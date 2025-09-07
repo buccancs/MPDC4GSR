@@ -15,6 +15,7 @@
     <string name="lms_setting_http_error">Network Error</string>
     <string name="tc_connect_line">Wired Connection</string>
     <string name="tc_connect_wifi">Wireless Connection</string>
+    <string name="tc_connect_bluetooth">Bluetooth Connection</string>
     
     <!-- Report/Delete strings -->
     <string name="report_delete">Delete</string>

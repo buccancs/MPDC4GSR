@@ -50,6 +50,12 @@ class DeviceTypeActivity : BaseActivity() {
                             .withBoolean("isTS004", false)
                             .navigation(this@DeviceTypeActivity)
                     }
+                    IRDeviceType.SHIMMER3_GSR -> {
+                        NavigationManager.getInstance()
+                            .build(RouterConfig.GSR_MULTI_MODAL)
+                            .navigation(this@DeviceTypeActivity)
+                        finish()
+                    }
                     else -> {
                         NavigationManager.getInstance()
                             .build(RouterConfig.IR_MAIN)
@@ -97,6 +103,7 @@ class DeviceTypeActivity : BaseActivity() {
 //            暂时先屏蔽TC007
 //            ItemInfo(true, IRDeviceType.TS004, IRDeviceType.TC007),
             ItemInfo(true, IRDeviceType.TS004, null),
+            ItemInfo(true, IRDeviceType.SHIMMER3_GSR, null),
         )
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -108,7 +115,12 @@ class DeviceTypeActivity : BaseActivity() {
             val secondType: IRDeviceType? = dataList[position].secondType
             val tvTitle = holder.itemView.findViewById<TextView>(R.id.tv_title)
             tvTitle.isVisible = dataList[position].isTitle
-            tvTitle.text = context.getString(if (firstType.isLine()) R.string.tc_connect_line else R.string.tc_connect_wifi)
+            tvTitle.text = context.getString(
+                when (firstType) {
+                    IRDeviceType.SHIMMER3_GSR -> R.string.tc_connect_bluetooth
+                    else -> if (firstType.isLine()) R.string.tc_connect_line else R.string.tc_connect_wifi
+                }
+            )
 
             val tvItem1 = holder.itemView.findViewById<TextView>(R.id.tv_item1)
             tvItem1.text = firstType.getDeviceName()
@@ -120,6 +132,7 @@ class DeviceTypeActivity : BaseActivity() {
                 IRDeviceType.TC007 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_tc007)
                 IRDeviceType.TS001 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts001)
                 IRDeviceType.TS004 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts004)
+                IRDeviceType.SHIMMER3_GSR -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item1).setImageResource(R.drawable.ic_device_type_ts004) // TODO: Add proper Shimmer3 icon
             }
 
             holder.itemView.findViewById<ViewGroup>(R.id.group_item2).isVisible = secondType != null
@@ -134,6 +147,7 @@ class DeviceTypeActivity : BaseActivity() {
                     IRDeviceType.TC007 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_tc007)
                     IRDeviceType.TS001 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_ts001)
                     IRDeviceType.TS004 -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_ts004)
+                    IRDeviceType.SHIMMER3_GSR -> holder.itemView.findViewById<android.widget.ImageView>(R.id.iv_item2).setImageResource(R.drawable.ic_device_type_ts004) // TODO: Add proper Shimmer3 icon
                 }
             }
         }
@@ -160,7 +174,7 @@ class DeviceTypeActivity : BaseActivity() {
     }
 
     /**
-     * 支持的热成像设备类型.
+     * 支持的设备类型 (热成像设备和GSR传感器).
      */
     enum class IRDeviceType {
         TC001 {
@@ -186,6 +200,10 @@ class DeviceTypeActivity : BaseActivity() {
         TS004 {
             override fun isLine(): Boolean = false
             override fun getDeviceName(): String = "TS004"
+        },
+        SHIMMER3_GSR {
+            override fun isLine(): Boolean = false  // Bluetooth connection
+            override fun getDeviceName(): String = "Shimmer3 GSR"
         };
 
         abstract fun isLine(): Boolean

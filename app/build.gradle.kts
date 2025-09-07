@@ -186,6 +186,7 @@ dependencies {
     implementation(project(":component:thermal-lite")) // Thermal Lite functionality
     implementation(project(":component:pseudo"))       // Pseudo color functionality needed by app
     implementation(project(":component:gsr-recording"))
+    implementation(project(":component:user"))         // User module for MoreActivity and settings
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))

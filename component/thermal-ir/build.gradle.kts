@@ -91,9 +91,9 @@ dependencies {
     // Image browser library
     implementation(libs.mn.image.browser)
     
-    // SmartRefreshLayout for pull-to-refresh functionality
-    implementation(libs.smart.refresh.layout)
-    implementation(libs.smart.refresh.header)
+    // Temporarily comment out problematic dependencies to fix build
+    // Standard Android SwipeRefreshLayout for pull-to-refresh functionality
+    // implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     
     // Core library desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
@@ -102,11 +102,13 @@ dependencies {
     implementation(libs.andromeda.core)  // Using version from libs.versions.toml (16.0.1) from Maven Central
     implementation(libs.andromeda.sense)  // Using version from libs.versions.toml (16.0.1) from Maven Central
     
-    // GSY VideoPlayer for MyGSYVideoPlayer - exclude media3 and cast framework to avoid Jetifier warnings
-    implementation(libs.gsy.video.player) {
-        exclude(group = "androidx.media3", module = "media3-cast")
-        exclude(group = "androidx.media3", module = "media3-session")
-        exclude(group = "androidx.media3", module = "media3-ui")
-        exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
-    }
+    // Temporarily comment out problematic GSYVideoPlayer to fix build
+    // GSY VideoPlayer for video playback - using basic version to avoid AliyunPlayer dependency issues
+    // implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack") {
+    //     exclude(group = "androidx.media3", module = "media3-cast")
+    //     exclude(group = "androidx.media3", module = "media3-session")
+    //     exclude(group = "androidx.media3", module = "media3-ui")
+    //     exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
+    //     exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
+    // }
 }

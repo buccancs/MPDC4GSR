@@ -54,7 +54,7 @@ dependencies {
     
     // Project dependencies
     implementation(project(":libapp"))
-    // Removed libmenu dependency - PseudoColorConfig moved to this module
+    implementation(project(":libmenu"))  // Required for menu references in widget files
 
     // Use shared UI bundle instead of individual dependencies
     implementation(libs.bundles.ui.common)

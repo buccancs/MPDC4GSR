@@ -21,20 +21,25 @@ rootProject.name = "MPDC4GSR"
 include(":app")
 include(":commonlibrary")
 
-// Essential sensor and recording modules
+// All sensor and recording modules (restored)
 include(":component:thermal")
 include(":component:gsr-recording")
+include(":component:thermal-ir")
+include(":component:thermal-lite")
+include(":component:CommonComponent")
+include(":component:edit3d")
+include(":component:house")
+include(":component:pseudo")
+include(":component:transfer")
+include(":component:user")
 include(":BleModule")
 
-// Core library modules
+// All library modules (restored)
 include(":libapp")
 include(":libcom")
 include(":libir")
 include(":libui")
+include(":libhik")
+include(":libmatrix")
+include(":libmenu")
 include(":RangeSeekBar")
-
-// Note: Removed redundant modules:
-// - component:thermal-ir and component:thermal-lite (consolidated into component:thermal)
-// - component:house, component:pseudo, component:user (non-essential for MPDC4GSR)
-// - component:edit3d, component:transfer, component:CommonComponent (unused)
-// - libhik, libmatrix, libmenu (redundant functionality)

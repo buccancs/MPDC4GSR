@@ -62,8 +62,10 @@ dependencies {
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
+    implementation(project(":libmenu"))  // Required for MenuFirstTabView
     implementation(project(":component:CommonComponent"))  // Required for CommonComponent classes
-    // Removed libmenu dependency - functionality consolidated into libui
+    implementation(project(":component:pseudo"))  // Required for CustomPseudoBean class
+    // Note: Cannot add thermal-ir or thermal-lite due to circular dependencies
     
     // ARouter removed - now using NavigationManager instead
     // implementation(libs.arouter.api)

@@ -84,6 +84,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RGBCameraRecorder? = null
     private var isRecording = false
+    private var isStartingRecording = false  // Guard against double taps
     private var currentSession: SessionInfo? = null
     private var sampleCount = 0L
     private var syncMarkCount = 0
@@ -360,7 +361,8 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         val basePermissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.RECORD_AUDIO
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAMERA  // Critical: Camera permission for RGB video recording
         )
         
         // Check base permissions
@@ -388,20 +390,22 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     
     private fun requestPermissions() {
         val permissionsToRequest = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            // Android 12+ permissions including Bluetooth for Shimmer3 GSR devices
+            // Android 12+ permissions including Camera and Bluetooth for Shimmer3 GSR devices
             arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA,  // Critical: Camera permission for RGB video recording
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_CONNECT
             )
         } else {
-            // Legacy permissions
+            // Legacy permissions including Camera
             arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA,  // Critical: Camera permission for RGB video recording
                 Manifest.permission.BLUETOOTH,
                 Manifest.permission.BLUETOOTH_ADMIN
             )
@@ -452,6 +456,12 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             return
         }
         
+        // Guard against concurrent toggling
+        if (isStartingRecording) {
+            Log.d(TAG, "Recording start already in progress, ignoring additional taps")
+            return
+        }
+        
         if (isRecording) {
             stopRecording()
         } else {
@@ -460,6 +470,11 @@ class MultiModalRecordingActivity : AppCompatActivity() {
     }
     
     private fun startRecording() {
+        // Set guard flag and disable button immediately to prevent double taps
+        isStartingRecording = true
+        startStopButton.isEnabled = false
+        startStopButton.text = "Starting..."
+        
         val sessionId = sessionIdEdit.text.toString().trim().ifEmpty { 
             TimeUtil.generateSessionId("MultiModal") 
         }
@@ -497,41 +512,77 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             
             val cameraStarted = rgbCameraRecorder?.startRecording(sessionId) ?: false
             if (!cameraStarted) {
+                // Reset guard flags on failure
+                isStartingRecording = false
+                startStopButton.isEnabled = true
+                startStopButton.text = "Start Recording"
                 statusText.text = "Failed to start camera recording"
                 Toast.makeText(this, "Failed to start RGB camera recording", Toast.LENGTH_LONG).show()
                 return
             }
         }
         
-        // Start GSR recording
+        // Start GSR recording asynchronously
         lifecycleScope.launch {
-            val success = gsrRecorder.startRecording(sessionId, participantId, studyName)
-            
-            if (success) {
-                // Reset counters
-                sampleCount = 0
-                syncMarkCount = 0
+            try {
+                val success = gsrRecorder.startRecording(sessionId, participantId, studyName)
                 
-                isRecording = true
-                updateUI()
-                
-                val recordingModes = mutableListOf<String>()
-                if (enableVideoSwitch.isChecked) {
-                    recordingModes.add(if (enable4KSwitch.isChecked) "4K Video" else "1080p Video")
-                    if (enableRawCaptureSwitch.isChecked) {
-                        recordingModes.add("RAW Images (${rawFrameRateSpinner.selectedItem})")
+                if (success) {
+                    // Reset counters
+                    sampleCount = 0
+                    syncMarkCount = 0
+                    
+                    // Atomic state update
+                    isRecording = true
+                    isStartingRecording = false
+                    
+                    runOnUiThread {
+                        updateUI()
+                        startStopButton.isEnabled = true
+                        startStopButton.text = "Stop Recording"
                     }
+                    
+                    val recordingModes = mutableListOf<String>()
+                    if (enableVideoSwitch.isChecked) {
+                        recordingModes.add(if (enable4KSwitch.isChecked) "4K Video" else "1080p Video")
+                        if (enableRawCaptureSwitch.isChecked) {
+                            recordingModes.add("RAW Images (${rawFrameRateSpinner.selectedItem})")
+                        }
+                    }
+                    recordingModes.add("GSR (128Hz)")
+                    
+                    runOnUiThread {
+                        statusText.text = "Recording: ${recordingModes.joinToString(", ")}"
+                    }
+                    
+                    Log.i(TAG, "Multi-modal recording started: $sessionId")
+                } else {
+                    // Reset guard flags on GSR failure
+                    isStartingRecording = false
+                    
+                    runOnUiThread {
+                        startStopButton.isEnabled = true
+                        startStopButton.text = "Start Recording"
+                        statusText.text = "Failed to start recording"
+                    }
+                    
+                    // Stop camera if GSR fails
+                    rgbCameraRecorder?.stopRecording()
+                    Toast.makeText(this@MultiModalRecordingActivity, "Failed to start GSR recording", Toast.LENGTH_LONG).show()
                 }
-                recordingModes.add("GSR (128Hz)")
+            } catch (e: Exception) {
+                // Reset guard flags on exception
+                isStartingRecording = false
                 
-                statusText.text = "Recording: ${recordingModes.joinToString(", ")}"
+                runOnUiThread {
+                    startStopButton.isEnabled = true
+                    startStopButton.text = "Start Recording"
+                    statusText.text = "Error starting recording"
+                }
                 
-                Log.i(TAG, "Multi-modal recording started: $sessionId")
-            } else {
-                // Stop camera if GSR fails
+                Log.e(TAG, "Error starting recording", e)
                 rgbCameraRecorder?.stopRecording()
-                statusText.text = "Failed to start recording"
-                Toast.makeText(this@MultiModalRecordingActivity, "Failed to start GSR recording", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MultiModalRecordingActivity, "Error starting recording: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }

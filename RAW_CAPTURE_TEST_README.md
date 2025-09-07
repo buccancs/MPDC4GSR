@@ -94,11 +94,16 @@ rgbCameraRecorder.startRecording(sessionId)
 - **Fallback**: Gracefully disables RAW if not supported, continues video recording
 
 ## File Sizes (Estimated)
-- **4K60FPS Video**: ~12MB/min (H.264, 8Mbps bitrate)
-- **RAW Images (30fps)**: ~100MB/min (Samsung S22: ~3.4MB per DNG @ 4032x3024)
-- **GSR Data**: ~1KB/min (128Hz sampling)
+- **4K60FPS Video**: ~60MB/min (H.264, 8Mbps bitrate: 8,000,000 bits/sec ÷ 8 bits/byte × 60 sec ≈ 60MB/min)
+- **RAW Images (30fps)**: ~6.12GB/min (Samsung S22: ~3.4MB per DNG @ 4032x3024 × 30fps × 60sec = 6,120MB/min)
+- **GSR Data**: ~1KB/min (128Hz sampling, CSV format)
 
-Total storage: ~113MB/min for full multi-modal recording
+Total storage: ~6.18GB/min for full multi-modal recording
+
+**⚠️ Storage Requirements:**
+- **High-capacity storage recommended**: 64GB+ for extended sessions
+- **Performance**: Use UFS 3.x or faster storage for sustained write speeds
+- **Monitoring**: Built-in storage monitoring prevents recording interruption
 
 ## Validation
 The implementation ensures:

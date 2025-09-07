@@ -53,12 +53,6 @@ android {
     }
 
     signingConfigs {
-        getByName("debug") {
-            storeFile = file("artibox_key/ArtiBox.jks")
-            keyAlias = "Artibox"
-            storePassword = "artibox2017"
-            keyPassword = "artibox2017"
-        }
         create("release") {
             storeFile = file("artibox_key/ArtiBox.jks")
             keyAlias = "Artibox"
@@ -72,14 +66,6 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
-            signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
-                "proguard-rules.pro"
-            )
-        }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false

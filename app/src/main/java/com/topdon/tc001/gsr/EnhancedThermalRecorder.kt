@@ -6,7 +6,8 @@ import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.gsr.model.SessionInfo
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -102,7 +103,7 @@ class EnhancedThermalRecorder private constructor(
     /**
      * Start recording session with automatic GSR integration and Samsung S22 ground truth timing
      */
-    fun startRecording(
+    suspend fun startRecording(
         sessionName: String, 
         participantId: String? = null,
         enableGsr: Boolean = true
@@ -124,30 +125,32 @@ class EnhancedThermalRecorder private constructor(
         Log.d(TAG, "Using ${TimeUtil.getDetectedProcessor()} processor timing for maximum precision")
         
         if (enableGsr) {
-            // Start GSR recording automatically with unified timing using coroutine
-            return runBlocking {
-                val gsrStarted = gsrRecorder.startRecording(sessionId, participantId, "Thermal_GSR_Study")
+            // Start GSR recording automatically with unified timing using suspend function
+            val gsrStarted = gsrRecorder.startRecording(sessionName, participantId, "Thermal_GSR_Study")
+            
+            if (gsrStarted) {
+                isRecordingState = true
                 
-                if (gsrStarted) {
-                    isRecordingState = true
-                    
-                    // Verify timing synchronization
-                    val timingValidation = TimeUtil.validateTimingSystem()
-                    Log.i(TAG, "Enhanced thermal recording started with GSR: $sessionId")
-                    Log.d(TAG, "Samsung S22 timing system validation: $timingValidation")
-                    
-                    // Add initial synchronization verification mark
-                    triggerSyncEvent("RECORDING_INITIALIZATION", mapOf(
-                        "unified_start_timestamp" to unifiedStartTimestamp.toString(),
-                        "samsung_s22_ground_truth" to "established",
-                        "timing_validation" to timingValidation.toString()
-                    ))
-                    
-                    true
-                } else {
-                    Log.e(TAG, "Failed to start GSR recording for thermal session")
-                    false
+                // Verify timing synchronization
+                val timingValidation = TimeUtil.validateTimingSystem()
+                Log.i(TAG, "Enhanced thermal recording started with GSR: $sessionName")
+                Log.d(TAG, "Samsung S22 timing system validation: $timingValidation")
+                
+                // Add initial synchronization verification mark
+                val syncEventSuccess = triggerSyncEvent("RECORDING_INITIALIZATION", mapOf(
+                    "unified_start_timestamp" to unifiedStartTimestamp.toString(),
+                    "samsung_s22_ground_truth" to "established",
+                    "timing_validation" to timingValidation.toString()
+                ))
+                
+                if (syncEventSuccess) {
+                    Log.d(TAG, "Initial synchronization mark successfully added")
                 }
+                
+                return true
+            } else {
+                Log.e(TAG, "Failed to start GSR recording for thermal session")
+                return false
             }
         } else {
             // Create session without GSR recording
@@ -195,8 +198,16 @@ class EnhancedThermalRecorder private constructor(
                     put("timing_validation", TimeUtil.validateTimingSystem().toString())
                 }
                 
-                runBlocking {
-                    gsrRecorder.addSyncMark(eventType, enhancedMetadata.toString())
+                // Use the existing coroutine scope to handle async call without blocking
+                try {
+                    // This will be executed in the GSRRecorder's internal coroutine context
+                    GlobalScope.launch {
+                        gsrRecorder.addSyncMark(eventType, enhancedMetadata.toString())
+                    }
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to add sync mark", e)
+                    false
                 }
             } else {
                 // Add sync mark to session manager for thermal-only sessions

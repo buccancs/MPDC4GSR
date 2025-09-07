@@ -6,6 +6,8 @@ import android.view.TextureView
 import com.topdon.tc001.gsr.EnhancedThermalRecorder
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.config.FileConfig
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -85,10 +87,13 @@ class SynchronizedMultiModalRecorder(
 
             Log.i(TAG, "Starting synchronized multi-modal recording with unified timestamp: $synchronizedTimestamp")
             
-            // 1. Start GSR recording first (fastest to initialize)
-            val gsrStarted = thermalRecorder.startRecording(unifiedSessionId, null, true)
-            if (!gsrStarted) {
-                Log.w(TAG, "GSR recording failed to start, continuing with thermal+RGB only")
+            // 1. Start GSR recording first (fastest to initialize) - using coroutine for async call
+            var gsrStarted = false
+            GlobalScope.launch {
+                gsrStarted = thermalRecorder.startRecording(unifiedSessionId, null, true)
+                if (!gsrStarted) {
+                    Log.w(TAG, "GSR recording failed to start, continuing with thermal+RGB only")
+                }
             }
 
             // 2. Start RGB camera recording with same session ID

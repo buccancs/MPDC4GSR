@@ -64,7 +64,7 @@ build_apk() {
     log "   Build Type: ${BUILD_TYPE}"
     
     # Build with optimizations
-    ./gradlew ":app:assemble${BUILD_TYPE^}" \
+    ./gradlew ":app:assembleRelease" \
         --build-cache \
         --parallel \
         --quiet \

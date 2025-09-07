@@ -76,12 +76,13 @@ dependencies {
     implementation(libs.utilcode)
     implementation(libs.mn.image.browser)
     
-    // AAR dependencies - required for thermal camera functionality
-    implementation(files("../../libir/libs/suplib-release.aar"))  // Required for SupHelp class
-    implementation(files("../../libir/libs/ai-upscale-release.aar"))  // AI upscale functionality
-    implementation(files("../../libir/libs/texturegesture-release.aar"))  // Texture gesture functionality
-    implementation(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))  // Required for IRCMD classes
-    implementation(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))  // AC020 SDK 
-    implementation(files("../../libir/libs/libirutils_1.2.0_2409241055.aar"))  // IR utilities
-    implementation(files("../../shared/libs/lms_international-3.90.009.0.aar"))  // LMS SDK for thermal-ir classes
+    // AAR dependencies moved to app module to avoid library AAR packaging issues
+    // These will be provided by the app module at runtime
+    compileOnly(files("../../libir/libs/suplib-release.aar"))  // Required for SupHelp class
+    compileOnly(files("../../libir/libs/ai-upscale-release.aar"))  // AI upscale functionality
+    compileOnly(files("../../libir/libs/texturegesture-release.aar"))  // Texture gesture functionality
+    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))  // Required for IRCMD classes
+    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))  // AC020 SDK 
+    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar"))  // IR utilities
+    compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar"))  // LMS SDK for thermal-ir classes
 }

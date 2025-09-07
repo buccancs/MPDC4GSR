@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import android.preference.PreferenceManager
 import com.csl.irCamera.R
@@ -57,6 +58,14 @@ class GSRSettingsActivity : AppCompatActivity() {
         setupUI()
         loadCurrentSettings()
         setupListeners()
+        
+        // Setup modern back handling
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                saveCurrentSettings()
+                finish()
+            }
+        })
     }
 
     private fun setupUI() {
@@ -216,12 +225,13 @@ class GSRSettingsActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         saveCurrentSettings()
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        saveCurrentSettings()
-        super.onBackPressed()
+        // Handle via OnBackPressedCallback instead
+        onBackPressedDispatcher.onBackPressed()
     }
 }

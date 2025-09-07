@@ -36,14 +36,14 @@ android {
         }
 
         buildConfigField("String", "VERSION_DATE", "\"$buildDayStr\"")
+        buildConfigField("String", "SOFT_CODE", "\"TC001_DisplaySW_IRCamera_Adr\"")
+        buildConfigField("String", "APP_KEY", "\"5B2F6F1FD80844FCB6E50BCA19222E76\"")
+        buildConfigField("String", "APP_SECRET", "\"A4A2EE33347A4D7885C26689515567EC\"")
         
         manifestPlaceholders["JPUSH_PKGNAME"] = applicationId!!
         manifestPlaceholders["JPUSH_APPKEY"] = "cbd4eafc9049d751fc5a8c58"
         manifestPlaceholders["JPUSH_CHANNEL"] = "developer-default"
-    }
-
-    base {
-        archivesName = "TC001-v${libs.versions.versionName.get()}.google"
+        manifestPlaceholders["app_name"] = "IRCamera"
     }
 
     bundle {
@@ -171,61 +171,6 @@ android {
         dataBinding = true
         viewBinding = true
     }
-    
-    flavorDimensions += "app"
-
-    productFlavors {
-        create("dev") {
-            dimension = "app"
-            buildConfigField("int", "ENV_TYPE", "0")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfrared.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared.get()}\"")
-            manifestPlaceholders["app_name"] = "TopInfrared"
-        }
-        create("beta") {
-            dimension = "app"
-            buildConfigField("int", "ENV_TYPE", "0")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfrared.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared.get()}\"")
-            manifestPlaceholders["app_name"] = "IRCamera"
-        }
-        create("prod") {
-            dimension = "app"
-            buildConfigField("int", "ENV_TYPE", "0")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfrared.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared.get()}\"")
-            manifestPlaceholders["app_name"] = "IRCamera"
-        }
-        create("prodTopdon") {
-            dimension = "app"
-            targetSdk = 27
-            buildConfigField("int", "ENV_TYPE", "0")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfrared10.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared10.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared10.get()}\"")
-            manifestPlaceholders["app_name"] = "IRCamera"
-        }
-        create("insideChina") {
-            dimension = "app"
-            buildConfigField("int", "ENV_TYPE", "1")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfraredCn.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfraredCn.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfraredCn.get()}\"")
-            manifestPlaceholders["app_name"] = "热视界"
-        }
-        create("prodTopdonInsideChina") {
-            dimension = "app"
-            targetSdk = 27
-            buildConfigField("int", "ENV_TYPE", "1")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfraredCn10.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfraredCn10.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfraredCn10.get()}\"")
-            manifestPlaceholders["app_name"] = "热视界"
-        }
-    }
 }
 
 // Dependency resolution strategy to fix Guava conflicts
@@ -287,18 +232,8 @@ dependencies {
     implementation(libs.umeng.apm)
     implementation(libs.zoho.salesiq)
 
-    // UMeng - Platform-specific dependencies based on original build.gradle
-    // Note: umeng-common-9.4.4+000.jar file not found, using Maven Central versions instead
-    "devImplementation"(libs.umeng.common)
-    "betaImplementation"(libs.umeng.common)
-    "prodImplementation"(libs.umeng.common)
-    "prodTopdonImplementation"(libs.umeng.common)
-    
-    // China flavor dependencies
-    "insideChinaImplementation"(libs.umeng.common)
-    "insideChinaImplementation"(libs.umeng.asms)
-    "prodTopdonInsideChinaImplementation"(libs.umeng.common)
-    "prodTopdonInsideChinaImplementation"(libs.umeng.asms)
+    // UMeng - Simplified single implementation
+    implementation(libs.umeng.common)
 }
 
 // Utility functions for APK naming (converted from original Groovy)
@@ -313,34 +248,3 @@ fun getDayStr(): String {
 fun getTimeStr(): String {
     return SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 }
-
-// APK naming function from original build.gradle
-fun getApkName(variantName: String, versionName: String): String {
-    val dayStr = getDayStr()
-    val nameStr = "TopInfrared_${versionName}.${dayStr}"
-    return when (variantName) {
-        "devDebug" -> "TopInfrared-v${versionName}-debug.apk"
-        "devRelease" -> "${nameStr}-release.apk"
-        "betaDebug" -> "${nameStr}_beta_debug.apk"
-        "betaRelease" -> "${nameStr}_beta.apk"
-        "prodDebug" -> "${nameStr}_debug.apk"
-        "prodRelease" -> "${nameStr}.apk"
-        "prodTopdonDebug" -> "TopInfrared_Android10_${versionName}.${dayStr}_debug.apk"
-        "prodTopdonRelease" -> "TopInfrared_Android10_${versionName}.${dayStr}.apk"
-        "insideChinaDebug" -> "${nameStr}_debug.apk"
-        "insideChinaRelease" -> "${nameStr}.apk"
-        "prodTopdonInsideChinaDebug" -> "${nameStr}_debug.apk"
-        "prodTopdonInsideChinaRelease" -> "${nameStr}.apk"
-        else -> "TopInfrared.apk"
-    }
-}
-
-// Configure APK naming for all variants - Simplified for now
-/* TODO: Re-enable APK naming after fixing variant outputs configuration
-android.applicationVariants.all { variant ->
-    variant.outputs.configureEach {
-        (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName = 
-            getApkName(variant.name, android.defaultConfig.versionName ?: "1.0.0")
-    }
-}
-*/

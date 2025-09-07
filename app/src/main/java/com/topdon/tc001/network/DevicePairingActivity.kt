@@ -136,7 +136,7 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
     private fun updateUI() {
         val isConnected = networkClient.isConnected()
         
-        scanButton.isEnabled = !isConnected
+        scanButton.isEnabled = isConnected.not()
         disconnectButton.visibility = if (isConnected) View.VISIBLE else View.GONE
         controllersRecyclerView.visibility = if (isConnected) View.GONE else View.VISIBLE
         
@@ -185,7 +185,7 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
             // Show dialog for remote measurement request
             androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Remote Measurement Request")
-                .setMessage("PC Controller is requesting to start measurement session:\n\n${sessionInfo.sessionName}")
+                .setMessage("PC Controller is requesting to start measurement session:\n\n${sessionInfo.studyName ?: sessionInfo.sessionId}")
                 .setPositiveButton("Start") { _, _ ->
                     startRemoteMeasurement(sessionInfo)
                 }
@@ -226,7 +226,7 @@ class DevicePairingActivity : AppCompatActivity(), NetworkClient.NetworkEventLis
         // Launch MultiModalRecordingActivity with remote session info
         val intent = Intent(this, MultiModalRecordingActivity::class.java).apply {
             putExtra("session_id", sessionInfo.sessionId)
-            putExtra("session_name", sessionInfo.sessionName)
+            putExtra("session_name", sessionInfo.studyName ?: sessionInfo.sessionId)
             putExtra("remote_session", true)
         }
         startActivity(intent)

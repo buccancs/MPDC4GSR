@@ -10,6 +10,9 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.*
 import java.net.*
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentHashMap
 import javax.net.ssl.*
 
@@ -204,7 +207,7 @@ class NetworkClient(private val context: Context) {
                     put("message_type", "measurement_data")
                     put("device_id", deviceId)
                     put("session_id", sessionId)
-                    put("timestamp", System.currentTimeMillis())
+                    put("timestamp", getCurrentTimestamp())
                     put("data", data)
                 }
                 
@@ -230,7 +233,7 @@ class NetworkClient(private val context: Context) {
                     put("device_id", deviceId)
                     put("status", status)
                     batteryLevel?.let { put("battery_level", it) }
-                    put("timestamp", System.currentTimeMillis())
+                    put("timestamp", getCurrentTimestamp())
                 }
                 
                 sendMessage(message)
@@ -244,20 +247,20 @@ class NetworkClient(private val context: Context) {
     private suspend fun registerDevice(): Boolean = withContext(Dispatchers.IO) {
         try {
             val capabilities = listOf(
-                "gsr_sensor",
-                "thermal_camera", 
-                "rgb_camera",
-                "raw_capture",
-                "video_recording",
-                "bluetooth_sync"
+                "gsr",
+                "thermal", 
+                "visual",
+                "audio"
             )
             
             val registrationMessage = JSONObject().apply {
                 put("message_type", "device_register")
                 put("device_id", deviceId)
-                put("device_type", "MPDC4GSR_Mobile")
-                put("capabilities", capabilities.joinToString(","))
-                put("timestamp", System.currentTimeMillis())
+                put("device_type", "android_phone")
+                put("capabilities", org.json.JSONArray(capabilities))
+                put("ip_address", getLocalIpAddress())
+                put("port", PC_CONTROLLER_PORT)
+                put("timestamp", getCurrentTimestamp())
             }
             
             sendMessage(registrationMessage)
@@ -297,7 +300,7 @@ class NetworkClient(private val context: Context) {
                     val heartbeatMessage = JSONObject().apply {
                         put("message_type", "device_heartbeat")
                         put("device_id", deviceId)
-                        put("timestamp", System.currentTimeMillis())
+                        put("timestamp", getCurrentTimestamp())
                     }
                     
                     sendMessage(heartbeatMessage)
@@ -323,10 +326,9 @@ class NetworkClient(private val context: Context) {
                 
                 val sessionInfo = SessionInfo(
                     sessionId = sessionId,
-                    sessionName = sessionName,
                     startTime = System.currentTimeMillis(),
                     participantId = "remote",
-                    notes = "PC Controller initiated session"
+                    studyName = sessionName
                 )
                 
                 eventListener?.onRemoteMeasurementRequest(sessionInfo)
@@ -456,6 +458,22 @@ class NetworkClient(private val context: Context) {
     }
     
     fun isConnected(): Boolean = isConnected
+    
+    private fun getCurrentTimestamp(): String {
+        return Instant.now().atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+    }
+    
+    private fun getLocalIpAddress(): String {
+        try {
+            val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val dhcpInfo = wifiManager.dhcpInfo
+            return intToIp(dhcpInfo.ipAddress)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to get local IP address", e)
+            return "127.0.0.1"
+        }
+    }
     
     fun getDiscoveredControllers(): List<ControllerInfo> = discoveredControllers.values.toList()
 }

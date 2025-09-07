@@ -126,8 +126,9 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                     currentSession?.let { session ->
                         lifecycleScope.launch {
                             val data = org.json.JSONObject().apply {
-                                put("gsr_value", sample.gsrValue)
-                                put("ppg_value", sample.ppgValue)
+                                put("gsr_conductance", sample.conductance)
+                                put("gsr_resistance", sample.resistance)
+                                put("raw_value", sample.rawValue)
                                 put("timestamp", sample.timestamp)
                                 put("sample_index", sample.sampleIndex)
                             }
@@ -352,7 +353,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
                         // Auto-fill session info from remote request
                         sessionIdEdit.setText(sessionInfo.sessionId)
                         participantIdEdit.setText(sessionInfo.participantId)
-                        studyNameEdit.setText(sessionInfo.sessionName)
+                        studyNameEdit.setText(sessionInfo.studyName)
                         
                         // Auto-start recording if requested
                         if (!isRecording) {

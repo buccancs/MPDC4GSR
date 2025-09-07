@@ -207,7 +207,8 @@ class GSRDemoActivity : AppCompatActivity() {
         )
         
         lifecycleScope.launch {
-            val success = gsrRecorder.addSyncMark("DEMO_SYNC_EVENT", metadata.toString())
+            val metadataJson = com.google.gson.Gson().toJson(metadata)
+            val success = gsrRecorder.addSyncMark("DEMO_SYNC_EVENT", metadataJson)
             
             if (success) {
                 // Success feedback is handled in the listener

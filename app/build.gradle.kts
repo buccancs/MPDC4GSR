@@ -53,7 +53,7 @@ android {
     }
 
     signingConfigs {
-        create("debug") {
+        getByName("debug") {
             storeFile = file("artibox_key/ArtiBox.jks")
             keyAlias = "Artibox"
             storePassword = "artibox2017"
@@ -254,6 +254,7 @@ dependencies {
     implementation(project(":libui"))
 
     // ARouter configuration
+    implementation(libs.arouter.api)
     kapt(libs.arouter.compiler)
 
     // LocalRepo AAR files moved to app/libs

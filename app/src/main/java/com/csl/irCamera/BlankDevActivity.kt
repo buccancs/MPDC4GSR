@@ -28,7 +28,7 @@ class BlankDevActivity : AppCompatActivity() {
             }
             finish()
         } else {
-            startActivity(Intent(this, SplashActivity::class.java))
+            startActivity(Intent(this, com.topdon.tc001.ClauseActivity::class.java))
             finish()
         }
     }

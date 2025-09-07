@@ -138,7 +138,7 @@ object NavigationManager {
             RouterConfig.TC_MORE -> getClassByName("com.topdon.module.user.activity.MoreActivity")
 
             // GSR routes  
-            RouterConfig.GSR_MULTI_MODAL -> getClassByName("com.topdon.component.gsr.activity.GSRMultiModalActivity")
+            RouterConfig.GSR_MULTI_MODAL -> getClassByName("com.topdon.tc001.gsr.MultiModalRecordingActivity")
             RouterConfig.GSR_DEMO -> getClassByName("com.topdon.component.gsr.activity.GSRDemoActivity")
             
             // Gallery and Camera Setting routes

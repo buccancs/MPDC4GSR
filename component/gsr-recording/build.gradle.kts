@@ -59,7 +59,7 @@ dependencies {
     // For CSV writing
     implementation("com.opencsv:opencsv:5.7.1")
     
-    // Official Shimmer Android API Integration
+    // Official Shimmer Android API Integration - Latest v3.2.3Beta
     // JAR files from https://github.com/ShimmerEngineering/ShimmerAndroidAPI/releases
     implementation(files("libs/ShimmerBiophysicalProcessingLibrary_Rev_0_11.jar"))
     implementation(files("libs/AndroidBluetoothLibrary.jar"))

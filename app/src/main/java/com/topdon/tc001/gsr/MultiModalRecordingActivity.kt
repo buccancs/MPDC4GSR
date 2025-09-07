@@ -579,6 +579,41 @@ class MultiModalRecordingActivity : AppCompatActivity() {
         participantIdEdit.isEnabled = !isRecording
         studyNameEdit.isEnabled = !isRecording
     }
+
+    override fun onCreateOptionsMenu(menu: android.view.Menu?): Boolean {
+        menuInflater.inflate(R.menu.multi_modal_recording_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_gallery -> {
+                openGallery()
+                true
+            }
+            R.id.action_settings -> {
+                openSettings()
+                true
+            }
+            R.id.action_session_manager -> {
+                openSessionManager()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun openGallery() {
+        GSRGalleryActivity.startActivity(this)
+    }
+
+    private fun openSettings() {
+        GSRSettingsActivity.startActivity(this)
+    }
+
+    private fun openSessionManager() {
+        SessionManagerActivity.startActivity(this)
+    }
     
     override fun onDestroy() {
         super.onDestroy()

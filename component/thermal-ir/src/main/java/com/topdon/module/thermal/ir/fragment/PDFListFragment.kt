@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.topdon.lib.core.navigation.NavigationManager
 import com.blankj.utilcode.util.Utils
 import com.topdon.lib.core.config.ExtraKeyConfig

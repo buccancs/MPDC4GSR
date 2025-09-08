@@ -39,11 +39,15 @@ aiofiles>=23.1.0
 cryptography>=45.0.7
 typing-extensions>=4.8.0
 
+# Enhanced networking and discovery
+zeroconf>=0.132.2
+python-zeroconf>=0.132.2
+
 # Network security dependencies - LATEST SECURE VERSIONS
 urllib3>=2.5.0
 requests>=2.32.3
 jinja2>=3.1.6
-certifi>=2025.1.1
+certifi>=2024.8.30
 twisted>=24.7.0
 pyjwt>=2.10.1
 

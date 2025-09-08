@@ -66,12 +66,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isDebuggable = true
-            isMinifyEnabled = false
-            applicationIdSuffix = ".debug"
-        }
-        
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
@@ -82,11 +76,11 @@ android {
         }
     }
     
-    // Configure variants using modern API - enable both debug and release
+    // Configure variants using modern API - only release variant
     androidComponents {
         beforeVariants { variantBuilder ->
-            // Enable all build variants for development and testing
-            variantBuilder.enable = true
+            // Only enable release variant, disable debug
+            variantBuilder.enable = variantBuilder.buildType == "release"
         }
     }
 

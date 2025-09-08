@@ -11,11 +11,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-            buildConfigField("boolean", "DEBUG", "true")
-        }
-        
         getByName("release") {
             isMinifyEnabled = false
             buildConfigField("boolean", "DEBUG", "false")
@@ -26,11 +21,11 @@ android {
         }
     }
     
-    // Enable both debug and release variants for development and production
+    // Only release variant enabled for production builds
     androidComponents {
         beforeVariants { variant ->
-            // Enable all build variants for flexible development
-            variant.enable = true
+            // Only enable release variant, disable debug
+            variant.enable = variant.buildType == "release"
         }
     }
     

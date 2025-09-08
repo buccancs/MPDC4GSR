@@ -32,13 +32,17 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    
+    // Only release variant enabled
+    androidComponents {
+        beforeVariants { variant ->
+            // Only enable release variant, disable debug
+            variant.enable = variant.buildType == "release"
         }
     }
     compileOptions {

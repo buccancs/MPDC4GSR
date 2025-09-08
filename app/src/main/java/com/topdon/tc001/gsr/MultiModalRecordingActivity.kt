@@ -228,23 +228,7 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             }
         }
 
-    // Service connection for EnhancedRecordingService
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as? com.topdon.gsr.service.EnhancedRecordingService.LocalBinder
-            enhancedRecordingService = binder?.getService()
-            isServiceBound = true
-            Log.d(TAG, "Enhanced recording service connected")
-            updateNetworkStatusUI()
-        }
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-            enhancedRecordingService = null
-            isServiceBound = false
-            Log.d(TAG, "Enhanced recording service disconnected")
-            updateNetworkStatusUI()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

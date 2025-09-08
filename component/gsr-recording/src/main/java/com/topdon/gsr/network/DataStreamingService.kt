@@ -403,10 +403,11 @@ class DataStreamingService(
     /**
      * Clean up resources
      */
-    fun cleanup() {
-        streamingScope.launch {
-            stopStreaming()
-        }
+    suspend fun cleanup() {
+        // Stop streaming before cancelling jobs to ensure proper data flush
+        stopStreaming()
+        
+        // Cancel all jobs after streaming is stopped
         streamingJob.cancel()
         clearQueues()
         eventListener = null

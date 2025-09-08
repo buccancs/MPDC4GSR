@@ -142,6 +142,11 @@ class DeviceAuthenticationManager(private val context: Context) {
 
     /**
      * Generate pairing PIN for device discovery
+     * 
+     * Creates a secure 6-digit PIN that will be used to authenticate 
+     * this device with a PC Controller during the initial pairing process.
+     * 
+     * @return A 6-digit PIN string for device pairing
      */
     fun generatePairingPin(): String {
         val random = SecureRandom()
@@ -156,6 +161,11 @@ class DeviceAuthenticationManager(private val context: Context) {
 
     /**
      * Get current pairing PIN
+     * 
+     * Retrieves the currently stored pairing PIN for this device.
+     * Returns null if no PIN has been generated yet.
+     * 
+     * @return The current pairing PIN string, or null if not available
      */
     fun getCurrentPairingPin(): String? {
         return prefs.getString(PREF_PAIRING_PIN, null)
@@ -163,6 +173,12 @@ class DeviceAuthenticationManager(private val context: Context) {
 
     /**
      * Create pairing request for PC Controller
+     * 
+     * Constructs a complete pairing request containing device information,
+     * capabilities, and authentication PIN to be sent to PC Controller
+     * during the discovery and pairing process.
+     * 
+     * @return A PairingRequest object with device details and credentials
      */
     fun createPairingRequest(): PairingRequest {
         val pin = getCurrentPairingPin() ?: generatePairingPin()
@@ -178,6 +194,14 @@ class DeviceAuthenticationManager(private val context: Context) {
 
     /**
      * Process pairing response from PC Controller
+     * 
+     * Handles the response from PC Controller after sending a pairing request.
+     * Stores authentication credentials and paired controller information
+     * if pairing was successful.
+     * 
+     * @param response JSON response from PC Controller containing pairing result
+     * @return true if pairing was successful and credentials stored, false otherwise
+     * @throws JSONException if response format is invalid
      */
     fun processPairingResponse(response: JSONObject): Boolean {
         try {

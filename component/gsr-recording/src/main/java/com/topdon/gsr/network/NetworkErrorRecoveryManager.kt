@@ -275,6 +275,16 @@ class NetworkErrorRecoveryManager(
         }
     }
 
+    /**
+     * Calculate retry delay with exponential backoff and jitter
+     * 
+     * Implements exponential backoff algorithm with random jitter to avoid
+     * synchronized retry attempts across multiple clients. Caps the maximum
+     * delay to prevent excessively long wait times.
+     * 
+     * @param attempt Retry attempt number (1-based)
+     * @return Delay in milliseconds before next retry attempt
+     */
     private fun calculateRetryDelay(attempt: Int): Long {
         // Exponential backoff with jitter
         val baseDelay = INITIAL_RETRY_DELAY_MS * (1L shl (attempt - 1))
@@ -283,6 +293,14 @@ class NetworkErrorRecoveryManager(
         return cappedDelay + jitter
     }
 
+    /**
+     * Check if current failure is part of rapid failure pattern
+     * 
+     * Detects rapid consecutive failures within a time window that may
+     * indicate a persistent network issue requiring circuit breaker activation.
+     * 
+     * @return true if rapid failure threshold is exceeded, false otherwise
+     */
     private fun isRapidFailure(): Boolean {
         val currentTime = System.currentTimeMillis()
         

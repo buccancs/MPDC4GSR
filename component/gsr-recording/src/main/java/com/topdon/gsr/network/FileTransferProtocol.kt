@@ -76,6 +76,17 @@ class FileTransferProtocol(
 
     /**
      * Queue a file for transfer to PC Controller
+     * 
+     * Adds a file to the transfer queue with specified priority and metadata.
+     * Files are transferred asynchronously using chunked uploads with integrity verification.
+     * 
+     * @param filePath Absolute path to the file to be transferred
+     * @param priority Transfer priority level affecting queue ordering
+     * @param sessionId Recording session ID for organizing transferred files
+     * @param metadata Additional key-value metadata to include with transfer
+     * @return Unique transfer ID for tracking the file transfer progress
+     * @throws FileNotFoundException if the specified file does not exist
+     * @throws SecurityException if file access is denied
      */
     suspend fun queueFileTransfer(
         filePath: String,
@@ -110,6 +121,10 @@ class FileTransferProtocol(
 
     /**
      * Process the transfer queue with priority-based scheduling
+     * 
+     * Initiates processing of queued file transfers in priority order.
+     * Respects maximum concurrent transfer limits to avoid overwhelming
+     * the network connection.
      */
     private fun processTransferQueue(): Unit {
         transferScope.launch {
@@ -119,6 +134,10 @@ class FileTransferProtocol(
     
     /**
      * Async version to avoid recursion issues
+     * 
+     * Processes pending transfer requests while respecting concurrency limits.
+     * Removes requests from queue and starts transfers until maximum
+     * concurrent transfers is reached.
      */
     private suspend fun processTransferQueueAsync(): Unit = withContext(Dispatchers.IO) {
         while (transferQueue.isNotEmpty() && activeTransfers.size < MAX_CONCURRENT_TRANSFERS) {
@@ -133,6 +152,12 @@ class FileTransferProtocol(
 
     /**
      * Start individual file transfer with resumable support
+     * 
+     * Initiates transfer of a single file using chunked uploads with
+     * integrity verification. Supports resuming interrupted transfers
+     * from the last completed chunk.
+     * 
+     * @param request Transfer request containing file details and metadata
      */
     private suspend fun startFileTransfer(request: TransferRequest): Unit = withContext(Dispatchers.IO) {
         val session = TransferSession(

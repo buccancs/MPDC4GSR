@@ -100,6 +100,11 @@ class QualityOfServiceManager(
 
     /**
      * Start QoS monitoring and optimization
+     * 
+     * Initializes bandwidth monitoring, latency measurement, adaptive processing,
+     * and priority queue processing. Must be called before using other QoS features.
+     * 
+     * @throws IllegalStateException if QoS monitoring is already active
      */
     suspend fun startQoSMonitoring() = withContext(Dispatchers.IO) {
         if (isMonitoring.getAndSet(true)) {

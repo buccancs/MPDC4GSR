@@ -743,7 +743,12 @@ class NetworkClient(private val context: Context) {
     fun getErrorRecoveryManager(): NetworkErrorRecoveryManager = errorRecoveryManager
 
     /**
-     * Start device discovery with callback
+     * Start device discovery with callback-based result handling
+     * 
+     * Initiates discovery of PC Controllers on the local network and
+     * reports success/failure through the provided callback function.
+     * 
+     * @param callback Function called with true if discovery succeeds, false otherwise
      */
     fun startDiscovery(callback: (Boolean) -> Unit) {
         heartbeatScope.launch {
@@ -758,7 +763,14 @@ class NetworkClient(private val context: Context) {
     }
 
     /**
-     * Connect to controller with callback
+     * Connect to controller with callback-based result handling
+     * 
+     * Attempts to establish connection to a PC Controller at specified
+     * address and port, reporting success/failure through callback.
+     * 
+     * @param address IP address of PC Controller
+     * @param port TCP port of PC Controller 
+     * @param callback Function called with true if connection succeeds, false otherwise
      */
     fun connectToController(address: String, port: Int, callback: (Boolean) -> Unit) {
         heartbeatScope.launch {

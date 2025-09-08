@@ -431,6 +431,12 @@ class NetworkClient(private val context: Context) {
 
     private fun handleIncomingMessage(message: JSONObject) {
         val messageType = message.optString("message_type")
+        
+        // Check for custom message handlers first
+        messageHandlers[messageType]?.let { handler ->
+            handler(message)
+            return
+        }
 
         when (messageType) {
             "session_start" -> {
@@ -474,7 +480,10 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    private suspend fun sendMessage(message: JSONObject) =
+    /**
+     * Send message (public method for external components)
+     */
+    suspend fun sendMessage(message: JSONObject) =
         withContext(Dispatchers.IO) {
             val output = outputStream ?: throw IOException("Not connected")
 
@@ -751,4 +760,56 @@ class NetworkClient(private val context: Context) {
         discoveredControllers.clear()
         eventListener = null
     }
+
+    /**
+     * Send binary data (for file transfers and frame data)
+     */
+    suspend fun sendBinaryData(data: ByteArray) = withContext(Dispatchers.IO) {
+        val output = outputStream ?: throw IOException("Not connected")
+        output.writeInt(data.size)
+        output.write(data)
+        output.flush()
+    }
+
+    /**
+     * Wait for a specific response type with timeout
+     */
+    suspend fun waitForResponse(messageType: String, timeoutMs: Long): JSONObject {
+        val startTime = System.currentTimeMillis()
+        
+        while (System.currentTimeMillis() - startTime < timeoutMs) {
+            val message = receiveMessage(1000L)
+            if (message?.optString("type") == messageType) {
+                return message
+            }
+            delay(100L)
+        }
+        
+        throw IOException("Timeout waiting for response: $messageType")
+    }
+
+    /**
+     * Broadcast message to all discovered controllers
+     */
+    suspend fun broadcastMessage(message: JSONObject) = withContext(Dispatchers.IO) {
+        discoveredControllers.values.forEach { controller ->
+            try {
+                sendMessage(message)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to broadcast to ${controller.ipAddress}", e)
+            }
+        }
+    }
+
+    /**
+     * Set message handler for specific message types
+     */
+    fun setMessageHandler(messageType: String, handler: (JSONObject) -> Unit) {
+        messageHandlers[messageType] = handler
+    }
+
+    /**
+     * Get current clock offset for time synchronization
+     */
+    fun getClockOffset(): Long = clockOffset
 }

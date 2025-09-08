@@ -1,33 +1,38 @@
-# IRCamera Platform - Advanced API Documentation
+# IRCamera Platform - Enterprise Advanced API Documentation
 
-## Overview
+## 🎯 Overview
 
-This document provides comprehensive API documentation for the IRCamera platform, including detailed code examples, integration patterns, and advanced usage scenarios for all components and libraries.
+This document provides **comprehensive enterprise-grade API documentation** for the IRCamera platform, including detailed code examples, enterprise integration patterns, advanced usage scenarios, cloud deployment strategies, ML/AI integration, and production-ready implementation guides for all components and libraries.
 
-## Table of Contents
+## 📋 Table of Contents
 
-1. [Android Application API](#android-application-api)
-2. [PC Controller API](#pc-controller-api)
-3. [Core Libraries API](#core-libraries-api)
-4. [Network Protocol API](#network-protocol-api)
-5. [Integration Examples](#integration-examples)
-6. [Error Handling Patterns](#error-handling-patterns)
-7. [Performance Optimization](#performance-optimization)
+1. [📱 Android Enterprise Application API](#android-enterprise-application-api) - Complete Android API with enterprise features
+2. [🖥️ PC Controller Enterprise API](#pc-controller-enterprise-api) - Python-based enterprise hub API
+3. [🔧 Core Libraries Enterprise API](#core-libraries-enterprise-api) - Advanced library integration
+4. [🌐 Network Protocol Enterprise API](#network-protocol-enterprise-api) - Secure networking and cloud integration
+5. [☁️ Cloud Integration API](#cloud-integration-api) - AWS, Azure, GCP enterprise patterns
+6. [🤖 ML/AI Integration API](#ml-ai-integration-api) - Machine learning and AI capabilities
+7. [📡 Real-Time Streaming API](#real-time-streaming-api) - WebRTC and live analytics
+8. [🔄 Enterprise Integration Examples](#enterprise-integration-examples) - Production deployment patterns
+9. [🛡️ Security & Error Handling](#security-error-handling) - Enterprise security patterns
+10. [⚡ Performance Optimization](#performance-optimization) - Enterprise optimization strategies
 
 ---
 
-## Android Application API
+## 📱 Android Enterprise Application API
 
-### Thermal-IR Module API
+### 🔥 Thermal-IR Module Enterprise API
 
-#### Core Thermal Processing Interface
+#### Enterprise Core Thermal Processing Interface
 ```kotlin
-interface ThermalProcessingAPI {
+interface EnterpriseThermalProcessingAPI {
     /**
-     * Initialize thermal camera with specified configuration
-     * @param deviceType Type of thermal camera device
-     * @param config Camera configuration parameters
-     * @return Result containing camera handle or error
+     * Initialize enterprise thermal camera with advanced configuration
+     * Supports multi-device management, cloud integration, and ML processing
+     * @param deviceType Type of thermal camera device (TC001, TC007, TS004, HIK)
+     * @param enterpriseConfig Enterprise configuration with cloud credentials
+     * @param mlConfig Machine learning configuration for real-time inference
+     * @return Result containing enterprise camera handle or detailed error information
      */
     suspend fun initializeThermalCamera(
         deviceType: ThermalDeviceType,

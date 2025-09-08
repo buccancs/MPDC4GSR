@@ -1,33 +1,47 @@
-# Thermal-IR Module Documentation
+# 🔥 Enterprise Thermal-IR Module Documentation
 
-## Overview
+## 🎯 Overview
 
-The `thermal-ir` module is the primary thermal imaging component of the IRCamera platform, providing comprehensive thermal camera integration and real-time processing capabilities.
+The **Enterprise Thermal-IR Module** is the flagship thermal imaging component of the IRCamera platform, providing comprehensive multi-device thermal camera integration, real-time ML-powered processing capabilities, cloud integration, advanced analytics, and enterprise-grade performance optimization.
 
-## Architecture
+## 🏗️ Enterprise Architecture
 
 ```mermaid
 graph TB
-    subgraph "thermal-ir Module"
-        ThermalActivity[Thermal Activity]
-        ThermalViewModel[Thermal ViewModel]
-        ThermalRepository[Thermal Repository]
-        CameraController[Camera Controller]
-        ImageProcessor[Image Processor]
-        TemperatureAnalyzer[Temperature Analyzer]
+    subgraph "🔥 Enterprise thermal-ir Module"
+        ThermalActivity[Enterprise Thermal Activity<br/>Material 3 + Multi-Window]
+        ThermalViewModel[Advanced Thermal ViewModel<br/>Coroutines + LiveData + ML]
+        ThermalRepository[Enterprise Repository<br/>Multi-Source + Cloud Sync]
+        CameraController[Multi-Camera Controller<br/>TC001/TC007/TS004/HIK]
+        ImageProcessor[AI Image Processor<br/>Real-Time ML Enhancement]
+        TemperatureAnalyzer[Advanced Temperature Analyzer<br/>Predictive Analytics]
+        CloudIntegrator[Cloud Integrator<br/>AWS/Azure/GCP]
+        MLPipeline[ML Pipeline<br/>Real-Time Inference]
     end
     
-    subgraph "Dependencies"
-        LibIR[libir Library]
-        LibCom[libcom Library]
-        LibUI[libui Library]
-        CameraX[CameraX]
+    subgraph "🔧 Enterprise Dependencies"
+        LibIR[libir Enterprise Library<br/>GPU-Accelerated Processing]
+        LibCom[libcom Advanced Library<br/>Secure Cloud Communication]
+        LibUI[libui Enterprise Library<br/>Adaptive UI Framework]
+        CameraX[CameraX Advanced<br/>Multi-Camera API]
+        TensorFlow[TensorFlow Lite<br/>Edge ML Processing]
+        OpenCV[OpenCV Advanced<br/>Computer Vision]
     end
     
-    subgraph "Hardware"
-        TC001[TC001 Camera]
-        TC007[TC007 Camera]
-        External[External Cameras]
+    subgraph "🔌 Enterprise Hardware Support"
+        TC001[TC001 Professional<br/>256×192 + 60FPS]
+        TC007[TC007 Wireless<br/>384×288 + Battery]
+        TS004[TS004 Network<br/>640×480 + IP Protocol]
+        HIKVision[HIKVision Enterprise<br/>1024×768 + Professional]
+        CustomHW[Custom Hardware<br/>SDK Integration]
+    end
+    
+    subgraph "☁️ Cloud & Enterprise Services"
+        AWS[AWS Integration<br/>S3 + Lambda + EC2]
+        Azure[Azure Services<br/>Blob + Functions + VMs]
+        GCP[Google Cloud<br/>Storage + ML + Compute]
+        EnterpriseDB[Enterprise Database<br/>PostgreSQL + MongoDB]
+    end
     end
     
     ThermalActivity --> ThermalViewModel

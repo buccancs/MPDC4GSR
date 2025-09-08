@@ -262,7 +262,7 @@ class GSRRawImageViewActivity : AppCompatActivity() {
 
     private fun showDetailedInfo() {
         // Extract EXIF data from DNG file using ExifInterface
-        try {
+        val exifData = try {
             val exifInterface = ExifInterface(gsrItem.filePath)
             val info = StringBuilder()
             
@@ -295,14 +295,18 @@ class GSRRawImageViewActivity : AppCompatActivity() {
                 info.append("Dimensions: ${width}x${height}\n")
             }
             
-            return if (info.isNotEmpty()) info.toString() else "No EXIF data available"
+            if (info.isNotEmpty()) info.toString() else "No EXIF data available"
             
         } catch (e: Exception) {
             Log.e("GSRRawImageView", "Error reading EXIF data", e)
-            return "Error reading EXIF data: ${e.message}"
+            "Error reading EXIF data: ${e.message}"
         }
+        
         val detailedInfo =
             """
+            EXIF Data:
+            $exifData
+            
             Technical Details:
             
             Camera Settings:

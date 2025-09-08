@@ -346,10 +346,10 @@ class RecordingService : LifecycleService() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("IRCamera Recording")
             .setContentText(contentText)
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Use appropriate icon
+            .setSmallIcon(android.R.drawable.ic_media_play) // Use system icon for recording
             .setOngoing(true)
             .addAction(
-                R.drawable.ic_launcher_foreground, // Use appropriate stop icon
+                android.R.drawable.ic_media_pause, // Use system stop icon
                 "Stop",
                 stopPendingIntent
             )

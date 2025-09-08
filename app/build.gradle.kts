@@ -170,18 +170,19 @@ android {
     }
 }
 
-// Dependency resolution strategy to fix Guava conflicts
+// Dependency resolution strategy to fix Guava conflicts and add ListenableFuture
 configurations.all {
     resolutionStrategy {
         force("com.google.guava:guava:31.1-android")
-        exclude(group = "com.google.guava", module = "listenablefuture")
-        exclude(group = "com.google.guava", module = "guava-jdk5")
     }
 }
 
 dependencies {
     // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+    
+    // Guava for CameraX ListenableFuture support
+    implementation("com.google.guava:guava:31.1-android")
     
     // Core consolidated modules
     implementation(project(":component:thermal"))      // Consolidated thermal functionality

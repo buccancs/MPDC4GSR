@@ -130,6 +130,8 @@ enum class ErrorType {
     PERMISSION_DENIED,
     SYNC_FAILED,
     DATA_CORRUPTION,
+    DEVICE_ERROR,
+    STORAGE_ERROR,
     UNKNOWN
 }
 

@@ -1,10 +1,12 @@
 package com.topdon.tc001
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.SparseArray
 import android.view.KeyEvent
 import android.view.View
@@ -22,6 +24,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.topdon.lib.core.navigation.NavigationManager
 import com.blankj.utilcode.util.AppUtils
 import com.elvishew.xlog.XLog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 // import com.example.suplib.wrapper.SupHelp // TODO: Fix SupHelp library access
 import com.example.thermal_lite.activity.IRThermalLiteActivity
 import com.hjq.permissions.OnPermissionCallback
@@ -61,8 +65,6 @@ import com.csl.irCamera.BuildConfig
 // import com.zoho.commons.LauncherModes
 // import com.zoho.commons.LauncherProperties
 // import com.zoho.salesiqembed.ZohoSalesIQ
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
@@ -129,7 +131,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             try {
                 val supHelpClass = Class.forName("com.example.suplib.wrapper.SupHelp")
                 val initMethod = supHelpClass.getMethod("init", Context::class.java)
-                initMethod.invoke(null, this)
+                initMethod.invoke(null, this@MainActivity)
             } catch (e: Exception) {
                 // SupHelp library not available, continue without it
                 Log.w("MainActivity", "SupHelp library not available: ${e.message}")

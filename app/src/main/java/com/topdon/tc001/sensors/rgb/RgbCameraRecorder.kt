@@ -12,6 +12,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.google.common.util.concurrent.ListenableFuture
 import com.topdon.tc001.sensors.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -317,11 +318,11 @@ class RgbCameraRecorder(
     override fun getStatusFlow(): Flow<RecordingStatus> = _statusFlow.asSharedFlow()
     override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
 
-    override fun getRecordingStats(): RecordingStats {
+    override fun getRecordingStats(): com.topdon.tc001.sensors.RecordingStats {
         val currentTime = System.nanoTime()
         val sessionDuration = if (recordingStartTime > 0) (currentTime - recordingStartTime) / 1_000_000 else 0L
         
-        return RecordingStats(
+        return com.topdon.tc001.sensors.RecordingStats(
             sensorId = sensorId,
             sensorType = sensorType,
             sessionDurationMs = sessionDuration,

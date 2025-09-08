@@ -494,6 +494,152 @@ gsr_session_YYYYMMDD_HHMMSS/
 └── session_info.json     # Recording metadata
 ```
 
+## 🔄 Advanced System Diagrams
+
+### Communication Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant A as Android App
+    participant PC as PC Controller
+    participant TC as Thermal Camera
+    participant S as Shimmer GSR
+    participant D as Data Storage
+    
+    A->>PC: Initial Connection Request
+    PC->>A: Authentication Challenge
+    A->>PC: Authentication Response
+    PC->>A: Connection Established
+    
+    A->>TC: Initialize Camera
+    TC->>A: Camera Ready
+    A->>S: Connect BLE GSR
+    S->>A: BLE Connected
+    
+    PC->>A: Start Recording Session
+    A->>TC: Begin Thermal Capture
+    A->>S: Begin GSR Recording
+    
+    loop Recording Session
+        TC->>A: Thermal Frame Data
+        S->>A: GSR Data Point
+        A->>PC: Synchronized Data Packet
+        PC->>D: Store Data with Timestamp
+    end
+    
+    PC->>A: Stop Recording Session
+    A->>TC: Stop Thermal Capture
+    A->>S: Stop GSR Recording
+    A->>PC: Session Complete
+    PC->>D: Finalize Data Export
+```
+
+### Component Lifecycle State Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> Initializing
+    Initializing --> Idle: Setup Complete
+    Idle --> Connecting: User Connects Device
+    Connecting --> Connected: Device Ready
+    Connecting --> Error: Connection Failed
+    Connected --> Recording: Start Session
+    Recording --> Paused: User Pause
+    Paused --> Recording: Resume
+    Recording --> Processing: Stop Session
+    Processing --> Idle: Processing Complete
+    Error --> Idle: Reset/Retry
+    Connected --> Idle: Disconnect
+    Idle --> [*]: App Close
+```
+
+### Deployment Architecture
+
+```mermaid
+deployment
+    node "Android Device" {
+        component "IRCamera App" {
+            [thermal-ir]
+            [gsr-recording]
+            [libir]
+            [libcom]
+        }
+        database "Local Storage"
+    }
+    
+    node "PC Controller" {
+        component "Python Hub" {
+            [Session Manager]
+            [Data Aggregator]
+            [GSR Ingestor]
+        }
+        database "Centralized Storage"
+    }
+    
+    node "Thermal Hardware" {
+        [TC001 Camera]
+        [TC007 Camera]
+        [TS004 Camera]
+        [HIKVision Camera]
+    }
+    
+    node "BLE Sensors" {
+        [Shimmer3 GSR]
+        [Custom Sensors]
+    }
+    
+    [IRCamera App] --> [Python Hub]: TCP/IP Protocol
+    [IRCamera App] --> [TC001 Camera]: USB/Wireless
+    [IRCamera App] --> [Shimmer3 GSR]: BLE
+    [Python Hub] --> [Centralized Storage]: File I/O
+```
+
+### Class Relationship Diagram
+
+```mermaid
+classDiagram
+    class ThermalProcessor {
+        +processFrame(frame: ThermalFrame)
+        +applyPseudoColor(frame: ThermalFrame)
+        +extractTemperatureData(frame: ThermalFrame)
+        +calibrateDevice(device: ThermalDevice)
+    }
+    
+    class GSRRecorder {
+        +connectDevice(address: String)
+        +startRecording()
+        +stopRecording()
+        +processGSRData(data: ByteArray)
+    }
+    
+    class DataSynchronizer {
+        +synchronizeTimestamps(dataList: List~SensorData~)
+        +calculateOffset(deviceTime: Long, referenceTime: Long)
+        +alignSensorStreams(streams: Map~String, Stream~)
+    }
+    
+    class SessionManager {
+        +createSession(config: SessionConfig)
+        +addDevice(device: SensorDevice)
+        +startRecording()
+        +stopRecording()
+        +exportData(format: ExportFormat)
+    }
+    
+    class NetworkController {
+        +establishConnection(endpoint: String)
+        +sendCommand(command: Command)
+        +receiveData(): SensorData
+        +handleDisconnection()
+    }
+    
+    ThermalProcessor --> SessionManager: reports to
+    GSRRecorder --> SessionManager: reports to
+    DataSynchronizer --> SessionManager: used by
+    NetworkController --> SessionManager: communicates with
+    SessionManager --> DataSynchronizer: coordinates
+```
+
 ## 🔌 Hardware Integration
 
 ### Supported Thermal Cameras
@@ -558,14 +704,33 @@ python -m pytest test_system_integration.py
 python test_comprehensive.py
 ```
 
-## 📚 Documentation
+## 📚 Comprehensive Documentation
 
+### 🚀 Getting Started
 - **[Quick Start Guide](docs/QUICK_START.md)** - Essential setup and usage
-- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Development procedures and architecture  
 - **[User Manual](docs/USER_MANUAL.md)** - Complete user documentation
-- **[API Reference](docs/API_REFERENCE.md)** - Protocol and SDK documentation
-- **[Architecture Guide](docs/ARCHITECTURE.md)** - Detailed system architecture
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+
+### 🏗️ Architecture & Development
+- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Development procedures and architecture  
+- **[Architecture Guide](docs/ARCHITECTURE.md)** - Detailed system architecture
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - Contribution guidelines and standards
+
+### 📖 Technical References
+- **[Technical Specifications](docs/TECHNICAL_SPECIFICATIONS.md)** - Complete technical specifications for all components
+- **[API Reference](docs/API_REFERENCE.md)** - Basic protocol and SDK documentation
+- **[Advanced API Documentation](docs/ADVANCED_API_DOCUMENTATION.md)** - Comprehensive API with detailed examples
+
+### 🧩 Component Documentation
+- **[Thermal-IR Module](docs/modules/THERMAL_IR_MODULE.md)** - Primary thermal imaging component
+- **[GSR Recording Module](docs/modules/GSR_RECORDING_MODULE.md)** - Shimmer3 GSR sensor integration
+- **[LibIR Library](docs/modules/LIBIR_LIBRARY.md)** - Core thermal processing algorithms
+- **[PC Controller](docs/modules/PC_CONTROLLER.md)** - Python-based central hub
+
+### 📊 Additional Resources
+- **[Performance Benchmarks](docs/PERFORMANCE_BENCHMARKS.md)** - System performance analysis
+- **[Security Guidelines](docs/SECURITY_GUIDELINES.md)** - Security implementation guide
+- **[Deployment Guide](docs/DEPLOYMENT_GUIDE.md)** - Production deployment instructions
 
 ## 🤝 Contributing
 

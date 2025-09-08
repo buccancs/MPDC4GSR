@@ -180,3 +180,7 @@ BUILD_*.md
 GRADLE_*.md
 *MIGRATION*.md
 
+# LaTeX backup files
+*.bak*
+docs/latex/*.bak*
+

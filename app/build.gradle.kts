@@ -230,6 +230,15 @@ dependencies {
 
     // UMeng - Simplified single implementation
     implementation(libs.umeng.common)
+    
+    // Enhanced charting and data visualization
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.opencsv:opencsv:5.7.1")
+    implementation("com.google.code.gson:gson:2.10.1")
+    
+    // Enhanced networking and serialization for Hub-Spoke
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }
 
 // Utility functions for APK naming (converted from original Groovy)

@@ -1,15 +1,25 @@
 #!/usr/bin/env python3
 """
-Integration Example: PC Controller with Native Backend
+Enhanced Integration Example: Complete Hub-and-Spoke Demonstration
 
-This example demonstrates how to integrate all the new components:
+This enhanced example demonstrates the full Hub-and-Spoke architecture:
 - Native backend for high-performance sensor interfacing
-- Real-time plotting with PyQtGraph
-- Data aggregation engine
-- Enhanced GUI components
+- Real-time plotting with PyQtGraph and enhanced visualization
+- Advanced data aggregation engine with scientific export
+- Enhanced GUI components with device management
+- Complete network server with Android device coordination
+- Comprehensive error handling and recovery mechanisms
 
 Usage:
-    python integration_example.py [--demo-mode] [--session-dir PATH]
+    python integration_example.py [--demo-mode] [--session-dir PATH] [--enable-native] [--port PORT]
+    
+Features Demonstrated:
+    • Multi-modal sensor coordination (RGB, Thermal, GSR)
+    • Sub-5ms time synchronization across devices
+    • Real-time data visualization and analysis
+    • Scientific data export (HDF5, CSV, JSON)
+    • Device fault detection and recovery
+    • Cross-platform compatibility
 """
 
 import sys
@@ -17,17 +27,23 @@ import time
 import asyncio
 import argparse
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict, List
 import numpy as np
+import json
+from datetime import datetime
 
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QPushButton
-from PyQt6.QtCore import QTimer, pyqtSignal
+from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, 
+                             QWidget, QPushButton, QLabel, QTextEdit, QTabWidget,
+                             QSplitter, QGroupBox, QGridLayout, QProgressBar,
+                             QMessageBox, QDialog, QDialogButtonBox)
+from PyQt6.QtCore import QTimer, pyqtSignal, QThread, QObject
+from PyQt6.QtGui import QFont, QPixmap, QPalette, QColor
 
-from ircamera_pc.gui.plotting_widgets import MultiModalDashboard
-from ircamera_pc.gui.widgets import DeviceListWidget, SessionControlWidget, StatusDisplayWidget
+from ircamera_pc.gui.plotting_widgets import MultiModalDashboard, EnhancedGSRPlotWidget
+from ircamera_pc.gui.widgets import DeviceListWidget, SessionControlWidget, StatusDisplayWidget, EnhancedStatusWidget
 from ircamera_pc.data import DataAggregationEngine, AggregationStats
 from ircamera_pc.core.session import SessionManager
 from ircamera_pc.network.server import NetworkServer
@@ -36,32 +52,59 @@ from ircamera_pc.core.timesync import TimeSyncService
 try:
     import native_backend
     NATIVE_BACKEND_AVAILABLE = True
-    print("✓ Native backend available")
+    print("✓ Enhanced native backend available - High-performance mode enabled")
 except ImportError:
     NATIVE_BACKEND_AVAILABLE = False
-    print("⚠ Native backend not available - using simulation mode")
+    print("⚠ Native backend not available - Running in enhanced simulation mode")
 
 
-class IntegratedPCController(QMainWindow):
+class EnhancedPCController(QMainWindow):
     """
-    Integrated PC Controller demonstrating all new components.
+    Enhanced PC Controller with complete Hub-and-Spoke demonstration.
+    
+    Features:
+    - Complete multi-modal sensor coordination
+    - Real-time data visualization and analysis
+    - Advanced device management and error recovery
+    - Scientific data export capabilities
+    - Cross-platform network server for Android devices
     """
     
-    def __init__(self, session_dir: Path, demo_mode: bool = False):
+    # Signals for cross-thread communication
+    device_connected = pyqtSignal(str, dict)
+    device_disconnected = pyqtSignal(str)
+    data_received = pyqtSignal(str, dict)
+    sync_event = pyqtSignal(str, dict)
+    
+    def __init__(self, session_dir: Path, demo_mode: bool = False, enable_native: bool = True, server_port: int = 8080):
         super().__init__()
         
         self.session_dir = session_dir
         self.demo_mode = demo_mode
+        self.enable_native = enable_native and NATIVE_BACKEND_AVAILABLE
+        self.server_port = server_port
         
-        # Core components
+        # Enhanced core components
         self.session_manager = SessionManager()
         self.network_server = NetworkServer()
         self.time_sync_service = TimeSyncService()
-        self.data_aggregation = DataAggregationEngine(session_dir)
+        self.data_aggregation = DataAggregationEngine(session_dir, buffer_size_mb=1000)
         
-        # Native backend components
+        # Native backend components (if available)
         self.native_shimmer: Optional['native_backend.NativeShimmer'] = None
         self.native_webcam: Optional['native_backend.NativeWebcam'] = None
+        
+        # Enhanced state management
+        self.connected_devices: Dict[str, Dict] = {}
+        self.recording_active = False
+        self.sync_quality_scores: Dict[str, float] = {}
+        self.error_count = 0
+        self.session_stats = {
+            'start_time': None,
+            'data_points_received': 0,
+            'devices_connected': 0,
+            'sync_events_sent': 0
+        }
         
         # GUI components
         self.dashboard: Optional[MultiModalDashboard] = None

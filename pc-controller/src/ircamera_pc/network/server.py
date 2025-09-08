@@ -539,7 +539,37 @@ class NetworkServer:
             f"Received GSR data batch from {device_id}: {len(data_points)} points"
         )
 
-        # TODO: Forward to GSR ingestor
+        # Forward to GSR ingestor for processing
+        try:
+            from ..core.gsr_ingestor import GSRIngestor, GSRSample, GSRMode
+            
+            # Convert data points to GSR samples
+            gsr_samples = []
+            for point in data_points:
+                sample = GSRSample(
+                    timestamp=point.get("timestamp", time.time()),
+                    value=point.get("value", 0.0),
+                    quality=point.get("quality", 100),
+                    device_id=device_id
+                )
+                gsr_samples.append(sample)
+            
+            # Get or create GSR ingestor instance
+            if not hasattr(self, "_gsr_ingestor"):
+                self._gsr_ingestor = GSRIngestor()
+            
+            # Process the data batch
+            await self._gsr_ingestor.process_data_batch(
+                session_id=message.get("session_id"),
+                device_id=device_id,
+                samples=gsr_samples
+            )
+            
+            logger.debug(f"Forwarded {len(gsr_samples)} GSR samples to ingestor")
+            
+        except Exception as e:
+            logger.warning(f"Failed to forward GSR data to ingestor: {e}")
+            # Continue processing even if ingestor fails
 
         return create_message("ack", ack_for="gsr_data_batch", status="success")
 

@@ -1,125 +1,562 @@
-# MPDC4GSR - Multi-Modal Physiological Sensing Platform
+# IRCamera - Multi-Device Thermal Imaging Platform
 
-[![Android Build](https://img.shields.io/badge/Android-Release--Only-green.svg)](https://developer.android.com/)
-[![Shimmer3](https://img.shields.io/badge/Shimmer3-GSR%20Integrated-blue.svg)](https://www.shimmersensing.com/)
-[![PC Controller](https://img.shields.io/badge/PC%20Controller-PyQt6-orange.svg)](https://www.qt.io/)
+[![Android Build](https://img.shields.io/badge/Android-Kotlin-green.svg)](https://developer.android.com/)
+[![PC Controller](https://img.shields.io/badge/PC%20Controller-Python-blue.svg)](https://www.python.org/)
+[![Thermal Devices](https://img.shields.io/badge/Thermal-TC001%20%7C%20TS004%20%7C%20HIK-orange.svg)](https://www.topdon.com/)
 
-A comprehensive multi-modal physiological sensing platform that synchronously records RGB video, thermal imagery, and GSR (Galvanic Skin Response) data for research applications.
+A comprehensive thermal imaging application platform supporting multiple thermal camera devices with advanced imaging capabilities, data recording, and cross-platform synchronization.
 
 ## 🎯 Overview
 
-The MPDC4GSR platform consists of two main components:
-- **Android Sensor Node**: Mobile data collection with RGB/thermal cameras and Shimmer3 GSR sensors
-- **PC Controller**: Central hub for device management, data aggregation, and real-time monitoring
+IRCamera is a modular thermal imaging platform that consists of:
+- **Android Application**: Feature-rich mobile thermal imaging with multi-device support
+- **PC Controller**: Python-based hub for advanced data processing and device coordination
+- **Multi-Device Support**: TC001, TC007, TS004, HIKVision thermal cameras
+- **GSR Integration**: Shimmer3 sensor support for physiological data collection
 
 ### Key Features
 
-- **Multi-Modal Recording**: Synchronized RGB (4K60FPS), thermal, and GSR data capture
-- **Real-Time Synchronization**: Nanosecond precision timing across all data streams  
-- **Shimmer3 Integration**: Official SDK integration for authentic GSR data acquisition
-- **Network Discovery**: Automatic device pairing and remote control capabilities
-- **Professional Research**: Designed for physiological stress analysis and machine learning research
+- **Multi-Device Thermal Imaging**: Support for various thermal camera models
+- **Real-Time Processing**: Live thermal image processing and analysis
+- **Data Synchronization**: Cross-platform data collection and synchronization
+- **Advanced Analysis**: 3D thermal reconstruction, temperature monitoring, and reporting
+- **Modular Architecture**: Component-based design for easy feature extension
+
+## 🏗️ System Architecture
+
+The IRCamera platform uses a modular, component-based architecture designed for flexibility and scalability:
+
+```mermaid
+graph TB
+    subgraph "Android Application Layer"
+        MainApp[Main Application]
+        UI[User Interface Layer]
+        Services[Background Services]
+    end
+    
+    subgraph "Feature Components"
+        ThermalIR[Thermal-IR Module]
+        ThermalLite[Thermal-Lite Module]
+        GSRRec[GSR Recording Module]
+        House[House Analysis Module]
+        Edit3D[3D Edit Module]
+        Transfer[Transfer Module]
+        User[User Management Module]
+        Pseudo[Pseudo Color Module]
+        Common[Common Components]
+    end
+    
+    subgraph "Core Libraries"
+        LibApp[App Core Library]
+        LibCom[Communication Library] 
+        LibIR[IR Processing Library]
+        LibUI[UI Components Library]
+        LibHIK[HIKVision Integration]
+        LibMatrix[Matrix Processing]
+        LibMenu[Menu Components]
+    end
+    
+    subgraph "Hardware Integration"
+        BLE[BLE Module]
+        RangeSeek[Range Seek Bar]
+        Cameras[Camera Interfaces]
+    end
+    
+    subgraph "PC Controller"
+        PCCore[PC Core Engine]
+        GSRIngest[GSR Data Ingestor]
+        NetSync[Network Sync]
+        DataProc[Data Processing]
+    end
+    
+    MainApp --> UI
+    MainApp --> Services
+    UI --> ThermalIR
+    UI --> ThermalLite
+    UI --> GSRRec
+    UI --> House
+    UI --> Edit3D
+    UI --> Transfer
+    UI --> User
+    UI --> Pseudo
+    
+    ThermalIR --> LibIR
+    ThermalLite --> LibIR
+    GSRRec --> LibCom
+    House --> LibApp
+    Edit3D --> LibMatrix
+    Transfer --> LibCom
+    User --> LibApp
+    Pseudo --> LibIR
+    Common --> LibUI
+    
+    Services --> BLE
+    UI --> RangeSeek
+    LibCom --> Cameras
+    
+    LibCom <-->|Network Protocol| PCCore
+    GSRIngest --> NetSync
+    NetSync --> DataProc
+```
+
+## 📱 Component Architecture
+
+### Android App Module Structure
+
+```mermaid
+graph LR
+    subgraph "Core Application"
+        App[Main App Module]
+        Common[Common Library]
+    end
+    
+    subgraph "Thermal Processing Components"
+        TIR[thermal-ir]
+        TLite[thermal-lite]
+        Thermal[thermal]
+        Pseudo[pseudo]
+    end
+    
+    subgraph "Data & Analysis Components"
+        GSR[gsr-recording]
+        House[house]
+        Edit3D[edit3d]
+        Transfer[transfer]
+    end
+    
+    subgraph "User Interface Components"
+        User[user]
+        CommonComp[CommonComponent]
+        RangeSeek[RangeSeekBar]
+    end
+    
+    subgraph "Core Libraries"
+        LibApp[libapp]
+        LibCom[libcom]
+        LibIR[libir]
+        LibUI[libui]
+        LibHIK[libhik]
+        LibMatrix[libmatrix]
+        LibMenu[libmenu]
+    end
+    
+    subgraph "Hardware Integration"
+        BLE[BleModule]
+    end
+    
+    App --> TIR
+    App --> TLite
+    App --> Thermal
+    App --> GSR
+    App --> House
+    App --> Edit3D
+    App --> Transfer
+    App --> User
+    
+    TIR --> LibIR
+    TLite --> LibIR
+    Thermal --> LibIR
+    Pseudo --> LibIR
+    
+    GSR --> LibCom
+    Transfer --> LibCom
+    House --> LibApp
+    User --> LibApp
+    
+    Edit3D --> LibMatrix
+    CommonComp --> LibUI
+    User --> LibMenu
+    
+    LibCom --> BLE
+    Common --> LibApp
+```
+
+### PC Controller Architecture
+
+```mermaid
+graph TB
+    subgraph "PC Controller Application"
+        Main[main.py]
+        Core[Core Engine]
+        GUI[GUI Layer]
+        Network[Network Layer]
+        Utils[Utilities]
+        Tests[Test Suite]
+    end
+    
+    subgraph "Core Components"
+        GSRIngest[GSR Data Ingestor]
+        SessionMgr[Session Manager]
+        DataAgg[Data Aggregator]
+        TimSync[Time Synchronization]
+    end
+    
+    subgraph "External Integrations"
+        AndroidApp[Android App]
+        ThermalCam[Thermal Cameras]
+        ShimmerGSR[Shimmer GSR Sensors]
+        Storage[Data Storage]
+    end
+    
+    Main --> Core
+    Main --> GUI
+    Core --> GSRIngest
+    Core --> SessionMgr
+    Core --> DataAgg
+    Core --> TimSync
+    
+    Network <-->|TCP/IP Protocol| AndroidApp
+    GSRIngest <-->|BLE/Serial| ShimmerGSR
+    GUI -->|Control Commands| Core
+    DataAgg --> Storage
+    
+    SessionMgr -->|Coordinate| ThermalCam
+    TimSync -->|Sync Protocol| AndroidApp
+```
+
+## 🔧 Feature Breakdown by Module
+
+### Thermal Processing Modules
+
+| Module | Purpose | Key Features |
+|--------|---------|--------------|
+| **thermal-ir** | Main thermal imaging | Real-time processing, temperature analysis, monitoring |
+| **thermal-lite** | Lightweight thermal | Optimized for lower-end devices, basic thermal functions |
+| **thermal** | Core thermal engine | Base thermal processing algorithms and utilities |
+| **pseudo** | Pseudo coloring | False color mapping, thermal visualization enhancement |
+
+### Data Collection & Analysis
+
+| Module | Purpose | Key Features |
+|--------|---------|--------------|
+| **gsr-recording** | GSR data capture | Shimmer3 integration, physiological data recording |
+| **house** | Building analysis | Thermal analysis for building inspection, energy auditing |
+| **edit3d** | 3D reconstruction | 3D thermal model generation and editing |
+| **transfer** | Data management | File transfer, synchronization, data export |
+
+### User Interface & Controls
+
+| Module | Purpose | Key Features |
+|--------|---------|--------------|
+| **user** | User management | Settings, preferences, user profiles |
+| **CommonComponent** | Shared UI elements | Reusable components, common widgets |
+| **RangeSeekBar** | Custom controls | Range selection, threshold setting |
+
+### Core Libraries
+
+| Library | Purpose | Key Features |
+|---------|---------|--------------|
+| **libapp** | Application core | Core app functionality, base classes |
+| **libcom** | Communication | Network protocols, device communication |
+| **libir** | IR processing | Thermal image processing algorithms |
+| **libui** | UI framework | UI components and styling |
+| **libhik** | HIKVision support | HIKVision camera integration |
+| **libmatrix** | Matrix operations | Mathematical operations for image processing |
+| **libmenu** | Menu system | Application menu and navigation |
+
+## 🔄 Data Flow Architecture
+
+```mermaid
+flowchart TD
+    subgraph "Hardware Layer"
+        TC001[TC001 Camera]
+        TC007[TC007 Camera] 
+        TS004[TS004 Camera]
+        HIK[HIKVision Camera]
+        Shimmer[Shimmer3 GSR]
+        RGB[RGB Camera]
+    end
+    
+    subgraph "Android Sensor Processing"
+        BLEMod[BLE Module]
+        ThermalProc[Thermal Processing]
+        GSRProc[GSR Processing]
+        ImageProc[Image Processing]
+        DataSync[Data Synchronization]
+    end
+    
+    subgraph "PC Controller Hub"
+        NetRx[Network Receiver]
+        GSRIngest[GSR Ingestor]
+        DataAgg[Data Aggregator]
+        SessionCtrl[Session Controller]
+        Storage[Data Storage]
+    end
+    
+    subgraph "Output & Analysis"
+        ThermalVideo[Thermal Video]
+        GSRData[GSR Data CSV]
+        RawImages[Raw Images]
+        Analysis[Analysis Reports]
+        Export[Data Export]
+    end
+    
+    TC001 --> ThermalProc
+    TC007 --> ThermalProc
+    TS004 --> ThermalProc
+    HIK --> ThermalProc
+    Shimmer --> BLEMod
+    RGB --> ImageProc
+    
+    BLEMod --> GSRProc
+    ThermalProc --> DataSync
+    GSRProc --> DataSync
+    ImageProc --> DataSync
+    
+    DataSync -->|Network Protocol| NetRx
+    NetRx --> DataAgg
+    NetRx --> GSRIngest
+    DataAgg --> SessionCtrl
+    GSRIngest --> SessionCtrl
+    SessionCtrl --> Storage
+    
+    Storage --> ThermalVideo
+    Storage --> GSRData
+    Storage --> RawImages
+    Storage --> Analysis
+    Storage --> Export
+```
 
 ## 🚀 Quick Start
 
-### Android App
+### Prerequisites
+- Android Studio 4.0+ with Kotlin support
+- Python 3.8+ for PC Controller
+- Supported thermal camera device
+- Android device with API 21+
+
+### Building the Android Application
+
 ```bash
-# Build and install the Android application
-./gradlew :app:assembleRelease
-adb install app/build/outputs/apk/release/app-release.apk
-```
-
-### PC Controller
-```bash
-# Set up the Python environment
-cd pc-controller
-pip install -r requirements.txt
-python src/main.py
-```
-
-### Basic Usage
-1. **Pair Devices**: Ensure Android device and PC are on the same WiFi network
-2. **Connect Shimmer3**: Pair your Shimmer3 GSR sensor via Bluetooth
-3. **Start Recording**: Launch recording session from PC Controller or Android app
-4. **Data Collection**: Multi-modal data streams to synchronized session folders
-
-## 📱 System Requirements
-
-### Android Device
-- Android 5.0+ (API 21+)
-- Bluetooth 4.0+ for Shimmer3 connectivity
-- Camera2 API support (Level 3 preferred for RAW capture)
-- 8GB+ storage for recording sessions
-
-### PC Controller
-- Python 3.11+
-- PyQt6 GUI framework
-- Windows/Linux/macOS support
-- Network connectivity for device discovery
-
-### Hardware Sensors
-- **Shimmer3 GSR+**: Galvanic skin response sensor
-- **Thermal Camera**: FLIR/Topdon compatible USB cameras
-- **RGB Camera**: Built-in Android camera or external USB cameras
-
-## 🏗️ Architecture
-
-### Hub-and-Spoke Model
-```
-┌─────────────────┐    WiFi/TCP     ┌──────────────────┐
-│   PC Controller │◄──────────────►│  Android Sensor  │
-│     (Hub)       │                │     (Spoke)      │
-└─────────────────┘                └──────────────────┘
-         │                                   │
-         ▼                                   ▼
-┌─────────────────┐                ┌──────────────────┐
-│ Data Aggregation│                │ Sensor Hardware  │
-│ Time Sync       │                │ • RGB Camera     │
-│ Session Control │                │ • Thermal Camera │
-│ Real-time Plots │                │ • Shimmer3 GSR   │
-└─────────────────┘                └──────────────────┘
-```
-
-### Data Synchronization
-- **Time Sync Protocol**: NTP-like handshake for sub-5ms accuracy
-- **Flash Sync**: Visual synchronization for post-processing verification
-- **Unified Timestamps**: All data streams use synchronized nanosecond timestamps
-
-## 📊 Data Output
-
-Each recording session generates:
-```
-session_YYYYMMDD_HHMMSS/
-├── rgb_video.mp4           # 4K60FPS H.264 video
-├── raw_images/             # 30fps DNG raw captures  
-├── thermal_video.mp4       # Infrared video stream
-├── gsr_data.csv           # 128Hz GSR measurements
-├── sync_events.csv        # Cross-modal sync markers
-└── session_metadata.json  # Session configuration
-```
-
-## 🔧 Development
-
-### Building from Source
-```bash
-# Clone repository
+# Clone the repository
 git clone https://github.com/buccancs/IRCamera.git
 cd IRCamera
 
-# Android build (release-only configuration)
-./gradlew clean :app:assembleRelease
+# Build all modules
+./gradlew clean build
 
-# PC Controller setup
+# Build specific release APK
+./gradlew :app:assembleRelease
+
+# Install on connected device
+adb install app/build/outputs/apk/release/app-release.apk
+```
+
+### Setting up PC Controller
+
+```bash
+# Navigate to PC controller directory
 cd pc-controller
-pip install -e .
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Run the application
 python src/main.py
 ```
 
+### Basic Usage Flow
+
+1. **Device Connection**: Connect thermal camera via USB or network
+2. **App Launch**: Start Android application and select device type
+3. **PC Sync** (Optional): Launch PC controller for advanced features
+4. **Recording**: Begin thermal imaging session
+5. **Data Export**: Export collected data for analysis
+
+## 📱 Supported Devices & Features
+
+### Thermal Camera Support
+
+| Device | Module | Features | Notes |
+|--------|---------|----------|-------|
+| **TC001** | thermal-ir | Full thermal imaging, temperature analysis | Primary thermal device |
+| **TC001 Plus** | thermal-ir | Enhanced processing, higher resolution | Advanced features |
+| **TC001 Lite** | thermal-lite | Basic thermal imaging, optimized performance | Entry-level device |
+| **TC007** | thermal-ir | Wireless thermal imaging, battery operation | Portable thermal camera |
+| **TS004** | thermal | Network-connected thermal device | IP-based thermal imaging |
+| **HIKVision** | libhik | Enterprise thermal cameras | Professional-grade devices |
+
+### Android App Features by Module
+
+```mermaid
+mindmap
+  root((IRCamera Features))
+    Thermal Imaging
+      Real-time Processing
+      Temperature Measurement
+      Pseudo Color Mapping
+      Video Recording
+      Image Capture
+    Data Collection
+      GSR Recording
+      Shimmer3 Integration
+      Data Synchronization
+      Session Management
+    Analysis Tools
+      3D Reconstruction
+      Building Analysis
+      Temperature Monitoring
+      Report Generation
+    User Interface
+      Multi-device Support
+      Settings Management
+      Gallery View
+      Data Transfer
+    Hardware Integration
+      BLE Connectivity
+      USB Camera Support
+      Network Protocols
+      Device Discovery
+```
+
+## 🔧 Development Setup
+
+### Project Structure Overview
+
+```
+IRCamera/
+├── app/                    # Main Android application
+├── pc-controller/          # Python PC application
+├── component/              # Feature modules
+│   ├── thermal-ir/         # Main thermal processing
+│   ├── thermal-lite/       # Lightweight thermal
+│   ├── gsr-recording/      # GSR data collection
+│   ├── house/              # Building analysis
+│   ├── edit3d/             # 3D editing tools
+│   ├── transfer/           # Data transfer
+│   ├── user/               # User management
+│   ├── pseudo/             # Pseudo coloring
+│   └── CommonComponent/    # Shared components
+├── lib*/                   # Core libraries
+│   ├── libapp/             # App framework
+│   ├── libcom/             # Communication
+│   ├── libir/              # IR processing
+│   ├── libui/              # UI components
+│   ├── libhik/             # HIKVision integration
+│   ├── libmatrix/          # Matrix operations
+│   └── libmenu/            # Menu system
+├── BleModule/              # Bluetooth integration
+└── RangeSeekBar/           # Custom UI control
+```
+
 ### Key Technologies
-- **Android**: Kotlin, CameraX, BLE, MVVM Architecture
-- **PC Controller**: Python, PyQt6, OpenCV, PyBind11 C++ backend
-- **Communication**: TLS-secured TCP/IP with JSON messaging
-- **Sensors**: Official Shimmer Android API, USB Video Class (UVC)
+
+- **Android Development**: Kotlin, MVVM Architecture, CameraX, Android Architecture Components
+- **PC Controller**: Python 3.8+, GUI frameworks, data processing libraries
+- **Communication**: Network protocols, BLE integration, device synchronization
+- **Image Processing**: Thermal image algorithms, pseudo coloring, matrix operations
+- **Hardware Integration**: Multiple thermal camera APIs, GSR sensor integration
+
+### Adding New Components
+
+1. **Create Module**: Add new module in `component/` directory
+2. **Update Settings**: Add module to `settings.gradle.kts`
+3. **Define Dependencies**: Configure `build.gradle.kts` for the module
+4. **Implement Interface**: Follow existing patterns in similar modules
+5. **Integration**: Wire module into main application
+
+### Development Workflow
+
+```bash
+# 1. Setup development environment
+./gradlew build
+
+# 2. Run tests
+./gradlew test
+
+# 3. Build specific module
+./gradlew :component:thermal-ir:build
+
+# 4. Generate documentation
+./gradlew dokka
+
+# 5. Create release build
+./gradlew assembleRelease
+```
+
+## 📊 Data Output Formats
+
+### Thermal Data
+```
+thermal_session_YYYYMMDD_HHMMSS/
+├── thermal_video.mp4       # Processed thermal video
+├── raw_thermal/            # Raw thermal data frames
+├── temperature_map.csv     # Temperature measurements
+└── metadata.json          # Session configuration
+```
+
+### GSR Data (when using PC Controller)
+```
+gsr_session_YYYYMMDD_HHMMSS/
+├── gsr_data.csv           # Time-series GSR measurements  
+├── events.csv             # Synchronization events
+├── raw_images/            # Synchronized image captures
+└── session_info.json     # Recording metadata
+```
+
+## 🔌 Hardware Integration
+
+### Supported Thermal Cameras
+
+```mermaid
+graph LR
+    subgraph "USB Connected"
+        TC001[TC001 Series]
+        HIK[HIKVision Cameras]
+    end
+    
+    subgraph "Wireless Connected"  
+        TC007[TC007 Wireless]
+        TS004[TS004 Network]
+    end
+    
+    subgraph "Processing Modules"
+        ThermalIR[thermal-ir]
+        ThermalLite[thermal-lite]
+        HIKLib[libhik]
+    end
+    
+    TC001 --> ThermalIR
+    TC007 --> ThermalIR
+    TS004 --> ThermalLite
+    HIK --> HIKLib
+    
+    ThermalIR --> Analysis[Thermal Analysis]
+    ThermalLite --> Analysis
+    HIKLib --> Analysis
+```
+
+### BLE Sensor Integration
+
+The `BleModule` provides:
+- Shimmer3 GSR sensor connectivity
+- Real-time physiological data streaming
+- Data synchronization with thermal capture
+- Multi-sensor coordination
+
+## 🧪 Testing
+
+### Unit Tests
+```bash
+# Run all tests
+./gradlew test
+
+# Test specific module
+./gradlew :component:thermal-ir:test
+
+# Test with coverage
+./gradlew testDebugUnitTestCoverage
+```
+
+### Integration Tests
+```bash
+# PC Controller tests
+cd pc-controller
+python -m pytest test_system_integration.py
+
+# Comprehensive tests
+python test_comprehensive.py
+```
 
 ## 📚 Documentation
 
@@ -127,17 +564,25 @@ python src/main.py
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Development procedures and architecture  
 - **[User Manual](docs/USER_MANUAL.md)** - Complete user documentation
 - **[API Reference](docs/API_REFERENCE.md)** - Protocol and SDK documentation
+- **[Architecture Guide](docs/ARCHITECTURE.md)** - Detailed system architecture
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 
 ## 🤝 Contributing
 
-We welcome contributions to the MPDC4GSR platform:
+We welcome contributions to the IRCamera platform:
 
 1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
+2. **Create** a feature branch (`git checkout -b feature/thermal-enhancement`)
+3. **Commit** your changes (`git commit -m 'Add thermal enhancement feature'`)
+4. **Push** to the branch (`git push origin feature/thermal-enhancement`)
 5. **Open** a Pull Request
+
+### Contribution Guidelines
+
+- Follow existing code style and patterns
+- Add tests for new functionality
+- Update documentation as needed
+- Ensure all builds pass before submitting PR
 
 See **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** for detailed guidelines.
 
@@ -147,12 +592,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Shimmer Research** for official Android SDK and GSR sensor integration
-- **Qt/PyQt** for cross-platform GUI framework
-- **Android CameraX** for advanced camera capabilities
-- **Research Community** for physiological sensing requirements and validation
+- **Topdon Technology** for thermal camera hardware and SDK support
+- **HIKVision** for enterprise thermal camera integration
+- **Shimmer Research** for GSR sensor integration and physiological sensing
+- **Android Community** for CameraX and modern Android development patterns
+- **Open Source Community** for various libraries and tools used in this project
 
 ---
 
-**MPDC4GSR** - Multi-Modal Physiological Data Collection for GSR Analysis  
-*Professional-grade research platform for synchronized physiological sensing*
+**IRCamera** - Advanced Thermal Imaging Platform  
+*Professional thermal imaging with multi-device support and advanced analysis capabilities*

@@ -78,6 +78,7 @@ class TransferJob:
     resume_offset: int
     retry_count: int
     error_message: Optional[str]
+    device_connection: Optional[Any] = None  # Connection to source device
 
     @property
     def progress_percent(self) -> float:
@@ -196,6 +197,7 @@ class FileTransferManager:
                 resume_offset=0,
                 retry_count=0,
                 error_message=None,
+                device_connection=device_conn,  # Store device connection for real file transfer
             )
 
             # Check for partial file to resume
@@ -312,7 +314,7 @@ class FileTransferManager:
 
             logger.info(f"Starting transfer: {job.manifest.filename}")
 
-            # Simulate file transfer (replace with actual network transfer)
+            # Real file transfer implementation using network communication
             await self._transfer_file_chunks(job)
 
             # Verify file integrity if enabled
@@ -383,7 +385,7 @@ class FileTransferManager:
                     # Determine chunk size for this iteration
                     chunk_size = min(self.chunk_size, bytes_remaining)
 
-                    # Simulate reading chunk from device (replace with actual network read)
+                    # Read chunk from device using real network communication
                     chunk_data = await self._read_chunk_from_device(
                         job, bytes_transferred, chunk_size
                     )
@@ -410,15 +412,89 @@ class FileTransferManager:
         self, job: TransferJob, offset: int, size: int
     ) -> bytes:
         """
-        Read a chunk of data from the device
-
-        This is a placeholder - implement actual network communication
+        Read a chunk of data from the device using real network communication
+        
+        Args:
+            job: Transfer job containing device connection info
+            offset: File offset to read from
+            size: Number of bytes to read
+            
+        Returns:
+            Chunk data as bytes
         """
-        # Simulate network delay and data
-        await asyncio.sleep(0.01)  # Simulate network latency
-
-        # Return dummy data for now (replace with actual device communication)
-        return b"x" * size
+        try:
+            # Real network communication to read file chunk from Android device
+            device_conn = job.device_connection
+            if hasattr(device_conn, 'read_file_chunk'):
+                # Use device connection's file reading method
+                return await device_conn.read_file_chunk(
+                    job.manifest.remote_path,
+                    offset,
+                    size
+                )
+            else:
+                # Fallback: use TCP socket communication with Android device
+                request_data = {
+                    "type": "read_file_chunk",
+                    "file_path": job.manifest.remote_path,
+                    "offset": offset,
+                    "size": size,
+                    "session_id": job.manifest.session_id
+                }
+                
+                # Send request to Android device
+                response = await self._send_device_request(device_conn, request_data)
+                
+                if response and response.get("status") == "success":
+                    # Decode base64 data or get binary data
+                    chunk_data = response.get("data", b"")
+                    if isinstance(chunk_data, str):
+                        import base64
+                        chunk_data = base64.b64decode(chunk_data)
+                    return chunk_data
+                else:
+                    raise Exception(f"Device read failed: {response.get('error', 'Unknown error')}")
+                    
+        except Exception as e:
+            logger.error(f"Failed to read chunk from device: {e}")
+            raise
+    
+    async def _send_device_request(self, device_conn: Any, request_data: dict) -> dict:
+        """
+        Send request to Android device and get response
+        
+        Args:
+            device_conn: Device connection object
+            request_data: Request data as dict
+            
+        Returns:
+            Response data as dict
+        """
+        try:
+            import json
+            
+            # Convert request to JSON
+            request_json = json.dumps(request_data)
+            
+            # Send via device connection
+            if hasattr(device_conn, 'send_json'):
+                return await device_conn.send_json(request_data)
+            elif hasattr(device_conn, 'writer'):
+                # Direct socket communication
+                device_conn.writer.write(request_json.encode('utf-8'))
+                await device_conn.writer.drain()
+                
+                # Read response
+                response_data = await device_conn.reader.read(65536)
+                response_json = response_data.decode('utf-8')
+                return json.loads(response_json)
+            else:
+                # Fallback error
+                raise Exception("No valid device communication method available")
+                
+        except Exception as e:
+            logger.error(f"Device request failed: {e}")
+            return {"status": "error", "error": str(e)}
 
     async def _update_progress(self, job: TransferJob):
         """Update transfer progress and notify callbacks"""

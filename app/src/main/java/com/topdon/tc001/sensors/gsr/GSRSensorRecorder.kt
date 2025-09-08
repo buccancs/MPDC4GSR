@@ -116,21 +116,45 @@ class GSRSensorRecorder(
 
     private suspend fun monitorGSRData() {
         try {
-            // Get latest GSR data from legacy recorder
-            // This would require integration with the existing GSR data flow
-            
-            // For now, simulate monitoring based on expected data rate
-            val expectedSamples = ((System.nanoTime() - recordingStartTime) / 1_000_000_000.0 * samplingRate).toLong()
-            val currentSamples = sampleCount.get()
-            
-            if (expectedSamples > currentSamples + samplingRate) {
-                // Potential data loss detected
-                Log.w(TAG, "Potential GSR data loss detected: expected $expectedSamples, got $currentSamples")
-                emitError(ErrorType.DATA_CORRUPTION, "GSR data loss detected", true)
+            // Get real GSR data from Shimmer recorder instance
+            val shimmerRecorder = realShimmerGSRRecorder
+            if (shimmerRecorder != null) {
+                // Monitor real Shimmer data flow and quality
+                val realDataStats = shimmerRecorder.getDataStatistics()
+                val realSampleCount = realDataStats?.totalSamples ?: sampleCount.get()
+                
+                // Update actual sample count from real Shimmer data
+                sampleCount.set(realSampleCount)
+                
+                // Check for real data loss based on actual Shimmer data rate
+                val expectedSamples = ((System.nanoTime() - recordingStartTime) / 1_000_000_000.0 * samplingRate).toLong()
+                val actualSamples = realSampleCount
+                
+                if (expectedSamples > actualSamples + samplingRate) {
+                    // Real data loss detected from Shimmer device
+                    Log.w(TAG, "Real GSR data loss detected from Shimmer: expected $expectedSamples, got $actualSamples")
+                    emitError(ErrorType.DATA_CORRUPTION, "Real Shimmer GSR data loss detected", true)
+                }
+                
+                // Monitor real Shimmer connection status
+                val connectionStatus = shimmerRecorder.getConnectionStatus()
+                if (connectionStatus == "DISCONNECTED") {
+                    Log.w(TAG, "Real Shimmer device disconnected during recording")
+                    emitError(ErrorType.DEVICE_ERROR, "Real Shimmer device disconnected", true)
+                }
+                
+            } else {
+                // Fallback to legacy GSR recorder monitoring
+                val legacyRecorder = legacyGSRRecorder
+                if (legacyRecorder != null) {
+                    // Monitor legacy GSR data
+                    val legacyStats = legacyRecorder.getCurrentStats()
+                    sampleCount.set(legacyStats?.sampleCount ?: 0)
+                }
             }
             
         } catch (e: Exception) {
-            Log.w(TAG, "GSR data monitoring error", e)
+            Log.w(TAG, "Real GSR data monitoring error", e)
         }
     }
 
@@ -315,7 +339,7 @@ class GSRSensorRecorder(
             
             // Cleanup legacy recorder
             legacyGSRRecorder = null
-            shimmerRecorder = null
+            realShimmerGSRRecorder = null
             
             Log.i(TAG, "GSR sensor cleaned up")
             
@@ -381,9 +405,10 @@ class GSRSensorRecorder(
      */
     fun getShimmerConnectionStatus(): String {
         return when {
-            shimmerRecorder != null -> "Connected"
-            legacyGSRRecorder != null -> "Legacy Mode"
-            else -> "Simulation Mode"
+            realShimmerGSRRecorder?.getConnectionStatus() == "CONNECTED" -> "Real Shimmer Connected"
+            realShimmerGSRRecorder?.getConnectionStatus() == "CONNECTING" -> "Real Shimmer Connecting"
+            legacyGSRRecorder != null -> "Legacy GSR Mode"
+            else -> "No Device Connected"
         }
     }
 

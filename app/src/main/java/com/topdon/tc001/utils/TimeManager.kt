@@ -8,6 +8,7 @@ import android.util.Log
 import kotlinx.coroutines.*
 import java.net.InetAddress
 import java.util.concurrent.atomic.AtomicLong
+import java.util.UUID
 import kotlin.math.abs
 
 /**
@@ -189,24 +190,83 @@ class TimeManager(
     }
 
     private suspend fun sendTimeSyncRequest(pcAddress: String, port: Int, localTime: Long): TimeSyncResponse? {
-        // This would implement the actual network communication with PC Controller
-        // For now, simulate the response for development
-        
+        // Real network communication with PC Controller using TCP socket
         return try {
-            // Simulate network delay
-            delay(kotlin.random.Random.nextLong(10, 50))
-            
-            // Simulate PC Controller times (would come from actual network response)
-            val pcReceiveTime = localTime + kotlin.random.Random.nextLong(-1_000_000, 1_000_000) // ±1ms random offset
-            val pcSendTime = pcReceiveTime + kotlin.random.Random.nextLong(100_000, 500_000) // Processing time
-            
-            TimeSyncResponse(
-                pcReceiveTime = pcReceiveTime,
-                pcSendTime = pcSendTime
-            )
+            withContext(Dispatchers.IO) {
+                // Create TCP socket connection to PC Controller
+                val socket = java.net.Socket()
+                socket.connect(java.net.InetSocketAddress(pcAddress, port), SYNC_TIMEOUT_MS.toInt())
+                
+                try {
+                    val outputStream = socket.getOutputStream()
+                    val inputStream = socket.getInputStream()
+                    
+                    // Create time sync request message
+                    val requestJson = """
+                        {
+                            "type": "time_sync_request",
+                            "client_send_time": $localTime,
+                            "session_id": "${UUID.randomUUID()}"
+                        }
+                    """.trimIndent()
+                    
+                    // Send request to PC Controller
+                    outputStream.write(requestJson.toByteArray(Charsets.UTF_8))
+                    outputStream.flush()
+                    
+                    // Read response from PC Controller
+                    val buffer = ByteArray(1024)
+                    val bytesRead = inputStream.read(buffer)
+                    val responseStr = String(buffer, 0, bytesRead, Charsets.UTF_8)
+                    
+                    // Parse JSON response
+                    val response = parseTimeSyncResponse(responseStr)
+                    
+                    Log.d(TAG, "Real time sync response received from PC Controller")
+                    response
+                    
+                } finally {
+                    socket.close()
+                }
+            }
             
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to send time sync request", e)
+            Log.w(TAG, "Failed to send real time sync request to PC Controller", e)
+            null
+        }
+    }
+    
+    private fun parseTimeSyncResponse(responseJson: String): TimeSyncResponse? {
+        return try {
+            // Parse real JSON response from PC Controller
+            // Expected format: {"pc_receive_time": ..., "pc_send_time": ...}
+            val lines = responseJson.split(",")
+            var pcReceiveTime: Long? = null
+            var pcSendTime: Long? = null
+            
+            for (line in lines) {
+                when {
+                    line.contains("pc_receive_time") -> {
+                        pcReceiveTime = line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
+                    }
+                    line.contains("pc_send_time") -> {
+                        pcSendTime = line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
+                    }
+                }
+            }
+            
+            if (pcReceiveTime != null && pcSendTime != null) {
+                TimeSyncResponse(
+                    pcReceiveTime = pcReceiveTime,
+                    pcSendTime = pcSendTime
+                )
+            } else {
+                Log.w(TAG, "Invalid time sync response format from PC Controller")
+                null
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse time sync response from PC Controller", e)
             null
         }
     }

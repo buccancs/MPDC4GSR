@@ -175,7 +175,7 @@ class GSRSensorRecorder(
                 
                 // Start the real Shimmer recorder
                 val success = try {
-                    // This would call the real recording start method
+                    // Call the actual recording start method
                     startRealShimmerRecording(shimmerRecorder, sessionDirectory)
                 } catch (e: Exception) {
                     Log.e(TAG, "Real Shimmer GSR recording start failed", e)
@@ -231,10 +231,33 @@ class GSRSensorRecorder(
     private suspend fun startRealShimmerRecording(shimmerRecorder: ShimmerGSRRecorder, sessionDir: String): Boolean {
         // Start real Shimmer recording using the existing GSR recording module
         return try {
-            // Use the real Shimmer recorder's start method
-            Log.i(TAG, "Starting real Shimmer recording using existing GSR module")
-            // This would integrate with the real ShimmerGSRRecorder implementation
-            true
+            // Extract sessionId from sessionDirectory path
+            val sessionId = sessionDir.substringAfterLast("/").ifEmpty { 
+                "session_${System.currentTimeMillis()}" 
+            }
+            
+            Log.i(TAG, "Starting real Shimmer recording with sessionId: $sessionId")
+            
+            // Initialize the Shimmer device first if not already connected
+            if (!shimmerRecorder.isDeviceConnected()) {
+                Log.i(TAG, "Initializing Shimmer device connection")
+                val initSuccess = shimmerRecorder.initializeDevice()
+                if (!initSuccess) {
+                    Log.e(TAG, "Failed to initialize Shimmer device")
+                    return false
+                }
+            }
+            
+            // Start the real Shimmer recorder with the extracted sessionId
+            val success = shimmerRecorder.startRecording(sessionId)
+            
+            if (success) {
+                Log.i(TAG, "Real Shimmer GSR recording started successfully")
+            } else {
+                Log.e(TAG, "Real Shimmer GSR recording failed to start")
+            }
+            
+            success
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start real Shimmer recording", e)
             false
@@ -242,9 +265,39 @@ class GSRSensorRecorder(
     }
 
     private suspend fun startLegacyRecording(recorder: LegacyGSRRecorder, sessionDir: String): Boolean {
-        // This integrates with the existing GSR recording system
-        Log.i(TAG, "Starting legacy GSR recording integration with real Shimmer data")
-        return true
+        // Start legacy GSR recording using the existing GSR recording system
+        return try {
+            // Extract sessionId from sessionDirectory path
+            val sessionId = sessionDir.substringAfterLast("/").ifEmpty { 
+                "session_${System.currentTimeMillis()}" 
+            }
+            
+            Log.i(TAG, "Starting legacy GSR recording with sessionId: $sessionId")
+            
+            // Initialize the legacy recorder first
+            val initSuccess = recorder.initialize()
+            if (!initSuccess) {
+                Log.w(TAG, "Legacy GSR recorder initialization failed, but continuing")
+            }
+            
+            // Start the legacy recorder with proper parameters
+            val success = recorder.startRecording(
+                sessionId = sessionId,
+                participantId = "participant_${System.currentTimeMillis()}",
+                studyName = "IRCamera_MultiModal_Study"
+            )
+            
+            if (success) {
+                Log.i(TAG, "Legacy GSR recording started successfully")
+            } else {
+                Log.w(TAG, "Legacy GSR recording failed to start")
+            }
+            
+            success
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start legacy GSR recording", e)
+            false
+        }
     }
 
     override suspend fun stopRecording(): Boolean {
@@ -260,7 +313,7 @@ class GSRSensorRecorder(
                 Log.i(TAG, "Stopping real Shimmer GSR recording using existing module")
                 
                 val stopSuccess = try {
-                    // This would call the real recording stop method
+                    // Call the actual recording stop method
                     stopRealShimmerRecording(shimmerRecorder)
                 } catch (e: Exception) {
                     Log.e(TAG, "Real Shimmer GSR recording stop failed", e)
@@ -295,10 +348,18 @@ class GSRSensorRecorder(
     private suspend fun stopRealShimmerRecording(shimmerRecorder: ShimmerGSRRecorder): Boolean {
         // Stop real Shimmer recording using the existing GSR recording module
         return try {
-            // Use the real Shimmer recorder's stop method
             Log.i(TAG, "Stopping real Shimmer recording using existing GSR module")
-            // This would integrate with the real ShimmerGSRRecorder implementation
-            true
+            
+            // Call the real Shimmer recorder's stop method
+            val sessionInfo = shimmerRecorder.stopRecording()
+            
+            if (sessionInfo != null) {
+                Log.i(TAG, "Real Shimmer GSR recording stopped successfully. Session: ${sessionInfo.sessionId}, Samples: ${sessionInfo.sampleCount}")
+                true
+            } else {
+                Log.w(TAG, "Real Shimmer GSR recording stop returned null session info")
+                false
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop real Shimmer recording", e)
             false
@@ -306,21 +367,52 @@ class GSRSensorRecorder(
     }
 
     private suspend fun stopLegacyRecording(recorder: LegacyGSRRecorder) {
-        // This would integrate with the existing GSR recording stop
-        Log.i(TAG, "Stopping legacy GSR recording integration")
+        // Stop legacy GSR recording using the existing GSR recording system
+        try {
+            Log.i(TAG, "Stopping legacy GSR recording")
+            
+            // Call the real legacy recorder's stop method
+            val sessionInfo = recorder.stopRecording()
+            
+            if (sessionInfo != null) {
+                Log.i(TAG, "Legacy GSR recording stopped successfully. Session: ${sessionInfo.sessionId}, Samples: ${sessionInfo.sampleCount}")
+            } else {
+                Log.w(TAG, "Legacy GSR recording stop returned null session info")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to stop legacy GSR recording", e)
+        }
     }
 
     override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
         try {
             syncMarkerCount.incrementAndGet()
             
-            // Add sync marker to legacy GSR system
-            legacyGSRRecorder?.let { recorder ->
-                // This would call the legacy sync marker method
-                Log.i(TAG, "Adding GSR sync marker: $markerType at $timestampNs")
+            // Convert timestamp from nanoseconds to milliseconds and add metadata string
+            val timestampMs = timestampNs / 1_000_000
+            val metadataString = metadata.entries.joinToString(", ") { "${it.key}=${it.value}" }
+            
+            // Add sync marker to real Shimmer GSR system
+            realShimmerGSRRecorder?.let { shimmerRecorder ->
+                val success = shimmerRecorder.triggerSyncEvent(markerType, metadataString)
+                if (success) {
+                    Log.i(TAG, "Real Shimmer GSR sync marker added: $markerType at $timestampMs ms")
+                } else {
+                    Log.w(TAG, "Failed to add real Shimmer GSR sync marker: $markerType")
+                }
             }
             
-            Log.i(TAG, "GSR sync marker added: $markerType")
+            // Add sync marker to legacy GSR system
+            legacyGSRRecorder?.let { recorder ->
+                val success = recorder.addSyncMark(markerType, metadataString)
+                if (success) {
+                    Log.i(TAG, "Legacy GSR sync marker added: $markerType at $timestampMs ms")
+                } else {
+                    Log.w(TAG, "Failed to add legacy GSR sync marker: $markerType")
+                }
+            }
+            
+            Log.i(TAG, "GSR sync marker processing completed: $markerType")
             
         } catch (e: Exception) {
             Log.w(TAG, "Failed to add GSR sync marker", e)
@@ -337,11 +429,31 @@ class GSRSensorRecorder(
             dataMonitoringJob?.cancel()
             recordingScope.cancel()
             
-            // Cleanup legacy recorder
+            // Properly disconnect and cleanup real Shimmer recorder
+            realShimmerGSRRecorder?.let { shimmerRecorder ->
+                try {
+                    shimmerRecorder.disconnect()
+                    Log.i(TAG, "Real Shimmer GSR recorder disconnected")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error disconnecting real Shimmer GSR recorder", e)
+                }
+            }
+            
+            // Properly disconnect and cleanup legacy recorder
+            legacyGSRRecorder?.let { recorder ->
+                try {
+                    recorder.disconnect()
+                    Log.i(TAG, "Legacy GSR recorder disconnected")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error disconnecting legacy GSR recorder", e)
+                }
+            }
+            
+            // Clear references
             legacyGSRRecorder = null
             realShimmerGSRRecorder = null
             
-            Log.i(TAG, "GSR sensor cleaned up")
+            Log.i(TAG, "GSR sensor cleaned up successfully")
             
         } catch (e: Exception) {
             Log.e(TAG, "GSR sensor cleanup failed", e)

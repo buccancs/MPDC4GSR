@@ -12,7 +12,7 @@ import com.topdon.lib.core.bean.TargetColorBean
 import com.topdon.lib.core.databinding.ItmeTargetColorBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-class TargetColorAdapter(val context: Context,var targetColor: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+class TargetColorAdapter(val context: Context, var targetColor: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listenerTarget: OnItemClickListener? = null
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
@@ -22,15 +22,19 @@ class TargetColorAdapter(val context: Context,var targetColor: Int) : RecyclerVi
         notifyDataSetChanged()
     }
 
-    private val targetColorBean = arrayListOf(
-        TargetColorBean(R.drawable.bg_target_color_green, "", ObserveBean.TYPE_TARGET_COLOR_GREEN),
-        TargetColorBean(R.drawable.bg_target_color_red, "", ObserveBean.TYPE_TARGET_COLOR_RED),
-        TargetColorBean(R.drawable.bg_target_color_blue, "", ObserveBean.TYPE_TARGET_COLOR_BLUE),
-        TargetColorBean(R.drawable.bg_target_color_black, "", ObserveBean.TYPE_TARGET_COLOR_BLACK),
-        TargetColorBean(R.drawable.bg_target_color_white, "", ObserveBean.TYPE_TARGET_COLOR_WHITE),
-    )
+    private val targetColorBean =
+        arrayListOf(
+            TargetColorBean(R.drawable.bg_target_color_green, "", ObserveBean.TYPE_TARGET_COLOR_GREEN),
+            TargetColorBean(R.drawable.bg_target_color_red, "", ObserveBean.TYPE_TARGET_COLOR_RED),
+            TargetColorBean(R.drawable.bg_target_color_blue, "", ObserveBean.TYPE_TARGET_COLOR_BLUE),
+            TargetColorBean(R.drawable.bg_target_color_black, "", ObserveBean.TYPE_TARGET_COLOR_BLACK),
+            TargetColorBean(R.drawable.bg_target_color_white, "", ObserveBean.TYPE_TARGET_COLOR_WHITE),
+        )
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItmeTargetColorBinding.inflate(inflater, parent, false)
         return ItemView(binding)
@@ -40,19 +44,27 @@ class TargetColorAdapter(val context: Context,var targetColor: Int) : RecyclerVi
         return targetColorBean.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         if (holder is ItemView) {
             val bean = targetColorBean[position]
             holder.img.setImageResource(bean.res)
             holder.lay.setOnClickListener {
                 listener?.invoke(position, bean.code)
-                listenerTarget?.onClick(position,bean.code)
+                listenerTarget?.onClick(position, bean.code)
             }
             iconUI(bean.code == targetColor, holder.img, holder.strokeBg, holder.signBg)
         }
     }
 
-    private fun iconUI(isActive: Boolean, img: ImageView, strokeBg: ImageView, signBg: ImageView) {
+    private fun iconUI(
+        isActive: Boolean,
+        img: ImageView,
+        strokeBg: ImageView,
+        signBg: ImageView,
+    ) {
         img.isSelected = isActive
         if (isActive) {
             strokeBg.visibility = View.VISIBLE
@@ -68,6 +80,7 @@ class TargetColorAdapter(val context: Context,var targetColor: Int) : RecyclerVi
         val img: ImageView = binding.itemTargetColor
         val strokeBg: ImageView = binding.itemTargetColorStroke
         val signBg: ImageView = binding.itemTargetColorSign
+
         init {
             val canSeeCount = 5
             val with = (ScreenUtil.getScreenWidth(context) / canSeeCount)
@@ -85,6 +98,9 @@ class TargetColorAdapter(val context: Context,var targetColor: Int) : RecyclerVi
     }
 
     interface OnItemClickListener {
-        fun onClick(index: Int, code: Int)
+        fun onClick(
+            index: Int,
+            code: Int,
+        )
     }
 }

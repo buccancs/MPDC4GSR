@@ -16,5 +16,5 @@ data class StatementJson(
     val status: Any,
     val statusList: Any,
     val type: Any,
-    val versionNum: Any
+    val versionNum: Any,
 )

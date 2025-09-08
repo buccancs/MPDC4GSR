@@ -8,7 +8,12 @@ class ThermalViewModel : BaseViewModel() {
      * white:82 FF
      * black:82 00
      */
-    fun yuvArea(yuv: ByteArray, temp: FloatArray, max: Float, min: Float) {
+    fun yuvArea(
+        yuv: ByteArray,
+        temp: FloatArray,
+        max: Float,
+        min: Float,
+    ) {
         for (i in temp.indices) {
             if (temp[i] < min) {
                 yuv[i * 2] = 0x82.toByte()
@@ -20,5 +25,4 @@ class ThermalViewModel : BaseViewModel() {
             }
         }
     }
-
 }

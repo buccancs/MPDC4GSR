@@ -1,7 +1,6 @@
 package com.topdon.lib.core.tools
 
 object CheckDoubleClick {
-    
     private val records: MutableMap<String, Long> = HashMap()
 
     fun isFastDoubleClick(): Boolean {
@@ -9,7 +8,7 @@ object CheckDoubleClick {
             records.clear()
         }
 
-        //本方法被调用的文件名和行号作为标记
+        // 本方法被调用的文件名和行号作为标记
         val ste = Throwable().stackTrace[1]
         val key = ste.fileName + ste.lineNumber
         var lastClickTime = records[key]

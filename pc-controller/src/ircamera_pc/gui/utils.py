@@ -5,6 +5,7 @@ Utility functions and classes for GUI components.
 """
 
 import sys
+
 from loguru import logger
 from PyQt5.QtCore import QObject, pyqtSignal
 

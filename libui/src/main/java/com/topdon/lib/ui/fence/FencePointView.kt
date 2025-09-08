@@ -13,11 +13,8 @@ import android.view.MotionEvent
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 
 class FencePointView : View {
-
     var listener: CallBack? = null
     private val iconSize = SizeUtils.dp2px(32f)
 
@@ -25,15 +22,13 @@ class FencePointView : View {
 
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
 
-
     constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(
         context,
         attrs,
-        defStyle
+        defStyle,
     )
 
     init {
-
     }
 
     private val mPaint by lazy {
@@ -52,10 +47,9 @@ class FencePointView : View {
     private val drawable: BitmapDrawable by lazy {
         resources.getDrawable(
             UiR.mipmap.ic_fence_point,
-            null
+            null,
         ) as BitmapDrawable
     }
-
 
     @SuppressLint("UseCompatLoadingForDrawables", "DrawAllocation")
     override fun onDraw(canvas: Canvas) {
@@ -88,12 +82,13 @@ class FencePointView : View {
             top = height - destH
         }
 
-        val dst = Rect(
-            left,
-            top,
-            right,
-            bottom
-        )
+        val dst =
+            Rect(
+                left,
+                top,
+                right,
+                bottom,
+            )
         canvas.drawBitmap(bitmap, src, dst, mPaint)
     }
 
@@ -129,19 +124,19 @@ class FencePointView : View {
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         if (startPoint[0] - destW / 2 < 0) {
-            //left
+            // left
             point1[0] = destW / 2
         }
         if (startPoint[0] + destW / 2 > width) {
-            //right
+            // right
             point1[0] = width - destW / 2
         }
         if (startPoint[1] - destW / 2 < 0) {
-            //top
+            // top
             point1[1] = destH / 2
         }
         if (startPoint[1] + destW / 2 > height) {
-            //bottom
+            // bottom
             point1[1] = height - destH / 2
         }
         Log.w("123", "坐标 point:${point1.contentToString()}")
@@ -161,6 +156,9 @@ class FencePointView : View {
          * startPoint: 左上角
          * endPoint: 右下角
          */
-        fun callback(startPoint: IntArray, srcRect: IntArray)
+        fun callback(
+            startPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }

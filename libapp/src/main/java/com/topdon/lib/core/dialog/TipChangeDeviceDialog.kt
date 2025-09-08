@@ -9,12 +9,13 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.core.databinding.DialogTipChangeDeviceBinding
+import com.topdon.lib.core.utils.ScreenUtil
 
 @Deprecated("3.80使用新首页设备列表逻辑，不需要设备切换提示弹框了")
-class TipChangeDeviceDialog :Dialog {
+class TipChangeDeviceDialog : Dialog {
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
+
     class Builder {
         var dialog: TipChangeDeviceDialog? = null
         private var context: Context? = null
@@ -35,11 +36,12 @@ class TipChangeDeviceDialog :Dialog {
             return this
         }
 
-        fun setMessage(@StringRes message: Int): Builder {
+        fun setMessage(
+            @StringRes message: Int,
+        ): Builder {
             this.message = context!!.getString(message)
             return this
         }
-
 
         fun setCancelListener(event: ((check: Boolean) -> Unit)? = null): Builder {
             this.closeEvent = event
@@ -54,7 +56,6 @@ class TipChangeDeviceDialog :Dialog {
         fun dismiss() {
             this.dialog!!.dismiss()
         }
-
 
         fun create(): TipChangeDeviceDialog {
             if (dialog == null) {
@@ -73,19 +74,19 @@ class TipChangeDeviceDialog :Dialog {
                 binding.root,
                 ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                ),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    //竖屏
+                    // 竖屏
                     0.85
                 } else {
-                    //横屏
+                    // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() //设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)

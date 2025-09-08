@@ -8,20 +8,18 @@ import android.text.*
 import android.text.style.UnderlineSpan
 import android.view.View
 import android.widget.TextView
-import com.topdon.tc001.view.ConnectionGuideView
-import com.topdon.lib.core.view.TitleView
 import com.csl.irCamera.R
-
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.utils.Constants
+import com.topdon.lib.core.view.TitleView
+import com.topdon.tc001.view.ConnectionGuideView
 
 // Legacy ARouter route annotation - now using NavigationManager
-class MoreHelpActivity:BaseActivity() {
-    private var connectionType : Int = 0
+class MoreHelpActivity : BaseActivity() {
+    private var connectionType: Int = 0
     private lateinit var wifiManager: WifiManager
-    
+
     // findViewById declarations
     private val tvTitle: TextView by lazy { findViewById(R.id.tv_title) }
     private val titleView: TitleView by lazy { findViewById(R.id.title_view) }
@@ -31,7 +29,7 @@ class MoreHelpActivity:BaseActivity() {
     private val disconnectTip1: ConnectionGuideView by lazy { findViewById(R.id.disconnect_tip1) }
     private val disconnectTip2: ConnectionGuideView by lazy { findViewById(R.id.disconnect_tip2) }
     private val ivTvSetting: TextView by lazy { findViewById(R.id.iv_tvSetting) }
-    
+
     override fun initContentView() = R.layout.activity_more_help
 
     override fun initView() {
@@ -40,8 +38,8 @@ class MoreHelpActivity:BaseActivity() {
     }
 
     private fun initIntent() {
-        connectionType = intent.getIntExtra(Constants.SETTING_CONNECTION_TYPE,0)
-        if(connectionType == Constants.SETTING_CONNECTION){
+        connectionType = intent.getIntExtra(Constants.SETTING_CONNECTION_TYPE, 0)
+        if (connectionType == Constants.SETTING_CONNECTION) {
             tvTitle.text = getString(R.string.ts004_guide_text8)
             titleView.setTitleText(R.string.ts004_guide_text6)
             mainGuideTip1.visibility = View.VISIBLE
@@ -50,7 +48,7 @@ class MoreHelpActivity:BaseActivity() {
             disconnectTip1.visibility = View.GONE
             disconnectTip2.visibility = View.GONE
             ivTvSetting.visibility = View.GONE
-        }else{
+        } else {
             tvTitle.text = getString(R.string.ts004_disconnect_tips1)
             mainGuideTip1.visibility = View.GONE
             mainGuideTip2.visibility = View.GONE
@@ -70,9 +68,9 @@ class MoreHelpActivity:BaseActivity() {
         }
     }
 
-    private fun startWifiList(){
-        if(wifiManager.isWifiEnabled){
-            if (Build.VERSION.SDK_INT < 29) {//低于 Android10
+    private fun startWifiList() {
+        if (wifiManager.isWifiEnabled) {
+            if (Build.VERSION.SDK_INT < 29) { // 低于 Android10
                 wifiManager.isWifiEnabled = true
             } else {
                 var wifiIntent = Intent(Settings.Panel.ACTION_WIFI)
@@ -85,12 +83,12 @@ class MoreHelpActivity:BaseActivity() {
                     startActivity(wifiIntent)
                 }
             }
-        }else{
+        } else {
             TipDialog.Builder(this)
                 .setTitleMessage(getString(R.string.app_tip))
                 .setMessage(R.string.ts004_wlan_tips)
                 .setPositiveListener(R.string.app_open) {
-                    if (Build.VERSION.SDK_INT < 29) {//低于 Android10
+                    if (Build.VERSION.SDK_INT < 29) { // 低于 Android10
                         wifiManager.isWifiEnabled = true
                     } else {
                         var wifiIntent = Intent(Settings.Panel.ACTION_WIFI)

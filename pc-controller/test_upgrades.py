@@ -4,20 +4,20 @@ Basic functionality test for IRCamera PC Controller
 Tests core components without GUI dependencies.
 """
 
-import sys
 import asyncio
+import sys
 from pathlib import Path
 
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
+from ircamera_pc.core.session import SessionManager
 from ircamera_pc.network.protocol import (
-    get_protocol_manager,
     create_message,
+    get_protocol_manager,
     validate_message,
 )
 from ircamera_pc.network.server import NetworkServer
-from ircamera_pc.core.session import SessionManager
 
 
 def test_protocol_manager():

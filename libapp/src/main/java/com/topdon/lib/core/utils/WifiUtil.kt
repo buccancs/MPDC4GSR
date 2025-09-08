@@ -18,7 +18,6 @@ import com.hjq.permissions.XXPermissions
  * WIFI 相关工具类.
  */
 object WifiUtil {
-
     /**
      * 不带双引号的 SSID.
      */
@@ -49,18 +48,23 @@ object WifiUtil {
         return wifiManager.connectionInfo?.getWifiName()
     }
 
-
     /**
      * 在给定 activity 生命周期内添加 WIFI 开关状态监听.
      */
-    fun addWifiStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
+    fun addWifiStateListener(
+        activity: ComponentActivity,
+        listener: ((isEnable: Boolean) -> Unit),
+    ) {
         activity.lifecycle.addObserver(WifiStateObserver(activity, WifiStateReceiver(listener)))
     }
 
     /**
      * 在给定 activity 生命周期内添加 WIFI 扫描结果监听.
      */
-    fun addWifiScanListener(activity: ComponentActivity, listener: ((isSuccess: Boolean) -> Unit)) {
+    fun addWifiScanListener(
+        activity: ComponentActivity,
+        listener: ((isSuccess: Boolean) -> Unit),
+    ) {
         activity.lifecycle.addObserver(WifiScanObserver(activity, WifiScanReceiver(listener)))
     }
 
@@ -90,7 +94,10 @@ object WifiUtil {
      * WIFI 状态变更广播监听.
      */
     private class WifiStateReceiver(val listener: ((isEnable: Boolean) -> Unit)) : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(
+            context: Context?,
+            intent: Intent?,
+        ) {
             when (intent?.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)) {
                 WifiManager.WIFI_STATE_ENABLED -> listener.invoke(true)
                 WifiManager.WIFI_STATE_DISABLED, WifiManager.WIFI_STATE_UNKNOWN -> listener.invoke(false)
@@ -102,7 +109,10 @@ object WifiUtil {
      * WIFI 扫描结果广播监听.
      */
     private class WifiScanReceiver(val listener: ((isSuccess: Boolean) -> Unit)) : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent?) {
+        override fun onReceive(
+            context: Context,
+            intent: Intent?,
+        ) {
             listener.invoke(intent?.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false) ?: false)
         }
     }

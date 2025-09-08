@@ -1,26 +1,26 @@
-//package com.topdon.module.thermal.activity
+// package com.topdon.module.thermal.activity
 //
-//import android.util.Log
-//import androidx.lifecycle.lifecycleScope
-//import androidx.recyclerview.widget.GridLayoutManager
-//import com.github.aachartmodel.aainfographics.aachartcreator.*
-//import com.github.aachartmodel.aainfographics.aaoptionsmodel.*
-//import com.github.aachartmodel.aainfographics.aatools.AAGradientColor
-//import com.github.aachartmodel.aainfographics.aatools.AALinearGradientDirection
-//import com.topdon.lib.core.common.SharedManager
-//import com.topdon.lib.core.config.RouterConfig
-//import com.topdon.lib.core.db.AppDatabase
-//import com.topdon.lib.core.db.entity.ThermalEntity
-//import com.topdon.lib.core.ktbase.BaseActivity
-//import com.topdon.lib.core.tools.TimeTool
-//import com.topdon.module.thermal.R
-//import com.topdon.module.thermal.adapter.SettingTimeAdapter
-//import kotlinx.coroutines.Dispatchers
-//import kotlinx.coroutines.delay
-//import kotlinx.coroutines.launch
+// import android.util.Log
+// import androidx.lifecycle.lifecycleScope
+// import androidx.recyclerview.widget.GridLayoutManager
+// import com.github.aachartmodel.aainfographics.aachartcreator.*
+// import com.github.aachartmodel.aainfographics.aaoptionsmodel.*
+// import com.github.aachartmodel.aainfographics.aatools.AAGradientColor
+// import com.github.aachartmodel.aainfographics.aatools.AALinearGradientDirection
+// import com.topdon.lib.core.common.SharedManager
+// import com.topdon.lib.core.config.RouterConfig
+// import com.topdon.lib.core.db.AppDatabase
+// import com.topdon.lib.core.db.entity.ThermalEntity
+// import com.topdon.lib.core.ktbase.BaseActivity
+// import com.topdon.lib.core.tools.TimeTool
+// import com.topdon.module.thermal.R
+// import com.topdon.module.thermal.adapter.SettingTimeAdapter
+// import kotlinx.coroutines.Dispatchers
+// import kotlinx.coroutines.delay
+// import kotlinx.coroutines.launch
 //
-//@Route(path = RouterConfig.THERMAL_LOG_CHART)
-//class LogChartActivity : BaseActivity() {
+// @Route(path = RouterConfig.THERMAL_LOG_CHART)
+// class LogChartActivity : BaseActivity() {
 //
 //    val adapter: SettingTimeAdapter by lazy { SettingTimeAdapter(this) }
 //
@@ -97,17 +97,17 @@
 //            .gridLineColor("#717a8f")
 //            .lineColor("#717a8f")
 //            .tickColor("#717a8f")//刻度颜色
-////            .minRange(20)//占空
+// //            .minRange(20)//占空
 //            .minorTickColor("#FF0000")
 //            .labels(AALabels().style(AAStyle.style("#717a8f")))//标尺文字
-////            .categories(timeList)
+// //            .categories(timeList)
 //
 //        val yAxis = AAYAxis()
 //            .lineWidth(1f)
 //            .gridLineWidth(1f)
 //            .gridLineColor("#454b56")
 //            .lineColor("#383d45")
-////            .max(100f)//设置最大y值
+// //            .max(100f)//设置最大y值
 //            .min(0f)//设置最小y值
 //            .labels(AALabels().style(AAStyle.style("#717a8f")))
 //            .title(AATitle().text("").style(AAStyle().color("#FFFFFF")))//不显示
@@ -207,4 +207,4 @@
 //
 //    }
 //
-//}
+// }

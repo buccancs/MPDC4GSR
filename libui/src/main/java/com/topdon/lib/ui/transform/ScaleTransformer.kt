@@ -16,7 +16,10 @@ class ScaleTransformer : HorizontalScrollItemTransformer {
     private var minScale: Float = 0.8f
     private var maxMinDiff: Float = 0.2f
 
-    override fun transformItem(item: View, position: Float) {
+    override fun transformItem(
+        item: View,
+        position: Float,
+    ) {
         pivotX.setOn(item)
         pivotY.setOn(item)
         val closenessToCenter = 1f - Math.abs(position)
@@ -34,12 +37,16 @@ class ScaleTransformer : HorizontalScrollItemTransformer {
             maxScale = 1f
         }
 
-        fun setMinScale(@FloatRange(from = 0.01) scale: Float): Builder {
+        fun setMinScale(
+            @FloatRange(from = 0.01) scale: Float,
+        ): Builder {
             transformer.minScale = scale
             return this
         }
 
-        fun setMaxScale(@FloatRange(from = 0.01) scale: Float): Builder {
+        fun setMaxScale(
+            @FloatRange(from = 0.01) scale: Float,
+        ): Builder {
             maxScale = scale
             return this
         }
@@ -69,7 +76,10 @@ class ScaleTransformer : HorizontalScrollItemTransformer {
             return transformer
         }
 
-        private fun assertAxis(pivot: Pivot, @Pivot.Axis axis: Int) {
+        private fun assertAxis(
+            pivot: Pivot,
+            @Pivot.Axis axis: Int,
+        ) {
             require(pivot.axis == axis) { "You passed a Pivot for wrong axis." }
         }
     }

@@ -19,92 +19,114 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
     }
 
     private var mWebSocket: WebSocket? = null
-    private var status: State = State.DISCONNECTED //websocket连接状态
+    private var status: State = State.DISCONNECTED // websocket连接状态
     private var heartBeatTimer: HeartBeatTimer? = null
 
-    private val mWebSocketListener: WebSocketListener = object : WebSocketListener() {
-        @Override
-        override fun onOpen(webSocket: WebSocket, response: Response) {
-            mWebSocket = webSocket
-            status = State.CONNECTED
+    private val mWebSocketListener: WebSocketListener =
+        object : WebSocketListener() {
+            @Override
+            override fun onOpen(
+                webSocket: WebSocket,
+                response: Response,
+            ) {
+                mWebSocket = webSocket
+                status = State.CONNECTED
 
-            //开始定时发送心跳
-            heartBeatTimer?.cancel()
-            heartBeatTimer = HeartBeatTimer(this@WsManager)
-            heartBeatTimer?.timeoutListener = {
+                // 开始定时发送心跳
+                heartBeatTimer?.cancel()
+                heartBeatTimer = HeartBeatTimer(this@WsManager)
+                heartBeatTimer?.timeoutListener = {
+                    statusListener.runMain {
+                        it.onHeartBeatTimeout()
+                    }
+                }
+                heartBeatTimer?.start()
+
                 statusListener.runMain {
-                    it.onHeartBeatTimeout()
+                    it.onOpen(webSocket, response)
                 }
             }
-            heartBeatTimer?.start()
 
-            statusListener.runMain {
-                it.onOpen(webSocket, response)
+            @Override
+            override fun onMessage(
+                webSocket: WebSocket,
+                bytes: ByteString,
+            ) {
+                heartBeatTimer?.lastHeartBeatTime = System.currentTimeMillis()
+                statusListener.runMain {
+                    it.onMessage(webSocket, bytes)
+                }
+            }
+
+            @Override
+            override fun onMessage(
+                webSocket: WebSocket,
+                text: String,
+            ) {
+                heartBeatTimer?.lastHeartBeatTime = System.currentTimeMillis()
+                statusListener.runMain {
+                    it.onMessage(webSocket, text)
+                }
+            }
+
+            @Override
+            override fun onClosing(
+                webSocket: WebSocket,
+                code: Int,
+                reason: String,
+            ) {
+                status = State.DISCONNECTED
+                statusListener.runMain {
+                    it.onClosing(webSocket, code, reason)
+                }
+            }
+
+            @Override
+            override fun onClosed(
+                webSocket: WebSocket,
+                code: Int,
+                reason: String,
+            ) {
+                status = State.DISCONNECTED
+
+                heartBeatTimer?.cancel()
+                heartBeatTimer = null
+
+                statusListener.runMain {
+                    it.onClosed(webSocket, code, reason)
+                }
+            }
+
+            @Override
+            override fun onFailure(
+                webSocket: WebSocket,
+                t: Throwable,
+                response: Response?,
+            ) {
+                status = State.DISCONNECTED
+                statusListener.runMain {
+                    it.onFailure(webSocket, t, response)
+                }
             }
         }
-
-        @Override
-        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-            heartBeatTimer?.lastHeartBeatTime = System.currentTimeMillis()
-            statusListener.runMain {
-                it.onMessage(webSocket, bytes)
-            }
-        }
-
-        @Override
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            heartBeatTimer?.lastHeartBeatTime = System.currentTimeMillis()
-            statusListener.runMain {
-                it.onMessage(webSocket, text)
-            }
-        }
-
-        @Override
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            status = State.DISCONNECTED
-            statusListener.runMain {
-                it.onClosing(webSocket, code, reason)
-            }
-        }
-
-        @Override
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            status = State.DISCONNECTED
-
-            heartBeatTimer?.cancel()
-            heartBeatTimer = null
-
-            statusListener.runMain {
-                it.onClosed(webSocket, code, reason)
-            }
-        }
-
-        @Override
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            status = State.DISCONNECTED
-            statusListener.runMain {
-                it.onFailure(webSocket, t, response)
-            }
-        }
-    }
-
 
     fun isConnect(): Boolean = status == State.CONNECTING || status == State.CONNECTED
 
-
     private var mLock = ReentrantLock()
+
     @Synchronized
     fun startConnect() {
-        if (status == State.CONNECTING || status == State.CONNECTED) {//连接中或已连接
+        if (status == State.CONNECTING || status == State.CONNECTED) { // 连接中或已连接
             Log.w("WebSocket", "${if (status == State.CONNECTING) "连接中" else "已连接"} startConnect() 重复调用")
             return
         }
         status = State.CONNECTING
 
         okHttpClient.dispatcher.cancelAll()
-        val mRequest: Request = Request.Builder()
-            .url(wsUrl)
-            .build()
+        val mRequest: Request =
+            Request.Builder()
+                .url(wsUrl)
+                .build()
         try {
             mLock.lockInterruptibly()
             try {
@@ -160,8 +182,8 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
         return isSend
     }
 
-
     private val wsMainHandler = Handler(Looper.getMainLooper())
+
     private fun IWebSocketListener?.runMain(block: (IWebSocketListener) -> Unit) {
         if (this != null) {
             if (Looper.myLooper() != Looper.getMainLooper()) {
@@ -174,7 +196,6 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
         }
     }
 
-
     private class HeartBeatTimer(val wsManager: WsManager) : Timer() {
         var timeoutListener: (() -> Unit)? = null
 
@@ -182,27 +203,31 @@ class WsManager(private val wsUrl: String, private val okHttpClient: OkHttpClien
         var lastHeartBeatTime: Long = 0
 
         fun start() {
-            schedule(object : TimerTask() {
-                override fun run() {
-                    val currentTime = System.currentTimeMillis()
-                    if (lastHeartBeatTime == 0L) {
-                        lastHeartBeatTime = currentTime
-                    }
-                    if (currentTime - lastHeartBeatTime > 15 * 1000) {//3秒一个心跳包，连续丢失 5 个包视为断开
-                        Log.d("WebSocket", "连续5个心跳包无响应，视为连接断开")
-                        timeoutListener?.invoke()
-                        lastHeartBeatTime = currentTime
-                    } else {
-                        val heartBeatMsg: String? = wsManager.statusListener.onHeartBeat()
-                        if (heartBeatMsg == null) {
+            schedule(
+                object : TimerTask() {
+                    override fun run() {
+                        val currentTime = System.currentTimeMillis()
+                        if (lastHeartBeatTime == 0L) {
+                            lastHeartBeatTime = currentTime
+                        }
+                        if (currentTime - lastHeartBeatTime > 15 * 1000) { // 3秒一个心跳包，连续丢失 5 个包视为断开
+                            Log.d("WebSocket", "连续5个心跳包无响应，视为连接断开")
+                            timeoutListener?.invoke()
                             lastHeartBeatTime = currentTime
                         } else {
-                            val isSuccess = wsManager.sendMessage(heartBeatMsg)
-                            Log.v("WebSocket", "--> 发送心跳消息 ${if (isSuccess) "成功" else "失败"}")
+                            val heartBeatMsg: String? = wsManager.statusListener.onHeartBeat()
+                            if (heartBeatMsg == null) {
+                                lastHeartBeatTime = currentTime
+                            } else {
+                                val isSuccess = wsManager.sendMessage(heartBeatMsg)
+                                Log.v("WebSocket", "--> 发送心跳消息 ${if (isSuccess) "成功" else "失败"}")
+                            }
                         }
                     }
-                }
-            }, 3000, 3000)
+                },
+                3000,
+                3000,
+            )
         }
     }
 

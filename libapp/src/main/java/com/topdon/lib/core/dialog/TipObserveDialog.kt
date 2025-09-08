@@ -8,14 +8,13 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams
 import android.widget.*
 import com.topdon.lib.core.R
-import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.core.databinding.DialogTipObserveBinding
+import com.topdon.lib.core.utils.ScreenUtil
 
 /**
  * 观测-弹框封装
  */
 class TipObserveDialog : Dialog {
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
@@ -48,7 +47,6 @@ class TipObserveDialog : Dialog {
             return this
         }
 
-
         fun setCancelListener(event: ((check: Boolean) -> Unit)? = null): Builder {
             this.closeEvent = event
             return this
@@ -80,19 +78,20 @@ class TipObserveDialog : Dialog {
             messageText = binding.dialogTipMsgText
             checkBox = binding.dialogTipCheck
             imgClose = binding.imgClose
-            dialog!!.addContentView(binding.root,
-                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            dialog!!.addContentView(
+                binding.root,
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    //竖屏
+                    // 竖屏
                     0.75
                 } else {
-                    //横屏
+                    // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() //设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)
@@ -105,11 +104,11 @@ class TipObserveDialog : Dialog {
                 dismiss()
                 closeEvent?.invoke(hasCheck)
             }
-            //title
+            // title
             if (title != null) {
                 titleText.setText(title, TextView.BufferType.NORMAL)
             }
-            //msg
+            // msg
             if (message != null) {
                 messageText.visibility = View.VISIBLE
                 messageText.setText(message, TextView.BufferType.NORMAL)

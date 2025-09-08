@@ -7,9 +7,9 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.appcompat.app.AppCompatActivity
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.topdon.lib.core.BaseApplication
@@ -20,9 +20,8 @@ import com.topdon.lib.core.bean.response.ResponseUserInfo
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.common.UserInfoManager
 import com.topdon.lib.core.dialog.LoadingDialog
-import com.topdon.lib.core.tools.*
 import com.topdon.lib.core.dialog.TipCameraProgressDialog
-import com.topdon.lib.core.dialog.TipProgressDialog
+import com.topdon.lib.core.tools.*
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.bean.CommonBean
 import org.greenrobot.eventbus.EventBus
@@ -34,11 +33,12 @@ import java.io.File
  * Created by admin on 2018/6/4.
  */
 abstract class BaseActivity : AppCompatActivity() {
-
     val TAG = this.javaClass.simpleName
 
     protected abstract fun initContentView(): Int
+
     protected abstract fun initView()
+
     protected abstract fun initData()
 
     protected var savedInstanceState: Bundle? = null
@@ -49,20 +49,20 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         BaseApplication.instance.activitys.add(this)
         this.savedInstanceState = savedInstanceState
-        if(!EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().register(this)
-        }
+        if (!EventBus.getDefault().isRegistered(this))
+            {
+                EventBus.getDefault().register(this)
+            }
 
         if (isLockPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
-        window.navigationBarColor = ContextCompat.getColor(this,R.color.toolbar_16131E)
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.toolbar_16131E)
         setContentView(initContentView())
         initView()
         initData()
         synLogin()
     }
-
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(AppLanguageUtils.attachBaseContext(newBase, ConstantLanguages.ENGLISH))
@@ -70,9 +70,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if(!EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().register(this)
-        }
+        if (!EventBus.getDefault().isRegistered(this))
+            {
+                EventBus.getDefault().register(this)
+            }
     }
 
     override fun onResume() {
@@ -83,17 +84,15 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onStop()
     }
 
-
-
     override fun onDestroy() {
         cameraDialog?.dismiss()
         super.onDestroy()
-        if (EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().unregister(this)
-        }
+        if (EventBus.getDefault().isRegistered(this))
+            {
+                EventBus.getDefault().unregister(this)
+            }
         BaseApplication.instance.activitys.remove(this)
     }
-
 
     /**
      * 监听 USB 连接状态
@@ -106,43 +105,43 @@ abstract class BaseActivity : AppCompatActivity() {
             disConnected()
         }
     }
+
     protected open fun connected() {
-
     }
+
     protected open fun disConnected() {
-
     }
-
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketConnectState(event: SocketStateEvent) {
-        Log.d("onSocketConnectState","${event.isConnect}")
+        Log.d("onSocketConnectState", "${event.isConnect}")
         if (event.isConnect) {
             onSocketConnected(event.isTS004)
         } else {
             onSocketDisConnected(event.isTS004)
         }
     }
+
     protected open fun onSocketConnected(isTS004: Boolean) {
-
     }
+
     protected open fun onSocketDisConnected(isTS004: Boolean) {
-
     }
-
 
     /**
      * 新版 LMS 风格的加载中弹框.
      */
     private var loadingDialog: LoadingDialog? = null
+
     /**
      * 真是醉了，一个加载中的弹框现在就有 3 种，不管了，继续加，理论上后续都要改成这个.
      */
-    fun showLoadingDialog(@StringRes resId: Int = R.string.tip_loading) {
+    fun showLoadingDialog(
+        @StringRes resId: Int = R.string.tip_loading,
+    ) {
         showLoadingDialog(getString(resId))
     }
+
     fun showLoadingDialog(text: CharSequence?) {
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog(this)
@@ -150,6 +149,7 @@ abstract class BaseActivity : AppCompatActivity() {
         loadingDialog?.setTips(text)
         loadingDialog?.show()
     }
+
     /**
      * 真是醉了，一个加载中的弹框现在就有 3 种，不管了，继续加，理论上后续都要改成这个.
      */
@@ -157,8 +157,8 @@ abstract class BaseActivity : AppCompatActivity() {
         loadingDialog?.dismiss()
     }
 
-
     private var cameraDialog: TipCameraProgressDialog? = null
+
     fun showCameraLoading() {
         if (cameraDialog != null && cameraDialog!!.isShowing) {
             return
@@ -173,18 +173,19 @@ abstract class BaseActivity : AppCompatActivity() {
             if (!(isFinishing && isDestroyed)) {
                 cameraDialog?.show()
             }
-        }catch (e:Exception){
-            //临时捕获方案，后面需求完成后再追踪优化
-            Log.e("临时处理方案",e.message.toString())
+        } catch (e: Exception) {
+            // 临时捕获方案，后面需求完成后再追踪优化
+            Log.e("临时处理方案", e.message.toString())
         }
     }
+
     fun dismissCameraLoading() {
         if (cameraDialog != null && cameraDialog!!.isShowing) {
             cameraDialog?.dismiss()
         }
     }
 
-    //同步登录信息
+    // 同步登录信息
     private fun synLogin() {
         if (this::class.java.simpleName == "MainActivity") {
             LMS.getInstance().syncUserInfo()
@@ -207,7 +208,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         } else {
             if (UserInfoManager.getInstance().isLogin()) {
-                //账号已退出,本地登录状态,需退出操作
+                // 账号已退出,本地登录状态,需退出操作
                 UserInfoManager.getInstance().logout()
             }
         }
@@ -216,12 +217,18 @@ abstract class BaseActivity : AppCompatActivity() {
     protected class TakePhotoResult : ActivityResultContract<File, File?>() {
         private lateinit var file: File
 
-        override fun createIntent(context: Context, input: File): Intent {
+        override fun createIntent(
+            context: Context,
+            input: File,
+        ): Intent {
             file = input
             val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             return Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
 
-        override fun parseResult(resultCode: Int, intent: Intent?): File? = if (resultCode == RESULT_OK) file else null
+        override fun parseResult(
+            resultCode: Int,
+            intent: Intent?,
+        ): File? = if (resultCode == RESULT_OK) file else null
     }
 }

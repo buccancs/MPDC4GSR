@@ -15,15 +15,15 @@ import com.topdon.lib.core.utils.ScreenUtil
  * Created by LCG on 2024/10/26.
  */
 class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
-
     @StringRes
     private var tipsResId: Int = 0
     private var onConfirmListener: ((isSelect: Boolean) -> Unit)? = null
-    
+
     private val binding: DialogNotTipsSelectBinding = DialogNotTipsSelectBinding.inflate(layoutInflater)
 
-
-    fun setTipsResId(@StringRes tipsResId: Int): NotTipsSelectDialog {
+    fun setTipsResId(
+        @StringRes tipsResId: Int,
+    ): NotTipsSelectDialog {
         this.tipsResId = tipsResId
         return this
     }
@@ -35,8 +35,6 @@ class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         onConfirmListener = l
         return this
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

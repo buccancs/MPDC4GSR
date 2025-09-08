@@ -20,8 +20,6 @@ import kotlinx.coroutines.withContext
  * Created by fylder on 2018/6/23.
  */
 object GlideLoader {
-
-
     /**
      * 图像默认图
      */
@@ -35,7 +33,11 @@ object GlideLoader {
     /**
      * 圆形图片
      */
-    fun loadCircle(img: ImageView, resourceId: Int, options: RequestOptions) {
+    fun loadCircle(
+        img: ImageView,
+        resourceId: Int,
+        options: RequestOptions,
+    ) {
         Glide.with(img)
             .load(resourceId)
             .apply(options)
@@ -45,7 +47,11 @@ object GlideLoader {
     /**
      * 圆形图片
      */
-    fun loadCircle(img: ImageView, url: String, options: RequestOptions) {
+    fun loadCircle(
+        img: ImageView,
+        url: String,
+        options: RequestOptions,
+    ) {
         Glide.with(img)
             .load(url)
             .apply(options)
@@ -55,7 +61,11 @@ object GlideLoader {
     /**
      * 圆形图片
      */
-    fun loadCircle(img: ImageView, drawable: Drawable, options: RequestOptions) {
+    fun loadCircle(
+        img: ImageView,
+        drawable: Drawable,
+        options: RequestOptions,
+    ) {
         Glide.with(img)
             .load(drawable)
             .apply(options)
@@ -65,7 +75,11 @@ object GlideLoader {
     /**
      * 圆形图片
      */
-    fun loadCircle(img: ImageView, uri: Uri, options: RequestOptions) {
+    fun loadCircle(
+        img: ImageView,
+        uri: Uri,
+        options: RequestOptions,
+    ) {
         Glide.with(img)
             .load(uri)
             .apply(options)
@@ -75,7 +89,12 @@ object GlideLoader {
     /**
      * 圆形图片
      */
-    fun loadCircle(img: ImageView, url: String, resourceId: Int, options: RequestOptions) {
+    fun loadCircle(
+        img: ImageView,
+        url: String,
+        resourceId: Int,
+        options: RequestOptions,
+    ) {
         Glide.with(img)
             .load(url)
             .error(resourceId)
@@ -87,7 +106,10 @@ object GlideLoader {
     /**
      * 圆角形图片
      */
-    fun loadRounded(img: ImageView, resourceId: Int) {
+    fun loadRounded(
+        img: ImageView,
+        resourceId: Int,
+    ) {
         Glide.with(img)
             .load(resourceId)
             .apply(getPhotoOptions())
@@ -97,7 +119,10 @@ object GlideLoader {
     /**
      * 圆角形图片
      */
-    fun loadRounded(img: ImageView, url: String) {
+    fun loadRounded(
+        img: ImageView,
+        url: String,
+    ) {
         Glide.with(img)
             .load(url)
             .apply(getPhotoOptions())
@@ -107,7 +132,10 @@ object GlideLoader {
     /**
      * 圆角形图片
      */
-    fun loadRounded(img: ImageView, drawable: Drawable) {
+    fun loadRounded(
+        img: ImageView,
+        drawable: Drawable,
+    ) {
         Glide.with(img)
             .load(drawable)
             .apply(getPhotoOptions())
@@ -117,7 +145,10 @@ object GlideLoader {
     /**
      * 圆角形图片
      */
-    fun loadRounded(img: ImageView, uri: Uri) {
+    fun loadRounded(
+        img: ImageView,
+        uri: Uri,
+    ) {
         Glide.with(img)
             .load(uri)
             .apply(getPhotoOptions())
@@ -127,14 +158,19 @@ object GlideLoader {
     /**
      * 加载图片
      */
-    fun load(img: ImageView, url: String?) {
-        val multi = MultiTransformation(
-            CenterCrop()
-        )
-        val options = RequestOptions
-            .bitmapTransform(multi)
-            .placeholder(R.mipmap.bg_default_img)
-            .error(R.mipmap.bg_default_img)
+    fun load(
+        img: ImageView,
+        url: String?,
+    ) {
+        val multi =
+            MultiTransformation(
+                CenterCrop(),
+            )
+        val options =
+            RequestOptions
+                .bitmapTransform(multi)
+                .placeholder(R.mipmap.bg_default_img)
+                .error(R.mipmap.bg_default_img)
         Glide.with(img)
             .load(url)
             .apply(options)
@@ -144,14 +180,19 @@ object GlideLoader {
     /**
      * 加载图片
      */
-    fun loadGallery(img: ImageView, url: String?) {
-        val multi = MultiTransformation(
-            CenterCrop()
-        )
-        val options = RequestOptions
-            .bitmapTransform(multi)
-            .placeholder(R.drawable.ic_gallery_default_shape)
-            .error(R.drawable.ic_gallery_default_shape)
+    fun loadGallery(
+        img: ImageView,
+        url: String?,
+    ) {
+        val multi =
+            MultiTransformation(
+                CenterCrop(),
+            )
+        val options =
+            RequestOptions
+                .bitmapTransform(multi)
+                .placeholder(R.drawable.ic_gallery_default_shape)
+                .error(R.drawable.ic_gallery_default_shape)
         Glide.with(img)
             .load(url)
             .apply(options)
@@ -161,14 +202,19 @@ object GlideLoader {
     /**
      * 加载图片
      */
-    fun loadFit(img: ImageView, url: String?) {
-        val multi = MultiTransformation(
-            FitCenter()
-        )
-        val options = RequestOptions
-            .bitmapTransform(multi)
-            .placeholder(R.drawable.ic_default_search_svg)
-            .error(R.drawable.ic_default_search_svg)
+    fun loadFit(
+        img: ImageView,
+        url: String?,
+    ) {
+        val multi =
+            MultiTransformation(
+                FitCenter(),
+            )
+        val options =
+            RequestOptions
+                .bitmapTransform(multi)
+                .placeholder(R.drawable.ic_default_search_svg)
+                .error(R.drawable.ic_default_search_svg)
         Glide.with(img)
             .load(url)
             .apply(options)
@@ -178,12 +224,17 @@ object GlideLoader {
     /**
      * 加载图片
      */
-    fun load(img: ImageView, resourceId: Int) {
-        val multi = MultiTransformation(
-            FitCenter()
-        )
-        val options = RequestOptions
-            .bitmapTransform(multi)
+    fun load(
+        img: ImageView,
+        resourceId: Int,
+    ) {
+        val multi =
+            MultiTransformation(
+                FitCenter(),
+            )
+        val options =
+            RequestOptions
+                .bitmapTransform(multi)
 
         Glide.with(img)
             .load(resourceId)
@@ -191,15 +242,20 @@ object GlideLoader {
             .into(img)
     }
 
-
-    fun loadP(img: ImageView, url: String?) {
+    fun loadP(
+        img: ImageView,
+        url: String?,
+    ) {
         Glide.with(img)
             .load(url)
             .placeholder(R.drawable.ic_default_search_svg)
             .into(img)
     }
 
-    suspend fun getDrawable(context: Context, url: String?): Drawable? {
+    suspend fun getDrawable(
+        context: Context,
+        url: String?,
+    ): Drawable? {
         if (url == null) {
             return null
         }

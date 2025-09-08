@@ -3,19 +3,16 @@ package com.topdon.lib.ui.widget
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
-import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 import kotlin.math.roundToInt
+import com.topdon.lib.ui.R as UiR
 
 /**
  * 支持竖向的 SeekBar。
  * 暂不支持 thumbOffset.
  */
-class CommSeekBar: AppCompatSeekBar {
+class CommSeekBar : AppCompatSeekBar {
     /**
      * 0-横向 1-竖向
      */
@@ -25,15 +22,15 @@ class CommSeekBar: AppCompatSeekBar {
     private var mMaxHeight = 48
     private var mMinWidth = 24
     private var mMinHeight = 24
-    var level = 0;
+    var level = 0
 
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
 
-    constructor(context: Context): this(context, null)
+    constructor(context: Context) : this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val typedArray = context.obtainStyledAttributes(attrs, UiR.styleable.CommSeekBar, defStyleAttr, 0)
         orientation = typedArray.getInt(UiR.styleable.CommSeekBar_android_orientation, 0)
         mMaxWidth = typedArray.getDimensionPixelSize(UiR.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
@@ -59,7 +56,10 @@ class CommSeekBar: AppCompatSeekBar {
         }
     }
 
-    override fun setProgress(progress: Int, animate: Boolean) {
+    override fun setProgress(
+        progress: Int,
+        animate: Boolean,
+    ) {
         super.setProgress(progress, animate)
         if (orientation != 0) {
             onSeekBarChangeListener?.onProgressChanged(this, progress, false)
@@ -73,7 +73,10 @@ class CommSeekBar: AppCompatSeekBar {
         }
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         if (orientation == 0) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         } else {
@@ -92,21 +95,27 @@ class CommSeekBar: AppCompatSeekBar {
 
             setMeasuredDimension(
                 resolveSizeAndState(dw, widthMeasureSpec, 0),
-                resolveSizeAndState(dh, heightMeasureSpec, 0)
+                resolveSizeAndState(dh, heightMeasureSpec, 0),
             )
         }
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int,
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (orientation != 0) {
             calculateDrawable(w, h)
         }
     }
 
-
-
-    private fun calculateDrawable(w: Int, h: Int) {
+    private fun calculateDrawable(
+        w: Int,
+        h: Int,
+    ) {
         val paddingWidth: Int = w - paddingLeft - paddingRight
         val paddingHeight: Int = h - paddingTop - paddingBottom
 
@@ -132,8 +141,9 @@ class CommSeekBar: AppCompatSeekBar {
         if (thumb != null) {
             val available: Int = paddingHeight - thumbHeight + thumbOffset * 2
             val left = progress / max.toFloat() * available + 0.5f
-            val reviseLeft = left.coerceAtLeast(thumbHeight / 2 + 0.5f)
-                .coerceAtMost(paddingHeight - thumbHeight / 2 - 0.5f).toInt()
+            val reviseLeft =
+                left.coerceAtLeast(thumbHeight / 2 + 0.5f)
+                    .coerceAtMost(paddingHeight - thumbHeight / 2 - 0.5f).toInt()
             thumb.setBounds(reviseLeft, thumbTopOffset, reviseLeft + thumbHeight, thumbTopOffset + thumbWidth)
         }
     }
@@ -186,25 +196,26 @@ class CommSeekBar: AppCompatSeekBar {
     /**
      * 通过级别分层进行粘性处理
      */
-    fun stopTrackTouchLevel(){
-        if (level > 0){
-            val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
-            setProgress((newLevel.toFloat() / level * 100).toInt())
-         }
+    fun stopTrackTouchLevel()  {
+        if (level > 0)
+            {
+                val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
+                setProgress((newLevel.toFloat() / level * 100).toInt())
+            }
     }
-
 
     private fun trackTouchEvent(event: MotionEvent) {
         val y = event.y.roundToInt()
-        progress = if (y < paddingTop) {
-            0
-        } else if (y > height - paddingBottom) {
-            max
-        } else {
-            val availableHeight: Int = height - paddingTop - paddingBottom
-            val scale: Float = (y - paddingTop) / availableHeight.toFloat()
-            (scale * max).roundToInt()
-        }
+        progress =
+            if (y < paddingTop) {
+                0
+            } else if (y > height - paddingBottom) {
+                max
+            } else {
+                val availableHeight: Int = height - paddingTop - paddingBottom
+                val scale: Float = (y - paddingTop) / availableHeight.toFloat()
+                (scale * max).roundToInt()
+            }
         stopTrackTouchLevel()
         if (thumb != null) {
             calculateDrawable(width, height)

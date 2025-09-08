@@ -4,8 +4,8 @@ Test script for new Bluetooth and WiFi functionality
 Tests the core logic without GUI dependencies
 """
 
-import sys
 import asyncio
+import sys
 from pathlib import Path
 
 # Add src to path
@@ -57,8 +57,8 @@ def test_admin_privileges_basic():
     """Test admin privileges manager basic functionality (without GUI)."""
     try:
         from ircamera_pc.core.admin_privileges import (
-            PrivilegeLevel,
             ElevationResult,
+            PrivilegeLevel,
             SystemPermissions,
         )
 

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.ui.transform.HorizontalScrollItemTransformer
 import com.topdon.lib.ui.utils.Direction.Companion.fromDelta
-import java.util.ArrayList
 import java.util.Locale
 import kotlin.math.abs
 
@@ -26,9 +25,9 @@ import kotlin.math.abs
 class HorizontalLayoutManager(
     private val context: Context,
     scrollStateListener: ScrollStateListener,
-    orientation: DSVOrientation
+    orientation: DSVOrientation,
 ) : RecyclerView.LayoutManager() {
-    //This field will take value of all visible view's center points during the fill phase
+    // This field will take value of all visible view's center points during the fill phase
     private var viewCenterIterator: Point
     private var recyclerCenter: Point
     private var currentViewCenter: Point
@@ -37,7 +36,7 @@ class HorizontalLayoutManager(
     var extraLayoutSpace = 0
         private set
 
-    //Max possible distance a view can travel during one scroll phase
+    // Max possible distance a view can travel during one scroll phase
     private var scrollToChangeCurrent = 0
     private var currentScrollState = 0
     private var scrolled = 0
@@ -76,7 +75,10 @@ class HorizontalLayoutManager(
         transformClampItemCount = DEFAULT_TRANSFORM_CLAMP_ITEM_COUNT
     }
 
-    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
+    override fun onLayoutChildren(
+        recycler: RecyclerView.Recycler,
+        state: RecyclerView.State,
+    ) {
         if (state.itemCount == 0) {
             recyclerViewProxy.removeAndRecycleAllViews(recycler)
             pendingPosition = NO_POSITION
@@ -100,9 +102,9 @@ class HorizontalLayoutManager(
 
     private fun ensureValidPosition(state: RecyclerView.State) {
         if (currentPosition == NO_POSITION || currentPosition >= state.itemCount) {
-            //currentPosition might have been assigned in onRestoreInstanceState()
-            //which can lead to a crash (position out of bounds) when data set
-            //is not persisted across rotations
+            // currentPosition might have been assigned in onRestoreInstanceState()
+            // which can lead to a crash (position out of bounds) when data set
+            // is not persisted across rotations
             currentPosition = 0
         }
     }
@@ -123,18 +125,23 @@ class HorizontalLayoutManager(
         val childViewHeight = recyclerViewProxy.getMeasuredHeightWithMargin(viewToMeasure)
         childHalfWidth = childViewWidth / 2
         childHalfHeight = childViewHeight / 2
-        scrollToChangeCurrent = orientationHelper.getDistanceToChangeCurrent(
-            childViewWidth,
-            childViewHeight
-        )
+        scrollToChangeCurrent =
+            orientationHelper.getDistanceToChangeCurrent(
+                childViewWidth,
+                childViewHeight,
+            )
         extraLayoutSpace = scrollToChangeCurrent * offscreenItems
         recyclerViewProxy.detachAndScrapView(viewToMeasure, recycler)
     }
 
     private fun updateRecyclerDimensions(state: RecyclerView.State) {
-        val dimensionsChanged = (!state.isMeasuring
-                && (recyclerViewProxy.width != viewWidth
-                || recyclerViewProxy.height != viewHeight))
+        val dimensionsChanged = (
+            !state.isMeasuring &&
+                (
+                    recyclerViewProxy.width != viewWidth ||
+                        recyclerViewProxy.height != viewHeight
+                )
+        )
         if (dimensionsChanged) {
             viewWidth = recyclerViewProxy.width
             viewHeight = recyclerViewProxy.height
@@ -146,30 +153,37 @@ class HorizontalLayoutManager(
     private fun fill(recycler: RecyclerView.Recycler?) {
         cacheAndDetachAttachedViews()
         orientationHelper.setCurrentViewCenter(recyclerCenter, scrolled, currentViewCenter)
-        val endBound = orientationHelper.getViewEnd(
-            recyclerViewProxy.width,
-            recyclerViewProxy.height
-        )
+        val endBound =
+            orientationHelper.getViewEnd(
+                recyclerViewProxy.width,
+                recyclerViewProxy.height,
+            )
 
-        //Layout current
+        // Layout current
         if (isViewVisible(currentViewCenter, endBound)) {
             layoutView(recycler, currentPosition, currentViewCenter)
         }
 
-        //Layout items before the current item
+        // Layout items before the current item
         layoutViews(recycler, Direction.START, endBound)
 
-        //Layout items after the current item
+        // Layout items after the current item
         layoutViews(recycler, Direction.END, endBound)
         recycleDetachedViewsAndClearCache(recycler!!)
     }
 
-    private fun layoutViews(recycler: RecyclerView.Recycler?, direction: Direction, endBound: Int) {
+    private fun layoutViews(
+        recycler: RecyclerView.Recycler?,
+        direction: Direction,
+        endBound: Int,
+    ) {
         val positionStep = direction.applyTo(1)
 
-        //Predictive layout is required when we are doing smooth fast scroll towards pendingPosition
-        var noPredictiveLayoutRequired = (pendingPosition == NO_POSITION
-                || !direction.sameAs(pendingPosition - currentPosition))
+        // Predictive layout is required when we are doing smooth fast scroll towards pendingPosition
+        var noPredictiveLayoutRequired = (
+            pendingPosition == NO_POSITION ||
+                !direction.sameAs(pendingPosition - currentPosition)
+        )
         viewCenterIterator[currentViewCenter.x] = currentViewCenter.y
         var pos = currentPosition + positionStep
         while (isInBounds(pos)) {
@@ -186,15 +200,21 @@ class HorizontalLayoutManager(
         }
     }
 
-    private fun layoutView(recycler: RecyclerView.Recycler?, position: Int, viewCenter: Point) {
+    private fun layoutView(
+        recycler: RecyclerView.Recycler?,
+        position: Int,
+        viewCenter: Point,
+    ) {
         if (position < 0) return
         var v = detachedCache[position]
         if (v == null) {
             v = recyclerViewProxy.getMeasuredChildForAdapterPosition(position, recycler!!)
             recyclerViewProxy.layoutDecoratedWithMargins(
                 v,
-                viewCenter.x - childHalfWidth, viewCenter.y - childHalfHeight,
-                viewCenter.x + childHalfWidth, viewCenter.y + childHalfHeight
+                viewCenter.x - childHalfWidth,
+                viewCenter.y - childHalfHeight,
+                viewCenter.x + childHalfWidth,
+                viewCenter.y + childHalfHeight,
             )
         } else {
             recyclerViewProxy.attachView(v)
@@ -221,7 +241,11 @@ class HorizontalLayoutManager(
         detachedCache.clear()
     }
 
-    override fun onItemsAdded(recyclerView: RecyclerView, positionStart: Int, itemCount: Int) {
+    override fun onItemsAdded(
+        recyclerView: RecyclerView,
+        positionStart: Int,
+        itemCount: Int,
+    ) {
         var newPosition = currentPosition
         if (currentPosition == NO_POSITION) {
             newPosition = 0
@@ -231,13 +255,17 @@ class HorizontalLayoutManager(
         onNewPosition(newPosition)
     }
 
-    override fun onItemsRemoved(recyclerView: RecyclerView, positionStart: Int, itemCount: Int) {
+    override fun onItemsRemoved(
+        recyclerView: RecyclerView,
+        positionStart: Int,
+        itemCount: Int,
+    ) {
         var newPosition = currentPosition
         if (recyclerViewProxy.itemCount == 0) {
             newPosition = NO_POSITION
         } else if (currentPosition >= positionStart) {
             if (currentPosition < positionStart + itemCount) {
-                //If currentPosition is in the removed items, then the new item became current
+                // If currentPosition is in the removed items, then the new item became current
                 currentPosition = NO_POSITION
             }
             newPosition = Math.max(0, currentPosition - itemCount)
@@ -246,7 +274,7 @@ class HorizontalLayoutManager(
     }
 
     override fun onItemsChanged(recyclerView: RecyclerView) {
-        //notifyDataSetChanged() was called. We need to ensure that currentPosition is not out of bounds
+        // notifyDataSetChanged() was called. We need to ensure that currentPosition is not out of bounds
         currentPosition = Math.min(Math.max(0, currentPosition), recyclerViewProxy.itemCount - 1)
         dataSetChangeShiftedPosition = true
     }
@@ -261,7 +289,7 @@ class HorizontalLayoutManager(
     override fun scrollHorizontallyBy(
         dx: Int,
         recycler: RecyclerView.Recycler,
-        state: RecyclerView.State
+        state: RecyclerView.State,
     ): Int {
         return scrollBy(dx, recycler)
     }
@@ -269,12 +297,15 @@ class HorizontalLayoutManager(
     override fun scrollVerticallyBy(
         dy: Int,
         recycler: RecyclerView.Recycler,
-        state: RecyclerView.State
+        state: RecyclerView.State,
     ): Int {
         return scrollBy(dy, recycler)
     }
 
-    private fun scrollBy(amount: Int, recycler: RecyclerView.Recycler?): Int {
+    private fun scrollBy(
+        amount: Int,
+        recycler: RecyclerView.Recycler?,
+    ): Int {
         if (recyclerViewProxy.childCount == 0) {
             return 0
         }
@@ -319,14 +350,14 @@ class HorizontalLayoutManager(
     override fun smoothScrollToPosition(
         recyclerView: RecyclerView,
         state: RecyclerView.State,
-        position: Int
+        position: Int,
     ) {
         if (currentPosition == position || pendingPosition != NO_POSITION) {
             return
         }
         checkTargetPosition(state, position)
         if (currentPosition == NO_POSITION) {
-            //Layout not happened yet
+            // Layout not happened yet
             currentPosition = position
         } else {
             startSmoothPendingScroll(position)
@@ -346,13 +377,13 @@ class HorizontalLayoutManager(
             scrollStateListener.onScrollStart()
         }
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            //Scroll is not finished until current view is centered
+            // Scroll is not finished until current view is centered
             val isScrollEnded = onScrollEnd()
             if (isScrollEnded) {
                 scrollStateListener.onScrollEnd()
             } else {
-                //Scroll continues and we don't want to set currentScrollState to STATE_IDLE,
-                //because this will then trigger .scrollStateListener.onScrollStart()
+                // Scroll continues and we don't want to set currentScrollState to STATE_IDLE,
+                // because this will then trigger .scrollStateListener.onScrollStart()
                 return
             }
         } else if (state == RecyclerView.SCROLL_STATE_DRAGGING) {
@@ -375,11 +406,12 @@ class HorizontalLayoutManager(
             currentPosition += scrollDirection.applyTo(1)
             scrolled = 0
         }
-        pendingScroll = if (isAnotherItemCloserThanCurrent) {
-            getHowMuchIsLeftToScroll(scrolled)
-        } else {
-            -scrolled
-        }
+        pendingScroll =
+            if (isAnotherItemCloserThanCurrent) {
+                getHowMuchIsLeftToScroll(scrolled)
+            } else {
+                -scrolled
+            }
         return if (pendingScroll == 0) {
             true
         } else {
@@ -389,9 +421,9 @@ class HorizontalLayoutManager(
     }
 
     private fun onDragStart() {
-        //Here we need to:
-        //1. Stop any pending scroll
-        //2. Set currentPosition to position of the item that is closest to the center
+        // Here we need to:
+        // 1. Stop any pending scroll
+        // 2. Set currentPosition to position of the item that is closest to the center
         val isScrollingThroughMultiplePositions = Math.abs(scrolled) > scrollToChangeCurrent
         if (isScrollingThroughMultiplePositions) {
             val scrolledPositions = scrolled / scrollToChangeCurrent
@@ -407,7 +439,10 @@ class HorizontalLayoutManager(
         pendingScroll = 0
     }
 
-    fun onFling(velocityX: Int, velocityY: Int) {
+    fun onFling(
+        velocityX: Int,
+        velocityY: Int,
+    ) {
         val velocity = orientationHelper.getFlingVelocity(velocityX, velocityY)
         val throttleValue = if (shouldSlideOnFling) Math.abs(velocity / flingThreshold) else 1
         var newPosition = currentPosition + fromDelta(velocity).applyTo(throttleValue)
@@ -436,19 +471,24 @@ class HorizontalLayoutManager(
         val isBoundReached: Boolean
         val isScrollDirectionAsBefore = direction.applyTo(scrolled) > 0
         if (direction === Direction.START && currentPosition == 0) {
-            //We can scroll to the left when currentPosition == 0 only if we scrolled to the right before
+            // We can scroll to the left when currentPosition == 0 only if we scrolled to the right before
             isBoundReached = scrolled == 0
             allowedScroll = if (isBoundReached) 0 else Math.abs(scrolled)
         } else if (direction === Direction.END && currentPosition == recyclerViewProxy.itemCount - 1) {
-            //We can scroll to the right when currentPosition == last only if we scrolled to the left before
+            // We can scroll to the right when currentPosition == last only if we scrolled to the left before
             isBoundReached = scrolled == 0
             allowedScroll = if (isBoundReached) 0 else Math.abs(scrolled)
         } else {
             isBoundReached = false
             allowedScroll =
-                if (isScrollDirectionAsBefore) scrollToChangeCurrent - Math.abs(scrolled) else scrollToChangeCurrent + Math.abs(
-                    scrolled
-                )
+                if (isScrollDirectionAsBefore) {
+                    scrollToChangeCurrent - Math.abs(scrolled)
+                } else {
+                    scrollToChangeCurrent +
+                        Math.abs(
+                            scrolled,
+                        )
+                }
         }
         scrollStateListener.onIsBoundReachedFlagChange(isBoundReached)
         return allowedScroll
@@ -522,16 +562,17 @@ class HorizontalLayoutManager(
 
     override fun onAdapterChanged(
         oldAdapter: RecyclerView.Adapter<*>?,
-        newAdapter: RecyclerView.Adapter<*>?
+        newAdapter: RecyclerView.Adapter<*>?,
     ) {
         pendingPosition = NO_POSITION
         pendingScroll = 0
         scrolled = pendingScroll
-        currentPosition = if (newAdapter is InitialPositionProvider) {
-            (newAdapter as InitialPositionProvider).getInitialPosition()
-        } else {
-            0
-        }
+        currentPosition =
+            if (newAdapter is InitialPositionProvider) {
+                (newAdapter as InitialPositionProvider).getInitialPosition()
+            } else {
+                0
+            }
         recyclerViewProxy.removeAllViews()
     }
 
@@ -552,18 +593,19 @@ class HorizontalLayoutManager(
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
         )
     }
 
     val nextPosition: Int
-        get() = if (scrolled == 0) {
-            currentPosition
-        } else if (pendingPosition != NO_POSITION) {
-            pendingPosition
-        } else {
-            currentPosition + fromDelta(scrolled).applyTo(1)
-        }
+        get() =
+            if (scrolled == 0) {
+                currentPosition
+            } else if (pendingPosition != NO_POSITION) {
+                pendingPosition
+            } else {
+                currentPosition + fromDelta(scrolled).applyTo(1)
+            }
 
     fun setItemTransformer(itemTransformer: HorizontalScrollItemTransformer?) {
         this.itemTransformer = itemTransformer
@@ -607,21 +649,25 @@ class HorizontalLayoutManager(
         }
     }
 
-    private fun getCenterRelativePositionOf(v: View, maxDistance: Int): Float {
-        val distanceFromCenter = orientationHelper.getDistanceFromCenter(
-            recyclerCenter,
-            getDecoratedLeft(v) + childHalfWidth,
-            getDecoratedTop(v) + childHalfHeight
-        )
+    private fun getCenterRelativePositionOf(
+        v: View,
+        maxDistance: Int,
+    ): Float {
+        val distanceFromCenter =
+            orientationHelper.getDistanceFromCenter(
+                recyclerCenter,
+                getDecoratedLeft(v) + childHalfWidth,
+                getDecoratedTop(v) + childHalfHeight,
+            )
         return Math.min(Math.max(-1f, distanceFromCenter / maxDistance), 1f)
     }
 
     private fun checkNewOnFlingPositionIsInBounds(position: Int): Int {
         val itemCount = recyclerViewProxy.itemCount
-        //The check is required in case slide through multiple items is turned on
+        // The check is required in case slide through multiple items is turned on
         if (currentPosition != 0 && position < 0) {
-            //If currentPosition == 0 && position < 0 we forbid scroll to the left,
-            //but if currentPosition != 0 we can slide to the first item
+            // If currentPosition == 0 && position < 0 we forbid scroll to the left,
+            // but if currentPosition != 0 we can slide to the first item
             return 0
         } else if (currentPosition != itemCount - 1 && position >= itemCount) {
             return itemCount - 1
@@ -641,8 +687,13 @@ class HorizontalLayoutManager(
         get() = recyclerViewProxy.getChildAt(recyclerViewProxy.childCount - 1)
 
     private fun notifyScroll() {
-        val amountToScroll = if (pendingPosition != NO_POSITION) Math.abs(scrolled + pendingScroll)
-            .toFloat() else scrollToChangeCurrent.toFloat()
+        val amountToScroll =
+            if (pendingPosition != NO_POSITION) {
+                Math.abs(scrolled + pendingScroll)
+                    .toFloat()
+            } else {
+                scrollToChangeCurrent.toFloat()
+            }
         val position = -Math.min(Math.max(-1f, scrolled / amountToScroll), 1f)
         scrollStateListener.onScroll(position)
     }
@@ -651,19 +702,29 @@ class HorizontalLayoutManager(
         return itemPosition >= 0 && itemPosition < recyclerViewProxy.itemCount
     }
 
-    private fun isViewVisible(viewCenter: Point, endBound: Int): Boolean {
+    private fun isViewVisible(
+        viewCenter: Point,
+        endBound: Int,
+    ): Boolean {
         return orientationHelper.isViewVisible(
-            viewCenter, childHalfWidth, childHalfHeight,
-            endBound, extraLayoutSpace
+            viewCenter,
+            childHalfWidth,
+            childHalfHeight,
+            endBound,
+            extraLayoutSpace,
         )
     }
 
-    private fun checkTargetPosition(state: RecyclerView.State, targetPosition: Int) {
+    private fun checkTargetPosition(
+        state: RecyclerView.State,
+        targetPosition: Int,
+    ) {
         require(!(targetPosition < 0 || targetPosition >= state.itemCount)) {
             String.format(
                 Locale.US,
                 "target position out of bounds: position=%d, itemCount=%d",
-                targetPosition, state.itemCount
+                targetPosition,
+                state.itemCount,
             )
         }
     }
@@ -678,11 +739,17 @@ class HorizontalLayoutManager(
 
     private inner class DiscreteLinearSmoothScroller(context: Context?) :
         LinearSmoothScroller(context) {
-        override fun calculateDxToMakeVisible(view: View, snapPreference: Int): Int {
+        override fun calculateDxToMakeVisible(
+            view: View,
+            snapPreference: Int,
+        ): Int {
             return orientationHelper.getPendingDx(-pendingScroll)
         }
 
-        override fun calculateDyToMakeVisible(view: View, snapPreference: Int): Int {
+        override fun calculateDyToMakeVisible(
+            view: View,
+            snapPreference: Int,
+        ): Int {
             return orientationHelper.getPendingDy(-pendingScroll)
         }
 
@@ -694,29 +761,34 @@ class HorizontalLayoutManager(
         override fun computeScrollVectorForPosition(targetPosition: Int): PointF? {
             return PointF(
                 orientationHelper.getPendingDx(pendingScroll).toFloat(),
-                orientationHelper.getPendingDy(pendingScroll).toFloat()
+                orientationHelper.getPendingDy(pendingScroll).toFloat(),
             )
         }
     }
 
     interface ScrollStateListener {
         fun onIsBoundReachedFlagChange(isBoundReached: Boolean)
+
         fun onScrollStart()
+
         fun onScrollEnd()
+
         fun onScroll(currentViewPosition: Float)
+
         fun onCurrentViewFirstLayout()
+
         fun onDataSetChangeChangedPosition()
     }
 
     interface InitialPositionProvider {
-        fun getInitialPosition() : Int
+        fun getInitialPosition(): Int
     }
 
     companion object {
         const val NO_POSITION = -1
         private const val EXTRA_POSITION = "extra_position"
         private const val DEFAULT_TIME_FOR_ITEM_SETTLE = 300
-        private const val DEFAULT_FLING_THRESHOLD = 2100 //Decrease to increase sensitivity.
+        private const val DEFAULT_FLING_THRESHOLD = 2100 // Decrease to increase sensitivity.
         private const val DEFAULT_TRANSFORM_CLAMP_ITEM_COUNT = 1
         private const val SCROLL_TO_SNAP_TO_ANOTHER_ITEM = 0.6f
     }

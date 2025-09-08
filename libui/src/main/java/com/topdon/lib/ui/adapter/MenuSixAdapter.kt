@@ -8,20 +8,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.listener.SingleClickListener
+import com.topdon.lib.ui.R as UiR
+import com.topdon.menu.R as MenuR
 
 @Deprecated("看起来是旧版 2D 编辑的菜单，根本没使用了")
 class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
-    private var colorEnable = false //伪彩条
-    private var contrastEnable = false //对比度
-    private var ddeEnable = false //细节
+    private var colorEnable = false // 伪彩条
+    private var contrastEnable = false // 对比度
+    private var ddeEnable = false // 细节
 
     fun selected(index: Int) {
         selected = index
@@ -43,30 +43,37 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
         notifyDataSetChanged()
     }
 
-    private val fourBean = arrayListOf(
-        ColorBean(MenuR.drawable.selector_menu2_setting_1, context.getString(R.string.thermal_pseudo), 1),
-        ColorBean(MenuR.drawable.selector_menu2_setting_2, context.getString(R.string.thermal_contrast), 2),
-        ColorBean(MenuR.drawable.selector_menu2_setting_3, context.getString(R.string.thermal_sharpen), 3),
-    )
+    private val fourBean =
+        arrayListOf(
+            ColorBean(MenuR.drawable.selector_menu2_setting_1, context.getString(R.string.thermal_pseudo), 1),
+            ColorBean(MenuR.drawable.selector_menu2_setting_2, context.getString(R.string.thermal_contrast), 2),
+            ColorBean(MenuR.drawable.selector_menu2_setting_3, context.getString(R.string.thermal_sharpen), 3),
+        )
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(UiR.layout.ui_item_menu_four_view, parent, false)
         return ItemView(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         if (holder is ItemView) {
             val bean = fourBean[position]
             holder.name.text = bean.name
             holder.img.setImageResource(bean.res)
-            holder.lay.setOnClickListener(object : SingleClickListener() {
-                override fun onSingleClick() {
-                    listener?.invoke(position, bean.code)
-                    selected(bean.code)
-                }
-
-            })
+            holder.lay.setOnClickListener(
+                object : SingleClickListener() {
+                    override fun onSingleClick() {
+                        listener?.invoke(position, bean.code)
+                        selected(bean.code)
+                    }
+                },
+            )
             when (bean.code) {
                 1 -> {
                     iconUI(colorEnable, holder.img, holder.name)
@@ -85,7 +92,11 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
     }
 
     // 状态变化
-    private fun iconUI(isActive: Boolean, img: ImageView, nameText: TextView) {
+    private fun iconUI(
+        isActive: Boolean,
+        img: ImageView,
+        nameText: TextView,
+    ) {
         img.isSelected = isActive
         if (isActive) {
             nameText.setTextColor(ContextCompat.getColor(context, UiR.color.white))
@@ -103,5 +114,4 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
         val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
     }
-
 }

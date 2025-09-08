@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.bean.GalleryBean
 import com.topdon.lib.core.bean.GalleryTitle

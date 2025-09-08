@@ -13,35 +13,30 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 
 class CountDownView : View {
-
-    //圆环颜色
+    // 圆环颜色
     private var mRingColor = 0
 
-    //圆环宽度
+    // 圆环宽度
     private var mRingWidth = 0
 
-    //圆环进度值文本大小
+    // 圆环进度值文本大小
     private var mRingProgressTextSize = 0
 
-    //宽度
+    // 宽度
     private var mWidth = 0
 
-    //高度
+    // 高度
     private var mHeight = 0
 
-    //文本
+    // 文本
     private var mRingText: String? = null
     private lateinit var mPaint: Paint
     private lateinit var mTextPaint: Paint
 
-    //圆环的矩形区域
+    // 圆环的矩形区域
     private var mRectF: RectF? = null
 
     //
@@ -56,48 +51,51 @@ class CountDownView : View {
      */
     private var mListener: OnCountDownListener? = null
 
-
     constructor(context: Context) : this(context, null)
 
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ) {
         val ta = context.obtainStyledAttributes(attrs, UiR.styleable.CountDownView)
         for (i in 0 until ta.indexCount) {
             when (ta.getIndex(i)) {
-                UiR.styleable.CountDownView_ringColor -> mRingColor =
-                    ta.getColor(
-                        UiR.styleable.CountDownView_ringColor,
-                        ContextCompat.getColor(context, UiR.color.colorAccent)
-                    )
-                UiR.styleable.CountDownView_ringWidth -> mRingWidth =
-                    ta.getDimensionPixelSize(
-                        UiR.styleable.CountDownView_ringWidth,
-                        40
-                    )
-                UiR.styleable.CountDownView_progressTextSize -> mRingProgressTextSize =
-                    ta.getDimensionPixelSize(
-                        UiR.styleable.CountDownView_progressTextSize,
-                        20
-                    )
-                UiR.styleable.CountDownView_progressTextColor -> mProgressTextColor =
-                    ta.getColor(
-                        UiR.styleable.CountDownView_progressTextColor,
-                        context.resources.getColor(UiR.color.colorAccent)
-                    )
-                UiR.styleable.CountDownView_countdownTime -> mCountdownTime =
-                    ta.getInteger(
-                        UiR.styleable.CountDownView_countdownTime,
-                        60
-                    )
-                UiR.styleable.CountDownView_progressText -> mRingText =
-                    ta.getString(UiR.styleable.CountDownView_progressText)
+                UiR.styleable.CountDownView_ringColor ->
+                    mRingColor =
+                        ta.getColor(
+                            UiR.styleable.CountDownView_ringColor,
+                            ContextCompat.getColor(context, UiR.color.colorAccent),
+                        )
+                UiR.styleable.CountDownView_ringWidth ->
+                    mRingWidth =
+                        ta.getDimensionPixelSize(
+                            UiR.styleable.CountDownView_ringWidth,
+                            40,
+                        )
+                UiR.styleable.CountDownView_progressTextSize ->
+                    mRingProgressTextSize =
+                        ta.getDimensionPixelSize(
+                            UiR.styleable.CountDownView_progressTextSize,
+                            20,
+                        )
+                UiR.styleable.CountDownView_progressTextColor ->
+                    mProgressTextColor =
+                        ta.getColor(
+                            UiR.styleable.CountDownView_progressTextColor,
+                            context.resources.getColor(UiR.color.colorAccent),
+                        )
+                UiR.styleable.CountDownView_countdownTime ->
+                    mCountdownTime =
+                        ta.getInteger(
+                            UiR.styleable.CountDownView_countdownTime,
+                            60,
+                        )
+                UiR.styleable.CountDownView_progressText ->
+                    mRingText =
+                        ta.getString(UiR.styleable.CountDownView_progressText)
             }
         }
         ta.recycle()
@@ -108,18 +106,24 @@ class CountDownView : View {
     }
 
     @SuppressLint("DrawAllocation")
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+    override fun onLayout(
+        changed: Boolean,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
+    ) {
         super.onLayout(changed, left, top, right, bottom)
         mWidth = measuredWidth
         mHeight = measuredHeight
-        mRectF = RectF(
-            0 + mRingWidth / 2f,
-            0 + mRingWidth / 2f,
-            mWidth - mRingWidth / 2f,
-            mHeight - mRingWidth / 2f
-        )
+        mRectF =
+            RectF(
+                0 + mRingWidth / 2f,
+                0 + mRingWidth / 2f,
+                mWidth - mRingWidth / 2f,
+                mHeight - mRingWidth / 2f,
+            )
     }
-
 
     /**
      * 设置倒计时间 单位秒
@@ -143,13 +147,13 @@ class CountDownView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        //绘制圆环
+        // 绘制圆环
         mPaint.color = mRingColor
         mPaint.style = Paint.Style.FILL
         mPaint.strokeWidth = mRingWidth.toFloat()
         canvas.drawArc(mRectF!!, -90f, mCurrentProgress - 360, false, mPaint)
         val font = Typeface.DEFAULT_BOLD
-        //绘制文本
+        // 绘制文本
         mTextPaint.isAntiAlias = true
         mTextPaint.textAlign = Paint.Align.CENTER
         mTextPaint.typeface = font
@@ -159,13 +163,12 @@ class CountDownView : View {
         mTextPaint.textSize = mRingProgressTextSize.toFloat()
         mTextPaint.color = mProgressTextColor
 
-        //文字居中显示
+        // 文字居中显示
         val fontMetrics = mTextPaint.fontMetricsInt
         val baseline =
             ((mRectF!!.bottom + mRectF!!.top - fontMetrics.bottom - fontMetrics.top) / 2).toInt()
         canvas.drawText(mRingText!!, mRectF!!.centerX(), baseline.toFloat(), mTextPaint)
     }
-
 
     /**
      * 开始倒计时
@@ -178,15 +181,17 @@ class CountDownView : View {
             invalidate()
         }
         valueAnimator!!.start()
-        valueAnimator!!.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                super.onAnimationEnd(animation)
-                //倒计时结束回调
-                if (mListener != null) {
-                    mListener!!.countDownFinished()
+        valueAnimator!!.addListener(
+            object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    // 倒计时结束回调
+                    if (mListener != null) {
+                        mListener!!.countDownFinished()
+                    }
                 }
-            }
-        })
+            },
+        )
     }
 
     /**

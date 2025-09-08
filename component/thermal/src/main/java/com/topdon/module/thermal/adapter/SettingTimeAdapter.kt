@@ -1,7 +1,6 @@
 package com.topdon.module.thermal.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.topdon.module.thermal.R
  */
 class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     private var datas = arrayOf("秒", "分", "时", "天")
     private var dataTimes = arrayOf(1, 2, 3, 4)
 
@@ -27,14 +25,19 @@ class SettingTimeAdapter(val context: Context) :
         notifyDataSetChanged()
     }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_setting_time, parent, false)
         return ItemView(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         if (holder is ItemView) {
             holder.btn.text = datas[position]
             if (position == select) {
@@ -48,7 +51,6 @@ class SettingTimeAdapter(val context: Context) :
                 listener?.onClick(position, dataTimes[position])
                 setCheck(position)
             }
-
         }
     }
 
@@ -60,10 +62,10 @@ class SettingTimeAdapter(val context: Context) :
         val btn: Button = itemView.findViewById(R.id.item_setting_time_btn)
     }
 
-
     interface OnItemClickListener {
-        fun onClick(index: Int, time: Int)
+        fun onClick(
+            index: Int,
+            time: Int,
+        )
     }
-
-
 }

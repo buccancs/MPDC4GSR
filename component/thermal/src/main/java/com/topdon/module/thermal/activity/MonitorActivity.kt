@@ -6,15 +6,14 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.BarUtils
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.ui.dialog.MonitorSelectDialog
 import com.topdon.lib.core.navigation.NavigationManager
+import com.topdon.lib.ui.dialog.MonitorSelectDialog
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class MonitorActivity : BaseActivity(), View.OnClickListener {
-
     companion object {
         const val STATS_START = 101
         const val STATS_MONITOR = 102
@@ -23,8 +22,8 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
 
     var MONITOR_ACTION = STATS_START
 
-    private var selectType = 1//选取点类型(点 线 面)
-    private var selectIndex: ArrayList<Int> = arrayListOf()//选取点
+    private var selectType = 1 // 选取点类型(点 线 面)
+    private var selectIndex: ArrayList<Int> = arrayListOf() // 选取点
 
     override fun initContentView() = R.layout.activity_monitor
 
@@ -32,7 +31,7 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         // Set toolbar title
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
-        
+
         val blackColor = ContextCompat.getColor(this, com.topdon.lib.core.R.color.black)
         toolbar?.setBackgroundColor(blackColor)
         BarUtils.setStatusBarColor(this, blackColor)
@@ -48,7 +47,6 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initData() {
-
     }
 
     override fun onClick(v: View?) {
@@ -63,8 +61,9 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
                         when (select) {
                             1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
                             2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
-                            else -> EventBus.getDefault()
-                                .post(ThermalActionEvent(action = 2003))
+                            else ->
+                                EventBus.getDefault()
+                                    .post(ThermalActionEvent(action = 2003))
                         }
                     }
                     .create().show()
@@ -78,7 +77,10 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    fun select(selectType: Int, selectIndex: ArrayList<Int>) {
+    fun select(
+        selectType: Int,
+        selectIndex: ArrayList<Int>,
+    ) {
         findViewById<Button>(R.id.motion_start_btn).isEnabled = true
         this.selectType = selectType
         this.selectIndex = selectIndex
@@ -94,14 +96,12 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         motionBtn.visibility = View.GONE
     }
 
-    //秒
+    // 秒
     fun updateTime(time: Long) {
         val ss = time % 60
         val mm = time / 60 % 60
         val ssStr = String.format("%02d", ss)
         val mmStr = String.format("%02d", mm)
-        findViewById<Button>(R.id.motion_start_btn).text = "${mmStr}:${ssStr}"
+        findViewById<Button>(R.id.motion_start_btn).text = "$mmStr:$ssStr"
     }
-
-
 }

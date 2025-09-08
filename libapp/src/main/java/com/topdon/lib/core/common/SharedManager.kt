@@ -6,7 +6,6 @@ import android.util.Base64
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
-import com.topdon.lib.core.bean.CarDetectBean
 import com.topdon.lib.core.bean.CarDetectChildBean
 import com.topdon.lib.core.bean.ContinuousBean
 import com.topdon.lib.core.bean.WatermarkBean
@@ -88,7 +87,6 @@ object SharedManager {
             SPUtils.getInstance().put("irConfigJsonTC007", value)
         }
 
-
     /**
      * 首页操作指引要显示的步骤 1-第1步 2-第2步 3-第3步 0-不显示
      */
@@ -107,7 +105,6 @@ object SharedManager {
     var configGuideStep: Int
         get() = SPUtils.getInstance().getInt("configGuideStep", 1)
         set(value) = SPUtils.getInstance().put("configGuideStep", value)
-
 
     /**
      * 是否显示过发射率提示
@@ -149,20 +146,23 @@ object SharedManager {
      * 双光校正旋转角度，取值范围 [0, 2000]，对应 SeekBar 取值.id对应设备的sid作为唯一标识区分
      */
     fun getManualAngle(sId: String): Int {
-        return SPUtils.getInstance().getInt("manualAngle_${sId}", 1000)
+        return SPUtils.getInstance().getInt("manualAngle_$sId", 1000)
     }
 
-    fun setManualAngle(sId: String, value: Int) {
-        SPUtils.getInstance().put("manualAngle_${sId}", value)
+    fun setManualAngle(
+        sId: String,
+        value: Int,
+    ) {
+        SPUtils.getInstance().put("manualAngle_$sId", value)
     }
 
     /**
      * 双光校正的实际数据，长度必定为 24.
      */
     fun getManualData(sId: String): ByteArray {
-        val strValue = SPUtils.getInstance().getString("manualData_${sId}")
+        val strValue = SPUtils.getInstance().getString("manualData_$sId")
         return if (strValue.isNullOrEmpty()) {
-            //对应 1,0,0,0,1,0 6个 float，该值为默认值
+            // 对应 1,0,0,0,1,0 6个 float，该值为默认值
             byteArrayOf(
                 0,
                 0,
@@ -187,17 +187,20 @@ object SharedManager {
                 0,
                 0,
                 0,
-                0
+                0,
             )
         } else {
             Base64.decode(strValue.toByteArray(), Base64.DEFAULT)
         }
     }
 
-    fun setManualData(sId: String, value: ByteArray) {
+    fun setManualData(
+        sId: String,
+        value: ByteArray,
+    ) {
         if (value.size == 24) {
             SPUtils.getInstance()
-                .put("manualData_${sId}", String(Base64.encode(value, Base64.DEFAULT)))
+                .put("manualData_$sId", String(Base64.encode(value, Base64.DEFAULT)))
         }
     }
 
@@ -295,10 +298,14 @@ object SharedManager {
     var continuousBean: ContinuousBean
         get() {
             val json = SPUtils.getInstance().getString("continuousBean", "")
-            return if (json.isNullOrEmpty()) ContinuousBean() else Gson().fromJson(
-                json,
-                ContinuousBean::class.java
-            )
+            return if (json.isNullOrEmpty()) {
+                ContinuousBean()
+            } else {
+                Gson().fromJson(
+                    json,
+                    ContinuousBean::class.java,
+                )
+            }
         }
         set(value) {
             SPUtils.getInstance().put("continuousBean", Gson().toJson(value))
@@ -311,10 +318,14 @@ object SharedManager {
     var wifiWatermarkBean: WatermarkBean
         get() {
             val json = SPUtils.getInstance().getString("wifiWatermarkBean", "")
-            return if (json.isNullOrEmpty()) WatermarkBean() else Gson().fromJson(
-                json,
-                WatermarkBean::class.java
-            )
+            return if (json.isNullOrEmpty()) {
+                WatermarkBean()
+            } else {
+                Gson().fromJson(
+                    json,
+                    WatermarkBean::class.java,
+                )
+            }
         }
         set(value) {
             SPUtils.getInstance().put("watermarkBean", Gson().toJson(value))
@@ -326,10 +337,14 @@ object SharedManager {
     var watermarkBean: WatermarkBean
         get() {
             val json = SPUtils.getInstance().getString("watermarkBean", "")
-            return if (json.isNullOrEmpty()) WatermarkBean() else Gson().fromJson(
-                json,
-                WatermarkBean::class.java
-            )
+            return if (json.isNullOrEmpty()) {
+                WatermarkBean()
+            } else {
+                Gson().fromJson(
+                    json,
+                    WatermarkBean::class.java,
+                )
+            }
         }
         set(value) {
             SPUtils.getInstance().put("watermarkBean", Gson().toJson(value))
@@ -362,29 +377,28 @@ object SharedManager {
     private const val HEAD_ICON: String = "head_icon"
 
     private const val BASE_HOST: String = "base_host"
-    private const val LANGUAGE = "language"//语言设置
+    private const val LANGUAGE = "language" // 语言设置
 
-    private const val HAS_SHOW_CLAUSE = "hasShowClause"//是否显示过条款
-    private const val TEMPERATURE_UNIT = "temperature"//温度单位
-    private const val VERSION_CHECK_DATE = "version_check_date"//版本检测的日期
+    private const val HAS_SHOW_CLAUSE = "hasShowClause" // 是否显示过条款
+    private const val TEMPERATURE_UNIT = "temperature" // 温度单位
+    private const val VERSION_CHECK_DATE = "version_check_date" // 版本检测的日期
 
-    private const val DEVICE_SN = "deviceSn"//设备SN
-    private const val DEVICE_VERSION = "deviceVersion"//设备版本
+    private const val DEVICE_SN = "deviceSn" // 设备SN
+    private const val DEVICE_VERSION = "deviceVersion" // 设备版本
 
-    private const val IR_CONFIG = "ir_config"//温度修正参数(json)
-    private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo"//自定义伪彩条
-    private const val SP_TARGET_POP = "sp_target_pop"       //标靶弹框
+    private const val IR_CONFIG = "ir_config" // 温度修正参数(json)
+    private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo" // 自定义伪彩条
+    private const val SP_TARGET_POP = "sp_target_pop" // 标靶弹框
 
-    private const val SP_SETTING_IS_PUSH = "sp_setting_is_push" //推送开关
+    private const val SP_SETTING_IS_PUSH = "sp_setting_is_push" // 推送开关
     private const val SP_SETTING_IS_RECOMMEND = "sp_setting_is_recommend"
 
     /************************TS004************************************/
-    private const val SP_HOT_MODE = "sp_hot_mode"       //白热
-    private const val SP_CHANGE_DEVICE = "sp_change_device"       //ts001与ts004相互切换
-    private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo"//tc007自定义伪彩条
+    private const val SP_HOT_MODE = "sp_hot_mode" // 白热
+    private const val SP_CHANGE_DEVICE = "sp_change_device" // ts001与ts004相互切换
+    private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo" // tc007自定义伪彩条
 
-    private const val SP_CAR_DETECT = "sp_car_detect"       //汽车检测项目
-
+    private const val SP_CAR_DETECT = "sp_car_detect" // 汽车检测项目
 
     fun setToken(token: String) {
         SPUtils.getInstance().put(TOKEN, token)
@@ -426,7 +440,6 @@ object SharedManager {
         return SPUtils.getInstance().getString(HEAD_ICON, "")
     }
 
-
     fun setBaseHost(value: String) {
         return SPUtils.getInstance().put(BASE_HOST, value)
     }
@@ -435,7 +448,10 @@ object SharedManager {
         return SPUtils.getInstance().getString(BASE_HOST, "")
     }
 
-    fun setLanguage(context: Context, language: String) {
+    fun setLanguage(
+        context: Context,
+        language: String,
+    ) {
         PreferenceManager.getDefaultSharedPreferences(context)
             .edit().putString(LANGUAGE, language).apply()
     }
@@ -444,7 +460,6 @@ object SharedManager {
     fun getLanguage(context: Context): String {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(LANGUAGE, "")!!
     }
-
 
     fun setHasShowClause(hasShowClause: Boolean) {
         return SPUtils.getInstance().put(HAS_SHOW_CLAUSE, hasShowClause)
@@ -503,7 +518,6 @@ object SharedManager {
         return SPUtils.getInstance().getString(SP_CUSTOM_PSEUDO, "")
     }
 
-
     fun saveTC007CustomPseudo(json: String) {
         SPUtils.getInstance().put(SP_TC007_CUSTOM_PSEUDO, json)
     }
@@ -523,10 +537,8 @@ object SharedManager {
         SPUtils.getInstance().put(SP_TARGET_POP, targetPop)
     }
 
-
-    private const val IR_DUAL_DISP = "ir_dual_disp"//双光配准-水平
-    private const val IR_DUAL_DISP_V = "ir_dual_disp_v"//双光配准-垂直
-
+    private const val IR_DUAL_DISP = "ir_dual_disp" // 双光配准-水平
+    private const val IR_DUAL_DISP_V = "ir_dual_disp_v" // 双光配准-垂直
 
     fun saveSettingIsPush(isPush: Boolean) {
         SPUtils.getInstance().put(SP_SETTING_IS_PUSH, isPush)
@@ -563,6 +575,7 @@ object SharedManager {
         return SPUtils.getInstance().put("storage_permissions_state", value)
     }
     /************************TS004************************************/
+
     /**
      * TS004主页面-黑热
      */
@@ -599,5 +612,4 @@ object SharedManager {
     fun saveCarDetectInfo(bean: CarDetectChildBean) {
         SPUtils.getInstance().put(SP_CAR_DETECT, GsonUtils.toJson(bean))
     }
-
 }

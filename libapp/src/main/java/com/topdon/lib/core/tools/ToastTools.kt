@@ -13,15 +13,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-
 /**
  * create by fylder on 2018/7/4
  **/
 object ToastTools {
-
     var mPublicToast: Toast? = null
 
-    fun showShort(@StringRes textStr: Int) {
+    fun showShort(
+        @StringRes textStr: Int,
+    ) {
         showShort(Utils.getApp().getString(textStr))
     }
 
@@ -29,7 +29,10 @@ object ToastTools {
         showShort(textStr, Toast.LENGTH_SHORT)
     }
 
-    fun showShort(textStr: String, duration: Int) {
+    fun showShort(
+        textStr: String,
+        duration: Int,
+    ) {
         GlobalScope.launch(Dispatchers.Main) {
             val inflater =
                 Utils.getApp().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

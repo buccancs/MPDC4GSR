@@ -12,8 +12,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.maning.imagebrowserlibrary.ImageEngine
-import com.topdon.module.thermal.R
-
 
 class GlideImageEngine : ImageEngine {
     override fun loadImage(
@@ -21,7 +19,7 @@ class GlideImageEngine : ImageEngine {
         url: String,
         imageView: ImageView,
         progressView: View,
-        customImageView: View
+        customImageView: View,
     ) {
         val option = RequestOptions().centerCrop()
 
@@ -39,7 +37,7 @@ class GlideImageEngine : ImageEngine {
             e: GlideException?,
             model: Any?,
             target: Target<Drawable>?,
-            isFirstResource: Boolean
+            isFirstResource: Boolean,
         ): Boolean {
             return false
         }
@@ -49,7 +47,7 @@ class GlideImageEngine : ImageEngine {
             model: Any?,
             target: Target<Drawable>?,
             dataSource: DataSource?,
-            isFirstResource: Boolean
+            isFirstResource: Boolean,
         ): Boolean {
             return false
         }
@@ -60,7 +58,7 @@ class GlideImageEngine : ImageEngine {
             e: GlideException?,
             model: Any?,
             target: Target<Bitmap>?,
-            isFirstResource: Boolean
+            isFirstResource: Boolean,
         ): Boolean {
             return false
         }
@@ -70,10 +68,9 @@ class GlideImageEngine : ImageEngine {
             model: Any?,
             target: Target<Bitmap>?,
             dataSource: DataSource?,
-            isFirstResource: Boolean
+            isFirstResource: Boolean,
         ): Boolean {
             return false
         }
-
     }
 }

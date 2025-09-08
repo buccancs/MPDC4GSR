@@ -6,8 +6,7 @@ import androidx.room.PrimaryKey
 import com.topdon.lib.core.tools.TimeTool
 
 @Entity(tableName = "thermal")
-class ThermalEntity  {
-
+class ThermalEntity {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
@@ -41,7 +40,7 @@ class ThermalEntity  {
     @ColumnInfo(name = "create_time")
     var createTime: Long = 0
 
-    //单位ms
+    // 单位ms
     @ColumnInfo(name = "update_time")
     var updateTime: Long = 0
 
@@ -60,5 +59,4 @@ class ThermalEntity  {
     fun getMinTemp(): Float {
         return thermalMin
     }
-
 }

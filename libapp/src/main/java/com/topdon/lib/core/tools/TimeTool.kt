@@ -2,7 +2,6 @@ package com.topdon.lib.core.tools
 
 import android.annotation.SuppressLint
 import android.util.Log
-import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.utils.CommUtils
 import java.io.File
 import java.text.ParsePosition
@@ -10,7 +9,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object TimeTool {
-
     fun formatDetectTime(timeMillis: Long): String {
         return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timeMillis))
     }
@@ -47,26 +45,29 @@ object TimeTool {
             dateFormat.timeZone = timeZone
             dateFormat.parse(timeStr, ParsePosition(0)).time
         } catch (e: Exception) {
-            //2021-01-01 00:00:00
+            // 2021-01-01 00:00:00
             1609430400000
         }
     }
-
 
     /**
      * @param type 1:秒 2:分 3:时 4:天
      */
     @SuppressLint("SimpleDateFormat")
-    fun showDateType(time: Long, type: Int = 0): String {
+    fun showDateType(
+        time: Long,
+        type: Int = 0,
+    ): String {
         val date = Date(time)
-        //yyyy-MM-dd HH:mm:ss.SSS
-        val pattern = when (type) {
-            1 -> "HH:mm:ss.SSS"
-            2 -> "HH:mm"
-            3 -> "MM-dd HH:00"
-            4 -> "yyyy-MM-dd"
-            else -> "yyyy-MM-dd HH:mm:ss"
-        }
+        // yyyy-MM-dd HH:mm:ss.SSS
+        val pattern =
+            when (type) {
+                1 -> "HH:mm:ss.SSS"
+                2 -> "HH:mm"
+                3 -> "MM-dd HH:00"
+                4 -> "yyyy-MM-dd"
+                else -> "yyyy-MM-dd HH:mm:ss"
+            }
         val dateFormat = SimpleDateFormat(pattern)
         val timeZone = TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
         dateFormat.timeZone = timeZone
@@ -77,14 +78,18 @@ object TimeTool {
      * 精度秒转分
      */
     @SuppressLint("SimpleDateFormat")
-    fun timeToMinute(time: Long, type: Int): Long {
-        val dateFormat = when (type) {
-            1 -> SimpleDateFormat("yyyy-MM-dd HH:mm:ss")//秒
-            2 -> SimpleDateFormat("yyyy-MM-dd HH:mm:00")//分
-            3 -> SimpleDateFormat("yyyy-MM-dd HH:00:00")//时
-            4 -> SimpleDateFormat("yyyy-MM-dd 00:00:0")//天
-            else -> SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        }
+    fun timeToMinute(
+        time: Long,
+        type: Int,
+    ): Long {
+        val dateFormat =
+            when (type) {
+                1 -> SimpleDateFormat("yyyy-MM-dd HH:mm:ss") // 秒
+                2 -> SimpleDateFormat("yyyy-MM-dd HH:mm:00") // 分
+                3 -> SimpleDateFormat("yyyy-MM-dd HH:00:00") // 时
+                4 -> SimpleDateFormat("yyyy-MM-dd 00:00:0") // 天
+                else -> SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            }
         val date = Date(time)
         val str = dateFormat.format(date)
         return strToTime(str)
@@ -128,7 +133,6 @@ object TimeTool {
         }
     }
 
-
     /**
      * 视频时长
      */
@@ -146,11 +150,12 @@ object TimeTool {
         val strName = file.name
         currentTime = 0L
         try {
-            currentTime = if (strName.contains("${CommUtils.getAppName()}_")) {
-                strName.substring(6, strName.lastIndexOf(".")).toLong()
-            } else {
-                file.lastModified()
-            }
+            currentTime =
+                if (strName.contains("${CommUtils.getAppName()}_")) {
+                    strName.substring(6, strName.lastIndexOf(".")).toLong()
+                } else {
+                    file.lastModified()
+                }
         } catch (e: Exception) {
             Log.e("视频文件名称解析异常", "${e.message}")
         }

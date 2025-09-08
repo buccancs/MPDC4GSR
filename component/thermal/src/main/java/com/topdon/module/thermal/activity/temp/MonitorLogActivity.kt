@@ -1,22 +1,22 @@
-//package com.topdon.module.thermal.activity
+// package com.topdon.module.thermal.activity
 //
-//import androidx.lifecycle.lifecycleScope
-//import androidx.recyclerview.widget.LinearLayoutManager
-//import com.topdon.lib.core.navigation.NavigationManager
-//import com.topdon.lib.core.common.SharedManager
-//import com.topdon.lib.core.config.RouterConfig
-//import com.topdon.lib.core.db.AppDatabase
-//import com.topdon.lib.core.db.entity.ThermalEntity
-//import com.topdon.lib.core.ktbase.BaseActivity
-//import com.topdon.module.thermal.R
-//import com.topdon.module.thermal.adapter.MonitorLogAdapter
+// import androidx.lifecycle.lifecycleScope
+// import androidx.recyclerview.widget.LinearLayoutManager
+// import com.topdon.lib.core.navigation.NavigationManager
+// import com.topdon.lib.core.common.SharedManager
+// import com.topdon.lib.core.config.RouterConfig
+// import com.topdon.lib.core.db.AppDatabase
+// import com.topdon.lib.core.db.entity.ThermalEntity
+// import com.topdon.lib.core.ktbase.BaseActivity
+// import com.topdon.module.thermal.R
+// import com.topdon.module.thermal.adapter.MonitorLogAdapter
 
-//import kotlinx.coroutines.Dispatchers
-//import kotlinx.coroutines.launch
+// import kotlinx.coroutines.Dispatchers
+// import kotlinx.coroutines.launch
 //
-//监控记录
-//@Route(path = RouterConfig.THERMAL_LOG)
-//class MonitorLogActivity : BaseActivity() {
+// 监控记录
+// @Route(path = RouterConfig.THERMAL_LOG)
+// class MonitorLogActivity : BaseActivity() {
 //
 //    val adapter: MonitorLogAdapter by lazy { MonitorLogAdapter(this) }
 //
@@ -45,4 +45,4 @@
 //        }
 //
 //    }
-//}
+// }

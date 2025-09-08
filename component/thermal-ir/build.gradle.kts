@@ -91,22 +91,16 @@ dependencies {
     // Image browser library
     implementation(libs.mn.image.browser)
     
-    // SmartRefreshLayout for pull-to-refresh functionality
-    implementation(libs.smart.refresh.layout)
-    implementation(libs.smart.refresh.header)
-    
-    // Core library desugaring
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
-    
-    // Compass and sensor dependencies
-    implementation(libs.andromeda.core)  // Using version from libs.versions.toml (16.0.1) from Maven Central
-    implementation(libs.andromeda.sense)  // Using version from libs.versions.toml (16.0.1) from Maven Central
-    
-    // GSY VideoPlayer for MyGSYVideoPlayer - exclude media3 and cast framework to avoid Jetifier warnings
-    implementation(libs.gsy.video.player) {
+    // GSY VideoPlayer for video playback - using standard version
+    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack") {
         exclude(group = "androidx.media3", module = "media3-cast")
         exclude(group = "androidx.media3", module = "media3-session")
         exclude(group = "androidx.media3", module = "media3-ui")
         exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
+        exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
     }
+    
+    // SmartRefreshLayout for pull-to-refresh functionality
+    implementation("io.github.scwang90:refresh-layout-kernel:2.1.0")
+    implementation("io.github.scwang90:refresh-header-classics:2.1.0")
 }

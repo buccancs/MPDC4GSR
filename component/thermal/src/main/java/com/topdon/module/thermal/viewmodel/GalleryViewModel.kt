@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class GalleryViewModel : BaseViewModel() {
-
     val galleryLiveData = SingleLiveEvent<ArrayList<String>>()
 
     fun getData() {
@@ -44,42 +43,44 @@ class GalleryViewModel : BaseViewModel() {
     }
 
     private fun getGalleryList(): Flow<ArrayList<String>> {
-        val flow = flow {
-            val path = Utils.getApp()
-                .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
-            val file = File(path)
-            if (file.isDirectory) {
-                val list = arrayListOf<String>()
-                file.list()?.forEach { fileName ->
-                    list.add("${path}/${fileName}")
+        val flow =
+            flow {
+                val path =
+                    Utils.getApp()
+                        .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
+                val file = File(path)
+                if (file.isDirectory) {
+                    val list = arrayListOf<String>()
+                    file.list()?.forEach { fileName ->
+                        list.add("$path/$fileName")
+                    }
+                    emit(list)
+                } else {
+                    emit(arrayListOf<String>())
                 }
-                emit(list)
-            } else {
-                emit(arrayListOf<String>())
+            }.map {
+                return@map it
             }
-        }.map {
-            return@map it
-        }
         return flow
     }
 
-
     private fun getVideoList(): Flow<ArrayList<String>> {
-        val flow = flow {
-            val path = FileConfig.lineGalleryDir
-            val file = File(path)
-            if (file.isDirectory) {
-                val list = arrayListOf<String>()
-                file.list()?.forEach { fileName ->
-                    list.add("${path}/${fileName}")
+        val flow =
+            flow {
+                val path = FileConfig.lineGalleryDir
+                val file = File(path)
+                if (file.isDirectory) {
+                    val list = arrayListOf<String>()
+                    file.list()?.forEach { fileName ->
+                        list.add("$path/$fileName")
+                    }
+                    emit(list)
+                } else {
+                    emit(arrayListOf<String>())
                 }
-                emit(list)
-            } else {
-                emit(arrayListOf<String>())
+            }.map {
+                return@map it
             }
-        }.map {
-            return@map it
-        }
         return flow
     }
 }

@@ -10,10 +10,8 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 
-class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
+class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
     private val seekPercent: Float
 
@@ -43,14 +41,17 @@ class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
         set(value) {
             tvTips.text = value
         }
+
     /**
      * seekBar 的 onProgressChange 事件监听.
      */
     var onProgressChangeListener: ((progress: Int, fromUser: Boolean) -> Unit)? = null
+
     /**
      * seekBar 的 onStopTrackingTouch 事件监听.
      */
     var onStopTrackingTouch: ((progress: Int) -> Unit)? = null
+
     /**
      * 根据进度格式化指示 View 文字.
      */
@@ -60,13 +61,18 @@ class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
             field = value
         }
 
-    constructor(context: Context): this(context, null)
+    constructor(context: Context) : this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int): super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes,
+    ) {
         // seekBar 的 maxHeight 在 29 以下只能通过 xml 设置实在太蛋疼了，这里只好给当前 View 设置 maxHeight,在 attr 中传递给 seekBar
         val thumb = ContextCompat.getDrawable(context, UiR.drawable.ic_tips_seek_bar_thumb)
         val thumbWidth = thumb?.intrinsicWidth ?: 0
@@ -107,14 +113,17 @@ class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
         addView(tvMax)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
         val width = if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenWidth(context) else widthSize
 
-        for (i in 0 until  childCount) {
+        for (i in 0 until childCount) {
             when (val child = getChildAt(i)) {
                 seekBar -> {
                     val childWidthSpec = MeasureSpec.makeMeasureSpec((width * seekPercent).toInt(), MeasureSpec.EXACTLY)
@@ -138,8 +147,14 @@ class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
         setMeasuredDimension(width, if (heightMode == MeasureSpec.EXACTLY) heightSize else height)
     }
 
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        for (i in 0 until  childCount) {
+    override fun onLayout(
+        changed: Boolean,
+        l: Int,
+        t: Int,
+        r: Int,
+        b: Int,
+    ) {
+        for (i in 0 until childCount) {
             val child = getChildAt(i)
             val childWidth = child.measuredWidth
             val childHeight = child.measuredHeight
@@ -171,7 +186,11 @@ class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
         }
     }
 
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+    override fun onProgressChanged(
+        seekBar: SeekBar?,
+        progress: Int,
+        fromUser: Boolean,
+    ) {
         tvTips.text = if (valueFormatListener == null) progress.toString() else valueFormatListener?.invoke(progress)
         requestLayout()
         onProgressChangeListener?.invoke(progress, fromUser)
@@ -183,6 +202,4 @@ class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         onStopTrackingTouch?.invoke(this.seekBar.progress)
     }
-
-
 }

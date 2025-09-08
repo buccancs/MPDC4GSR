@@ -13,17 +13,17 @@ import com.topdon.lib.core.utils.NetWorkUtils
  * date: 2024/4/28 17:08
  **/
 abstract class BaseWifiActivity : BaseActivity() {
-
-
     protected val permissionList by lazy {
-        if (this.applicationInfo.targetSdkVersion >= 34){
-            listOf(
-                Permission.WRITE_EXTERNAL_STORAGE,
-            )
-        } else if (this.applicationInfo.targetSdkVersion == 33) {
+        if (this.applicationInfo.targetSdkVersion >= 34)
+            {
+                listOf(
+                    Permission.WRITE_EXTERNAL_STORAGE,
+                )
+            } else if (this.applicationInfo.targetSdkVersion == 33) {
             mutableListOf(
-                Permission.READ_MEDIA_VIDEO, Permission.READ_MEDIA_IMAGES,
-                Permission.WRITE_EXTERNAL_STORAGE
+                Permission.READ_MEDIA_VIDEO,
+                Permission.READ_MEDIA_IMAGES,
+                Permission.WRITE_EXTERNAL_STORAGE,
             )
         } else {
             mutableListOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
@@ -32,7 +32,7 @@ abstract class BaseWifiActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT >= 29) {
-            //Android10 及以上
+            // Android10 及以上
             NetWorkUtils.switchNetwork(true)
         }
         super.onCreate(savedInstanceState)
@@ -41,12 +41,12 @@ abstract class BaseWifiActivity : BaseActivity() {
             .putBoolean("use-sw-codec", true)
             .apply()
         PreferenceManager.getDefaultSharedPreferences(this@BaseWifiActivity)
-            .getBoolean("auto_audio", false);
+            .getBoolean("auto_audio", false)
     }
 
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT >= 29) {//Android10 及以上
+        if (Build.VERSION.SDK_INT >= 29) { // Android10 及以上
             NetWorkUtils.switchNetwork(true)
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -60,5 +60,4 @@ abstract class BaseWifiActivity : BaseActivity() {
     override fun onStop() {
         super.onStop()
     }
-
 }

@@ -3,29 +3,29 @@ package com.topdon.lib.core.utils
 import java.util.*
 
 object ByteUtils {
-
     /**
      * byte[] => string
      * [0x01, 0x02] => 01 02
      */
-    fun ByteArray.toHexString(separator: String = " ") = asUByteArray().joinToString(separator) {
-        it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
-    }
+    fun ByteArray.toHexString(separator: String = " ") =
+        asUByteArray().joinToString(separator) {
+            it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
+        }
 
     /**
      * byte[] => string
      * [0x01, 0x02] => 01:02
      */
-    fun ByteArray.toHexMd5String() = asUByteArray().joinToString(":") {
-        it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
-    }
+    fun ByteArray.toHexMd5String() =
+        asUByteArray().joinToString(":") {
+            it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
+        }
 
     /**
      * string => byte[]
      * 0102 => [0x01, 0x02]
      */
-    fun String.hexStringToByteArray() =
-        ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+    fun String.hexStringToByteArray() = ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 
     /**
      * UUID => ff01
@@ -35,62 +35,67 @@ object ByteUtils {
     /**
      * byte[] => int
      */
-    fun ByteArray.bytesToInt() = run {
-        var total = 0
-        val size = this.size
-        for (i in 0 until size) {
-            total += this[i].toUByte().toInt().shl((size - i - 1) * 8)
+    fun ByteArray.bytesToInt() =
+        run {
+            var total = 0
+            val size = this.size
+            for (i in 0 until size) {
+                total += this[i].toUByte().toInt().shl((size - i - 1) * 8)
+            }
+            total
         }
-        total
-    }
 
     /**
      * byte[] => long
      */
-    fun ByteArray.bytesToLong() = run {
-        var total = 0L
-        val size = this.size
-        for (i in 0 until size) {
-            total += this[i].toUByte().toInt().shl((size - i - 1) * 8)
+    fun ByteArray.bytesToLong() =
+        run {
+            var total = 0L
+            val size = this.size
+            for (i in 0 until size) {
+                total += this[i].toUByte().toInt().shl((size - i - 1) * 8)
+            }
+            total
         }
-        total
-    }
 
     /**
      * int => byte[]
      */
-    fun Int.toBytes(size: Int) = run {
-        var data = byteArrayOf()
-        for (i in 0 until size) {
-            data = data.plus(this.shr((size - i - 1) * 8).toByte())
+    fun Int.toBytes(size: Int) =
+        run {
+            var data = byteArrayOf()
+            for (i in 0 until size) {
+                data = data.plus(this.shr((size - i - 1) * 8).toByte())
+            }
+            data
         }
-        data
-    }
 
     /**
      * String => byte[]
      */
-    fun String.toBytes(size: Int) = run {
-        val data = ByteArray(size)
-        val srcBytes = this.toByteArray()
-        if (srcBytes.size > size) {
-            srcBytes.copyInto(data, 0, 0, size)
-        } else {
-            srcBytes.copyInto(data, 0, 0, srcBytes.size)
+    fun String.toBytes(size: Int) =
+        run {
+            val data = ByteArray(size)
+            val srcBytes = this.toByteArray()
+            if (srcBytes.size > size) {
+                srcBytes.copyInto(data, 0, 0, size)
+            } else {
+                srcBytes.copyInto(data, 0, 0, srcBytes.size)
+            }
+            return@run data
         }
-        return@run data
-    }
 
     /**
      * long => byte[]
      */
-    fun Long.toBytes(size: Int) = run {
-        var data = byteArrayOf()
-        for (i in 0 until size) {
-            data = data.plus(this.shr((size - i - 1) * 8).toByte())
+    fun Long.toBytes(size: Int) =
+        run {
+            var data = byteArrayOf()
+            for (i in 0 until size) {
+                data = data.plus(this.shr((size - i - 1) * 8).toByte())
+            }
+            data
         }
-        data
-    }
 
     /**
      * 0x123
@@ -99,21 +104,23 @@ object ByteUtils {
      * 2 -> 2
      * 3 -> 1
      */
-    fun Int.getIndex(index: Int): Int = run {
-        val a = this % (1 shl (index * 4))
-        return a shr ((index - 1) * 4)
-    }
+    fun Int.getIndex(index: Int): Int =
+        run {
+            val a = this % (1 shl (index * 4))
+            return a shr ((index - 1) * 4)
+        }
 
     /**
      * 倒序
      */
-    fun ByteArray.descBytes() = run {
-        var data = byteArrayOf()
-        for (i in 0 until this.size) {
-            data = data.plus(this[this.size - 1 - i])
+    fun ByteArray.descBytes() =
+        run {
+            var data = byteArrayOf()
+            for (i in 0 until this.size) {
+                data = data.plus(this[this.size - 1 - i])
+            }
+            return@run data
         }
-        return@run data
-    }
 
     /**
      * 将指定 ***大端字节序*** 的数组转换为 Int，若传递的参数超过4个则只取前4个.

@@ -89,7 +89,7 @@ abstract class HouseDetectDao {
         for (i in houseDetect.dirList.indices) {
             val dir = houseDetect.dirList[i]
             dir.position = i
-            if (dir.id == 0L) {//复制的目录
+            if (dir.id == 0L) { // 复制的目录
                 dir.id = insertDir(dir)
                 for (item in dir.itemList) {
                     item.parentId = dir.id
@@ -110,15 +110,15 @@ abstract class HouseDetectDao {
      * 根据指定的目录信息，更新目录及对应的项目列表.
      */
     open fun refreshDir(dirDetect: DirDetect) {
-        if (dirDetect.itemList.isEmpty()) {//所有子项目都没了，这个目录也干掉
+        if (dirDetect.itemList.isEmpty()) { // 所有子项目都没了，这个目录也干掉
             deleteDir(dirDetect)
         } else {
-            updateDir(dirDetect) //更新目录名称及数量
+            updateDir(dirDetect) // 更新目录名称及数量
             val oldItemList: ArrayList<ItemDetect> = ArrayList(queryItemList(dirDetect.id))
             for (i in dirDetect.itemList.indices) {
                 val item = dirDetect.itemList[i]
                 item.position = i
-                if (item.id == 0L) {//复制的项目
+                if (item.id == 0L) { // 复制的项目
                     item.id = insertItem(item)
                 } else {
                     updateItem(item)
@@ -157,20 +157,23 @@ abstract class HouseDetectDao {
      * 将指定 position 位置的目录复制一份
      */
     @Transaction
-    open fun copyDir(dirList: ArrayList<DirDetect>, position: Int): DirDetect {
-        //复制位置后面所有目录 position 需偏移一位
+    open fun copyDir(
+        dirList: ArrayList<DirDetect>,
+        position: Int,
+    ): DirDetect {
+        // 复制位置后面所有目录 position 需偏移一位
         for (i in position + 1 until dirList.size) {
             val dir: DirDetect = dirList[i]
             dir.position += 1
             updateDir(dir)
         }
 
-        //添加复制的目录
+        // 添加复制的目录
         val oldDir = dirList[position]
         val newDir = oldDir.copyOne()
         newDir.id = insertDir(newDir)
 
-        //添加复制的目录下的项目列表
+        // 添加复制的目录下的项目列表
         for (item in newDir.itemList) {
             item.parentId = newDir.id
             item.id = insertItem(item)
@@ -183,20 +186,23 @@ abstract class HouseDetectDao {
      * 将指定 position 位置的项目复制一份
      */
     @Transaction
-    open fun copyItem(itemList: ArrayList<ItemDetect>, position: Int): ItemDetect {
-        //复制位置后面所有项目 position 需偏移一位
+    open fun copyItem(
+        itemList: ArrayList<ItemDetect>,
+        position: Int,
+    ): ItemDetect {
+        // 复制位置后面所有项目 position 需偏移一位
         for (i in position + 1 until itemList.size) {
             val item: ItemDetect = itemList[i]
             item.position += 1
             updateItem(item)
         }
 
-        //添加复制的项目
+        // 添加复制的项目
         val oldItem = itemList[position]
         val newItem = oldItem.copyOne(position = oldItem.position + 1, itemName = oldItem.copyName())
         newItem.id = insertItem(newItem)
 
-        //复制后目录里的3个数量可能需要刷新
+        // 复制后目录里的3个数量可能需要刷新
         if (newItem.state > 0) {
             val dir = newItem.dirDetect
             when (newItem.state) {
@@ -209,31 +215,32 @@ abstract class HouseDetectDao {
         return newItem
     }
 
-
-
     @Insert
     abstract fun insertDetect(houseDetect: HouseDetect): Long
+
     @Insert
     abstract fun insertDir(dirDetect: DirDetect): Long
+
     @Insert
     abstract fun insertItem(itemDetect: ItemDetect): Long
 
-
     @Delete
     abstract fun deleteDetect(vararg houseDetect: HouseDetect)
+
     @Delete
     abstract fun deleteDir(vararg dirDetect: DirDetect)
+
     @Delete
     abstract fun deleteItem(vararg itemDetect: ItemDetect)
 
-
     @Update
     abstract fun updateDetect(vararg houseDetect: HouseDetect)
+
     @Update
     abstract fun updateDir(vararg dirDetect: DirDetect)
+
     @Update
     abstract fun updateItem(vararg itemDetect: ItemDetect)
-
 
     /**
      * 仅查询所有检测列表信息，注意每个检测下的目录均未加载.
@@ -243,10 +250,13 @@ abstract class HouseDetectDao {
 
     @Query("SELECT * FROM HouseDetect WHERE id = :id")
     abstract fun queryDetectById(id: Long): HouseDetect?
+
     @Query("SELECT * FROM DirDetect WHERE id = :id")
     abstract fun queryDirById(id: Long): DirDetect?
+
     @Query("SELECT * FROM DirDetect WHERE parentId = :detectId ORDER BY position")
     abstract fun queryDirList(detectId: Long): List<DirDetect>
+
     @Query("SELECT * FROM ItemDetect WHERE parentId = :dirId ORDER BY position")
     abstract fun queryItemList(dirId: Long): List<ItemDetect>
 }

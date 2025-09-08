@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.blankj.utilcode.util.SizeUtils
-import com.kylecorry.andromeda.core.ui.setCompoundDrawables
 import com.csl.irCamera.R
+import com.kylecorry.andromeda.core.ui.setCompoundDrawables
 
 /**
  * 首页-设备列表-删除设备确认 PopupWindow.
@@ -18,7 +18,6 @@ import com.csl.irCamera.R
  * Created by LCG on 2024/4/24.
  */
 class DelPopup(val context: Context) : PopupWindow() {
-
     var onDelListener: (() -> Unit)? = null
 
     init {

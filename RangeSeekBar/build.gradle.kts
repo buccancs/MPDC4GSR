@@ -38,12 +38,12 @@ dependencies {
     androidTestImplementation(libs.test.espresso.core)
 }
 
-// 指定编码
+// Set encoding
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
-// 打包源码
+// Package source code
 tasks.register<Jar>("sourcesJar") {
     from(android.sourceSets.getByName("main").java.srcDirs)
     archiveClassifier.set("sources")

@@ -13,20 +13,18 @@ import android.view.View
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 
 /**
  * 3D 编辑使用的，长地像 SeekBar 的那个条条.
  */
 class BarPickView : View {
-
     companion object {
         /**
          * 默认条条背景颜色.
          */
         @ColorInt
         private const val DEFAULT_BG_COLOR = 0xff787878.toInt()
+
         /**
          * 默认进度条颜色.
          */
@@ -37,6 +35,7 @@ class BarPickView : View {
          * Thumb 圆角尺寸，单位 dp.
          */
         private const val THUMB_CORNERS = 11f
+
         /**
          * Thumb 描边尺寸，单位 dp.
          */
@@ -75,8 +74,6 @@ class BarPickView : View {
             }
         }
 
-
-
     /**
      * 条条当前进度.
      */
@@ -97,23 +94,21 @@ class BarPickView : View {
      * 条条尺寸，单位 px（横向时是高度，竖向时是宽度）
      */
     private val barSize: Int
+
     /**
      * 顺时针旋转角度，仅支持 0、90、180、270.
      */
     private val rotate: Int
+
     /**
      * 标签文字.
      */
     private val labelText: String
 
-
-
     private val path = Path()
     private val paint = TextPaint()
     private val thumbRect = RectF()
     private val barRect = RectF()
-
-
 
     constructor(context: Context) : this(context, null)
 
@@ -121,7 +116,12 @@ class BarPickView : View {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes:Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes,
+    ) {
         val typedArray = context.obtainStyledAttributes(attrs, UiR.styleable.BarPickView, 0, 0)
         max = typedArray.getInt(UiR.styleable.BarPickView_android_max, 100)
         min = typedArray.getInt(UiR.styleable.BarPickView_barMin, 0)
@@ -147,12 +147,13 @@ class BarPickView : View {
         val y: Float = event.y - barRect.top
         val barWidth: Float = barRect.width()
         val barHeight: Float = barRect.height()
-        progress = when (rotate) {
-            0 -> (x / barWidth * (max - min) + min).toInt()
-            180 -> ((barWidth - x) / barWidth * (max - min) + min).toInt()
-            90 -> (y / barHeight * (max - min) + min).toInt()
-            else -> ((barHeight - y) / barHeight * (max - min) + min).toInt()
-        }.coerceAtLeast(min).coerceAtMost(max)
+        progress =
+            when (rotate) {
+                0 -> (x / barWidth * (max - min) + min).toInt()
+                180 -> ((barWidth - x) / barWidth * (max - min) + min).toInt()
+                90 -> (y / barHeight * (max - min) + min).toInt()
+                else -> ((barHeight - y) / barHeight * (max - min) + min).toInt()
+            }.coerceAtLeast(min).coerceAtMost(max)
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> onStartTrackingTouch?.invoke(progress, max)
@@ -173,7 +174,10 @@ class BarPickView : View {
         return minTextWidth.coerceAtLeast(maxTextWidth) + SizeUtils.dp2px(12f)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
@@ -181,30 +185,32 @@ class BarPickView : View {
 
         val thumbWidth = computeThumbWidth()
         val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
-        
-        val width: Int = if (rotate == 0 || rotate == 180) {
-            if (widthMode == MeasureSpec.UNSPECIFIED) context.resources.displayMetrics.widthPixels else widthSize
-        } else {
-            val wantWidth: Int = thumbWidth + paddingStart + paddingEnd
-            when (widthMode) {
-                MeasureSpec.EXACTLY -> widthSize
-                MeasureSpec.AT_MOST -> wantWidth.coerceAtMost(widthSize)
-                MeasureSpec.UNSPECIFIED -> wantWidth
-                else -> wantWidth
-            }
-        }
 
-        val height: Int = if (rotate == 0 || rotate == 180) {
-            val wantHeight: Int = thumbHeight + paddingTop + paddingBottom
-            when (heightMode) {
-                MeasureSpec.EXACTLY -> heightSize
-                MeasureSpec.AT_MOST -> wantHeight.coerceAtMost(heightSize)
-                MeasureSpec.UNSPECIFIED -> wantHeight
-                else -> wantHeight
+        val width: Int =
+            if (rotate == 0 || rotate == 180) {
+                if (widthMode == MeasureSpec.UNSPECIFIED) context.resources.displayMetrics.widthPixels else widthSize
+            } else {
+                val wantWidth: Int = thumbWidth + paddingStart + paddingEnd
+                when (widthMode) {
+                    MeasureSpec.EXACTLY -> widthSize
+                    MeasureSpec.AT_MOST -> wantWidth.coerceAtMost(widthSize)
+                    MeasureSpec.UNSPECIFIED -> wantWidth
+                    else -> wantWidth
+                }
             }
-        } else {
-            if (heightMode == MeasureSpec.UNSPECIFIED) context.resources.displayMetrics.heightPixels else heightSize
-        }
+
+        val height: Int =
+            if (rotate == 0 || rotate == 180) {
+                val wantHeight: Int = thumbHeight + paddingTop + paddingBottom
+                when (heightMode) {
+                    MeasureSpec.EXACTLY -> heightSize
+                    MeasureSpec.AT_MOST -> wantHeight.coerceAtMost(heightSize)
+                    MeasureSpec.UNSPECIFIED -> wantHeight
+                    else -> wantHeight
+                }
+            } else {
+                if (heightMode == MeasureSpec.UNSPECIFIED) context.resources.displayMetrics.heightPixels else heightSize
+            }
 
         setMeasuredDimension(width, height)
     }
@@ -258,10 +264,11 @@ class BarPickView : View {
         val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
         if (rotate == 0 || rotate == 180) {
             val progressWidth = (barRect.width() * (progress - min) / (max - min)).toInt()
-            val left = (if (rotate == 0) (barRect.left + progressWidth - thumbWidth / 2) else (barRect.right - progressWidth - thumbWidth / 2))
-                .toInt()
-                .coerceAtLeast(barRect.left.toInt())
-                .coerceAtMost(barRect.right.toInt() - thumbWidth)
+            val left =
+                (if (rotate == 0) (barRect.left + progressWidth - thumbWidth / 2) else (barRect.right - progressWidth - thumbWidth / 2))
+                    .toInt()
+                    .coerceAtLeast(barRect.left.toInt())
+                    .coerceAtMost(barRect.right.toInt() - thumbWidth)
             val right = left + thumbWidth
             val top = paddingTop
             val bottom = measuredHeight - paddingBottom
@@ -270,10 +277,11 @@ class BarPickView : View {
             val progressHeight = (barRect.height() * (progress - min) / (max - min).toFloat()).toInt()
             val left = paddingStart
             val right = measuredWidth - paddingEnd
-            val top = (if (rotate == 90) (barRect.top + progressHeight - thumbHeight / 2) else (barRect.bottom - progressHeight - thumbHeight / 2))
-                .toInt()
-                .coerceAtLeast(barRect.top.toInt())
-                .coerceAtMost(barRect.bottom.toInt() - thumbHeight)
+            val top =
+                (if (rotate == 90) (barRect.top + progressHeight - thumbHeight / 2) else (barRect.bottom - progressHeight - thumbHeight / 2))
+                    .toInt()
+                    .coerceAtLeast(barRect.top.toInt())
+                    .coerceAtMost(barRect.bottom.toInt() - thumbHeight)
             val bottom = top + thumbHeight
             thumbRect.set(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
         }
@@ -357,7 +365,7 @@ class BarPickView : View {
             }
         } else {
             val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
-            val progressHeight = (barRect.height() * (progress - min)  / (max - min).toFloat()).toInt()
+            val progressHeight = (barRect.height() * (progress - min) / (max - min).toFloat()).toInt()
             if (progressHeight == 0) {
                 return
             }
@@ -411,11 +419,12 @@ class BarPickView : View {
 
             val labelTextWidth = paint.measureText(labelText)
             val labelX = thumbRect.left + (thumbRect.width() - labelTextWidth) / 2
-            val labelY = if (rotate == 90) {
-                (paddingTop + SizeUtils.dp2px(6f) - paint.fontMetricsInt.top).toFloat()
-            } else {
-                (height - SizeUtils.dp2px(6f) - paint.fontMetricsInt.bottom).toFloat()
-            }
+            val labelY =
+                if (rotate == 90) {
+                    (paddingTop + SizeUtils.dp2px(6f) - paint.fontMetricsInt.top).toFloat()
+                } else {
+                    (height - SizeUtils.dp2px(6f) - paint.fontMetricsInt.bottom).toFloat()
+                }
             canvas.drawText(labelText, labelX, labelY, paint)
         }
     }

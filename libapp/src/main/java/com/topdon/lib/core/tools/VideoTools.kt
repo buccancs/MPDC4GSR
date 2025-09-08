@@ -1,17 +1,11 @@
 package com.topdon.lib.core.tools
 
 import android.media.MediaMetadataRetriever
-import android.media.MediaPlayer
-import android.util.Log
-import org.bytedeco.javacv.FFmpegFrameGrabber
-import org.bytedeco.javacv.FrameGrabber
-
 
 object VideoTools {
-
-    //获取视频时长
+    // 获取视频时长
     fun getLocalVideoDuration(videoPath: String): Long {
-        return if (videoPath.uppercase().endsWith(".MP4")||videoPath.uppercase().endsWith(".AVI")) {
+        return if (videoPath.uppercase().endsWith(".MP4") || videoPath.uppercase().endsWith(".AVI")) {
             try {
                 val mmr = MediaMetadataRetriever()
                 mmr.setDataSource(videoPath)

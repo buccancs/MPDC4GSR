@@ -29,11 +29,20 @@ android {
     }
 
     buildTypes {
+        // Only release build type - no debug variants
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+    
+    // Disable all debug variants completely - release-only configuration
+    variantFilter {
+        if (buildType.name == "debug") {
+            ignore = true
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

@@ -7,8 +7,14 @@ plugins {
     kotlin("kapt")
 }
 
-val dayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
-val timeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.name)
+    }
+}
+
+val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
+val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 
 android {
     namespace = "com.csl.irCamera"
@@ -29,15 +35,15 @@ android {
             abiFilters += listOf("arm64-v8a")
         }
 
-        buildConfigField("String", "VERSION_DATE", "\"$dayStr\"")
+        buildConfigField("String", "VERSION_DATE", "\"$buildDayStr\"")
+        buildConfigField("String", "SOFT_CODE", "\"TC001_DisplaySW_IRCamera_Adr\"")
+        buildConfigField("String", "APP_KEY", "\"5B2F6F1FD80844FCB6E50BCA19222E76\"")
+        buildConfigField("String", "APP_SECRET", "\"A4A2EE33347A4D7885C26689515567EC\"")
         
         manifestPlaceholders["JPUSH_PKGNAME"] = applicationId!!
         manifestPlaceholders["JPUSH_APPKEY"] = "cbd4eafc9049d751fc5a8c58"
         manifestPlaceholders["JPUSH_CHANNEL"] = "developer-default"
-    }
-
-    base {
-        archivesName = "TC001-v${libs.versions.versionName.get()}.google"
+        manifestPlaceholders["app_name"] = "IRCamera"
     }
 
     bundle {
@@ -60,6 +66,7 @@ android {
     }
 
     buildTypes {
+        // Only release build type - no debug variants
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
@@ -69,6 +76,14 @@ android {
             )
         }
     }
+    
+    // Disable all debug variants completely - release-only configuration
+    variantFilter {
+        if (buildType.name == "debug") {
+            ignore = true
+        }
+    }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -98,6 +113,16 @@ android {
                 "META-INF/LICENSE.md",
                 "META-INF/LICENSE-notice.md"
             )
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt",
+                "META-INF/ASL2.0"
+            )
         }
         jniLibs {
             useLegacyPackaging = true
@@ -115,32 +140,7 @@ android {
                 "lib/armeabi-v7a/libomp.so",
                 "lib/arm64-v8a/libomp.so",
                 "lib/arm64-v8a/liblog.so",
-                "lib/armeabi-v7a/liblog.so"
-            )
-        }
-    }
-    
-    buildFeatures {
-        buildConfig = true
-        dataBinding = true
-        viewBinding = true
-    }
-    
-    packaging {
-        resources {
-            excludes += listOf(
-                "META-INF/DEPENDENCIES",
-                "META-INF/LICENSE",
-                "META-INF/LICENSE.txt",
-                "META-INF/license.txt",
-                "META-INF/NOTICE",
-                "META-INF/NOTICE.txt",
-                "META-INF/notice.txt",
-                "META-INF/ASL2.0"
-            )
-        }
-        jniLibs {
-            pickFirsts += listOf(
+                "lib/armeabi-v7a/liblog.so",
                 "lib/arm64-v8a/libijkffmpeg.so",
                 "lib/arm64-v8a/libijkplayer.so",
                 "lib/arm64-v8a/libijksdl.so",
@@ -157,20 +157,14 @@ android {
                 "lib/x86_64/libijkplayer.so",
                 "lib/x86_64/libijksdl.so"
             )
+            keepDebugSymbols += listOf("**/*.so")
         }
     }
     
-    flavorDimensions += "app"
-
-    productFlavors {
-        create("prod") {
-            dimension = "app"
-            buildConfigField("int", "ENV_TYPE", "0")
-            buildConfigField("String", "SOFT_CODE", "\"${libs.versions.softcodeTopinfrared.get()}\"")
-            buildConfigField("String", "APP_KEY", "\"${libs.versions.appkeyTopinfrared.get()}\"")
-            buildConfigField("String", "APP_SECRET", "\"${libs.versions.appsecretTopinfrared.get()}\"")
-            manifestPlaceholders["app_name"] = "IRCamera"
-        }
+    buildFeatures {
+        buildConfig = true
+        dataBinding = true
+        viewBinding = true
     }
 }
 
@@ -183,39 +177,26 @@ configurations.all {
     }
 }
 
-// APK naming function - Simplified for prodRelease only
-fun getApkName(variantName: String, versionName: String): String {
-    val nameStr = "TopInfrared_${versionName}.$dayStr"
-    return when (variantName) {
-        "prodRelease" -> "$nameStr.apk"
-        else -> "TopInfrared.apk"
-    }
-}
-
-// APK naming will be configured later
-// android.applicationVariants.all { variant ->
-//     variant.outputs.forEach { output ->
-//         if (output is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
-//             output.outputFileName = getApkName(variant, AndroidConfig.versionName)
-//         }
-//     }
-// }
-
 dependencies {
     // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(project(":component:edit3d"))
-    implementation(project(":component:pseudo"))
-    implementation(project(":component:thermal-ir"))
-    implementation(project(":component:thermal-lite"))
-    implementation(project(":component:transfer"))
-    implementation(project(":component:user"))
+    
+    // Core consolidated modules
+    implementation(project(":component:thermal"))      // Consolidated thermal functionality
+    implementation(project(":component:thermal-ir"))   // Thermal IR resources needed by app
+    implementation(project(":component:thermal-lite")) // Thermal Lite functionality
+    implementation(project(":component:pseudo"))       // Pseudo color functionality needed by app
     implementation(project(":component:gsr-recording"))
+    implementation(project(":component:user"))         // User module for MoreActivity and settings
     implementation(project(":libapp"))
     implementation(project(":libcom"))
     implementation(project(":libir"))
-    implementation(project(":libmenu"))
     implementation(project(":libui"))
+    implementation(project(":libmenu"))               // Menu resources needed by app
+
+    // ARouter configuration
+    implementation(libs.arouter.api)
+    kapt(libs.arouter.compiler)
 
     // LocalRepo AAR files moved to app/libs
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
@@ -245,12 +226,21 @@ dependencies {
     // implementation(libs.bundles.smart.refresh) // Temporarily commented out due to jitpack.io issues
     implementation(libs.wechat.sdk)
     implementation(libs.umeng.apm)
-    implementation(libs.zoho.salesiq)
+    // implementation(libs.zoho.salesiq) // Commented out - not essential for MPDC4GSR
 
-    // Core library desugaring for Java 8+ APIs on older Android versions
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-    // UMeng - Referenced directly from Maven Central
+    // UMeng - Simplified single implementation
     implementation(libs.umeng.common)
 }
 
+// Utility functions for APK naming (converted from original Groovy)
+fun getYearStr(): String {
+    return SimpleDateFormat("yy", Locale.getDefault()).format(Date())
+}
+
+fun getDayStr(): String {
+    return SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
+}
+
+fun getTimeStr(): String {
+    return SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
+}

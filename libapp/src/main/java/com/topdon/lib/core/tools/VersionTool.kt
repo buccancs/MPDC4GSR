@@ -4,21 +4,21 @@ import com.elvishew.xlog.XLog
 import java.util.regex.Pattern
 
 object VersionTool {
-
     /**
      * V1.0 => 1.0
      */
     fun getVersion(str: String): String {
         var versionStr = "1.0"
         if (str.uppercase().contains("V")) {
-            if (str.length > str.lastIndexOf("V") + 1)
+            if (str.length > str.lastIndexOf("V") + 1) {
                 versionStr = str.substring(startIndex = str.lastIndexOf("V") + 1)
+            }
         } else {
             try {
                 str.toFloat()
                 versionStr = str
             } catch (e: Exception) {
-                //str 不是1.01类型数据
+                // str 不是1.01类型数据
             }
         }
 
@@ -28,7 +28,10 @@ object VersionTool {
     /**
      * 检查是否需要更新最新版本
      */
-    fun checkNewVersion(serverVersionStr: String, localVersionStr: String): Boolean {
+    fun checkNewVersion(
+        serverVersionStr: String,
+        localVersionStr: String,
+    ): Boolean {
         try {
             val serverV = getVersion(serverVersionStr)
             val localV = getVersion(localVersionStr)
@@ -43,7 +46,10 @@ object VersionTool {
     /**
      * 比较app版本大小
      */
-    fun checkVersion(remoteStr: String, localStr: String): Boolean {
+    fun checkVersion(
+        remoteStr: String,
+        localStr: String,
+    ): Boolean {
         try {
             val regex = "[^(0-9).]"
             val remoteStrTemp = Pattern.compile(regex).matcher(remoteStr).replaceAll("").trim()
@@ -64,5 +70,4 @@ object VersionTool {
             return false
         }
     }
-
 }

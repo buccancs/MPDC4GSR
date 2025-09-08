@@ -8,26 +8,30 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
 
-
 class StringConverterFactory : Converter.Factory() {
-
     override fun responseBodyConverter(
         type: Type?,
         annotations: Array<Annotation>?,
-        retrofit: Retrofit?
+        retrofit: Retrofit?,
     ): Converter<ResponseBody, *>? {
         return if (String::class.java == type) {
             Converter<ResponseBody, String> { value -> value.string() }
-        } else null
+        } else {
+            null
+        }
     }
 
     override fun requestBodyConverter(
-        type: Type?, parameterAnnotations: Array<Annotation>?,
-        methodAnnotations: Array<Annotation>?, retrofit: Retrofit?
+        type: Type?,
+        parameterAnnotations: Array<Annotation>?,
+        methodAnnotations: Array<Annotation>?,
+        retrofit: Retrofit?,
     ): Converter<*, RequestBody>? {
         return if (String::class.java == type) {
             Converter<String, RequestBody> { value -> value.toRequestBody(MEDIA_TYPE) }
-        } else null
+        } else {
+            null
+        }
     }
 
     companion object {

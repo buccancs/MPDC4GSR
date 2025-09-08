@@ -3,7 +3,6 @@ package com.topdon.lib.core.tools
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.Utils
@@ -11,7 +10,6 @@ import java.io.File
 import java.lang.Exception
 
 object FileTools {
-
     fun getFileSize(path: String): String {
         var str = ""
         try {
@@ -42,13 +40,14 @@ object FileTools {
         buffer.append("(").append(MediaStore.Images.ImageColumns.DATA)
             .append("=").append("'").append(path).append("'")
             .append(")")
-        val cur: Cursor? = cr.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Images.ImageColumns._ID),
-            buffer.toString(),
-            null,
-            null
-        )
+        val cur: Cursor? =
+            cr.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Images.ImageColumns._ID),
+                buffer.toString(),
+                null,
+                null,
+            )
         var index = 0
         if (cur == null) {
             return null
@@ -61,6 +60,8 @@ object FileTools {
         }
         return if (index != 0) {
             Uri.parse("content://media/external/images/media/$index")
-        } else null
+        } else {
+            null
+        }
     }
 }

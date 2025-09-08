@@ -45,7 +45,7 @@ dependencies {
     
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")
-    api("com.blankj:utilcodex:1.30.6") // 工具包
+    api("com.blankj:utilcodex:1.30.6") // Utility library
     api("com.google.code.gson:gson:2.8.8")
     api("com.elvishew:xlog:1.10.1")
     // UMeng Analytics - now available via version catalog

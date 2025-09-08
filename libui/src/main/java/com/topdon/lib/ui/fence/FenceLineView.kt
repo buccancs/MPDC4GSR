@@ -12,24 +12,20 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
 class FenceLineView : View {
-
     var listener: CallBack? = null
 
     private val mPaint by lazy { Paint() }
-    private val rect: Rect = Rect(0, 0, 0, 0) //手动绘制矩形
-    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } //线宽度
-
+    private val rect: Rect = Rect(0, 0, 0, 0) // 手动绘制矩形
+    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } // 线宽度
 
     constructor (context: Context) : super(context)
 
-
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
-
 
     constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(
         context,
         attrs,
-        defStyle
+        defStyle,
     )
 
     init {
@@ -40,7 +36,6 @@ class FenceLineView : View {
         mPaint.alpha = 255
     }
 
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 //        canvas.drawRect(rect, mPaint)
@@ -49,7 +44,7 @@ class FenceLineView : View {
             startPoint[1].toFloat(),
             endPoint[0].toFloat(),
             endPoint[1].toFloat(),
-            mPaint
+            mPaint,
         )
     }
 
@@ -102,12 +97,13 @@ class FenceLineView : View {
                 endPoint[0] = x
                 endPoint[1] = y
 
-                old = Rect(
-                    rect.left,
-                    rect.top,
-                    (rect.right + strokeWidth).toInt(),
-                    (rect.bottom + strokeWidth).toInt()
-                )
+                old =
+                    Rect(
+                        rect.left,
+                        rect.top,
+                        (rect.right + strokeWidth).toInt(),
+                        (rect.bottom + strokeWidth).toInt(),
+                    )
                 rect.right = x
                 rect.bottom = y
                 old.union(x, y)
@@ -115,12 +111,13 @@ class FenceLineView : View {
                 result()
             }
             MotionEvent.ACTION_MOVE -> {
-                old = Rect(
-                    rect.left,
-                    rect.top,
-                    (rect.right + strokeWidth).toInt(),
-                    (rect.bottom + strokeWidth).toInt()
-                )
+                old =
+                    Rect(
+                        rect.left,
+                        rect.top,
+                        (rect.right + strokeWidth).toInt(),
+                        (rect.bottom + strokeWidth).toInt(),
+                    )
                 rect.right = mX.toInt()
                 rect.bottom = mY.toInt()
                 endPoint[0] = mX.toInt()
@@ -153,6 +150,10 @@ class FenceLineView : View {
          * startPoint: 左上角
          * endPoint: 右下角
          */
-        fun callback(startPoint: IntArray, endPoint: IntArray, srcRect: IntArray)
+        fun callback(
+            startPoint: IntArray,
+            endPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }

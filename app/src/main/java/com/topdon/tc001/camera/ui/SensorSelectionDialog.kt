@@ -18,27 +18,26 @@ import com.csl.irCamera.R
 class SensorSelectionDialog(
     context: Context,
     private val availableSensors: Set<SensorType>,
-    private val onSensorsSelected: (Set<SensorType>) -> Unit
+    private val onSensorsSelected: (Set<SensorType>) -> Unit,
 ) : Dialog(context) {
-
     companion object {
         private const val TAG = "SensorSelectionDialog"
-        
+
         fun detectAvailableSensors(context: Context): Set<SensorType> {
             val available = mutableSetOf<SensorType>()
-            
+
             // Thermal camera is always available in this thermal camera app
             available.add(SensorType.THERMAL)
-            
+
             // Check RGB camera availability
             if (context.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_CAMERA_ANY)) {
                 available.add(SensorType.RGB)
             }
-            
+
             // GSR sensor availability - for now assume always available with fallback to simulated data
             // In production, this would check for paired Shimmer devices
             available.add(SensorType.GSR)
-            
+
             Log.d(TAG, "Detected available sensors: $available")
             return available
         }
@@ -46,7 +45,10 @@ class SensorSelectionDialog(
         /**
          * Show sensor selection dialog with auto-detected available sensors
          */
-        fun show(context: Context, onSensorsSelected: (Set<SensorType>) -> Unit) {
+        fun show(
+            context: Context,
+            onSensorsSelected: (Set<SensorType>) -> Unit,
+        ) {
             val availableSensors = detectAvailableSensors(context)
             SensorSelectionDialog(context, availableSensors, onSensorsSelected).show()
         }
@@ -55,7 +57,7 @@ class SensorSelectionDialog(
     enum class SensorType(val displayName: String, val description: String) {
         THERMAL("🌡️ Thermal Camera", "Infrared thermal imaging with precise temperature measurement"),
         RGB("📸 RGB Camera", "High-quality color video recording with Samsung camera features"),
-        GSR("📊 GSR Sensor", "128Hz physiological data via Shimmer3 Bluetooth sensor")
+        GSR("📊 GSR Sensor", "128Hz physiological data via Shimmer3 Bluetooth sensor"),
     }
 
     private lateinit var thermalCheckBox: CheckBox
@@ -70,19 +72,21 @@ class SensorSelectionDialog(
         setTitle("Select Recording Sensors")
 
         // Create layout
-        val mainLayout = LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(48, 32, 48, 32)
-        }
+        val mainLayout =
+            LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(48, 32, 48, 32)
+            }
 
         // Title text with better formatting
-        val titleText = TextView(context).apply {
-            text = "🚀 Parallel Multi-Modal Recording\nChoose sensors for synchronized research-grade recording:"
-            textSize = 16f
-            setTextColor(ContextCompat.getColor(context, android.R.color.black))
-            setPadding(0, 0, 0, 24)
-            gravity = Gravity.CENTER
-        }
+        val titleText =
+            TextView(context).apply {
+                text = "🚀 Parallel Multi-Modal Recording\nChoose sensors for synchronized research-grade recording:"
+                textSize = 16f
+                setTextColor(ContextCompat.getColor(context, android.R.color.black))
+                setPadding(0, 0, 0, 24)
+                gravity = Gravity.CENTER
+            }
         mainLayout.addView(titleText)
 
         // Sensor checkboxes with descriptions
@@ -92,7 +96,7 @@ class SensorSelectionDialog(
         }
 
         createSensorCheckBox(SensorType.RGB).let {
-            rgbCheckBox = it.first  
+            rgbCheckBox = it.first
             mainLayout.addView(it.second)
         }
 
@@ -102,39 +106,44 @@ class SensorSelectionDialog(
         }
 
         // Status text
-        statusText = TextView(context).apply {
-            textSize = 12f
-            setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
-            gravity = Gravity.CENTER
-            setPadding(0, 16, 0, 16)
-        }
+        statusText =
+            TextView(context).apply {
+                textSize = 12f
+                setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
+                gravity = Gravity.CENTER
+                setPadding(0, 16, 0, 16)
+            }
         updateStatusText()
         mainLayout.addView(statusText)
 
         // Buttons
-        val buttonLayout = LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
-        }
-
-        cancelButton = Button(context).apply {
-            text = "Cancel"
-            setOnClickListener { 
-                Log.d(TAG, "Sensor selection canceled")
-                dismiss() 
+        val buttonLayout =
+            LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER
             }
-        }
 
-        startButton = Button(context).apply {
-            text = "Start Recording"
-            isEnabled = false
-            setOnClickListener { startRecording() }
-        }
+        cancelButton =
+            Button(context).apply {
+                text = "Cancel"
+                setOnClickListener {
+                    Log.d(TAG, "Sensor selection canceled")
+                    dismiss()
+                }
+            }
+
+        startButton =
+            Button(context).apply {
+                text = "Start Recording"
+                isEnabled = false
+                setOnClickListener { startRecording() }
+            }
 
         buttonLayout.addView(cancelButton)
-        val spacer = View(context).apply {
-            layoutParams = LinearLayout.LayoutParams(24, 0)
-        }
+        val spacer =
+            View(context).apply {
+                layoutParams = LinearLayout.LayoutParams(24, 0)
+            }
         buttonLayout.addView(spacer)
         buttonLayout.addView(startButton)
 
@@ -142,13 +151,13 @@ class SensorSelectionDialog(
 
         // Setup change listeners
         setupCheckBoxListeners()
-        
+
         setContentView(mainLayout)
 
         // Dialog properties
         window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
         )
         setCancelable(true)
         setCanceledOnTouchOutside(false)
@@ -157,44 +166,49 @@ class SensorSelectionDialog(
     }
 
     private fun createSensorCheckBox(sensorType: SensorType): Pair<CheckBox, LinearLayout> {
-        val container = LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(0, 8, 0, 8)
-        }
-
-        val checkBox = CheckBox(context).apply {
-            text = sensorType.displayName
-            textSize = 14f
-            isEnabled = availableSensors.contains(sensorType)
-            
-            // Default selections based on availability
-            isChecked = when (sensorType) {
-                SensorType.THERMAL -> availableSensors.contains(sensorType) // Always select thermal if available
-                SensorType.RGB -> false // Let user choose
-                SensorType.GSR -> false // Let user choose  
+        val container =
+            LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(0, 8, 0, 8)
             }
 
-            if (!isEnabled) {
-                alpha = 0.5f
-            }
-        }
+        val checkBox =
+            CheckBox(context).apply {
+                text = sensorType.displayName
+                textSize = 14f
+                isEnabled = availableSensors.contains(sensorType)
 
-        val description = TextView(context).apply {
-            text = if (availableSensors.contains(sensorType)) {
-                sensorType.description
-            } else {
-                "${sensorType.description} (Not Available)"
-            }
-            textSize = 12f
-            setTextColor(
-                if (availableSensors.contains(sensorType)) {
-                    ContextCompat.getColor(context, android.R.color.darker_gray)
-                } else {
-                    ContextCompat.getColor(context, android.R.color.tertiary_text_dark)
+                // Default selections based on availability
+                isChecked =
+                    when (sensorType) {
+                        SensorType.THERMAL -> availableSensors.contains(sensorType) // Always select thermal if available
+                        SensorType.RGB -> false // Let user choose
+                        SensorType.GSR -> false // Let user choose
+                    }
+
+                if (!isEnabled) {
+                    alpha = 0.5f
                 }
-            )
-            setPadding(32, 0, 0, 0)
-        }
+            }
+
+        val description =
+            TextView(context).apply {
+                text =
+                    if (availableSensors.contains(sensorType)) {
+                        sensorType.description
+                    } else {
+                        "${sensorType.description} (Not Available)"
+                    }
+                textSize = 12f
+                setTextColor(
+                    if (availableSensors.contains(sensorType)) {
+                        ContextCompat.getColor(context, android.R.color.darker_gray)
+                    } else {
+                        ContextCompat.getColor(context, android.R.color.tertiary_text_dark)
+                    },
+                )
+                setPadding(32, 0, 0, 0)
+            }
 
         container.addView(checkBox)
         container.addView(description)
@@ -218,22 +232,23 @@ class SensorSelectionDialog(
 
     private fun updateStatusText() {
         val selectedSensors = getSelectedSensors()
-        statusText.text = when (selectedSensors.size) {
-            0 -> "⚠️ Select at least one sensor to start recording"
-            1 -> "📱 Single-modal: ${selectedSensors.first().displayName} only"
-            2 -> "🔄 Dual-modal: ${selectedSensors.map { it.displayName }.joinToString(" + ")} synchronized"
-            3 -> "🎯 Tri-modal: Complete physiological research setup"
-            else -> "📊 ${selectedSensors.size} sensors selected for parallel recording"
-        }
+        statusText.text =
+            when (selectedSensors.size) {
+                0 -> "⚠️ Select at least one sensor to start recording"
+                1 -> "📱 Single-modal: ${selectedSensors.first().displayName} only"
+                2 -> "🔄 Dual-modal: ${selectedSensors.map { it.displayName }.joinToString(" + ")} synchronized"
+                3 -> "🎯 Tri-modal: Complete physiological research setup"
+                else -> "📊 ${selectedSensors.size} sensors selected for parallel recording"
+            }
     }
 
     private fun getSelectedSensors(): Set<SensorType> {
         val selected = mutableSetOf<SensorType>()
-        
+
         if (thermalCheckBox.isChecked) selected.add(SensorType.THERMAL)
-        if (rgbCheckBox.isChecked) selected.add(SensorType.RGB) 
+        if (rgbCheckBox.isChecked) selected.add(SensorType.RGB)
         if (gsrCheckBox.isChecked) selected.add(SensorType.GSR)
-        
+
         return selected
     }
 
@@ -248,5 +263,4 @@ class SensorSelectionDialog(
         onSensorsSelected(selectedSensors)
         dismiss()
     }
-
 }

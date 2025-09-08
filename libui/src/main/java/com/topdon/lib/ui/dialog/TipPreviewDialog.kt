@@ -16,18 +16,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 import com.topdon.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
 import kotlin.collections.ArrayList
+import com.topdon.lib.ui.R as UiR
 
 class TipPreviewDialog : DialogFragment() {
-
     private lateinit var titleList: ArrayList<String>
-    private var dis: Disposable?=null
+    private var dis: Disposable? = null
     var closeEvent: ((check: Boolean) -> Unit)? = null
     private var canceled = false
     private var hasCheck = false
@@ -35,11 +33,11 @@ class TipPreviewDialog : DialogFragment() {
     private lateinit var tvContent: TextView
     private lateinit var checkBox: CheckBox
     private lateinit var imgClose: ImageView
-    private lateinit var viewPager : ViewPager
+    private lateinit var viewPager: ViewPager
     private lateinit var indicateView: IndicateView
-    private var index : Int = -1
+    private var index: Int = -1
     private val pageCount = 2
-    private var timer : Timer?= Timer()
+    private var timer: Timer? = Timer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,20 +46,25 @@ class TipPreviewDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(UiR.layout.dialog_tip_preview, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
-        titleList = arrayListOf(
-            getString(R.string.preview_step_1),
-            getString(R.string.preview_step_2),
-        )
+        titleList =
+            arrayListOf(
+                getString(R.string.preview_step_1),
+                getString(R.string.preview_step_2),
+            )
         checkBox = view.findViewById(UiR.id.dialog_tip_check)
         imgClose = view.findViewById(UiR.id.img_close)
         viewPager = view.findViewById(UiR.id.view_pager)
@@ -82,31 +85,32 @@ class TipPreviewDialog : DialogFragment() {
             dismiss()
         }
         updateIndex(0)
-        viewPager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
+        viewPager.addOnPageChangeListener(
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int,
+                ) {
+                }
 
-            override fun onPageSelected(position: Int) {
-                updateIndex(position)
-            }
+                override fun onPageSelected(position: Int) {
+                    updateIndex(position)
+                }
 
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-        })
+                override fun onPageScrollStateChanged(state: Int) {
+                }
+            },
+        )
     }
 
-
-    fun updateIndex(position : Int){
-        if (index == position){
-            return
-        }
+    fun updateIndex(position: Int)  {
+        if (index == position)
+            {
+                return
+            }
         indicateView.currentIndex = position
-        viewPager.setCurrentItem(position,true)
+        viewPager.setCurrentItem(position, true)
         tvContent.text = titleList[position]
         index = position
     }
@@ -126,7 +130,10 @@ class TipPreviewDialog : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    override fun show(manager: FragmentManager, tag: String?) {
+    override fun show(
+        manager: FragmentManager,
+        tag: String?,
+    ) {
         try {
             super.show(manager, tag)
         } catch (e: Exception) {
@@ -147,7 +154,7 @@ class TipPreviewDialog : DialogFragment() {
         }
 
         override fun getItem(position: Int): Fragment {
-           return when (position) {
+            return when (position) {
                 0 -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_1)
                 }

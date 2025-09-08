@@ -17,7 +17,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
-
 import com.blankj.utilcode.util.LanguageUtils
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.bean.event.SocketMsgEvent
@@ -44,16 +43,16 @@ import org.json.JSONObject
 import java.io.File
 
 abstract class BaseApplication : Application() {
-
     companion object {
         lateinit var instance: BaseApplication
         val usbObserver by lazy { DeviceBroadcastReceiver() }
     }
+
     var tau_data_H: ByteArray? = null
     var tau_data_L: ByteArray? = null
 
     var activitys = arrayListOf<Activity>()
-    var hasOtgShow = false//otg提示只出现一次
+    var hasOtgShow = false // otg提示只出现一次
 
     /**
      * 获取软件编码.
@@ -69,7 +68,6 @@ abstract class BaseApplication : Application() {
      */
     abstract fun isDomestic(): Boolean
 
-
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -81,34 +79,41 @@ abstract class BaseApplication : Application() {
         WebSocketProxy.getInstance().onMessageListener = {
             parserSocketMessage(it)
         }
-
     }
 
-    open fun initWebSocket(){
+    open fun initWebSocket()  {
         connectWebSocket()
-        //注册网络变更广播 - using modern network callback for Android 10+
+        // 注册网络变更广播 - using modern network callback for Android 10+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkRequest = android.net.NetworkRequest.Builder()
-                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                .build()
-            
-            manager.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
-                override fun onAvailable(network: Network) {
-                    super.onAvailable(network)
-                    val capabilities = manager.getNetworkCapabilities(network)
-                    if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
-                        connectWebSocket()
-                        Log.i("WebSocket", "WiFi network available: $network")
+            val networkRequest =
+                android.net.NetworkRequest.Builder()
+                    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    .build()
+
+            manager.registerNetworkCallback(
+                networkRequest,
+                object : ConnectivityManager.NetworkCallback() {
+                    override fun onAvailable(network: Network) {
+                        super.onAvailable(network)
+                        val capabilities = manager.getNetworkCapabilities(network)
+                        if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
+                            connectWebSocket()
+                            Log.i("WebSocket", "WiFi network available: $network")
+                        }
                     }
-                }
-            })
+                },
+            )
         } else {
             // Fallback for older Android versions
             if (Build.VERSION.SDK_INT < 33) {
                 registerReceiver(NetworkChangedReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
             } else {
-                registerReceiver(NetworkChangedReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), Context.RECEIVER_NOT_EXPORTED)
+                registerReceiver(
+                    NetworkChangedReceiver(),
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
+                    Context.RECEIVER_NOT_EXPORTED,
+                )
             }
         }
     }
@@ -122,9 +127,10 @@ abstract class BaseApplication : Application() {
         } else if (ssid.startsWith(DeviceConfig.TC007_NAME_START)) {
             SharedManager.hasTC007 = true
             WebSocketProxy.getInstance().startWebSocket(ssid)
-        }else{
-            NetWorkUtils.switchNetwork(true)
-        }
+        } else
+            {
+                NetWorkUtils.switchNetwork(true)
+            }
     }
 
     fun disconnectWebSocket() {
@@ -140,21 +146,20 @@ abstract class BaseApplication : Application() {
         if (TextUtils.isEmpty(msgJson)) return
         EventBus.getDefault().post(SocketMsgEvent(msgJson))
 
-        if (SharedManager.is04AutoSync) {//自动保存到手机开启
+        if (SharedManager.is04AutoSync) { // 自动保存到手机开启
             when (SocketCmdUtil.getCmdResponse(msgJson)) {
-                WsCmdConstants.AR_COMMAND_SNAPSHOT -> {//拍照事件
+                WsCmdConstants.AR_COMMAND_SNAPSHOT -> { // 拍照事件
                     autoSaveNewest(false)
                 }
 
-                WsCmdConstants.AR_COMMAND_VRECORD -> {//开始或结束录像事件
+                WsCmdConstants.AR_COMMAND_VRECORD -> { // 开始或结束录像事件
                     try {
                         val data: JSONObject = JSONObject(msgJson).getJSONObject("data")
                         val enable: Boolean = data.getBoolean("enable")
-                        if (!enable) {//结束才同步
+                        if (!enable) { // 结束才同步
                             autoSaveNewest(true)
                         }
                     } catch (_: Exception) {
-
                     }
                 }
             }
@@ -175,16 +180,20 @@ abstract class BaseApplication : Application() {
     }
 
     private inner class NetworkChangedReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(
+            context: Context?,
+            intent: Intent?,
+        ) {
             if (ConnectivityManager.CONNECTIVITY_ACTION == intent?.action) {
                 val manager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                
+
                 // Use modern API for Android M+ (API 23+)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val activeNetwork = manager.activeNetwork
                     val capabilities = manager.getNetworkCapabilities(activeNetwork)
                     if (capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
-                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                    ) {
                         connectWebSocket()
                         Log.i("WebSocket", "WiFi network connected: $activeNetwork")
                     }
@@ -201,8 +210,6 @@ abstract class BaseApplication : Application() {
         }
     }
 
-
-
     /**
      * 设置webview的android9以上系统的多进程兼容性处理
      */
@@ -210,7 +217,7 @@ abstract class BaseApplication : Application() {
     open fun webviewSetPath(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val processName = getProcessName(context)
-            if (!applicationContext.packageName.equals(processName)) { //判断不等于默认进程名称
+            if (!applicationContext.packageName.equals(processName)) { // 判断不等于默认进程名称
                 WebView.setDataDirectorySuffix(processName!!)
             }
         }
@@ -227,7 +234,7 @@ abstract class BaseApplication : Application() {
         return null
     }
 
-    //清除无用数据
+    // 清除无用数据
     fun clearDb() {
         GlobalScope.launch(Dispatchers.Default) {
             try {
@@ -259,5 +266,4 @@ abstract class BaseApplication : Application() {
             it.finish()
         }
     }
-
 }

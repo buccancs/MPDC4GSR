@@ -9,18 +9,14 @@ import android.view.ViewGroup.LayoutParams
 import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 
-
 /**
  * 提示窗
  * create by fylder on 2018/6/15
  **/
 class TipCameraProgressDialog : Dialog {
-
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
-
 
     class Builder {
         var dialog: TipCameraProgressDialog? = null
@@ -50,18 +46,18 @@ class TipCameraProgressDialog : Dialog {
             val view = inflater.inflate(R.layout.dialog_tip_camera_progress, null)
             dialog!!.addContentView(
                 view,
-                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    //竖屏
+                    // 竖屏
                     0.52
                 } else {
-                    //横屏
+                    // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() //设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
             dialog!!.window!!.attributes = lp
             dialog!!.setCanceledOnTouchOutside(canceleable)
             dialog!!.setCancelable(canceleable)
@@ -69,8 +65,6 @@ class TipCameraProgressDialog : Dialog {
             return dialog as TipCameraProgressDialog
         }
     }
-
-
 
     /**
      * 提交回调

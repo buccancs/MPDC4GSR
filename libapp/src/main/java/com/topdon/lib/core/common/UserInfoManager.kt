@@ -7,9 +7,7 @@ import android.text.TextUtils
  **/
 
 class UserInfoManager {
-
     companion object {
-
         @Volatile
         var manager: UserInfoManager? = null
 
@@ -23,7 +21,6 @@ class UserInfoManager {
             }
             return manager!!
         }
-
     }
 
     /**
@@ -33,7 +30,7 @@ class UserInfoManager {
     fun isLogin(): Boolean {
         val token = SharedManager.getToken()
         return if (TextUtils.equals("-1", token)) {
-            //游客模式认为没有登录
+            // 游客模式认为没有登录
             false
         } else {
             !TextUtils.isEmpty(token)

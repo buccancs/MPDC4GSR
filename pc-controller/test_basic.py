@@ -5,9 +5,9 @@ Basic validation test for IRCamera PC Controller core components
 Tests the key architectural components without GUI dependencies.
 """
 
+import shutil
 import sys
 import tempfile
-import shutil
 from pathlib import Path
 
 # Add src to path
@@ -42,10 +42,9 @@ def test_basic_functionality():
 
         # Test 2: Session Manager
         print("\n2. Testing Session Manager...")
-        from ircamera_pc.core.session import SessionManager
-
         # Patch the config object to use temp directory
         import ircamera_pc.core.session
+        from ircamera_pc.core.session import SessionManager
 
         ircamera_pc.core.session.config
         ircamera_pc.core.session.config = config

@@ -1,9 +1,7 @@
 package com.topdon.lib.core.socket
 
-import android.net.Network
 import android.Manifest
-import android.content.Context
-import android.net.wifi.WifiManager
+import android.net.Network
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -17,7 +15,6 @@ import com.hjq.permissions.XXPermissions
 import com.topdon.lib.core.bean.event.SocketStateEvent
 import com.topdon.lib.core.config.DeviceConfig
 import com.topdon.lib.core.utils.WifiUtil
-import com.topdon.lib.core.utils.WifiUtil.getWifiName
 import com.topdon.lib.core.utils.WsCmdConstants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -28,12 +25,10 @@ import okio.ByteString
 import org.greenrobot.eventbus.EventBus
 
 class WebSocketProxy {
-
     companion object {
         private const val TS004_URL = "ws://192.168.40.1:888"
 
         private const val TC007_URL = "ws://192.168.40.1:63206/v1/thermal/temp/template/data"
-
 
         @JvmStatic
         private var mWebSocketProxy: WebSocketProxy? = null
@@ -50,24 +45,26 @@ class WebSocketProxy {
         }
     }
 
-
     private var currentSSID: String? = null
     private var mWsManager: WsManager? = null
     private var webSocketListener: MyWebSocketListener? = null
     private var reconnectHandler = ReconnectHandler()
-    private var network : Network ?= null
+    private var network: Network? = null
 
     private fun getOKHttpClient(): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-            //.pingInterval(3, TimeUnit.SECONDS)
-            .addInterceptor(Interceptor { chain ->
-                val originalRequest = chain.request()
-                val builder: Request.Builder = originalRequest.newBuilder()
-                val compressedRequest: Request = builder.build()
-                XLog.tag("WebSocket").d("request:$compressedRequest")
-                chain.proceed(compressedRequest)
-            })
-            .retryOnConnectionFailure(true)
+        val builder =
+            OkHttpClient.Builder()
+                // .pingInterval(3, TimeUnit.SECONDS)
+                .addInterceptor(
+                    Interceptor { chain ->
+                        val originalRequest = chain.request()
+                        val builder: Request.Builder = originalRequest.newBuilder()
+                        val compressedRequest: Request = builder.build()
+                        XLog.tag("WebSocket").d("request:$compressedRequest")
+                        chain.proceed(compressedRequest)
+                    },
+                )
+                .retryOnConnectionFailure(true)
         network?.socketFactory?.let {
             builder.socketFactory(it)
         }
@@ -78,21 +75,30 @@ class WebSocketProxy {
      * TC007 Socket 一帧数据回调，由于没有同时监听多个回调的需求，这里只搞一个就行了。
      */
     private var onFrameListener: ((frame: SocketFrameBean) -> Unit)? = null
-    fun setOnFrameListener(activity: ComponentActivity, listener: (frame: SocketFrameBean) -> Unit) {
-        activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onCreate(owner: LifecycleOwner) {
-                onFrameListener = listener
-            }
 
-            override fun onDestroy(owner: LifecycleOwner) {
-                onFrameListener = null
-            }
-        })
+    fun setOnFrameListener(
+        activity: ComponentActivity,
+        listener: (frame: SocketFrameBean) -> Unit,
+    ) {
+        activity.lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onCreate(owner: LifecycleOwner) {
+                    onFrameListener = listener
+                }
+
+                override fun onDestroy(owner: LifecycleOwner) {
+                    onFrameListener = null
+                }
+            },
+        )
     }
 
     var onMessageListener: ((text: String) -> Unit)? = null
 
-    fun startWebSocket(ssid: String, network: Network? = null) {
+    fun startWebSocket(
+        ssid: String,
+        network: Network? = null,
+    ) {
         if (ssid == currentSSID) {
             if (mWsManager != null) {
                 XLog.tag("WebSocket").w("$ssid startWebSocket() 重复调用")
@@ -113,14 +119,16 @@ class WebSocketProxy {
         XLog.tag("WebSocket").d("$ssid startWebSocket()")
 
         if (mWsManager == null) {
-            webSocketListener = MyWebSocketListener(ssid, reconnectHandler, onMessageListener) {
-                onFrameListener?.invoke(it)
-            }
-            mWsManager = WsManager.Builder()
-                .client(getOKHttpClient())
-                .wsUrl(if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) TS004_URL else TC007_URL)
-                .setWsStatusListener(webSocketListener)
-                .build()
+            webSocketListener =
+                MyWebSocketListener(ssid, reconnectHandler, onMessageListener) {
+                    onFrameListener?.invoke(it)
+                }
+            mWsManager =
+                WsManager.Builder()
+                    .client(getOKHttpClient())
+                    .wsUrl(if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) TS004_URL else TC007_URL)
+                    .setWsStatusListener(webSocketListener)
+                    .build()
         }
         mWsManager?.startConnect()
     }
@@ -151,14 +159,12 @@ class WebSocketProxy {
         mWsManager?.sendMessage(cmd)
     }
 
-
     private class MyWebSocketListener(
         val ssid: String,
         val handler: ReconnectHandler,
         val onMessageListener: ((text: String) -> Unit)?,
-        val onFrameListener: (frame: SocketFrameBean) -> Unit
+        val onFrameListener: (frame: SocketFrameBean) -> Unit,
     ) : WsManager.IWebSocketListener() {
-
         /**
          * onFailure 时是否需要重连。
          * 使用该变量是因为，恢复出厂、格式化存储等操作后，由于需要重启会主动断开与设备的连接。
@@ -167,14 +173,20 @@ class WebSocketProxy {
          */
         var isNeedReconnect = true
 
-        override fun onOpen(webSocket: WebSocket, response: Response) {
+        override fun onOpen(
+            webSocket: WebSocket,
+            response: Response,
+        ) {
             XLog.tag("WebSocket").d("$ssid Socket 连接成功")
             isNeedReconnect = true
             handler.reset()
             EventBus.getDefault().post(SocketStateEvent(true, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
         }
 
-        override fun onMessage(webSocket: WebSocket, text: String) {
+        override fun onMessage(
+            webSocket: WebSocket,
+            text: String,
+        ) {
             if (SocketCmdUtil.getCmdResponse(text) == WsCmdConstants.APP_EVENT_HEART_BEATS) {
                 Log.v("WebSocket", "<-- 收到心跳消息 ${text.replace("\n", "").replace(" ", "")}")
             } else {
@@ -187,8 +199,12 @@ class WebSocketProxy {
          * TC007 温度帧一秒两帧，每帧都输出太过频繁，用该变量控制
          */
         private var needPrint = false
-        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-            if (ssid.startsWith(DeviceConfig.TC007_NAME_START) && bytes.size == 254 ) {
+
+        override fun onMessage(
+            webSocket: WebSocket,
+            bytes: ByteString,
+        ) {
+            if (ssid.startsWith(DeviceConfig.TC007_NAME_START) && bytes.size == 254) {
                 val frameBean = SocketFrameBean(bytes.toByteArray())
                 onFrameListener.invoke(frameBean)
                 needPrint = !needPrint
@@ -201,11 +217,19 @@ class WebSocketProxy {
             }
         }
 
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+        override fun onClosing(
+            webSocket: WebSocket,
+            code: Int,
+            reason: String,
+        ) {
             XLog.tag("WebSocket").d("$ssid 连接关闭中，原因：$reason")
         }
 
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+        override fun onClosed(
+            webSocket: WebSocket,
+            code: Int,
+            reason: String,
+        ) {
             if (handler.isReconnecting) {
                 XLog.tag("WebSocket").d("$ssid 重连过程中，旧连接已关闭，原因：$reason")
             } else {
@@ -216,7 +240,11 @@ class WebSocketProxy {
             mWebSocketProxy?.currentSSID = ""
         }
 
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+        override fun onFailure(
+            webSocket: WebSocket,
+            t: Throwable,
+            response: Response?,
+        ) {
             XLog.tag("WebSocket").d("$ssid 发送或接收失败，response: ${response?.message}")
             XLog.tag("WebSocket").d("$ssid 发送或接收失败，异常原因: ${t.message}")
             if (checkNeedReconnect()) {
@@ -262,6 +290,7 @@ class WebSocketProxy {
              * 最大重连次数.
              */
             private const val MAX_RECONNECT_COUNT = 3
+
             /**
              * 每次重连间隔，单位毫秒.
              */

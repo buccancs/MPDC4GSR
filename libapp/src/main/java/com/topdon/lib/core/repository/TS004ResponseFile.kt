@@ -54,8 +54,9 @@ data class PipBean(
  * brightness: Int
  */
 data class BrightnessBean(
-    val brightness: Int
+    val brightness: Int,
 )
+
 /**
  * TS004 接口请求返回：获取放大倍数
  * @param factor 缩放比例

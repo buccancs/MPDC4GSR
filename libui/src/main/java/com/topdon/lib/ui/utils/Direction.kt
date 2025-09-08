@@ -23,9 +23,10 @@ enum class Direction {
         override fun sameAs(direction: Int): Boolean {
             return direction > 0
         }
-    };
+    }, ;
 
     abstract fun applyTo(delta: Int): Int
+
     abstract fun sameAs(direction: Int): Boolean
 
     companion object {

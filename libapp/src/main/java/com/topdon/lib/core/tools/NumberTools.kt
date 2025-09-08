@@ -5,7 +5,6 @@ import java.math.RoundingMode
 import java.util.*
 
 object NumberTools {
-
     /**
      * 精确小数点后一位
      */
@@ -38,7 +37,10 @@ object NumberTools {
      * 四舍五入
      * @param newScale 保留多少位小数
      */
-    fun scale(value: Float, newScale: Int): Float {
+    fun scale(
+        value: Float,
+        newScale: Int,
+    ): Float {
         return BigDecimal(value.toDouble()).setScale(newScale, RoundingMode.HALF_UP).toFloat()
     }
 }

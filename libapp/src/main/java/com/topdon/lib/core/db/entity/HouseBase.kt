@@ -1,13 +1,10 @@
 package com.topdon.lib.core.db.entity
 
-import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.blankj.utilcode.util.TimeUtils
-import com.blankj.utilcode.util.Utils
-import com.topdon.lib.core.R
 
 /**
  * 房屋检测 - 检测与报告都有的栏位.
@@ -90,45 +87,41 @@ open class HouseBase {
     @ColumnInfo
     var updateTime: Long = 0
 
-
-
-
     override fun equals(other: Any?): Boolean = other is HouseBase && other.id == id
 
     override fun hashCode(): Int = id.toInt()
 
-
     /**
      * 获取房屋面积单位.
      */
-    fun getSpaceUnitStr(): String = when (houseSpaceUnit) {
-        0 -> "ac"
-        1 -> "m²"
-        else -> "ha"
-    }
+    fun getSpaceUnitStr(): String =
+        when (houseSpaceUnit) {
+            0 -> "ac"
+            1 -> "m²"
+            else -> "ha"
+        }
 
     /**
      * 获取检测费用货币单位.
      */
-    fun getCostUnitStr(): String = when (costUnit) {
-        1 -> "EUR" //欧元EUR
-        2 -> "GBP" //英镑GBP
-        3 -> "AUD" //澳元AUD
-        4 -> "JPY" //日元JPY
-        5 -> "CAD" //加元CAD
-        6 -> "NZD" //新西兰NZD
-        7 -> "RMB" //人民币RMB
-        8 -> "HKD" //港币HKD
-        else -> "USD" //美元USD
-    }
+    fun getCostUnitStr(): String =
+        when (costUnit) {
+            1 -> "EUR" // 欧元EUR
+            2 -> "GBP" // 英镑GBP
+            3 -> "AUD" // 澳元AUD
+            4 -> "JPY" // 日元JPY
+            5 -> "CAD" // 加元CAD
+            6 -> "NZD" // 新西兰NZD
+            7 -> "RMB" // 人民币RMB
+            8 -> "HKD" // 港币HKD
+            else -> "USD" // 美元USD
+        }
 
     /**
      * 获取该报告对应的 PDF 文件名称
      */
     fun getPdfFileName(): String = "TC_${TimeUtils.millis2String(createTime, "yyyyMMdd_HHmmss")}.pdf"
 }
-
-
 
 /**
  * 房屋检测 - 一项检测.
@@ -192,8 +185,6 @@ class HouseDetect : HouseBase() {
     }
 }
 
-
-
 /**
  * 房屋检测 - 一项报告.
  */
@@ -204,25 +195,24 @@ class HouseReport : HouseBase() {
      */
     @ColumnInfo
     var inspectorWhitePath: String = ""
+
     /**
      * 检测师签名图片（黑色笔刷版）在本地绝对路径
      */
     @ColumnInfo
     var inspectorBlackPath: String = ""
 
-
     /**
      * 房主签名图片（白色笔刷版）在本地绝对路径
      */
     @ColumnInfo
     var houseOwnerWhitePath: String = ""
+
     /**
      * 房主签名图片（黑色笔刷版）在本地绝对路径
      */
     @ColumnInfo
     var houseOwnerBlackPath: String = ""
-
-
 
     /**
      * 该报告下的目录列表

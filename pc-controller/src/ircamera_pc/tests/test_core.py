@@ -4,16 +4,17 @@ Tests for IRCamera PC Controller
 Basic test suite for core functionality validation.
 """
 
-import pytest
-from unittest.mock import Mock, patch
-from datetime import datetime
-import tempfile
 import shutil
+import tempfile
+from datetime import datetime
+from unittest.mock import Mock, patch
+
+import pytest
 
 from ..core.config import ConfigManager
 from ..core.session import SessionManager, SessionState
 from ..core.timesync import TimeSyncService
-from ..network.server import NetworkServer, DeviceInfo
+from ..network.server import DeviceInfo, NetworkServer
 
 
 class TestConfigManager:
@@ -159,9 +160,7 @@ class TestTimeSyncService:
         request_data = (
             b"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f"
         )
-        service.handle_sync_request(
-            "test_device", request_data, ("127.0.0.1", 12345)
-        )
+        service.handle_sync_request("test_device", request_data, ("127.0.0.1", 12345))
 
         # Should have stats now
         stats = service.get_device_stats("test_device")

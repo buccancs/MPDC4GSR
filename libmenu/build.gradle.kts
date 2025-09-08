@@ -37,11 +37,11 @@ android {
 dependencies {
     // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(libs.material) // 需要 ConstraintLayout、ViewPager2
+    implementation(libs.material) // Requires ConstraintLayout, ViewPager2
 
     implementation(libs.glide)
 
-    implementation(project(":libapp")) // 需要使用 string 资源
+    implementation(project(":libapp")) // Requires string resources
     
     // Testing dependencies
     testImplementation(libs.junit)

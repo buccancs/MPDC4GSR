@@ -5,12 +5,14 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 
 abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
-
     protected lateinit var viewModel: VM
 
     abstract fun providerVMClass(): Class<VM>?
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         initVM()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -24,7 +26,8 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (this::viewModel.isInitialized)
+        if (this::viewModel.isInitialized) {
             lifecycle.removeObserver(viewModel)
+        }
     }
 }

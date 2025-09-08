@@ -1,7 +1,6 @@
 package com.topdon.lib.core.bean.tools
 
 class ThermalBean {
-
     var maxTemp = 0f
     var minTemp = 0f
     var centerTemp = 0f

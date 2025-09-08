@@ -5,55 +5,41 @@ dependencyResolutionManagement {
         mavenCentral()
         maven { url = uri("https://www.jitpack.io") }
         maven { url = uri("https://developer.huawei.com/repo/") }
-        maven { url = uri("https://maven.google.com") }
-        maven { url = uri("https://repo1.maven.org/maven2/") }
-        maven { url = uri("https://maven.zohodl.com") }
         // Aliyun repositories as fallback
-        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
         maven { url = uri("https://maven.aliyun.com/repository/central") }
-        maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
-        // Local AAR files directories
+        // Consolidated local AAR files directories
         flatDir {
-            dirs("libir/libs")
-        }
-        flatDir {
-            dirs("libapp/libs")
-        }
-        flatDir {
-            dirs("app/libs")  // Added for LocalRepo AAR files
-        }
-        
-        flatDir {
-            dirs("commonlibrary")
-        }
-
-        flatDir {
-            dirs("component/edit3d/libs")
+            dirs("libir/libs", "libapp/libs", "app/libs", "commonlibrary")
         }
     }
 }
 
-rootProject.name = "TopInfrared"
+rootProject.name = "MPDC4GSR"
 
+// Core application modules
 include(":app")
-include(":BleModule")
 include(":commonlibrary")
+
+// All sensor and recording modules (restored)
+include(":component:thermal")
+include(":component:gsr-recording")
+include(":component:thermal-ir")
+include(":component:thermal-lite")
 include(":component:CommonComponent")
 include(":component:edit3d")
 include(":component:house")
 include(":component:pseudo")
-include(":component:thermal")
-include(":component:thermal-ir")
-include(":component:thermal-lite")
 include(":component:transfer")
 include(":component:user")
-include(":component:gsr-recording")
+include(":BleModule")
+
+// All library modules (restored)
 include(":libapp")
 include(":libcom")
-include(":libhik")
 include(":libir")
+include(":libui")
+include(":libhik")
 include(":libmatrix")
 include(":libmenu")
-include(":libui")
 include(":RangeSeekBar")

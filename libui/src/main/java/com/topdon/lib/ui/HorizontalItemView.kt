@@ -18,10 +18,8 @@ class HorizontalItemView : RecyclerView {
     private val layoutManager: HorizontalLayoutManager
     private val scrollStateChangeListeners: ArrayList<ScrollStateChangeListener<ViewHolder>> = ArrayList()
     private val onItemChangedListeners: ArrayList<OnItemChangedListener<ViewHolder>> = ArrayList()
-    
+
     private var isOverScrollEnabled = false
-
-
 
     constructor(context: Context) : this(context, null)
 
@@ -29,7 +27,7 @@ class HorizontalItemView : RecyclerView {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         isOverScrollEnabled = overScrollMode != OVER_SCROLL_NEVER
-        layoutManager = HorizontalLayoutManager(context, ScrollStateListener(),  DSVOrientation.HORIZONTAL)
+        layoutManager = HorizontalLayoutManager(context, ScrollStateListener(), DSVOrientation.HORIZONTAL)
         setLayoutManager(layoutManager)
     }
 
@@ -41,7 +39,10 @@ class HorizontalItemView : RecyclerView {
         }
     }
 
-    override fun fling(velocityX: Int, velocityY: Int): Boolean {
+    override fun fling(
+        velocityX: Int,
+        velocityY: Int,
+    ): Boolean {
         val isFling = super.fling(velocityX, velocityY)
         if (isFling) {
             layoutManager.onFling(velocityX, velocityY)
@@ -51,7 +52,9 @@ class HorizontalItemView : RecyclerView {
         return isFling
     }
 
-    fun setItemTransitionTimeMillis(@IntRange(from = 10) millis: Int) {
+    fun setItemTransitionTimeMillis(
+        @IntRange(from = 10) millis: Int,
+    ) {
         layoutManager.setTimeForItemSettle(millis)
     }
 
@@ -70,8 +73,6 @@ class HorizontalItemView : RecyclerView {
     fun addOnItemChangedListener(onItemChangedListener: OnItemChangedListener<*>) {
         onItemChangedListeners.add(onItemChangedListener as OnItemChangedListener<ViewHolder>)
     }
-
-
 
     private inner class ScrollStateListener : HorizontalLayoutManager.ScrollStateListener {
         override fun onIsBoundReachedFlagChange(isBoundReached: Boolean) {
@@ -146,9 +147,23 @@ class HorizontalItemView : RecyclerView {
     }
 
     interface ScrollStateChangeListener<T : ViewHolder> {
-        fun onScrollStart(currentItemHolder: T, adapterPosition: Int)
-        fun onScrollEnd(currentItemHolder: T, adapterPosition: Int)
-        fun onScroll(scrollPosition: Float, currentPosition: Int, newPosition: Int, currentHolder: T?, newCurrent: T?)
+        fun onScrollStart(
+            currentItemHolder: T,
+            adapterPosition: Int,
+        )
+
+        fun onScrollEnd(
+            currentItemHolder: T,
+            adapterPosition: Int,
+        )
+
+        fun onScroll(
+            scrollPosition: Float,
+            currentPosition: Int,
+            newPosition: Int,
+            currentHolder: T?,
+            newCurrent: T?,
+        )
     }
 
     interface OnItemChangedListener<T : ViewHolder?> {
@@ -156,6 +171,9 @@ class HorizontalItemView : RecyclerView {
          * This method will be also triggered when view appears on the screen for the first time.
          * If data set is empty, viewHolder will be null and adapterPosition will be NO_POSITION
          */
-        fun onCurrentItemChanged(viewHolder: T?, adapterPosition: Int)
+        fun onCurrentItemChanged(
+            viewHolder: T?,
+            adapterPosition: Int,
+        )
     }
 }

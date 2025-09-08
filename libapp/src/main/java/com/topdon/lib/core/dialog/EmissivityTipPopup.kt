@@ -11,13 +11,13 @@ import android.widget.CheckBox
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.databinding.LayoutPopupTipEmissivityBinding
 import com.topdon.lib.core.R
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
+import com.topdon.lib.core.databinding.LayoutPopupTipEmissivityBinding
+import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
-import com.topdon.lib.core.navigation.NavigationManager
 
 /**
  * des:
@@ -54,7 +54,12 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
         return this
     }
 
-    fun setDataBean(environment: Float,distance : Float,radiation : Float,text : String): EmissivityTipPopup {
+    fun setDataBean(
+        environment: Float,
+        distance: Float,
+        radiation: Float,
+        text: String,
+    ): EmissivityTipPopup {
         this.environment = environment
         this.distance = distance
         this.radiation = radiation
@@ -73,12 +78,14 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
             binding.tvDistanceTitle.text = context.getString(R.string.thermal_config_distance) + ":"
 
             binding.tvTitle.visibility = View.GONE
-            if (text.isNotEmpty()){
-                binding.tvEmissivityMaterials.text = text
-                binding.tvEmissivityMaterials.visibility = View.VISIBLE
-            }else{
-                binding.tvEmissivityMaterials.visibility = View.GONE
-            }
+            if (text.isNotEmpty())
+                {
+                    binding.tvEmissivityMaterials.text = text
+                    binding.tvEmissivityMaterials.visibility = View.VISIBLE
+                } else
+                {
+                    binding.tvEmissivityMaterials.visibility = View.GONE
+                }
             binding.dialogTipCancelBtn.visibility = View.GONE
             binding.dialogTipSuccessBtn.text = context.getString(R.string.tc_modify_params)
             binding.dialogTipCheck.visibility = View.GONE
@@ -86,11 +93,12 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
                 NumberTools.to02(radiation)}"
             binding.tvEnvironmentValue.text = UnitTools.showC(environment)
             binding.tvDistanceValue.text = "${NumberTools.to02(distance)}m"
-            popupWindow = PopupWindow(
-                view,
-                SizeUtils.dp2px(275f),
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
+            popupWindow =
+                PopupWindow(
+                    view,
+                    SizeUtils.dp2px(275f),
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                )
             popupWindow?.apply {
                 isFocusable = true
                 isOutsideTouchable = true

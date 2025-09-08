@@ -7,9 +7,7 @@ import com.topdon.lib.core.utils.ScreenUtil
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-
 object ScreenTool {
-
     /**
      * 折叠屏
      */
@@ -20,7 +18,7 @@ object ScreenTool {
         return (width / height) < 0.75f
     }
 
-    fun isIPad(context: Context) : Boolean{
+    fun isIPad(context: Context): Boolean  {
         val width = ScreenUtil.getScreenWidth(context)
         val height = ScreenUtil.getScreenHeight(context)
         val densityDpi = context.resources.displayMetrics.densityDpi

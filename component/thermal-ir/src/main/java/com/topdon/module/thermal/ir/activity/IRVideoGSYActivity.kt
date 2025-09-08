@@ -29,7 +29,7 @@ import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.event.GalleryDownloadEvent
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
+import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
 import java.io.File
 
 
@@ -100,7 +100,7 @@ class IRVideoGSYActivity : BaseActivity() {
     }
 
     private fun previewVideo(isRemote: Boolean, path: String) {
-        PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
+        PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
         val url = if (isRemote) {
             path
         } else {

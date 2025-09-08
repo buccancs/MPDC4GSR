@@ -16,10 +16,8 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.TimeZone
 
 object GalleryRepository {
-
     enum class DirType {
         LINE,
         TC007,
@@ -27,7 +25,10 @@ object GalleryRepository {
         TS004_REMOTE,
     }
 
-    private fun copySourDir(sourceDir: File, targetDir: File): Boolean {
+    private fun copySourDir(
+        sourceDir: File,
+        targetDir: File,
+    ): Boolean {
         return try {
             if (!sourceDir.exists()) {
                 return false
@@ -36,16 +37,17 @@ object GalleryRepository {
                 return false
             }
             val fileList = sourceDir.listFiles()
-            if(fileList?.isEmpty() == true){
-                return false
-            }
+            if (fileList?.isEmpty() == true)
+                {
+                    return false
+                }
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }
-            //遍历要复制该目录下的全部文件
+            // 遍历要复制该目录下的全部文件
             fileList?.forEach {
                 val path = sourceDir.absolutePath + File.separator + it.name
-                copyPictureFile(path,targetDir.absolutePath + File.separator + it.name)
+                copyPictureFile(path, targetDir.absolutePath + File.separator + it.name)
             }
             return true
         } catch (ex: Exception) {
@@ -53,7 +55,10 @@ object GalleryRepository {
         }
     }
 
-    private fun copyPictureFile(oldPath: String, newPath: String): Boolean {
+    private fun copyPictureFile(
+        oldPath: String,
+        newPath: String,
+    ): Boolean {
         return try {
             val streamFrom: InputStream = FileInputStream(oldPath)
             val streamTo: OutputStream = FileOutputStream(newPath)
@@ -80,7 +85,7 @@ object GalleryRepository {
             val dirFile = File(path)
             if (dirFile.isDirectory) {
                 val files = dirFile.listFiles()!!
-                //按时间倒序
+                // 按时间倒序
                 files.sortByDescending {
                     it.lastModified()
                 }
@@ -101,7 +106,12 @@ object GalleryRepository {
      * @param pageNum 页码，从1开始
      * @param pageCount 每页数据条数
      */
-    suspend fun loadByPage(isVideo: Boolean, dirType: DirType, pageNum: Int, pageCount: Int): ArrayList<GalleryBean>? {
+    suspend fun loadByPage(
+        isVideo: Boolean,
+        dirType: DirType,
+        pageNum: Int,
+        pageCount: Int,
+    ): ArrayList<GalleryBean>? {
         return withContext(Dispatchers.IO) {
             val resultList: ArrayList<GalleryBean> = ArrayList()
             if (dirType == DirType.TS004_REMOTE) {
@@ -137,28 +147,32 @@ object GalleryRepository {
     /**
      * 仅供生成报告使用的，加载所有指定设备类型的图片.
      */
-    suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> = withContext(Dispatchers.IO) {
-        val resultList: ArrayList<GalleryBean> = ArrayList()
-        try {
-            val allFileList = loadAllLocale(false, dirType)
-            allFileList.forEach {
-                resultList.add(GalleryBean(it))
-            }
-            if (resultList.isNotEmpty()) {
-                resultList.sortByDescending {
-                    it.timeMillis
+    suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> =
+        withContext(Dispatchers.IO) {
+            val resultList: ArrayList<GalleryBean> = ArrayList()
+            try {
+                val allFileList = loadAllLocale(false, dirType)
+                allFileList.forEach {
+                    resultList.add(GalleryBean(it))
                 }
+                if (resultList.isNotEmpty()) {
+                    resultList.sortByDescending {
+                        it.timeMillis
+                    }
+                }
+            } catch (e: Exception) {
+                XLog.e("读取图库失败: ${e.message}")
             }
-        } catch (e: Exception) {
-            XLog.e("读取图库失败: ${e.message}")
+            return@withContext resultList
         }
-        return@withContext resultList
-    }
 
     /**
      * 加载本地所有指定类型的图片或视频列表.
      */
-    private fun loadAllLocale(isVideo: Boolean, dirType: DirType): ArrayList<File> {
+    private fun loadAllLocale(
+        isVideo: Boolean,
+        dirType: DirType,
+    ): ArrayList<File> {
         if (dirType == DirType.LINE) {
             val sourFile = File(FileConfig.gallerySourDir)
             if (sourFile.exists()) {
@@ -169,11 +183,12 @@ object GalleryRepository {
                 }
             }
         }
-        val dirFile = when (dirType) {
-            DirType.LINE -> File(FileConfig.lineGalleryDir)
-            DirType.TC007 -> File(FileConfig.tc007GalleryDir)
-            else -> File(FileConfig.ts004GalleryDir)
-        }
+        val dirFile =
+            when (dirType) {
+                DirType.LINE -> File(FileConfig.lineGalleryDir)
+                DirType.TC007 -> File(FileConfig.tc007GalleryDir)
+                else -> File(FileConfig.ts004GalleryDir)
+            }
         var files = dirFile.listFiles { pathname -> pathname?.isFile == true }
         if (files.isNullOrEmpty()) {
             files = loadAllLocaleByMediaStore(dirType)
@@ -185,7 +200,7 @@ object GalleryRepository {
                 resultList.add(it)
             }
         }
-        //按时间倒序
+        // 按时间倒序
         resultList.sortByDescending {
             it.lastModified()
         }
@@ -198,28 +213,31 @@ object GalleryRepository {
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
         val tc001Files: MutableList<File> = ArrayList()
         // 定义查询的列
-        val projection = arrayOf(
-            MediaStore.Images.Media.DATA
-        )
+        val projection =
+            arrayOf(
+                MediaStore.Images.Media.DATA,
+            )
         // 定义查询条件，指定目标文件夹路径
         val selection = MediaStore.Images.Media.DATA + " LIKE ?"
-        val path = when (dirType) {
-            DirType.LINE -> "%DCIM/${CommUtils.getAppName()}%"
-            DirType.TC007 -> "%DCIM/TC007%"
-            else -> "%DCIM/TS004%"
-        }
+        val path =
+            when (dirType) {
+                DirType.LINE -> "%DCIM/${CommUtils.getAppName()}%"
+                DirType.TC007 -> "%DCIM/TC007%"
+                else -> "%DCIM/TS004%"
+            }
         val selectionArgs = arrayOf(path)
         // 获取MediaStore ContentResolver
         val contentResolver: ContentResolver = Utils.getApp().contentResolver
         // 查询媒体库
         val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val cursor = contentResolver.query(
-            queryUri,
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )
+        val cursor =
+            contentResolver.query(
+                queryUri,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+            )
         cursor?.use {
             while (it.moveToNext()) {
                 val filePath = it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
@@ -229,5 +247,4 @@ object GalleryRepository {
         }
         return tc001Files.toTypedArray()
     }
-
 }

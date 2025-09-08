@@ -53,9 +53,6 @@ open class DirBase {
     @ColumnInfo
     var dangerCount: Int = 0
 
-
-
-
     override fun equals(other: Any?): Boolean = other is DirBase && other.id == id
 
     override fun hashCode(): Int = id.toInt()
@@ -67,17 +64,20 @@ open class DirBase {
     fun getDangerCountStr(): String = if (dangerCount > 99) "99+" else dangerCount.toString()
 }
 
-
-
 /**
  * 检测所属的一项目录.
  */
-@Entity(foreignKeys = [ForeignKey(
-    entity = HouseDetect::class,
-    parentColumns = ["id"],
-    childColumns = ["parentId"],
-    onDelete = ForeignKey.CASCADE,
-    onUpdate = ForeignKey.CASCADE,)])
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = HouseDetect::class,
+            parentColumns = ["id"],
+            childColumns = ["parentId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+    ],
+)
 class DirDetect() : DirBase() {
     @Ignore
     constructor(parentId: Long, position: Int, dirName: String) : this() {
@@ -166,33 +166,37 @@ class DirDetect() : DirBase() {
         /**
          * 构建默认的检测目录列表.
          */
-        fun buildDefaultDirList(parentId: Long): ArrayList<DirDetect> = arrayListOf(
-            DirDetect(parentId, 0, Utils.getApp().getString(R.string.detect_dir1_root)),
-            DirDetect(parentId, 1, Utils.getApp().getString(R.string.detect_dir2_root)),
-            DirDetect(parentId, 2, Utils.getApp().getString(R.string.detect_dir3_root)),
-            DirDetect(parentId, 3, Utils.getApp().getString(R.string.detect_dir4_root)),
-            DirDetect(parentId, 4, Utils.getApp().getString(R.string.detect_dir5_root)),
-            DirDetect(parentId, 5, Utils.getApp().getString(R.string.detect_dir6_root)),
-            DirDetect(parentId, 6, Utils.getApp().getString(R.string.detect_dir7_root)),
-            DirDetect(parentId, 7, Utils.getApp().getString(R.string.detect_dir8_root)),
-            DirDetect(parentId, 8, Utils.getApp().getString(R.string.detect_dir9_root)),
-            DirDetect(parentId, 9, Utils.getApp().getString(R.string.detect_dir10_root)),
-            DirDetect(parentId, 10, Utils.getApp().getString(R.string.detect_dir11_root)),
-        )
+        fun buildDefaultDirList(parentId: Long): ArrayList<DirDetect> =
+            arrayListOf(
+                DirDetect(parentId, 0, Utils.getApp().getString(R.string.detect_dir1_root)),
+                DirDetect(parentId, 1, Utils.getApp().getString(R.string.detect_dir2_root)),
+                DirDetect(parentId, 2, Utils.getApp().getString(R.string.detect_dir3_root)),
+                DirDetect(parentId, 3, Utils.getApp().getString(R.string.detect_dir4_root)),
+                DirDetect(parentId, 4, Utils.getApp().getString(R.string.detect_dir5_root)),
+                DirDetect(parentId, 5, Utils.getApp().getString(R.string.detect_dir6_root)),
+                DirDetect(parentId, 6, Utils.getApp().getString(R.string.detect_dir7_root)),
+                DirDetect(parentId, 7, Utils.getApp().getString(R.string.detect_dir8_root)),
+                DirDetect(parentId, 8, Utils.getApp().getString(R.string.detect_dir9_root)),
+                DirDetect(parentId, 9, Utils.getApp().getString(R.string.detect_dir10_root)),
+                DirDetect(parentId, 10, Utils.getApp().getString(R.string.detect_dir11_root)),
+            )
     }
 }
-
-
 
 /**
  * 报告所属的一项目录.
  */
-@Entity(foreignKeys = [ForeignKey(
-    entity = HouseReport::class,
-    parentColumns = ["id"],
-    childColumns = ["parentId"],
-    onDelete = ForeignKey.CASCADE,
-    onUpdate = ForeignKey.CASCADE,)])
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = HouseReport::class,
+            parentColumns = ["id"],
+            childColumns = ["parentId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE,
+        ),
+    ],
+)
 class DirReport : DirBase() {
     /**
      * 所对应的报告 Id

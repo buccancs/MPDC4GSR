@@ -1,18 +1,20 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("kapt")
+    // Temporarily disable kapt to fix compilation issues
+    // kotlin("kapt")
     id("kotlin-parcelize")
 }
 
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.name)
-    }
-    // Enable Kotlin 2.1.0 compatibility
-    correctErrorTypes = true
-    useBuildCache = true
-}
+// Temporarily disable kapt configuration
+// kapt {
+//     arguments {
+//         arg("AROUTER_MODULE_NAME", project.name)
+//     }
+//     // Enable Kotlin 2.1.0 compatibility
+//     correctErrorTypes = true
+//     useBuildCache = true
+// }
 
 android {
     namespace = "com.topdon.module.thermal"
@@ -27,6 +29,7 @@ android {
     }
 
     buildTypes {
+        // Only release build type - no debug variants
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -35,6 +38,14 @@ android {
             )
         }
     }
+    
+    // Disable all debug variants completely - release-only configuration
+    variantFilter {
+        if (buildType.name == "debug") {
+            ignore = true
+        }
+    }
+
     
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -60,7 +71,10 @@ dependencies {
     implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":libmenu"))
+    implementation(project(":libmenu"))  // Required for MenuFirstTabView
+    implementation(project(":component:CommonComponent"))  // Required for CommonComponent classes
+    implementation(project(":component:pseudo"))  // Required for CustomPseudoBean class
+    // Note: Cannot add thermal-ir or thermal-lite due to circular dependencies
     
     // ARouter removed - now using NavigationManager instead
     // implementation(libs.arouter.api)
@@ -71,6 +85,13 @@ dependencies {
     implementation(libs.utilcode)
     implementation(libs.mn.image.browser)
     
-    // Core library desugaring
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    // AAR dependencies moved to app module to avoid library AAR packaging issues
+    // These will be provided by the app module at runtime
+    compileOnly(files("../../libir/libs/suplib-release.aar"))  // Required for SupHelp class
+    compileOnly(files("../../libir/libs/ai-upscale-release.aar"))  // AI upscale functionality
+    compileOnly(files("../../libir/libs/texturegesture-release.aar"))  // Texture gesture functionality
+    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))  // Required for IRCMD classes
+    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))  // AC020 SDK 
+    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar"))  // IR utilities
+    compileOnly(files("../../shared/libs/lms_international-3.90.009.0.aar"))  // LMS SDK for thermal-ir classes
 }

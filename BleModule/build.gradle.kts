@@ -23,9 +23,11 @@ android {
     }
     
     // Disable all debug variants completely - release-only configuration to match libapp
-    variantFilter {
-        if (buildType.name == "debug") {
-            ignore = true
+    androidComponents {
+        beforeVariants { variant ->
+            if (variant.buildType == "debug") {
+                variant.enable = false
+            }
         }
     }
     

@@ -389,27 +389,3 @@ class WiFiControlWidget(QWidget):
         """Set error status."""
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")
-        super().__init__()
-        self._label = QLabel(
-            "Bluetooth control temporarily unavailable - GUI under repair"
-        )
-
-
-class WiFiControlWidget(QWidget):
-    """Simple placeholder WiFi control widget."""
-
-    def __init__(self):
-        super().__init__()
-        self._label = QLabel("WiFi control temporarily unavailable - GUI under repair")
-
-
-class SystemIntegrationWidget(QWidget):
-    """Simple placeholder system integration widget."""
-
-    elevation_requested = pyqtSignal(str)
-
-    def __init__(self):
-        super().__init__()
-        self._label = QLabel(
-            "System integration temporarily unavailable - GUI under repair"
-        )

@@ -260,6 +260,47 @@ dependencies {
     implementation("androidx.camera:camera-video:1.3.1")
     implementation("androidx.camera:camera-view:1.3.1")
     implementation("androidx.camera:camera-extensions:1.3.1")
+    
+    // Comprehensive Testing Dependencies
+    // Unit testing framework
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation("org.hamcrest:hamcrest:2.2")
+    
+    // Mocking framework
+    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("io.mockk:mockk-android:1.13.4")
+    
+    // Kotlin coroutines testing
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    
+    // Android instrumented testing
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    
+    // AndroidX Test - Instrumented testing
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    
+    // Robolectric for unit tests that need Android framework
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    
+    // Network testing
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+    
+    // Performance testing and benchmarking
+    androidTestImplementation("androidx.benchmark:benchmark-junit4:1.2.2")
+    
+    // Truth assertions for better test readability
+    testImplementation("com.google.truth:truth:1.1.4")
+    androidTestImplementation("com.google.truth:truth:1.1.4")
+    
+    // Test data generation
+    testImplementation("com.github.javafaker:javafaker:1.0.2")
 }
 
 // Utility functions for APK naming (converted from original Groovy)

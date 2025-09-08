@@ -15,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -277,7 +278,7 @@ class GSRRecorder(
 
                 delay(sampleIntervalMs)
             } catch (e: Exception) {
-                if (currentCoroutineContext().isActive) {
+                if (coroutineContext.isActive) {
                     Log.e(TAG, "Error in simulated data generation", e)
                     notifyError("Data generation error: ${e.message}")
                 }

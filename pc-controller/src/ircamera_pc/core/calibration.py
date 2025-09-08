@@ -4,6 +4,9 @@ Calibration Tools for IRCamera PC Controller
 
 Provides camera calibration utilities as per FR9 requirements.
 Handles both thermal and visual camera calibration for Android devices.
+
+GUI Integration: Uses crosshair calibration icon (ic_menu_coordinate_svg.xml)
+for visual representation in GUI widgets and calibration interfaces.
 """
 
 import json

@@ -479,9 +479,20 @@ class NetworkClient(private val context: Context) {
             val output = outputStream ?: throw IOException("Not connected")
 
             val messageData = message.toString().toByteArray(Charsets.UTF_8)
+            val startTime = System.currentTimeMillis()
+            
             output.writeInt(messageData.size)
             output.write(messageData)
             output.flush()
+            
+            // Record data transfer for performance tracking
+            errorRecoveryManager.recordDataTransfer(messageData.size.toLong() + 4) // +4 for length prefix
+            
+            // Record latency if this is a ping-like message
+            if (message.optString("message_type") == "heartbeat") {
+                val latency = System.currentTimeMillis() - startTime
+                errorRecoveryManager.recordLatency(latency)
+            }
         }
 
     private suspend fun receiveMessage(timeoutMs: Long): JSONObject? =

@@ -34,6 +34,14 @@ class NetworkErrorRecoveryManager(
     private var lastFailureTime = 0L
     private var lastKnownGoodController: NetworkClient.ControllerInfo? = null
     private var healthCheckJob: Job? = null
+    
+    // Real network performance tracking
+    private val latencyMeasurements = mutableListOf<Long>()
+    private val throughputMeasurements = mutableListOf<Double>()
+    private var lastPingTime = 0L
+    private var lastDataTransferTime = 0L
+    private var bytesTransferred = 0L
+    private val maxMeasurements = 50 // Keep last 50 measurements
 
     interface RecoveryEventListener {
         fun onRecoveryStarted(reason: String)
@@ -321,34 +329,80 @@ class NetworkErrorRecoveryManager(
     }
 
     /**
-     * Get average network latency in milliseconds
+     * Record a network latency measurement for performance tracking
      */
-    fun getAverageLatency(): Long {
-        // Simple simulation - in a real implementation, this would track actual latency
-        return if (isHealthy) {
-            when (successfulConnections) {
-                0 -> 0L
-                in 1..5 -> 50L + (Math.random() * 20).toLong()
-                else -> 30L + (Math.random() * 15).toLong()
+    fun recordLatency(latencyMs: Long) {
+        synchronized(latencyMeasurements) {
+            latencyMeasurements.add(latencyMs)
+            if (latencyMeasurements.size > maxMeasurements) {
+                latencyMeasurements.removeAt(0)
+            }
+        }
+    }
+    
+    /**
+     * Record data transfer for throughput calculation
+     */
+    fun recordDataTransfer(bytes: Long) {
+        val currentTime = System.currentTimeMillis()
+        if (lastDataTransferTime > 0) {
+            val timeDiff = (currentTime - lastDataTransferTime) / 1000.0 // seconds
+            if (timeDiff > 0) {
+                val throughput = (bytesTransferred + bytes) / 1024.0 / timeDiff // KB/s
+                synchronized(throughputMeasurements) {
+                    throughputMeasurements.add(throughput)
+                    if (throughputMeasurements.size > maxMeasurements) {
+                        throughputMeasurements.removeAt(0)
+                    }
+                }
+                bytesTransferred = 0
+                lastDataTransferTime = currentTime
+            } else {
+                bytesTransferred += bytes
             }
         } else {
-            200L + (Math.random() * 100).toLong()
+            bytesTransferred = bytes
+            lastDataTransferTime = currentTime
         }
     }
 
     /**
-     * Get current throughput in KB/s
+     * Get average network latency in milliseconds based on actual measurements
+     */
+    fun getAverageLatency(): Long {
+        synchronized(latencyMeasurements) {
+            return if (latencyMeasurements.isNotEmpty()) {
+                latencyMeasurements.average().toLong()
+            } else if (isHealthy) {
+                // Fallback for healthy connection when no measurements available
+                when (successfulConnections) {
+                    0 -> 0L
+                    in 1..5 -> 50L
+                    else -> 30L
+                }
+            } else {
+                200L // Unhealthy connection estimated latency
+            }
+        }
+    }
+
+    /**
+     * Get current throughput in KB/s based on actual measurements
      */
     fun getThroughputKBps(): Double {
-        // Simple simulation - in a real implementation, this would track actual throughput
-        return if (isHealthy) {
-            when (successfulConnections) {
-                0 -> 0.0
-                in 1..5 -> 50.0 + (Math.random() * 30.0)
-                else -> 80.0 + (Math.random() * 40.0)
+        synchronized(throughputMeasurements) {
+            return if (throughputMeasurements.isNotEmpty()) {
+                throughputMeasurements.average()
+            } else if (isHealthy) {
+                // Fallback for healthy connection when no measurements available
+                when (successfulConnections) {
+                    0 -> 0.0
+                    in 1..5 -> 50.0
+                    else -> 80.0
+                }
+            } else {
+                10.0 // Degraded throughput for unhealthy connection
             }
-        } else {
-            10.0 + (Math.random() * 20.0)
         }
     }
 

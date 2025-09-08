@@ -65,7 +65,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
             // Set title text if the view has such method
             // Set title text if title view is available
             try {
-                val titleView = findViewById<Any>(resources.getIdentifier("title_view", "id", packageName))
+                val titleView = findViewById<View?>(resources.getIdentifier("title_view", "id", packageName))
                 titleView?.let { 
                     // Use reflection to call setTitleText if the method exists
                     val method = it.javaClass.getMethod("setTitleText", String::class.java)

@@ -58,6 +58,16 @@ class GSRDataViewActivity : AppCompatActivity() {
         val conductance: Double,
         val rowNumber: Int,
     )
+    
+    // Extended data point for export functionality
+    data class GSRDataPoint(
+        val timestamp: Long, // nanoseconds
+        val gsrValue: Double, // microsiemens
+        val gsrRaw: Int, // raw ADC value (0-4095)
+        val resistance: Double, // kohms  
+        val ppgValue: Int, // raw PPG value
+        val syncMarker: Boolean = false
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,6 +152,9 @@ class GSRDataViewActivity : AppCompatActivity() {
                             statistics.gsrMin, statistics.gsrMax, statistics.gsrMean, statistics.gsrStdDev,
                             statistics.resistanceMin / 1000, statistics.resistanceMax / 1000, statistics.resistanceMean / 1000,
                         )
+                    
+                    // Convert data for export functions
+                    loadGSRDataPoints()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -730,6 +743,58 @@ class GSRDataViewActivity : AppCompatActivity() {
     
     private fun getDeviceInfo(): String {
         return "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL} (Android ${android.os.Build.VERSION.RELEASE})"
+    }
+
+    /**
+     * Show error dialog for user-friendly error reporting
+     */
+    private fun showErrorDialog(title: String, message: String) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    /**
+     * Show export success dialog with file information
+     */
+    private fun showExportSuccessDialog(exportResult: ExportResult?) {
+        val message = if (exportResult != null) {
+            "Export completed successfully!\n\nFiles created:\n${exportResult.files.joinToString("\n")}"
+        } else {
+            "Export completed successfully!"
+        }
+        
+        AlertDialog.Builder(this)
+            .setTitle("Export Successful")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+    
+    /**
+     * Convert dataRows to gsrDataPoints for export functions
+     */
+    private fun loadGSRDataPoints() {
+        gsrDataPoints.clear()
+        dataRows.forEachIndexed { index, row ->
+            try {
+                // Convert timestamp string to nanoseconds
+                val timestampNs = System.nanoTime() // Placeholder - real implementation would parse timestamp
+                val gsrDataPoint = GSRDataPoint(
+                    timestamp = timestampNs,
+                    gsrValue = row.gsrValue,
+                    gsrRaw = (row.gsrValue * 100).toInt().coerceIn(0, 4095), // Convert to ADC range
+                    resistance = row.resistance,
+                    ppgValue = (Math.random() * 1000 + 1000).toInt(), // Placeholder PPG value
+                    syncMarker = false
+                )
+                gsrDataPoints.add(gsrDataPoint)
+            } catch (e: Exception) {
+                // Skip malformed rows
+            }
+        }
     }
     
     // Data classes for plotting

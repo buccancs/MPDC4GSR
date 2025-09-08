@@ -7,7 +7,6 @@ package com.topdon.module.thermal.tools.medie
  * @wechat yaphetzhao92
  */
 interface IYapVideoProvider<Bitmap> {
-
     /**
      * bitmap list size, you can set like
      *
@@ -26,5 +25,4 @@ interface IYapVideoProvider<Bitmap> {
      * A return of -1 indicates failure
      */
     fun progress(progress: Float)
-
 }

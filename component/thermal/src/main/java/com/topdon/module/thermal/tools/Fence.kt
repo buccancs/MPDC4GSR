@@ -3,7 +3,6 @@ package com.topdon.module.thermal.tools
 import android.util.Log
 
 class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateType: Int = 0) {
-
     var scale = 0f
 
     init {
@@ -46,7 +45,10 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
     /**
      * 获取线坐标
      */
-    fun getLinePoint(start: IntArray, end: IntArray): ArrayList<IntArray> {
+    fun getLinePoint(
+        start: IntArray,
+        end: IntArray,
+    ): ArrayList<IntArray> {
         val startPoint: IntArray
         val endPoint: IntArray
         if (start[0] > end[0]) {
@@ -78,7 +80,10 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
     /**
      * 获取线坐标序号
      */
-    fun getLineIndex(start: IntArray, end: IntArray): ArrayList<Int> {
+    fun getLineIndex(
+        start: IntArray,
+        end: IntArray,
+    ): ArrayList<Int> {
         val lineList = getLinePoint(start, end)
         return pointToIndex(lineList)
     }
@@ -86,7 +91,10 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
     /**
      * 获取面积坐标点
      */
-    fun getAreaPoint(start: IntArray, end: IntArray): ArrayList<IntArray> {
+    fun getAreaPoint(
+        start: IntArray,
+        end: IntArray,
+    ): ArrayList<IntArray> {
         val startX: Int = (start[0] * scale).toInt()
         val startY: Int = (start[1] * scale).toInt()
         val endX: Int = (end[0] * scale).toInt()
@@ -103,11 +111,13 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
     /**
      * 获取面积坐标序号
      */
-    fun getAreaIndex(start: IntArray, end: IntArray): ArrayList<Int> {
+    fun getAreaIndex(
+        start: IntArray,
+        end: IntArray,
+    ): ArrayList<Int> {
         val lineList = getAreaPoint(start, end)
         return pointToIndex(lineList)
     }
-
 
     fun pointToIndex(lineList: ArrayList<IntArray>): ArrayList<Int> {
         val indexList = arrayListOf<Int>()

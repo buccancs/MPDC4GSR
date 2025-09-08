@@ -7,7 +7,6 @@ import com.topdon.lib.core.tools.TimeTool
 
 @Entity(tableName = "thermal_minute")
 class ThermalMinuteEntity {
-
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
@@ -41,7 +40,7 @@ class ThermalMinuteEntity {
     @ColumnInfo(name = "create_time")
     var createTime: Long = 0
 
-    //单位ms
+    // 单位ms
     @ColumnInfo(name = "update_time")
     var updateTime: Long = 0
 

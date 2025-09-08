@@ -7,10 +7,10 @@ with IRCamera devices for wireless communication.
 
 import asyncio
 import platform
-from typing import Dict, List, Optional
 from dataclasses import dataclass
-from enum import Enum
 from datetime import datetime
+from enum import Enum
+from typing import Dict, List, Optional
 
 try:
     from loguru import logger
@@ -20,7 +20,8 @@ except ImportError:
     logger = get_logger(__name__)
 
 try:
-    from PyQt6.QtCore import pyqtSignal, QTimer
+    from PyQt6.QtCore import QTimer, pyqtSignal
+
     from .base_manager import BaseManager
 
     PYQT_AVAILABLE = True
@@ -32,14 +33,13 @@ except ImportError:
 
 
 try:
-    from bleak import BleakScanner, BleakClient, BleakGATTCharacteristic
+    from bleak import BleakClient, BleakGATTCharacteristic, BleakScanner
     from bleak.backends.device import BLEDevice
 
     BLUETOOTH_AVAILABLE = True
 except ImportError:
     logger.warning(
-        "Bluetooth dependencies not available."
-        "Install 'bleak' for Bluetooth support"
+        "Bluetooth dependencies not available." "Install 'bleak' for Bluetooth support"
     )
     BLUETOOTH_AVAILABLE = False
     # Create fallback type for when bleak is not available
@@ -127,8 +127,7 @@ class BluetoothManager(BaseManager):
 
         if not BLUETOOTH_AVAILABLE:
             logger.error(
-                "Bluetooth functionality not available"
-                "- missing dependencies"
+                "Bluetooth functionality not available" "- missing dependencies"
             )
 
     def _emit_signal(self, signal_name: str, *args):
@@ -156,9 +155,7 @@ class BluetoothManager(BaseManager):
             if device.connection_state == ConnectionState.CONNECTED
         ]
 
-    def start_scanning(
-        self, continuous: bool = False, interval: int = 10
-    ) -> None:
+    def start_scanning(self, continuous: bool = False, interval: int = 10) -> None:
         """
         Start scanning for Bluetooth devices.
 
@@ -167,9 +164,7 @@ class BluetoothManager(BaseManager):
             interval: Scan interval in seconds for continuous scanning
         """
         if not self.is_available:
-            self._emit_signal(
-                "error_occurred", "scan", "Bluetooth not available"
-            )
+            self._emit_signal("error_occurred", "scan", "Bluetooth not available")
             return
 
         if self._scanning:
@@ -200,23 +195,19 @@ class BluetoothManager(BaseManager):
 
             discovered_count = 0
             for device in devices:
-                if (
-                    device.address not in self._devices
-                    or self._should_update_device(device)
+                if device.address not in self._devices or self._should_update_device(
+                    device
                 ):
                     bt_device = self._create_bluetooth_device(device)
                     self._devices[device.address] = bt_device
                     self._emit_signal("device_discovered", bt_device)
                     discovered_count += 1
                     logger.debug(
-                        f"Discovered device: {device.name}"
-                        "({device.address})"
+                        f"Discovered device: {device.name}" "({device.address})"
                     )
 
             self._emit_signal("scan_completed", discovered_count)
-            logger.info(
-                f"Scan completed - found {discovered_count}" "new devices"
-            )
+            logger.info(f"Scan completed - found {discovered_count}" "new devices")
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Error during device scan: {e}")
@@ -284,9 +275,7 @@ class BluetoothManager(BaseManager):
             True if connection successful, False otherwise
         """
         if not self.is_available:
-            self._emit_signal(
-                "error_occurred", "connect", "Bluetooth not available"
-            )
+            self._emit_signal("error_occurred", "connect", "Bluetooth not available")
             return False
 
         if address not in self._devices:
@@ -345,9 +334,7 @@ class BluetoothManager(BaseManager):
             if address in self._devices:
                 device = self._devices[address]
                 device.connection_state = ConnectionState.DISCONNECTED
-                self._emit_signal(
-                    "device_disconnected", address, "User initiated"
-                )
+                self._emit_signal("device_disconnected", address, "User initiated")
                 logger.info(f"Disconnected from {device.name}")
 
         except (OSError, ValueError, RuntimeError) as e:
@@ -371,10 +358,7 @@ class BluetoothManager(BaseManager):
             )
             return False
 
-        if (
-            address not in self._devices
-            or not self._devices[address].is_ircamera
-        ):
+        if address not in self._devices or not self._devices[address].is_ircamera:
             self._emit_signal(
                 "error_occurred",
                 "send",
@@ -384,9 +368,7 @@ class BluetoothManager(BaseManager):
 
         try:
             client = self._connections[address]
-            await client.write_gatt_char(
-                self.IRCAMERA_DATA_CHARACTERISTIC, data
-            )
+            await client.write_gatt_char(self.IRCAMERA_DATA_CHARACTERISTIC, data)
             logger.debug(f"Sent {len(data)} bytes to {address}")
             return True
 

@@ -7,14 +7,11 @@ import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 
 /**
  * 自定义FooterView - Simplified version without SmartRefreshLayout dependency
  */
 class LoadingFooter : LinearLayout {
-
     private val llLoading: LinearLayout
     private val clLoadEnd: ConstraintLayout
 

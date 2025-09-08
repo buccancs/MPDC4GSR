@@ -1,22 +1,19 @@
 package com.topdon.tc001
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.view.View
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
-import com.github.lzyzsd.jsbridge.BridgeWebView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-
+import com.csl.irCamera.R
+import com.github.lzyzsd.jsbridge.BridgeWebView
 import com.github.lzyzsd.jsbridge.BridgeWebViewClient
 import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
-import com.csl.irCamera.R
 
 /**
  * 使用 WebView 加载网页的 Activity.
@@ -28,7 +25,6 @@ import com.csl.irCamera.R
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class WebViewActivity : BaseActivity() {
-
     // View declarations
     private lateinit var tvReload: TextView
     private lateinit var viewCover: View
@@ -59,31 +55,39 @@ class WebViewActivity : BaseActivity() {
         }
 
         val webSettings: WebSettings = webView.settings
-        webSettings.setSupportZoom(false)//设置不支持字体缩放
+        webSettings.setSupportZoom(false) // 设置不支持字体缩放
         webSettings.useWideViewPort = true
-        webSettings.javaScriptCanOpenWindowsAutomatically = true //允许js弹出窗口
+        webSettings.javaScriptCanOpenWindowsAutomatically = true // 允许js弹出窗口
         webSettings.defaultTextEncodingName = "UTF-8"
         webSettings.javaScriptEnabled = true
         webSettings.allowFileAccess = true
         webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
         webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
-        webView.webViewClient = object : BridgeWebViewClient(webView) {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                dismissLoadingDialog()
-                viewCover.isVisible = false
-            }
+        webView.webViewClient =
+            object : BridgeWebViewClient(webView) {
+                override fun onPageFinished(
+                    view: WebView?,
+                    url: String?,
+                ) {
+                    super.onPageFinished(view, url)
+                    dismissLoadingDialog()
+                    viewCover.isVisible = false
+                }
 
-            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                super.onReceivedError(view, request, error)
-                dismissLoadingDialog()
-                viewCover.isVisible = false
-                if (request?.isForMainFrame == true) {
-                    clError.isVisible = true
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?,
+                ) {
+                    super.onReceivedError(view, request, error)
+                    dismissLoadingDialog()
+                    viewCover.isVisible = false
+                    if (request?.isForMainFrame == true) {
+                        clError.isVisible = true
+                    }
                 }
             }
-        }
 
         webView.registerHandler("goBack") { _, function ->
             function.onCallBack("android")

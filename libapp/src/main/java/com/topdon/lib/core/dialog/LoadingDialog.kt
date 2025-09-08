@@ -17,10 +17,11 @@ import com.topdon.lib.core.utils.ScreenUtil
  * Created by LCG on 2024/4/12.
  */
 class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialog) {
-
     private val binding: DialogLoadingBinding = DialogLoadingBinding.inflate(LayoutInflater.from(context))
 
-    fun setTips(@StringRes resId: Int) {
+    fun setTips(
+        @StringRes resId: Int,
+    ) {
         binding.tvTips.setText(resId)
         binding.tvTips.isVisible = true
     }
@@ -43,5 +44,4 @@ class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialo
             it.attributes = layoutParams
         }
     }
-
 }

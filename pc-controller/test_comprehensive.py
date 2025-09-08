@@ -8,10 +8,10 @@ Tests all implemented components including the new ones:
 - Camera Calibrator
 """
 
+import asyncio
+import shutil
 import sys
 import tempfile
-import shutil
-import asyncio
 import time
 from pathlib import Path
 
@@ -31,12 +31,12 @@ def test_all_components():
     try:
         # Import all components
         from ircamera_pc.core import (
+            CameraCalibrator,
             ConfigManager,
+            FileTransferManager,
+            GSRIngestor,
             SessionManager,
             TimeSyncService,
-            GSRIngestor,
-            FileTransferManager,
-            CameraCalibrator,
         )
         from ircamera_pc.network.server import NetworkServer
 

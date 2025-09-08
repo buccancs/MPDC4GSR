@@ -4,14 +4,14 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
-import androidx.appcompat.app.AppCompatActivity
-import com.topdon.lib.core.tools.PermissionTool
 import com.csl.irCamera.R
+import com.google.android.material.tabs.TabLayout
+import com.topdon.lib.core.tools.PermissionTool
 
 /**
  * GSR Recording Gallery Activity
@@ -19,10 +19,9 @@ import com.csl.irCamera.R
  * Consistent with thermal camera gallery interface
  */
 class GSRGalleryActivity : AppCompatActivity() {
-
     companion object {
         private const val TAG = "GSRGalleryActivity"
-        
+
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRGalleryActivity::class.java))
         }
@@ -39,12 +38,12 @@ class GSRGalleryActivity : AppCompatActivity() {
             mutableListOf(
                 Manifest.permission.READ_MEDIA_VIDEO,
                 Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
             )
         } else {
             mutableListOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
             )
         }
     }
@@ -52,7 +51,7 @@ class GSRGalleryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gsr_gallery)
-        
+
         initView()
         requestPermissions()
     }
@@ -60,10 +59,10 @@ class GSRGalleryActivity : AppCompatActivity() {
     private fun initView() {
         val galleryViewPager = findViewById<ViewPager>(R.id.gsr_gallery_viewpager)
         val galleryTab = findViewById<TabLayout>(R.id.gsr_gallery_tab)
-        
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Recording Gallery"
-        
+
         galleryViewPager.adapter = ViewAdapter(this, supportFragmentManager)
         galleryTab.setupWithViewPager(galleryViewPager)
     }
@@ -84,7 +83,7 @@ class GSRGalleryActivity : AppCompatActivity() {
 
         constructor(context: Context, fm: FragmentManager) : super(
             fm,
-            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
         ) {
             titles = arrayOf("GSR Data", "Videos", "RAW Images", "Sessions")
         }

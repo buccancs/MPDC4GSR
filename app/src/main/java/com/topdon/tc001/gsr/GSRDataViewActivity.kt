@@ -19,14 +19,17 @@ import java.io.File
  * Detailed view of GSR CSV data files with statistics and export options
  */
 class GSRDataViewActivity : AppCompatActivity() {
-
     companion object {
         private const val EXTRA_FILE_PATH = "file_path"
-        
-        fun startActivity(context: Context, filePath: String) {
-            val intent = Intent(context, GSRDataViewActivity::class.java).apply {
-                putExtra(EXTRA_FILE_PATH, filePath)
-            }
+
+        fun startActivity(
+            context: Context,
+            filePath: String,
+        ) {
+            val intent =
+                Intent(context, GSRDataViewActivity::class.java).apply {
+                    putExtra(EXTRA_FILE_PATH, filePath)
+                }
             context.startActivity(intent)
         }
     }
@@ -44,7 +47,7 @@ class GSRDataViewActivity : AppCompatActivity() {
         val gsrValue: Double,
         val resistance: Double,
         val conductance: Double,
-        val rowNumber: Int
+        val rowNumber: Int,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,18 +79,20 @@ class GSRDataViewActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         // Display basic file info
-        val fileSize = if (file.length() >= 1024 * 1024) {
-            "%.1f MB".format(file.length() / (1024.0 * 1024.0))
-        } else {
-            "%.1f KB".format(file.length() / 1024.0)
-        }
+        val fileSize =
+            if (file.length() >= 1024 * 1024) {
+                "%.1f MB".format(file.length() / (1024.0 * 1024.0))
+            } else {
+                "%.1f KB".format(file.length() / 1024.0)
+            }
 
-        fileInfoText.text = """
+        fileInfoText.text =
+            """
             File: ${file.name}
             Size: $fileSize
             Path: ${file.absolutePath}
             Modified: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date(file.lastModified()))}
-        """.trimIndent()
+            """.trimIndent()
     }
 
     private fun loadGSRData() {
@@ -97,9 +102,10 @@ class GSRDataViewActivity : AppCompatActivity() {
                 val headerLine = lines.firstOrNull() ?: ""
                 val dataLines = lines.drop(1)
 
-                val rows = dataLines.mapIndexed { index, line ->
-                    parseGSRDataRow(line, index + 2) // +2 because we skip header and 0-based index
-                }.filterNotNull()
+                val rows =
+                    dataLines.mapIndexed { index, line ->
+                        parseGSRDataRow(line, index + 2) // +2 because we skip header and 0-based index
+                    }.filterNotNull()
 
                 val statistics = calculateStatistics(rows)
 
@@ -108,7 +114,8 @@ class GSRDataViewActivity : AppCompatActivity() {
                     dataRows.addAll(rows)
                     adapter.notifyDataSetChanged()
 
-                    statisticsText.text = """
+                    statisticsText.text =
+                        """
                         Total Samples: ${rows.size}
                         Duration: ${formatDuration((rows.size / 128).toLong())} (@ 128 Hz)
                         
@@ -122,10 +129,10 @@ class GSRDataViewActivity : AppCompatActivity() {
                         • Min: %.1f kΩ
                         • Max: %.1f kΩ
                         • Mean: %.1f kΩ
-                    """.trimIndent().format(
-                        statistics.gsrMin, statistics.gsrMax, statistics.gsrMean, statistics.gsrStdDev,
-                        statistics.resistanceMin / 1000, statistics.resistanceMax / 1000, statistics.resistanceMean / 1000
-                    )
+                        """.trimIndent().format(
+                            statistics.gsrMin, statistics.gsrMax, statistics.gsrMean, statistics.gsrStdDev,
+                            statistics.resistanceMin / 1000, statistics.resistanceMax / 1000, statistics.resistanceMean / 1000,
+                        )
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -135,7 +142,10 @@ class GSRDataViewActivity : AppCompatActivity() {
         }
     }
 
-    private fun parseGSRDataRow(line: String, rowNumber: Int): GSRDataRow? {
+    private fun parseGSRDataRow(
+        line: String,
+        rowNumber: Int,
+    ): GSRDataRow? {
         return try {
             val parts = line.split(",")
             if (parts.size >= 4) {
@@ -144,9 +154,11 @@ class GSRDataViewActivity : AppCompatActivity() {
                     gsrValue = parts[1].trim().toDouble(),
                     resistance = parts[2].trim().toDouble(),
                     conductance = parts[3].trim().toDouble(),
-                    rowNumber = rowNumber
+                    rowNumber = rowNumber,
                 )
-            } else null
+            } else {
+                null
+            }
         } catch (e: Exception) {
             null
         }
@@ -173,7 +185,7 @@ class GSRDataViewActivity : AppCompatActivity() {
             gsrStdDev = gsrStdDev,
             resistanceMin = resistanceValues.minOrNull() ?: 0.0,
             resistanceMax = resistanceValues.maxOrNull() ?: 0.0,
-            resistanceMean = resistanceMean
+            resistanceMean = resistanceMean,
         )
     }
 
@@ -184,7 +196,7 @@ class GSRDataViewActivity : AppCompatActivity() {
         val gsrStdDev: Double,
         val resistanceMin: Double,
         val resistanceMax: Double,
-        val resistanceMean: Double
+        val resistanceMean: Double,
     )
 
     private fun formatDuration(seconds: Long): String {
@@ -225,12 +237,13 @@ class GSRDataViewActivity : AppCompatActivity() {
     }
 
     private fun shareData() {
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, "GSR Data from ${file.name}")
-            putExtra(Intent.EXTRA_STREAM, android.net.Uri.fromFile(file))
-            type = "text/csv"
-        }
+        val shareIntent =
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "GSR Data from ${file.name}")
+                putExtra(Intent.EXTRA_STREAM, android.net.Uri.fromFile(file))
+                type = "text/csv"
+            }
         startActivity(Intent.createChooser(shareIntent, "Share GSR Data"))
     }
 

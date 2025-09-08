@@ -12,24 +12,20 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
 class FenceView : View {
-
     var listener: CallBack? = null
 
     private val mPaint by lazy { Paint() }
-    private val rect: Rect = Rect(0, 0, 0, 0) //手动绘制矩形
-    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } //线宽度
-
+    private val rect: Rect = Rect(0, 0, 0, 0) // 手动绘制矩形
+    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } // 线宽度
 
     constructor (context: Context) : super(context)
 
-
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
-
 
     constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(
         context,
         attrs,
-        defStyle
+        defStyle,
     )
 
     init {
@@ -39,7 +35,6 @@ class FenceView : View {
         mPaint.strokeWidth = strokeWidth
         mPaint.alpha = 255
     }
-
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -92,12 +87,13 @@ class FenceView : View {
                 endPoint[0] = x
                 endPoint[1] = y
 
-                old = Rect(
-                    rect.left,
-                    rect.top,
-                    (rect.right + strokeWidth).toInt(),
-                    (rect.bottom + strokeWidth).toInt()
-                )
+                old =
+                    Rect(
+                        rect.left,
+                        rect.top,
+                        (rect.right + strokeWidth).toInt(),
+                        (rect.bottom + strokeWidth).toInt(),
+                    )
                 rect.right = x
                 rect.bottom = y
                 old.union(x, y)
@@ -105,12 +101,13 @@ class FenceView : View {
                 result()
             }
             MotionEvent.ACTION_MOVE -> {
-                old = Rect(
-                    rect.left,
-                    rect.top,
-                    (rect.right + strokeWidth).toInt(),
-                    (rect.bottom + strokeWidth).toInt()
-                )
+                old =
+                    Rect(
+                        rect.left,
+                        rect.top,
+                        (rect.right + strokeWidth).toInt(),
+                        (rect.bottom + strokeWidth).toInt(),
+                    )
                 rect.right = mX.toInt()
                 rect.bottom = mY.toInt()
                 old.union(mX.toInt(), mY.toInt())
@@ -123,7 +120,7 @@ class FenceView : View {
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         val point2 = intArrayOf(endPoint[0], endPoint[1])
-        //调整位置
+        // 调整位置
         for (i in 0..1) {
             if (startPoint[i] > endPoint[i]) {
                 point1[i] = endPoint[i]
@@ -132,7 +129,7 @@ class FenceView : View {
         }
         Log.i(
             "123",
-            "原始坐标 start:${startPoint.contentToString()}, end:${endPoint.contentToString()}"
+            "原始坐标 start:${startPoint.contentToString()}, end:${endPoint.contentToString()}",
         )
         Log.w("123", "修正坐标 start:${point1.contentToString()}, end:${point2.contentToString()}")
         if (listener != null) {
@@ -156,6 +153,10 @@ class FenceView : View {
          * startPoint: 左上角
          * endPoint: 右下角
          */
-        fun callback(startPoint: IntArray, endPoint: IntArray, srcRect: IntArray)
+        fun callback(
+            startPoint: IntArray,
+            endPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }

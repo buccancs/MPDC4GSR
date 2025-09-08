@@ -59,39 +59,42 @@ abstract class HouseReportDao {
         return houseReport
     }
 
-
-
     @Insert
     abstract fun insertReport(houseReport: HouseReport): Long
+
     @Insert
     abstract fun insertDir(dirReport: DirReport): Long
+
     @Insert
     abstract fun insertItem(itemReport: ItemReport): Long
 
-
     @Delete
     abstract fun deleteReport(vararg houseReport: HouseReport)
+
     @Delete
     abstract fun deleteDir(vararg dirReport: DirReport)
+
     @Delete
     abstract fun deleteItem(vararg itemReport: ItemReport)
 
-
     @Update
     abstract fun updateReport(houseReport: HouseReport)
+
     @Update
     abstract fun updateDir(dirReport: DirReport)
+
     @Update
     abstract fun updateItem(itemReport: ItemReport)
-
 
     @Query("SELECT * FROM HouseReport ORDER BY createTime DESC")
     abstract fun queryAll(): List<HouseReport>
 
     @Query("SELECT * FROM HouseReport WHERE id = :id")
     abstract fun queryReportById(id: Long): HouseReport?
+
     @Query("SELECT * FROM DirReport WHERE parentId = :reportId ORDER BY position")
     abstract fun queryDirList(reportId: Long): List<DirReport>
+
     @Query("SELECT * FROM ItemReport WHERE parentId = :dirId ORDER BY position")
     abstract fun queryItemList(dirId: Long): List<ItemReport>
 }

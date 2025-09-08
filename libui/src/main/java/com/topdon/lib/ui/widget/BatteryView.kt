@@ -21,6 +21,7 @@ class BatteryView : AppCompatImageView {
             field = value
             invalidate()
         }
+
     /**
      * 当前是否充电中
      */
@@ -29,7 +30,6 @@ class BatteryView : AppCompatImageView {
             field = value
             invalidate()
         }
-
 
     private val paint = Paint()
     private val path = Path()
@@ -42,7 +42,10 @@ class BatteryView : AppCompatImageView {
         paint.isAntiAlias = true
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
@@ -61,19 +64,19 @@ class BatteryView : AppCompatImageView {
                     MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt().coerceAtMost(heightSize))
                     MeasureSpec.AT_MOST -> {
                         if (widthSize < 58) {
-                            if (heightSize < 30) {//宽✘ 高✘
+                            if (heightSize < 30) { // 宽✘ 高✘
                                 if ((widthSize * 30 / 58f).toInt() <= heightSize) {
                                     setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                                 } else {
                                     setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
                                 }
-                            } else {//宽✘ 高✔
+                            } else { // 宽✘ 高✔
                                 setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                             }
                         } else {
-                            if (heightSize < 30) {//宽✔ 高✘
+                            if (heightSize < 30) { // 宽✔ 高✘
                                 setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
-                            } else {//宽✔ 高✔
+                            } else { // 宽✔ 高✔
                                 setMeasuredDimension(58, 30)
                             }
                         }
@@ -119,16 +122,24 @@ class BatteryView : AppCompatImageView {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        //绘制电池外壳
+        // 绘制电池外壳
         val lineSize = drawWidth * 2 / 58f
         val roundSize = drawWidth * 6 / 58f
         val batteryWidth = drawWidth * 50 / 58f
         paint.style = Paint.Style.STROKE
         paint.strokeCap = Paint.Cap.BUTT
         paint.color = 0xff83808c.toInt()
-        canvas.drawRoundRect(lineSize / 2, lineSize / 2, lineSize / 2 + batteryWidth, drawHeight.toFloat() - lineSize / 2, roundSize, roundSize, paint)
+        canvas.drawRoundRect(
+            lineSize / 2,
+            lineSize / 2,
+            lineSize / 2 + batteryWidth,
+            drawHeight.toFloat() - lineSize / 2,
+            roundSize,
+            roundSize,
+            paint,
+        )
 
-        //绘制电池正极
+        // 绘制电池正极
         val anodeWidth = drawWidth * 3 / 58f
         val anodeHeight = drawHeight * 8 / 30f - lineSize
         val anodeX = drawWidth - anodeWidth / 2
@@ -138,14 +149,29 @@ class BatteryView : AppCompatImageView {
         paint.strokeWidth = anodeWidth
         canvas.drawLine(anodeX, anodeStartY, anodeX, anodeStartY + anodeHeight, paint)
 
-        //绘制电量
+        // 绘制电量
         if (battery <= 0) {
             return
         }
         val progressWidth = drawWidth * 42 / 58f * battery / 100
         paint.strokeCap = Paint.Cap.BUTT
-        paint.color = (if (isCharging) 0xff6dc80e else if (battery <= 10) 0xffeb433e else 0xffffffff).toInt()
+        paint.color =
+            (
+                if (isCharging) {
+                    0xff6dc80e
+                } else if (battery <= 10) {
+                    0xffeb433e
+                } else {
+                    0xffffffff
+                }
+            ).toInt()
         canvas.clipPath(path)
-        canvas.drawRect(lineSize + anodeWidth, lineSize + anodeWidth, lineSize + anodeWidth + progressWidth, drawHeight - lineSize - anodeWidth, paint)
+        canvas.drawRect(
+            lineSize + anodeWidth,
+            lineSize + anodeWidth,
+            lineSize + anodeWidth + progressWidth,
+            drawHeight - lineSize - anodeWidth,
+            paint,
+        )
     }
 }

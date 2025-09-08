@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import com.topdon.lib.core.R
-import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.core.databinding.DialogConfirmSelectBinding
+import com.topdon.lib.core.utils.ScreenUtil
 
 /**
  * TS004 远端图库删除提示弹框.
@@ -18,7 +18,6 @@ import com.topdon.lib.core.databinding.DialogConfirmSelectBinding
  * Created by LCG on 2024/2/29.
  */
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
-
     var onConfirmClickListener: ((isSelect: Boolean) -> Unit)? = null
     private lateinit var binding: DialogConfirmSelectBinding
 
@@ -29,7 +28,9 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         binding.ivIcon.isVisible = isShowIcon
     }
 
-    fun setTitleRes(@StringRes titleRes: Int) {
+    fun setTitleRes(
+        @StringRes titleRes: Int,
+    ) {
         binding.tvTitle.setText(titleRes)
     }
 
@@ -44,7 +45,9 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         binding.rlMessage.isVisible = isShowMessage
     }
 
-    fun setMessageRes(@StringRes messageRes: Int) {
+    fun setMessageRes(
+        @StringRes messageRes: Int,
+    ) {
         binding.tvMessage.setText(messageRes)
     }
 
@@ -54,26 +57,30 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
     fun setShowCancel(isShowCancel: Boolean) {
         binding.tvCancel.isVisible = isShowCancel
     }
+
     /**
      * 设置取消按钮文字，默认为“取消”.
      */
-    fun setCancelText(@StringRes cancelRes: Int) {
+    fun setCancelText(
+        @StringRes cancelRes: Int,
+    ) {
         binding.tvCancel.setText(cancelRes)
     }
 
     /**
      * 设置确认按钮文字，默认为“删除"
      */
-    fun setConfirmText(@StringRes confirmRes: Int) {
+    fun setConfirmText(
+        @StringRes confirmRes: Int,
+    ) {
         binding.tvConfirm.setText(confirmRes)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(true)
         setCanceledOnTouchOutside(true)
-        
+
         binding = DialogConfirmSelectBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
 
@@ -91,13 +98,13 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.rlMessage -> {//选中状态
+            binding.rlMessage -> { // 选中状态
                 binding.ivSelect.isSelected = !binding.ivSelect.isSelected
             }
-            binding.tvCancel -> {//取消
+            binding.tvCancel -> { // 取消
                 dismiss()
             }
-            binding.tvConfirm -> {//确认
+            binding.tvConfirm -> { // 确认
                 dismiss()
                 onConfirmClickListener?.invoke(binding.ivSelect.isSelected)
             }

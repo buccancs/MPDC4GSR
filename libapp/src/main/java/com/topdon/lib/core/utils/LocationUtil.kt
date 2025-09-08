@@ -27,34 +27,37 @@ object LocationUtil {
      * @return 省-市-区，若获取失败或无可知位置信息则为 null
      */
     @RequiresPermission(Permission.ACCESS_FINE_LOCATION)
-    suspend fun getLastLocationStr(context: Context): String? = withContext(Dispatchers.IO) {
-        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        if (location == null) {
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-        }
-        if (location == null) {
-            return@withContext null
-        }
-        try {
-            val resultList = Geocoder(context, Locale.getDefault()).getFromLocation(location.latitude, location.longitude, 1)
-            if (resultList.isNullOrEmpty()) {
+    suspend fun getLastLocationStr(context: Context): String? =
+        withContext(Dispatchers.IO) {
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            }
+            if (location == null) {
                 return@withContext null
             }
-            val address = resultList[0]
-            return@withContext (address.adminArea ?: "") + (address.locality ?: "") + (address.subLocality ?: "")//省-市-区
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return@withContext null
+            try {
+                val resultList = Geocoder(context, Locale.getDefault()).getFromLocation(location.latitude, location.longitude, 1)
+                if (resultList.isNullOrEmpty()) {
+                    return@withContext null
+                }
+                val address = resultList[0]
+                return@withContext (address.adminArea ?: "") + (address.locality ?: "") + (address.subLocality ?: "") // 省-市-区
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return@withContext null
+            }
         }
-    }
-
 
     /**
      * 在给定 activity 生命周期内添加 位置信息 开关状态监听.
      */
-    fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
-        if (Build.VERSION.SDK_INT >= 28) {//Android 9及以上版本才有位置信息开关
+    fun addBtStateListener(
+        activity: ComponentActivity,
+        listener: ((isEnable: Boolean) -> Unit),
+    ) {
+        if (Build.VERSION.SDK_INT >= 28) { // Android 9及以上版本才有位置信息开关
             activity.lifecycle.addObserver(ModeChangeObserver(activity, listener))
         }
     }
@@ -74,7 +77,10 @@ object LocationUtil {
         }
 
         private inner class ModeChangeReceiver : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
                 listener.invoke(locationManager.isLocationEnabled)
             }
         }

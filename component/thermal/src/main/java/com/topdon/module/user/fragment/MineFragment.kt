@@ -12,11 +12,10 @@ import com.topdon.module.thermal.R
  * Simplified version for MPDC4GSR
  */
 class MineFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Create a simple placeholder view
         return inflater.inflate(android.R.layout.simple_list_item_1, container, false)

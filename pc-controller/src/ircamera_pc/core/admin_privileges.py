@@ -5,18 +5,19 @@ Handles privilege elevation and system integration for full PC control
 including network, Bluetooth, and system-level operations.
 """
 
+import ctypes
 import os
-import sys
 import platform
 import subprocess
-import ctypes
-from typing import Optional
+import sys
 from dataclasses import dataclass
 from enum import Enum
+from typing import Optional
 
 try:
     from PyQt6.QtCore import pyqtSignal
-    from PyQt6.QtWidgets import QMessageBox, QApplication
+    from PyQt6.QtWidgets import QApplication, QMessageBox
+
     from .base_manager import BaseManager
 
     PYQT_AVAILABLE = True
@@ -118,9 +119,7 @@ class AdminPrivilegesManager(BaseManager):
     if PYQT_AVAILABLE:
         privilege_changed = pyqtSignal(PrivilegeLevel)
         elevation_requested = pyqtSignal(str)  # reason
-        elevation_completed = pyqtSignal(
-            ElevationResult, str
-        )  # result, message
+        elevation_completed = pyqtSignal(ElevationResult, str)  # result, message
         permission_denied = pyqtSignal(str, str)  # operation, reason
         system_ready = pyqtSignal(SystemPermissions)
 
@@ -159,9 +158,7 @@ class AdminPrivilegesManager(BaseManager):
         """Get current system permissions status."""
         return self._permissions
 
-    def request_elevation(
-        self, reason: str = "System Integration"
-    ) -> ElevationResult:
+    def request_elevation(self, reason: str = "System Integration") -> ElevationResult:
         """
         Request privilege elevation for system integration.
 
@@ -257,9 +254,7 @@ class AdminPrivilegesManager(BaseManager):
             system = platform.system()
 
             if system == "Windows":
-                return self._run_windows_admin_command(
-                    command, arguments or []
-                )
+                return self._run_windows_admin_command(command, arguments or [])
             elif system in ["Linux", "Darwin"]:
                 return self._run_unix_admin_command(command, arguments or [])
             else:
@@ -299,9 +294,7 @@ class AdminPrivilegesManager(BaseManager):
             logger.error(f"Failed to check service status: {e}")
             return None
 
-    def manage_firewall_rule(
-        self, rule_name: str, action: str, **kwargs
-    ) -> bool:
+    def manage_firewall_rule(self, rule_name: str, action: str, **kwargs) -> bool:
         """
         Manage Windows Firewall rules for IRCamera communication.
 
@@ -321,9 +314,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
         try:
-            return self._manage_windows_firewall_rule(
-                rule_name, action, **kwargs
-            )
+            return self._manage_windows_firewall_rule(rule_name, action, **kwargs)
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Firewall rule management failed: {e}")
@@ -341,9 +332,7 @@ class AdminPrivilegesManager(BaseManager):
             else:
                 self._current_privilege = PrivilegeLevel.UNKNOWN
 
-            logger.info(
-                f"Current privilege level: {self._current_privilege.value}"
-            )
+            logger.info(f"Current privilege level: {self._current_privilege.value}")
             self._emit_signal("privilege_changed", self._current_privilege)
 
         except (OSError, ValueError, RuntimeError) as e:
@@ -366,9 +355,7 @@ class AdminPrivilegesManager(BaseManager):
                         )[0]
 
                         # SYSTEM SID: S-1-5-18
-                        system_sid = win32security.ConvertStringSidToSid(
-                            "S-1-5-18"
-                        )
+                        system_sid = win32security.ConvertStringSidToSid("S-1-5-18")
 
                         if win32security.EqualSid(user_sid, system_sid):
                             return PrivilegeLevel.SYSTEM
@@ -425,9 +412,7 @@ class AdminPrivilegesManager(BaseManager):
             elif system in ["Linux", "Darwin"]:
                 self._check_unix_permissions()
             else:
-                logger.warning(
-                    f"Permission checking not implemented for {system}"
-                )
+                logger.warning(f"Permission checking not implemented for {system}")
 
             self._emit_signal("system_ready", self._permissions)
 
@@ -443,9 +428,7 @@ class AdminPrivilegesManager(BaseManager):
         self._permissions.bluetooth_control = self._test_bluetooth_access()
 
         # Service management
-        self._permissions.service_management = (
-            self._test_service_management_access()
-        )
+        self._permissions.service_management = self._test_service_management_access()
 
         # Registry access
         self._permissions.registry_access = self._test_registry_access()
@@ -460,9 +443,7 @@ class AdminPrivilegesManager(BaseManager):
         """Check Unix-specific permissions."""
         # Basic checks for Unix systems - should only be called on Unix-like systems
         if platform.system() == "Windows":
-            logger.error(
-                "_check_unix_permissions called on Windows - this is a bug"
-            )
+            logger.error("_check_unix_permissions called on Windows - this is a bug")
             return
 
         try:
@@ -475,9 +456,7 @@ class AdminPrivilegesManager(BaseManager):
             self._permissions.hardware_access = is_root
         except AttributeError:
             # os.getuid() not available (shouldn't happen on Unix systems)
-            logger.error(
-                "os.getuid() not available - platform detection failed"
-            )
+            logger.error("os.getuid() not available - platform detection failed")
             # Fallback to checking sudo only
             can_sudo = self._can_sudo()
             self._permissions.network_config = can_sudo
@@ -513,8 +492,7 @@ class AdminPrivilegesManager(BaseManager):
                     "• Firewall configuration\n"
                     "• Service management\n\n"
                     "Would you like to continue?",
-                    QMessageBox.StandardButton.Yes
-                    | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                     QMessageBox.StandardButton.Yes,
                 )
 
@@ -558,9 +536,7 @@ class AdminPrivilegesManager(BaseManager):
             script_path = sys.argv[0]
 
             # Security: Validate paths before subprocess call
-            if not os.path.exists(python_path) or not os.path.exists(
-                script_path
-            ):
+            if not os.path.exists(python_path) or not os.path.exists(script_path):
                 raise FileNotFoundError("Required executable paths not found")
 
             subprocess.Popen(
@@ -605,12 +581,9 @@ class AdminPrivilegesManager(BaseManager):
     def _get_result_message(self, result: ElevationResult) -> str:
         """Get user-friendly message for elevation result."""
         messages = {
-            ElevationResult.SUCCESS: "Administrator privileges"
-            "granted successfully",
-            ElevationResult.CANCELLED: "Privilege elevation was"
-            "cancelled by user",
-            ElevationResult.FAILED: "Failed to obtain administrator"
-            "privileges",
+            ElevationResult.SUCCESS: "Administrator privileges" "granted successfully",
+            ElevationResult.CANCELLED: "Privilege elevation was" "cancelled by user",
+            ElevationResult.FAILED: "Failed to obtain administrator" "privileges",
             ElevationResult.ALREADY_ELEVATED: (
                 "Application already running with administrator privileges"
             ),
@@ -716,9 +689,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     # Command execution methods
-    def _run_windows_admin_command(
-        self, command: str, arguments: list
-    ) -> bool:
+    def _run_windows_admin_command(self, command: str, arguments: list) -> bool:
         """Run Windows admin command."""
         try:
             result = subprocess.run(

@@ -11,9 +11,8 @@ import com.csl.irCamera.R
  * Adapter for displaying GSR data rows in detailed view
  */
 class GSRDataRowAdapter(
-    private val dataRows: List<GSRDataViewActivity.GSRDataRow>
+    private val dataRows: List<GSRDataViewActivity.GSRDataRow>,
 ) : RecyclerView.Adapter<GSRDataRowAdapter.ViewHolder>() {
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val rowNumber: TextView = view.findViewById(R.id.row_number)
         val timestamp: TextView = view.findViewById(R.id.timestamp)
@@ -22,15 +21,22 @@ class GSRDataRowAdapter(
         val conductance: TextView = view.findViewById(R.id.conductance)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_gsr_data_row, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_gsr_data_row, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val dataRow = dataRows[position]
-        
+
         holder.rowNumber.text = dataRow.rowNumber.toString()
         holder.timestamp.text = dataRow.timestamp
         holder.gsrValue.text = "%.3f μS".format(dataRow.gsrValue)

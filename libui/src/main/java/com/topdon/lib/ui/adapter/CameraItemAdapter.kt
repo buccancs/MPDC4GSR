@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
+import com.topdon.lib.ui.R as UiR
 
 /**
  * @author: CaiSongL
@@ -17,25 +16,32 @@ import com.topdon.menu.R as MenuR
  */
 @Deprecated("热成像-菜单-拍照已重构，不需要这个类了")
 class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapter.ViewHolder>() {
-
-    val data: List<String> = listOf(
-        context.getString(R.string.person_headshot_camera),
-        context.getString(R.string.app_video)
-    )
+    val data: List<String> =
+        listOf(
+            context.getString(R.string.person_headshot_camera),
+            context.getString(R.string.app_video),
+        )
 
     private var parentRecycler: RecyclerView? = null
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         parentRecycler = recyclerView
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val v = inflater.inflate(UiR.layout.item_weak, parent, false)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         holder?.textView?.text = data[position]
     }
 
@@ -43,7 +49,8 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
         return data.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+    inner class ViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         val textView: TextView
 

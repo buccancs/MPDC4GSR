@@ -8,8 +8,6 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 
 /**
  * ViewPager 指示 View.
@@ -17,7 +15,6 @@ import com.topdon.menu.R as MenuR
  * Created by chenggeng.lin on 2023/11/13.
  */
 class IndicateView : View {
-
     var itemCount: Int = 0
         set(value) {
             field = value
@@ -30,7 +27,6 @@ class IndicateView : View {
             invalidate()
         }
 
-
     private val itemWidth: Int = (ScreenUtil.getScreenWidth(context) * 20 / 375f).toInt()
 
     private val itemHeight: Int = (itemWidth * 2 / 20f).toInt()
@@ -39,10 +35,8 @@ class IndicateView : View {
 
     private val roundRadius: Float = SizeUtils.dp2px(2f).toFloat()
 
-
     private val defaultPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val selectPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-
 
     constructor(context: Context) : this(context, null)
 
@@ -50,15 +44,23 @@ class IndicateView : View {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes:Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes,
+    ) {
         defaultPaint.color = 0xffffffff.toInt()
         val typedArray = context.obtainStyledAttributes(attrs, UiR.styleable.IndicateView)
-        val color = typedArray.getColor(UiR.styleable.IndicateView_selectColor, 0xffffba42.toInt() )
+        val color = typedArray.getColor(UiR.styleable.IndicateView_selectColor, 0xffffba42.toInt())
         typedArray.recycle()
         selectPaint.color = color
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(
+        widthMeasureSpec: Int,
+        heightMeasureSpec: Int,
+    ) {
         setMeasuredDimension(itemWidth * itemCount + itemMargin * (itemCount - 1), itemHeight)
     }
 

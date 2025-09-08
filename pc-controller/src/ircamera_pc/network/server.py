@@ -9,10 +9,10 @@ Device Synchronisation.
 import asyncio
 import json
 import uuid
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-from typing import Dict, Any, Optional, List, Callable
-from dataclasses import dataclass, asdict
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 try:
     from loguru import logger
@@ -21,10 +21,10 @@ except ImportError:
 
 from ..core.config import config
 from .protocol import (
-    get_protocol_manager,
-    create_message,
-    validate_message,
     ValidationError,
+    create_message,
+    get_protocol_manager,
+    validate_message,
 )
 
 
@@ -142,9 +142,7 @@ class NetworkServer:
 
         self._setup_message_handlers()
         protocol_version = self._protocol.get_protocol_info()["version"]
-        logger.info(
-            f"Network Server initialized with protocol {protocol_version}"
-        )
+        logger.info(f"Network Server initialized with protocol {protocol_version}")
 
     def _setup_message_handlers(self) -> None:
         """Set up message handlers for different message types."""
@@ -173,9 +171,7 @@ class NetworkServer:
             )
 
             # Start heartbeat monitoring
-            self._heartbeat_task = asyncio.create_task(
-                self._monitor_heartbeats()
-            )
+            self._heartbeat_task = asyncio.create_task(self._monitor_heartbeats())
 
             self._is_running = True
 
@@ -231,8 +227,7 @@ class NetworkServer:
 
                 if message_length > self._max_message_size:
                     logger.warning(
-                        f"Message too large from {addr}:"
-                        "{message_length} bytes"
+                        f"Message too large from {addr}:" "{message_length} bytes"
                     )
                     break
 
@@ -279,16 +274,12 @@ class NetworkServer:
             message_id = message.get("message_id", str(uuid.uuid4()))
 
             if not message_type:
-                await self._send_error(
-                    writer, "Missing message_type field", message_id
-                )
+                await self._send_error(writer, "Missing message_type field", message_id)
                 return
 
             # Handle message using protocol-aware handlers
             if message_type in self._message_handlers:
-                response = await self._message_handlers[message_type](
-                    message, writer
-                )
+                response = await self._message_handlers[message_type](message, writer)
                 if response:
                     response["message_id"] = message_id
                     await self._send_message(writer, response)
@@ -361,9 +352,7 @@ class NetworkServer:
             if self._on_device_connected:
                 self._on_device_connected(device_info)
 
-            return create_message(
-                "ack", ack_for="device_register", status="success"
-            )
+            return create_message("ack", ack_for="device_register", status="success")
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Error handling device registration: {e}")
@@ -386,14 +375,10 @@ class NetworkServer:
 
             # Update device status if provided
             if "battery_level" in message:
-                self._devices[device_id].battery_level = message[
-                    "battery_level"
-                ]
+                self._devices[device_id].battery_level = message["battery_level"]
 
             logger.debug(f"Heartbeat from {device_id}")
-            return create_message(
-                "ack", ack_for="device_heartbeat", status="success"
-            )
+            return create_message("ack", ack_for="device_heartbeat", status="success")
 
         return create_message(
             "error",
@@ -422,9 +407,7 @@ class NetworkServer:
             if self._on_device_status_update:
                 self._on_device_status_update(device)
 
-            return create_message(
-                "ack", ack_for="device_status", status="success"
-            )
+            return create_message("ack", ack_for="device_status", status="success")
 
         return create_message(
             "error",
@@ -443,9 +426,7 @@ class NetworkServer:
 
         logger.info(f"File transfer {status} from {device_id}: {transfer_id}")
 
-        return create_message(
-            "ack", ack_for="file_transfer_complete", status="success"
-        )
+        return create_message("ack", ack_for="file_transfer_complete", status="success")
 
     async def _handle_time_sync_request(
         self, message: Dict[str, Any], writer: asyncio.StreamWriter
@@ -477,9 +458,7 @@ class NetworkServer:
 
         # TODO: Forward to GSR ingestor
 
-        return create_message(
-            "ack", ack_for="gsr_data_batch", status="success"
-        )
+        return create_message("ack", ack_for="gsr_data_batch", status="success")
 
     async def _handle_gsr_leader_election(
         self, message: Dict[str, Any], writer: asyncio.StreamWriter
@@ -502,9 +481,7 @@ class NetworkServer:
                     current_leader = device
                     break
 
-            if (
-                not current_leader or priority_score > 0.8
-            ):  # High priority threshold
+            if not current_leader or priority_score > 0.8:  # High priority threshold
                 # Elect new leader
                 if current_leader:
                     current_leader.is_gsr_leader = False
@@ -519,9 +496,7 @@ class NetworkServer:
                     priority_score=1.0,
                 )
 
-        return create_message(
-            "ack", ack_for="gsr_leader_election", status="success"
-        )
+        return create_message("ack", ack_for="gsr_leader_election", status="success")
 
     async def _handle_device_disconnect(self, device_id: str) -> None:
         """Handle device disconnection."""
@@ -625,8 +600,7 @@ class NetworkServer:
                     await self._send_message(self._clients[device_id], command)
                     results[device_id] = True
                     logger.debug(
-                        f"Command sent to {device_id}: "
-                        "{command.get('message_type')}"
+                        f"Command sent to {device_id}: " "{command.get('message_type')}"
                     )
                 except (OSError, ValueError, RuntimeError) as e:
                     logger.error(f"Failed to send command to {device_id}: {e}")
@@ -745,10 +719,7 @@ class NetworkServer:
     def get_gsr_leader(self) -> Optional[DeviceInfo]:
         """Get current GSR leader device."""
         for device in self._devices.values():
-            if (
-                device.is_gsr_leader
-                and device.state != DeviceState.DISCONNECTED.value
-            ):
+            if device.is_gsr_leader and device.state != DeviceState.DISCONNECTED.value:
                 return device
         return None
 

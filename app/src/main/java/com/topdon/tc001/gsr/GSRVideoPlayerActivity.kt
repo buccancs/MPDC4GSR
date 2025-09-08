@@ -20,15 +20,18 @@ import java.io.File
  * Video playback for recorded videos from multi-modal sessions
  */
 class GSRVideoPlayerActivity : AppCompatActivity() {
-
     companion object {
         private const val TAG = "GSRVideoPlayerActivity"
         private const val EXTRA_VIDEO_PATH = "video_path"
-        
-        fun startActivity(context: Context, videoPath: String) {
-            val intent = Intent(context, GSRVideoPlayerActivity::class.java).apply {
-                putExtra(EXTRA_VIDEO_PATH, videoPath)
-            }
+
+        fun startActivity(
+            context: Context,
+            videoPath: String,
+        ) {
+            val intent =
+                Intent(context, GSRVideoPlayerActivity::class.java).apply {
+                    putExtra(EXTRA_VIDEO_PATH, videoPath)
+                }
             context.startActivity(intent)
         }
     }
@@ -61,16 +64,17 @@ class GSRVideoPlayerActivity : AppCompatActivity() {
 
     private fun playVideo(videoFile: File) {
         Log.w(TAG, "Opening video file: ${videoFile.absolutePath}")
-        
-        val uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val authority = "${packageName}.fileprovider"
-            FileProvider.getUriForFile(this, authority, videoFile)
-        } else {
-            Uri.fromFile(videoFile)
-        }
-        
+
+        val uri: Uri =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val authority = "$packageName.fileprovider"
+                FileProvider.getUriForFile(this, authority, videoFile)
+            } else {
+                Uri.fromFile(videoFile)
+            }
+
         Log.w(TAG, "Video URI: $uri")
-        
+
         videoView.setVideoURI(uri)
         videoView.setMediaController(MediaController(this))
         videoView.setOnPreparedListener { mediaPlayer ->
@@ -111,42 +115,47 @@ class GSRVideoPlayerActivity : AppCompatActivity() {
 
     private fun shareVideo() {
         val videoFile = File(videoPath)
-        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            FileProvider.getUriForFile(this, "${packageName}.fileprovider", videoFile)
-        } else {
-            Uri.fromFile(videoFile)
-        }
+        val uri =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                FileProvider.getUriForFile(this, "$packageName.fileprovider", videoFile)
+            } else {
+                Uri.fromFile(videoFile)
+            }
 
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, uri)
-            type = "video/*"
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
+        val shareIntent =
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, uri)
+                type = "video/*"
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
         startActivity(Intent.createChooser(shareIntent, "Share Video"))
     }
 
     private fun showVideoInfo() {
         val videoFile = File(videoPath)
-        val fileSize = if (videoFile.length() >= 1024 * 1024 * 1024) {
-            "%.1f GB".format(videoFile.length() / (1024.0 * 1024.0 * 1024.0))
-        } else if (videoFile.length() >= 1024 * 1024) {
-            "%.1f MB".format(videoFile.length() / (1024.0 * 1024.0))
-        } else {
-            "%.1f KB".format(videoFile.length() / 1024.0)
-        }
+        val fileSize =
+            if (videoFile.length() >= 1024 * 1024 * 1024) {
+                "%.1f GB".format(videoFile.length() / (1024.0 * 1024.0 * 1024.0))
+            } else if (videoFile.length() >= 1024 * 1024) {
+                "%.1f MB".format(videoFile.length() / (1024.0 * 1024.0))
+            } else {
+                "%.1f KB".format(videoFile.length() / 1024.0)
+            }
 
-        val createdDate = java.text.SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss", 
-            java.util.Locale.getDefault()
-        ).format(java.util.Date(videoFile.lastModified()))
+        val createdDate =
+            java.text.SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss",
+                java.util.Locale.getDefault(),
+            ).format(java.util.Date(videoFile.lastModified()))
 
-        val info = """
+        val info =
+            """
             File: ${videoFile.name}
             Size: $fileSize
             Created: $createdDate
             Path: ${videoFile.absolutePath}
-        """.trimIndent()
+            """.trimIndent()
 
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Video Information")

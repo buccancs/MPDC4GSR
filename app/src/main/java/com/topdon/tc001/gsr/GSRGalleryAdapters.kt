@@ -14,9 +14,8 @@ import java.io.File
  */
 class GSRDataAdapter(
     private val dataFiles: List<GSRDataFragment.GSRDataFile>,
-    private val onItemClick: (GSRDataFragment.GSRDataFile) -> Unit
+    private val onItemClick: (GSRDataFragment.GSRDataFile) -> Unit,
 ) : RecyclerView.Adapter<GSRDataAdapter.ViewHolder>() {
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val fileIcon: ImageView = view.findViewById(R.id.file_icon)
         val fileName: TextView = view.findViewById(R.id.file_name)
@@ -27,29 +26,36 @@ class GSRDataAdapter(
         val createdDate: TextView = view.findViewById(R.id.created_date)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_gsr_data_file, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_gsr_data_file, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val dataFile = dataFiles[position]
-        
+
         holder.fileName.text = dataFile.file.name
         holder.sessionInfo.text = "Session: ${dataFile.sessionId} | Participant: ${dataFile.participantId}"
         holder.fileSize.text = formatFileSize(dataFile.file.length())
         holder.sampleCount.text = "${dataFile.sampleCount} samples"
         holder.duration.text = formatDuration(dataFile.duration)
         holder.createdDate.text = dataFile.createdDate
-        
+
         holder.itemView.setOnClickListener {
             onItemClick(dataFile)
         }
     }
 
     override fun getItemCount() = dataFiles.size
-    
+
     private fun formatFileSize(bytes: Long): String {
         return when {
             bytes >= 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
@@ -57,7 +63,7 @@ class GSRDataAdapter(
             else -> "$bytes B"
         }
     }
-    
+
     private fun formatDuration(seconds: Long): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60
@@ -70,9 +76,8 @@ class GSRDataAdapter(
  */
 class GSRVideoAdapter(
     private val videoFiles: List<File>,
-    private val onItemClick: (File) -> Unit
+    private val onItemClick: (File) -> Unit,
 ) : RecyclerView.Adapter<GSRVideoAdapter.ViewHolder>() {
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val videoThumbnail: ImageView = view.findViewById(R.id.video_thumbnail)
         val fileName: TextView = view.findViewById(R.id.file_name)
@@ -82,18 +87,25 @@ class GSRVideoAdapter(
         val createdDate: TextView = view.findViewById(R.id.created_date)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_gsr_video_file, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_gsr_video_file, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val videoFile = videoFiles[position]
-        
+
         holder.fileName.text = videoFile.name
         holder.fileSize.text = formatFileSize(videoFile.length())
-        
+
         // Parse video metadata from filename if available
         val filename = videoFile.nameWithoutExtension
         when {
@@ -102,22 +114,23 @@ class GSRVideoAdapter(
             filename.contains("720") -> holder.resolution.text = "HD (1280×720)"
             else -> holder.resolution.text = "Unknown resolution"
         }
-        
-        holder.createdDate.text = java.text.SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss", 
-            java.util.Locale.getDefault()
-        ).format(java.util.Date(videoFile.lastModified()))
-        
+
+        holder.createdDate.text =
+            java.text.SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss",
+                java.util.Locale.getDefault(),
+            ).format(java.util.Date(videoFile.lastModified()))
+
         // TODO: Extract actual video duration using MediaMetadataRetriever
         holder.duration.text = "Duration: Unknown"
-        
+
         holder.itemView.setOnClickListener {
             onItemClick(videoFile)
         }
     }
 
     override fun getItemCount() = videoFiles.size
-    
+
     private fun formatFileSize(bytes: Long): String {
         return when {
             bytes >= 1024 * 1024 * 1024 -> "%.1f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
@@ -133,9 +146,8 @@ class GSRVideoAdapter(
  */
 class GSRRawImageAdapter(
     private val rawImageFiles: List<File>,
-    private val onItemClick: (File) -> Unit
+    private val onItemClick: (File) -> Unit,
 ) : RecyclerView.Adapter<GSRRawImageAdapter.ViewHolder>() {
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageThumbnail: ImageView = view.findViewById(R.id.image_thumbnail)
         val fileName: TextView = view.findViewById(R.id.file_name)
@@ -145,35 +157,43 @@ class GSRRawImageAdapter(
         val createdDate: TextView = view.findViewById(R.id.created_date)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_gsr_raw_image_file, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_gsr_raw_image_file, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val rawImageFile = rawImageFiles[position]
-        
+
         holder.fileName.text = rawImageFile.name
         holder.fileSize.text = formatFileSize(rawImageFile.length())
-        
+
         // Parse RAW image metadata from filename
         val filename = rawImageFile.nameWithoutExtension
         holder.resolution.text = "4032×3024 (12MP)" // Samsung S22 sensor size
         holder.captureInfo.text = "DNG RAW • Level 3"
-        
-        holder.createdDate.text = java.text.SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss", 
-            java.util.Locale.getDefault()
-        ).format(java.util.Date(rawImageFile.lastModified()))
-        
+
+        holder.createdDate.text =
+            java.text.SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss",
+                java.util.Locale.getDefault(),
+            ).format(java.util.Date(rawImageFile.lastModified()))
+
         holder.itemView.setOnClickListener {
             onItemClick(rawImageFile)
         }
     }
 
     override fun getItemCount() = rawImageFiles.size
-    
+
     private fun formatFileSize(bytes: Long): String {
         return when {
             bytes >= 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
@@ -188,9 +208,8 @@ class GSRRawImageAdapter(
  */
 class GSRSessionAdapter(
     private val sessions: List<GSRSessionFragment.GSRSessionInfo>,
-    private val onItemClick: (GSRSessionFragment.GSRSessionInfo) -> Unit
+    private val onItemClick: (GSRSessionFragment.GSRSessionInfo) -> Unit,
 ) : RecyclerView.Adapter<GSRSessionAdapter.ViewHolder>() {
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val sessionIcon: ImageView = view.findViewById(R.id.session_icon)
         val sessionId: TextView = view.findViewById(R.id.session_id)
@@ -201,40 +220,48 @@ class GSRSessionAdapter(
         val startTime: TextView = view.findViewById(R.id.start_time)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_gsr_session, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_gsr_session, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val session = sessions[position]
-        
+
         holder.sessionId.text = session.sessionId
         holder.participantInfo.text = "Participant: ${session.participantId}"
         holder.studyInfo.text = "Study: ${session.studyName}"
         holder.startTime.text = session.startTime
         holder.duration.text = formatDuration(session.duration)
-        
+
         // Count available files
         val fileCount = mutableListOf<String>()
         if (session.gsrDataFile != null) fileCount.add("GSR Data")
         if (session.videoFile != null) fileCount.add("Video")
         if (session.rawImageCount > 0) fileCount.add("${session.rawImageCount} RAW Images")
-        
-        holder.fileCount.text = if (fileCount.isEmpty()) {
-            "No files"
-        } else {
-            fileCount.joinToString(" • ")
-        }
-        
+
+        holder.fileCount.text =
+            if (fileCount.isEmpty()) {
+                "No files"
+            } else {
+                fileCount.joinToString(" • ")
+            }
+
         holder.itemView.setOnClickListener {
             onItemClick(session)
         }
     }
 
     override fun getItemCount() = sessions.size
-    
+
     private fun formatDuration(seconds: Long): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60

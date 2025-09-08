@@ -5,9 +5,10 @@ Handles loading and management of application configuration from YAML files.
 Provides centralized access to configuration settings across all modules.
 """
 
-import yaml
-from typing import Dict, Any, Optional
 from pathlib import Path
+from typing import Any, Dict, Optional
+
+import yaml
 
 try:
     from loguru import logger
@@ -143,9 +144,7 @@ class ConfigManager:
             self.config_path.parent.mkdir(parents=True, exist_ok=True)
 
             with open(self.config_path, "w", encoding="utf-8") as file:
-                yaml.dump(
-                    self._config, file, default_flow_style=False, indent=2
-                )
+                yaml.dump(self._config, file, default_flow_style=False, indent=2)
 
             logger.info(f"Configuration saved to {self.config_path}")
 

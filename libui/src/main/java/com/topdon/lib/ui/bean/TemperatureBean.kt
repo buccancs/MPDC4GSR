@@ -4,5 +4,5 @@ data class TemperatureBean(
     val res: Int,
     val name: String,
     val info: String,
-    val code: Int
+    val code: Int,
 )

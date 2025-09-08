@@ -17,7 +17,10 @@ class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
         layoutManager.detachView(view!!)
     }
 
-    fun detachAndScrapView(view: View?, recycler: RecyclerView.Recycler?) {
+    fun detachAndScrapView(
+        view: View?,
+        recycler: RecyclerView.Recycler?,
+    ) {
         layoutManager.detachAndScrapView(view!!, recycler!!)
     }
 
@@ -25,7 +28,10 @@ class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
         layoutManager.detachAndScrapAttachedViews(recycler!!)
     }
 
-    fun recycleView(view: View?, recycler: RecyclerView.Recycler) {
+    fun recycleView(
+        view: View?,
+        recycler: RecyclerView.Recycler,
+    ) {
         recycler.recycleView(view!!)
     }
 
@@ -38,14 +44,23 @@ class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
     val itemCount: Int
         get() = layoutManager.itemCount
 
-    fun getMeasuredChildForAdapterPosition(position: Int, recycler: RecyclerView.Recycler): View {
+    fun getMeasuredChildForAdapterPosition(
+        position: Int,
+        recycler: RecyclerView.Recycler,
+    ): View {
         val view = recycler.getViewForPosition(position)
         layoutManager.addView(view)
         layoutManager.measureChildWithMargins(view, 0, 0)
         return view
     }
 
-    fun layoutDecoratedWithMargins(v: View?, left: Int, top: Int, right: Int, bottom: Int) {
+    fun layoutDecoratedWithMargins(
+        v: View?,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
+    ) {
         layoutManager.layoutDecoratedWithMargins(v!!, left, top, right, bottom)
     }
 

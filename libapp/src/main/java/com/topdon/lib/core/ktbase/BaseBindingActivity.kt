@@ -14,7 +14,6 @@ import androidx.databinding.ViewDataBinding
 import com.topdon.lib.core.R
 import com.topdon.lib.core.bean.event.SocketStateEvent
 import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
-import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.dialog.LoadingDialog
 import com.topdon.lib.core.tools.AppLanguageUtils
 import com.topdon.lib.core.tools.ConstantLanguages
@@ -32,7 +31,6 @@ import java.io.File
  * Created by LCG on 2024/10/14.
  */
 abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
-
     protected lateinit var binding: B
 
     /**
@@ -59,10 +57,6 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
         super.attachBaseContext(AppLanguageUtils.attachBaseContext(newBase, ConstantLanguages.ENGLISH))
     }
 
-
-
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUSBLineStateChange(event: DeviceConnectEvent) {
         if (event.isConnect) {
@@ -71,15 +65,12 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
             disConnected()
         }
     }
+
     protected open fun connected() {
-
     }
+
     protected open fun disConnected() {
-
     }
-
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketConnectState(event: SocketStateEvent) {
@@ -89,24 +80,27 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
             onSocketDisConnected(event.isTS004)
         }
     }
+
     protected open fun onSocketConnected(isTS004: Boolean) {
-
     }
+
     protected open fun onSocketDisConnected(isTS004: Boolean) {
-
     }
-
 
     /**
      * 新版 LMS 风格的加载中弹框.
      */
     private var loadingDialog: LoadingDialog? = null
+
     /**
      * 显示加载中弹框.
      */
-    fun showLoadingDialog(@StringRes resId: Int = R.string.tip_loading) {
+    fun showLoadingDialog(
+        @StringRes resId: Int = R.string.tip_loading,
+    ) {
         showLoadingDialog(getString(resId))
     }
+
     /**
      * 显示加载中弹框.
      */
@@ -117,6 +111,7 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
         loadingDialog?.setTips(text)
         loadingDialog?.show()
     }
+
     /**
      * 关闭加载中弹框.
      */
@@ -124,16 +119,21 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
         loadingDialog?.dismiss()
     }
 
-
     protected class TakePhotoResult : ActivityResultContract<File, File?>() {
         private lateinit var file: File
 
-        override fun createIntent(context: Context, input: File): Intent {
+        override fun createIntent(
+            context: Context,
+            input: File,
+        ): Intent {
             file = input
             val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             return Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
 
-        override fun parseResult(resultCode: Int, intent: Intent?): File? = if (resultCode == RESULT_OK) file else null
+        override fun parseResult(
+            resultCode: Int,
+            intent: Intent?,
+        ): File? = if (resultCode == RESULT_OK) file else null
     }
 }

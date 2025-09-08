@@ -6,8 +6,6 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 
 class RoundImageView : AppCompatImageView {
     companion object {
@@ -23,7 +21,6 @@ class RoundImageView : AppCompatImageView {
         /** 圆角位置 - 右下.  */
         const val RIGHT_BOTTOM = 8
 
-
         /** 默认圆角半径 - 10dp  */
         private const val DEFAULT_RADIUS = 10f
 
@@ -31,7 +28,7 @@ class RoundImageView : AppCompatImageView {
         private const val DEFAULT_POSITION = 15
     }
 
-    var position = 0 //需圆角的位置
+    var position = 0 // 需圆角的位置
         set(value) {
             if (field != value) {
                 field = value
@@ -39,10 +36,9 @@ class RoundImageView : AppCompatImageView {
             }
         }
 
-    private var radius = 0 //圆角半径，单位 px
-    private val path = Path()//绘制范围
-    private var density = 0f //屏幕缩放等级，用于dp与px转换
-
+    private var radius = 0 // 圆角半径，单位 px
+    private val path = Path() // 绘制范围
+    private var density = 0f // 屏幕缩放等级，用于dp与px转换
 
     constructor(context: Context) : this(context, null)
 
@@ -55,7 +51,6 @@ class RoundImageView : AppCompatImageView {
         radius = typedArray.getDimensionPixelSize(UiR.styleable.RoundImageView_round_radius, dp2px(DEFAULT_RADIUS))
         position = typedArray.getInt(UiR.styleable.RoundImageView_round_position, DEFAULT_POSITION)
         typedArray.recycle()
-
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -107,9 +102,7 @@ class RoundImageView : AppCompatImageView {
         }
     }
 
-
     private fun dp2px(dpValue: Float): Int {
         return (dpValue * density + 0.5f).toInt()
     }
-
 }

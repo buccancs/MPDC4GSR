@@ -31,9 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class App : BaseApplication() {
-
     // Temporarily commented out due to dependency issues
     // init {
     //     SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ ->
@@ -46,8 +44,9 @@ class App : BaseApplication() {
     //     }
     // }
 
-    companion object{
+    companion object {
         lateinit var instance: App
+
         /**
          * 延时初始化
          */
@@ -60,19 +59,16 @@ class App : BaseApplication() {
         }
     }
 
-
-
-
     override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
 
     override fun isDomestic(): Boolean = false // Default to international since flavors were removed
 
-    val activityNameList : MutableList<String> = mutableListOf()
+    val activityNameList: MutableList<String> = mutableListOf()
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        //隐私政策弹框用app内的，默认设置lms里的隐私政策设置为true
+        // 隐私政策弹框用app内的，默认设置lms里的隐私政策设置为true
         SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
 
         if (SharedManager.getHasShowClause() || !isDomestic()) {
@@ -87,7 +83,7 @@ class App : BaseApplication() {
         if (!isDomestic()) {
             // Production version - force production URL and disable URL switching
             UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
-            SharedManager.setBaseHost(UrlConstant.BASE_URL) //更新app服务地址
+            SharedManager.setBaseHost(UrlConstant.BASE_URL) // 更新app服务地址
         }
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -96,32 +92,40 @@ class App : BaseApplication() {
         }
 //        CrashReport.initCrashReport(applicationContext, "cd1f9e26ee", false)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks{
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                if (!activityNameList.contains(activity.javaClass.getSimpleName())){
-                    activityNameList.add(activity.javaClass.getSimpleName())
+        registerActivityLifecycleCallbacks(
+            object : Application.ActivityLifecycleCallbacks {
+                override fun onActivityCreated(
+                    activity: Activity,
+                    savedInstanceState: Bundle?,
+                ) {
+                    if (!activityNameList.contains(activity.javaClass.getSimpleName())) {
+                        activityNameList.add(activity.javaClass.getSimpleName())
+                    }
                 }
-            }
 
-            override fun onActivityStarted(activity: Activity) {
-            }
+                override fun onActivityStarted(activity: Activity) {
+                }
 
-            override fun onActivityResumed(activity: Activity) {
-            }
+                override fun onActivityResumed(activity: Activity) {
+                }
 
-            override fun onActivityPaused(activity: Activity) {
+                override fun onActivityPaused(activity: Activity) {
+                }
 
-            }
+                override fun onActivityStopped(activity: Activity) {
+                }
 
-            override fun onActivityStopped(activity: Activity) {
-            }
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-            }
-            override fun onActivityDestroyed(activity: Activity) {
-                activityNameList.remove(activity.javaClass.getSimpleName())
-            }
+                override fun onActivitySaveInstanceState(
+                    activity: Activity,
+                    outState: Bundle,
+                ) {
+                }
 
-        })
+                override fun onActivityDestroyed(activity: Activity) {
+                    activityNameList.remove(activity.javaClass.getSimpleName())
+                }
+            },
+        )
         // initZoho() // Commented out - Zoho dependency not available
     }
 
@@ -147,7 +151,6 @@ class App : BaseApplication() {
                     XLog.e("bcf", "ZohoSalesIQ失敗")
                 }
             })
-        */
+         */
     }
 }
-

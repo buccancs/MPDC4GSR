@@ -19,11 +19,13 @@ import com.topdon.lib.core.config.DeviceConfig
 import com.topdon.lib.core.tools.PermissionTool
 
 object BluetoothUtil {
-
     /**
      * 在给定 activity 生命周期内添加 蓝牙 开关状态监听.
      */
-    fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
+    fun addBtStateListener(
+        activity: ComponentActivity,
+        listener: ((isEnable: Boolean) -> Unit),
+    ) {
         activity.lifecycle.addObserver(BtStateObserver(activity, listener))
     }
 
@@ -40,7 +42,10 @@ object BluetoothUtil {
         }
 
         private inner class BtStateReceiver : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
                 when (intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)) {
                     BluetoothAdapter.STATE_OFF -> listener.invoke(false)
                     BluetoothAdapter.STATE_ON -> listener.invoke(true)
@@ -49,15 +54,15 @@ object BluetoothUtil {
         }
     }
 
-
-
-
     private val scanCallback = MyScanCallback()
 
     /**
      * 设置低功耗蓝牙搜索回调.
      */
-    fun setLeScanListener(isTS004: Boolean, listener: (name: String) -> Unit) {
+    fun setLeScanListener(
+        isTS004: Boolean,
+        listener: (name: String) -> Unit,
+    ) {
         scanCallback.isTS004 = isTS004
         scanCallback.listener = listener
     }
@@ -82,10 +87,11 @@ object BluetoothUtil {
             return false
         }
 
-        val settings = ScanSettings.Builder()
-            .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
-            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-            .build()
+        val settings =
+            ScanSettings.Builder()
+                .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                .build()
 
         btLeScanner.startScan(null, settings, scanCallback)
         return true
@@ -120,7 +126,10 @@ object BluetoothUtil {
         var listener: ((name: String) -> Unit)? = null
 
         @SuppressLint("MissingPermission")
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+        override fun onScanResult(
+            callbackType: Int,
+            result: ScanResult?,
+        ) {
             val name: String = result?.device?.name ?: return
             if (name.startsWith(if (isTS004) DeviceConfig.TS004_NAME_START else DeviceConfig.TC007_NAME_START)) {
                 XLog.v("蓝牙扫描出一个目标设备：$name")

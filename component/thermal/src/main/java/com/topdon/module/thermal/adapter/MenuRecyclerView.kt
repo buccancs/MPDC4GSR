@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 
 class MenuRecyclerView : RecyclerView {
-
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -16,31 +15,33 @@ class MenuRecyclerView : RecyclerView {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
 
     fun initType(type: Int) {
-        val span = when (type) {
-            1 -> 2
-            2 -> 6
-            4 -> 4
-            else -> 4
-        }
+        val span =
+            when (type) {
+                1 -> 2
+                2 -> 6
+                4 -> 4
+                else -> 4
+            }
         if (span == 2) {
             setPadding(
                 (ScreenUtils.getAppScreenWidth() / 3.5f).toInt(),
                 0,
                 (ScreenUtils.getAppScreenWidth() / 3.5f).toInt(),
-                0
+                0,
             )
         } else {
             setPadding(0, 0, 0, 0)
         }
-        layoutManager = if (type == 3) {
-            LinearLayoutManager(context, HORIZONTAL, false)
-        } else {
-            GridLayoutManager(context, span)
-        }
+        layoutManager =
+            if (type == 3) {
+                LinearLayoutManager(context, HORIZONTAL, false)
+            } else {
+                GridLayoutManager(context, span)
+            }
         val menuTabAdapter = adapter
         if (menuTabAdapter is MenuTabAdapter) {
             (menuTabAdapter as MenuTabAdapter).initType(type)

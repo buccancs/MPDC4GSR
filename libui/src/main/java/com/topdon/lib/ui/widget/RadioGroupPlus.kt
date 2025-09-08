@@ -11,7 +11,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.annotation.IdRes
 
-
 /**
  *
  * This class is used to create a multiple-exclusion scope for a set of radio
@@ -83,7 +82,7 @@ class RadioGroupPlus : LinearLayout {
 
         // retrieve selected radio button as requested by the user in the
         // XML layout file
-        //TODO: fix ignored attributes
+        // TODO: fix ignored attributes
 //        TypedArray attributes = context.obtainStyledAttributes(
 //                attrs, com.android.internal.R.styleable.RadioGroup, com.android.internal.R.attr.radioButtonStyle, 0);
 
@@ -128,7 +127,11 @@ class RadioGroupPlus : LinearLayout {
         }
     }
 
-    override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
+    override fun addView(
+        child: View,
+        index: Int,
+        params: ViewGroup.LayoutParams,
+    ) {
         if (child is RadioButton) {
             val button = child
             if (button.isChecked) {
@@ -153,7 +156,9 @@ class RadioGroupPlus : LinearLayout {
      * @see .getCheckedRadioButtonId
      * @see .clearCheck
      */
-    fun check(@IdRes id: Int) {
+    fun check(
+        @IdRes id: Int,
+    ) {
         // don't even bother
         if (id != -1 && id == checkedRadioButtonId) {
             return
@@ -167,14 +172,19 @@ class RadioGroupPlus : LinearLayout {
         setCheckedId(id)
     }
 
-    private fun setCheckedId(@IdRes id: Int) {
+    private fun setCheckedId(
+        @IdRes id: Int,
+    ) {
         checkedRadioButtonId = id
         if (mOnCheckedChangeListener != null) {
             mOnCheckedChangeListener!!.onCheckedChanged(this, checkedRadioButtonId)
         }
     }
 
-    private fun setCheckedStateForView(viewId: Int, checked: Boolean) {
+    private fun setCheckedStateForView(
+        viewId: Int,
+        checked: Boolean,
+    ) {
         val checkedView = findViewById<View>(viewId)
         if (checkedView != null && checkedView is RadioButton) {
             checkedView.isChecked = checked
@@ -222,7 +232,7 @@ class RadioGroupPlus : LinearLayout {
     override fun generateDefaultLayoutParams(): LinearLayout.LayoutParams {
         return LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
         )
     }
 
@@ -281,18 +291,21 @@ class RadioGroupPlus : LinearLayout {
          */
         override fun setBaseAttributes(
             a: TypedArray,
-            widthAttr: Int, heightAttr: Int
+            widthAttr: Int,
+            heightAttr: Int,
         ) {
-            width = if (a.hasValue(widthAttr)) {
-                a.getLayoutDimension(widthAttr, "layout_width")
-            } else {
-                WRAP_CONTENT
-            }
-            height = if (a.hasValue(heightAttr)) {
-                a.getLayoutDimension(heightAttr, "layout_height")
-            } else {
-                WRAP_CONTENT
-            }
+            width =
+                if (a.hasValue(widthAttr)) {
+                    a.getLayoutDimension(widthAttr, "layout_width")
+                } else {
+                    WRAP_CONTENT
+                }
+            height =
+                if (a.hasValue(heightAttr)) {
+                    a.getLayoutDimension(heightAttr, "layout_height")
+                } else {
+                    WRAP_CONTENT
+                }
         }
     }
 
@@ -310,11 +323,17 @@ class RadioGroupPlus : LinearLayout {
          * @param group     the group in which the checked radio button has changed
          * @param checkedId the unique identifier of the newly checked radio button
          */
-        fun onCheckedChanged(group: RadioGroupPlus, @IdRes checkedId: Int)
+        fun onCheckedChanged(
+            group: RadioGroupPlus,
+            @IdRes checkedId: Int,
+        )
     }
 
     private inner class CheckedStateTracker : CompoundButton.OnCheckedChangeListener {
-        override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+        override fun onCheckedChanged(
+            buttonView: CompoundButton,
+            isChecked: Boolean,
+        ) {
             // prevents from infinite recursion
             if (mProtectFromCheckedChange) {
                 return
@@ -338,6 +357,7 @@ class RadioGroupPlus : LinearLayout {
     private inner class PassThroughHierarchyChangeListener :
         OnHierarchyChangeListener {
         var mOnHierarchyChangeListener: OnHierarchyChangeListener? = null
+
         fun traverseTree(view: View) {
             if (view is RadioButton) {
                 var id = view.getId()
@@ -347,7 +367,7 @@ class RadioGroupPlus : LinearLayout {
                     view.setId(id)
                 }
                 view.setOnCheckedChangeListener(
-                    mChildOnCheckedChangeListener
+                    mChildOnCheckedChangeListener,
                 )
             }
             if (view !is ViewGroup) {
@@ -365,7 +385,10 @@ class RadioGroupPlus : LinearLayout {
         /**
          * {@inheritDoc}
          */
-        override fun onChildViewAdded(parent: View, child: View) {
+        override fun onChildViewAdded(
+            parent: View,
+            child: View,
+        ) {
             traverseTree(child)
             if (parent === this@RadioGroupPlus && child is RadioButton) {
                 var id = child.getId()
@@ -375,7 +398,7 @@ class RadioGroupPlus : LinearLayout {
                     child.setId(id)
                 }
                 child.setOnCheckedChangeListener(
-                    mChildOnCheckedChangeListener
+                    mChildOnCheckedChangeListener,
                 )
             }
             mOnHierarchyChangeListener?.onChildViewAdded(parent, child)
@@ -384,7 +407,10 @@ class RadioGroupPlus : LinearLayout {
         /**
          * {@inheritDoc}
          */
-        override fun onChildViewRemoved(parent: View, child: View) {
+        override fun onChildViewRemoved(
+            parent: View,
+            child: View,
+        ) {
             if (parent === this@RadioGroupPlus && child is RadioButton) {
                 child.setOnCheckedChangeListener(null)
             }

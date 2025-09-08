@@ -11,7 +11,8 @@ import java.lang.annotation.RetentionPolicy
  */
 class Pivot(
     @get:Axis
-    @param:Axis val axis: Int, private val pivotPoint: Int
+    @param:Axis val axis: Int,
+    private val pivotPoint: Int,
 ) {
     fun setOn(view: View) {
         if (axis == AXIS_X) {
@@ -46,7 +47,7 @@ class Pivot(
             override fun create(): Pivot {
                 return Pivot(AXIS_X, PIVOT_MAX)
             }
-        };
+        }, ;
 
         abstract fun create(): Pivot
     }
@@ -66,7 +67,7 @@ class Pivot(
             override fun create(): Pivot {
                 return Pivot(AXIS_Y, PIVOT_MAX)
             }
-        };
+        }, ;
 
         abstract fun create(): Pivot
     }
@@ -74,6 +75,7 @@ class Pivot(
     @IntDef(AXIS_X, AXIS_Y)
     @Retention(RetentionPolicy.SOURCE)
     annotation class Axis
+
     companion object {
         const val AXIS_X = 0
         const val AXIS_Y = 1

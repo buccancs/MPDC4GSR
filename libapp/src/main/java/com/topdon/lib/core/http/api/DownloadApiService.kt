@@ -15,5 +15,7 @@ interface DownloadApiService {
      */
     @GET
     @Streaming
-    suspend fun download(@Url url: String): ResponseBody
+    suspend fun download(
+        @Url url: String,
+    ): ResponseBody
 }

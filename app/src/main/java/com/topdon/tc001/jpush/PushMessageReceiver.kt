@@ -1,24 +1,24 @@
-//package com.topdon.tc001.jpush
-//import android.content.Context
-//import android.content.Intent
-//import android.util.Log
-//import cn.jpush.android.api.CmdMessage
-//import cn.jpush.android.api.CustomMessage
-//import cn.jpush.android.api.JPushInterface
-//import cn.jpush.android.api.JPushMessage
-//import cn.jpush.android.api.NotificationMessage
-//import cn.jpush.android.service.JPushMessageReceiver
-//import com.topdon.lib.core.BaseApplication
-//import com.topdon.lms.sdk.helper.TagAliasOperatorHelper
+// package com.topdon.tc001.jpush
+// import android.content.Context
+// import android.content.Intent
+// import android.util.Log
+// import cn.jpush.android.api.CmdMessage
+// import cn.jpush.android.api.CustomMessage
+// import cn.jpush.android.api.JPushInterface
+// import cn.jpush.android.api.JPushMessage
+// import cn.jpush.android.api.NotificationMessage
+// import cn.jpush.android.service.JPushMessageReceiver
+// import com.topdon.lib.core.BaseApplication
+// import com.topdon.lms.sdk.helper.TagAliasOperatorHelper
 //
-//class PushMessageReceiver : JPushMessageReceiver(){
+// class PushMessageReceiver : JPushMessageReceiver(){
 //    private val TAG = "PushMessageService"
 //
 //    override fun onMessage(context: Context?, customMessage: CustomMessage) {
 //        Log.e(TAG, "[onMessage] $customMessage")
-////        Intent intent = new Intent("com.jiguang.demo.message");
-////        intent.putExtra("msg", customMessage.message);
-////        context.sendBroadcast(intent);
+// //        Intent intent = new Intent("com.jiguang.demo.message");
+// //        intent.putExtra("msg", customMessage.message);
+// //        context.sendBroadcast(intent);
 //    }
 //
 //    override fun onNotifyMessageOpened(context: Context?, message: NotificationMessage) {
@@ -182,4 +182,4 @@
 //        super.onPropertyOperatorResult(context, jPushMessage)
 //        Log.e(TAG, "[onPropertyOperatorResult]")
 //    }
-//}
+// }

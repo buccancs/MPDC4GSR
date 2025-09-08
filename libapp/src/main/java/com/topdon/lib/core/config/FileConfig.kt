@@ -13,7 +13,10 @@ object FileConfig {
      * 获取房屋检测缓存目录下指定文件.
      * 注意，不执行子文件创建逻辑，若有需要需自行创建.
      */
-    fun getDetectImageDir(context: Context, child: String): File {
+    fun getDetectImageDir(
+        context: Context,
+        child: String,
+    ): File {
         val externalDir = context.getExternalFilesDir("detect")
         return if (externalDir == null) {
             val fileDir = File(context.filesDir, "detect")
@@ -30,7 +33,10 @@ object FileConfig {
      * 获取房屋检测-签名图片缓存目录.
      * 注意，不执行子文件创建逻辑，若有需要需自行创建.
      */
-    fun getSignImageDir(context: Context, child: String): File {
+    fun getSignImageDir(
+        context: Context,
+        child: String,
+    ): File {
         val externalDir = context.getExternalFilesDir("sign")
         return if (externalDir == null) {
             val fileDir = File(context.filesDir, "sign")
@@ -85,7 +91,6 @@ object FileConfig {
             }
         }
 
-
     /**
      * 原有图库目录
      */
@@ -115,11 +120,12 @@ object FileConfig {
             return path
         }
 
-    fun getGalleryDirByType(currentDirType : DirType) : String = when (currentDirType) {
-        DirType.LINE -> lineGalleryDir
-        DirType.TC007 -> tc007GalleryDir
-        else -> ts004GalleryDir
-    }
+    fun getGalleryDirByType(currentDirType: DirType): String =
+        when (currentDirType) {
+            DirType.LINE -> lineGalleryDir
+            DirType.TC007 -> tc007GalleryDir
+            else -> ts004GalleryDir
+        }
 
     /**
      * 有线设备 图库目录
@@ -195,8 +201,6 @@ object FileConfig {
             }
             return path
         }
-
-
 
     /**
      * 外部存储/Documents/APP名称/house

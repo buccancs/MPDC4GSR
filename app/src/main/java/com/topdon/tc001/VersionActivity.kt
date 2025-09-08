@@ -4,24 +4,23 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.topdon.lib.core.navigation.NavigationManager
+import com.csl.irCamera.BuildConfig
+import com.csl.irCamera.R
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
+import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.CheckDoubleClick
 import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.UrlConstant
 import com.topdon.tc001.utils.AppVersionUtil
-import com.csl.irCamera.R
-import com.csl.irCamera.BuildConfig
 import com.topdon.tc001.utils.VersionUtils
 import java.util.*
 
 // Legacy ARouter route annotation - now using NavigationManager
 class VersionActivity : BaseActivity(), View.OnClickListener {
-
     // View declarations using findViewById pattern
     private lateinit var versionYearTxt: TextView
     private lateinit var versionStatementPrivateTxt: TextView
@@ -31,6 +30,7 @@ class VersionActivity : BaseActivity(), View.OnClickListener {
     private lateinit var clNewVersion: ConstraintLayout
     private lateinit var settingVersionTxt: TextView
     private lateinit var tvNewVersion: TextView
+
     override fun initContentView() = R.layout.activity_version
 
     override fun initView() {
@@ -43,7 +43,7 @@ class VersionActivity : BaseActivity(), View.OnClickListener {
         clNewVersion = findViewById(R.id.cl_new_version)
         settingVersionTxt = findViewById(R.id.setting_version_txt)
         tvNewVersion = findViewById(R.id.tv_new_version)
-        
+
         // Set up views
         findViewById<TextView>(R.id.version_code_text).text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
         val year = Calendar.getInstance().get(Calendar.YEAR)
@@ -96,20 +96,24 @@ class VersionActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private var appVersionUtil: AppVersionUtil?=null
+    private var appVersionUtil: AppVersionUtil? = null
+
     private fun checkAppVersion(isShow: Boolean) {
         if (appVersionUtil == null) {
-            appVersionUtil = AppVersionUtil(this, object : AppVersionUtil.DotIsShowListener {
-                override fun isShow(show: Boolean) {
-                    clNewVersion.visibility = View.VISIBLE
-                }
+            appVersionUtil =
+                AppVersionUtil(
+                    this,
+                    object : AppVersionUtil.DotIsShowListener {
+                        override fun isShow(show: Boolean) {
+                            clNewVersion.visibility = View.VISIBLE
+                        }
 
-                override fun version(version: String) {
-                    tvNewVersion.text = "$version"
-                }
-            })
+                        override fun version(version: String) {
+                            tvNewVersion.text = "$version"
+                        }
+                    },
+                )
         }
         appVersionUtil?.checkVersion(isShow)
     }
-
 }

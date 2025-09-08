@@ -6,21 +6,22 @@ Implements FR6: User Interface for Monitoring & Control requirements.
 """
 
 import asyncio
-import sys
 import signal
+import sys
 from typing import Optional
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import QTimer
-from loguru import logger
 
-from ..core import config, SessionManager
-from ..core.timesync import TimeSyncService
-from ..core.gsr_ingestor import GSRIngestor
-from ..core.file_transfer import FileTransferManager
-from ..core.calibration import CameraCalibrator
-from ..core.bluetooth_manager import BluetoothManager
-from ..core.wifi_manager import WiFiManager
+from loguru import logger
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QApplication
+
+from ..core import SessionManager, config
 from ..core.admin_privileges import AdminPrivilegesManager
+from ..core.bluetooth_manager import BluetoothManager
+from ..core.calibration import CameraCalibrator
+from ..core.file_transfer import FileTransferManager
+from ..core.gsr_ingestor import GSRIngestor
+from ..core.timesync import TimeSyncService
+from ..core.wifi_manager import WiFiManager
 from ..network.server import NetworkServer
 from .main_window import MainWindow
 from .utils import setup_logging
@@ -63,8 +64,7 @@ class IRCameraApp:
         self._timer: Optional[QTimer] = None
 
         logger.info(
-            "IRCamera Application initialized"
-            "with system integration features"
+            "IRCamera Application initialized" "with system integration features"
         )
         components = [
             "Session Manager",

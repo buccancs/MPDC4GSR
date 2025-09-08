@@ -5,7 +5,6 @@ import android.view.WindowManager
 import android.widget.TextView
 import com.csl.irCamera.R
 
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseActivity
 import java.io.File
 import java.io.FileOutputStream
@@ -17,7 +16,6 @@ import java.io.OutputStream
  **/
 // Legacy ARouter route annotation - now using NavigationManager
 class PdfActivity : BaseActivity() {
-    
     // findViewById declarations - TODO: Replace with PDFView when library is added
     private val pdfView: TextView by lazy { findViewById<TextView>(R.id.pdf_view) }
 
@@ -39,7 +37,7 @@ class PdfActivity : BaseActivity() {
         .enableAntialiasing(true) // improve rendering a little bit on low-res screens
         .spacing(0) // spacing between pages in dp. To define spacing color, set view background
         .load()
-        */
+         */
     }
 
     override fun initData() {
@@ -64,9 +62,12 @@ class PdfActivity : BaseActivity() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    //复制assets文件
+    // 复制assets文件
     @Throws(IOException::class)
-    private fun copyBigDataToSD(assetsName: String, targetFile: File) {
+    private fun copyBigDataToSD(
+        assetsName: String,
+        targetFile: File,
+    ) {
         val myOutput: OutputStream = FileOutputStream(targetFile)
         val myInput = assets.open(assetsName)
         val buffer = ByteArray(1024)
@@ -79,5 +80,4 @@ class PdfActivity : BaseActivity() {
         myInput.close()
         myOutput.close()
     }
-
 }

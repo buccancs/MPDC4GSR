@@ -6,12 +6,14 @@ to eliminate code duplication and ensure consistent behavior.
 """
 
 import logging
-from typing import Optional, Dict, Any
 from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional
 
 try:
-    from PyQt6.QtCore import QObject as QtQObject, pyqtSignal
     from abc import ABCMeta
+
+    from PyQt6.QtCore import QObject as QtQObject
+    from PyQt6.QtCore import pyqtSignal
 
     PYQT_AVAILABLE = True
 

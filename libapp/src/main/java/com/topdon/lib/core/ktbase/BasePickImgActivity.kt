@@ -10,10 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.R
+import com.topdon.lib.core.databinding.ActivityImagePickIrPlushBinding
 import com.topdon.lib.core.dialog.ColorSelectDialog
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.view.ImageEditView
-import com.topdon.lib.core.databinding.ActivityImagePickIrPlushBinding
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -29,6 +29,7 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
      * String 类型 - 拾取的图片在本地的绝对路径.
      */
     val RESULT_IMAGE_PATH = "RESULT_IMAGE_PATH"
+
     /**
      * 当前是否已拍了一张照等待完成.
      */
@@ -48,8 +49,8 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityImagePickIrPlushBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
-        //默认选中画圆
+
+        // 默认选中画圆
         binding.ivEditCircle.isSelected = true
         binding.imageEditView.type = ImageEditView.Type.CIRCLE
         binding.viewColor.setBackgroundColor(binding.imageEditView.color)
@@ -85,39 +86,44 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     private fun resize() {
         val widthPixels = resources.displayMetrics.widthPixels
         val heightPixels = resources.displayMetrics.heightPixels
-        binding.titleView.measure(MeasureSpec.makeMeasureSpec(widthPixels, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(heightPixels, MeasureSpec.AT_MOST))
+        binding.titleView.measure(
+            MeasureSpec.makeMeasureSpec(widthPixels, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(heightPixels, MeasureSpec.AT_MOST),
+        )
 
-        val ivPickHeight = SizeUtils.dp2px(60f + 20 + 20) //拍照按钮高度，60dp+上下各20dp margin
+        val ivPickHeight = SizeUtils.dp2px(60f + 20 + 20) // 拍照按钮高度，60dp+上下各20dp margin
         val menuHeight = (widthPixels * 75f / 384).toInt()
         val bottomHeight = ivPickHeight.coerceAtLeast(menuHeight)
         val canUseHeight = heightPixels - binding.titleView.measuredHeight - bottomHeight
         val wantHeight = (widthPixels * 256f / 192).toInt()
-        if (wantHeight <= canUseHeight) {//够用
-            binding.fragmentContainerView.layoutParams = binding.fragmentContainerView.layoutParams.apply {
-                this.width = widthPixels
-                this.height = wantHeight
-            }
-            binding.imageEditView.layoutParams = binding.imageEditView.layoutParams.apply {
-                this.width = widthPixels
-                this.height = wantHeight
-            }
+        if (wantHeight <= canUseHeight) { // 够用
+            binding.fragmentContainerView.layoutParams =
+                binding.fragmentContainerView.layoutParams.apply {
+                    this.width = widthPixels
+                    this.height = wantHeight
+                }
+            binding.imageEditView.layoutParams =
+                binding.imageEditView.layoutParams.apply {
+                    this.width = widthPixels
+                    this.height = wantHeight
+                }
         } else {
-            binding.fragmentContainerView.layoutParams = binding.fragmentContainerView.layoutParams.apply {
-                this.width = (canUseHeight * 192f / 256).toInt()
-                this.height = canUseHeight
-            }
-            binding.imageEditView.layoutParams = binding.imageEditView.layoutParams.apply {
-                this.width = (canUseHeight * 192f / 256).toInt()
-                this.height = canUseHeight
-            }
+            binding.fragmentContainerView.layoutParams =
+                binding.fragmentContainerView.layoutParams.apply {
+                    this.width = (canUseHeight * 192f / 256).toInt()
+                    this.height = canUseHeight
+                }
+            binding.imageEditView.layoutParams =
+                binding.imageEditView.layoutParams.apply {
+                    this.width = (canUseHeight * 192f / 256).toInt()
+                    this.height = canUseHeight
+                }
         }
     }
 
-
-    open suspend fun getPickBitmap() : Bitmap?{
-       return null
+    open suspend fun getPickBitmap(): Bitmap?  {
+        return null
     }
-
 
     override fun onClick(v: View?) {
         when (v) {
@@ -198,5 +204,4 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         super.disConnected()
         finish()
     }
-
 }

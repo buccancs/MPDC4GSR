@@ -12,10 +12,12 @@ import java.util.concurrent.atomic.AtomicBoolean
  * Created by jzh on 2020-12-28.
  */
 class SingleLiveEvent<T> : MutableLiveData<T>() {
-
     private val mPending: AtomicBoolean = AtomicBoolean(false)
 
-    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
+    override fun observe(
+        owner: LifecycleOwner,
+        observer: Observer<in T>,
+    ) {
         super.observe(owner, {
             if (mPending.compareAndSet(true, false)) {
                 observer.onChanged(it)
@@ -24,7 +26,9 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     }
 
     @MainThread
-    override fun setValue(@Nullable t: T?) {
+    override fun setValue(
+        @Nullable t: T?,
+    ) {
         mPending.set(true)
         super.setValue(t)
     }

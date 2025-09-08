@@ -10,12 +10,10 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.lifecycleScope
-
+import com.csl.irCamera.R
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.ktbase.BaseViewModelActivity
-import com.csl.irCamera.R
 import com.topdon.tc001.viewmodel.PolicyViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,13 +26,12 @@ import kotlinx.coroutines.launch
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
-
     private lateinit var policyWeb: WebView
     private val mHandler = Handler(Looper.getMainLooper())
 
     companion object {
         const val KEY_THEME_TYPE = "key_theme_type"
-        const val KEY_USE_TYPE = "key_use_type"     //使用类型 用本地和用网络
+        const val KEY_USE_TYPE = "key_use_type" // 使用类型 用本地和用网络
     }
 
     private var themeType = 1
@@ -53,12 +50,13 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         if (intent.hasExtra(KEY_USE_TYPE)) {
             keyUseType = intent.getIntExtra(KEY_USE_TYPE, 0)
         }
-        themeStr = when (themeType) {
-            1 -> getString(R.string.user_services_agreement)
-            2 -> getString(R.string.privacy_policy)
-            3 -> getString(R.string.third_party_components)
-            else -> getString(R.string.user_services_agreement)
-        }
+        themeStr =
+            when (themeType) {
+                1 -> getString(R.string.user_services_agreement)
+                2 -> getString(R.string.privacy_policy)
+                3 -> getString(R.string.third_party_components)
+                else -> getString(R.string.user_services_agreement)
+            }
 
         // Initialize views using findViewById
         policyWeb = findViewById(R.id.policy_web)
@@ -110,43 +108,54 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
     private fun initWeb(url: String) {
         policyWeb.visibility = View.INVISIBLE
         val webSettings: WebSettings = policyWeb.settings
-        webSettings.javaScriptEnabled = true //设置支持javascript
+        webSettings.javaScriptEnabled = true // 设置支持javascript
 
-        policyWeb.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                view.loadUrl(url)
-                return true
-            }
+        policyWeb.webViewClient =
+            object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView,
+                    url: String,
+                ): Boolean {
+                    view.loadUrl(url)
+                    return true
+                }
 
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                Log.w("123", "onPageFinished url: $url")
-            }
-        }
-
-        policyWeb.webChromeClient = object : WebChromeClient() {
-
-            override fun onProgressChanged(view: WebView, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
-            }
-
-            override fun onReceivedTitle(view: WebView?, title: String?) {
-                super.onReceivedTitle(view, title)
-                if (title!!.contains("404") && reloadCount > 0) {
-                    loadHttp(view!!)
-                    delayShowWebView()
-                } else {
-                    mHandler.postDelayed({
-                        policyWeb.visibility = View.VISIBLE
-                    }, 200)
+                override fun onPageFinished(
+                    view: WebView?,
+                    url: String?,
+                ) {
+                    super.onPageFinished(view, url)
+                    Log.w("123", "onPageFinished url: $url")
                 }
             }
 
-        }
+        policyWeb.webChromeClient =
+            object : WebChromeClient() {
+                override fun onProgressChanged(
+                    view: WebView,
+                    newProgress: Int,
+                ) {
+                    super.onProgressChanged(view, newProgress)
+                }
+
+                override fun onReceivedTitle(
+                    view: WebView?,
+                    title: String?,
+                ) {
+                    super.onReceivedTitle(view, title)
+                    if (title!!.contains("404") && reloadCount > 0) {
+                        loadHttp(view!!)
+                        delayShowWebView()
+                    } else {
+                        mHandler.postDelayed({
+                            policyWeb.visibility = View.VISIBLE
+                        }, 200)
+                    }
+                }
+            }
 
         policyWeb.settings.defaultTextEncodingName = "utf-8"
         policyWeb.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
-
     }
 
     /**
@@ -157,14 +166,22 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
      * @param backgroundColor 修改字体颜色
      * @return String
      */
-    fun getHtmlData(htmlBody: String, fontColor: String, backgroundColor: String): String {
-        val head = "<head>" +
+    fun getHtmlData(
+        htmlBody: String,
+        fontColor: String,
+        backgroundColor: String,
+    ): String {
+        val head =
+            "<head>" +
                 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
-                "<style>img{max-width: 100%; width:100%; height:auto;}video{max-width: 100%; width:100%; height:auto;}*{margin:0px;}body{font-size:16px;color: ${fontColor}; background-color: ${backgroundColor};}</style>" + "</head>"
+                "<style>img{max-width: 100%; width:100%; height:auto;}video{max-width: 100%; width:100%; height:auto;}*{margin:0px;}body{font-size:16px;color: $fontColor; background-color: $backgroundColor;}</style>" + "</head>"
         return "<html>$head<body>$htmlBody</body></html>"
     }
 
-    override fun httpErrorTip(text: String, requestUrl: String) {
+    override fun httpErrorTip(
+        text: String,
+        requestUrl: String,
+    ) {
         XLog.w("声明接口异常,打开默认链接")
         loadHttp(policyWeb)
         delayShowWebView()
@@ -174,17 +191,21 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         reloadCount--
         when (themeType) {
             1 -> {
-                //用户服务协议
-                view.loadUrl("https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=21")
+                // 用户服务协议
+                view.loadUrl(
+                    "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=21",
+                )
             }
 
             2 -> {
-                //隐私政策
-                view.loadUrl("https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=22")
+                // 隐私政策
+                view.loadUrl(
+                    "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=22",
+                )
             }
 
             3 -> {
-                //第三方组件
+                // 第三方组件
                 view.loadUrl("file:///android_asset/web/third_statement.html")
             }
         }
@@ -200,7 +221,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
                 if (BaseApplication.instance.isDomestic()) {
                     view.loadUrl("file:///android_asset/web/services_agreement_default_inside_china.html")
                 } else {
-                    //用户服务协议
+                    // 用户服务协议
                     view.loadUrl("file:///android_asset/web/services_agreement_default.html")
                 }
             }
@@ -209,13 +230,13 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
                 if (BaseApplication.instance.isDomestic()) {
                     view.loadUrl("file:///android_asset/web/privacy_default_inside_china.html")
                 } else {
-                    //隐私政策
+                    // 隐私政策
                     view.loadUrl("file:///android_asset/web/privacy_default.html")
                 }
             }
 
             3 -> {
-                //第三方组件
+                // 第三方组件
                 view.loadUrl("file:///android_asset/web/third_statement.html")
             }
         }

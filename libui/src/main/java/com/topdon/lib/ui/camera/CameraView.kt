@@ -11,8 +11,6 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CaptureRequest
-import android.hardware.camera2.CaptureResult
-import android.hardware.camera2.TotalCaptureResult
 import android.media.Image
 import android.media.ImageReader
 import android.os.Handler
@@ -20,12 +18,11 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.util.Size
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
-import android.view.ScaleGestureDetector
-import android.view.MotionEvent
-import android.view.GestureDetector
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -33,17 +30,12 @@ import androidx.annotation.NonNull
 import com.blankj.utilcode.util.ThreadUtils.runOnUiThread
 import com.blankj.utilcode.util.ToastUtils
 import com.topdon.lib.core.utils.ScreenUtil
-import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
 import java.nio.ByteBuffer
-import java.util.Arrays
 import java.util.Collections
-import java.util.Locale
 import kotlin.concurrent.thread
+import com.topdon.lib.ui.R as UiR
 
 class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
-
     /**预览 */
     lateinit var mTextureView: TextureView
 
@@ -56,7 +48,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
 
     private fun initView() {
@@ -88,7 +80,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 parentViewH = view.height.toFloat()
             }
             MotionEvent.ACTION_MOVE -> {
-                //滑动
+                // 滑动
                 moveX = event.x - startX
                 moveY = event.y - startY
                 if (moveX - scaleW < 0f) moveX = 0f + scaleW
@@ -103,14 +95,14 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 mTextureView.y = moveY
             }
             MotionEvent.ACTION_UP -> {
-                isScale = false//实际以手指抬起设定缩放结束
+                isScale = false // 实际以手指抬起设定缩放结束
             }
         }
         return lis.onTouchEvent(event)
     }
 
     override fun onScale(detector: ScaleGestureDetector): Boolean {
-        //缩放
+        // 缩放
         isScale = true
         detector?.let {
             val scaleFactor = it.scaleFactor - 1
@@ -127,10 +119,9 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     }
 
     override fun onScaleEnd(detector: ScaleGestureDetector) {
-
     }
 
-    private var startX = 0f//记录落点到控件的距离
+    private var startX = 0f // 记录落点到控件的距离
     private var startY = 0f
     private var moveX = 0f
     private var moveY = 0f
@@ -138,12 +129,12 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private var parentViewH = 0f
     private var isScale = false
     private var scale = 1f
-    private var scaleW = 0f//单边缩放长度
+    private var scaleW = 0f // 单边缩放长度
     private var scaleH = 0f
 
     private lateinit var lis: ScaleGestureDetector
 
-//////////////////
+// ////////////////
     /**相机权限请求标识 */
     private val REQUEST_CAMERA_CODE = 0x100
 
@@ -183,20 +174,27 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     /**相机设备状态回调 */
     private val mStateCallback: CameraDevice.StateCallback =
         object : CameraDevice.StateCallback() {
-            override fun onOpened(@NonNull camera: CameraDevice) {
+            override fun onOpened(
+                @NonNull camera: CameraDevice,
+            ) {
                 // 打开
                 mCameraDevice = camera
                 // 开始预览
                 takePreview()
             }
 
-            override fun onDisconnected(@NonNull camera: CameraDevice) {
+            override fun onDisconnected(
+                @NonNull camera: CameraDevice,
+            ) {
                 // 断开连接
                 camera.close()
                 mCameraDevice = null
             }
 
-            override fun onError(@NonNull camera: CameraDevice, error: Int) {
+            override fun onError(
+                @NonNull camera: CameraDevice,
+                error: Int,
+            ) {
                 // 异常
                 camera.close()
                 mCameraDevice = null
@@ -225,9 +223,12 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             mCameraDevice!!.createCaptureSession(
                 listOf(
                     previewSurface,
-                    mImageReader.surface
-                ), object : CameraCaptureSession.StateCallback() {
-                    override fun onConfigured(@NonNull session: CameraCaptureSession) {
+                    mImageReader.surface,
+                ),
+                object : CameraCaptureSession.StateCallback() {
+                    override fun onConfigured(
+                        @NonNull session: CameraCaptureSession,
+                    ) {
                         try {
                             // 配置
                             val captureRequest = mCameraCaptureBuilder.build()
@@ -237,58 +238,60 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                             mCameraCaptureSession!!.setRepeatingRequest(
                                 captureRequest,
                                 null,
-                                mCameraHandler
+                                mCameraHandler,
                             )
                         } catch (e: CameraAccessException) {
                             e.printStackTrace()
                         }
                     }
 
-                    override fun onConfigureFailed(@NonNull session: CameraCaptureSession) {
+                    override fun onConfigureFailed(
+                        @NonNull session: CameraCaptureSession,
+                    ) {
                         // 配置失败
                     }
-                }, mCameraHandler
+                },
+                mCameraHandler,
             )
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
     }
 
-
     private fun onResumeView() {
-        mTextureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-            override fun onSurfaceTextureAvailable(
-                surface: SurfaceTexture,
-                width: Int,
-                height: Int
-            ) {
-                // SurfaceTexture可用
-                // 设置相机参数并打开相机
-                Log.w("123", "width:$width, height:$height")
-                //w:h = 1 / 1.33
-                setUpCamera(width, height)
+        mTextureView.surfaceTextureListener =
+            object : TextureView.SurfaceTextureListener {
+                override fun onSurfaceTextureAvailable(
+                    surface: SurfaceTexture,
+                    width: Int,
+                    height: Int,
+                ) {
+                    // SurfaceTexture可用
+                    // 设置相机参数并打开相机
+                    Log.w("123", "width:$width, height:$height")
+                    // w:h = 1 / 1.33
+                    setUpCamera(width, height)
 //                openCamera()
-            }
+                }
 
-            override fun onSurfaceTextureSizeChanged(
-                surface: SurfaceTexture,
-                width: Int,
-                height: Int
-            ) {
-                // SurfaceTexture大小改变
-            }
+                override fun onSurfaceTextureSizeChanged(
+                    surface: SurfaceTexture,
+                    width: Int,
+                    height: Int,
+                ) {
+                    // SurfaceTexture大小改变
+                }
 
-            override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
-                // SurfaceTexture 销毁
-                return false
-            }
+                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    // SurfaceTexture 销毁
+                    return false
+                }
 
-            override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
-                // SurfaceTexture 更新
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+                    // SurfaceTexture 更新
+                }
             }
-        }
     }
-
 
     /**
      * 打开相机
@@ -310,7 +313,10 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
      * @param width 宽度
      * @param height 高度
      */
-    private fun setUpCamera(width: Int, height: Int) {
+    private fun setUpCamera(
+        width: Int,
+        height: Int,
+    ) {
         // 创建Handler
         mCameraHandler = Handler(Looper.getMainLooper())
         // 获取摄像头的管理者
@@ -332,7 +338,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                     getOptimalSize(
                         map.getOutputSizes(SurfaceTexture::class.java),
                         width,
-                        height
+                        height,
                     )
                 // 获取相机支持的最大拍照尺寸
                 val sizes = map.getOutputSizes(ImageFormat.JPEG)
@@ -340,7 +346,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 val h = w * sizes[0].height / sizes[0].width
                 mCaptureSize = Size(w, h)
                 Log.w("123", "w:${sizes[0].width}, h:${sizes[0].height}")
-                Log.w("123", "调整后w:${w}, h:${h}")
+                Log.w("123", "调整后w:$w, h:$h")
 //                mCaptureSize = Size(1000, 1000)
 //                mCaptureSize =
 //                    Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG))) { lhs, rhs ->
@@ -364,7 +370,11 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
      * @param height 高
      * @return 最接近width和height的size
      */
-    private fun getOptimalSize(sizeMap: Array<Size>, width: Int, height: Int): Size {
+    private fun getOptimalSize(
+        sizeMap: Array<Size>,
+        width: Int,
+        height: Int,
+    ): Size {
         // 创建列表
         val sizeList: MutableList<Size> = ArrayList()
         // 遍历
@@ -383,9 +393,11 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         // 判断存储Size的列表是否有数据
         return if (sizeList.size > 0) {
             Collections.min(
-                sizeList
+                sizeList,
             ) { lhs, rhs -> java.lang.Long.signum((lhs.width * lhs.height - rhs.width * rhs.height).toLong()) }
-        } else sizeMap[0]
+        } else {
+            sizeMap[0]
+        }
     }
 
     private var flag = 0
@@ -395,12 +407,13 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
      */
     private fun setupImageReader() {
         // 2代表ImageReader中最多可以获取两帧图像流
-        mImageReader = ImageReader.newInstance(
-            mCaptureSize!!.width,
-            mCaptureSize!!.height,
-            ImageFormat.JPEG,
-            1
-        )
+        mImageReader =
+            ImageReader.newInstance(
+                mCaptureSize!!.width,
+                mCaptureSize!!.height,
+                ImageFormat.JPEG,
+                1,
+            )
         // 设置图像可用监听
         mImageReader.setOnImageAvailableListener({ reader ->
             flag = 1
@@ -429,7 +442,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                         it.layoutParams.width = sw / 2
                         it.setImageBitmap(bitmap)
                     }
-
                 }
                 flag++
                 thread {
@@ -448,7 +460,6 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
      * 保存图片任务
      */
     private inner class ImageSaver(image: Image) : Runnable {
-
         /**图像 */
         private val mImage: Image = image
 
@@ -456,8 +467,5 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
 //            ImageSaverTool().save(mImage)
             flag++
         }
-
     }
-
 }
-

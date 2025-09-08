@@ -8,24 +8,21 @@ import androidx.constraintlayout.motion.widget.MotionLayout
  * 闪烁效果
  */
 class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
-
     private var motionStartId = 0
     private var motionEndId = 0
 
     @Volatile
     private var isAdd = false
 
-
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     )
 
     /**
@@ -49,7 +46,11 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
         transitionToStart()
     }
 
-    override fun onTransitionStarted(motionLayout: MotionLayout?, startId: Int, endId: Int) {
+    override fun onTransitionStarted(
+        motionLayout: MotionLayout?,
+        startId: Int,
+        endId: Int,
+    ) {
         motionStartId = startId
         motionEndId = endId
     }
@@ -58,12 +59,14 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
         motionLayout: MotionLayout?,
         startId: Int,
         endId: Int,
-        progress: Float
+        progress: Float,
     ) {
-
     }
 
-    override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
+    override fun onTransitionCompleted(
+        motionLayout: MotionLayout?,
+        currentId: Int,
+    ) {
 //        Log.w("123", "onTransitionCompleted currentId:$currentId")
         if (currentId == motionEndId) {
             transitionToStart()
@@ -76,10 +79,7 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
         motionLayout: MotionLayout?,
         triggerId: Int,
         positive: Boolean,
-        progress: Float
+        progress: Float,
     ) {
-
     }
-
-
 }

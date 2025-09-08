@@ -2,7 +2,6 @@ package com.topdon.tc001.gsr
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
@@ -21,14 +20,17 @@ import java.io.File
  * Viewer for captured RAW DNG images with metadata display
  */
 class GSRRawImageViewActivity : AppCompatActivity() {
-
     companion object {
         private const val EXTRA_IMAGE_PATH = "image_path"
-        
-        fun startActivity(context: Context, imagePath: String) {
-            val intent = Intent(context, GSRRawImageViewActivity::class.java).apply {
-                putExtra(EXTRA_IMAGE_PATH, imagePath)
-            }
+
+        fun startActivity(
+            context: Context,
+            imagePath: String,
+        ) {
+            val intent =
+                Intent(context, GSRRawImageViewActivity::class.java).apply {
+                    putExtra(EXTRA_IMAGE_PATH, imagePath)
+                }
             context.startActivity(intent)
         }
     }
@@ -67,9 +69,10 @@ class GSRRawImageViewActivity : AppCompatActivity() {
         try {
             // For DNG files, we'll try to load a basic preview
             // Note: Full DNG processing requires specialized libraries like Adobe DNG SDK
-            val options = BitmapFactory.Options().apply {
-                inJustDecodeBounds = true
-            }
+            val options =
+                BitmapFactory.Options().apply {
+                    inJustDecodeBounds = true
+                }
             BitmapFactory.decodeFile(imagePath, options)
 
             // Calculate sample size to fit screen
@@ -97,12 +100,18 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     private fun showDNGMessage() {
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("RAW DNG Image")
-            .setMessage("This is a RAW DNG image file. Full preview requires specialized RAW processing software. Basic metadata is shown below.")
+            .setMessage(
+                "This is a RAW DNG image file. Full preview requires specialized RAW processing software. Basic metadata is shown below.",
+            )
             .setPositiveButton("OK", null)
             .show()
     }
 
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    private fun calculateInSampleSize(
+        options: BitmapFactory.Options,
+        reqWidth: Int,
+        reqHeight: Int,
+    ): Int {
         val height = options.outHeight
         val width = options.outWidth
         var inSampleSize = 1
@@ -119,22 +128,25 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     }
 
     private fun displayMetadata() {
-        val fileSize = if (imageFile.length() >= 1024 * 1024) {
-            "%.1f MB".format(imageFile.length() / (1024.0 * 1024.0))
-        } else {
-            "%.1f KB".format(imageFile.length() / 1024.0)
-        }
+        val fileSize =
+            if (imageFile.length() >= 1024 * 1024) {
+                "%.1f MB".format(imageFile.length() / (1024.0 * 1024.0))
+            } else {
+                "%.1f KB".format(imageFile.length() / 1024.0)
+            }
 
-        val createdDate = java.text.SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss", 
-            java.util.Locale.getDefault()
-        ).format(java.util.Date(imageFile.lastModified()))
+        val createdDate =
+            java.text.SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss",
+                java.util.Locale.getDefault(),
+            ).format(java.util.Date(imageFile.lastModified()))
 
         // Parse filename for capture info
         val filename = imageFile.nameWithoutExtension
         val captureNumber = filename.substringAfterLast("_", "Unknown")
 
-        metadataText.text = """
+        metadataText.text =
+            """
             RAW DNG Image Metadata
             
             File Information:
@@ -160,7 +172,7 @@ class GSRRawImageViewActivity : AppCompatActivity() {
             
             Note: This is a Level 3 RAW capture containing unprocessed sensor data
             for maximum image quality and post-processing flexibility.
-        """.trimIndent()
+            """.trimIndent()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -191,18 +203,20 @@ class GSRRawImageViewActivity : AppCompatActivity() {
     }
 
     private fun shareImage() {
-        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            FileProvider.getUriForFile(this, "${packageName}.fileprovider", imageFile)
-        } else {
-            Uri.fromFile(imageFile)
-        }
+        val uri =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                FileProvider.getUriForFile(this, "$packageName.fileprovider", imageFile)
+            } else {
+                Uri.fromFile(imageFile)
+            }
 
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, uri)
-            type = "image/*"
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
+        val shareIntent =
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, uri)
+                type = "image/*"
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
         startActivity(Intent.createChooser(shareIntent, "Share RAW Image"))
     }
 
@@ -218,7 +232,8 @@ class GSRRawImageViewActivity : AppCompatActivity() {
 
     private fun showDetailedInfo() {
         // TODO: Extract actual EXIF data from DNG file
-        val detailedInfo = """
+        val detailedInfo =
+            """
             Technical Details:
             
             Camera Settings:
@@ -243,7 +258,7 @@ class GSRRawImageViewActivity : AppCompatActivity() {
             • Standard: Adobe DNG 1.4
             • Compatibility: Adobe Camera Raw, Lightroom
             • Metadata: Full EXIF preserved
-        """.trimIndent()
+            """.trimIndent()
 
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Technical Information")

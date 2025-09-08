@@ -16,7 +16,6 @@ import com.topdon.lib.core.utils.ScreenUtil
  * Created by LCG on 2024/3/4.
  */
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
-
     private var _binding: DialogFirmwareUpBinding? = null
     private val binding get() = _binding!!
 
@@ -65,11 +64,11 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
             binding.tvCancel.isVisible = value
         }
 
-
     /**
      * 取消点击事件监听.
      */
     var onCancelClickListener: (() -> Unit)? = null
+
     /**
      * 更新点击事件监听.
      */
@@ -95,17 +94,17 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog), 
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.tvCancel -> {//取消
+            binding.tvCancel -> { // 取消
                 dismiss()
                 onCancelClickListener?.invoke()
             }
-            binding.tvConfirm -> {//确认
+            binding.tvConfirm -> { // 确认
                 dismiss()
                 onConfirmClickListener?.invoke()
             }
         }
     }
-    
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         _binding = null

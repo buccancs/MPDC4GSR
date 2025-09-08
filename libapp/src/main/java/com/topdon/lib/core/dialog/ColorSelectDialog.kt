@@ -4,12 +4,11 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.databinding.DialogColorSelectBinding
 import com.topdon.lib.core.R
+import com.topdon.lib.core.databinding.DialogColorSelectBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
 /**
@@ -17,13 +16,15 @@ import com.topdon.lib.core.utils.ScreenUtil
  *
  * Created by LCG on 2024/2/2.
  */
-class ColorSelectDialog(context: Context, @ColorInt private var color: Int) : Dialog(context, R.style.InfoDialog) {
-
+class ColorSelectDialog(
+    context: Context,
+    @ColorInt private var color: Int,
+) : Dialog(context, R.style.InfoDialog) {
     /**
      * 颜色值拾取事件监听.
      */
     var onPickListener: ((color: Int) -> Unit)? = null
-    
+
     private lateinit var binding: DialogColorSelectBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +43,6 @@ class ColorSelectDialog(context: Context, @ColorInt private var color: Int) : Di
             dismiss()
             onPickListener?.invoke(color)
         }
-
 
         window?.let {
             val layoutParams = it.attributes

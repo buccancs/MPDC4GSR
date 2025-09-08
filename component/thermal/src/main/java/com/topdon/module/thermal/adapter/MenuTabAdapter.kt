@@ -12,7 +12,6 @@ import com.topdon.module.thermal.R
 
 class MenuTabAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     var listener: OnItemClickListener? = null
     private var type = 0
     private var datas = arrayListOf<Int>()
@@ -29,23 +28,25 @@ class MenuTabAdapter(val context: Context) :
         notifyDataSetChanged()
     }
 
-    //拍摄
-    private val firstMenus = arrayListOf<Int>(
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg
-    )
+    // 拍摄
+    private val firstMenus =
+        arrayListOf<Int>(
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg,
+        )
 
-    //选框
-    private val secondMenus = arrayListOf<Int>(
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal6003,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7001,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7002,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7003,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7004
-    )
+    // 选框
+    private val secondMenus =
+        arrayListOf<Int>(
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal6003,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7001,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7002,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7003,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7004,
+        )
 
-    //选框
+    // 选框
     private val secondMenusStr =
         arrayListOf(
             "点",
@@ -53,10 +54,10 @@ class MenuTabAdapter(val context: Context) :
             "面",
             "添加",
             "全图",
-            "删除"
+            "删除",
         )
 
-    //选框
+    // 选框
     private val fourthMenusStr =
         arrayListOf(
             "旋转",
@@ -65,59 +66,70 @@ class MenuTabAdapter(val context: Context) :
             "色带",
         )
 
-    //色彩 - Using available resources as placeholders
-    private val thirdMenus = arrayListOf<Int>(
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal5003,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal6002,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal6003,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7001,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7002,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7003,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7004,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal5003_selected_svg,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal6003_svg
-    )
+    // 色彩 - Using available resources as placeholders
+    private val thirdMenus =
+        arrayListOf<Int>(
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal5003,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal6002,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal6003,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7001,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7002,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7003,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7004,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal5003_selected_svg,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal6003_svg,
+        )
 
-    //设置 - Using available resources as placeholders
-    private val fourthMenus = arrayListOf<Int>(
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7003_svg,
-        com.topdon.lib.ui.R.drawable.ic_menu_thermal7004_svg
-    )
+    // 设置 - Using available resources as placeholders
+    private val fourthMenus =
+        arrayListOf<Int>(
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7003_svg,
+            com.topdon.lib.ui.R.drawable.ic_menu_thermal7004_svg,
+        )
 
     fun initType(type: Int) {
         this.type = type
-        datas = when (type) {
-            1 -> firstMenus
-            2 -> secondMenus
-            3 -> thirdMenus
-            4 -> fourthMenus
-            else -> thirdMenus
-        }
-        dataStrList = when (type) {
-            2 -> secondMenusStr
-            4 -> fourthMenusStr
-            else -> secondMenusStr
-        }
+        datas =
+            when (type) {
+                1 -> firstMenus
+                2 -> secondMenus
+                3 -> thirdMenus
+                4 -> fourthMenus
+                else -> thirdMenus
+            }
+        dataStrList =
+            when (type) {
+                2 -> secondMenusStr
+                4 -> fourthMenusStr
+                else -> secondMenusStr
+            }
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         return if (viewType == TYPE_ITEM) {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_menu_tab_view, parent, false)
+            val view =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_menu_tab_view, parent, false)
             ItemView(view)
         } else {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_menu_tab_more_view, parent, false)
+            val view =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_menu_tab_more_view, parent, false)
             ItemMoreView(view)
         }
-
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         if (holder is BaseItemView) {
             holder.img.setImageResource(datas[position])
             holder.lay.setOnClickListener {
@@ -130,8 +142,11 @@ class MenuTabAdapter(val context: Context) :
                 holder.name.text = dataStrList[position]
                 holder.name.isSelected = position == selected
                 holder.name.setTextColor(
-                    if (position == selected) ContextCompat.getColor(context, com.topdon.lib.core.R.color.white)
-                    else ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color)
+                    if (position == selected) {
+                        ContextCompat.getColor(context, com.topdon.lib.core.R.color.white)
+                    } else {
+                        ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color)
+                    },
                 )
             }
         }
@@ -174,6 +189,4 @@ class MenuTabAdapter(val context: Context) :
     interface OnItemClickListener {
         fun onClick(index: Int)
     }
-
-
 }

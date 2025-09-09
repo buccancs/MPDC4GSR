@@ -26,7 +26,7 @@
 org.gradle.parallel=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
-org.gradle.jvmargs=-Xmx8g -XX:MaxPermSize=512m
+org.gradle.jvmargs=-Xmx8g -XX:MaxMetaspaceSize=512m
 ```
 
 ### 2. Module-Specific Builds

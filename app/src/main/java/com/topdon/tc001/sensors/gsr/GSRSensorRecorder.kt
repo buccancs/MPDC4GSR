@@ -292,40 +292,6 @@ class GSRSensorRecorder(
             false
         }
     }
-        // Start real Shimmer recording using the existing GSR recording module
-        return try {
-            // Extract sessionId from sessionDirectory path
-            val sessionId = sessionDir.substringAfterLast("/").ifEmpty { 
-                "session_${System.currentTimeMillis()}" 
-            }
-            
-            Log.i(TAG, "Starting real Shimmer recording with sessionId: $sessionId")
-            
-            // Initialize the Shimmer device first if not already connected
-            if (!shimmerRecorder.isDeviceConnected()) {
-                Log.i(TAG, "Initializing Shimmer device connection")
-                val initSuccess = shimmerRecorder.initializeDevice()
-                if (!initSuccess) {
-                    Log.e(TAG, "Failed to initialize Shimmer device")
-                    return false
-                }
-            }
-            
-            // Start the real Shimmer recorder with the extracted sessionId
-            val success = shimmerRecorder.startRecording(sessionId)
-            
-            if (success) {
-                Log.i(TAG, "Real Shimmer GSR recording started successfully")
-            } else {
-                Log.e(TAG, "Real Shimmer GSR recording failed to start")
-            }
-            
-            success
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start real Shimmer recording", e)
-            false
-        }
-    }
 
     private suspend fun startLegacyRecording(recorder: LegacyGSRRecorder, sessionDir: String): Boolean {
         // Start legacy GSR recording using the existing GSR recording system
@@ -424,25 +390,6 @@ class GSRSensorRecorder(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop enhanced Shimmer recording", e)
-            false
-        }
-    }
-        // Stop real Shimmer recording using the existing GSR recording module
-        return try {
-            Log.i(TAG, "Stopping real Shimmer recording using existing GSR module")
-            
-            // Call the real Shimmer recorder's stop method
-            val sessionInfo = shimmerRecorder.stopRecording()
-            
-            if (sessionInfo != null) {
-                Log.i(TAG, "Real Shimmer GSR recording stopped successfully. Session: ${sessionInfo.sessionId}, Samples: ${sessionInfo.sampleCount}")
-                true
-            } else {
-                Log.w(TAG, "Real Shimmer GSR recording stop returned null session info")
-                false
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop real Shimmer recording", e)
             false
         }
     }

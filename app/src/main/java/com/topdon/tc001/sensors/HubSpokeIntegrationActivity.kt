@@ -56,8 +56,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         private const val DEFAULT_PC_CONTROLLER_PORT = 8080
     }
 
-    override fun getViewBinding(): ActivityHubSpokeIntegrationBinding = 
-        ActivityHubSpokeIntegrationBinding.inflate(layoutInflater)
+    override fun initContentLayoutId(): Int = R.layout.activity_hub_spoke_integration
 
     // Core components
     private lateinit var recordingController: RecordingController
@@ -212,14 +211,18 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             try {
                 // Start BLE device discovery to find available GSR sensors
                 enhancedBLE.addScanListener(object : com.topdon.ble.callback.ScanListener {
-                    override fun onScanStarted() {
+                    override fun onScanStart() {
                         Log.d(TAG, "Hub-spoke GSR sensor discovery started")
                         runOnUiThread {
                             binding.statusTextView.text = "Scanning for GSR sensors..."
                         }
                     }
                     
-                    override fun onScanResult(device: Device, rssi: Int, scanRecord: ByteArray?) {
+                    override fun onScanStop() {
+                        Log.d(TAG, "Hub-spoke GSR sensor discovery stopped")
+                    }
+                    
+                    override fun onScanResult(device: Device, isConnectedBySys: Boolean) {
                         // Check if device is a GSR sensor (Shimmer3 GSR+)
                         val deviceName = device.name?.uppercase() ?: ""
                         if (deviceName.contains("SHIMMER") || deviceName.contains("GSR")) {
@@ -227,26 +230,19 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                             
                             // Mark as GSR sensor for enhanced handling
                             val enhancedManager = com.topdon.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
-                            unifiedManager.markAsGsrSensor(device.address)
+                            enhancedManager.markAsGsrSensor(device.address)
                             
                             runOnUiThread {
                                 binding.statusTextView.text = "GSR sensor found: ${device.name}"
-                                updateDiscoveredDevicesUI(device, rssi)
+                                updateDiscoveredDevicesUI(device, device.rssi) // Use device.rssi instead of separate parameter
                             }
                         }
                     }
                     
-                    override fun onScanFailed(errorCode: Int) {
-                        Log.e(TAG, "Hub-spoke GSR sensor discovery failed: $errorCode")
+                    override fun onScanError(errorCode: Int, errorMsg: String?) {
+                        Log.e(TAG, "Hub-spoke GSR sensor discovery failed: $errorCode, message: $errorMsg")
                         runOnUiThread {
                             binding.statusTextView.text = "GSR sensor discovery failed"
-                        }
-                    }
-                    
-                    override fun onScanFinished(scanResults: List<Device>) {
-                        Log.i(TAG, "Hub-spoke GSR sensor discovery finished, found ${scanResults.size} devices")
-                        runOnUiThread {
-                            binding.statusTextView.text = "GSR sensor discovery completed"
                         }
                     }
                 })
@@ -272,7 +268,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             try {
                 if (systemStatus != null) {
                     val statusText = "BLE: ${systemStatus.activeConnections} active, " +
-                            "${systemStatus.knownDevices} known devices, " +
+                            "${systemStatus.totalDevicesConnected} total devices, " +
                             "Multi-device: ${if (systemStatus.multiDeviceMode) "ON" else "OFF"}"
                     
                     // Update BLE status display (assuming there's a BLE status TextView)

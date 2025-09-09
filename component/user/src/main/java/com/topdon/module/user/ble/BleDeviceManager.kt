@@ -116,17 +116,21 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
      */
     private fun setupDeviceDiscovery() {
         easyBLE?.addScanListener(object : com.topdon.ble.callback.ScanListener {
-            override fun onScanStarted() {
+            override fun onScanStart() {
                 Log.d(TAG, "Enhanced BLE scan started")
             }
             
-            override fun onScanResult(device: Device, rssi: Int, scanRecord: ByteArray?) {
+            override fun onScanStop() {
+                Log.d(TAG, "Enhanced BLE scan stopped")
+            }
+            
+            override fun onScanResult(device: Device, isConnectedBySys: Boolean) {
                 val deviceInfo = BleDeviceInfo(
                     address = device.address,
                     name = device.name,
-                    rssi = rssi,
+                    rssi = device.rssi, // Use device.rssi instead of separate parameter
                     isGsrSensor = isGsrSensorDevice(device),
-                    isPaired = false // Will be updated based on connection status
+                    isPaired = isConnectedBySys
                 )
                 
                 deviceInfoMap[device.address] = deviceInfo
@@ -140,12 +144,8 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 updateDiscoveredDevices()
             }
             
-            override fun onScanFailed(errorCode: Int) {
-                Log.e(TAG, "Enhanced BLE scan failed with error code: $errorCode")
-            }
-            
-            override fun onScanFinished(scanResults: List<Device>) {
-                Log.d(TAG, "Enhanced BLE scan finished, found ${scanResults.size} devices")
+            override fun onScanError(errorCode: Int, errorMsg: String?) {
+                Log.e(TAG, "Enhanced BLE scan failed with error code: $errorCode, message: $errorMsg")
             }
         })
     }
@@ -216,16 +216,14 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     private fun createOptimalConnectionConfig(isGsrSensor: Boolean): ConnectionConfiguration {
         return ConnectionConfiguration().apply {
             if (isGsrSensor) {
-                // Optimized settings for GSR sensors
-                requestConnectionPriority = BluetoothGatt.CONNECTION_PRIORITY_HIGH
-                autoConnect = true
-                connectTimeoutMillis = 10000
+                // Optimized settings for GSR sensors using public methods
+                setConnectTimeoutMillis(10000)
+                setAutoReconnect(true)
                 Log.d(TAG, "Applied GSR-optimized connection configuration")
             } else {
                 // Standard settings for other devices
-                requestConnectionPriority = BluetoothGatt.CONNECTION_PRIORITY_BALANCED
-                autoConnect = false
-                connectTimeoutMillis = 5000
+                setConnectTimeoutMillis(5000)
+                setAutoReconnect(false)
             }
         }
     }

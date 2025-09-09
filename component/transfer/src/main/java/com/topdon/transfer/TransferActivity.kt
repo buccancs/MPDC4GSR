@@ -1,6 +1,7 @@
 package com.topdon.transfer
 
 import android.media.MediaScannerConnection
+import android.os.Bundle
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,8 +19,8 @@ import com.topdon.component.transfer.R as TransferR  // Module-specific resource
 import com.topdon.lib.core.R  // Shared resources from libapp
 import com.topdon.lib.core.config.FileConfig
 import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseBindingActivity
-import com.topdon.transfer.databinding.ActivityTransferBinding
+import androidx.appcompat.app.AppCompatActivity
+import com.topdon.component.transfer.databinding.ActivityTransferBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,14 +36,15 @@ import java.util.zip.ZipFile
  *
  * Created by LCG on 2024/3/28.
  */
-class TransferActivity : BaseBindingActivity<ActivityTransferBinding>() {
+class TransferActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityTransferBinding
     private lateinit var transferDialog: TransferDialog
-
-    override fun initContentLayoutId(): Int = TransferR.layout.activity_transfer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityTransferBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initView()
     }
 
@@ -52,9 +54,6 @@ class TransferActivity : BaseBindingActivity<ActivityTransferBinding>() {
         }
 
         requestPermission()
-    }
-
-    override fun initData() {
     }
 
     /**

@@ -454,3 +454,4 @@ class SessionAdapter(
 
     override fun getItemCount(): Int = sessions.size
 }
+}

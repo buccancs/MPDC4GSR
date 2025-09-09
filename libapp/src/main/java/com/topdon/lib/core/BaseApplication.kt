@@ -204,6 +204,7 @@ abstract class BaseApplication : Application() {
                     // Fallback for API < 23 (Android 6.0)
                     @Suppress("DEPRECATION")
                     val activeNetwork = manager.activeNetworkInfo
+                    @Suppress("DEPRECATION")
                     if (activeNetwork?.isConnected == true && activeNetwork.type == ConnectivityManager.TYPE_WIFI) {
                         connectWebSocket()
                         Log.i("WebSocket", "WiFi network connected (legacy): ${activeNetwork.type}")

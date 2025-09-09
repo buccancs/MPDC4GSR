@@ -22,7 +22,7 @@ import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.topdon.module.thermal.ir.databinding.ActivityIrMainBinding
 import com.topdon.lib.core.repository.GalleryRepository.DirType
 import com.topdon.lib.core.repository.TC007Repository
@@ -52,7 +52,9 @@ import org.greenrobot.eventbus.EventBus
  * Created by LCG on 2024/4/18.
  */
 // Legacy ARouter route annotation - now using NavigationManager
-class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClickListener {
+class IRMainActivity : AppCompatActivity(), View.OnClickListener {
+    
+    private lateinit var binding: ActivityIrMainBinding
 
     /**
      * 从上一界面传递过来的，当前是否为 TC007 设备类型.
@@ -60,10 +62,10 @@ class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClic
      */
     private var isTC007 = false
 
-    override fun initContentLayoutId(): Int = R.layout.activity_ir_main
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityIrMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initView()
     }
 
@@ -75,21 +77,21 @@ class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClic
     private fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        binding.binding.viewPage.offscreenPageLimit = 5
-        binding.binding.viewPage.isUserInputEnabled = false
-        binding.binding.viewPage.adapter = ViewPagerAdapter(this, isTC007)
-        binding.binding.viewPage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.viewPage.offscreenPageLimit = 5
+        binding.viewPage.isUserInputEnabled = false
+        binding.viewPage.adapter = ViewPagerAdapter(this, isTC007)
+        binding.viewPage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 refreshTabSelect(position)
             }
         })
-        binding.binding.viewPage.setCurrentItem(2, false)
+        binding.viewPage.setCurrentItem(2, false)
 
-        binding.binding.clIconMonitor.setOnClickListener(this)
-        binding.binding.clIconGallery.setOnClickListener(this)
+        binding.clIconMonitor.setOnClickListener(this)
+        binding.clIconGallery.setOnClickListener(this)
         // view_main_thermal.setOnClickListener(this) // Not found in view declarations, likely unused
-        binding.binding.clIconReport.setOnClickListener(this)
-        binding.binding.clIconMine.setOnClickListener(this)
+        binding.clIconReport.setOnClickListener(this)
+        binding.clIconMine.setOnClickListener(this)
 
         showGuideDialog()
     }
@@ -100,7 +102,7 @@ class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClic
         if (isTC007) {
             if (WebSocketProxy.getInstance().isTC007Connect()) {
                 NetWorkUtils.switchNetwork(false)
-                binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+                binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
                 lifecycleScope.launch {
                     TC007Repository.syncTime()
                 }
@@ -108,39 +110,39 @@ class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClic
                     NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07).navigation(this)
                 }
             } else {
-                binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
+                binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
             }
         } else {
             if (DeviceTools.isConnect(isAutoRequest = false)) {
-                binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+                binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
             } else {
-                binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
+                binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
             }
         }
     }
 
-    override fun initData() {
+    private fun initData() {
     }
 
-    override fun connected() {
+    private fun connected() {
         if (!isTC007) {
-            binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+            binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
         }
     }
 
-    override fun disConnected() {
+    private fun disConnected() {
         if (!isTC007) {
-            binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
+            binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
         }
     }
 
-    override fun onSocketConnected(isTS004: Boolean) {
+    private fun onSocketConnected(isTS004: Boolean) {
         if (!isTS004 && isTC007) {
-            binding.binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+            binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
         }
     }
 
-    override fun onSocketDisConnected(isTS004: Boolean) {
+    private fun onSocketDisConnected(isTS004: Boolean) {
         if (!isTS004 && isTC007) {
             binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
         }
@@ -230,7 +232,7 @@ class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClic
                     if (Build.VERSION.SDK_INT < 31) {
                         lifecycleScope.launch {
                             delay(100)
-                            guideDialog.blurBg(clRoot)
+                            guideDialog.blurBg(binding.clRoot)
                         }
                     }
                     SharedManager.homeGuideStep = 2
@@ -240,7 +242,7 @@ class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClic
                     if (Build.VERSION.SDK_INT < 31) {
                         lifecycleScope.launch {
                             delay(100)
-                            guideDialog.blurBg(clRoot)
+                            guideDialog.blurBg(binding.clRoot)
                         }
                     }
                     SharedManager.homeGuideStep = 3
@@ -267,7 +269,7 @@ class IRMainActivity : BaseBindingActivity<ActivityIrMainBinding>(), View.OnClic
                 //界面切换及温度监控历史列表加载均需要时间，所以需要等待1000毫秒再去刷新背景
                 //而若等待1000毫秒太过久，界面会非模糊1000毫秒，所以先刷新一次背景占位
                 delay(100)
-                guideDialog.blurBg(clRoot)
+                guideDialog.blurBg(binding.clRoot)
             }
         }
     }

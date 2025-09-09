@@ -2,7 +2,9 @@ package com.topdon.module.thermal.ir.activity
 
 import android.os.Bundle
 import android.view.View
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import android.widget.Button
+import com.topdon.lib.core.config.RouterConfig
+import androidx.appcompat.app.AppCompatActivity
 import com.topdon.module.thermal.ir.databinding.ActivityIrMonitorBinding
 import com.topdon.lib.ui.dialog.MonitorSelectDialog
 import com.topdon.libcom.navigation.NavigationManager
@@ -15,14 +17,15 @@ import org.greenrobot.eventbus.EventBus
 /**
  * 选取区域监听
  */
-class IRMonitorActivity : BaseBindingActivity<ActivityIrMonitorBinding>(), View.OnClickListener {
+class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
 
+    private lateinit var binding: ActivityIrMonitorBinding
     private var selectIndex: SelectPositionBean? = null//选取点
-
-    override fun initContentLayoutId() = R.layout.activity_ir_monitor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityIrMonitorBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initView()
     }
 
@@ -73,12 +76,11 @@ class IRMonitorActivity : BaseBindingActivity<ActivityIrMonitorBinding>(), View.
     }
 
     private fun updateUI() {
-        findViewById<Button>(R.id.motion_start_btn).visibility = View.VISIBLE
-        findViewById<Button>(R.id.motion_btn).visibility = View.GONE
+        binding.motionStartBtn.visibility = View.VISIBLE
+        binding.motionBtn.visibility = View.GONE
     }
 
-    override fun disConnected() {
-        super.disConnected()
+    private fun disConnected() {
         finish()
     }
 

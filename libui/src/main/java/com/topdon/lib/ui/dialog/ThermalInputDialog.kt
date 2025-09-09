@@ -426,7 +426,7 @@ class ThermalInputDialog : Dialog {
             } else {
                 messageText.visibility = View.GONE
             }
-            dialog!!.setContentView(view)
+            dialog!!.setContentView(binding.root)
             return dialog as ThermalInputDialog
         }
 

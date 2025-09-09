@@ -50,11 +50,11 @@ class SteeringWheelView : LinearLayout, OnClickListener {
         binding.steeringWheelEndBtn.setOnClickListener(this)
         if (rotationIR == 270 || rotationIR == 90)
             {
-                tvConfirm.rotation = 270f
+                binding.tvConfirm.rotation = 270f
                 rotation = 90f
             } else
             {
-                tvConfirm.rotation = 0f
+                binding.tvConfirm.rotation = 0f
                 rotation = 0f
             }
     }

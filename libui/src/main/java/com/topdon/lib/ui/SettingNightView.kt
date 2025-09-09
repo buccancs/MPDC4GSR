@@ -14,7 +14,7 @@ import com.topdon.lib.ui.databinding.UiSettingViewNightBinding
 import com.topdon.lib.ui.R as UiR
 
 class SettingNightView : LinearLayout {
-    private val binding: UiSettingViewNightBinding
+    private lateinit var binding: UiSettingViewNightBinding
     
     var isRightArrowVisible: Boolean
         get() = binding.itemSettingEndImage.isVisible

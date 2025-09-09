@@ -12,25 +12,19 @@ import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.Spinner
-import android.widget.Switch
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.camera.RGBCameraRecorder
 import kotlinx.coroutines.launch
 
@@ -40,7 +34,7 @@ import kotlinx.coroutines.launch
  * Full multi-modal recording interface with GSR and thermal coordination
  * Navigation: Use NavigationManager.getInstance().build(RouterConfig.GSR_MULTI_MODAL).navigation(context)
  */
-class MultiModalRecordingActivity : AppCompatActivity() {
+class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecordingBinding>() {
     companion object {
         private const val TAG = "MultiModalActivity"
         private const val REQUEST_PERMISSIONS = 100
@@ -72,34 +66,6 @@ class MultiModalRecordingActivity : AppCompatActivity() {
             context.startActivity(intent)
         }
     }
-
-    // UI Components
-    private lateinit var sessionIdEdit: EditText
-    private lateinit var participantIdEdit: EditText
-    private lateinit var studyNameEdit: EditText
-    private lateinit var startStopButton: Button
-    private lateinit var syncEventButton: Button
-    private lateinit var statusText: TextView
-    private lateinit var sampleCountText: TextView
-    private lateinit var syncCountText: TextView
-    private lateinit var sessionDurationText: TextView
-    private lateinit var fileLocationText: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var cameraPreview: android.view.TextureView
-    
-    // Network status UI components
-    private lateinit var networkStatusText: TextView
-    private lateinit var discoveredDevicesText: TextView
-    private lateinit var streamingQueueText: TextView
-    private lateinit var networkMetricsText: TextView
-    private lateinit var connectToDeviceButton: Button
-    private lateinit var startDiscoveryButton: Button
-
-    // Recording options
-    private lateinit var enableVideoSwitch: Switch
-    private lateinit var enable4KSwitch: Switch
-    private lateinit var enableRawCaptureSwitch: Switch
-    private lateinit var rawFrameRateSpinner: Spinner
 
     // Recording components
     private lateinit var gsrRecorder: GSRRecorder

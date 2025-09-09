@@ -151,10 +151,10 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun initializeAdvancedBleCoordination() {
         lifecycleScope.launch {
             try {
-                // Initialize Enhanced BLE Manager with multi-device coordination
-                val enhancedManager = com.topdon.ble.EnhancedBleManager.getInstance()
-                enhancedManager.initialize(this@HubSpokeIntegrationActivity, true)
-                enhancedManager.enableMultiDeviceMode(true)
+                // Initialize Unified BLE Manager with multi-device coordination
+                val unifiedManager = com.topdon.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
+                unifiedManager.initialize(this@HubSpokeIntegrationActivity, true)
+                unifiedManager.enableMultiDeviceMode(true)
                 
                 Log.i(TAG, "Advanced BLE coordination initialized for hub-spoke system")
                 
@@ -176,13 +176,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun setupBleDeviceMonitoring() {
         lifecycleScope.launch {
             try {
-                val enhancedManager = com.topdon.ble.EnhancedBleManager.getInstance()
+                val enhancedManager = com.topdon.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
                 
                 // Monitor system BLE status and update UI
                 launch {
                     while (isServiceBound || !isDestroyed) {
                         try {
-                            val systemStatus = enhancedManager.getSystemStatus()
+                            val systemStatus = unifiedManager.getSystemStatus()
                             updateBleStatusUI(systemStatus)
                             
                             // Log system status for debugging
@@ -226,8 +226,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                             Log.i(TAG, "GSR sensor detected for hub-spoke: ${device.name} (${device.address})")
                             
                             // Mark as GSR sensor for enhanced handling
-                            val enhancedManager = com.topdon.ble.EnhancedBleManager.getInstance()
-                            enhancedManager.markAsGsrSensor(device.address)
+                            val enhancedManager = com.topdon.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
+                            unifiedManager.markAsGsrSensor(device.address)
                             
                             runOnUiThread {
                                 binding.statusTextView.text = "GSR sensor found: ${device.name}"
@@ -267,7 +267,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     /**
      * Update BLE status in the UI with enhanced system information
      */
-    private fun updateBleStatusUI(systemStatus: com.topdon.ble.EnhancedBleManager.SystemBleStatus?) {
+    private fun updateBleStatusUI(systemStatus: com.topdon.ble.UnifiedBleManager.SystemBleStatus?) {
         runOnUiThread {
             try {
                 if (systemStatus != null) {

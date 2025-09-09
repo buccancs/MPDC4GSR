@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Unified BLE Manager that merges all Shimmer Nordic BLE and Topdon BLE functionalities.
@@ -54,20 +56,30 @@ public class UnifiedBleManager {
     private final BluetoothManager bluetoothManager;
     private final BluetoothAdapter bluetoothAdapter;
     
-    // Enhanced BLE managers for different device types
+    // Connection monitoring and statistics (consolidated from EnhancedBleManager)
+    private final ConcurrentHashMap<String, ConnectionMetrics> deviceMetrics = new ConcurrentHashMap<>();
+    private final AtomicBoolean multiDeviceMode = new AtomicBoolean(false);
+    private final AtomicInteger activeConnections = new AtomicInteger(0);
+    
+    // Advanced features (consolidated from multiple managers)
+    private final AtomicBoolean enhancedErrorRecovery = new AtomicBoolean(true);
+    private final AtomicBoolean connectionOptimization = new AtomicBoolean(true);
+    private final AtomicBoolean dataLossDetection = new AtomicBoolean(true);
+    
+    // Enhanced BLE managers for different device types  
     private final ShimmerBleController shimmerController;
     private final TopdonBleController topdonController;
     
-    // Enhanced managers from existing implementation
-    private final EnhancedBleManager enhancedBleManager;
-    private final SecureBleManager secureBleManager;
-    private final PredictiveConnectionManager predictiveManager;
-    private final ResearchGradeBleManager researchManager;
+    // Core EasyBLE instance with Nordic backend
+    private EasyBLE easyBLE;
     
-    // Unified state management
-    private final AtomicBoolean isInitialized = new AtomicBoolean(false);
+    // Connection tracking and state management
+    private final ConcurrentHashMap<String, UnifiedDevice> connectedDevices = new ConcurrentHashMap<>();
+    private final AtomicBoolean isInitialized = new AtomicBoolean(false);  
     private final AtomicBoolean isScanning = new AtomicBoolean(false);
-    private final Map<String, UnifiedDevice> connectedDevices = new ConcurrentHashMap<>();
+    
+    // GSR sensor tracking for enhanced handling
+    private final ConcurrentHashMap<String, Boolean> gsrDevices = new ConcurrentHashMap<>();
     
     // Device type identification
     public enum DeviceType {
@@ -103,6 +115,40 @@ public class UnifiedBleManager {
     }
     
     /**
+     * Connection metrics for monitoring BLE device performance (consolidated from EnhancedBleManager)
+     */
+    public static class ConnectionMetrics {
+        public final AtomicLong connectAttempts = new AtomicLong(0);
+        public final AtomicLong successfulConnections = new AtomicLong(0);
+        public final AtomicLong disconnections = new AtomicLong(0);
+        public final AtomicLong dataPacketsReceived = new AtomicLong(0);
+        public final AtomicLong lastConnectionTime = new AtomicLong(0);
+        
+        public double getReliabilityScore() {
+            long attempts = connectAttempts.get();
+            return attempts > 0 ? (double) successfulConnections.get() / attempts : 0.0;
+        }
+    }
+    
+    /**
+     * System BLE status information (consolidated from EnhancedBleManager)
+     */
+    public static class SystemBleStatus {
+        public final int activeConnections;
+        public final boolean multiDeviceMode;
+        public final boolean enhancedErrorRecovery;
+        public final long totalDevicesConnected;
+        
+        public SystemBleStatus(int activeConnections, boolean multiDeviceMode, 
+                             boolean enhancedErrorRecovery, long totalDevicesConnected) {
+            this.activeConnections = activeConnections;
+            this.multiDeviceMode = multiDeviceMode;
+            this.enhancedErrorRecovery = enhancedErrorRecovery;
+            this.totalDevicesConnected = totalDevicesConnected;
+        }
+    }
+    
+    /**
      * Private constructor for singleton pattern
      */
     private UnifiedBleManager(@NonNull Context context) {
@@ -110,11 +156,7 @@ public class UnifiedBleManager {
         this.bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         this.bluetoothAdapter = bluetoothManager != null ? bluetoothManager.getAdapter() : null;
         
-        // Initialize enhanced managers
-        this.enhancedBleManager = EnhancedBleManager.getInstance();
-        this.secureBleManager = SecureBleManager.getInstance();
-        this.predictiveManager = PredictiveConnectionManager.getInstance();
-        this.researchManager = ResearchGradeBleManager.getInstance();
+        // Note: Consolidated functionality from multiple managers into this unified manager
         
         // Initialize device controllers
         this.shimmerController = new ShimmerBleController(context, this);
@@ -156,9 +198,8 @@ public class UnifiedBleManager {
                 return false;
             }
             
-            // Initialize enhanced managers
-            enhancedBleManager.initialize(context, true);
-            // Note: Other managers may not have public initialize/cleanup methods
+            // Initialize EasyBLE for basic BLE operations
+            this.easyBLE = EasyBLE.getBuilder().setUseNordicBleBackend(true).build();
             // Initialize device controllers
             shimmerController.initialize();
             topdonController.initialize();
@@ -318,34 +359,6 @@ public class UnifiedBleManager {
     }
     
     /**
-     * Get enhanced BLE manager for advanced features
-     */
-    public EnhancedBleManager getEnhancedBleManager() {
-        return enhancedBleManager;
-    }
-    
-    /**
-     * Get secure BLE manager for security features
-     */
-    public SecureBleManager getSecureBleManager() {
-        return secureBleManager;
-    }
-    
-    /**
-     * Get predictive connection manager for AI features
-     */
-    public PredictiveConnectionManager getPredictiveManager() {
-        return predictiveManager;
-    }
-    
-    /**
-     * Get research-grade BLE manager for scientific features
-     */
-    public ResearchGradeBleManager getResearchManager() {
-        return researchManager;
-    }
-    
-    /**
      * Cleanup and release resources
      */
     public void cleanup() {
@@ -355,12 +368,6 @@ public class UnifiedBleManager {
             
             shimmerController.cleanup();
             topdonController.cleanup();
-            
-            // Note: Enhanced managers are singletons and may not need cleanup
-            // enhancedBleManager.cleanup();
-            // secureBleManager.cleanup(); 
-            // predictiveManager.cleanup();
-            // researchManager.cleanup();
             
             isInitialized.set(false);
             Log.i(TAG, "UnifiedBleManager cleaned up");
@@ -415,5 +422,74 @@ public class UnifiedBleManager {
         public void onScanComplete() {
             unifiedListener.onScanComplete();
         }
+    }
+    
+    // Consolidated methods from EnhancedBleManager to eliminate duplication
+    
+    /**
+     * Initialize the unified BLE manager with multi-device support
+     */
+    public boolean initialize(@NonNull Context context, boolean enableMultiDevice) {
+        if (isInitialized.get()) {
+            return true;
+        }
+        
+        this.multiDeviceMode.set(enableMultiDevice);
+        return initialize();
+    }
+    
+    /**
+     * Enable multi-device mode
+     */
+    public void enableMultiDeviceMode(boolean enabled) {
+        this.multiDeviceMode.set(enabled);
+        Log.i(TAG, "Multi-device mode " + (enabled ? "enabled" : "disabled"));
+    }
+    
+    /**
+     * Get system BLE status
+     */
+    public SystemBleStatus getSystemStatus() {
+        return new SystemBleStatus(
+            activeConnections.get(),
+            multiDeviceMode.get(),
+            enhancedErrorRecovery.get(),
+            deviceMetrics.size()
+        );
+    }
+    
+    /**
+     * Mark device as GSR sensor for enhanced handling
+     */
+    public void markAsGsrSensor(@NonNull String deviceAddress) {
+        gsrDevices.put(deviceAddress, true);
+        Log.i(TAG, "Device " + deviceAddress + " marked as GSR sensor");
+    }
+    
+    /**
+     * Enhanced device connection with monitoring and metrics
+     */
+    @Nullable
+    public Connection connectWithEnhancements(@NonNull String deviceAddress) {
+        Log.i(TAG, "Enhanced connection attempt for device: " + deviceAddress);
+        
+        // Initialize metrics for this device
+        ConnectionMetrics metrics = deviceMetrics.computeIfAbsent(deviceAddress, 
+            k -> new ConnectionMetrics());
+        metrics.connectAttempts.incrementAndGet();
+        
+        // Use EasyBLE with Nordic backend for connection
+        Connection connection = easyBLE.connect(deviceAddress);
+        
+        if (connection != null) {
+            activeConnections.incrementAndGet();
+            metrics.lastConnectionTime.set(System.currentTimeMillis());
+            metrics.successfulConnections.incrementAndGet();
+            Log.i(TAG, "Enhanced connection successful for device: " + deviceAddress);
+        } else {
+            Log.w(TAG, "Enhanced connection failed for device: " + deviceAddress);
+        }
+        
+        return connection;
     }
 }

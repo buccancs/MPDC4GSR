@@ -15,10 +15,18 @@ android {
         debug {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }        
-        release {
+        }
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    
+    // Enable debug and release variants for flexible development
+    androidComponents {
+        beforeVariants { variant ->
+            // Enable both debug and release variants
+            variant.enable = variant.buildType in listOf("debug", "release")
         }
     }
     compileOptions {

@@ -66,6 +66,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+            buildConfigField("String", "BUILD_TYPE", "\"debug\"")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
@@ -76,11 +86,11 @@ android {
         }
     }
     
-    // Configure variants using modern API - only release variant
+    // Configure variants - enable debug for development, release for production
     androidComponents {
         beforeVariants { variantBuilder ->
-            // Only enable release variant, disable debug
-            variantBuilder.enable = variantBuilder.buildType == "release"
+            // Enable both debug and release variants for flexible development
+            variantBuilder.enable = variantBuilder.buildType in listOf("debug", "release")
         }
     }
 
@@ -236,6 +246,9 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.opencsv:opencsv:5.7.1")
     implementation("com.google.code.gson:gson:2.10.1")
+    
+    // PDF viewer library - TODO: Add when stable library is available
+    // implementation("com.github.barteksc:AndroidPdfViewer:2.8.2")
     
     // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")

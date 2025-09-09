@@ -11,6 +11,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            buildConfigField("boolean", "DEBUG", "true")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         getByName("release") {
             isMinifyEnabled = false
             buildConfigField("boolean", "DEBUG", "false")
@@ -21,11 +29,11 @@ android {
         }
     }
     
-    // Only release variant enabled for production builds
+    // Enable debug and release variants for flexible development
     androidComponents {
         beforeVariants { variant ->
-            // Only enable release variant, disable debug
-            variant.enable = variant.buildType == "release"
+            // Enable both debug and release variants
+            variant.enable = variant.buildType in listOf("debug", "release")
         }
     }
     

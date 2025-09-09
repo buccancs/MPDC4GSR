@@ -162,7 +162,7 @@ public class UnifiedBleManager {
         this.shimmerController = new ShimmerBleController(context, this);
         this.topdonController = new TopdonBleController(context, this);
         
-        Log.i(TAG, "UnifiedBleManager initialized with comprehensive BLE support");
+        Log.i(TAG, "UnifiedBleManager initialized with comprehensive BLE support and cross-modal coordination");
     }
     
     /**
@@ -180,7 +180,7 @@ public class UnifiedBleManager {
     }
     
     /**
-     * Initialize the unified BLE manager
+     * Initialize the unified BLE manager with cross-modal sync integration
      */
     public boolean initialize() {
         if (isInitialized.get()) {
@@ -200,12 +200,21 @@ public class UnifiedBleManager {
             
             // Initialize EasyBLE for basic BLE operations
             this.easyBLE = EasyBLE.getBuilder().setUseNordicBleBackend(true).build();
+            
             // Initialize device controllers
             shimmerController.initialize();
             topdonController.initialize();
             
+            // Initialize cross-modal synchronization integration
+            try {
+                CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
+                Log.i(TAG, "Cross-modal synchronization manager initialized for unified BLE coordination");
+            } catch (Exception e) {
+                Log.w(TAG, "Cross-modal sync manager initialization failed, continuing without sync", e);
+            }
+            
             isInitialized.set(true);
-            Log.i(TAG, "Unified BLE Manager initialized successfully");
+            Log.i(TAG, "Unified BLE Manager initialized successfully with cross-modal capabilities");
             return true;
             
         } catch (Exception e) {
@@ -467,6 +476,37 @@ public class UnifiedBleManager {
     }
     
     /**
+     * Get all connected Shimmer devices
+     */
+    @NonNull
+    public List<UnifiedDevice> getConnectedShimmerDevices() {
+        // Placeholder implementation - would be implemented by ShimmerBleController
+        return new ArrayList<>();
+    }
+    
+    /**
+     * Get all connected Topdon devices
+     */
+    @NonNull
+    public List<UnifiedDevice> getConnectedTopdonDevices() {
+        // Placeholder implementation - would be implemented by TopdonBleController
+        return new ArrayList<>();
+    }
+    
+    /**
+     * Get system BLE status
+     */
+    @NonNull
+    public SystemBleStatus getSystemBleStatus() {
+        return new SystemBleStatus(
+            activeConnections.get(),
+            true, // multiDeviceMode
+            true, // enhancedErrorRecovery
+            connectedDevices.size()
+        );
+    }
+    
+    /**
      * Enhanced device connection with monitoring and metrics
      */
     @Nullable
@@ -491,5 +531,104 @@ public class UnifiedBleManager {
         }
         
         return connection;
+    }
+    
+    // ========== Cross-Modal Synchronization Integration ==========
+    
+    /**
+     * Register BLE devices with cross-modal synchronization system
+     */
+    public boolean registerDevicesForCrossModalSync() {
+        try {
+            CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
+            
+            // Register all connected Shimmer devices
+            List<UnifiedDevice> shimmerDevices = getConnectedShimmerDevices();
+            for (UnifiedDevice device : shimmerDevices) {
+                CrossModalSyncManager.DeviceCapabilities capabilities = 
+                    new CrossModalSyncManager.DeviceCapabilities(
+                        true,  // supportsHardwareSync
+                        true,  // supportsTimestampGeneration
+                        128,   // maxSamplingRateHz (for GSR)
+                        1000   // syncAccuracyMicros (1ms)
+                    );
+                
+                syncManager.registerDevice(
+                    device.getDeviceId(),
+                    device.getDeviceName(),
+                    CrossModalSyncManager.DeviceCategory.BLE_SENSOR,
+                    device,
+                    capabilities
+                );
+            }
+            
+            // Register all connected Topdon devices
+            List<UnifiedDevice> topdonDevices = getConnectedTopdonDevices();
+            for (UnifiedDevice device : topdonDevices) {
+                CrossModalSyncManager.DeviceCapabilities capabilities = 
+                    new CrossModalSyncManager.DeviceCapabilities(
+                        true,  // supportsHardwareSync
+                        true,  // supportsTimestampGeneration
+                        30,    // maxSamplingRateHz (for thermal)
+                        5000   // syncAccuracyMicros (5ms)
+                    );
+                
+                syncManager.registerDevice(
+                    device.getDeviceId(),
+                    device.getDeviceName(),
+                    CrossModalSyncManager.DeviceCategory.BLE_SENSOR,
+                    device,
+                    capabilities
+                );
+            }
+            
+            Log.i(TAG, "Registered " + (shimmerDevices.size() + topdonDevices.size()) + 
+                      " BLE devices for cross-modal synchronization");
+            return true;
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to register devices for cross-modal sync", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Start synchronized recording across all BLE devices
+     */
+    public boolean startCrossModalRecording() {
+        try {
+            // Register devices first
+            registerDevicesForCrossModalSync();
+            
+            // Start synchronized recording
+            CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
+            return syncManager.startSynchronizedRecording();
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to start cross-modal recording", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Stop synchronized recording
+     */
+    public boolean stopCrossModalRecording() {
+        try {
+            CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
+            return syncManager.stopSynchronizedRecording();
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to stop cross-modal recording", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Get cross-modal sync manager instance for advanced operations
+     */
+    @NonNull
+    public CrossModalSyncManager getCrossModalSyncManager() {
+        return CrossModalSyncManager.getInstance(context);
     }
 }

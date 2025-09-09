@@ -91,6 +91,48 @@ public interface UnifiedDevice {
      */
     void setConnectionListener(@Nullable UnifiedBleManager.UnifiedConnectionListener listener);
     
+    // ========== Cross-Modal Synchronization Methods ==========
+    
+    /**
+     * Get unique device identifier for cross-modal sync
+     */
+    @NonNull
+    default String getDeviceId() {
+        return getAddress();
+    }
+    
+    /**
+     * Get device name for cross-modal sync
+     */
+    @NonNull
+    default String getDeviceName() {
+        String name = getName();
+        return name != null ? name : "Unknown Device";
+    }
+    
+    /**
+     * Start synchronized recording
+     */
+    default boolean startRecording(long timestamp) {
+        return startDataStreaming();
+    }
+    
+    /**
+     * Stop synchronized recording
+     */
+    default boolean stopRecording(long timestamp) {
+        return stopDataStreaming();
+    }
+    
+    /**
+     * Add synchronization mark
+     */
+    default boolean addSyncMark(long timestamp) {
+        // Default implementation - send sync mark command
+        byte[] syncCommand = new byte[]{0x00, 0x01}; // Generic sync mark
+        return sendCommand(syncCommand);
+    }
+    
     /**
      * Device connection states
      */

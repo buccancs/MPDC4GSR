@@ -58,4 +58,7 @@ dependencies {
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.livedata.ktx)
+    
+    // Enhanced BLE harmonization - Common component unified device management
+    implementation(project(":BleModule"))
 }

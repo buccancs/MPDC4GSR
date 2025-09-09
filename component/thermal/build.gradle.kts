@@ -82,6 +82,9 @@ dependencies {
     implementation(project(":component:pseudo"))  // Required for CustomPseudoBean class
     // Note: Cannot add thermal-ir or thermal-lite due to circular dependencies
     
+    // Enhanced BLE harmonization - Thermal component cross-modal coordination
+    implementation(project(":BleModule"))
+    
     // ARouter removed - now using NavigationManager instead
     // implementation(libs.arouter.api)
     // kapt(libs.arouter.compiler)

@@ -28,6 +28,12 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.camera.RGBCameraRecorder
 import kotlinx.coroutines.launch
 
+// Enhanced unified BLE integration for comprehensive cross-modal coordination
+import com.topdon.ble.UnifiedBleManager
+import com.topdon.ble.UnifiedDevice
+import com.topdon.ble.ShimmerDeviceConfig
+import com.topdon.ble.TopdonDeviceConfig
+
 // Note: EnhancedRecordingService is referenced with full package name since it's in a different module
 
 /**
@@ -77,6 +83,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private var currentSession: SessionInfo? = null
     private var sampleCount = 0L
     private var syncMarkCount = 0
+    
+    // Enhanced unified BLE management for cross-modal coordination
+    private var unifiedBleManager: UnifiedBleManager? = null
+    private var discoveredBleDevices = mutableListOf<UnifiedDevice>()
+    private var connectedBleDevices = mutableListOf<UnifiedDevice>()
     
     // Enhanced service integration
     private var enhancedRecordingService: com.topdon.gsr.service.EnhancedRecordingService? = null

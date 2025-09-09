@@ -30,10 +30,17 @@ android {
     }
 
     buildTypes {
-        // Only release build type - no debug variants
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    
+    // Configure single release variant for easier maintenance
+    androidComponents {
+        beforeVariants { variant ->
+            // Only enable release variant for single-developer maintenance
+            variant.enable = variant.buildType == "release"
         }
     }
 

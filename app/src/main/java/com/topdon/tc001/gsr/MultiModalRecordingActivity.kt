@@ -389,7 +389,13 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             }
 
         // Initialize RGB camera recorder
-        rgbCameraRecorder = RGBCameraRecorder(this, null).apply { // Use null for preview since layout doesn't have TextureView
+        // Pass the camera preview component from the binding if it exists, otherwise null
+        val cameraPreviewView = try {
+            binding.cameraPreview // Replace with the actual preview view ID from your layout/binding
+        } catch (e: Exception) {
+            null
+        }
+        rgbCameraRecorder = RGBCameraRecorder(this, cameraPreviewView).apply {
             onRecordingStarted = {
                 runOnUiThread {
                     binding.statusText.text = "Recording RGB video + GSR..."

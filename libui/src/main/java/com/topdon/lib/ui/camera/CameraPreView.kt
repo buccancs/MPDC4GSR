@@ -31,8 +31,9 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.listener.BitmapViewListener
+import com.topdon.lib.ui.databinding.CameraLayBinding
 import java.util.Collections
-import com.topdon.lib.ui.R as UiR
+import android.view.LayoutInflater
 
 /**
  * 相机预览
@@ -41,9 +42,10 @@ class CameraPreView :
     LinearLayout,
     ScaleGestureDetector.OnScaleGestureListener,
     BitmapViewListener {
+    
+    private lateinit var binding: CameraLayBinding
     private var cameraCharacteristics: CameraCharacteristics? = null
     private var isReverse: Boolean = false
-    private lateinit var mTextureView: TextureView
     private var cameraWidth = 0
 
     var isPreviewing = false
@@ -63,9 +65,8 @@ class CameraPreView :
     )
 
     private fun initView() {
-        inflate(context, UiR.layout.camera_lay, this)
-        mTextureView = findViewById(UiR.id.camera_texture)
-        mTextureView.post { cameraWidth = mTextureView.width }
+        binding = CameraLayBinding.inflate(LayoutInflater.from(context), this, true)
+        binding.cameraTexture.post { cameraWidth = binding.cameraTexture.width }
         lis = ScaleGestureDetector(context, this)
         onResumeView()
     }
@@ -97,11 +98,11 @@ class CameraPreView :
         }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                scaleW = mTextureView.width * (scale - 1) / 2f
-                scaleH = mTextureView.height * (scale - 1) / 2f
-                startX = event.x - mTextureView.x
-                startY = event.y - mTextureView.y
-                val view: View = mTextureView.parent as View
+                scaleW = binding.cameraTexture.width * (scale - 1) / 2f
+                scaleH = binding.cameraTexture.height * (scale - 1) / 2f
+                startX = event.x - binding.cameraTexture.x
+                startY = event.y - binding.cameraTexture.y
+                val view: View = binding.cameraTexture.parent as View
                 parentViewW = view.width.toFloat()
                 parentViewH = view.height.toFloat()
             }
@@ -127,17 +128,17 @@ class CameraPreView :
 //                    moveY = parentViewH - mTextureView.height - scaleH
 //                }
 //                Log.e("测试---","/"+(moveX + scaleW)+"///"+(parentViewW - mTextureView.width))
-                mTextureView.x = moveX
-                mTextureView.y = moveY
+                binding.cameraTexture.x = moveX
+                binding.cameraTexture.y = moveY
             }
             MotionEvent.ACTION_UP -> {
                 isScale = false // 实际以手指抬起设定缩放结束
                 val startX = viewX
                 val startY = viewY
 //                Log.e("测试","/"+(startX)+"///"+startY+"///"+(mTextureView.width)+"//"+mTextureView.width * scale)
-                if ((viewX < 0 && startX < -mTextureView.width * scale + SizeUtils.dp2px(10f)) ||
+                if ((viewX < 0 && startX < -binding.cameraTexture.width * scale + SizeUtils.dp2px(10f)) ||
                     (startX > 0 && startX > parentViewW - SizeUtils.dp2px(10f)) ||
-                    (startY < 0 && startY < -mTextureView.height * scale + SizeUtils.dp2px(10f)) ||
+                    (startY < 0 && startY < -binding.cameraTexture.height * scale + SizeUtils.dp2px(10f)) ||
                     (startY > 0 && startY > parentViewH - SizeUtils.dp2px(10f))
                 )
                     {
@@ -152,7 +153,7 @@ class CameraPreView :
      * 保存图片
      */
     public fun getBitmap(): Bitmap? {
-        return mTextureView.bitmap
+        return binding.cameraTexture.bitmap
     }
 
     override fun onScale(detector: ScaleGestureDetector): Boolean {

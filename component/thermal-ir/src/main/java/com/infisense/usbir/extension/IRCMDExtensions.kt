@@ -95,3 +95,4 @@ private fun IRCMD.nativeSetProperty(property: String, value: Int): Boolean {
         false
     }
 }
+}

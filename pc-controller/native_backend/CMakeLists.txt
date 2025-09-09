@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.18)
 project(ircamera_native_backend)
 
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -11,12 +12,10 @@ find_package(OpenCV REQUIRED)
 # Add pybind11 - handle both system installation and bundled version
 find_package(pybind11 QUIET)
 if(NOT pybind11_FOUND)
-    # If pybind11 is not found system-wide, add the bundled version
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pybind11/CMakeLists.txt")
-        add_subdirectory(pybind11)
-    else()
-        message(FATAL_ERROR "pybind11 not found. Please install pybind11 or add the pybind11 submodule.")
-    endif()
+    # Download pybind11 if not found
+    include(FetchContent)
+    FetchContent_Declare(pybind11 GIT_REPOSITORY https://github.com/pybind/pybind11 GIT_TAG v2.10.4)
+    FetchContent_MakeAvailable(pybind11)
 endif()
 
 # Include directories
@@ -44,3 +43,6 @@ set_target_properties(native_backend PROPERTIES
 
 # Compiler-specific options
 target_compile_definitions(native_backend PRIVATE VERSION_INFO=${EXAMPLE_VERSION_INFO})
+
+# Installation
+install(TARGETS native_backend DESTINATION .)

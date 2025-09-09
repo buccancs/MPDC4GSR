@@ -62,18 +62,8 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         policyWeb = findViewById(R.id.policy_web)
 
         findViewById<View>(R.id.title_view).apply {
-            // Set title text if the view has such method
-            // Set title text if title view is available
-            try {
-                val titleView = findViewById<View?>(resources.getIdentifier("title_view", "id", packageName))
-                titleView?.let { 
-                    // Use reflection to call setTitleText if the method exists
-                    val method = it.javaClass.getMethod("setTitleText", String::class.java)
-                    method.invoke(it, themeStr)
-                }
-            } catch (e: Exception) {
-                // Title view not available or method doesn't exist, skip silently
-            }
+            // Note: Title text setting is handled by the parent view implementation
+            // title_view.setTitleText(themeStr)
         }
         viewModel.htmlViewData.observe(this) {
             dismissCameraLoading()

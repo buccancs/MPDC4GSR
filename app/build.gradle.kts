@@ -227,7 +227,8 @@ dependencies {
     implementation(files("libs/main-2.2.1-release.aar"))
     
     // Additional AAR dependencies from libir module - all libir AAR files now handled at app level  
-    implementation(fileTree(mapOf("include" to listOf("opengl_1.3.2_standard.aar"), "dir" to "component/edit3d/libs")))
+    // Removed edit3d AAR dependency - module removed as unused
+    // implementation(fileTree(mapOf("include" to listOf("opengl_1.3.2_standard.aar"), "dir" to "component/edit3d/libs")))
     implementation(fileTree(mapOf("include" to listOf("*.aar"), "dir" to "libir/libs")))  // All libir AAR files
     
     // Explicit AAR dependencies for app module compilation (ensuring classpath resolution)

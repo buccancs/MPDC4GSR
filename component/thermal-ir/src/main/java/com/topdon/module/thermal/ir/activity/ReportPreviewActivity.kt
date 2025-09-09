@@ -11,11 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.CollectionUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
-import com.topdon.house.activity.SignInputActivity
-import com.topdon.house.event.HouseReportAddEvent
-import com.topdon.house.util.PDFUtil
-import com.topdon.house.viewmodel.DetectViewModel
-import com.topdon.house.viewmodel.ReportViewModel
+// Removed house module imports - module removed as unused
+// import com.topdon.house.activity.SignInputActivity
+// import com.topdon.house.event.HouseReportAddEvent
+// import com.topdon.house.util.PDFUtil
+// import com.topdon.house.viewmodel.DetectViewModel
+// import com.topdon.house.viewmodel.ReportViewModel
 import com.topdon.lib.core.bean.HouseRepPreviewAlbumItemBean
 import com.topdon.lib.core.bean.HouseRepPreviewBean
 import com.topdon.lib.core.bean.HouseRepPreviewItemBean
@@ -42,8 +43,9 @@ import kotlin.math.abs
 // Legacy ARouter route annotation - now using NavigationManager
 class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
 
-    private val detectViewModel: DetectViewModel by viewModels()
-    private val reportViewModel: ReportViewModel by viewModels()
+    // Disabled - ViewModels from removed house module
+    // private val detectViewModel: DetectViewModel by viewModels()
+    // private val reportViewModel: ReportViewModel by viewModels()
 
     // View declarations
     private lateinit var tvSave: android.widget.TextView
@@ -170,25 +172,29 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             }
 
             rlyInspectorSignature -> {
-                var intent = Intent(this, SignInputActivity::class.java)
-                intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, true)
-                startActivityForResult(intent, 1000)
+                // Disabled - SignInputActivity from removed house module
+                // var intent = Intent(this, SignInputActivity::class.java)
+                // intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, true)
+                // startActivityForResult(intent, 1000)
             }
 
             rlyHouseOwnerSignature -> {
-                var intent = Intent(this, SignInputActivity::class.java)
-                intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, false)
-                startActivityForResult(intent, 1001)
+                // Disabled - SignInputActivity from removed house module
+                // var intent = Intent(this, SignInputActivity::class.java)
+                // intent.putExtra(ExtraKeyConfig.IS_PICK_INSPECTOR, false)
+                // startActivityForResult(intent, 1001)
             }
 
             tvSave -> {
                 if (isReport) {//分享
                     lifecycleScope.launch {
                         showLoadingDialog()
-                        PDFUtil.delAllPDF(this@ReportPreviewActivity)
-                        val pdfUri: Uri? = PDFUtil.savePDF(this@ReportPreviewActivity, houseReport)
+                        // Disabled - PDFUtil from removed house module
+                        // PDFUtil.delAllPDF(this@ReportPreviewActivity)
+                        // val pdfUri: Uri? = PDFUtil.savePDF(this@ReportPreviewActivity, houseReport)
                         dismissLoadingDialog()
-                        if (pdfUri != null) {
+                        // Disabled PDF functionality
+                        // if (pdfUri != null) {
                             val shareIntent = Intent()
                             shareIntent.action = Intent.ACTION_SEND
                             shareIntent.putExtra(Intent.EXTRA_STREAM, pdfUri)
@@ -214,7 +220,8 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                         lifecycleScope.launch(Dispatchers.Main) {
                             dismissLoadingDialog()
                             TToast.shortToast(this@ReportPreviewActivity, R.string.pdf_saved_tips)
-                            EventBus.getDefault().post(HouseReportAddEvent())
+                            // Disabled - HouseReportAddEvent from removed house module
+                            // EventBus.getDefault().post(HouseReportAddEvent())
                             finish()
                         }
                     }

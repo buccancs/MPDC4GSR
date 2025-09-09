@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.CollectionUtils
-import com.topdon.house.activity.ImagesDetailActivity
+// Removed house module import - module removed as unused
+// import com.topdon.house.activity.ImagesDetailActivity
 import com.topdon.lib.core.bean.HouseRepPreviewItemBean
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.module.thermal.ir.R
@@ -60,7 +61,8 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
                 val albumAdapter = ReportPreviewAlbumAdapter(cxt, data.albumItemBeans)
                 holder.rcyAlbum.adapter = albumAdapter
             albumAdapter.jumpListener = { _, position ->
-                var intent = Intent(cxt, ImagesDetailActivity::class.java)
+                // Disabled - ImagesDetailActivity from removed house module  
+                // var intent = Intent(cxt, ImagesDetailActivity::class.java)
                 var photos = ArrayList<String>()
                 data.albumItemBeans.forEach {
                     photos.add(it.photoPath)

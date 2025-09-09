@@ -53,9 +53,9 @@ android {
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += listOf(
-            "-Xopt-in=kotlin.RequiresOptIn",
-            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xopt-in=kotlinx.coroutines.FlowPreview"
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.FlowPreview"
         )
     }
     
@@ -76,30 +76,39 @@ android {
         }
     }
     
-    packagingOptions {
-        pickFirst("**/libc++_shared.so")
-        // Handle native library conflicts and stripping issues
-        excludes += listOf(
-            "**/libavcodec.so",    // Exclude FFmpeg libraries that can't be stripped
-            "**/libavdevice.so", 
-            "**/libavfilter.so",
-            "**/libavformat.so",
-            "**/libavutil.so",
-            "**/libjniavcodec.so",
-            "**/libjniavdevice.so",
-            "**/libjniavfilter.so", 
-            "**/libjniavformat.so",
-            "**/libjniavutil.so",
-            "**/libjniswresample.so",
-            "**/libjniswscale.so",
-            "**/libswresample.so",
-            "**/libswscale.so",
-            "META-INF/DEPENDENCIES",
-            "META-INF/LICENSE",
-            "META-INF/LICENSE.txt", 
-            "META-INF/NOTICE",
-            "META-INF/NOTICE.txt"
-        )
+    packaging {
+        jniLibs {
+            // Enhanced native library conflict resolution
+            pickFirsts += listOf("**/libc++_shared.so")
+            // Exclude FFmpeg and other libraries that cause stripping issues
+            excludes += listOf(
+                "**/libavcodec.so",     // FFmpeg libraries with stripping issues
+                "**/libavdevice.so", 
+                "**/libavfilter.so",
+                "**/libavformat.so",
+                "**/libavutil.so",
+                "**/libjniavcodec.so",
+                "**/libjniavdevice.so",
+                "**/libjniavfilter.so", 
+                "**/libjniavformat.so",
+                "**/libjniavutil.so",
+                "**/libjniswresample.so",
+                "**/libjniswscale.so",
+                "**/libswresample.so",
+                "**/libswscale.so"
+            )
+            // Keep debug symbols for remaining libraries
+            keepDebugSymbols += listOf("**/*.so")
+        }
+        resources {
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt", 
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
+        }
     }
 }
 

@@ -1,24 +1,23 @@
 package com.topdon.module.user.activity
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.module.user.databinding.ActivityUnitBinding
-import com.topdon.lib.core.view.TitleView
-import com.topdon.module.user.R
 
 /**
  * 温度单位切换
  */
-// Legacy ARouter route annotation - now using NavigationManager
-class UnitActivity : BaseBindingActivity<ActivityUnitBinding>() {
+class UnitActivity : AppCompatActivity() {
 
-    override fun initContentLayoutId() = R.layout.activity_unit
+    private lateinit var binding: ActivityUnitBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityUnitBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
         initView()
     }
 
@@ -40,10 +39,5 @@ class UnitActivity : BaseBindingActivity<ActivityUnitBinding>() {
             binding.ivFahrenheit.isVisible = true
         }
     }
-
-    override fun initData() {
-
-    }
-
 }
 

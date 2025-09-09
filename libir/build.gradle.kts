@@ -58,18 +58,29 @@ android {
         }
     }
     
-    packagingOptions {
-        pickFirst("**/libc++_shared.so")
-        pickFirst("**/libSRImage.so") 
-        // Handle corrupted native libraries by excluding them
-        excludes += listOf(
-            "**/libSRImage.so", // Exclude corrupted libSRImage.so - will be handled by app module
-            "META-INF/DEPENDENCIES",
-            "META-INF/LICENSE",
-            "META-INF/LICENSE.txt",
-            "META-INF/NOTICE",
-            "META-INF/NOTICE.txt"
-        )
+    packaging {
+        jniLibs {
+            // Enhanced native library conflict resolution
+            pickFirsts += listOf("**/libc++_shared.so")
+            // Exclude corrupted native libraries that can't be stripped
+            excludes += listOf(
+                "**/libSRImage.so",     // Corrupted ELF header - exclude to prevent stripping errors
+                "**/liblog.so",         // System library - handled by OS
+                "**/libopen3d.so",      // Third-party library with stripping issues
+                "**/libopencv_java4.so" // OpenCV library - large and causes stripping issues
+            )
+            // Keep debug symbols for remaining native libraries
+            keepDebugSymbols += listOf("**/*.so")
+        }
+        resources {
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
+        }
     }
 }
 

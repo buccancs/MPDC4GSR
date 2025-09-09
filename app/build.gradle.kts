@@ -94,9 +94,9 @@ android {
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += listOf(
-            "-Xopt-in=kotlin.RequiresOptIn",
-            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi", 
-            "-Xopt-in=kotlinx.coroutines.FlowPreview"
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi", 
+            "-opt-in=kotlinx.coroutines.FlowPreview"
         )
     }
 
@@ -162,7 +162,14 @@ android {
                 "lib/x86_64/libijkplayer.so",
                 "lib/x86_64/libijksdl.so"
             )
-            keepDebugSymbols += listOf("**/*.so")
+            // Enhanced native library stripping configuration
+            keepDebugSymbols += listOf(
+                "**/*.so"  // Keep all debug symbols to prevent stripping issues
+            )
+            // Exclude libraries that can't be stripped due to corrupt headers
+            excludes += listOf(
+                "**/libSRImage.so"  // Primary culprit for stripping errors
+            )
         }
     }
     
@@ -172,11 +179,8 @@ android {
         viewBinding = true
     }
     
-    // Handle D8 compilation issues
-    dexOptions {
-        preDexLibraries = false
-        javaMaxHeapSize = "4g"
-    }
+    // D8 compilation is automatically optimized by AGP 8.0+
+    // Removed obsolete dexOptions configuration
 }
 
 // Dependency resolution strategy to fix Guava conflicts and add ListenableFuture

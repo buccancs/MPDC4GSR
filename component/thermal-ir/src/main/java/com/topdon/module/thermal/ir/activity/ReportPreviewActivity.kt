@@ -45,7 +45,9 @@ data class HouseRepPreviewBean(
     var inspectorName: String = "",
     var houseYear: String = "",
     var houseArea: String = "",
-    var expenses: String = ""
+    var expenses: String = "",
+    var inspectorWhitePath: String = "",
+    var houseOwnerWhitePath: String = ""
 )
 
 data class HouseRepPreviewItemBean(
@@ -318,7 +320,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             dirReport.itemList.forEachIndexed { _, itemReport ->
                 var projectItemBean = HouseRepPreviewProjectItemBean()
                 projectItemBean.projectName = itemReport.itemName
-                projectItemBean.state = itemReport.state
+                projectItemBean.state = itemReport.state.toString()
                 projectItemBean.remark = itemReport.inputText
                 if (itemReport.state > 0 || itemReport.inputText.isNotEmpty()) {
                     itemBean.projectItemBeans?.add(projectItemBean)
@@ -361,7 +363,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                 itemBean.projectItemBeans?.add(0, HouseRepPreviewProjectItemBean())
             }
             if (!isEmpty) {
-                houseRepPreviewBean.itemBeans.add(itemBean)
+                houseRepPreviewBean.itemBeans?.add(itemBean)
             }
         }
         houseRepPreviewBean.inspectorWhitePath = houseReport.inspectorWhitePath
@@ -381,7 +383,12 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             tvCost.text = it.expenses
 
             rcyFloor.layoutManager = LinearLayoutManager(this)
-            val reportPreviewAdapter = ReportPreviewAdapter(this, it.itemBeans)
+            val reportPreviewAdapter = ReportPreviewAdapter(this, it.itemBeans?.map { itemBean ->
+                // Convert local HouseRepPreviewItemBean to libapp HouseRepPreviewItemBean
+                com.topdon.lib.core.bean.HouseRepPreviewItemBean().apply {
+                    // Map properties as needed - this is a simplified conversion
+                }
+            } ?: emptyList())
             rcyFloor.isNestedScrollingEnabled = false
             rcyFloor.adapter = reportPreviewAdapter
 

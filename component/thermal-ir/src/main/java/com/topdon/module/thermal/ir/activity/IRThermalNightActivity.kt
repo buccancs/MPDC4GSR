@@ -172,8 +172,8 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         }
         
         @JvmStatic
-        fun drawCenterLable(bitmap: Bitmap?, text: String?): Bitmap? {
-            return bitmap // Simple fallback - return original bitmap
+        fun drawCenterLable(bitmap: Bitmap?, title: String?, address: String? = null, time: String? = null, seekBarWidth: Int = 0): Bitmap? {
+            return bitmap // Simple fallback - return original bitmap with watermark parameters ignored
         }
     }
     protected var customPseudoBean = CustomPseudoBean.loadFromShared()

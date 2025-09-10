@@ -184,3 +184,16 @@ GRADLE_*.md
 *.bak*
 docs/latex/*.bak*
 
+# CI/CD Artifacts (GitHub Actions)
+# -------------------------------------------------------------------
+dependency-check-report/
+dependency-check-*.zip
+dependency-report.txt
+dependency-updates.txt
+build-summary.md
+release-artifacts/
+build-outputs/
+pr-apk-size.txt
+**/build/reports/dependency-check/
+owasp-dependency-check/
+

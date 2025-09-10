@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityResearchTemplateBinding
 import com.topdon.gsr.model.ResearchTemplate
-import com.topdon.lib.core.base.BaseBindingActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 /**
  * Research Template Selection Activity
@@ -31,7 +31,7 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
         }
     }
 
-    override fun getLayoutId() = R.layout.activity_research_template
+    override fun initContentLayoutId() = R.layout.activity_research_template
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,10 +132,10 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
 
     private fun updateSelectedTemplateView() {
         selectedTemplate?.let { template ->
-            selectedTemplateContainer.visibility = View.VISIBLE
+            binding.selectedTemplateContainer.visibility = View.VISIBLE
 
-            selectedTemplateTitle.text = "${template.icon ?: "📊"} ${template.name}"
-            selectedTemplateDescription.text = template.description
+            binding.selectedTemplateTitle.text = "${template.icon ?: "📊"} ${template.name}"
+            binding.selectedTemplateDescription.text = template.description
 
             // Format template details
             val details =

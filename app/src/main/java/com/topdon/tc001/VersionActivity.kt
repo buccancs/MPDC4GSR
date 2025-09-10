@@ -43,7 +43,7 @@ class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnCl
                 LMS.getInstance().activityEnv()
             }
         }
-        binding.clNewVersion.setOnClickListener {
+        binding.includeNewVersion.clNewVersion.setOnClickListener {
             if (!CheckDoubleClick.isFastDoubleClick()) {
                 checkAppVersion(true)
             }
@@ -91,11 +91,11 @@ class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnCl
                     this,
                     object : AppVersionUtil.DotIsShowListener {
                         override fun isShow(show: Boolean) {
-                            binding.clNewVersion.visibility = View.VISIBLE
+                            binding.includeNewVersion.clNewVersion.visibility = View.VISIBLE
                         }
 
                         override fun version(version: String) {
-                            binding.tvNewVersion.text = "$version"
+                            binding.includeNewVersion.tvNewVersion.text = "$version"
                         }
                     },
                 )

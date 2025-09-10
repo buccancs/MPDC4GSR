@@ -1,0 +1,174 @@
+#!/bin/bash
+
+# Unified Validation Script - Consolidates all validation functionality
+# Usage: ./validate.sh [quick|core|full] [--auto-fix]
+
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Configuration
+MODE="${1:-core}"
+AUTO_FIX="${2:-}"
+START_TIME=$(date +%s)
+
+print_header() {
+    echo -e "${BLUE}=================================================${NC}"
+    echo -e "${BLUE}🔍 IRCamera Unified Validation System${NC}"
+    echo -e "${BLUE}=================================================${NC}"
+    echo -e "Mode: ${YELLOW}$MODE${NC}"
+    echo -e "Auto-fix: ${YELLOW}${AUTO_FIX:-disabled}${NC}"
+    echo ""
+}
+
+print_status() {
+    echo -e "${GREEN}✅ $1${NC}"
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠️  $1${NC}"
+}
+
+print_error() {
+    echo -e "${RED}❌ $1${NC}"
+}
+
+validate_syntax() {
+    print_status "Validating syntax..."
+    local errors=0
+    
+    # Kotlin files
+    if command -v ktlint >/dev/null 2>&1; then
+        if ! ktlint --format 2>/dev/null; then
+            ((errors++))
+        fi
+    fi
+    
+    # Java files (basic syntax check)
+    find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
+        if ! javac -cp "$(find . -name "*.jar" | tr '\n' ':')" -d /tmp -Xlint:none "$file" 2>/dev/null; then
+            print_warning "Java syntax issue in $file"
+        fi
+    done
+    
+    # Python files
+    find . -name "*.py" | while read -r file; do
+        if ! python3 -m py_compile "$file" 2>/dev/null; then
+            print_warning "Python syntax issue in $file"
+        fi
+    done
+    
+    return $errors
+}
+
+validate_build() {
+    print_status "Validating build..."
+    case $MODE in
+        "quick")
+            ./gradlew assembleDebug --quiet || return 1
+            ;;
+        "core")
+            ./gradlew compileReleaseSources --quiet || return 1
+            ;;
+        "full")
+            ./gradlew build --quiet || return 1
+            ;;
+    esac
+}
+
+validate_tests() {
+    if [[ "$MODE" == "full" ]]; then
+        print_status "Running tests..."
+        ./gradlew test --quiet || return 1
+    fi
+}
+
+run_auto_fix() {
+    if [[ "$AUTO_FIX" == "--auto-fix" ]]; then
+        print_status "Running auto-fix..."
+        
+        # Format code
+        if command -v ktlint >/dev/null 2>&1; then
+            ktlint --format 2>/dev/null || true
+        fi
+        
+        # Format XML
+        find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
+            if command -v xmllint >/dev/null 2>&1; then
+                xmllint --format "$file" > "${file}.tmp" 2>/dev/null && mv "${file}.tmp" "$file" || rm -f "${file}.tmp"
+            fi
+        done
+        
+        # Remove Chinese text from strings.xml
+        find . -name "strings.xml" | while read -r file; do
+            if grep -q '[^\x00-\x7F]' "$file"; then
+                grep -v '[^\x00-\x7F]' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
+                print_status "Cleaned Chinese text from $file"
+            fi
+        done
+    fi
+}
+
+main() {
+    print_header
+    
+    local exit_code=0
+    
+    # Run validations based on mode
+    case $MODE in
+        "quick")
+            validate_syntax || exit_code=1
+            ;;
+        "core")
+            validate_syntax || exit_code=1
+            validate_build || exit_code=1
+            ;;
+        "full")
+            validate_syntax || exit_code=1
+            validate_build || exit_code=1
+            validate_tests || exit_code=1
+            ;;
+        *)
+            print_error "Invalid mode: $MODE. Use: quick|core|full"
+            exit 1
+            ;;
+    esac
+    
+    # Auto-fix if requested
+    run_auto_fix
+    
+    # Summary
+    local end_time=$(date +%s)
+    local duration=$((end_time - START_TIME))
+    
+    echo ""
+    if [[ $exit_code -eq 0 ]]; then
+        print_status "Validation completed successfully in ${duration}s"
+    else
+        print_error "Validation failed in ${duration}s"
+    fi
+    
+    exit $exit_code
+}
+
+# Show help
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    echo "Usage: $0 [MODE] [--auto-fix]"
+    echo ""
+    echo "Modes:"
+    echo "  quick  - Syntax validation only (~15s)"
+    echo "  core   - Syntax + build validation (~60s)" 
+    echo "  full   - Syntax + build + tests (~300s)"
+    echo ""
+    echo "Options:"
+    echo "  --auto-fix  - Automatically fix formatting issues"
+    echo ""
+    exit 0
+fi
+
+main "$@"

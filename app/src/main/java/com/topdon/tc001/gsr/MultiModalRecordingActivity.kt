@@ -97,6 +97,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     // UI update timer
     private var uiUpdateJob: kotlinx.coroutines.Job? = null
 
+    override fun initContentLayoutId() = R.layout.activity_multi_modal_recording
+
     // Service connection for enhanced recording service
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {

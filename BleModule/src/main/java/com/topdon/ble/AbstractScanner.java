@@ -92,6 +92,19 @@ abstract class AbstractScanner implements Scanner {
         }
     }
 
+    //检查是否有蓝牙权限
+    private boolean noBluetoothPermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // API 31+ 需要新的蓝牙权限
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ||
+                   ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED;
+        } else {
+            // API 30及以下使用旧的蓝牙权限
+            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
+                   ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED;
+        }
+    }
+
     //处理搜索回调
     void handleScanCallback(final boolean start, final Device device, final boolean isConnectedBySys,
                             final int errorCode, final String errorMsg) {
@@ -216,6 +229,11 @@ abstract class AbstractScanner implements Scanner {
                     return;
                 } else if (noLocationPermission(context)) {
                     String errorMsg = "Unable to scan for Bluetooth devices, lack location permission.";
+                    handleScanCallback(false, null, false, ScanListener.ERROR_LACK_LOCATION_PERMISSION, errorMsg);
+                    logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, errorMsg);
+                    return;
+                } else if (noBluetoothPermission(context)) {
+                    String errorMsg = "Unable to scan for Bluetooth devices, lack Bluetooth permission.";
                     handleScanCallback(false, null, false, ScanListener.ERROR_LACK_LOCATION_PERMISSION, errorMsg);
                     logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, errorMsg);
                     return;

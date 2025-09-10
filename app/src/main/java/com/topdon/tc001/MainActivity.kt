@@ -608,17 +608,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             2 -> {
                 if (DeviceTools.isTC001PlusConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    startActivityForResult(Intent(this@MainActivity, IRThermalPlusActivity::class.java), 101)
+                    // Fixed: Replaced deprecated startActivityForResult with startActivity as no result processing is needed
+                    startActivity(Intent(this@MainActivity, IRThermalPlusActivity::class.java))
                 } else if (DeviceTools.isTC001LiteConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    startActivityForResult(Intent(this@MainActivity, IRThermalLiteActivity::class.java), 101)
+                    startActivity(Intent(this@MainActivity, IRThermalLiteActivity::class.java))
                 } else if (DeviceTools.isHikConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     // Note: Using IRThermalNightActivity as fallback for HIK thermal devices
-                    startActivityForResult(Intent(this@MainActivity, IRThermalNightActivity::class.java), 101)
+                    startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
                 } else {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    startActivityForResult(Intent(this@MainActivity, IRThermalNightActivity::class.java), 101)
+                    startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
                 }
             }
         }

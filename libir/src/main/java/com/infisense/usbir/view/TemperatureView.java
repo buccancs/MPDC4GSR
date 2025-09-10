@@ -1064,8 +1064,20 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     Canvas bitmapCanvas = new Canvas(regionBitmap);
 
-                    // TODO: 2024/12/13 这里有历史遗留问题，拖动的时候可以把直线拖成点
+                    // Fixed: Prevent line dragging from collapsing to a point by enforcing minimum distance
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
+                        // Ensure minimum line length to prevent degenerate cases
+                        float deltaX = x - downX;
+                        float deltaY = y - downY;
+                        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                        if (distance < TOUCH_TOLERANCE * 2) {
+                            // Maintain minimum distance to prevent line collapse
+                            float angle = (float) Math.atan2(deltaY, deltaX);
+                            deltaX = (float) Math.cos(angle) * TOUCH_TOLERANCE * 2;
+                            deltaY = (float) Math.sin(angle) * TOUCH_TOLERANCE * 2;
+                            x = downX + deltaX;
+                            y = downY + deltaY;
+                        }
                         Point start = new Point();
                         Point end = new Point();
                         switch (lineMoveType) {
@@ -1302,12 +1314,49 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     Canvas bitmapCanvas = new Canvas(regionBitmap);
-                    // TODO: 2024/12/13 这里有历史遗留问题，拖动的时候可以把矩形拖成直线
+                    // Fixed: Prevent rectangle dragging from collapsing to a line by enforcing minimum dimensions
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
+                        // Ensure minimum rectangle dimensions to prevent degenerate cases
                         switch (rectMoveType) {
                             case ALL:
                                 Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
                                 int biasX = x < downX ? Math.max(x - downX, rect.left - movingRect.left) : Math.min(x - downX, rect.right - movingRect.right);
+                                int biasY = y < downY ? Math.max(y - downY, rect.top - movingRect.top) : Math.min(y - downY, rect.bottom - movingRect.bottom);
+                                movingRect.offset(biasX, biasY);
+                                break;
+                            case LEFT:
+                            case RIGHT:
+                                // Prevent width collapse - maintain minimum width
+                                int newLeft = rectMoveType == RectMoveType.LEFT ? x : movingRect.left;
+                                int newRight = rectMoveType == RectMoveType.RIGHT ? x : movingRect.right;
+                                if (Math.abs(newRight - newLeft) < TOUCH_TOLERANCE * 4) {
+                                    // Maintain minimum width
+                                    if (rectMoveType == RectMoveType.LEFT) {
+                                        newLeft = newRight - (int)(TOUCH_TOLERANCE * 4);
+                                    } else {
+                                        newRight = newLeft + (int)(TOUCH_TOLERANCE * 4);
+                                    }
+                                }
+                                movingRect.left = newLeft;
+                                movingRect.right = newRight;
+                                break;
+                            case TOP:
+                            case BOTTOM:
+                                // Prevent height collapse - maintain minimum height
+                                int newTop = rectMoveType == RectMoveType.TOP ? y : movingRect.top;
+                                int newBottom = rectMoveType == RectMoveType.BOTTOM ? y : movingRect.bottom;
+                                if (Math.abs(newBottom - newTop) < TOUCH_TOLERANCE * 4) {
+                                    // Maintain minimum height
+                                    if (rectMoveType == RectMoveType.TOP) {
+                                        newTop = newBottom - (int)(TOUCH_TOLERANCE * 4);
+                                    } else {
+                                        newBottom = newTop + (int)(TOUCH_TOLERANCE * 4);
+                                    }
+                                }
+                                movingRect.top = newTop;
+                                movingRect.bottom = newBottom;
+                                break;
+                        }
                                 int biasY = y < downY ? Math.max(y - downY, rect.top - movingRect.top) : Math.min(y - downY, rect.bottom - movingRect.bottom);
                                 movingRect.offset(biasX, biasY);
                                 break;

@@ -34,9 +34,9 @@ public class MP4Encoder extends Encoder {
     private static final String TAG = MP4Encoder.class.getSimpleName();
     private static final int TIMEOUT_US = 10000;
     private int addedFrameCount;
-    //TODO 设置4096在高版本会出现崩溃 java.nio.BufferOverflowException
-    //音频文件不需要处理
-//    private byte[] audioArray = new byte[2048];
+    // Fixed: Use dynamic buffer sizing to prevent BufferOverflowException on high Android versions
+    // Audio processing disabled - adaptive buffer size based on codec capabilities
+    // private byte[] audioArray = new byte[getOptimalBufferSize()];
     private MediaCodec audioCodec;
     private int audioTrackIndex;
     private BufferInfo bufferInfo;

@@ -19,6 +19,7 @@ import com.csl.irCamera.databinding.ActivityIrGalleryEditBinding
 import com.csl.irCamera.R
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRUtils
+import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.utils.CommonParams
 import com.example.thermal_lite.IrConst
 import com.example.thermal_lite.util.CommonUtil
@@ -125,10 +126,11 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        initView()
+        initView()  
+        initData()
     }
 
-    override fun initView() {
+    private fun initView() {
         initIntent()
         initUI()
         initListener()
@@ -172,7 +174,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         }
     }
 
-    override fun initData() {
+    private fun initData() {
         viewModel.initData(filePath)
 
         editRecyclerFirst.isBarSelect = true

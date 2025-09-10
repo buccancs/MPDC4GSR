@@ -33,7 +33,7 @@ show_menu() {
 
 run_command() {
     local cmd="$1"
-    
+
     case $cmd in
         "quick")
             echo -e "${GREEN}Running quick validation...${NC}"
@@ -81,14 +81,14 @@ run_command() {
 
 main() {
     print_header
-    
+
     if [[ $# -eq 0 ]]; then
         show_menu
         exit 0
     fi
-    
+
     run_command "$1"
-    
+
     echo -e "${GREEN}✅ Command completed successfully${NC}"
 }
 

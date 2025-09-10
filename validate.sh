@@ -41,28 +41,28 @@ print_error() {
 validate_syntax() {
     print_status "Validating syntax..."
     local errors=0
-    
+
     # Kotlin files
     if command -v ktlint >/dev/null 2>&1; then
         if ! ktlint --format 2>/dev/null; then
             ((errors++))
         fi
     fi
-    
+
     # Java files (basic syntax check)
     find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
         if ! javac -cp "$(find . -name "*.jar" | tr '\n' ':')" -d /tmp -Xlint:none "$file" 2>/dev/null; then
             print_warning "Java syntax issue in $file"
         fi
     done
-    
+
     # Python files
     find . -name "*.py" | while read -r file; do
         if ! python3 -m py_compile "$file" 2>/dev/null; then
             print_warning "Python syntax issue in $file"
         fi
     done
-    
+
     return $errors
 }
 
@@ -91,19 +91,23 @@ validate_tests() {
 run_auto_fix() {
     if [[ "$AUTO_FIX" == "--auto-fix" ]]; then
         print_status "Running auto-fix..."
-        
+
         # Format code
         if command -v ktlint >/dev/null 2>&1; then
             ktlint --format 2>/dev/null || true
         fi
-        
+
         # Format XML
         find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
             if command -v xmllint >/dev/null 2>&1; then
-                xmllint --format "$file" > "${file}.tmp" 2>/dev/null && mv "${file}.tmp" "$file" || rm -f "${file}.tmp"
+                if xmllint --format "$file" > "${file}.tmp" 2>/dev/null; then
+                    mv "${file}.tmp" "$file"
+                else
+                    rm -f "${file}.tmp"
+                fi
             fi
         done
-        
+
         # Remove Chinese text from strings.xml
         find . -name "strings.xml" | while read -r file; do
             if grep -q '[^\x00-\x7F]' "$file"; then
@@ -116,9 +120,9 @@ run_auto_fix() {
 
 main() {
     print_header
-    
+
     local exit_code=0
-    
+
     # Run validations based on mode
     case $MODE in
         "quick")
@@ -138,21 +142,22 @@ main() {
             exit 1
             ;;
     esac
-    
+
     # Auto-fix if requested
     run_auto_fix
-    
+
     # Summary
-    local end_time=$(date +%s)
+    local end_time
+    end_time=$(date +%s)
     local duration=$((end_time - START_TIME))
-    
+
     echo ""
     if [[ $exit_code -eq 0 ]]; then
         print_status "Validation completed successfully in ${duration}s"
     else
         print_error "Validation failed in ${duration}s"
     fi
-    
+
     exit $exit_code
 }
 
@@ -162,7 +167,7 @@ if [[ "$1" == "--help" || "$1" == "-h" ]]; then
     echo ""
     echo "Modes:"
     echo "  quick  - Syntax validation only (~15s)"
-    echo "  core   - Syntax + build validation (~60s)" 
+    echo "  core   - Syntax + build validation (~60s)"
     echo "  full   - Syntax + build + tests (~300s)"
     echo ""
     echo "Options:"

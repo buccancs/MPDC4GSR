@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -11,6 +10,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.topdon.ble.util.BluetoothPermissionUtils;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author IRCamera Integration Team
  */
-@SuppressLint("MissingPermission")
 public class NordicConnectionImpl implements Connection {
     private static final String TAG = "NordicConnectionImpl";
     

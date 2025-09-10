@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -12,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.topdon.ble.callback.MtuChangeCallback;
 import com.topdon.ble.callback.NotificationChangeCallback;
 import com.topdon.ble.callback.ReadCharacteristicCallback;
+import com.topdon.ble.util.BluetoothPermissionUtils;
 import com.topdon.commons.UUIDManager;
 import com.topdon.commons.observer.Observable;
 import com.topdon.commons.observer.Observe;
@@ -35,7 +35,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author chuanfeng.bi
  * @date 2021/11/19 11:10
  */
-@SuppressLint("MissingPermission")
 public class BluetoothManager implements EventObserver {
     public static boolean iSReset = false;//是否复位
     public static boolean isSending = false;//是否正在发送蓝牙数据

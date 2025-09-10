@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -19,6 +18,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.topdon.ble.util.BluetoothPermissionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +56,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author IRCamera Topdon Integration Team
  */
-@SuppressLint("MissingPermission")
 public class TopdonBleController {
     private static final String TAG = "TopdonBleController";
     

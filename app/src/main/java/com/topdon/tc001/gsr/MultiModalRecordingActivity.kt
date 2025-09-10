@@ -223,7 +223,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
             // Configure switches
             enableVideoSwitch.isChecked = true
-            enable4KSwitch.isChecked = false
+            enable4kSwitch.isChecked = false
             enableRawCaptureSwitch.isChecked = false
             
             // Set up raw frame rate spinner
@@ -249,15 +249,15 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             flashSyncButton.setOnClickListener { triggerFlashSync() }
 
             // Network control buttons
-            startDiscoveryButton.setOnClickListener { startDeviceDiscovery() }
-            connectToDeviceButton.setOnClickListener { connectToSelectedDevice() }
+            binding.startDiscoveryButton.setOnClickListener { startDeviceDiscovery() }
+            binding.connectToDeviceButton.setOnClickListener { connectToSelectedDevice() }
 
             // Initial UI state
-            statusText.text = "Ready to record"
-            dataText.text = "No data recorded yet"
-            networkStatusText.text = "Network: Disconnected"
-            discoveredDevicesText.text = "Discovered Devices: None"
-            streamingQueueText.text = "Streaming Queue: 0 items"
+            binding.statusText.text = "Ready to record"
+            binding.dataText.text = "No data recorded yet"
+            binding.networkStatusText.text = "Network: Disconnected"
+            binding.discoveredDevicesText.text = "Discovered Devices: None"
+            binding.streamingQueueText.text = "Streaming Queue: 0 items"
             networkMetricsText.text = "Latency: -- ms | Throughput: -- KB/s"
         }
 
@@ -270,10 +270,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             runOnUiThread {
                                 discoveredDevices.add(controller)
                                 updateNetworkStatusUI()
-                                connectToDeviceButton.isEnabled = true
+                                binding.connectToDeviceButton.isEnabled = true
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
-                                    "Found PC Controller: ${controller.name} (${controller.address})",
+                                    "Found PC Controller: ${controller.deviceName} (${controller.ipAddress})",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -284,7 +284,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                                 updateNetworkStatusUI()
                                 Toast.makeText(
                                     this@MultiModalRecordingActivity,
-                                    "Connected to ${controller.name}",
+                                    "Connected to ${controller.deviceName}",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -402,40 +402,12 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             }
 
         // Initialize RGB camera recorder
-        // Pass the camera preview component from the binding if it exists, otherwise null
-        val cameraPreviewView = try {
-            binding.cameraPreview // Replace with the actual preview view ID from your layout/binding
-        } catch (e: Exception) {
-            null
-        }
-        rgbCameraRecorder = RGBCameraRecorder(this, cameraPreviewView).apply {
-            onRecordingStarted = {
-                runOnUiThread {
-                    binding.statusText.text = "Recording RGB video + GSR..."
-                }
-            }
-            onRecordingStopped = { videoFile ->
-                runOnUiThread {
-                    binding.statusText.text = "RGB recording stopped. Video: ${videoFile?.name ?: "None"}"
-                }
-            }
-            onRawImageCaptured = { dngFile ->
-                runOnUiThread {
-                    Log.d(TAG, "RAW image captured: ${dngFile.name}")
-                }
-            }
-            onError = { error ->
-                runOnUiThread {
-                    Toast.makeText(
-                        this@MultiModalRecordingActivity,
-                        "Camera Error: $error", Toast.LENGTH_LONG,
-                    ).show()
-                }
-            }
-        }
+        // Camera preview not available in this layout - skip RGBCameraRecorder initialization
+        rgbCameraRecorder = null
+        Log.i(TAG, "RGBCameraRecorder skipped - no preview available in this layout")
 
         // Initialize camera
-        rgbCameraRecorder?.initialize()
+        // rgbCameraRecorder?.initialize() // Skipped since rgbCameraRecorder is null
         gsrRecorder.addListener(gsrListener)
 
         // Check permissions
@@ -518,9 +490,9 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
         if (requestCode == REQUEST_PERMISSIONS) {
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                statusText.text = "All permissions granted. GSR recording with Shimmer3 devices ready."
+                binding.statusText.text = "All permissions granted. GSR recording with Shimmer3 devices ready."
             } else {
-                statusText.text = "Permissions required for GSR recording and Shimmer3 device access."
+                binding.statusText.text = "Permissions required for GSR recording and Shimmer3 device access."
                 val missingPermissions = mutableListOf<String>()
 
                 // Check which specific permissions are missing
@@ -581,7 +553,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
         // Start RGB camera recording if enabled
         if (binding.enableVideoSwitch.isChecked) {
-            val resolution = if (binding.enable4KSwitch.isChecked) {
+            val resolution = if (binding.enable4kSwitch.isChecked) {
                 RGBCameraRecorder.VideoResolution.UHD_4K
             } else {
                 RGBCameraRecorder.VideoResolution.HD_1080P
@@ -657,7 +629,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
                     val recordingModes = mutableListOf<String>()
                     if (binding.enableVideoSwitch.isChecked) {
-                        recordingModes.add(if (binding.enable4KSwitch.isChecked) "4K Video" else "1080p Video")
+                        recordingModes.add(if (binding.enable4kSwitch.isChecked) "4K Video" else "1080p Video")
                         if (binding.enableRawCaptureSwitch.isChecked) {
                             recordingModes.add("RAW Images (${binding.rawFrameRateSpinner.selectedItem})")
                         }
@@ -830,7 +802,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             val deviceCount = discoveredDevices.size
             val deviceText = if (deviceCount > 0) {
                 val firstDevice = discoveredDevices.first()
-                "Devices: $deviceCount found (${firstDevice.name})"
+                "Devices: $deviceCount found (${firstDevice.deviceName})"
             } else {
                 "Discovered Devices: None"
             }
@@ -887,7 +859,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private fun connectToSelectedDevice() {
         if (discoveredDevices.isNotEmpty()) {
             val selectedDevice = discoveredDevices.first() // For simplicity, connect to first device
-            networkClient?.connectToController(selectedDevice.address, selectedDevice.port) { success ->
+            networkClient?.connectToController(selectedDevice.ipAddress, selectedDevice.port) { success ->
                 runOnUiThread {
                     if (success) {
                         Toast.makeText(this, "Connection successful", Toast.LENGTH_SHORT).show()

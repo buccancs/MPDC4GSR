@@ -15,73 +15,73 @@ import com.topdon.module.thermal.ir.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 
 /**
- * 选取区域监听
- */
+    * 选取区域监听
+    */
 class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityIrMonitorBinding
     private var selectIndex: SelectPositionBean? = null//选取点
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityIrMonitorBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        initView()
+    super.onCreate(savedInstanceState)
+    binding = ActivityIrMonitorBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+    initView()
     }
 
     private fun initView() {
-        binding.motionBtn.setOnClickListener(this)
-        binding.motionStartBtn.setOnClickListener(this)
+    binding.motionBtn.setOnClickListener(this)
+    binding.motionStartBtn.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            binding.motionBtn -> {
-                MonitorSelectDialog.Builder(this)
-                    .setPositiveListener {
-                        updateUI()
-                        when (it) {
-                            1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
-                            2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
-                            else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
-                        }
-                    }
-                    .create().show()
-            }
-            binding.motionStartBtn -> {
-                if (selectIndex == null) {
-                    MonitorSelectDialog.Builder(this)
-                        .setPositiveListener {
-                            updateUI()
-                            when (it) {
-                                1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
-                                2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
-                                else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
-                            }
-                        }
-                        .create().show()
-                    return
-                }
-                //开始温度监听
-                NavigationManager.getInstance().build(RouterConfig.IR_MONITOR_CHART)
-                    .withParcelable("select", selectIndex as android.os.Parcelable)
-                    .navigation(this)
-                finish()
-            }
-        }
+    when (v) {
+    binding.motionBtn -> {
+    MonitorSelectDialog.Builder(this)
+    .setPositiveListener {
+    updateUI()
+    when (it) {
+    1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
+    2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
+    else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
+    }
+    }
+    .create().show()
+    }
+    binding.motionStartBtn -> {
+    if (selectIndex == null) {
+    MonitorSelectDialog.Builder(this)
+    .setPositiveListener {
+    updateUI()
+    when (it) {
+    1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
+    2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
+    else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
+    }
+    }
+    .create().show()
+    return
+    }
+    //开始温度监听
+    NavigationManager.getInstance().build(RouterConfig.IR_MONITOR_CHART)
+    .withParcelable("select", selectIndex as android.os.Parcelable)
+    .navigation(this)
+    finish()
+    }
+    }
     }
 
     fun select(selectIndex: SelectPositionBean?) {
-        this.selectIndex = selectIndex
+    this.selectIndex = selectIndex
     }
 
     private fun updateUI() {
-        binding.motionStartBtn.visibility = View.VISIBLE
-        binding.motionBtn.visibility = View.GONE
+    binding.motionStartBtn.visibility = View.VISIBLE
+    binding.motionBtn.visibility = View.GONE
     }
 
     private fun disConnected() {
-        finish()
+    finish()
     }
 
 

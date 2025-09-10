@@ -11,10 +11,10 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.infisense.usbir.R
 
 /**
- * 卡尺图片
- * @author: CaiSongL
- * @date: 2023/10/25 13:31
- */
+    * 卡尺图片
+    * @author: CaiSongL
+    * @date: 2023/10/25 13:31
+    */
 class CaliperImageView : AppCompatImageView {
 
     private var showBitmapWidth: Float = 0f
@@ -37,60 +37,60 @@ class CaliperImageView : AppCompatImageView {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        initView()
+    initView()
     }
 
 
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
+    context,
+    attrs,
+    defStyleAttr
     )
     private fun initView() {
-        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
-        originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
-        originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
-        visibility = View.GONE
+    originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
+    originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
+    originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
+    visibility = View.GONE
     }
     fun setImageSize(imageWidth: Int, imageHeight: Int, parentViewWidth: Int, parentViewHeight: Int) {
-        this.imageWidth = imageWidth
-        this.imageHeight = imageHeight
-        if (parentViewWidth > 0){
-            this.parentViewWidth = parentViewWidth.toFloat()
-        }else{
-            this.parentViewWidth = (parent as ViewGroup).measuredWidth.toFloat()
-        }
-        if (parentViewHeight > 0){
-            this.parentViewHeight = parentViewHeight.toFloat()
-        }else{
-            this.parentViewHeight = (parent as ViewGroup).measuredHeight.toFloat()
-        }
-        if (parentViewWidth > 0) {
-            xscale = parentViewWidth.toFloat() / imageWidth.toFloat()
-        }
-        if (parentViewHeight > 0) {
-            yscale = parentViewHeight.toFloat() / imageHeight.toFloat()
-        }
-        showBitmapHeight = pxBitmapHeight * yscale
-        showBitmapWidth = pxBitmapHeight * originalBitmapWidth / originalBitmapHeight * xscale
-        visibility = View.VISIBLE
-        val layoutParams =  this.layoutParams
-        layoutParams.width  = showBitmapWidth.toInt()
-        layoutParams.height = showBitmapHeight.toInt()
-        this.layoutParams = layoutParams
-        if (l== 0 && t == 0 && r == 0 && b == 0){
-            l = (parentViewWidth/2 - showBitmapWidth / 2).toInt()
-            r = (parentViewWidth/2 + showBitmapWidth / 2).toInt()
-            t = (parentViewHeight/2 - showBitmapHeight / 2).toInt()
-            b = (parentViewHeight/2 + showBitmapHeight / 2).toInt()
-        }
-        layout(l, t, r, b)
-        requestLayout()
+    this.imageWidth = imageWidth
+    this.imageHeight = imageHeight
+    if (parentViewWidth > 0){
+    this.parentViewWidth = parentViewWidth.toFloat()
+    }else{
+    this.parentViewWidth = (parent as ViewGroup).measuredWidth.toFloat()
+    }
+    if (parentViewHeight > 0){
+    this.parentViewHeight = parentViewHeight.toFloat()
+    }else{
+    this.parentViewHeight = (parent as ViewGroup).measuredHeight.toFloat()
+    }
+    if (parentViewWidth > 0) {
+    xscale = parentViewWidth.toFloat() / imageWidth.toFloat()
+    }
+    if (parentViewHeight > 0) {
+    yscale = parentViewHeight.toFloat() / imageHeight.toFloat()
+    }
+    showBitmapHeight = pxBitmapHeight * yscale
+    showBitmapWidth = pxBitmapHeight * originalBitmapWidth / originalBitmapHeight * xscale
+    visibility = View.VISIBLE
+    val layoutParams =  this.layoutParams
+    layoutParams.width  = showBitmapWidth.toInt()
+    layoutParams.height = showBitmapHeight.toInt()
+    this.layoutParams = layoutParams
+    if (l== 0 && t == 0 && r == 0 && b == 0){
+    l = (parentViewWidth/2 - showBitmapWidth / 2).toInt()
+    r = (parentViewWidth/2 + showBitmapWidth / 2).toInt()
+    t = (parentViewHeight/2 - showBitmapHeight / 2).toInt()
+    b = (parentViewHeight/2 + showBitmapHeight / 2).toInt()
+    }
+    layout(l, t, r, b)
+    requestLayout()
     }
 
     override fun layout(l: Int, t: Int, r: Int, b: Int) {
-        super.layout(l, t, r, b)
+    super.layout(l, t, r, b)
     }
 
     private var downX = 0f
@@ -99,30 +99,30 @@ class CaliperImageView : AppCompatImageView {
     private val downTime: Long = 0
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        super.onTouchEvent(event)
-        if (this.isEnabled) {
-            when (event.getAction()) {
-                MotionEvent.ACTION_DOWN -> {
-                    downX = event.getX()
-                    downY = event.getY()
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    val xDistance: Float = event.getX() - downX
-                    val yDistance: Float = event.getY() - downY
-                    if (xDistance != 0f && yDistance != 0f) {
-                        l = (left + xDistance).toInt()
-                        r = (right + xDistance).toInt()
-                        t = (top + yDistance).toInt()
-                        b = (bottom + yDistance).toInt()
-                        layout(l, t, r, b)
-                    }
-                }
-                MotionEvent.ACTION_UP -> isPressed = false
-                MotionEvent.ACTION_CANCEL -> isPressed = false
-                else -> {}
-            }
-            return true
-        }
-        return false
+    super.onTouchEvent(event)
+    if (this.isEnabled) {
+    when (event.getAction()) {
+    MotionEvent.ACTION_DOWN -> {
+    downX = event.getX()
+    downY = event.getY()
+    }
+    MotionEvent.ACTION_MOVE -> {
+    val xDistance: Float = event.getX() - downX
+    val yDistance: Float = event.getY() - downY
+    if (xDistance != 0f && yDistance != 0f) {
+    l = (left + xDistance).toInt()
+    r = (right + xDistance).toInt()
+    t = (top + yDistance).toInt()
+    b = (bottom + yDistance).toInt()
+    layout(l, t, r, b)
+    }
+    }
+    MotionEvent.ACTION_UP -> isPressed = false
+    MotionEvent.ACTION_CANCEL -> isPressed = false
+    else -> {}
+    }
+    return true
+    }
+    return false
     }
 }

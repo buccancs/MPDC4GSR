@@ -18,20 +18,20 @@ class GalleryFragment : Fragment() {
     private var path = ""
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_gallery, container)
+    return inflater.inflate(R.layout.fragment_gallery, container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        path = requireArguments().getString("path")!!
-        
-        // Initialize view with findViewById
-        val fragmentGalleryImg: ImageView = view.findViewById(R.id.fragment_gallery_img)
-        Glide.with(this).load(path).into(fragmentGalleryImg)
+    super.onViewCreated(view, savedInstanceState)
+    path = requireArguments().getString("path")!!
+
+    // Initialize view with findViewById
+    val fragmentGalleryImg: ImageView = view.findViewById(R.id.fragment_gallery_img)
+    Glide.with(this).load(path).into(fragmentGalleryImg)
     }
 
 }

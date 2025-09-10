@@ -17,49 +17,49 @@ class ColorSelectAdapter(val context: Context) : RecyclerView.Adapter<ColorSelec
     private var selected = -1
 
     fun selected(index: Int) {
-        selected = index
-        notifyDataSetChanged()
+    selected = index
+    notifyDataSetChanged()
     }
 
     private val colorBean =
-        arrayListOf(
-            ColorSelectBean(UiR.color.color_select1, "#FF000000", 1),
-            ColorSelectBean(UiR.color.color_select2, "#FFFFFFFF", 2),
-            ColorSelectBean(UiR.color.color_select3, "#FF2B79D8", 3),
-            ColorSelectBean(UiR.color.color_select4, "#FFFF0000", 4),
-            ColorSelectBean(UiR.color.color_select5, "#FF0FA752", 5),
-            ColorSelectBean(UiR.color.color_select6, "#FF808080", 6),
-        )
+    arrayListOf(
+    ColorSelectBean(UiR.color.color_select1, "#FF000000", 1),
+    ColorSelectBean(UiR.color.color_select2, "#FFFFFFFF", 2),
+    ColorSelectBean(UiR.color.color_select3, "#FF2B79D8", 3),
+    ColorSelectBean(UiR.color.color_select4, "#FFFF0000", 4),
+    ColorSelectBean(UiR.color.color_select5, "#FF0FA752", 5),
+    ColorSelectBean(UiR.color.color_select6, "#FF808080", 6),
+    )
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
+    parent: ViewGroup,
+    viewType: Int,
     ): ItemView {
-        val binding = UiItemColorSelectBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return ItemView(binding)
+    val binding = UiItemColorSelectBinding.inflate(
+    LayoutInflater.from(parent.context),
+    parent,
+    false
+    )
+    return ItemView(binding)
     }
 
     override fun onBindViewHolder(
-        holder: ItemView,
-        position: Int,
+    holder: ItemView,
+    position: Int,
     ) {
-        with(holder.binding) {
-            itemColorImg.setImageResource(colorBean[position].colorRes)
-            itemColorLay.setOnClickListener {
-                listener?.invoke(position, Color.parseColor(colorBean[position].color))
-                selected(position)
-            }
-            itemColorImg.isSelected = position == selected
-            itemColorCheck.visibility = if (position == selected) View.VISIBLE else View.GONE
-        }
+    with(holder.binding) {
+    itemColorImg.setImageResource(colorBean[position].colorRes)
+    itemColorLay.setOnClickListener {
+    listener?.invoke(position, Color.parseColor(colorBean[position].color))
+    selected(position)
+    }
+    itemColorImg.isSelected = position == selected
+    itemColorCheck.visibility = if (position == selected) View.VISIBLE else View.GONE
+    }
     }
 
     override fun getItemCount(): Int {
-        return colorBean.size
+    return colorBean.size
     }
 
     inner class ItemView(val binding: UiItemColorSelectBinding) : RecyclerView.ViewHolder(binding.root)

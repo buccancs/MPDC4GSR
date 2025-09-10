@@ -11,7 +11,7 @@ package com.topdon.ble;
 public interface BondController {
     /**
      * 配对控制
-     * 
+     *
      * @param device 设备
      */
     boolean accept(Device device);

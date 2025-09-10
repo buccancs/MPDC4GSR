@@ -19,23 +19,23 @@ import com.topdon.lib.core.base.BaseBindingActivity
 import java.io.File
 
 /**
- * GSR RAW Image View Activity
- * Viewer for captured RAW DNG images with metadata display
- */
+    * GSR RAW Image View Activity
+    * Viewer for captured RAW DNG images with metadata display
+    */
 class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBinding>() {
     companion object {
-        private const val EXTRA_IMAGE_PATH = "image_path"
+    private const val EXTRA_IMAGE_PATH = "image_path"
 
-        fun startActivity(
-            context: Context,
-            imagePath: String,
-        ) {
-            val intent =
-                Intent(context, GSRRawImageViewActivity::class.java).apply {
-                    putExtra(EXTRA_IMAGE_PATH, imagePath)
-                }
-            context.startActivity(intent)
-        }
+    fun startActivity(
+    context: Context,
+    imagePath: String,
+    ) {
+    val intent =
+    Intent(context, GSRRawImageViewActivity::class.java).apply {
+    putExtra(EXTRA_IMAGE_PATH, imagePath)
+    }
+    context.startActivity(intent)
+    }
     }
 
     private lateinit var imagePath: String
@@ -44,294 +44,294 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
     override fun getLayoutId() = R.layout.activity_gsr_raw_image_view
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    super.onCreate(savedInstanceState)
 
-        imagePath = intent.getStringExtra(EXTRA_IMAGE_PATH) ?: ""
-        imageFile = File(imagePath)
+    imagePath = intent.getStringExtra(EXTRA_IMAGE_PATH) ?: ""
+    imageFile = File(imagePath)
 
-        if (!imageFile.exists()) {
-            finish()
-            return
-        }
+    if (!imageFile.exists()) {
+    finish()
+    return
+    }
 
-        setupUI()
-        loadImage()
-        displayMetadata()
+    setupUI()
+    loadImage()
+    displayMetadata()
     }
 
     private fun setupUI() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = imageFile.name
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.title = imageFile.name
     }
 
     private fun loadImage() {
-        try {
-            // For DNG files, we'll try to load a basic preview
-            // Note: Full DNG processing requires specialized libraries like Adobe DNG SDK
-            val options =
-                BitmapFactory.Options().apply {
-                    inJustDecodeBounds = true
-                }
-            BitmapFactory.decodeFile(imagePath, options)
+    try {
+    // For DNG files, we'll try to load a basic preview
+    // Note: Full DNG processing requires specialized libraries like Adobe DNG SDK
+    val options =
+    BitmapFactory.Options().apply {
+    inJustDecodeBounds = true
+    }
+    BitmapFactory.decodeFile(imagePath, options)
 
-            // Calculate sample size to fit screen
-            val screenWidth = resources.displayMetrics.widthPixels
-            val screenHeight = resources.displayMetrics.heightPixels
-            val sampleSize = calculateInSampleSize(options, screenWidth, screenHeight)
+    // Calculate sample size to fit screen
+    val screenWidth = resources.displayMetrics.widthPixels
+    val screenHeight = resources.displayMetrics.heightPixels
+    val sampleSize = calculateInSampleSize(options, screenWidth, screenHeight)
 
-            options.inJustDecodeBounds = false
-            options.inSampleSize = sampleSize
+    options.inJustDecodeBounds = false
+    options.inSampleSize = sampleSize
 
-            val bitmap = BitmapFactory.decodeFile(imagePath, options)
-            if (bitmap != null) {
-                binding.rawImageView.setImageBitmap(bitmap)
-            } else {
-                // If DNG can't be decoded directly, show a placeholder
-                binding.rawImageView.setImageResource(R.drawable.ic_camera_alt)
-                showDNGMessage()
-            }
-        } catch (e: Exception) {
-            binding.rawImageView.setImageResource(R.drawable.ic_camera_alt)
-            showDNGMessage()
-        }
+    val bitmap = BitmapFactory.decodeFile(imagePath, options)
+    if (bitmap != null) {
+    binding.rawImageView.setImageBitmap(bitmap)
+    } else {
+    // If DNG can't be decoded directly, show a placeholder
+    binding.rawImageView.setImageResource(R.drawable.ic_camera_alt)
+    showDNGMessage()
+    }
+    } catch (e: Exception) {
+    binding.rawImageView.setImageResource(R.drawable.ic_camera_alt)
+    showDNGMessage()
+    }
     }
 
     private fun showDNGMessage() {
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("RAW DNG Image")
-            .setMessage(
-                "This is a RAW DNG image file. Full preview requires specialized RAW processing software. Basic metadata is shown below.",
-            )
-            .setPositiveButton("OK", null)
-            .show()
+    androidx.appcompat.app.AlertDialog.Builder(this)
+    .setTitle("RAW DNG Image")
+    .setMessage(
+    "This is a RAW DNG image file. Full preview requires specialized RAW processing software. Basic metadata is shown below.",
+    )
+    .setPositiveButton("OK", null)
+    .show()
     }
 
     private fun calculateInSampleSize(
-        options: BitmapFactory.Options,
-        reqWidth: Int,
-        reqHeight: Int,
+    options: BitmapFactory.Options,
+    reqWidth: Int,
+    reqHeight: Int,
     ): Int {
-        val height = options.outHeight
-        val width = options.outWidth
-        var inSampleSize = 1
+    val height = options.outHeight
+    val width = options.outWidth
+    var inSampleSize = 1
 
-        if (height > reqHeight || width > reqWidth) {
-            val halfHeight = height / 2
-            val halfWidth = width / 2
+    if (height > reqHeight || width > reqWidth) {
+    val halfHeight = height / 2
+    val halfWidth = width / 2
 
-            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-        return inSampleSize
+    while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+    inSampleSize *= 2
+    }
+    }
+    return inSampleSize
     }
 
     private fun displayMetadata() {
-        val fileSize =
-            if (imageFile.length() >= 1024 * 1024) {
-                "%.1f MB".format(imageFile.length() / (1024.0 * 1024.0))
-            } else {
-                "%.1f KB".format(imageFile.length() / 1024.0)
-            }
+    val fileSize =
+    if (imageFile.length() >= 1024 * 1024) {
+    "%.1f MB".format(imageFile.length() / (1024.0 * 1024.0))
+    } else {
+    "%.1f KB".format(imageFile.length() / 1024.0)
+    }
 
-        val createdDate =
-            java.text.SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss",
-                java.util.Locale.getDefault(),
-            ).format(java.util.Date(imageFile.lastModified()))
+    val createdDate =
+    java.text.SimpleDateFormat(
+    "yyyy-MM-dd HH:mm:ss",
+    java.util.Locale.getDefault(),
+    ).format(java.util.Date(imageFile.lastModified()))
 
-        // Parse filename for capture info
-        val filename = imageFile.nameWithoutExtension
-        val captureNumber = filename.substringAfterLast("_", "Unknown")
+    // Parse filename for capture info
+    val filename = imageFile.nameWithoutExtension
+    val captureNumber = filename.substringAfterLast("_", "Unknown")
 
-        binding.metadataText.text =
-            """
-            RAW DNG Image Metadata
-            
-            File Information:
-            • Name: ${imageFile.name}
-            • Size: $fileSize
-            • Format: DNG (Digital Negative)
-            • Capture Level: Stage 3 / Level 3
-            
-            Camera Information:
-            • Sensor: Samsung S22 Main Camera
-            • Resolution: 4032×3024 (12MP)
-            • Bit Depth: 12-bit RAW
-            • Color Space: sRGB
-            
-            Capture Information:
-            • Capture Number: $captureNumber
-            • Timestamp: $createdDate
-            • Synchronization: Ground Truth CPU Timer
-            
-            Storage Information:
-            • Path: ${imageFile.absolutePath}
-            • Last Modified: $createdDate
-            
-            Note: This is a Level 3 RAW capture containing unprocessed sensor data
-            for maximum image quality and post-processing flexibility.
-            """.trimIndent()
+    binding.metadataText.text =
+    """
+    RAW DNG Image Metadata
+
+    File Information:
+    • Name: ${imageFile.name}
+    • Size: $fileSize
+    • Format: DNG (Digital Negative)
+    • Capture Level: Stage 3 / Level 3
+
+    Camera Information:
+    • Sensor: Samsung S22 Main Camera
+    • Resolution: 4032×3024 (12MP)
+    • Bit Depth: 12-bit RAW
+    • Color Space: sRGB
+
+    Capture Information:
+    • Capture Number: $captureNumber
+    • Timestamp: $createdDate
+    • Synchronization: Ground Truth CPU Timer
+
+    Storage Information:
+    • Path: ${imageFile.absolutePath}
+    • Last Modified: $createdDate
+
+    Note: This is a Level 3 RAW capture containing unprocessed sensor data
+    for maximum image quality and post-processing flexibility.
+    """.trimIndent()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.raw_image_view_menu, menu)
-        return true
+    menuInflater.inflate(R.menu.raw_image_view_menu, menu)
+    return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed()
-                true
-            }
-            R.id.action_share -> {
-                shareImage()
-                true
-            }
-            R.id.action_export -> {
-                exportImage()
-                true
-            }
-            R.id.action_info -> {
-                showDetailedInfo()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+    return when (item.itemId) {
+    android.R.id.home -> {
+    onBackPressedDispatcher.onBackPressed()
+    true
+    }
+    R.id.action_share -> {
+    shareImage()
+    true
+    }
+    R.id.action_export -> {
+    exportImage()
+    true
+    }
+    R.id.action_info -> {
+    showDetailedInfo()
+    true
+    }
+    else -> super.onOptionsItemSelected(item)
+    }
     }
 
     private fun shareImage() {
-        val uri =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                FileProvider.getUriForFile(this, "$packageName.fileprovider", imageFile)
-            } else {
-                Uri.fromFile(imageFile)
-            }
+    val uri =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    FileProvider.getUriForFile(this, "$packageName.fileprovider", imageFile)
+    } else {
+    Uri.fromFile(imageFile)
+    }
 
-        val shareIntent =
-            Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, uri)
-                type = "image/*"
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-        startActivity(Intent.createChooser(shareIntent, "Share RAW Image"))
+    val shareIntent =
+    Intent().apply {
+    action = Intent.ACTION_SEND
+    putExtra(Intent.EXTRA_STREAM, uri)
+    type = "image/*"
+    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    startActivity(Intent.createChooser(shareIntent, "Share RAW Image"))
     }
 
     private fun exportImage() {
-        // Implement RAW image export functionality
-        try {
-            val sourceFile = imageFile
-            if (sourceFile.exists()) {
-                val exportDir = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "GSR_Export")
-                exportDir.mkdirs()
-                
-                val exportFile = File(exportDir, "exported_${sourceFile.name}")
-                sourceFile.copyTo(exportFile, overwrite = true)
-                
-                Toast.makeText(this, "RAW image exported to: ${exportFile.absolutePath}", Toast.LENGTH_LONG).show()
-                
-                // Also share the file
-                val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", exportFile)
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                    type = "image/*"
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
-                startActivity(Intent.createChooser(shareIntent, "Export RAW Image"))
-            } else {
-                Toast.makeText(this, "Source file not found", Toast.LENGTH_SHORT).show()
-            }
-        } catch (e: Exception) {
-            Log.e("GSRRawImageView", "Error exporting RAW image", e)
-            Toast.makeText(this, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
-        // Could offer options to export as JPEG, TIFF, or keep as DNG
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("Export RAW Image")
-            .setMessage("RAW image export functionality will be implemented in a future update.")
-            .setPositiveButton("OK", null)
-            .show()
+    // Implement RAW image export functionality
+    try {
+    val sourceFile = imageFile
+    if (sourceFile.exists()) {
+    val exportDir = File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "GSR_Export")
+    exportDir.mkdirs()
+
+    val exportFile = File(exportDir, "exported_${sourceFile.name}")
+    sourceFile.copyTo(exportFile, overwrite = true)
+
+    Toast.makeText(this, "RAW image exported to: ${exportFile.absolutePath}", Toast.LENGTH_LONG).show()
+
+    // Also share the file
+    val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", exportFile)
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+    type = "image/*"
+    putExtra(Intent.EXTRA_STREAM, uri)
+    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    startActivity(Intent.createChooser(shareIntent, "Export RAW Image"))
+    } else {
+    Toast.makeText(this, "Source file not found", Toast.LENGTH_SHORT).show()
+    }
+    } catch (e: Exception) {
+    Log.e("GSRRawImageView", "Error exporting RAW image", e)
+    Toast.makeText(this, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+    }
+    // Could offer options to export as JPEG, TIFF, or keep as DNG
+    androidx.appcompat.app.AlertDialog.Builder(this)
+    .setTitle("Export RAW Image")
+    .setMessage("RAW image export functionality will be implemented in a future update.")
+    .setPositiveButton("OK", null)
+    .show()
     }
 
     private fun showDetailedInfo() {
-        // Extract EXIF data from DNG file using ExifInterface
-        val exifData = try {
-            val exifInterface = ExifInterface(imageFile.absolutePath)
-            val info = StringBuilder()
-            
-            // Core EXIF data
-            exifInterface.getAttribute(ExifInterface.TAG_MAKE)?.let { 
-                info.append("Camera: $it\n") 
-            }
-            exifInterface.getAttribute(ExifInterface.TAG_MODEL)?.let { 
-                info.append("Model: $it\n") 
-            }
-            exifInterface.getAttribute(ExifInterface.TAG_DATETIME)?.let { 
-                info.append("Date: $it\n") 
-            }
-            
-            // Technical details
-            exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME)?.let { 
-                info.append("Exposure: $it\n") 
-            }
-            exifInterface.getAttribute(ExifInterface.TAG_F_NUMBER)?.let { 
-                info.append("F-Number: $it\n") 
-            }
-            exifInterface.getAttribute(ExifInterface.TAG_ISO_SPEED)?.let { 
-                info.append("ISO: $it\n") 
-            }
-            
-            // Image dimensions - use getAttribute and convert to int
-            val width = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)?.toIntOrNull() ?: 0
-            val height = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)?.toIntOrNull() ?: 0
-            if (width > 0 && height > 0) {
-                info.append("Dimensions: ${width}x${height}\n")
-            }
-            
-            if (info.isNotEmpty()) info.toString() else "No EXIF data available"
-            
-        } catch (e: Exception) {
-            Log.e("GSRRawImageView", "Error reading EXIF data", e)
-            "Error reading EXIF data: ${e.message}"
-        }
-        
-        val detailedInfo =
-            """
-            EXIF Data:
-            $exifData
-            
-            Technical Details:
-            
-            Camera Settings:
-            • ISO: Variable (Auto)
-            • Aperture: f/1.8 (Main Camera)
-            • Focal Length: 6.3mm (35mm equiv: 24mm)
-            • Focus Mode: Auto Focus
-            
-            Image Processing:
-            • White Balance: Auto
-            • Color Profile: sRGB
-            • Compression: Lossless
-            • Quality: Maximum (RAW)
-            
-            Capture Context:
-            • Session Type: Multi-Modal Recording
-            • Parallel Recording: 4K Video + GSR Data
-            • Frame Rate: 30fps RAW capture
-            • Timing Sync: Samsung Exynos Ground Truth
-            
-            File Format:
-            • Standard: Adobe DNG 1.4
-            • Compatibility: Adobe Camera Raw, Lightroom
-            • Metadata: Full EXIF preserved
-            """.trimIndent()
+    // Extract EXIF data from DNG file using ExifInterface
+    val exifData = try {
+    val exifInterface = ExifInterface(imageFile.absolutePath)
+    val info = StringBuilder()
 
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("Technical Information")
-            .setMessage(detailedInfo)
-            .setPositiveButton("OK", null)
-            .show()
+    // Core EXIF data
+    exifInterface.getAttribute(ExifInterface.TAG_MAKE)?.let {
+    info.append("Camera: $it\n")
+    }
+    exifInterface.getAttribute(ExifInterface.TAG_MODEL)?.let {
+    info.append("Model: $it\n")
+    }
+    exifInterface.getAttribute(ExifInterface.TAG_DATETIME)?.let {
+    info.append("Date: $it\n")
+    }
+
+    // Technical details
+    exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME)?.let {
+    info.append("Exposure: $it\n")
+    }
+    exifInterface.getAttribute(ExifInterface.TAG_F_NUMBER)?.let {
+    info.append("F-Number: $it\n")
+    }
+    exifInterface.getAttribute(ExifInterface.TAG_ISO_SPEED)?.let {
+    info.append("ISO: $it\n")
+    }
+
+    // Image dimensions - use getAttribute and convert to int
+    val width = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)?.toIntOrNull() ?: 0
+    val height = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)?.toIntOrNull() ?: 0
+    if (width > 0 && height > 0) {
+    info.append("Dimensions: ${width}x${height}\n")
+    }
+
+    if (info.isNotEmpty()) info.toString() else "No EXIF data available"
+
+    } catch (e: Exception) {
+    Log.e("GSRRawImageView", "Error reading EXIF data", e)
+    "Error reading EXIF data: ${e.message}"
+    }
+
+    val detailedInfo =
+    """
+    EXIF Data:
+    $exifData
+
+    Technical Details:
+
+    Camera Settings:
+    • ISO: Variable (Auto)
+    • Aperture: f/1.8 (Main Camera)
+    • Focal Length: 6.3mm (35mm equiv: 24mm)
+    • Focus Mode: Auto Focus
+
+    Image Processing:
+    • White Balance: Auto
+    • Color Profile: sRGB
+    • Compression: Lossless
+    • Quality: Maximum (RAW)
+
+    Capture Context:
+    • Session Type: Multi-Modal Recording
+    • Parallel Recording: 4K Video + GSR Data
+    • Frame Rate: 30fps RAW capture
+    • Timing Sync: Samsung Exynos Ground Truth
+
+    File Format:
+    • Standard: Adobe DNG 1.4
+    • Compatibility: Adobe Camera Raw, Lightroom
+    • Metadata: Full EXIF preserved
+    """.trimIndent()
+
+    androidx.appcompat.app.AlertDialog.Builder(this)
+    .setTitle("Technical Information")
+    .setMessage(detailedInfo)
+    .setPositiveButton("OK", null)
+    .show()
     }
 }

@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.item_setting_check.view.*
 import kotlinx.android.synthetic.main.item_setting_time.view.*
 
 /**
- * 设置时间
- */
+    * 设置时间
+    */
 class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -25,46 +25,46 @@ class SettingTimeAdapter(val context: Context) :
     var select = 0
 
     fun setCheck(index: Int) {
-        this.select = index
-        notifyDataSetChanged()
+    this.select = index
+    notifyDataSetChanged()
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_setting_time, parent, false)
-        return ItemView(view)
+    val view =
+    LayoutInflater.from(parent.context).inflate(R.layout.item_setting_time, parent, false)
+    return ItemView(view)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ItemView) {
-            holder.btn.text = datas[position]
-            if (position == select) {
-                holder.btn.setBackgroundResource(R.drawable.ui_btn_round_theme)
-                holder.btn.setTextColor(ContextCompat.getColor(context, R.color.white))
-            } else {
-                holder.btn.background = null
-                holder.btn.setTextColor(ContextCompat.getColor(context, R.color.font_gray))
-            }
-            holder.btn.setOnClickListener {
-                listener?.onClick(position, dataTimes[position])
-                setCheck(position)
-            }
+    if (holder is ItemView) {
+    holder.btn.text = datas[position]
+    if (position == select) {
+    holder.btn.setBackgroundResource(R.drawable.ui_btn_round_theme)
+    holder.btn.setTextColor(ContextCompat.getColor(context, R.color.white))
+    } else {
+    holder.btn.background = null
+    holder.btn.setTextColor(ContextCompat.getColor(context, R.color.font_gray))
+    }
+    holder.btn.setOnClickListener {
+    listener?.onClick(position, dataTimes[position])
+    setCheck(position)
+    }
 
-        }
+    }
     }
 
     override fun getItemCount(): Int {
-        return datas.size
+    return datas.size
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val btn: Button = itemView.item_setting_time_btn
+    val btn: Button = itemView.item_setting_time_btn
     }
 
 
     interface OnItemClickListener {
-        fun onClick(index: Int, time: Int)
+    fun onClick(index: Int, time: Int)
     }
 
 

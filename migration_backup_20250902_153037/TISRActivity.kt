@@ -23,55 +23,55 @@ class TISRActivity : BaseActivity(){
     override fun initContentView() = R.layout.activity_tisr
 
     override fun initView() {
-        title_view.setTitleText("TISR")
-        setting_item_tisr_select.isChecked = SharedManager.is04TISR
-        setting_item_tisr_select.setOnCheckedChangeListener { _, isChecked ->
-            updateTISR(if(isChecked) 1 else 0)
-            SharedManager.is04TISR = isChecked
-        }
+    title_view.setTitleText("TISR")
+    setting_item_tisr_select.isChecked = SharedManager.is04TISR
+    setting_item_tisr_select.setOnCheckedChangeListener { _, isChecked ->
+    updateTISR(if(isChecked) 1 else 0)
+    SharedManager.is04TISR = isChecked
+    }
     }
 
     override fun initData() {
-        lifecycleScope.launch {
-            val tisrBean = TS004Repository.getTISR()
-            if(tisrBean?.isSuccess()!!){
-                val isTISR = tisrBean.data?.enable!! == 1
-                setting_item_tisr_select.isChecked = isTISR
-                SharedManager.is04TISR = isTISR
-            }else{
-                TToast.shortToast(this@TISRActivity, R.string.operation_failed_tips)
-            }
-        }
+    lifecycleScope.launch {
+    val tisrBean = TS004Repository.getTISR()
+    if(tisrBean?.isSuccess()!!){
+    val isTISR = tisrBean.data?.enable!! == 1
+    setting_item_tisr_select.isChecked = isTISR
+    SharedManager.is04TISR = isTISR
+    }else{
+    TToast.shortToast(this@TISRActivity, R.string.operation_failed_tips)
+    }
+    }
     }
 
     private fun updateTISR(state: Int) {
-        lifecycleScope.launch {
-            val isSuccess= TS004Repository.setTISR(state)
-            if(isSuccess){
-            }else{
-                TToast.shortToast(this@TISRActivity, R.string.operation_failed_tips)
-            }
-        }
+    lifecycleScope.launch {
+    val isSuccess= TS004Repository.setTISR(state)
+    if(isSuccess){
+    }else{
+    TToast.shortToast(this@TISRActivity, R.string.operation_failed_tips)
+    }
+    }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
-        when(SocketCmdUtil.getCmdResponse(event.text)){
-            WsCmdConstants.AR_COMMAND_TISR_GET -> {//获取超分状态
-                try {
-                    val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
-                    if(webSocketIp == WsCmdConstants.AR_COMMAND_IP){
-                        val data: JSONObject = JSONObject(event.text).getJSONObject("data")
-                        val state: Int = data.getInt("state")
-                        val isTISR = state == 1
-                        setting_item_tisr_select.isChecked = isTISR
-                        SharedManager.is04TISR = isTISR
-                    }
-                } catch (_: Exception) {
+    when(SocketCmdUtil.getCmdResponse(event.text)){
+    WsCmdConstants.AR_COMMAND_TISR_GET -> {//获取超分状态
+    try {
+    val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
+    if(webSocketIp == WsCmdConstants.AR_COMMAND_IP){
+    val data: JSONObject = JSONObject(event.text).getJSONObject("data")
+    val state: Int = data.getInt("state")
+    val isTISR = state == 1
+    setting_item_tisr_select.isChecked = isTISR
+    SharedManager.is04TISR = isTISR
+    }
+    } catch (_: Exception) {
 
-                }
-            }
-        }
+    }
+    }
+    }
     }
 
 }

@@ -1,54 +1,54 @@
 package com.topdon.lib.ui.config
 
 /**
- * 管理摄像头的属性值
- * @author: CaiSongL
- * @date: 2023/4/4 9:57
- */
+    * 管理摄像头的属性值
+    * @author: CaiSongL
+    * @date: 2023/4/4 9:57
+    */
 object CameraHelp {
     /**
-     * 伪彩条
-     */
+    * 伪彩条
+    */
     val TYPE_SET_PSEUDOCOLOR = 4
 
     /**
-     * 对比度
-     */
+    * 对比度
+    */
     val TYPE_SET_ParamLevelContrast = 3
 
     /**
-     * 锐度（细节）
-     */
+    * 锐度（细节）
+    */
     val TYPE_SET_ParamLevelDde = 2
 
     /**
-     * 警示
-     */
+    * 警示
+    */
     val TYPE_SET_ALARM = 12 // 预警
 
     /**
-     * 旋转
-     */
+    * 旋转
+    */
     val TYPE_SET_ROTATE = 1
 
     /**
-     * 字体
-     */
+    * 字体
+    */
     val TYPE_SET_COLOR = 13 // 颜色值
 
     /**
-     * 镜像
-     */
+    * 镜像
+    */
     val TYPE_SET_MIRROR = 14 // 镜像
 
     /**
-     * 仅 2D 编辑：水印
-     */
+    * 仅 2D 编辑：水印
+    */
     val TYPE_SET_WATERMARK = 15 // 水印
 
     /**
-     * 仅 TS001-观测：指南针
-     */
+    * 仅 TS001-观测：指南针
+    */
     val TYPE_SET_COMPASS = 23 // 指南针
 
     // TS001 -- 标定模式

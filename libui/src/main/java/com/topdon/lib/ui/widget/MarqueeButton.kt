@@ -10,12 +10,12 @@ class MarqueeButton : AppCompatButton {
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
 
     constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(
-        context,
-        attrs,
-        defStyle,
+    context,
+    attrs,
+    defStyle,
     )
 
     override fun isFocused(): Boolean {
-        return true
+    return true
     }
 }

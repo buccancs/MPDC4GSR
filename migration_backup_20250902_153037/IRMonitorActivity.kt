@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.activity_ir_monitor.*
 import org.greenrobot.eventbus.EventBus
 
 /**
- * 选取区域监听
- */
+    * 选取区域监听
+    */
 @Route(path = RouterConfig.IR_THERMAL_MONITOR)
 class IRMonitorActivity : BaseActivity(), View.OnClickListener {
 
@@ -24,8 +24,8 @@ class IRMonitorActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_ir_monitor
 
     override fun initView() {
-        motion_btn.setOnClickListener(this)
-        motion_start_btn.setOnClickListener(this)
+    motion_btn.setOnClickListener(this)
+    motion_start_btn.setOnClickListener(this)
     }
 
     override fun initData() {
@@ -33,54 +33,54 @@ class IRMonitorActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            motion_btn -> {
-                MonitorSelectDialog.Builder(this)
-                    .setPositiveListener {
-                        updateUI()
-                        when (it) {
-                            1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
-                            2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
-                            else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
-                        }
-                    }
-                    .create().show()
-            }
-            motion_start_btn -> {
-                if (selectIndex == null) {
-                    MonitorSelectDialog.Builder(this)
-                        .setPositiveListener {
-                            updateUI()
-                            when (it) {
-                                1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
-                                2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
-                                else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
-                            }
-                        }
-                        .create().show()
-                    return
-                }
-                //开始温度监听
-                ARouter.getInstance().build(RouterConfig.IR_MONITOR_CHART)
-                    .withParcelable("select", selectIndex)
-                    .navigation(this)
-                finish()
-            }
-        }
+    when (v) {
+    motion_btn -> {
+    MonitorSelectDialog.Builder(this)
+    .setPositiveListener {
+    updateUI()
+    when (it) {
+    1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
+    2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
+    else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
+    }
+    }
+    .create().show()
+    }
+    motion_start_btn -> {
+    if (selectIndex == null) {
+    MonitorSelectDialog.Builder(this)
+    .setPositiveListener {
+    updateUI()
+    when (it) {
+    1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
+    2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
+    else -> EventBus.getDefault().post(ThermalActionEvent(action = 2003))
+    }
+    }
+    .create().show()
+    return
+    }
+    //开始温度监听
+    ARouter.getInstance().build(RouterConfig.IR_MONITOR_CHART)
+    .withParcelable("select", selectIndex)
+    .navigation(this)
+    finish()
+    }
+    }
     }
 
     fun select(selectIndex: SelectPositionBean?) {
-        this.selectIndex = selectIndex
+    this.selectIndex = selectIndex
     }
 
     private fun updateUI() {
-        motion_start_btn.visibility = View.VISIBLE
-        motion_btn.visibility = View.GONE
+    motion_start_btn.visibility = View.VISIBLE
+    motion_btn.visibility = View.GONE
     }
 
     override fun disConnected() {
-        super.disConnected()
-        finish()
+    super.disConnected()
+    finish()
     }
 
 

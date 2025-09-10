@@ -41,122 +41,122 @@ class TipPreviewDialog : DialogFragment() {
     private var timer : Timer?= Timer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    super.onCreate(savedInstanceState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState)
+    return super.onCreateDialog(savedInstanceState)
     }
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.dialog_tip_preview, container, false)
+    return inflater.inflate(R.layout.dialog_tip_preview, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        titleList = arrayListOf(
-            getString(R.string.preview_step_1),
-            getString(R.string.preview_step_2),
-        )
-        checkBox = view.dialog_tip_check
-        imgClose = view.img_close
-        viewPager = view.view_pager
-        tvContent = view.tv_content
-        indicateView = view.indicate_view
-        val adapter = PageAdapter(childFragmentManager)
-        indicateView.itemCount = adapter.count
-        viewPager.adapter = adapter
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-            hasCheck = isChecked
-        }
-        imgClose.setOnClickListener {
-            closeEvent?.invoke(hasCheck)
-            dismiss()
-        }
-        view.tv_i_know.setOnClickListener {
-            closeEvent?.invoke(hasCheck)
-            dismiss()
-        }
-        updateIndex(0)
-        viewPager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
+    super.onViewCreated(view, savedInstanceState)
+    titleList = arrayListOf(
+    getString(R.string.preview_step_1),
+    getString(R.string.preview_step_2),
+    )
+    checkBox = view.dialog_tip_check
+    imgClose = view.img_close
+    viewPager = view.view_pager
+    tvContent = view.tv_content
+    indicateView = view.indicate_view
+    val adapter = PageAdapter(childFragmentManager)
+    indicateView.itemCount = adapter.count
+    viewPager.adapter = adapter
+    checkBox.setOnCheckedChangeListener { _, isChecked ->
+    hasCheck = isChecked
+    }
+    imgClose.setOnClickListener {
+    closeEvent?.invoke(hasCheck)
+    dismiss()
+    }
+    view.tv_i_know.setOnClickListener {
+    closeEvent?.invoke(hasCheck)
+    dismiss()
+    }
+    updateIndex(0)
+    viewPager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+    override fun onPageScrolled(
+    position: Int,
+    positionOffset: Float,
+    positionOffsetPixels: Int
+    ) {
+    }
 
-            override fun onPageSelected(position: Int) {
-                updateIndex(position)
-            }
+    override fun onPageSelected(position: Int) {
+    updateIndex(position)
+    }
 
-            override fun onPageScrollStateChanged(state: Int) {
-            }
+    override fun onPageScrollStateChanged(state: Int) {
+    }
 
-        })
+    })
     }
 
 
     fun updateIndex(position : Int){
-        if (index == position){
-            return
-        }
-        indicateView.currentIndex = position
-        viewPager.setCurrentItem(position,true)
-        tvContent.text = titleList[position]
-        index = position
+    if (index == position){
+    return
+    }
+    indicateView.currentIndex = position
+    viewPager.setCurrentItem(position,true)
+    tvContent.text = titleList[position]
+    index = position
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        timer?.cancel()
-        timer = null
+    super.onDestroy()
+    timer?.cancel()
+    timer = null
     }
 
     override fun onResume() {
-        super.onResume()
-        val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
-        params.width = -1
-        params.height = -1
-        dialog?.window?.attributes = params as WindowManager.LayoutParams
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    super.onResume()
+    val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
+    params.width = -1
+    params.height = -1
+    dialog?.window?.attributes = params as WindowManager.LayoutParams
+    dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
-        try {
-            super.show(manager, tag)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+    try {
+    super.show(manager, tag)
+    } catch (e: Exception) {
+    e.printStackTrace()
+    }
     }
 
     companion object {
-        fun newInstance(): TipPreviewDialog {
-            return TipPreviewDialog()
-        }
+    fun newInstance(): TipPreviewDialog {
+    return TipPreviewDialog()
+    }
     }
 
     inner class PageAdapter(fragmentManager: FragmentManager) :
-        FragmentPagerAdapter(fragmentManager) {
-        override fun getCount(): Int {
-            return pageCount
-        }
+    FragmentPagerAdapter(fragmentManager) {
+    override fun getCount(): Int {
+    return pageCount
+    }
 
-        override fun getItem(position: Int): Fragment {
-           return when (position) {
-                0 -> {
-                    PageFragment.newInstance(R.drawable.preview_step_1)
-                }
-                1 -> {
-                    PageFragment.newInstance(R.drawable.preview_step_2)
-                }
-                else -> {
-                    PageFragment.newInstance(R.drawable.preview_step_3)
-                }
-            }
-        }
+    override fun getItem(position: Int): Fragment {
+    return when (position) {
+    0 -> {
+    PageFragment.newInstance(R.drawable.preview_step_1)
+    }
+    1 -> {
+    PageFragment.newInstance(R.drawable.preview_step_2)
+    }
+    else -> {
+    PageFragment.newInstance(R.drawable.preview_step_3)
+    }
+    }
+    }
     }
 }

@@ -24,116 +24,116 @@ import org.easydarwin.video.Client
 import org.greenrobot.eventbus.EventBus
 
 /**
- * TC007 温度监控生成第2步 - 捕获
- * Created by LCG on 2024/5/10.
- */
+    * TC007 温度监控生成第2步 - 捕获
+    * Created by LCG on 2024/5/10.
+    */
 class IR07MonitorCapture2Activity : BaseActivity() {
 
     companion object {
-        private const val RTSP_URL = "rtsp://192.168.40.1/stream0"
+    private const val RTSP_URL = "rtsp://192.168.40.1/stream0"
     }
 
     /**
-     * 从上一界面传递过来的，当前选中的 点/线/面 信息.
-     */
+    * 从上一界面传递过来的，当前选中的 点/线/面 信息.
+    */
     private var selectInfo = SelectInfoBean()
 
     override fun initContentView(): Int = R.layout.activity_ir_07_monitor_capture2
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            val playFragment = PlayFragment.newInstance(RTSP_URL, Client.TRANSTYPE_TCP, 1, null,true)
-            supportFragmentManager.beginTransaction().add(R.id.fl_rtsp, playFragment).commit()
-        }
+    super.onCreate(savedInstanceState)
+    if (savedInstanceState == null) {
+    val playFragment = PlayFragment.newInstance(RTSP_URL, Client.TRANSTYPE_TCP, 1, null,true)
+    supportFragmentManager.beginTransaction().add(R.id.fl_rtsp, playFragment).commit()
+    }
     }
 
     override fun initView() {
-        title_view.setRightClickListener {
-            EventBus.getDefault().post(MonitorSaveEvent())
-            finish()
-        }
+    title_view.setRightClickListener {
+    EventBus.getDefault().post(MonitorSaveEvent())
+    finish()
+    }
 
-        selectInfo = intent.getParcelableExtra("select")!!
+    selectInfo = intent.getParcelableExtra("select")!!
 
-        monitor_current_vol.text = getString(if (selectInfo.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
-        monitor_real_vol.visibility = if (selectInfo.type == 1) View.GONE else View.VISIBLE
-        monitor_real_img.visibility = if (selectInfo.type == 1) View.GONE else View.VISIBLE
+    monitor_current_vol.text = getString(if (selectInfo.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
+    monitor_real_vol.visibility = if (selectInfo.type == 1) View.GONE else View.VISIBLE
+    monitor_real_img.visibility = if (selectInfo.type == 1) View.GONE else View.VISIBLE
 
-        addCallback(selectInfo)
+    addCallback(selectInfo)
     }
 
     override fun initData() {
     }
 
     override fun onResume() {
-        super.onResume()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        mp_chart_view.highlightValue(null) //关闭高亮点Marker
+    super.onResume()
+    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    mp_chart_view.highlightValue(null) //关闭高亮点Marker
     }
 
 
     override fun onPause() {
-        super.onPause()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    super.onPause()
+    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        //退出时把点线面清掉
-        CoroutineScope(Dispatchers.IO).launch {
-            TC007Repository.clearAllTemp()
-        }
+    super.onDestroy()
+    //退出时把点线面清掉
+    CoroutineScope(Dispatchers.IO).launch {
+    TC007Repository.clearAllTemp()
+    }
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
-        if (!isTS004) {
-            EventBus.getDefault().post(MonitorSaveEvent())
-            finish()
-        }
+    if (!isTS004) {
+    EventBus.getDefault().post(MonitorSaveEvent())
+    finish()
+    }
     }
 
     private fun addCallback(selectInfo: SelectInfoBean) {
-        var lastSaveTime: Long = 0 //上一次执行保存的时间戳，用于控制1秒保存1次
-        val thermalId = TimeTool.showDateSecond()
-        val startTime = System.currentTimeMillis()
+    var lastSaveTime: Long = 0 //上一次执行保存的时间戳，用于控制1秒保存1次
+    val thermalId = TimeTool.showDateSecond()
+    val startTime = System.currentTimeMillis()
 
-        WebSocketProxy.getInstance().setOnFrameListener(this) {
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - lastSaveTime > 1000) {
-                lastSaveTime = currentTime
+    WebSocketProxy.getInstance().setOnFrameListener(this) {
+    val currentTime = System.currentTimeMillis()
+    if (currentTime - lastSaveTime > 1000) {
+    lastSaveTime = currentTime
 
-                val maxValue = when (selectInfo.type) {
-                    1 -> it.p1Value / 10f
-                    2 -> it.l1MaxValue / 10f
-                    else -> it.r1MaxValue / 10f
-                }
-                val minValue = when (selectInfo.type) {
-                    1 -> it.p1Value / 10f
-                    2 -> it.l1MinValue / 10f
-                    else -> it.r1MinValue / 10f
-                }
-                val entity = ThermalEntity()
-                entity.userId = SharedManager.getUserId()
-                entity.thermalId = thermalId
-                entity.thermal = NumberTools.to02f(maxValue)
-                entity.thermalMax = NumberTools.to02f(maxValue)
-                entity.thermalMin = NumberTools.to02f(minValue)
-                entity.startTime = startTime
-                entity.createTime = currentTime
-                entity.type = when (selectInfo.type) {
-                    1 -> "point"
-                    2 -> "line"
-                    else -> "fence"
-                }
+    val maxValue = when (selectInfo.type) {
+    1 -> it.p1Value / 10f
+    2 -> it.l1MaxValue / 10f
+    else -> it.r1MaxValue / 10f
+    }
+    val minValue = when (selectInfo.type) {
+    1 -> it.p1Value / 10f
+    2 -> it.l1MinValue / 10f
+    else -> it.r1MinValue / 10f
+    }
+    val entity = ThermalEntity()
+    entity.userId = SharedManager.getUserId()
+    entity.thermalId = thermalId
+    entity.thermal = NumberTools.to02f(maxValue)
+    entity.thermalMax = NumberTools.to02f(maxValue)
+    entity.thermalMin = NumberTools.to02f(minValue)
+    entity.startTime = startTime
+    entity.createTime = currentTime
+    entity.type = when (selectInfo.type) {
+    1 -> "point"
+    2 -> "line"
+    else -> "fence"
+    }
 
-                lifecycleScope.launch(Dispatchers.IO) {
-                    AppDatabase.getInstance().thermalDao().insert(entity)
-                }
+    lifecycleScope.launch(Dispatchers.IO) {
+    AppDatabase.getInstance().thermalDao().insert(entity)
+    }
 
-                mp_chart_view.addPointToChart(bean = entity, selectType = selectInfo.type)
-                tv_time.text = TimeTool.showVideoLongTime(currentTime - startTime)
-            }
-        }
+    mp_chart_view.addPointToChart(bean = entity, selectType = selectInfo.type)
+    tv_time.text = TimeTool.showVideoLongTime(currentTime - startTime)
+    }
+    }
     }
 }

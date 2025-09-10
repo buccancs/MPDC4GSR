@@ -16,8 +16,8 @@ import com.topdon.module.user.model.FaqRepository
 import java.util.ArrayList
 
 /**
- * FAQ
- */
+    * FAQ
+    */
 // Legacy ARouter route annotation - now using NavigationManager
 class QuestionActivity : BaseActivity() {
 
@@ -27,20 +27,20 @@ class QuestionActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_question
 
     override fun initView() {
-        // Initialize views - migrated from synthetic views
-        questionRecycler = findViewById(R.id.question_recycler)
+    // Initialize views - migrated from synthetic views
+    questionRecycler = findViewById(R.id.question_recycler)
 
-        val adapter = MyAdapter(FaqRepository.getQuestionList(intent.getBooleanExtra("isTS001", false)))
-        adapter.onItemClickListener = {
-            NavigationManager.getInstance()
-                .build(RouterConfig.QUESTION_DETAILS)
-                .withString("question", it.question)
-                .withString("answer", it.answer)
-                .navigation(this)
-        }
+    val adapter = MyAdapter(FaqRepository.getQuestionList(intent.getBooleanExtra("isTS001", false)))
+    adapter.onItemClickListener = {
+    NavigationManager.getInstance()
+    .build(RouterConfig.QUESTION_DETAILS)
+    .withString("question", it.question)
+    .withString("answer", it.answer)
+    .navigation(this)
+    }
 
-        questionRecycler.layoutManager = LinearLayoutManager(this)
-        questionRecycler.adapter = adapter
+    questionRecycler.layoutManager = LinearLayoutManager(this)
+    questionRecycler.adapter = adapter
     }
 
     override fun initData() {
@@ -50,26 +50,26 @@ class QuestionActivity : BaseActivity() {
 
     private class MyAdapter(private val questionList: ArrayList<QuestionData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        var onItemClickListener: ((data: QuestionData) -> Unit)? = null
+    var onItemClickListener: ((data: QuestionData) -> Unit)? = null
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return ItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    return ItemHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false))
+    }
 
-        override fun getItemCount(): Int = questionList.size
+    override fun getItemCount(): Int = questionList.size
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            if (holder is ItemHolder) {
-                val itemQuestionInfo: TextView = holder.rootView.findViewById(R.id.item_question_info)
-                val itemQuestionLay: ConstraintLayout = holder.rootView.findViewById(R.id.item_question_lay)
-                
-                itemQuestionInfo.text = questionList[position].question
-                itemQuestionLay.setOnClickListener {
-                    onItemClickListener?.invoke(questionList[position])
-                }
-            }
-        }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    if (holder is ItemHolder) {
+    val itemQuestionInfo: TextView = holder.rootView.findViewById(R.id.item_question_info)
+    val itemQuestionLay: ConstraintLayout = holder.rootView.findViewById(R.id.item_question_lay)
 
-        private class ItemHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
+    itemQuestionInfo.text = questionList[position].question
+    itemQuestionLay.setOnClickListener {
+    onItemClickListener?.invoke(questionList[position])
+    }
+    }
+    }
+
+    private class ItemHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
     }
 }

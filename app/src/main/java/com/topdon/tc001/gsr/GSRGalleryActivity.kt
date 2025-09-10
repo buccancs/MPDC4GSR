@@ -13,93 +13,93 @@ import com.topdon.lib.core.base.BaseBindingActivity
 import com.topdon.lib.core.tools.PermissionTool
 
 /**
- * GSR Recording Gallery Activity
- * Provides tabbed interface for browsing GSR data files, videos, and RAW images
- * Consistent with thermal camera gallery interface
- */
+    * GSR Recording Gallery Activity
+    * Provides tabbed interface for browsing GSR data files, videos, and RAW images
+    * Consistent with thermal camera gallery interface
+    */
 class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
     companion object {
-        private const val TAG = "GSRGalleryActivity"
+    private const val TAG = "GSRGalleryActivity"
 
-        fun startActivity(context: Context) {
-            context.startActivity(Intent(context, GSRGalleryActivity::class.java))
-        }
+    fun startActivity(context: Context) {
+    context.startActivity(Intent(context, GSRGalleryActivity::class.java))
+    }
     }
 
     private val permissionList by lazy {
-        if (this.applicationInfo.targetSdkVersion >= 34) {
-            listOf(
-                Manifest.permission.READ_MEDIA_VIDEO,
-                Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
-        } else if (this.applicationInfo.targetSdkVersion >= 33) {
-            mutableListOf(
-                Manifest.permission.READ_MEDIA_VIDEO,
-                Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
-        } else {
-            mutableListOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
-        }
+    if (this.applicationInfo.targetSdkVersion >= 34) {
+    listOf(
+    Manifest.permission.READ_MEDIA_VIDEO,
+    Manifest.permission.READ_MEDIA_IMAGES,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    )
+    } else if (this.applicationInfo.targetSdkVersion >= 33) {
+    mutableListOf(
+    Manifest.permission.READ_MEDIA_VIDEO,
+    Manifest.permission.READ_MEDIA_IMAGES,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    )
+    } else {
+    mutableListOf(
+    Manifest.permission.READ_EXTERNAL_STORAGE,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    )
+    }
     }
 
     override fun getLayoutId() = R.layout.activity_gsr_gallery
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    super.onCreate(savedInstanceState)
 
-        initView()
-        requestPermissions()
+    initView()
+    requestPermissions()
     }
 
     private fun initView() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "GSR Recording Gallery"
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.title = "GSR Recording Gallery"
 
-        binding.gsrGalleryViewpager.adapter = ViewAdapter(this, supportFragmentManager)
-        binding.gsrGalleryTab.setupWithViewPager(binding.gsrGalleryViewpager)
+    binding.gsrGalleryViewpager.adapter = ViewAdapter(this, supportFragmentManager)
+    binding.gsrGalleryTab.setupWithViewPager(binding.gsrGalleryViewpager)
     }
 
     private fun requestPermissions() {
-        PermissionTool.requestFile(this) {
-            // Permission granted, gallery can now access media files
-        }
+    PermissionTool.requestFile(this) {
+    // Permission granted, gallery can now access media files
+    }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
-        return true
+    onBackPressedDispatcher.onBackPressed()
+    return true
     }
 
     inner class ViewAdapter : FragmentStatePagerAdapter {
-        private var titles: Array<String> = arrayOf()
+    private var titles: Array<String> = arrayOf()
 
-        constructor(context: Context, fm: FragmentManager) : super(
-            fm,
-            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
-        ) {
-            titles = arrayOf("GSR Data", "Videos", "RAW Images", "Sessions")
-        }
+    constructor(context: Context, fm: FragmentManager) : super(
+    fm,
+    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
+    ) {
+    titles = arrayOf("GSR Data", "Videos", "RAW Images", "Sessions")
+    }
 
-        override fun getCount(): Int {
-            return titles.size
-        }
+    override fun getCount(): Int {
+    return titles.size
+    }
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            return titles[position]
-        }
+    override fun getPageTitle(position: Int): CharSequence? {
+    return titles[position]
+    }
 
-        override fun getItem(position: Int): Fragment {
-            return when (position) {
-                0 -> GSRDataFragment()
-                1 -> GSRVideoFragment()
-                2 -> GSRRawImageFragment()
-                else -> GSRSessionFragment()
-            }
-        }
+    override fun getItem(position: Int): Fragment {
+    return when (position) {
+    0 -> GSRDataFragment()
+    1 -> GSRVideoFragment()
+    2 -> GSRRawImageFragment()
+    else -> GSRSessionFragment()
+    }
+    }
     }
 }

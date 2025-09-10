@@ -29,13 +29,13 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * 检测列表.
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007（不使用，透传）
- *
- * Created by LCG on 2024/8/20.
- */
+    * 检测列表.
+    *
+    * 需要传递参数：
+    * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007（不使用，透传）
+    *
+    * Created by LCG on 2024/8/20.
+    */
 internal class DetectListFragment : BaseFragment(), View.OnClickListener {
     private lateinit var adapter: HouseAdapter
 
@@ -46,133 +46,133 @@ internal class DetectListFragment : BaseFragment(), View.OnClickListener {
     override fun initContentView(): Int = R.layout.fragment_detect_list
 
     override fun initView() {
-        cl_del.isEnabled = false
-        iv_del.isEnabled = false
-        tv_del.isEnabled = false
+    cl_del.isEnabled = false
+    iv_del.isEnabled = false
+    tv_del.isEnabled = false
 
-        adapter = HouseAdapter(requireContext(), true)
-        adapter.onItemClickListener = {
-            val intent = Intent(context, ReportAddActivity::class.java)
-            intent.putExtra(ExtraKeyConfig.DETECT_ID, adapter.dataList[it].id)
-            intent.putExtra(ExtraKeyConfig.IS_TC007, arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false)
-            startActivity(intent)
-        }
-        adapter.onMoreClickListener = { position, v ->
-            ThreePickPopup(requireContext(), arrayListOf(R.string.app_edit, R.string.paste, R.string.report_delete)) {
-                when (it) {
-                    0 -> {//编辑
-                        val intent = Intent(requireContext(), DetectAddActivity::class.java)
-                        intent.putExtra(ExtraKeyConfig.DETECT_ID, adapter.dataList[position].id)
-                        startActivity(intent)
-                    }
-                    1 -> {//复制
-                        viewModel.copyDetect(position, adapter.dataList[position] as HouseDetect)
-                    }
-                    2 -> {//删除
-                        TipDialog.Builder(requireContext())
-                            .setTitleMessage(getString(R.string.monitor_report_delete))
-                            .setMessage(R.string.report_delete_tips)
-                            .setCancelListener(R.string.app_cancel)
-                            .setPositiveListener(R.string.thermal_delete) {
-                                lifecycleScope.launch(Dispatchers.IO) {
-                                    val houseDetect: HouseDetect = adapter.dataList[position] as HouseDetect
-                                    AppDatabase.getInstance().houseDetectDao().deleteDetect(houseDetect)
-                                    withContext(Dispatchers.Main) {
-                                        adapter.dataList.removeAt(position)
-                                        adapter.notifyItemRemoved(position)
-                                        if (adapter.dataList.isEmpty()) {
-                                            viewModel.queryAll()
-                                        }
-                                        TToast.shortToast(requireContext(), R.string.test_results_delete_success)
-                                    }
-                                }
-                            }
-                            .create().show()
-                    }
-                }
-            }.show(v, false)
-        }
-        adapter.onSelectChangeListener = {
-            tabViewModel.selectSizeLD.value = it
-        }
-        recycler_view.layoutManager = LinearLayoutManager(requireContext())
-        recycler_view.adapter = adapter
+    adapter = HouseAdapter(requireContext(), true)
+    adapter.onItemClickListener = {
+    val intent = Intent(context, ReportAddActivity::class.java)
+    intent.putExtra(ExtraKeyConfig.DETECT_ID, adapter.dataList[it].id)
+    intent.putExtra(ExtraKeyConfig.IS_TC007, arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false)
+    startActivity(intent)
+    }
+    adapter.onMoreClickListener = { position, v ->
+    ThreePickPopup(requireContext(), arrayListOf(R.string.app_edit, R.string.paste, R.string.report_delete)) {
+    when (it) {
+    0 -> {//编辑
+    val intent = Intent(requireContext(), DetectAddActivity::class.java)
+    intent.putExtra(ExtraKeyConfig.DETECT_ID, adapter.dataList[position].id)
+    startActivity(intent)
+    }
+    1 -> {//复制
+    viewModel.copyDetect(position, adapter.dataList[position] as HouseDetect)
+    }
+    2 -> {//删除
+    TipDialog.Builder(requireContext())
+    .setTitleMessage(getString(R.string.monitor_report_delete))
+    .setMessage(R.string.report_delete_tips)
+    .setCancelListener(R.string.app_cancel)
+    .setPositiveListener(R.string.thermal_delete) {
+    lifecycleScope.launch(Dispatchers.IO) {
+    val houseDetect: HouseDetect = adapter.dataList[position] as HouseDetect
+    AppDatabase.getInstance().houseDetectDao().deleteDetect(houseDetect)
+    withContext(Dispatchers.Main) {
+    adapter.dataList.removeAt(position)
+    adapter.notifyItemRemoved(position)
+    if (adapter.dataList.isEmpty()) {
+    viewModel.queryAll()
+    }
+    TToast.shortToast(requireContext(), R.string.test_results_delete_success)
+    }
+    }
+    }
+    .create().show()
+    }
+    }
+    }.show(v, false)
+    }
+    adapter.onSelectChangeListener = {
+    tabViewModel.selectSizeLD.value = it
+    }
+    recycler_view.layoutManager = LinearLayoutManager(requireContext())
+    recycler_view.adapter = adapter
 
-        tv_add.setOnClickListener(this)
-        cl_del.setOnClickListener(this)
+    tv_add.setOnClickListener(this)
+    cl_del.setOnClickListener(this)
 
 
-        tabViewModel.isEditModeLD.observe(viewLifecycleOwner) {
-            adapter.isEditMode = it
-            cl_del.isVisible = it
-        }
-        tabViewModel.selectSizeLD.observe(viewLifecycleOwner) {
-            cl_del.isEnabled = it > 0
-            iv_del.isEnabled = it > 0
-            tv_del.isEnabled = it > 0
-        }
+    tabViewModel.isEditModeLD.observe(viewLifecycleOwner) {
+    adapter.isEditMode = it
+    cl_del.isVisible = it
+    }
+    tabViewModel.selectSizeLD.observe(viewLifecycleOwner) {
+    cl_del.isEnabled = it > 0
+    iv_del.isEnabled = it > 0
+    tv_del.isEnabled = it > 0
+    }
 
-        viewModel.detectListLD.observe(viewLifecycleOwner) {
-            group_empty.isVisible = it.isEmpty()
-            recycler_view.isVisible = it.isNotEmpty()
-            adapter.refresh(it)
-        }
-        viewModel.detectLD.observe(viewLifecycleOwner) {
-            if (it != null) {
-                for (i in adapter.dataList.indices) {
-                    if (adapter.dataList[i].id == it.id) {
-                        adapter.dataList[i] = it
-                        adapter.notifyItemChanged(i)
-                        break
-                    }
-                }
-            }
-        }
-        viewModel.copyDetectLD.observe(viewLifecycleOwner) {
-            TToast.shortToast(requireContext(), R.string.ts004_copy_success)
-            adapter.dataList.add(it.first + 1, it.second)
-            adapter.notifyItemInserted(it.first + 1)
-        }
-        viewModel.queryAll()
+    viewModel.detectListLD.observe(viewLifecycleOwner) {
+    group_empty.isVisible = it.isEmpty()
+    recycler_view.isVisible = it.isNotEmpty()
+    adapter.refresh(it)
+    }
+    viewModel.detectLD.observe(viewLifecycleOwner) {
+    if (it != null) {
+    for (i in adapter.dataList.indices) {
+    if (adapter.dataList[i].id == it.id) {
+    adapter.dataList[i] = it
+    adapter.notifyItemChanged(i)
+    break
+    }
+    }
+    }
+    }
+    viewModel.copyDetectLD.observe(viewLifecycleOwner) {
+    TToast.shortToast(requireContext(), R.string.ts004_copy_success)
+    adapter.dataList.add(it.first + 1, it.second)
+    adapter.notifyItemInserted(it.first + 1)
+    }
+    viewModel.queryAll()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDetectCreate(event: HouseDetectAddEvent) {
-        viewModel.queryAll()
+    viewModel.queryAll()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDetectUpdate(event: HouseDetectEditEvent) {
-        viewModel.queryById(event.id)
+    viewModel.queryById(event.id)
     }
 
     override fun initData() {
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            tv_add -> {//添加
-                val intent = Intent(requireContext(), DetectAddActivity::class.java)
-                intent.putExtra(ExtraKeyConfig.IS_TC007, arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false)
-                startActivity(intent)
-            }
-            cl_del -> {//批量删除
-                if (adapter.selectIndexList.isNotEmpty()) {
-                    TipDialog.Builder(requireContext())
-                        .setTitleMessage(getString(R.string.monitor_report_delete))
-                        .setMessage(R.string.report_delete_tips)
-                        .setCancelListener(R.string.app_cancel)
-                        .setPositiveListener(R.string.thermal_delete) {
-                            val resultArray: Array<HouseDetect> = Array(adapter.selectIndexList.size) {
-                                adapter.dataList[adapter.selectIndexList[it]] as HouseDetect
-                            }
-                            viewModel.deleteMore(*resultArray)
-                            tabViewModel.isEditModeLD.value = false
-                            TToast.shortToast(requireContext(), R.string.test_results_delete_success)
-                        }
-                        .create().show()
-                }
-            }
-        }
+    when (v) {
+    tv_add -> {//添加
+    val intent = Intent(requireContext(), DetectAddActivity::class.java)
+    intent.putExtra(ExtraKeyConfig.IS_TC007, arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false)
+    startActivity(intent)
+    }
+    cl_del -> {//批量删除
+    if (adapter.selectIndexList.isNotEmpty()) {
+    TipDialog.Builder(requireContext())
+    .setTitleMessage(getString(R.string.monitor_report_delete))
+    .setMessage(R.string.report_delete_tips)
+    .setCancelListener(R.string.app_cancel)
+    .setPositiveListener(R.string.thermal_delete) {
+    val resultArray: Array<HouseDetect> = Array(adapter.selectIndexList.size) {
+    adapter.dataList[adapter.selectIndexList[it]] as HouseDetect
+    }
+    viewModel.deleteMore(*resultArray)
+    tabViewModel.isEditModeLD.value = false
+    TToast.shortToast(requireContext(), R.string.test_results_delete_success)
+    }
+    .create().show()
+    }
+    }
+    }
     }
 }

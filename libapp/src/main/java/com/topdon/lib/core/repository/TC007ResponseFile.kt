@@ -7,10 +7,10 @@ import java.lang.NumberFormatException
 // 这个文件用来放 TC007 接口返回 JSON 的封装
 
 /**
- * TC007 所有接口请求返回的格式内容.
- * @param Detail 当出错时，详细错误信息
- * @param Data 实际返回的数据，视不同的接口而定
- */
+    * TC007 所有接口请求返回的格式内容.
+    * @param Detail 当出错时，详细错误信息
+    * @param Data 实际返回的数据，视不同的接口而定
+    */
 data class TC007Response<T>(
     val Code: Int,
     val Message: String?,
@@ -19,18 +19,18 @@ data class TC007Response<T>(
     val Data: T?,
 ) {
     /**
-     * 判断请求是否成功.
-     */
+    * 判断请求是否成功.
+    */
     fun isSuccess(): Boolean = Code == 200
 }
 
 /**
- * TC007 接口请求返回：产品信息
- * @param ProductName 产品名称
- * @param ProductPN PN
- * @param ProductSN SN
- * @param Code 激活码
- */
+    * TC007 接口请求返回：产品信息
+    * @param ProductName 产品名称
+    * @param ProductPN PN
+    * @param ProductSN SN
+    * @param Code 激活码
+    */
 data class ProductBean(
     val ProductName: String,
     val ProductPN: String,
@@ -48,10 +48,10 @@ data class Version07Bean(
 )
 
 /**
- * TC007 接口请求返回：电池电量信息
- * @param Status Charging-充电中 Discharging-未充电
- * @param Remaining 剩余电量百分比
- */
+    * TC007 接口请求返回：电池电量信息
+    * @param Status Charging-充电中 Discharging-未充电
+    * @param Remaining 剩余电量百分比
+    */
 data class BatteryInfo(
     val Status: String?,
     val Remaining: String?,
@@ -59,19 +59,19 @@ data class BatteryInfo(
     fun isCharging(): Boolean = Status == "Charging"
 
     fun getBattery(): Int? =
-        try {
-            Remaining?.toInt()
-        } catch (_: NumberFormatException) {
-            null
-        }
+    try {
+    Remaining?.toInt()
+    } catch (_: NumberFormatException) {
+    null
+    }
 }
 
 /**
- * TC007 接口请求返回：固件升级状态
- * @param Status 当前升级状态 1-开始升级 2-升级中 3-升级失败 4-升级成功
- * @param Percent 当前升级进度百分比
- * @param Code 升级错误码
- */
+    * TC007 接口请求返回：固件升级状态
+    * @param Status 当前升级状态 1-开始升级 2-升级中 3-升级失败 4-升级成功
+    * @param Percent 当前升级进度百分比
+    * @param Code 升级错误码
+    */
 data class TC07UpgradeStatus(
     val Status: Int,
     val Percent: Int,
@@ -79,13 +79,13 @@ data class TC07UpgradeStatus(
 )
 
 /**
- * TC007 接口返回：测温属性参数
- * @param Fps 测温帧率[0,采集帧率]，默认12，最高支持12
- * @param Level 测温档位 0-高增益 1-低增益 3-自动切换
- * @param OsdMode 测温信息叠加方式 0-视频编码前叠加 1-码流信息叠加(编码后预览时叠加) 2-无叠加
- * @param TempUnit 温度单位 0-摄氏度 1-开尔文 2-华氏度
- * @param DistanceUnit 距离单位 0-米 1-英尺
- */
+    * TC007 接口返回：测温属性参数
+    * @param Fps 测温帧率[0,采集帧率]，默认12，最高支持12
+    * @param Level 测温档位 0-高增益 1-低增益 3-自动切换
+    * @param OsdMode 测温信息叠加方式 0-视频编码前叠加 1-码流信息叠加(编码后预览时叠加) 2-无叠加
+    * @param TempUnit 温度单位 0-摄氏度 1-开尔文 2-华氏度
+    * @param DistanceUnit 距离单位 0-米 1-英尺
+    */
 data class EnvAttr(
     val Fps: Int,
     val Level: Int,
@@ -136,11 +136,11 @@ internal data class TempPointParam(
     val Target: TargetParam,
 ) {
     constructor(id: Int, point: Point?) : this(
-        Enable = point != null,
-        ID = id,
-        Name = "P$id",
-        Point = PointParam(point?.x ?: 0, point?.y ?: 0),
-        Target = TargetParam(true),
+    Enable = point != null,
+    ID = id,
+    Name = "P$id",
+    Point = PointParam(point?.x ?: 0, point?.y ?: 0),
+    Target = TargetParam(true),
     )
 }
 
@@ -152,11 +152,11 @@ internal data class TempLineParam(
     val Target: TargetParam,
 ) {
     constructor(id: Int, start: Point?, end: Point?) : this(
-        Enable = start != null && end != null,
-        ID = id,
-        Name = "L$id",
-        Line = LineParam(PointParam(start), PointParam(end)),
-        Target = TargetParam(true),
+    Enable = start != null && end != null,
+    ID = id,
+    Name = "L$id",
+    Line = LineParam(PointParam(start), PointParam(end)),
+    Target = TargetParam(true),
     )
 
     data class LineParam(val Point0: PointParam, val Point1: PointParam)
@@ -170,27 +170,27 @@ internal data class TempRectParam(
     val Target: TargetParam,
 ) {
     constructor(id: Int, rect: Rect?) : this(
-        Enable = rect != null,
-        ID = id,
-        Name = "L$id",
-        Rectangle = RectParam(rect),
-        Target = TargetParam(true),
+    Enable = rect != null,
+    ID = id,
+    Name = "L$id",
+    Rectangle = RectParam(rect),
+    Target = TargetParam(true),
     )
 
     data class RectParam(val Point0: PointParam, val Point1: PointParam, val Point2: PointParam, val Point3: PointParam) {
-        constructor(rect: Rect?) : this(
-            Point0 = PointParam(rect?.left ?: 0, rect?.top ?: 0),
-            Point1 = PointParam(rect?.right ?: 0, rect?.top ?: 0),
-            Point2 = PointParam(rect?.left ?: 0, rect?.bottom ?: 0),
-            Point3 = PointParam(rect?.right ?: 0, rect?.bottom ?: 0),
-        )
+    constructor(rect: Rect?) : this(
+    Point0 = PointParam(rect?.left ?: 0, rect?.top ?: 0),
+    Point1 = PointParam(rect?.right ?: 0, rect?.top ?: 0),
+    Point2 = PointParam(rect?.left ?: 0, rect?.bottom ?: 0),
+    Point3 = PointParam(rect?.right ?: 0, rect?.bottom ?: 0),
+    )
     }
 }
 
 /**
- * @param DCFile 可见光数据
- * @param IRFile 红外数据
- */
+    * @param DCFile 可见光数据
+    * @param IRFile 红外数据
+    */
 data class PhotoBean(
     val DCFile: String?,
     val IRFile: String?,
@@ -204,8 +204,8 @@ data class AttributeBean(
 )
 
 /**
- * 汇总TC007的所有的属性值
- */
+    * 汇总TC007的所有的属性值
+    */
 data class WifiAttributeBean(
     var Ratio: Int? = null,
     var X: Int? = null,

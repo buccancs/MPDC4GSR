@@ -14,7 +14,7 @@ import java.util.Locale;
 /**
  * @author YanLu
  * @since 17/5/12
- * 
+ *
  * English-only language utilities
  */
 

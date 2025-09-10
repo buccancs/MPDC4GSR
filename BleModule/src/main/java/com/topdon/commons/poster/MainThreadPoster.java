@@ -16,12 +16,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 final class MainThreadPoster extends Handler implements Poster {
     private final Queue<Runnable> queue;
     private boolean handlerActive;
-    
+
     MainThreadPoster() {
         super(Looper.getMainLooper());
         queue = new ConcurrentLinkedQueue<>();
     }
-    
+
     @Override
     public void enqueue(@NonNull Runnable runnable) {
         Objects.requireNonNull(runnable, "runnable is null, cannot be enqueued");

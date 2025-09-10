@@ -6,12 +6,12 @@ import android.widget.LinearLayout
 import com.topdon.lib.ui.R as UiR
 
 /**
- * 自定义HeaderView
- */
+    * 自定义HeaderView
+    */
 class HeaderView : LinearLayout {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0) {
-        inflate(context, UiR.layout.ui_header_view, this)
+    inflate(context, UiR.layout.ui_header_view, this)
     }
 }

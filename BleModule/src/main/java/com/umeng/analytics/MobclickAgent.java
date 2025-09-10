@@ -8,7 +8,7 @@ import android.content.Context;
  * Replace with real implementation when UMeng Analytics dependency is available
  */
 public class MobclickAgent {
-    
+
     /**
      * Log custom event with parameters
      * @param context Application context
@@ -19,10 +19,10 @@ public class MobclickAgent {
         // Stub implementation - replace with real analytics when available
         android.util.Log.d("MobclickAgent", "Event: " + eventName + " Data: " + eventData);
     }
-    
+
     /**
      * Log custom event
-     * @param context Application context 
+     * @param context Application context
      * @param eventName Event name
      */
     public static void onEvent(Context context, String eventName) {

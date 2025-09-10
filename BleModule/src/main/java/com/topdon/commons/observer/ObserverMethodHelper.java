@@ -101,7 +101,7 @@ class ObserverMethodHelper {
             cls = cls.getSuperclass();
         }
         for (Method method : methods) {
-            Observe anno = method.getAnnotation(Observe.class);          
+            Observe anno = method.getAnnotation(Observe.class);
             if (anno != null || !isObserveAnnotationRequired) {
                 Tag tagAnno = method.getAnnotation(Tag.class);
                 String tag = tagAnno == null ? "" : tagAnno.value();

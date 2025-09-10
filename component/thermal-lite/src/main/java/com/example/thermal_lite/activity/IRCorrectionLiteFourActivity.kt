@@ -20,11 +20,11 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 
 /**
- *
- * 锅盖矫正
- * @author: CaiSongL
- * @date: 2023/8/4 9:06
- */
+    *
+    * 锅盖矫正
+    * @author: CaiSongL
+    * @date: 2023/8/4 9:06
+    */
 // Legacy ARouter route annotation - now using NavigationManager
 class IRCorrectionLiteFourActivity : BaseActivity() {
 
@@ -35,103 +35,103 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_correction_lite_four
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        
-        binding.titleView.setLeftClickListener {
-            TipDialog.Builder(this)
-                .setTitleMessage(getString(R.string.app_tip))
-                .setMessage(R.string.tips_cancel_correction)
-                .setPositiveListener(R.string.app_yes) {
-                    EventBus.getDefault().post(CorrectionFinishEvent())
-                    finish()
-                }.setCancelListener(R.string.app_no){
-                }
-                .create().show()
-        }
+    super.onCreate(savedInstanceState)
 
-        val irFragment = if (savedInstanceState == null) {
-            IRMonitorLiteFragment()
-        } else {
-            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as IRMonitorLiteFragment
-        }
-        lifecycleScope.launch {
-            delay(1000)
-            if (savedInstanceState == null) {
-                supportFragmentManager.beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, irFragment)
-                    .commit()
-            }
-        }
+    binding.titleView.setLeftClickListener {
+    TipDialog.Builder(this)
+    .setTitleMessage(getString(R.string.app_tip))
+    .setMessage(R.string.tips_cancel_correction)
+    .setPositiveListener(R.string.app_yes) {
+    EventBus.getDefault().post(CorrectionFinishEvent())
+    finish()
+    }.setCancelListener(R.string.app_no){
+    }
+    .create().show()
+    }
+
+    val irFragment = if (savedInstanceState == null) {
+    IRMonitorLiteFragment()
+    } else {
+    supportFragmentManager.findFragmentById(R.id.fragment_container_view) as IRMonitorLiteFragment
+    }
+    lifecycleScope.launch {
+    delay(1000)
+    if (savedInstanceState == null) {
+    supportFragmentManager.beginTransaction()
+    .setReorderingAllowed(true)
+    .add(R.id.fragment_container_view, irFragment)
+    .commit()
+    }
+    }
 
 
-        binding.timeDownView.postDelayed({
-            //开始矫正
-            if (binding.timeDownView.downTimeWatcher == null){
-                binding.timeDownView.setOnTimeDownListener(object : TimeDownView.DownTimeWatcher{
-                    override fun onTime(num: Int) {
-                        if (num == 35){
-                            lifecycleScope.launch(Dispatchers.IO) {
-                               result = irFragment.autoStart()
-                            }
-                        }
-                    }
-                    override fun onLastTime(num: Int) {
+    binding.timeDownView.postDelayed({
+    //开始矫正
+    if (binding.timeDownView.downTimeWatcher == null){
+    binding.timeDownView.setOnTimeDownListener(object : TimeDownView.DownTimeWatcher{
+    override fun onTime(num: Int) {
+    if (num == 35){
+    lifecycleScope.launch(Dispatchers.IO) {
+    result = irFragment.autoStart()
+    }
+    }
+    }
+    override fun onLastTime(num: Int) {
 
-                    }
-                    override fun onLastTimeFinish(num: Int) {
-                        try {
-                            if (!result){
-                                ToastUtils.showShort("标定保存失败，请重新标定")
-                                return
-                            }
-                            if (!this@IRCorrectionLiteFourActivity.isFinishing){
-                                TipDialog.Builder(this@IRCorrectionLiteFourActivity)
-                                    .setMessage(R.string.correction_complete)
-                                    .setPositiveListener(R.string.app_confirm) {
-                                        EventBus.getDefault().post(CorrectionFinishEvent())
-                                        finish()
-                                    }
-                                    .create().show()
-                            }
-                        }catch (e : Exception){
+    }
+    override fun onLastTimeFinish(num: Int) {
+    try {
+    if (!result){
+    ToastUtils.showShort("标定保存失败，请重新标定")
+    return
+    }
+    if (!this@IRCorrectionLiteFourActivity.isFinishing){
+    TipDialog.Builder(this@IRCorrectionLiteFourActivity)
+    .setMessage(R.string.correction_complete)
+    .setPositiveListener(R.string.app_confirm) {
+    EventBus.getDefault().post(CorrectionFinishEvent())
+    finish()
+    }
+    .create().show()
+    }
+    }catch (e : Exception){
 
-                        }
-                    }
-                })
-            }
-            binding.timeDownView.downSecond(time,false)
-        },2000)
+    }
+    }
+    })
+    }
+    binding.timeDownView.downSecond(time,false)
+    },2000)
     }
 
     override fun initView() {
-        binding = ActivityIrCorrectionLiteFourBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    binding = ActivityIrCorrectionLiteFourBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     }
 
     override fun onBackPressed() {
-        TipDialog.Builder(this)
-            .setTitleMessage(getString(R.string.app_tip))
-            .setMessage(R.string.tips_cancel_correction)
-            .setPositiveListener(R.string.app_yes) {
-                EventBus.getDefault().post(CorrectionFinishEvent())
-                super.onBackPressed()
-            }.setCancelListener(R.string.app_no){
-            }
-            .create().show()
+    TipDialog.Builder(this)
+    .setTitleMessage(getString(R.string.app_tip))
+    .setMessage(R.string.tips_cancel_correction)
+    .setPositiveListener(R.string.app_yes) {
+    EventBus.getDefault().post(CorrectionFinishEvent())
+    super.onBackPressed()
+    }.setCancelListener(R.string.app_no){
+    }
+    .create().show()
     }
 
     override fun disConnected() {
-        super.disConnected()
-        binding.timeDownView.cancel()
-        EventBus.getDefault().post(CorrectionFinishEvent())
-        finish()
+    super.disConnected()
+    binding.timeDownView.cancel()
+    EventBus.getDefault().post(CorrectionFinishEvent())
+    finish()
     }
 
     override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().post(CorrectionFinishEvent())
-        finish()
+    super.onStop()
+    EventBus.getDefault().post(CorrectionFinishEvent())
+    finish()
     }
 
     override fun initData() {
@@ -139,7 +139,7 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        binding.timeDownView.cancel()
+    super.onDestroy()
+    binding.timeDownView.cancel()
     }
 }

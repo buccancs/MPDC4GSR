@@ -36,7 +36,7 @@ ext_modules = [
         "native_backend",
         sources=[
             "native_backend/src/native_shimmer.cpp",
-            "native_backend/src/native_webcam.cpp", 
+            "native_backend/src/native_webcam.cpp",
             "native_backend/src/pybind_module.cpp",
         ],
         include_dirs=[
@@ -59,12 +59,12 @@ setup(
     description="Multi-Modal Physiological Sensing Platform - PC Controller",
     long_description=open("README.md").read() if os.path.exists("README.md") else "",
     long_description_content_type="text/markdown",
-    
+
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
-    
+
     python_requires=">=3.11",
-    
+
     install_requires=[
         "PyQt6>=6.4.0",
         "pyqtgraph>=0.13.0",
@@ -78,7 +78,7 @@ setup(
         "asyncio-mqtt>=0.13.0",
         "pyyaml>=6.0",
     ],
-    
+
     extras_require={
         "dev": [
             "pytest>=7.0.0",
@@ -89,20 +89,20 @@ setup(
         ],
         "test": [
             "pytest>=7.0.0",
-            "pytest-asyncio>=0.21.0", 
+            "pytest-asyncio>=0.21.0",
             "pytest-cov>=4.0.0",
         ],
     },
-    
+
     package_dir={"": "src"},
     packages=find_packages("src"),
-    
+
     entry_points={
         "console_scripts": [
             "ircamera-pc=ircamera_pc.main:main",
         ],
     },
-    
+
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
@@ -115,11 +115,11 @@ setup(
         "Topic :: System :: Hardware",
         "Topic :: Multimedia :: Video :: Capture",
     ],
-    
+
     package_data={
         "ircamera_pc": ["*.yaml", "*.json"],
     },
-    
+
     include_package_data=True,
     zip_safe=False,
 )

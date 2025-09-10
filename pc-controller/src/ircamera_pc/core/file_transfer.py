@@ -411,12 +411,12 @@ class FileTransferManager:
     ) -> bytes:
         """
         Read a chunk of data from the device using real network communication
-        
+
         Args:
             job: Transfer job containing device connection info
             offset: File offset to read from
             size: Number of bytes to read
-            
+
         Returns:
             Chunk data as bytes
         """
@@ -439,10 +439,10 @@ class FileTransferManager:
                     "size": size,
                     "session_id": job.manifest.session_id
                 }
-                
+
                 # Send request to Android device
                 response = await self._send_device_request(device_conn, request_data)
-                
+
                 if response and response.get("status") == "success":
                     # Decode base64 data or get binary data
                     chunk_data = response.get("data", b"")
@@ -452,28 +452,28 @@ class FileTransferManager:
                     return chunk_data
                 else:
                     raise Exception(f"Device read failed: {response.get('error', 'Unknown error')}")
-                    
+
         except Exception as e:
             logger.error(f"Failed to read chunk from device: {e}")
             raise
-    
+
     async def _send_device_request(self, device_conn: Any, request_data: dict) -> dict:
         """
         Send request to Android device and get response
-        
+
         Args:
             device_conn: Device connection object
             request_data: Request data as dict
-            
+
         Returns:
             Response data as dict
         """
         try:
             import json
-            
+
             # Convert request to JSON
             request_json = json.dumps(request_data)
-            
+
             # Send via device connection
             if hasattr(device_conn, 'send_json'):
                 return await device_conn.send_json(request_data)
@@ -481,7 +481,7 @@ class FileTransferManager:
                 # Direct socket communication
                 device_conn.writer.write(request_json.encode('utf-8'))
                 await device_conn.writer.drain()
-                
+
                 # Read response
                 response_data = await device_conn.reader.read(65536)
                 response_json = response_data.decode('utf-8')
@@ -489,7 +489,7 @@ class FileTransferManager:
             else:
                 # Fallback error
                 raise Exception("No valid device communication method available")
-                
+
         except Exception as e:
             logger.error(f"Device request failed: {e}")
             return {"status": "error", "error": str(e)}
@@ -656,7 +656,7 @@ class FileTransferManager:
                         device_id=manifest_data.get("device_id", ""),
                         timestamp=manifest_data.get("timestamp", 0.0)
                     )
-                    
+
                     # Recreate transfer job
                     job = TransferJob(
                         job_id=job_id,
@@ -670,7 +670,7 @@ class FileTransferManager:
                         retry_count=job_data.get("retry_count", 0),
                         error_message=job_data.get("error_message")
                     )
-                    
+
                     # Only restore jobs that were in progress or pending
                     if job.status in [TransferStatus.PENDING, TransferStatus.IN_PROGRESS, TransferStatus.PAUSED]:
                         # Verify local file state
@@ -678,7 +678,7 @@ class FileTransferManager:
                             actual_size = job.local_path.stat().st_size
                             job.bytes_transferred = actual_size
                             job.resume_offset = actual_size
-                            
+
                             # If file is complete, mark as completed
                             if actual_size >= job.manifest.size_bytes:
                                 job.status = TransferStatus.COMPLETED
@@ -695,14 +695,14 @@ class FileTransferManager:
                             job.status = TransferStatus.PENDING
                             self.transfer_queue.append(job_id)
                             logger.info(f"Restored pending transfer: {job.manifest.filename}")
-                        
+
                         self.active_jobs[job_id] = job
                         reconstructed_jobs += 1
-                        
+
                 except Exception as e:
                     logger.warning(f"Failed to restore transfer job {job_id}: {e}")
                     continue
-            
+
             # Restore transfer queue if saved
             saved_queue = state_data.get("transfer_queue", [])
             for job_id in saved_queue:

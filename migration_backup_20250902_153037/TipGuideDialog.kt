@@ -34,123 +34,123 @@ class TipGuideDialog : DialogFragment() {
     private var index: Int = -1
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.dialog_tip_guide, container, false)
+    return inflater.inflate(R.layout.dialog_tip_guide, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        titleList = arrayListOf(
-            getString(R.string.target_tips_step_1),
-            getString(R.string.target_tips_step_2),
-            getString(R.string.target_tips_step_3),
-            getString(R.string.target_tips_step_4),
-        )
-        imgList = arrayListOf(
-            R.drawable.target_guide_pic_1,
-            R.drawable.target_guide_pic_2,
-            R.drawable.target_guide_pic_3,
-            R.drawable.target_guide_pic_4,
-        )
-        viewPager = view.view_pager
-        tvContent1 = view.tv_content_1
-        tvContent2 = view.tv_content_2
-        tvContent3 = view.tv_content_3
-        indicateView = view.indicate_view
-        ivTarget = view.iv_target
-        val adapter = PageAdapter(childFragmentManager, imgList)
-        indicateView.itemCount = adapter.count
-        viewPager.adapter = adapter
-        view.tv_i_know.setOnClickListener {
-            closeEvent?.invoke(true)
-            dismiss()
-        }
-        updateIndex(0)
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
+    super.onViewCreated(view, savedInstanceState)
+    titleList = arrayListOf(
+    getString(R.string.target_tips_step_1),
+    getString(R.string.target_tips_step_2),
+    getString(R.string.target_tips_step_3),
+    getString(R.string.target_tips_step_4),
+    )
+    imgList = arrayListOf(
+    R.drawable.target_guide_pic_1,
+    R.drawable.target_guide_pic_2,
+    R.drawable.target_guide_pic_3,
+    R.drawable.target_guide_pic_4,
+    )
+    viewPager = view.view_pager
+    tvContent1 = view.tv_content_1
+    tvContent2 = view.tv_content_2
+    tvContent3 = view.tv_content_3
+    indicateView = view.indicate_view
+    ivTarget = view.iv_target
+    val adapter = PageAdapter(childFragmentManager, imgList)
+    indicateView.itemCount = adapter.count
+    viewPager.adapter = adapter
+    view.tv_i_know.setOnClickListener {
+    closeEvent?.invoke(true)
+    dismiss()
+    }
+    updateIndex(0)
+    viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+    override fun onPageScrolled(
+    position: Int,
+    positionOffset: Float,
+    positionOffsetPixels: Int
+    ) {
+    }
 
-            override fun onPageSelected(position: Int) {
-                updateIndex(position)
-            }
+    override fun onPageSelected(position: Int) {
+    updateIndex(position)
+    }
 
-            override fun onPageScrollStateChanged(state: Int) {
-            }
+    override fun onPageScrollStateChanged(state: Int) {
+    }
 
-        })
+    })
     }
 
 
     fun updateIndex(position: Int) {
-        if (index == position) {
-            return
-        }
-        indicateView.currentIndex = position
-        viewPager.setCurrentItem(position, true)
-        when (position) {
-            0 -> {
-                tvContent1.visibility = View.VISIBLE
-                tvContent3.visibility = View.VISIBLE
-                ivTarget.visibility = View.GONE
-            }
+    if (index == position) {
+    return
+    }
+    indicateView.currentIndex = position
+    viewPager.setCurrentItem(position, true)
+    when (position) {
+    0 -> {
+    tvContent1.visibility = View.VISIBLE
+    tvContent3.visibility = View.VISIBLE
+    ivTarget.visibility = View.GONE
+    }
 
-            2 -> {
-                tvContent1.visibility = View.GONE
-                tvContent3.visibility = View.GONE
-                ivTarget.visibility = View.VISIBLE
-            }
+    2 -> {
+    tvContent1.visibility = View.GONE
+    tvContent3.visibility = View.GONE
+    ivTarget.visibility = View.VISIBLE
+    }
 
-            else -> {
-                tvContent1.visibility = View.GONE
-                tvContent3.visibility = View.GONE
-                ivTarget.visibility = View.GONE
-            }
-        }
-        tvContent2.text = titleList[position]
-        index = position
+    else -> {
+    tvContent1.visibility = View.GONE
+    tvContent3.visibility = View.GONE
+    ivTarget.visibility = View.GONE
+    }
+    }
+    tvContent2.text = titleList[position]
+    index = position
     }
 
     override fun onResume() {
-        super.onResume()
-        val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
-        params.width = -1
-        params.height = -1
-        dialog?.window?.attributes = params as WindowManager.LayoutParams
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    super.onResume()
+    val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
+    params.width = -1
+    params.height = -1
+    dialog?.window?.attributes = params as WindowManager.LayoutParams
+    dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
-        try {
-            super.show(manager, tag)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+    try {
+    super.show(manager, tag)
+    } catch (e: Exception) {
+    e.printStackTrace()
+    }
     }
 
     companion object {
-        fun newInstance(): TipGuideDialog {
-            return TipGuideDialog()
-        }
+    fun newInstance(): TipGuideDialog {
+    return TipGuideDialog()
+    }
     }
 
     inner class PageAdapter(
-        fragmentManager: FragmentManager,
-        private val imgResList: ArrayList<Int>
+    fragmentManager: FragmentManager,
+    private val imgResList: ArrayList<Int>
     ) :
-        FragmentPagerAdapter(fragmentManager) {
-        override fun getCount(): Int {
-            return imgResList.size
-        }
+    FragmentPagerAdapter(fragmentManager) {
+    override fun getCount(): Int {
+    return imgResList.size
+    }
 
-        override fun getItem(position: Int): Fragment {
-            return PageFragment.newInstance(imgResList[position])
-        }
+    override fun getItem(position: Int): Fragment {
+    return PageFragment.newInstance(imgResList[position])
+    }
     }
 }

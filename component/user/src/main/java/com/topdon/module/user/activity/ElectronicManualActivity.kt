@@ -16,8 +16,8 @@ import com.topdon.lib.core.R as RCore
 import com.topdon.module.user.R
 
 /**
- * 电子说明书 或 FAQ 设备类型选择页面
- */
+    * 电子说明书 或 FAQ 设备类型选择页面
+    */
 // Legacy ARouter route annotation - now using NavigationManager
 class ElectronicManualActivity : BaseActivity() {
 
@@ -28,36 +28,36 @@ class ElectronicManualActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_electronic_manual
 
     override fun initView() {
-        // Initialize views - migrated from synthetic views
-        titleView = findViewById(R.id.title_view)
-        electronicManualRecycler = findViewById(R.id.electronic_manual_recycler)
-        
-        val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) //0-电子说明书 1-FAQ
+    // Initialize views - migrated from synthetic views
+    titleView = findViewById(R.id.title_view)
+    electronicManualRecycler = findViewById(R.id.electronic_manual_recycler)
 
-        titleView.setTitleText(if (productType == Constants.SETTING_BOOK) RCore.string.electronic_manual else RCore.string.app_question)
+    val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) //0-电子说明书 1-FAQ
 
-        val adapter = MyAdapter(productType == 1)
-        adapter.onPickListener = { isTS001 ->
-            if (isTS001) {
-                if (productType == Constants.SETTING_BOOK) {
-                    //电子说明书-TS001
-                } else {
-                    //FAQ-TS001
-                    NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", true).navigation(this)
-                }
-            } else {
-                if (productType == Constants.SETTING_BOOK) {
-                    //电子说明书-TS004
-                    NavigationManager.getInstance().build(RouterConfig.PDF).withBoolean("isTS001", false).navigation(this)
-                } else {
-                    //FAQ-TS004
-                    NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", false).navigation(this)
-                }
-            }
-        }
+    titleView.setTitleText(if (productType == Constants.SETTING_BOOK) RCore.string.electronic_manual else RCore.string.app_question)
 
-        electronicManualRecycler.layoutManager = LinearLayoutManager(this)
-        electronicManualRecycler.adapter = adapter
+    val adapter = MyAdapter(productType == 1)
+    adapter.onPickListener = { isTS001 ->
+    if (isTS001) {
+    if (productType == Constants.SETTING_BOOK) {
+    //电子说明书-TS001
+    } else {
+    //FAQ-TS001
+    NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", true).navigation(this)
+    }
+    } else {
+    if (productType == Constants.SETTING_BOOK) {
+    //电子说明书-TS004
+    NavigationManager.getInstance().build(RouterConfig.PDF).withBoolean("isTS001", false).navigation(this)
+    } else {
+    //FAQ-TS004
+    NavigationManager.getInstance().build(RouterConfig.QUESTION).withBoolean("isTS001", false).navigation(this)
+    }
+    }
+    }
+
+    electronicManualRecycler.layoutManager = LinearLayoutManager(this)
+    electronicManualRecycler.adapter = adapter
     }
 
     override fun initData() {
@@ -69,37 +69,37 @@ class ElectronicManualActivity : BaseActivity() {
 
     private class MyAdapter(private val isFAQ: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        var onPickListener: ((isTS001: Boolean) -> Unit)? = null
+    var onPickListener: ((isTS001: Boolean) -> Unit)? = null
 
-        private val optionList: ArrayList<String> = ArrayList(2)
+    private val optionList: ArrayList<String> = ArrayList(2)
 
-        init {
-            // 由于 TC001 的说明书为旧版本 样式， 2024-4-9 产品决定先隐藏，只放 TS004 的说明书
-            if (isFAQ) {
-                optionList.add("TS001")
-            }
-            optionList.add("TS004")
-        }
+    init {
+    // 由于 TC001 的说明书为旧版本 样式， 2024-4-9 产品决定先隐藏，只放 TS004 的说明书
+    if (isFAQ) {
+    optionList.add("TS001")
+    }
+    optionList.add("TS004")
+    }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_electronic_manual, parent, false))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_electronic_manual, parent, false))
+    }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            if (holder is ItemViewHolder) {
-                val itemText: TextView = holder.rootView.findViewById(R.id.item_text)
-                val itemLay: ConstraintLayout = holder.rootView.findViewById(R.id.item_lay)
-                
-                itemText.text = optionList[position]
-                itemLay.setOnClickListener {
-                    onPickListener?.invoke(isFAQ && position == 0)
-                }
-            }
-        }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    if (holder is ItemViewHolder) {
+    val itemText: TextView = holder.rootView.findViewById(R.id.item_text)
+    val itemLay: ConstraintLayout = holder.rootView.findViewById(R.id.item_lay)
 
-        override fun getItemCount(): Int = optionList.size
+    itemText.text = optionList[position]
+    itemLay.setOnClickListener {
+    onPickListener?.invoke(isFAQ && position == 0)
+    }
+    }
+    }
 
-        private class ItemViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
+    override fun getItemCount(): Int = optionList.size
+
+    private class ItemViewHolder(val rootView: View) : RecyclerView.ViewHolder(rootView)
     }
 
 }

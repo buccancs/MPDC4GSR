@@ -14,15 +14,15 @@ class ConnectActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_connect
 
     override fun initView() {
-        setTitleText(R.string.app_name)
-        val device = DeviceTools.isConnect()
-        if (device == null) {
-            //未连接
-            bluetooth_btn.text = getString(R.string.app_no_connect)
-        } else {
-            //已连接
-            bluetooth_btn.text = getString(R.string.app_connect)
-        }
+    setTitleText(R.string.app_name)
+    val device = DeviceTools.isConnect()
+    if (device == null) {
+    //未连接
+    bluetooth_btn.text = getString(R.string.app_no_connect)
+    } else {
+    //已连接
+    bluetooth_btn.text = getString(R.string.app_connect)
+    }
 
 
     }

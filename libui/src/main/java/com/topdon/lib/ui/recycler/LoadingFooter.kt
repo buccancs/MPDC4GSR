@@ -9,21 +9,21 @@ import androidx.core.view.isVisible
 import com.topdon.lib.ui.databinding.UiFooterViewBinding
 
 /**
- * 自定义FooterView - Modernized with view binding
- */
+    * 自定义FooterView - Modernized with view binding
+    */
 class LoadingFooter : LinearLayout {
     private val binding: UiFooterViewBinding
 
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0) {
-        binding = UiFooterViewBinding.inflate(LayoutInflater.from(context), this, true)
+    binding = UiFooterViewBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun setNoMoreData(noMoreData: Boolean): Boolean {
-        binding.llLoading.isVisible = !noMoreData
-        binding.clLoadEnd.isVisible = noMoreData
-        return true
+    binding.llLoading.isVisible = !noMoreData
+    binding.clLoadEnd.isVisible = noMoreData
+    return true
     }
 
     fun getCustomView(): View = this

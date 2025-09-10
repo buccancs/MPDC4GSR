@@ -24,94 +24,94 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
     private var ddeEnable = false // 细节
 
     fun selected(index: Int) {
-        selected = index
-        notifyDataSetChanged()
+    selected = index
+    notifyDataSetChanged()
     }
 
     fun enColor(colorEnable: Boolean) {
-        this.colorEnable = colorEnable
-        notifyDataSetChanged()
+    this.colorEnable = colorEnable
+    notifyDataSetChanged()
     }
 
     fun enContrast(param: Boolean) {
-        this.contrastEnable = param
-        notifyDataSetChanged()
+    this.contrastEnable = param
+    notifyDataSetChanged()
     }
 
     fun enDde(param: Boolean) {
-        this.ddeEnable = param
-        notifyDataSetChanged()
+    this.ddeEnable = param
+    notifyDataSetChanged()
     }
 
     private val fourBean =
-        arrayListOf(
-            ColorBean(MenuR.drawable.selector_menu2_setting_1, context.getString(R.string.thermal_pseudo), 1),
-            ColorBean(MenuR.drawable.selector_menu2_setting_2, context.getString(R.string.thermal_contrast), 2),
-            ColorBean(MenuR.drawable.selector_menu2_setting_3, context.getString(R.string.thermal_sharpen), 3),
-        )
+    arrayListOf(
+    ColorBean(MenuR.drawable.selector_menu2_setting_1, context.getString(R.string.thermal_pseudo), 1),
+    ColorBean(MenuR.drawable.selector_menu2_setting_2, context.getString(R.string.thermal_contrast), 2),
+    ColorBean(MenuR.drawable.selector_menu2_setting_3, context.getString(R.string.thermal_sharpen), 3),
+    )
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
+    parent: ViewGroup,
+    viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(UiR.layout.ui_item_menu_four_view, parent, false)
-        return ItemView(view)
+    val view = LayoutInflater.from(parent.context).inflate(UiR.layout.ui_item_menu_four_view, parent, false)
+    return ItemView(view)
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
+    holder: RecyclerView.ViewHolder,
+    position: Int,
     ) {
-        if (holder is ItemView) {
-            val bean = fourBean[position]
-            holder.name.text = bean.name
-            holder.img.setImageResource(bean.res)
-            holder.lay.setOnClickListener(
-                object : SingleClickListener() {
-                    override fun onSingleClick() {
-                        listener?.invoke(position, bean.code)
-                        selected(bean.code)
-                    }
-                },
-            )
-            when (bean.code) {
-                1 -> {
-                    iconUI(colorEnable, holder.img, holder.name)
-                }
-                2 -> {
-                    iconUI(contrastEnable, holder.img, holder.name)
-                }
-                3 -> {
-                    iconUI(ddeEnable, holder.img, holder.name)
-                }
-                else -> {
-                    iconUI(bean.code == selected, holder.img, holder.name)
-                }
-            }
-        }
+    if (holder is ItemView) {
+    val bean = fourBean[position]
+    holder.name.text = bean.name
+    holder.img.setImageResource(bean.res)
+    holder.lay.setOnClickListener(
+    object : SingleClickListener() {
+    override fun onSingleClick() {
+    listener?.invoke(position, bean.code)
+    selected(bean.code)
+    }
+    },
+    )
+    when (bean.code) {
+    1 -> {
+    iconUI(colorEnable, holder.img, holder.name)
+    }
+    2 -> {
+    iconUI(contrastEnable, holder.img, holder.name)
+    }
+    3 -> {
+    iconUI(ddeEnable, holder.img, holder.name)
+    }
+    else -> {
+    iconUI(bean.code == selected, holder.img, holder.name)
+    }
+    }
+    }
     }
 
     // 状态变化
     private fun iconUI(
-        isActive: Boolean,
-        img: ImageView,
-        nameText: TextView,
+    isActive: Boolean,
+    img: ImageView,
+    nameText: TextView,
     ) {
-        img.isSelected = isActive
-        if (isActive) {
-            nameText.setTextColor(ContextCompat.getColor(context, UiR.color.white))
-        } else {
-            nameText.setTextColor(ContextCompat.getColor(context, UiR.color.font_third_color))
-        }
+    img.isSelected = isActive
+    if (isActive) {
+    nameText.setTextColor(ContextCompat.getColor(context, UiR.color.white))
+    } else {
+    nameText.setTextColor(ContextCompat.getColor(context, UiR.color.font_third_color))
+    }
     }
 
     override fun getItemCount(): Int {
-        return fourBean.size
+    return fourBean.size
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
-        val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)
-        val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
+    val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
+    val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)
+    val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
     }
 }

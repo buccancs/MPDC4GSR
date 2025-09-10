@@ -21,67 +21,67 @@ import org.json.JSONObject
 
 // Legacy ARouter route annotation - now using NavigationManager
 class TISRActivity : BaseActivity(){
-    
+
     // View references - migrated from synthetic views
     private lateinit var titleView: TitleView
     private lateinit var settingItemTisrSelect: SwitchCompat
-    
+
     override fun initContentView() = R.layout.activity_tisr
 
     override fun initView() {
-        // Initialize views - migrated from synthetic views
-        titleView = findViewById(R.id.title_view)
-        settingItemTisrSelect = findViewById(R.id.setting_item_tisr_select)
-        
-        titleView.setTitleText("TISR")
-        settingItemTisrSelect.isChecked = SharedManager.is04TISR
-        settingItemTisrSelect.setOnCheckedChangeListener { _, isChecked ->
-            updateTISR(if(isChecked) 1 else 0)
-            SharedManager.is04TISR = isChecked
-        }
+    // Initialize views - migrated from synthetic views
+    titleView = findViewById(R.id.title_view)
+    settingItemTisrSelect = findViewById(R.id.setting_item_tisr_select)
+
+    titleView.setTitleText("TISR")
+    settingItemTisrSelect.isChecked = SharedManager.is04TISR
+    settingItemTisrSelect.setOnCheckedChangeListener { _, isChecked ->
+    updateTISR(if(isChecked) 1 else 0)
+    SharedManager.is04TISR = isChecked
+    }
     }
 
     override fun initData() {
-        lifecycleScope.launch {
-            val tisrBean = TS004Repository.getTISR()
-            if(tisrBean?.isSuccess()!!){
-                val isTISR = tisrBean.data?.enable!! == 1
-                settingItemTisrSelect.isChecked = isTISR
-                SharedManager.is04TISR = isTISR
-            }else{
-                TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
-            }
-        }
+    lifecycleScope.launch {
+    val tisrBean = TS004Repository.getTISR()
+    if(tisrBean?.isSuccess()!!){
+    val isTISR = tisrBean.data?.enable!! == 1
+    settingItemTisrSelect.isChecked = isTISR
+    SharedManager.is04TISR = isTISR
+    }else{
+    TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
+    }
+    }
     }
 
     private fun updateTISR(state: Int) {
-        lifecycleScope.launch {
-            val isSuccess= TS004Repository.setTISR(state)
-            if(isSuccess){
-            }else{
-                TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
-            }
-        }
+    lifecycleScope.launch {
+    val isSuccess= TS004Repository.setTISR(state)
+    if(isSuccess){
+    }else{
+    TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
+    }
+    }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
-        when(SocketCmdUtil.getCmdResponse(event.text)){
-            WsCmdConstants.AR_COMMAND_TISR_GET -> {//获取超分状态
-                try {
-                    val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
-                    if(webSocketIp == WsCmdConstants.AR_COMMAND_IP){
-                        val data: JSONObject = JSONObject(event.text).getJSONObject("data")
-                        val state: Int = data.getInt("state")
-                        val isTISR = state == 1
-                        settingItemTisrSelect.isChecked = isTISR
-                        SharedManager.is04TISR = isTISR
-                    }
-                } catch (_: Exception) {
+    when(SocketCmdUtil.getCmdResponse(event.text)){
+    WsCmdConstants.AR_COMMAND_TISR_GET -> {//获取超分状态
+    try {
+    val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
+    if(webSocketIp == WsCmdConstants.AR_COMMAND_IP){
+    val data: JSONObject = JSONObject(event.text).getJSONObject("data")
+    val state: Int = data.getInt("state")
+    val isTISR = state == 1
+    settingItemTisrSelect.isChecked = isTISR
+    SharedManager.is04TISR = isTISR
+    }
+    } catch (_: Exception) {
 
-                }
-            }
-        }
+    }
+    }
+    }
     }
 
 }

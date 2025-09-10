@@ -7,18 +7,18 @@ abstract class NullSensor(private val interval: Long = 0): AbstractSensor() {
     override val hasValidReading: Boolean = true
 
     private val timer = CoroutineTimer {
-        notifyListeners()
+    notifyListeners()
     }
 
     override fun startImpl() {
-        if (interval == 0L){
-            timer.once(0L)
-        } else {
-            timer.interval(interval)
-        }
+    if (interval == 0L){
+    timer.once(0L)
+    } else {
+    timer.interval(interval)
+    }
     }
 
     override fun stopImpl() {
-        timer.stop()
+    timer.stop()
     }
 }

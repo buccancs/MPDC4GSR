@@ -13,18 +13,18 @@ enum class FirmwareUpgradeResultCode(private var msg: String?, private var code:
     FILE_WRITE_ERROR("Write upgrade file error", 9);
 
     fun getMsg(): String? {
-        return msg
+    return msg
     }
 
     fun setMsg(msg: String?) {
-        this.msg = msg
+    this.msg = msg
     }
 
     fun getCode(): Int {
-        return code
+    return code
     }
 
     fun setCode(code: Int) {
-        this.code = code
+    this.code = code
     }
 }

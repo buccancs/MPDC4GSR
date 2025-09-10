@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Utilities class for interacting with the assets and the devices storage to
  * load and save DataSet objects from and to .txt files.
- * 
+ *
  * @author Philipp Jahoda
  */
 public class FileUtils {
@@ -30,7 +30,7 @@ public class FileUtils {
 
     /**
      * Loads a an Array of Entries from a textfile from the sd-card.
-     * 
+     *
      * @param path the name of the file on the sd-card (+ path if needed)
      * @return
      */
@@ -101,7 +101,7 @@ public class FileUtils {
 
     /**
      * Loads an array of Entries from a textfile from the assets folder.
-     * 
+     *
      * @param am
      * @param path the name of the file in the assets folder (+ path if needed)
      * @return
@@ -190,7 +190,7 @@ public class FileUtils {
 
     /**
      * Saves an Array of Entries to the specified location on the sdcard
-     * 
+     *
      * @param entries
      * @param path
      */

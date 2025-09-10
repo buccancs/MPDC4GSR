@@ -25,13 +25,13 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * 房屋检测首页.
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007（不使用，透传）
- *
- * Created by LCG on 2024/8/20.
- */
+    * 房屋检测首页.
+    *
+    * 需要传递参数：
+    * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007（不使用，透传）
+    *
+    * Created by LCG on 2024/8/20.
+    */
 class HouseHomeActivity : BaseActivity(), View.OnClickListener {
     private val tabViewModel: TabViewModel by viewModels()
 
@@ -42,54 +42,54 @@ class HouseHomeActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView(): Int = R.layout.activity_house_home
 
     override fun initView() {
-        iv_edit.isEnabled = false
-        iv_back.setOnClickListener(this)
-        iv_edit.setOnClickListener(this)
-        iv_add.setOnClickListener(this)
-        iv_exit_edit.setOnClickListener(this)
+    iv_edit.isEnabled = false
+    iv_back.setOnClickListener(this)
+    iv_edit.setOnClickListener(this)
+    iv_add.setOnClickListener(this)
+    iv_exit_edit.setOnClickListener(this)
 
-        val backCallback = object : OnBackPressedCallback(false) {
-            override fun handleOnBackPressed() {
-                tabViewModel.isEditModeLD.value = false
-            }
-        }
-        onBackPressedDispatcher.addCallback(this, backCallback)
+    val backCallback = object : OnBackPressedCallback(false) {
+    override fun handleOnBackPressed() {
+    tabViewModel.isEditModeLD.value = false
+    }
+    }
+    onBackPressedDispatcher.addCallback(this, backCallback)
 
-        tabViewModel.isEditModeLD.observe(this) {
-            backCallback.isEnabled = it
-            cl_title_bar.isVisible = !it
-            cl_edit_bar.isVisible = it
-            tab_layout.isVisible = !it
-            view_pager2.isUserInputEnabled = !it
-        }
-        tabViewModel.selectSizeLD.observe(this) {
-            tv_edit_title.text = if (it > 0) getString(R.string.chosen_item, it) else getString(R.string.not_selected)
-        }
+    tabViewModel.isEditModeLD.observe(this) {
+    backCallback.isEnabled = it
+    cl_title_bar.isVisible = !it
+    cl_edit_bar.isVisible = it
+    tab_layout.isVisible = !it
+    view_pager2.isUserInputEnabled = !it
+    }
+    tabViewModel.selectSizeLD.observe(this) {
+    tv_edit_title.text = if (it > 0) getString(R.string.chosen_item, it) else getString(R.string.not_selected)
+    }
 
-        detectViewModel.detectListLD.observe(this) {
-            if (view_pager2.currentItem == 0) {
-                iv_edit.isEnabled = !it.isNullOrEmpty()
-            }
-        }
-        reportViewModel.reportListLD.observe(this) {
-            if (view_pager2.currentItem == 1) {
-                iv_edit.isEnabled = !it.isNullOrEmpty()
-            }
-        }
+    detectViewModel.detectListLD.observe(this) {
+    if (view_pager2.currentItem == 0) {
+    iv_edit.isEnabled = !it.isNullOrEmpty()
+    }
+    }
+    reportViewModel.reportListLD.observe(this) {
+    if (view_pager2.currentItem == 1) {
+    iv_edit.isEnabled = !it.isNullOrEmpty()
+    }
+    }
 
-        view_pager2.adapter = ViewPagerAdapter(this)
-        view_pager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                if (position == 0) {//检测
-                    iv_edit.isEnabled = !detectViewModel.detectListLD.value.isNullOrEmpty()
-                } else {//报告
-                    iv_edit.isEnabled = !reportViewModel.reportListLD.value.isNullOrEmpty()
-                }
-            }
-        })
-        TabLayoutMediator(tab_layout, view_pager2) { tab, position ->
-            tab.setText(if (position == 0) R.string.app_detection else R.string.app_report)
-        }.attach()
+    view_pager2.adapter = ViewPagerAdapter(this)
+    view_pager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+    override fun onPageSelected(position: Int) {
+    if (position == 0) {//检测
+    iv_edit.isEnabled = !detectViewModel.detectListLD.value.isNullOrEmpty()
+    } else {//报告
+    iv_edit.isEnabled = !reportViewModel.reportListLD.value.isNullOrEmpty()
+    }
+    }
+    })
+    TabLayoutMediator(tab_layout, view_pager2) { tab, position ->
+    tab.setText(if (position == 0) R.string.app_detection else R.string.app_report)
+    }.attach()
     }
 
     override fun initData() {
@@ -97,37 +97,37 @@ class HouseHomeActivity : BaseActivity(), View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDetectCreate(event: HouseReportAddEvent) {
-        //有新报告被创建时，切到报告页
-        view_pager2.currentItem = 1
+    //有新报告被创建时，切到报告页
+    view_pager2.currentItem = 1
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            iv_back -> finish()
-            iv_edit -> {//编辑
-                tabViewModel.isEditModeLD.value = true
-            }
-            iv_add -> {//添加
-                val newIntent = Intent(this, DetectAddActivity::class.java)
-                newIntent.putExtra(ExtraKeyConfig.IS_TC007, intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
-                startActivity(newIntent)
-            }
-            iv_exit_edit -> {//退出编辑
-                tabViewModel.isEditModeLD.value = false
-            }
-        }
+    when (v) {
+    iv_back -> finish()
+    iv_edit -> {//编辑
+    tabViewModel.isEditModeLD.value = true
+    }
+    iv_add -> {//添加
+    val newIntent = Intent(this, DetectAddActivity::class.java)
+    newIntent.putExtra(ExtraKeyConfig.IS_TC007, intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
+    startActivity(newIntent)
+    }
+    iv_exit_edit -> {//退出编辑
+    tabViewModel.isEditModeLD.value = false
+    }
+    }
     }
 
 
     private class ViewPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 2
+    override fun getItemCount(): Int = 2
 
-        override fun createFragment(position: Int): Fragment {
-            val bundle = Bundle()
-            bundle.putBoolean(ExtraKeyConfig.IS_TC007, activity.intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
-            val fragment = if (position == 0) DetectListFragment() else ReportListFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
+    override fun createFragment(position: Int): Fragment {
+    val bundle = Bundle()
+    bundle.putBoolean(ExtraKeyConfig.IS_TC007, activity.intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false))
+    val fragment = if (position == 0) DetectListFragment() else ReportListFragment()
+    fragment.arguments = bundle
+    return fragment
+    }
     }
 }

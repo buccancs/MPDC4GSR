@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
 /**
- * @author: CaiSongL
- * @date: 2022/6/3 21:09
- */
+    * @author: CaiSongL
+    * @date: 2022/6/3 21:09
+    */
 fun View.gone(){
     this.visibility = View.GONE
 }
@@ -22,39 +22,39 @@ fun View.invisible(){
 }
 
 /**
- * 隐藏view，带有渐隐动画效果。
- * @param duration 毫秒，动画持续时长，默认500毫秒。
- */
+    * 隐藏view，带有渐隐动画效果。
+    * @param duration 毫秒，动画持续时长，默认500毫秒。
+    */
 fun View?.goneAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.GONE
     this?.startAnimation(AlphaAnimation(1f, 0f).apply {
-        this.duration = duration
-        fillAfter = true
+    this.duration = duration
+    fillAfter = true
     })
 }
 
 /**
- * 占位隐藏view，带有渐隐动画效果。
- * @param duration 毫秒，动画持续时长，默认500毫秒。
- */
+    * 占位隐藏view，带有渐隐动画效果。
+    * @param duration 毫秒，动画持续时长，默认500毫秒。
+    */
 fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.INVISIBLE
     this?.startAnimation(AlphaAnimation(1f, 0f).apply {
-        this.duration = duration
-        fillAfter = true
+    this.duration = duration
+    fillAfter = true
     })
 }
 
 /**
- * 显示view，带有渐显动画效果。
- *
- * @param duration 毫秒，动画持续时长，默认500毫秒。
- */
+    * 显示view，带有渐显动画效果。
+    *
+    * @param duration 毫秒，动画持续时长，默认500毫秒。
+    */
 fun View?.visibleAlphaAnimation(duration: Long = 500L) {
     this?.visibility = View.VISIBLE
     this?.startAnimation(AlphaAnimation(0f, 1f).apply {
-        this.duration = duration
-        fillAfter = true
+    this.duration = duration
+    fillAfter = true
     })
 }
 

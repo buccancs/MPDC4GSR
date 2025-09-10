@@ -27,107 +27,107 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
-        return position
+    return position
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return ItemView(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false)
-        )
+    return ItemView(
+    LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false)
+    )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val data = dataList[position]
-        if (holder is ItemView) {
-            holder.tvFloorNumber.text = data.itemName
+    val data = dataList[position]
+    if (holder is ItemView) {
+    holder.tvFloorNumber.text = data.itemName
 
-            holder.rcyReport.layoutManager = LinearLayoutManager(cxt)
-            val reportPreviewAdapter =
-                ReportPreviewFloorAdapter(cxt, data.projectItemBeans)
-            holder.rcyReport.adapter = reportPreviewAdapter
+    holder.rcyReport.layoutManager = LinearLayoutManager(cxt)
+    val reportPreviewAdapter =
+    ReportPreviewFloorAdapter(cxt, data.projectItemBeans)
+    holder.rcyReport.adapter = reportPreviewAdapter
 
-            if (CollectionUtils.isNotEmpty(data.projectItemBeans)) {
-                holder.flyProject.visibility = View.VISIBLE
-                holder.rcyCategory.layoutManager = LinearLayoutManager(cxt)
-                val reportCategoryAdapter =
-                    ReportPreviewFloorAdapter(cxt, data.projectItemBeans)
-                holder.rcyCategory.adapter = reportCategoryAdapter
-            } else {
-                holder.flyProject.visibility = View.GONE
-            }
+    if (CollectionUtils.isNotEmpty(data.projectItemBeans)) {
+    holder.flyProject.visibility = View.VISIBLE
+    holder.rcyCategory.layoutManager = LinearLayoutManager(cxt)
+    val reportCategoryAdapter =
+    ReportPreviewFloorAdapter(cxt, data.projectItemBeans)
+    holder.rcyCategory.adapter = reportCategoryAdapter
+    } else {
+    holder.flyProject.visibility = View.GONE
+    }
 
-            if (CollectionUtils.isNotEmpty(data.albumItemBeans)) {
-                holder.llyAlbum.visibility = View.VISIBLE
-                holder.rcyAlbum.layoutManager = GridLayoutManager(cxt, 3)
-                val albumAdapter = ReportPreviewAlbumAdapter(cxt, data.albumItemBeans)
-                holder.rcyAlbum.adapter = albumAdapter
-            albumAdapter.jumpListener = { _, position ->
-                // Disabled - ImagesDetailActivity from removed house module  
-                // var intent = Intent(cxt, ImagesDetailActivity::class.java)
-                // var photos = ArrayList<String>()
-                // data.albumItemBeans.forEach {
-                //     photos.add(it.photoPath)
-                // }
-                // intent.putExtra(ExtraKeyConfig.IMAGE_PATH_LIST, photos)
-                // intent.putExtra(ExtraKeyConfig.CURRENT_ITEM, position)
-                // cxt.startActivity(intent)
-                
-                // Temporary stub - show toast instead of navigating
-                TToast.shortToast(cxt, "Image detail view disabled - house module removed")
-            }
-        } else {
-            holder.llyAlbum.visibility = View.GONE
-        }
+    if (CollectionUtils.isNotEmpty(data.albumItemBeans)) {
+    holder.llyAlbum.visibility = View.VISIBLE
+    holder.rcyAlbum.layoutManager = GridLayoutManager(cxt, 3)
+    val albumAdapter = ReportPreviewAlbumAdapter(cxt, data.albumItemBeans)
+    holder.rcyAlbum.adapter = albumAdapter
+    albumAdapter.jumpListener = { _, position ->
+    // Disabled - ImagesDetailActivity from removed house module
+    // var intent = Intent(cxt, ImagesDetailActivity::class.java)
+    // var photos = ArrayList<String>()
+    // data.albumItemBeans.forEach {
+    //     photos.add(it.photoPath)
+    // }
+    // intent.putExtra(ExtraKeyConfig.IMAGE_PATH_LIST, photos)
+    // intent.putExtra(ExtraKeyConfig.CURRENT_ITEM, position)
+    // cxt.startActivity(intent)
 
-        holder.hsvReport.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                // Generic view doesn't have startScrollerTask method
-                // holder.hsvReport.startScrollerTask()
-            }
-            false
-        }
+    // Temporary stub - show toast instead of navigating
+    TToast.shortToast(cxt, "Image detail view disabled - house module removed")
+    }
+    } else {
+    holder.llyAlbum.visibility = View.GONE
+    }
 
-        // Scroll listener commented out due to type issues - would need proper MHorizontalScrollView import
-        /*
-        holder.hsvReport.setOnScrollStopListner(object : OnScrollStopListner {
-            override fun onScrollToRightEdge() {
-                holder.viewCategoryMask.visibility = View.VISIBLE
-            }
+    holder.hsvReport.setOnTouchListener { _, event ->
+    if (event.action == MotionEvent.ACTION_UP) {
+    // Generic view doesn't have startScrollerTask method
+    // holder.hsvReport.startScrollerTask()
+    }
+    false
+    }
 
-            override fun onScrollToMiddle() {
-                holder.viewCategoryMask.visibility = View.VISIBLE
-            }
+    // Scroll listener commented out due to type issues - would need proper MHorizontalScrollView import
+    /*
+    holder.hsvReport.setOnScrollStopListner(object : OnScrollStopListner {
+    override fun onScrollToRightEdge() {
+    holder.viewCategoryMask.visibility = View.VISIBLE
+    }
 
-            override fun onScrollToLeftEdge() {
-                holder.viewCategoryMask.visibility = View.GONE
-            }
+    override fun onScrollToMiddle() {
+    holder.viewCategoryMask.visibility = View.VISIBLE
+    }
 
-            override fun onScrollStoped() {
-            }
+    override fun onScrollToLeftEdge() {
+    holder.viewCategoryMask.visibility = View.GONE
+    }
 
-            override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-                if (holder.viewCategoryMask.visibility == View.VISIBLE) {
-                    return
-                }
-                holder.viewCategoryMask.visibility = View.VISIBLE
-            }
-        })
-        */
-        } // End of if (holder is ItemView) block
+    override fun onScrollStoped() {
+    }
+
+    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+    if (holder.viewCategoryMask.visibility == View.VISIBLE) {
+    return
+    }
+    holder.viewCategoryMask.visibility = View.VISIBLE
+    }
+    })
+    */
+    } // End of if (holder is ItemView) block
     }
 
     override fun getItemCount(): Int {
-        return dataList.size
+    return dataList.size
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvFloorNumber: TextView = itemView.findViewById(R.id.tv_floor_number)
-        val rcyReport: RecyclerView = itemView.findViewById(R.id.rcy_report)
-        val rcyCategory: RecyclerView = itemView.findViewById(R.id.rcy_category)
-        val llyAlbum: LinearLayout = itemView.findViewById(R.id.lly_album)
-        val rcyAlbum: RecyclerView = itemView.findViewById(R.id.rcy_album)
-        val flyProject: View = itemView.findViewById(R.id.fly_project)
-        val hsvReport: View = itemView.findViewById(R.id.hsv_report)
-        val viewCategoryMask: View = itemView.findViewById(R.id.view_category_mask)
+    val tvFloorNumber: TextView = itemView.findViewById(R.id.tv_floor_number)
+    val rcyReport: RecyclerView = itemView.findViewById(R.id.rcy_report)
+    val rcyCategory: RecyclerView = itemView.findViewById(R.id.rcy_category)
+    val llyAlbum: LinearLayout = itemView.findViewById(R.id.lly_album)
+    val rcyAlbum: RecyclerView = itemView.findViewById(R.id.rcy_album)
+    val flyProject: View = itemView.findViewById(R.id.fly_project)
+    val hsvReport: View = itemView.findViewById(R.id.hsv_report)
+    val viewCategoryMask: View = itemView.findViewById(R.id.view_category_mask)
     }
 }

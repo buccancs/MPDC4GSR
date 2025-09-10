@@ -5,23 +5,23 @@ import com.topdon.lib.core.R
 
 object LanguageTool {
     /**
-     * Get display language - English only
-     */
+    * Get display language - English only
+    */
     fun showLanguage(context: Context): String {
-        return context.getString(R.string.english)
+    return context.getString(R.string.english)
     }
 
     /**
-     * Get language code for server communication - English only
-     */
+    * Get language code for server communication - English only
+    */
     fun useLanguage(context: Context): String {
-        return "en-WW"
+    return "en-WW"
     }
 
     /**
-     * Get language code for statement interface - English only
-     */
+    * Get language code for statement interface - English only
+    */
     fun useStatementLanguage(): String {
-        return "EN"
+    return "EN"
     }
 }

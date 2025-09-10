@@ -1,8 +1,8 @@
 package com.topdon.module.thermal.ir.bean
 
 /**
- * 模式
- */
+    * 模式
+    */
 data class ModelBean(
     var defaultModel: DataBean,
     var myselfModel: ArrayList<DataBean> = arrayListOf()

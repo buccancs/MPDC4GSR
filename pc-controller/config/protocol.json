@@ -9,24 +9,53 @@
       "device_register": {
         "direction": "device_to_pc",
         "description": "Device registration message",
-        "required_fields": ["device_id", "device_type", "capabilities", "ip_address", "port"],
+        "required_fields": [
+          "device_id",
+          "device_type",
+          "capabilities",
+          "ip_address",
+          "port"
+        ],
         "optional_fields": ["battery_level", "gsr_mode", "device_name"],
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "device_register"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "device_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
-            "device_type": {"type": "string", "enum": ["android_phone", "android_tablet", "thermal_camera", "depth_camera"]},
+            "message_type": { "type": "string", "const": "device_register" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "device_id": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+            "device_type": {
+              "type": "string",
+              "enum": [
+                "android_phone",
+                "android_tablet",
+                "thermal_camera",
+                "depth_camera"
+              ]
+            },
             "capabilities": {
               "type": "array",
-              "items": {"type": "string", "enum": ["thermal", "visual", "depth", "audio", "gsr", "imu", "gps"]}
+              "items": {
+                "type": "string",
+                "enum": [
+                  "thermal",
+                  "visual",
+                  "depth",
+                  "audio",
+                  "gsr",
+                  "imu",
+                  "gps"
+                ]
+              }
             },
-            "ip_address": {"type": "string", "format": "ipv4"},
-            "port": {"type": "integer", "minimum": 1024, "maximum": 65535},
-            "battery_level": {"type": "integer", "minimum": 0, "maximum": 100},
-            "gsr_mode": {"type": "string", "enum": ["local", "bridged"]},
-            "device_name": {"type": "string", "maxLength": 64}
+            "ip_address": { "type": "string", "format": "ipv4" },
+            "port": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+            "battery_level": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "gsr_mode": { "type": "string", "enum": ["local", "bridged"] },
+            "device_name": { "type": "string", "maxLength": 64 }
           }
         }
       },
@@ -38,12 +67,19 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "device_heartbeat"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "device_id": {"type": "string"},
-            "battery_level": {"type": "integer", "minimum": 0, "maximum": 100},
-            "state": {"type": "string", "enum": ["idle", "recording", "error"]},
-            "current_session_id": {"type": "string"}
+            "message_type": { "type": "string", "const": "device_heartbeat" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "device_id": { "type": "string" },
+            "battery_level": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "state": {
+              "type": "string",
+              "enum": ["idle", "recording", "error"]
+            },
+            "current_session_id": { "type": "string" }
           }
         }
       },
@@ -55,17 +91,26 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "device_status"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "device_id": {"type": "string"},
-            "status": {"type": "string", "enum": ["ready", "recording", "transferring", "error", "low_battery"]},
-            "error_message": {"type": "string"},
+            "message_type": { "type": "string", "const": "device_status" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "device_id": { "type": "string" },
+            "status": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "recording",
+                "transferring",
+                "error",
+                "low_battery"
+              ]
+            },
+            "error_message": { "type": "string" },
             "data_stats": {
               "type": "object",
               "properties": {
-                "storage_used_mb": {"type": "number"},
-                "storage_available_mb": {"type": "number"},
-                "samples_recorded": {"type": "integer"}
+                "storage_used_mb": { "type": "number" },
+                "storage_available_mb": { "type": "number" },
+                "samples_recorded": { "type": "integer" }
               }
             }
           }
@@ -81,21 +126,40 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "session_start"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "session_id": {"type": "string"},
-            "session_name": {"type": "string"},
+            "message_type": { "type": "string", "const": "session_start" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "session_id": { "type": "string" },
+            "session_name": { "type": "string" },
             "recording_params": {
               "type": "object",
               "properties": {
-                "thermal_fps": {"type": "integer", "minimum": 1, "maximum": 60},
-                "visual_fps": {"type": "integer", "minimum": 1, "maximum": 60},
-                "audio_sample_rate": {"type": "integer", "enum": [8000, 16000, 44100, 48000]},
-                "gsr_sample_rate": {"type": "integer", "minimum": 1, "maximum": 1000},
-                "imu_sample_rate": {"type": "integer", "minimum": 1, "maximum": 1000}
+                "thermal_fps": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                },
+                "visual_fps": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60
+                },
+                "audio_sample_rate": {
+                  "type": "integer",
+                  "enum": [8000, 16000, 44100, 48000]
+                },
+                "gsr_sample_rate": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000
+                },
+                "imu_sample_rate": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000
+                }
               }
             },
-            "sync_offset_ms": {"type": "integer"}
+            "sync_offset_ms": { "type": "integer" }
           }
         }
       },
@@ -107,9 +171,9 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "session_stop"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "session_id": {"type": "string"}
+            "message_type": { "type": "string", "const": "session_stop" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "session_id": { "type": "string" }
           }
         }
       },
@@ -121,11 +185,11 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "recording_start"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "session_id": {"type": "string"},
-            "start_timestamp": {"type": "string", "format": "date-time"},
-            "recording_duration_s": {"type": "integer", "minimum": 1}
+            "message_type": { "type": "string", "const": "recording_start" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "session_id": { "type": "string" },
+            "start_timestamp": { "type": "string", "format": "date-time" },
+            "recording_duration_s": { "type": "integer", "minimum": 1 }
           }
         }
       },
@@ -137,9 +201,9 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "recording_stop"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "session_id": {"type": "string"}
+            "message_type": { "type": "string", "const": "recording_stop" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "session_id": { "type": "string" }
           }
         }
       }
@@ -153,26 +217,34 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "sync_mark"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "mark_type": {"type": "string", "enum": ["manual_mark", "auto_mark", "event_mark", "calibration_mark"]},
-            "mark_id": {"type": "string"},
+            "message_type": { "type": "string", "const": "sync_mark" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "mark_type": {
+              "type": "string",
+              "enum": [
+                "manual_mark",
+                "auto_mark",
+                "event_mark",
+                "calibration_mark"
+              ]
+            },
+            "mark_id": { "type": "string" },
             "metadata": {
               "type": "object",
               "properties": {
-                "description": {"type": "string"},
-                "user_id": {"type": "string"},
+                "description": { "type": "string" },
+                "user_id": { "type": "string" },
                 "coordinates": {
                   "type": "object",
                   "properties": {
-                    "x": {"type": "number"},
-                    "y": {"type": "number"},
-                    "z": {"type": "number"}
+                    "x": { "type": "number" },
+                    "y": { "type": "number" },
+                    "z": { "type": "number" }
                   }
                 }
               }
             },
-            "session_id": {"type": "string"}
+            "session_id": { "type": "string" }
           }
         }
       },
@@ -184,26 +256,40 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "sync_flash"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "duration_ms": {"type": "integer", "minimum": 10, "maximum": 5000, "default": 100},
-            "intensity": {"type": "number", "minimum": 0.1, "maximum": 1.0, "default": 1.0},
-            "color": {"type": "string", "enum": ["white", "red", "green", "blue"], "default": "white"}
+            "message_type": { "type": "string", "const": "sync_flash" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "duration_ms": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 5000,
+              "default": 100
+            },
+            "intensity": {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 1.0,
+              "default": 1.0
+            },
+            "color": {
+              "type": "string",
+              "enum": ["white", "red", "green", "blue"],
+              "default": "white"
+            }
           }
         }
       },
       "time_sync_request": {
-        "direction": "device_to_pc", 
+        "direction": "device_to_pc",
         "description": "Time synchronization request",
         "required_fields": ["device_id"],
         "optional_fields": ["client_timestamp"],
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "time_sync_request"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "device_id": {"type": "string"},
-            "client_timestamp": {"type": "string", "format": "date-time"}
+            "message_type": { "type": "string", "const": "time_sync_request" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "device_id": { "type": "string" },
+            "client_timestamp": { "type": "string", "format": "date-time" }
           }
         }
       },
@@ -215,11 +301,11 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "time_sync_response"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "server_timestamp": {"type": "string", "format": "date-time"},
-            "client_timestamp": {"type": "string", "format": "date-time"},
-            "processing_delay_ms": {"type": "number"}
+            "message_type": { "type": "string", "const": "time_sync_response" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "server_timestamp": { "type": "string", "format": "date-time" },
+            "client_timestamp": { "type": "string", "format": "date-time" },
+            "processing_delay_ms": { "type": "number" }
           }
         }
       }
@@ -233,24 +319,50 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "file_transfer_request"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "device_id": {"type": "string"},
-            "session_id": {"type": "string"},
+            "message_type": {
+              "type": "string",
+              "const": "file_transfer_request"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "device_id": { "type": "string" },
+            "session_id": { "type": "string" },
             "file_info": {
               "type": "object",
               "properties": {
-                "filename": {"type": "string"},
-                "file_type": {"type": "string", "enum": ["thermal", "visual", "depth", "audio", "gsr", "imu", "metadata"]},
-                "file_size": {"type": "integer", "minimum": 0},
-                "checksum": {"type": "string"},
-                "checksum_algorithm": {"type": "string", "enum": ["sha256", "md5"], "default": "sha256"},
-                "compression": {"type": "string", "enum": ["none", "gzip", "lz4"]},
-                "encoding": {"type": "string", "default": "utf-8"}
+                "filename": { "type": "string" },
+                "file_type": {
+                  "type": "string",
+                  "enum": [
+                    "thermal",
+                    "visual",
+                    "depth",
+                    "audio",
+                    "gsr",
+                    "imu",
+                    "metadata"
+                  ]
+                },
+                "file_size": { "type": "integer", "minimum": 0 },
+                "checksum": { "type": "string" },
+                "checksum_algorithm": {
+                  "type": "string",
+                  "enum": ["sha256", "md5"],
+                  "default": "sha256"
+                },
+                "compression": {
+                  "type": "string",
+                  "enum": ["none", "gzip", "lz4"]
+                },
+                "encoding": { "type": "string", "default": "utf-8" }
               },
               "required": ["filename", "file_type", "file_size", "checksum"]
             },
-            "priority": {"type": "integer", "minimum": 1, "maximum": 10, "default": 5}
+            "priority": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 5
+            }
           }
         }
       },
@@ -262,13 +374,19 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "file_transfer_complete"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "device_id": {"type": "string"},
-            "transfer_id": {"type": "string"},
-            "status": {"type": "string", "enum": ["success", "error", "cancelled"]},
-            "error_message": {"type": "string"},
-            "bytes_transferred": {"type": "integer", "minimum": 0}
+            "message_type": {
+              "type": "string",
+              "const": "file_transfer_complete"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "device_id": { "type": "string" },
+            "transfer_id": { "type": "string" },
+            "status": {
+              "type": "string",
+              "enum": ["success", "error", "cancelled"]
+            },
+            "error_message": { "type": "string" },
+            "bytes_transferred": { "type": "integer", "minimum": 0 }
           }
         }
       },
@@ -280,13 +398,13 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "file_chunk"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "transfer_id": {"type": "string"},
-            "chunk_index": {"type": "integer", "minimum": 0},
-            "chunk_data": {"type": "string", "contentEncoding": "base64"},
-            "is_final_chunk": {"type": "boolean", "default": false},
-            "chunk_checksum": {"type": "string"}
+            "message_type": { "type": "string", "const": "file_chunk" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "transfer_id": { "type": "string" },
+            "chunk_index": { "type": "integer", "minimum": 0 },
+            "chunk_data": { "type": "string", "contentEncoding": "base64" },
+            "is_final_chunk": { "type": "boolean", "default": false },
+            "chunk_checksum": { "type": "string" }
           }
         }
       }
@@ -300,19 +418,23 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "gsr_data_batch"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "device_id": {"type": "string"},
-            "session_id": {"type": "string"},
+            "message_type": { "type": "string", "const": "gsr_data_batch" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "device_id": { "type": "string" },
+            "session_id": { "type": "string" },
             "data_points": {
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "timestamp": {"type": "string", "format": "date-time"},
-                  "value": {"type": "number"},
-                  "unit": {"type": "string", "enum": ["microsiemens", "ohms"], "default": "microsiemens"},
-                  "quality": {"type": "number", "minimum": 0, "maximum": 1}
+                  "timestamp": { "type": "string", "format": "date-time" },
+                  "value": { "type": "number" },
+                  "unit": {
+                    "type": "string",
+                    "enum": ["microsiemens", "ohms"],
+                    "default": "microsiemens"
+                  },
+                  "quality": { "type": "number", "minimum": 0, "maximum": 1 }
                 },
                 "required": ["timestamp", "value"]
               }
@@ -320,9 +442,13 @@
             "quality_metrics": {
               "type": "object",
               "properties": {
-                "avg_quality": {"type": "number", "minimum": 0, "maximum": 1},
-                "noise_level": {"type": "number"},
-                "saturation_rate": {"type": "number", "minimum": 0, "maximum": 1}
+                "avg_quality": { "type": "number", "minimum": 0, "maximum": 1 },
+                "noise_level": { "type": "number" },
+                "saturation_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
               }
             }
           }
@@ -336,17 +462,26 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "gsr_leader_election"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "device_id": {"type": "string"},
-            "election_type": {"type": "string", "enum": ["candidate", "leader", "acknowledge"]},
-            "priority_score": {"type": "number", "minimum": 0},
+            "message_type": {
+              "type": "string",
+              "const": "gsr_leader_election"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "device_id": { "type": "string" },
+            "election_type": {
+              "type": "string",
+              "enum": ["candidate", "leader", "acknowledge"]
+            },
+            "priority_score": { "type": "number", "minimum": 0 },
             "capabilities": {
               "type": "object",
               "properties": {
-                "bridged_mode_support": {"type": "boolean"},
-                "sampling_rates": {"type": "array", "items": {"type": "integer"}},
-                "quality_filtering": {"type": "boolean"}
+                "bridged_mode_support": { "type": "boolean" },
+                "sampling_rates": {
+                  "type": "array",
+                  "items": { "type": "integer" }
+                },
+                "quality_filtering": { "type": "boolean" }
               }
             }
           }
@@ -362,11 +497,15 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "ack"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "ack_for": {"type": "string"},
-            "status": {"type": "string", "enum": ["success", "error"], "default": "success"},
-            "message": {"type": "string"}
+            "message_type": { "type": "string", "const": "ack" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "ack_for": { "type": "string" },
+            "status": {
+              "type": "string",
+              "enum": ["success", "error"],
+              "default": "success"
+            },
+            "message": { "type": "string" }
           }
         }
       },
@@ -378,19 +517,30 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "error"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "error_code": {"type": "string", "enum": ["INVALID_MESSAGE", "UNSUPPORTED_OPERATION", "DEVICE_BUSY", "SESSION_NOT_FOUND", "PERMISSION_DENIED", "RESOURCE_UNAVAILABLE", "TIMEOUT"]},
-            "error_message": {"type": "string"},
+            "message_type": { "type": "string", "const": "error" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "error_code": {
+              "type": "string",
+              "enum": [
+                "INVALID_MESSAGE",
+                "UNSUPPORTED_OPERATION",
+                "DEVICE_BUSY",
+                "SESSION_NOT_FOUND",
+                "PERMISSION_DENIED",
+                "RESOURCE_UNAVAILABLE",
+                "TIMEOUT"
+              ]
+            },
+            "error_message": { "type": "string" },
             "context": {
               "type": "object",
               "properties": {
-                "request_id": {"type": "string"},
-                "device_id": {"type": "string"},
-                "session_id": {"type": "string"}
+                "request_id": { "type": "string" },
+                "device_id": { "type": "string" },
+                "session_id": { "type": "string" }
               }
             },
-            "retry_after_s": {"type": "integer", "minimum": 1}
+            "retry_after_s": { "type": "integer", "minimum": 1 }
           }
         }
       }
@@ -404,10 +554,13 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "bluetooth_scan_request"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "scan_duration": {"type": "integer", "minimum": 5, "maximum": 60},
-            "filter_ircamera_only": {"type": "boolean"}
+            "message_type": {
+              "type": "string",
+              "const": "bluetooth_scan_request"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "scan_duration": { "type": "integer", "minimum": 5, "maximum": 60 },
+            "filter_ircamera_only": { "type": "boolean" }
           }
         }
       },
@@ -419,38 +572,57 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "bluetooth_scan_result"},
-            "timestamp": {"type": "string", "format": "date-time"},
+            "message_type": {
+              "type": "string",
+              "const": "bluetooth_scan_result"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
             "devices": {
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "address": {"type": "string", "pattern": "^[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}$"},
-                  "name": {"type": "string"},
-                  "rssi": {"type": "integer", "minimum": -100, "maximum": 0},
-                  "device_type": {"type": "string", "enum": ["ble", "classic", "unknown"]},
-                  "is_ircamera": {"type": "boolean"}
+                  "address": {
+                    "type": "string",
+                    "pattern": "^[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}$"
+                  },
+                  "name": { "type": "string" },
+                  "rssi": { "type": "integer", "minimum": -100, "maximum": 0 },
+                  "device_type": {
+                    "type": "string",
+                    "enum": ["ble", "classic", "unknown"]
+                  },
+                  "is_ircamera": { "type": "boolean" }
                 },
                 "required": ["address", "rssi", "device_type"]
               }
             },
-            "scan_complete": {"type": "boolean"}
+            "scan_complete": { "type": "boolean" }
           }
         }
       },
       "bluetooth_connect_request": {
-        "direction": "pc_to_device", 
+        "direction": "pc_to_device",
         "description": "Request device to connect to Bluetooth device",
         "required_fields": ["target_address"],
         "optional_fields": ["connection_timeout"],
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "bluetooth_connect_request"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "target_address": {"type": "string", "pattern": "^[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}$"},
-            "connection_timeout": {"type": "integer", "minimum": 5, "maximum": 60}
+            "message_type": {
+              "type": "string",
+              "const": "bluetooth_connect_request"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "target_address": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}$"
+            },
+            "connection_timeout": {
+              "type": "integer",
+              "minimum": 5,
+              "maximum": 60
+            }
           }
         }
       },
@@ -462,11 +634,20 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "bluetooth_connection_status"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "target_address": {"type": "string", "pattern": "^[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}$"},
-            "status": {"type": "string", "enum": ["connecting", "connected", "disconnected", "error"]},
-            "error_message": {"type": "string"}
+            "message_type": {
+              "type": "string",
+              "const": "bluetooth_connection_status"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "target_address": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}$"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["connecting", "connected", "disconnected", "error"]
+            },
+            "error_message": { "type": "string" }
           }
         }
       },
@@ -478,9 +659,9 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "wifi_scan_request"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "filter_ircamera_only": {"type": "boolean"}
+            "message_type": { "type": "string", "const": "wifi_scan_request" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "filter_ircamera_only": { "type": "boolean" }
           }
         }
       },
@@ -492,25 +673,43 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "wifi_scan_result"},
-            "timestamp": {"type": "string", "format": "date-time"},
+            "message_type": { "type": "string", "const": "wifi_scan_result" },
+            "timestamp": { "type": "string", "format": "date-time" },
             "networks": {
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "ssid": {"type": "string"},
-                  "bssid": {"type": "string", "pattern": "^[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}$"},
-                  "signal_strength": {"type": "integer", "minimum": -100, "maximum": 0},
-                  "frequency": {"type": "integer", "minimum": 2400, "maximum": 6000},
-                  "security_type": {"type": "string", "enum": ["open", "wep", "wpa", "wpa2", "wpa3", "enterprise"]},
-                  "channel": {"type": "integer", "minimum": 1, "maximum": 196},
-                  "is_ircamera_hotspot": {"type": "boolean"}
+                  "ssid": { "type": "string" },
+                  "bssid": {
+                    "type": "string",
+                    "pattern": "^[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}:[0-9A-Fa-f]{2}$"
+                  },
+                  "signal_strength": {
+                    "type": "integer",
+                    "minimum": -100,
+                    "maximum": 0
+                  },
+                  "frequency": {
+                    "type": "integer",
+                    "minimum": 2400,
+                    "maximum": 6000
+                  },
+                  "security_type": {
+                    "type": "string",
+                    "enum": ["open", "wep", "wpa", "wpa2", "wpa3", "enterprise"]
+                  },
+                  "channel": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 196
+                  },
+                  "is_ircamera_hotspot": { "type": "boolean" }
                 },
                 "required": ["ssid", "signal_strength", "security_type"]
               }
             },
-            "scan_complete": {"type": "boolean"}
+            "scan_complete": { "type": "boolean" }
           }
         }
       },
@@ -522,11 +721,18 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "wifi_connect_request"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "ssid": {"type": "string"},
-            "password": {"type": "string"},
-            "connection_timeout": {"type": "integer", "minimum": 10, "maximum": 120}
+            "message_type": {
+              "type": "string",
+              "const": "wifi_connect_request"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "ssid": { "type": "string" },
+            "password": { "type": "string" },
+            "connection_timeout": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 120
+            }
           }
         }
       },
@@ -538,12 +744,18 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "wifi_connection_status"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "ssid": {"type": "string"},
-            "status": {"type": "string", "enum": ["connecting", "connected", "disconnected", "error"]},
-            "ip_address": {"type": "string", "format": "ipv4"},
-            "error_message": {"type": "string"}
+            "message_type": {
+              "type": "string",
+              "const": "wifi_connection_status"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "ssid": { "type": "string" },
+            "status": {
+              "type": "string",
+              "enum": ["connecting", "connected", "disconnected", "error"]
+            },
+            "ip_address": { "type": "string", "format": "ipv4" },
+            "error_message": { "type": "string" }
           }
         }
       },
@@ -555,12 +767,15 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "hotspot_control_request"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "action": {"type": "string", "enum": ["start", "stop"]},
-            "ssid": {"type": "string"},
-            "password": {"type": "string"},
-            "channel": {"type": "integer", "minimum": 1, "maximum": 13}
+            "message_type": {
+              "type": "string",
+              "const": "hotspot_control_request"
+            },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "action": { "type": "string", "enum": ["start", "stop"] },
+            "ssid": { "type": "string" },
+            "password": { "type": "string" },
+            "channel": { "type": "integer", "minimum": 1, "maximum": 13 }
           }
         }
       },
@@ -572,12 +787,15 @@
         "schema": {
           "type": "object",
           "properties": {
-            "message_type": {"type": "string", "const": "hotspot_status"},
-            "timestamp": {"type": "string", "format": "date-time"},
-            "status": {"type": "string", "enum": ["stopped", "starting", "running", "stopping", "error"]},
-            "ssid": {"type": "string"},
-            "connected_clients": {"type": "integer", "minimum": 0},
-            "error_message": {"type": "string"}
+            "message_type": { "type": "string", "const": "hotspot_status" },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "status": {
+              "type": "string",
+              "enum": ["stopped", "starting", "running", "stopping", "error"]
+            },
+            "ssid": { "type": "string" },
+            "connected_clients": { "type": "integer", "minimum": 0 },
+            "error_message": { "type": "string" }
           }
         }
       }
@@ -585,7 +803,7 @@
   },
   "common_fields": {
     "message_type": {
-      "type": "string", 
+      "type": "string",
       "description": "Type of message being sent",
       "required": true
     },
@@ -601,7 +819,7 @@
       "required": false
     },
     "correlation_id": {
-      "type": "string", 
+      "type": "string",
       "description": "ID to correlate request/response pairs",
       "required": false
     }

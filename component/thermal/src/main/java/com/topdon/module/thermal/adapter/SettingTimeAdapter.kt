@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.R
 
 /**
- * 设置时间
- */
+    * 设置时间
+    */
 class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var datas = arrayOf("秒", "分", "时", "天")
@@ -21,51 +21,51 @@ class SettingTimeAdapter(val context: Context) :
     var select = 0
 
     fun setCheck(index: Int) {
-        this.select = index
-        notifyDataSetChanged()
+    this.select = index
+    notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
+    parent: ViewGroup,
+    viewType: Int,
     ): RecyclerView.ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_setting_time, parent, false)
-        return ItemView(view)
+    val view =
+    LayoutInflater.from(parent.context).inflate(R.layout.item_setting_time, parent, false)
+    return ItemView(view)
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
+    holder: RecyclerView.ViewHolder,
+    position: Int,
     ) {
-        if (holder is ItemView) {
-            holder.btn.text = datas[position]
-            if (position == select) {
-                holder.btn.setBackgroundResource(R.drawable.ui_btn_round_theme)
-                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.white))
-            } else {
-                holder.btn.background = null
-                holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color))
-            }
-            holder.btn.setOnClickListener {
-                listener?.onClick(position, dataTimes[position])
-                setCheck(position)
-            }
-        }
+    if (holder is ItemView) {
+    holder.btn.text = datas[position]
+    if (position == select) {
+    holder.btn.setBackgroundResource(R.drawable.ui_btn_round_theme)
+    holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.white))
+    } else {
+    holder.btn.background = null
+    holder.btn.setTextColor(ContextCompat.getColor(context, com.topdon.lib.core.R.color.font_third_color))
+    }
+    holder.btn.setOnClickListener {
+    listener?.onClick(position, dataTimes[position])
+    setCheck(position)
+    }
+    }
     }
 
     override fun getItemCount(): Int {
-        return datas.size
+    return datas.size
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val btn: Button = itemView.findViewById(R.id.item_setting_time_btn)
+    val btn: Button = itemView.findViewById(R.id.item_setting_time_btn)
     }
 
     interface OnItemClickListener {
-        fun onClick(
-            index: Int,
-            time: Int,
-        )
+    fun onClick(
+    index: Int,
+    time: Int,
+    )
     }
 }

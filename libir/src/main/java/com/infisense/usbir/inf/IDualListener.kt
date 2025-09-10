@@ -5,10 +5,10 @@ import com.energy.iruvc.utils.DualCameraParams
 
 
 /**
- * 统一管理双光的特殊接口，区别于单光
- * @author: CaiSongL
- * @date: 2024/1/10 11:40
- */
+    * 统一管理双光的特殊接口，区别于单光
+    * @author: CaiSongL
+    * @date: 2024/1/10 11:40
+    */
 @Deprecated("未使用，好像没什么用")
 interface IDualListener {
 

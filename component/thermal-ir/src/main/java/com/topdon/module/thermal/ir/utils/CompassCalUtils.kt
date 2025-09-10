@@ -25,21 +25,21 @@ fun textDimensions(text: String,paint: Paint): Pair<Float, Float> {
 }
 
 /**
- * Returns the values between min and max, inclusive, that are divisible by divisor
- * @param min The minimum value
- * @param max The maximum value
- * @param divisor The divisor
- * @return The values between min and max, inclusive, that are divisible by divisor
- */
+    * Returns the values between min and max, inclusive, that are divisible by divisor
+    * @param min The minimum value
+    * @param max The maximum value
+    * @param divisor The divisor
+    * @return The values between min and max, inclusive, that are divisible by divisor
+    */
 fun getValuesBetween(min: Float, max: Float, divisor: Float): List<Float> {
     val values = mutableListOf<Float>()
     val start = min.roundNearest(divisor)
     var i = start
     while (i <= max) {
-        if (i >= min) {
-            values.add(i)
-        }
-        i += divisor
+    if (i >= min) {
+    values.add(i)
+    }
+    i += divisor
     }
     return values
 }
@@ -49,12 +49,12 @@ fun Float.roundNearest(nearest: Float): Float {
 }
 
 /**
- * Gets the pixel coordinate of a point on the screen given the bearing and azimuth. The point is considered to be on a plane.
- * @param bearing The compass bearing in degrees of the point
- * @param azimuth The compass bearing in degrees that the user is facing (center of the screen)
- * @param viewWidth The size of the view in pixels
- * @param fovWidth The field of view of the camera in degrees
- */
+    * Gets the pixel coordinate of a point on the screen given the bearing and azimuth. The point is considered to be on a plane.
+    * @param bearing The compass bearing in degrees of the point
+    * @param azimuth The compass bearing in degrees that the user is facing (center of the screen)
+    * @param viewWidth The size of the view in pixels
+    * @param fovWidth The field of view of the camera in degrees
+    */
 fun getPixelLinear(
     bearing: Float,
     azimuth: Float,
@@ -71,9 +71,9 @@ fun deltaAngle(angle1: Float, angle2: Float): Float {
     val a = normalizeAngle(angle1 - angle2)
     val b = normalizeAngle(angle2 - angle1)
     return if (a < b) {
-        -a
+    -a
     } else {
-        b
+    b
     }
 }
 
@@ -89,11 +89,11 @@ fun wrap(value: Double, min: Double, max: Double): Double {
     // https://stackoverflow.com/questions/14415753/wrap-value-into-range-min-max-without-division
     val range = max - min
     if (value < min) {
-        return max - (min - value) % range
+    return max - (min - value) % range
     }
 
     if (value > max) {
-        return min + (value - min) % range
+    return min + (value - min) % range
     }
 
     return value

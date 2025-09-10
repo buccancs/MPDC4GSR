@@ -13,10 +13,10 @@ class IRMonitorViewModel : BaseViewModel() {
     val recordListLD = MutableLiveData<List<ThermalDao.Record>>()
 
     fun queryRecordList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val recordList: List<ThermalDao.Record> = AppDatabase.getInstance().thermalDao().queryRecordList()
-            recordListLD.postValue(recordList)
-        }
+    viewModelScope.launch(Dispatchers.IO) {
+    val recordList: List<ThermalDao.Record> = AppDatabase.getInstance().thermalDao().queryRecordList()
+    recordListLD.postValue(recordList)
+    }
     }
 
 
@@ -26,15 +26,15 @@ class IRMonitorViewModel : BaseViewModel() {
     val detailListLD = MutableLiveData<List<ThermalEntity>>()
 
     fun queryDetail(startTime: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val detailList: List<ThermalEntity> = AppDatabase.getInstance().thermalDao().queryDetail(startTime)
-            detailListLD.postValue(detailList)
-        }
+    viewModelScope.launch(Dispatchers.IO) {
+    val detailList: List<ThermalEntity> = AppDatabase.getInstance().thermalDao().queryDetail(startTime)
+    detailListLD.postValue(detailList)
+    }
     }
 
     fun delDetail(startTime: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            AppDatabase.getInstance().thermalDao().delDetail(startTime)
-        }
+    viewModelScope.launch(Dispatchers.IO) {
+    AppDatabase.getInstance().thermalDao().delDetail(startTime)
+    }
     }
 }

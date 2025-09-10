@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * 搜索配置
- * 
+ *
  * date: 2021/8/12 15:31
  * author: bichuanfeng
  */

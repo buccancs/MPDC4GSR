@@ -7,41 +7,41 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.csl.irCamera.databinding.ActivitySessionDetailBinding
 
 /**
- * Session Detail Activity
- * Detailed view of recording session with data analysis and export options
- */
+    * Session Detail Activity
+    * Detailed view of recording session with data analysis and export options
+    */
 class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>() {
     companion object {
-        private const val EXTRA_SESSION_ID = "session_id"
+    private const val EXTRA_SESSION_ID = "session_id"
 
-        fun startActivity(
-            context: Context,
-            sessionId: String,
-        ) {
-            val intent =
-                Intent(context, SessionDetailActivity::class.java).apply {
-                    putExtra(EXTRA_SESSION_ID, sessionId)
-                }
-            context.startActivity(intent)
-        }
+    fun startActivity(
+    context: Context,
+    sessionId: String,
+    ) {
+    val intent =
+    Intent(context, SessionDetailActivity::class.java).apply {
+    putExtra(EXTRA_SESSION_ID, sessionId)
+    }
+    context.startActivity(intent)
+    }
     }
 
     override fun initView() {
-        val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
-        
-        // Set the content programmatically since we don't have a complex layout
-        binding.root.apply {
-            text = "Session Details\n\nSession ID: $sessionId\n\nDetailed session analysis coming soon..."
-            setPadding(32, 32, 32, 32)
-            textSize = 16f
-        }
+    val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Session Details"
+    // Set the content programmatically since we don't have a complex layout
+    binding.root.apply {
+    text = "Session Details\n\nSession ID: $sessionId\n\nDetailed session analysis coming soon..."
+    setPadding(32, 32, 32, 32)
+    textSize = 16f
+    }
+
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.title = "Session Details"
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
+    onBackPressed()
+    return true
     }
 }

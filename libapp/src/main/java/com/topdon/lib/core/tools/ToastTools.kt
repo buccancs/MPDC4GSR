@@ -15,46 +15,46 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
- * create by fylder on 2018/7/4
- **/
+    * create by fylder on 2018/7/4
+    **/
 object ToastTools {
     var mPublicToast: Toast? = null
 
     fun showShort(
-        @StringRes textStr: Int,
+    @StringRes textStr: Int,
     ) {
-        showShort(Utils.getApp().getString(textStr))
+    showShort(Utils.getApp().getString(textStr))
     }
 
     fun showShort(textStr: String) {
-        showShort(textStr, Toast.LENGTH_SHORT)
+    showShort(textStr, Toast.LENGTH_SHORT)
     }
 
     fun showShort(
-        textStr: String,
-        duration: Int,
+    textStr: String,
+    duration: Int,
     ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val inflater =
-                Utils.getApp().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val view = inflater.inflate(R.layout.toast_tip, null)
-            val text = view.findViewById(R.id.toast_tip_text) as TextView
-            text.text = textStr
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // Use simple text toast for Android 11+ (API 30+) since custom views are deprecated
-                mPublicToast = Toast.makeText(Utils.getApp(), textStr, duration)
-                mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
-            } else {
-                // Use custom view for older Android versions
-                if (mPublicToast == null) {
-                    mPublicToast = Toast(Utils.getApp())
-                }
-                mPublicToast?.duration = duration
-                mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
-                @Suppress("DEPRECATION")
-                mPublicToast?.view = view
-            }
-            mPublicToast?.show()
-        }
+    GlobalScope.launch(Dispatchers.Main) {
+    val inflater =
+    Utils.getApp().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val view = inflater.inflate(R.layout.toast_tip, null)
+    val text = view.findViewById(R.id.toast_tip_text) as TextView
+    text.text = textStr
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    // Use simple text toast for Android 11+ (API 30+) since custom views are deprecated
+    mPublicToast = Toast.makeText(Utils.getApp(), textStr, duration)
+    mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
+    } else {
+    // Use custom view for older Android versions
+    if (mPublicToast == null) {
+    mPublicToast = Toast(Utils.getApp())
+    }
+    mPublicToast?.duration = duration
+    mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
+    @Suppress("DEPRECATION")
+    mPublicToast?.view = view
+    }
+    mPublicToast?.show()
+    }
     }
 }

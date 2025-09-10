@@ -27,33 +27,33 @@ class ReportPreviewAlbumAdapter(
 
     var jumpListener: ((item: HouseRepPreviewAlbumItemBean, position: Int) -> Unit)? = null
     override fun getItemViewType(position: Int): Int {
-        return position
+    return position
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return ItemView(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_report_album_child, parent, false)
-        )
+    return ItemView(
+    LayoutInflater.from(parent.context)
+    .inflate(R.layout.item_report_album_child, parent, false)
+    )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val bean = dataList[position]
-        if (holder is ItemView) {
-            Glide.with(cxt).load(bean.photoPath).into(holder.rivPhoto)
-            holder.tvName.text = bean.title
-            holder.rivPhoto.setOnClickListener {
-                jumpListener?.invoke(bean, position)
-            }
-        }
+    val bean = dataList[position]
+    if (holder is ItemView) {
+    Glide.with(cxt).load(bean.photoPath).into(holder.rivPhoto)
+    holder.tvName.text = bean.title
+    holder.rivPhoto.setOnClickListener {
+    jumpListener?.invoke(bean, position)
+    }
+    }
     }
 
     override fun getItemCount(): Int {
-        return dataList.size
+    return dataList.size
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val rivPhoto: ImageView = itemView.findViewById(R.id.riv_photo)
-        val tvName: TextView = itemView.findViewById(R.id.tv_name)
+    val rivPhoto: ImageView = itemView.findViewById(R.id.riv_photo)
+    val tvName: TextView = itemView.findViewById(R.id.tv_name)
     }
 }

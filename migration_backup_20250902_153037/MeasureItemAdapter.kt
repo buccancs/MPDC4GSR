@@ -19,50 +19,50 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
     private var selected = -1
 
     fun selected(index: Int) {
-        selected = index
-        notifyDataSetChanged()
+    selected = index
+    notifyDataSetChanged()
     }
 
     private val secondBean = arrayListOf(
-        ColorBean(R.drawable.ic_menu_thermal7001, "1.8m", ObserveBean.TYPE_MEASURE_PERSON),
-        ColorBean(R.drawable.ic_menu_thermal7002, "1.0m", ObserveBean.TYPE_MEASURE_SHEEP),
-        ColorBean(R.drawable.ic_menu_thermal7003, "0.5m", ObserveBean.TYPE_MEASURE_DOG),
-        ColorBean(R.drawable.ic_menu_thermal7004, "0.2m", ObserveBean.TYPE_MEASURE_BIRD),
+    ColorBean(R.drawable.ic_menu_thermal7001, "1.8m", ObserveBean.TYPE_MEASURE_PERSON),
+    ColorBean(R.drawable.ic_menu_thermal7002, "1.0m", ObserveBean.TYPE_MEASURE_SHEEP),
+    ColorBean(R.drawable.ic_menu_thermal7003, "0.5m", ObserveBean.TYPE_MEASURE_DOG),
+    ColorBean(R.drawable.ic_menu_thermal7004, "0.2m", ObserveBean.TYPE_MEASURE_BIRD),
     )
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.itme_target_mode, parent, false)
-        return ItemView(view)
+    val view = LayoutInflater.from(parent.context).inflate(R.layout.itme_target_mode, parent, false)
+    return ItemView(view)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ItemView) {
-            val bean = secondBean[position]
-            holder.img.setImageResource(bean.res)
-            holder.lay.setOnClickListener {
-                listener?.invoke(position, bean.code)
-                selected(bean.code)
-            }
-            holder.img.isSelected = bean.code == selected
-            holder.name.visibility = View.VISIBLE
-            holder.name.text = bean.name
-            holder.name.isSelected = bean.code == selected
-            holder.name.setTextColor(ContextCompat.getColor(context, R.color.white)
+    if (holder is ItemView) {
+    val bean = secondBean[position]
+    holder.img.setImageResource(bean.res)
+    holder.lay.setOnClickListener {
+    listener?.invoke(position, bean.code)
+    selected(bean.code)
+    }
+    holder.img.isSelected = bean.code == selected
+    holder.name.visibility = View.VISIBLE
+    holder.name.text = bean.name
+    holder.name.isSelected = bean.code == selected
+    holder.name.setTextColor(ContextCompat.getColor(context, R.color.white)
 //               if (position == selected) ContextCompat.getColor(context, R.color.white)
 //                else ContextCompat.getColor(context, R.color.font_third_color)
-            )
-        }
+    )
+    }
     }
 
     override fun getItemCount(): Int {
-        return secondBean.size
+    return secondBean.size
     }
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val lay: View = itemView.item_menu_tab_lay
-        val img: ImageView = itemView.item_menu_tab_img
-        val name: TextView = itemView.item_menu_tab_text
+    val lay: View = itemView.item_menu_tab_lay
+    val img: ImageView = itemView.item_menu_tab_img
+    val name: TextView = itemView.item_menu_tab_text
 //        init {
 //            val canSeeCount = 4
 //            val with = (ScreenUtils.getScreenWidth() / canSeeCount)

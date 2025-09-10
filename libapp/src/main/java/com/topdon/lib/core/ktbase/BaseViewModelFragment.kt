@@ -10,24 +10,24 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
     abstract fun providerVMClass(): Class<VM>?
 
     override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
+    view: View,
+    savedInstanceState: Bundle?,
     ) {
-        initVM()
-        super.onViewCreated(view, savedInstanceState)
+    initVM()
+    super.onViewCreated(view, savedInstanceState)
     }
 
     private fun initVM() {
-        providerVMClass()?.let {
-            viewModel = ViewModelProvider(this).get(it)
-            lifecycle.addObserver(viewModel)
-        }
+    providerVMClass()?.let {
+    viewModel = ViewModelProvider(this).get(it)
+    lifecycle.addObserver(viewModel)
+    }
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        if (this::viewModel.isInitialized) {
-            lifecycle.removeObserver(viewModel)
-        }
+    super.onDestroy()
+    if (this::viewModel.isInitialized) {
+    lifecycle.removeObserver(viewModel)
+    }
     }
 }

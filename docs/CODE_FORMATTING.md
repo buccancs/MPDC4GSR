@@ -1,56 +1,66 @@
 # Code Formatting & Validation Guide
 
-This document describes the comprehensive code formatting and validation system implemented for the IRCamera project.
+This document describes the comprehensive code formatting and validation system implemented for the
+IRCamera project.
 
 ## Overview
 
-The project implements automated code formatting and validation across multiple file types to ensure consistent, professional code standards throughout the codebase.
+The project implements automated code formatting and validation across multiple file types to ensure
+consistent, professional code standards throughout the codebase.
 
 ## Supported File Types
 
 ### 📄 XML Files (AndroidManifest, layouts, drawables, values)
+
 - **Tool:** `xmllint`
 - **Purpose:** Format XML files with proper indentation and structure
 - **Standards:** Well-formed XML with consistent formatting
 - **Files:** All `.xml` files in the project (excluding build directories)
 
 ### 📋 JSON Files
+
 - **Tool:** `prettier`
 - **Purpose:** Validate and format JSON with proper indentation
 - **Standards:** 2-space indentation, no tabs, consistent formatting
 - **Files:** All `.json` files in the project
 
 ### 🔧 Gradle Files
+
 - **Tool:** Gradle wrapper
 - **Purpose:** Syntax validation and dependency analysis
 - **Standards:** Valid Gradle syntax, dependency verification
 - **Files:** All `.gradle` and `.gradle.kts` files
 
 ### 📝 YAML Files
+
 - **Tool:** `prettier` with yamllint standards
 - **Purpose:** YAML formatting and validation
 - **Standards:** 2-space indentation, proper YAML structure
 - **Files:** All `.yml` and `.yaml` files including workflow files
 
 ### ⚙️ TOML Files
+
 - **Tool:** `toml-sort`
 - **Purpose:** TOML validation and key sorting
 - **Standards:** Sorted keys, proper TOML format
 - **Files:** All `.toml` files (e.g., `pyproject.toml`)
 
 ### 🔑 Properties Files
+
 - **Tool:** Built-in `sort`
 - **Purpose:** Key-value standardization
 - **Standards:** Sorted properties, consistent key-value format
 - **Files:** All `.properties` files
 
 ### 📖 Markdown Files
+
 - **Tool:** `prettier`
 - **Purpose:** Documentation consistency
 - **Standards:** 100-character line width, proper prose wrapping
 - **Files:** All `.md` files in the project
 
 ### 🐚 Shell Scripts
+
 - **Tool:** `shellcheck`
 - **Purpose:** Script validation and executable permissions
 - **Standards:** Shellcheck compliance, executable permissions set
@@ -61,11 +71,13 @@ The project implements automated code formatting and validation across multiple 
 ### 1. GitHub Actions Workflow (`code-formatting.yml`)
 
 **Triggers:**
+
 - Push to main branches (`main`, `develop`, `master`)
 - Pull requests to main branches
 - Manual dispatch with auto-commit option
 
 **Features:**
+
 - Comprehensive formatting across all file types
 - Automated commit of formatting changes (when enabled)
 - Detailed formatting reports with statistics
@@ -73,15 +85,16 @@ The project implements automated code formatting and validation across multiple 
 - Artifact generation for formatting reports
 
 **Usage:**
+
 ```yaml
 # Manually trigger with auto-commit
 on:
   workflow_dispatch:
     inputs:
       auto_commit:
-        description: 'Auto-commit formatting changes'
+        description: "Auto-commit formatting changes"
         required: false
-        default: 'true'
+        default: "true"
         type: boolean
 ```
 
@@ -90,12 +103,14 @@ on:
 **Purpose:** Local development formatting validation
 
 **Installation:**
+
 ```bash
 pip install pre-commit
 pre-commit install
 ```
 
 **Usage:**
+
 ```bash
 # Run on all files
 pre-commit run --all-files
@@ -109,6 +124,7 @@ pre-commit run --files path/to/file.xml
 **Purpose:** Comprehensive local formatting matching the CI workflow
 
 **Usage:**
+
 ```bash
 # Make executable (if not already)
 chmod +x format_all_files.sh
@@ -118,6 +134,7 @@ chmod +x format_all_files.sh
 ```
 
 **Features:**
+
 - Colored output for better visibility
 - File counters and progress tracking
 - Dependency installation checks
@@ -127,7 +144,9 @@ chmod +x format_all_files.sh
 ## Special Features
 
 ### Chinese Text Cleanup
-The system automatically removes Chinese text from `strings.xml` files to maintain English-only content:
+
+The system automatically removes Chinese text from `strings.xml` files to maintain English-only
+content:
 
 ```bash
 # Removes lines containing Chinese characters
@@ -135,6 +154,7 @@ sed -i '/[\u4e00-\u9fff]/d' strings.xml
 ```
 
 ### Gradle Dependency Analysis
+
 Beyond syntax validation, the system performs dependency analysis:
 
 ```bash
@@ -142,6 +162,7 @@ Beyond syntax validation, the system performs dependency analysis:
 ```
 
 ### Comprehensive Reporting
+
 Each formatting run generates detailed statistics:
 
 ```
@@ -166,17 +187,20 @@ Each formatting run generates detailed statistics:
 ## Integration with Development Workflow
 
 ### For Pull Requests
+
 1. Formatting workflow runs automatically on PR creation/updates
 2. PR comments show formatting results
 3. Changes must be pulled if formatting modifications are made
 4. Status checks ensure code meets formatting standards
 
 ### For Releases
+
 1. All code is automatically formatted before release builds
 2. Release artifacts include formatting compliance verification
 3. Professional documentation standards are enforced
 
 ### For Local Development
+
 1. Pre-commit hooks catch formatting issues early
 2. Local script allows comprehensive formatting before commits
 3. IDE integration possible through tool configurations
@@ -184,12 +208,14 @@ Each formatting run generates detailed statistics:
 ## Best Practices
 
 ### For Developers
+
 1. Install pre-commit hooks for immediate feedback
 2. Run local formatting script before major commits
 3. Enable auto-commit in manual workflow runs for batch formatting
 4. Review formatting changes before accepting
 
 ### For Project Maintenance
+
 1. Regular execution of comprehensive formatting
 2. Monitor formatting reports for consistency trends
 3. Update formatting standards as project evolves
@@ -200,6 +226,7 @@ Each formatting run generates detailed statistics:
 ### Common Issues
 
 **Tool Installation Failures:**
+
 ```bash
 # Install Node.js tools
 npm install -g prettier markdownlint-cli
@@ -212,6 +239,7 @@ sudo apt-get install libxml2-utils shellcheck
 ```
 
 **Permission Issues:**
+
 ```bash
 # Make scripts executable
 chmod +x gradlew
@@ -220,6 +248,7 @@ find . -name "*.sh" -exec chmod +x {} \;
 ```
 
 **XML Formatting Failures:**
+
 - Check for well-formed XML structure
 - Verify no invalid characters in XML content
 - Ensure proper XML declaration where needed
@@ -227,11 +256,13 @@ find . -name "*.sh" -exec chmod +x {} \;
 ### Performance Optimization
 
 **Large Repositories:**
+
 - Use parallel processing for multiple file types
 - Implement file filtering for changed files only
 - Cache tool installations in CI environments
 
 **Network Dependencies:**
+
 - Cache npm and pip packages
 - Use offline-capable tools where possible
 - Implement fallback mechanisms for tool failures
@@ -243,34 +274,41 @@ find . -name "*.sh" -exec chmod +x {} \;
 The code formatting system has been refined with the following improvements:
 
 #### 1. **Fixed Counter Logic**
-- **Issue:** Previous shell loops used subshells (`while | read`) that prevented counters from persisting
+
+- **Issue:** Previous shell loops used subshells (`while | read`) that prevented counters from
+  persisting
 - **Solution:** Implemented temporary files to collect file lists and proper counter tracking
 - **Benefit:** Accurate file count reporting in both GitHub Actions and local scripts
 
 #### 2. **Improved Error Handling**
+
 - **Enhanced XML Processing:** Backup and restore on formatting failures
-- **Graceful Tool Failures:** Continue processing even when individual tools fail  
+- **Graceful Tool Failures:** Continue processing even when individual tools fail
 - **Exit Codes:** Proper error propagation for critical failures (e.g., Gradle syntax errors)
 - **File Validation:** Check file existence before processing
 
 #### 3. **Better Chinese Text Removal**
+
 - **Issue:** Previous `sed` regex pattern didn't work reliably across all systems
 - **Solution:** Switched to `grep -v '[一-龯]'` for more reliable Chinese character detection
 - **Added:** Backup and restore mechanism with change detection
 - **Reporting:** Accurate count of files that had Chinese text removed
 
 #### 4. **Simplified Conditional Logic**
+
 - **GitHub Actions:** Fixed complex condition in auto-commit workflow
 - **Cleaner Logic:** Separated conditions for better readability and reliability
 - **Environment Variables:** Proper use of GitHub Environment variables for cross-step data
 
 #### 5. **Enhanced Progress Reporting**
+
 - **Visual Feedback:** Color-coded success/warning/error messages in local script
 - **Detailed Logging:** Per-file processing status with clear indicators
 - **Summary Statistics:** Comprehensive reporting with actual processed file counts
 - **Change Detection:** Better differentiation between files processed vs. files changed
 
 #### 6. **Cross-Environment Compatibility**
+
 - **Tool Availability:** Better checks for required tools before processing
 - **Fallback Mechanisms:** Graceful handling when optional tools are missing
 - **Path Handling:** Improved temporary file management
@@ -279,6 +317,7 @@ The code formatting system has been refined with the following improvements:
 ## Validation Results
 
 ### Before Refinements
+
 ```
 ⚠ Issues Found:
 - Counters always showed 0 due to subshell limitations
@@ -289,6 +328,7 @@ The code formatting system has been refined with the following improvements:
 ```
 
 ### After Refinements
+
 ```
 ✅ Improvements Achieved:
 - Accurate file counting and reporting
@@ -300,6 +340,7 @@ The code formatting system has been refined with the following improvements:
 ```
 
 ### Example Output (Refined Version)
+
 ```
 🚀 Starting comprehensive code formatting...
 
@@ -349,4 +390,5 @@ Formatting: ./package.json
 4. **Performance Metrics:** Track formatting time and efficiency
 5. **Visual Diff:** Generate visual diffs for formatting changes
 
-This comprehensive formatting system ensures professional code quality and consistency across the entire IRCamera project codebase.
+This comprehensive formatting system ensures professional code quality and consistency across the
+entire IRCamera project codebase.

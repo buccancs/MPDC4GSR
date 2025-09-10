@@ -4,8 +4,8 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 /**
- * 一张图片对应的数据信息.
- */
+    * 一张图片对应的数据信息.
+    */
 @Parcelize
 data class ReportIRBean(
     var picture_id: String, //上传服务器后接口返回的图片Id

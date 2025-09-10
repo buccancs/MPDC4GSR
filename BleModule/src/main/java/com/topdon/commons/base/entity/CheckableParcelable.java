@@ -24,7 +24,7 @@ public class CheckableParcelable<T extends Parcelable> extends CheckableItem<T> 
 
     public CheckableParcelable() {
     }
-	
+
 	public CheckableParcelable(T data) {
         super(data);
     }

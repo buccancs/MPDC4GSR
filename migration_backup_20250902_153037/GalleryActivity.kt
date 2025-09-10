@@ -20,61 +20,61 @@ class GalleryActivity : BaseActivity() {
 //    override fun providerVMClass() = GalleryViewModel::class.java
 
     private val permissionList by lazy{
-        if (this.applicationInfo.targetSdkVersion >= 34){
-            listOf(
-                Permission.READ_MEDIA_VIDEO,
-                Permission.READ_MEDIA_IMAGES,
-                Permission.WRITE_EXTERNAL_STORAGE,
-            )
-        } else if (this.applicationInfo.targetSdkVersion >= 33){
-            mutableListOf(Permission.READ_MEDIA_VIDEO,
-                Permission.READ_MEDIA_IMAGES,
-                Permission.WRITE_EXTERNAL_STORAGE)
-        }else{
-            mutableListOf(Permission.READ_EXTERNAL_STORAGE,Permission.WRITE_EXTERNAL_STORAGE)
-        }
+    if (this.applicationInfo.targetSdkVersion >= 34){
+    listOf(
+    Permission.READ_MEDIA_VIDEO,
+    Permission.READ_MEDIA_IMAGES,
+    Permission.WRITE_EXTERNAL_STORAGE,
+    )
+    } else if (this.applicationInfo.targetSdkVersion >= 33){
+    mutableListOf(Permission.READ_MEDIA_VIDEO,
+    Permission.READ_MEDIA_IMAGES,
+    Permission.WRITE_EXTERNAL_STORAGE)
+    }else{
+    mutableListOf(Permission.READ_EXTERNAL_STORAGE,Permission.WRITE_EXTERNAL_STORAGE)
+    }
     }
 
     override fun initContentView() = R.layout.activity_gallery
 
     override fun initView() {
-        setTitleText(getString(R.string.gallery))
-        gallery_viewpager.adapter = ViewAdapter(this, supportFragmentManager)
-        gallery_tab.setupWithViewPager(gallery_viewpager)
+    setTitleText(getString(R.string.gallery))
+    gallery_viewpager.adapter = ViewAdapter(this, supportFragmentManager)
+    gallery_tab.setupWithViewPager(gallery_viewpager)
 
-        mRxPermissions!!.request( permissionList)
-            .subscribe {
+    mRxPermissions!!.request( permissionList)
+    .subscribe {
 
-            }
+    }
     }
 
     override fun initData() {
     }
 
     inner class ViewAdapter : FragmentPagerAdapter {
-        private var titles: Array<String> = arrayOf()
+    private var titles: Array<String> = arrayOf()
 
-        constructor (context: Context, fm: FragmentManager) : super(
-            fm,
-            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-        ) {
-            titles = arrayOf("图片", "视频")
-        }
+    constructor (context: Context, fm: FragmentManager) : super(
+    fm,
+    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+    ) {
+    titles = arrayOf("图片", "视频")
+    }
 
-        override fun getCount(): Int {
-            return titles.size
-        }
+    override fun getCount(): Int {
+    return titles.size
+    }
 
-        override fun getPageTitle(position: Int): CharSequence? {
-            return titles[position]
-        }
+    override fun getPageTitle(position: Int): CharSequence? {
+    return titles[position]
+    }
 
-        override fun getItem(position: Int): Fragment {
-            return when (position) {
-                0 -> GalleryPictureFragment()
-                else -> GalleryVideoFragment()
-            }
-        }
+    override fun getItem(position: Int): Fragment {
+    return when (position) {
+    0 -> GalleryPictureFragment()
+    else -> GalleryVideoFragment()
+    }
+    }
     }
 
 }

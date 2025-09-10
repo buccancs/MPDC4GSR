@@ -1,0 +1,105 @@
+# Enhanced Code Formatting Configuration
+# This file controls the behavior of the comprehensive formatting system
+
+formatting:
+  # Global settings
+  global:
+    max_line_length: 120
+    indent_size: 4
+    use_tabs: false
+    trim_trailing_whitespace: true
+    insert_final_newline: true
+
+  # File type specific settings
+  xml:
+    enabled: true
+    format_attributes: true
+    sort_attributes: false
+    preserve_comments: true
+
+  json:
+    enabled: true
+    indent_size: 2
+    sort_keys: false
+
+  yaml:
+    enabled: true
+    indent_size: 2
+    preserve_quotes: true
+
+  markdown:
+    enabled: true
+    prose_wrap: "always"
+    print_width: 100
+
+  properties:
+    enabled: true
+    sort_keys: true
+    align_values: false
+
+  kotlin:
+    enabled: true
+    indent_size: 4
+    continuation_indent: 8
+
+  java:
+    enabled: true
+    indent_size: 4
+    wrap_long_lines: true
+
+  python:
+    enabled: true
+    max_line_length: 88
+    validate_syntax: true
+
+  shell:
+    enabled: true
+    validate_syntax: true
+    make_executable: true
+
+# Advanced features
+advanced:
+  chinese_text_cleanup:
+    enabled: true
+    backup_files: true
+
+  duplicate_detection:
+    enabled: true
+    check_resource_names: true
+
+  performance_metrics:
+    enabled: true
+    detailed_timing: true
+
+  large_file_handling:
+    enabled: true
+    size_threshold: "100KB"
+    parallel_processing: false
+
+# Exclusion patterns
+exclude:
+  paths:
+    - "**/build/**"
+    - "**/.gradle/**"
+    - "**/node_modules/**"
+    - "**/migration_backup_*/**"
+  files:
+    - "**.tmp"
+    - "**.bak"
+    - "**.orig"
+
+# Validation settings
+validation:
+  xml_lint: true
+  json_lint: true
+  yaml_lint: true
+  gradle_syntax: true
+  shell_check: true
+  python_compile: true
+
+# Reporting
+reporting:
+  detailed_stats: true
+  performance_metrics: true
+  error_summary: true
+  success_summary: true

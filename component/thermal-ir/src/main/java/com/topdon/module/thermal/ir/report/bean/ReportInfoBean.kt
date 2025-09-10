@@ -5,10 +5,10 @@ import com.topdon.lib.core.utils.CommUtils
 import kotlinx.android.parcel.Parcelize
 
 /**
- * 报告信息.
- *
- * 报告由 3 部分组成：报告信息、检测条件、红外数据.
- */
+    * 报告信息.
+    *
+    * 报告由 3 部分组成：报告信息、检测条件、红外数据.
+    */
 @Parcelize
 data class ReportInfoBean(
     val report_name: String?,    //报告名称

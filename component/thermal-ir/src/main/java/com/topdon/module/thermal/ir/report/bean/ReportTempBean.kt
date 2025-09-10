@@ -21,16 +21,16 @@ data class ReportTempBean(
 ): Parcelable {
 
     constructor(temperature: String?, is_temperature: Int, comment: String?, is_comment: Int): this(
-        null,
-        0,
-        null,
-        0,
-        comment,
-        is_comment,
-        null,
-        0,
-        temperature,
-        is_temperature
+    null,
+    0,
+    null,
+    0,
+    comment,
+    is_comment,
+    null,
+    0,
+    temperature,
+    is_temperature
     )
 
     fun isMaxOpen() = is_max_temperature == 1

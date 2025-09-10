@@ -1,10 +1,10 @@
 package com.topdon.lib.core.comm
 
 /**
- * des:
- * author: CaiSongL
- * date: 2024/4/30 10:16
- **/
+    * des:
+    * author: CaiSongL
+    * date: 2024/4/30 10:16
+    **/
 enum class IrParam {
     ParamLevel, // 对比度
     ParamAlarm, // 预警

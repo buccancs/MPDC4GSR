@@ -10,34 +10,34 @@ import kotlin.math.min
 class MagQualityCompassWrapper(private val compass: ICompass, private val magnetometer: ISensor) :
     AbstractSensor(), ICompass {
     override val bearing: Bearing
-        get() = compass.bearing
+    get() = compass.bearing
 
     override var declination: Float
-        get() = compass.declination
-        set(value) {
-            compass.declination = value
-        }
+    get() = compass.declination
+    set(value) {
+    compass.declination = value
+    }
     override val hasValidReading: Boolean
-        get() = compass.hasValidReading
+    get() = compass.hasValidReading
 
     override val rawBearing: Float
-        get() = compass.rawBearing
+    get() = compass.rawBearing
 
     override val quality: Quality
-        get() = Quality.values()[min(magnetometer.quality.ordinal, compass.quality.ordinal)]
+    get() = Quality.values()[min(magnetometer.quality.ordinal, compass.quality.ordinal)]
 
     override fun startImpl() {
-        compass.start(this::onReading)
-        magnetometer.start(this::onReading)
+    compass.start(this::onReading)
+    magnetometer.start(this::onReading)
     }
 
     override fun stopImpl() {
-        compass.stop(this::onReading)
-        magnetometer.stop(this::onReading)
+    compass.stop(this::onReading)
+    magnetometer.stop(this::onReading)
     }
 
     private fun onReading(): Boolean {
-        notifyListeners()
-        return true
+    notifyListeners()
+    return true
     }
 }

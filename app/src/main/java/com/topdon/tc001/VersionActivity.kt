@@ -20,80 +20,80 @@ import java.util.*
 // Legacy ARouter route annotation - now using NavigationManager
 class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnClickListener {
 
-    override fun getViewBinding(): ActivityVersionBinding = 
-        ActivityVersionBinding.inflate(layoutInflater)
+    override fun getViewBinding(): ActivityVersionBinding =
+    ActivityVersionBinding.inflate(layoutInflater)
 
     override fun initView() {
-        // Set up views using binding
-        binding.versionCodeText.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
-        val year = Calendar.getInstance().get(Calendar.YEAR)
-        binding.versionYearTxt.text = getString(R.string.version_year, "2023-$year")
-        binding.versionStatementPrivateTxt.setOnClickListener(this)
-        binding.versionStatementPolicyTxt.setOnClickListener(this)
-        binding.versionStatementCopyrightTxt.setOnClickListener(this)
+    // Set up views using binding
+    binding.versionCodeText.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+    val year = Calendar.getInstance().get(Calendar.YEAR)
+    binding.versionYearTxt.text = getString(R.string.version_year, "2023-$year")
+    binding.versionStatementPrivateTxt.setOnClickListener(this)
+    binding.versionStatementPolicyTxt.setOnClickListener(this)
+    binding.versionStatementCopyrightTxt.setOnClickListener(this)
 
-        binding.settingVersionImg.setOnClickListener {
-            if (BuildConfig.DEBUG && CheckDoubleClick.isFastDoubleClick()) {
-                LMS.getInstance().activityEnv()
-            }
-        }
-        binding.clNewVersion.setOnClickListener {
-            if (!CheckDoubleClick.isFastDoubleClick()) {
-                checkAppVersion(true)
-            }
-        }
-        binding.settingVersionTxt.text = CommUtils.getAppName()
+    binding.settingVersionImg.setOnClickListener {
+    if (BuildConfig.DEBUG && CheckDoubleClick.isFastDoubleClick()) {
+    LMS.getInstance().activityEnv()
+    }
+    }
+    binding.clNewVersion.setOnClickListener {
+    if (!CheckDoubleClick.isFastDoubleClick()) {
+    checkAppVersion(true)
+    }
+    }
+    binding.settingVersionTxt.text = CommUtils.getAppName()
     }
 
     override fun initData() {
-        if (BaseApplication.instance.isDomestic()) {
-            checkAppVersion(false)
-        }
+    if (BaseApplication.instance.isDomestic()) {
+    checkAppVersion(false)
+    }
     }
 
     override fun onResume() {
-        super.onResume()
-        SharedManager.setBaseHost(UrlConstant.BASE_URL)
+    super.onResume()
+    SharedManager.setBaseHost(UrlConstant.BASE_URL)
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            binding.versionStatementPrivateTxt -> {
-                NavigationManager.build(RouterConfig.POLICY)
-                    .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
-                    .navigation(this)
-            }
-            binding.versionStatementPolicyTxt -> {
-                NavigationManager.build(RouterConfig.POLICY)
-                    .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
-                    .navigation(this)
-            }
-            binding.versionStatementCopyrightTxt -> {
-                NavigationManager.build(RouterConfig.POLICY)
-                    .withInt(PolicyActivity.KEY_THEME_TYPE, 3)
-                    .navigation(this)
-            }
-        }
+    when (v) {
+    binding.versionStatementPrivateTxt -> {
+    NavigationManager.build(RouterConfig.POLICY)
+    .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
+    .navigation(this)
+    }
+    binding.versionStatementPolicyTxt -> {
+    NavigationManager.build(RouterConfig.POLICY)
+    .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
+    .navigation(this)
+    }
+    binding.versionStatementCopyrightTxt -> {
+    NavigationManager.build(RouterConfig.POLICY)
+    .withInt(PolicyActivity.KEY_THEME_TYPE, 3)
+    .navigation(this)
+    }
+    }
     }
 
     private var appVersionUtil: AppVersionUtil? = null
 
     private fun checkAppVersion(isShow: Boolean) {
-        if (appVersionUtil == null) {
-            appVersionUtil =
-                AppVersionUtil(
-                    this,
-                    object : AppVersionUtil.DotIsShowListener {
-                        override fun isShow(show: Boolean) {
-                            binding.clNewVersion.visibility = View.VISIBLE
-                        }
+    if (appVersionUtil == null) {
+    appVersionUtil =
+    AppVersionUtil(
+    this,
+    object : AppVersionUtil.DotIsShowListener {
+    override fun isShow(show: Boolean) {
+    binding.clNewVersion.visibility = View.VISIBLE
+    }
 
-                        override fun version(version: String) {
-                            binding.tvNewVersion.text = "$version"
-                        }
-                    },
-                )
-        }
-        appVersionUtil?.checkVersion(isShow)
+    override fun version(version: String) {
+    binding.tvNewVersion.text = "$version"
+    }
+    },
+    )
+    }
+    appVersionUtil?.checkVersion(isShow)
     }
 }

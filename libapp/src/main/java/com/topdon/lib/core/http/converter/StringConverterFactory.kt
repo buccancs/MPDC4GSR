@@ -10,35 +10,35 @@ import java.lang.reflect.Type
 
 class StringConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(
-        type: Type,
-        annotations: Array<Annotation>,
-        retrofit: Retrofit,
+    type: Type,
+    annotations: Array<Annotation>,
+    retrofit: Retrofit,
     ): Converter<ResponseBody, *>? {
-        return if (String::class.java == type) {
-            Converter<ResponseBody, String> { value -> value.string() }
-        } else {
-            null
-        }
+    return if (String::class.java == type) {
+    Converter<ResponseBody, String> { value -> value.string() }
+    } else {
+    null
+    }
     }
 
     override fun requestBodyConverter(
-        type: Type,
-        parameterAnnotations: Array<Annotation>,
-        methodAnnotations: Array<Annotation>,
-        retrofit: Retrofit,
+    type: Type,
+    parameterAnnotations: Array<Annotation>,
+    methodAnnotations: Array<Annotation>,
+    retrofit: Retrofit,
     ): Converter<*, RequestBody>? {
-        return if (String::class.java == type) {
-            Converter<String, RequestBody> { value -> value.toRequestBody(MEDIA_TYPE) }
-        } else {
-            null
-        }
+    return if (String::class.java == type) {
+    Converter<String, RequestBody> { value -> value.toRequestBody(MEDIA_TYPE) }
+    } else {
+    null
+    }
     }
 
     companion object {
-        private val MEDIA_TYPE = "text/plain".toMediaTypeOrNull()
+    private val MEDIA_TYPE = "text/plain".toMediaTypeOrNull()
 
-        fun create(): StringConverterFactory {
-            return StringConverterFactory()
-        }
+    fun create(): StringConverterFactory {
+    return StringConverterFactory()
+    }
     }
 }

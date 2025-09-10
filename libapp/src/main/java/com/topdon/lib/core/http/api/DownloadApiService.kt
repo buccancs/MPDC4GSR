@@ -6,16 +6,16 @@ import retrofit2.http.Streaming
 import retrofit2.http.Url
 
 /**
- *
- * Created by LCG on 2024/3/5.
- */
+    *
+    * Created by LCG on 2024/3/5.
+    */
 interface DownloadApiService {
     /**
-     * 下载文件.
-     */
+    * 下载文件.
+    */
     @GET
     @Streaming
     suspend fun download(
-        @Url url: String,
+    @Url url: String,
     ): ResponseBody
 }

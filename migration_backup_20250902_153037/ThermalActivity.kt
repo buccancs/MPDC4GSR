@@ -23,18 +23,18 @@ class ThermalActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_thermal
 
     override fun initView() {
-        setTitleText(R.string.main_thermal)
-        mToolBar!!.setBackgroundColor(blackColor)
-        BarUtils.setStatusBarColor(this, blackColor)
-        BarUtils.setNavBarColor(window, blackColor)
-        initRecycler()
-        thermal_tab.setOnItemListener(object : MenuFirstTabView.OnItemListener {
-            override fun selectPosition(position: Int) {
-                //一级菜单选择
-                showRecycler(position)
-            }
+    setTitleText(R.string.main_thermal)
+    mToolBar!!.setBackgroundColor(blackColor)
+    BarUtils.setStatusBarColor(this, blackColor)
+    BarUtils.setNavBarColor(window, blackColor)
+    initRecycler()
+    thermal_tab.setOnItemListener(object : MenuFirstTabView.OnItemListener {
+    override fun selectPosition(position: Int) {
+    //一级菜单选择
+    showRecycler(position)
+    }
 
-        })
+    })
     }
 
     override fun initData() {
@@ -42,28 +42,28 @@ class ThermalActivity : BaseActivity() {
     }
 
     private fun initRecycler() {
-        thermal_recycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        thermal_recycler.adapter = menuAdapter
-        thermal_recycler.visibility = View.GONE
-        menuAdapter.initType(1)
-        menuAdapter.listener = object : MenuTabAdapter.OnItemClickListener {
-            override fun onClick(index: Int) {
-                //二级菜单选择
-                Log.w("123", "index: $index")
-                EventBus.getDefault().post(ThermalActionEvent(action = index))
-            }
+    thermal_recycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+    thermal_recycler.adapter = menuAdapter
+    thermal_recycler.visibility = View.GONE
+    menuAdapter.initType(1)
+    menuAdapter.listener = object : MenuTabAdapter.OnItemClickListener {
+    override fun onClick(index: Int) {
+    //二级菜单选择
+    Log.w("123", "index: $index")
+    EventBus.getDefault().post(ThermalActionEvent(action = index))
+    }
 
-        }
+    }
     }
 
     fun showRecycler(select: Int) {
-        thermal_recycler.initType(select)
-        if (select == 5) {
-            thermal_recycler.visibility = View.GONE
-            EventBus.getDefault().post(ThermalActionEvent(action = 5000))
-        } else {
-            thermal_recycler.visibility = View.VISIBLE
-        }
+    thermal_recycler.initType(select)
+    if (select == 5) {
+    thermal_recycler.visibility = View.GONE
+    EventBus.getDefault().post(ThermalActionEvent(action = 5000))
+    } else {
+    thermal_recycler.visibility = View.VISIBLE
+    }
     }
 
 }

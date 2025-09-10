@@ -3,157 +3,157 @@ name: Pull Request Validation
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [ main, develop, master ]
+    branches: [main, develop, master]
 
 jobs:
   validate-pr:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Fetch full history for proper diff analysis
-        
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      
-    - name: Cache Gradle packages
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-          
-    - name: Make gradlew executable
-      run: chmod +x gradlew
-      
-    - name: Check PR title and description
-      run: |
-        echo "PR Title: ${{ github.event.pull_request.title }}"
-        echo "PR Body: ${{ github.event.pull_request.body }}"
-        
-        # Check if PR title follows conventional commit format
-        if [[ "${{ github.event.pull_request.title }}" =~ ^(feat|fix|docs|style|refactor|perf|test|chore|ci|build)(\(.+\))?: .+ ]]; then
-          echo "✅ PR title follows conventional commit format"
-        else
-          echo "❌ PR title should follow conventional commit format: type(scope): description"
-          exit 1
-        fi
-        
-    - name: Analyze changed files
-      run: |
-        echo "Files changed in this PR:"
-        git diff --name-only origin/${{ github.event.pull_request.base.ref }}..HEAD
-        
-        # Check if any critical files were modified
-        CRITICAL_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}..HEAD | grep -E "(build\.gradle|settings\.gradle|gradle\.properties|proguard-rules|signing)" || true)
-        if [ -n "$CRITICAL_FILES" ]; then
-          echo "⚠️  Critical build files modified:"
-          echo "$CRITICAL_FILES"
-        fi
-        
-    - name: Run quick compile check
-      run: ./gradlew compileDebugKotlin --continue
-      
-    - name: Run basic lint on changed modules
-      run: |
-        # Get changed modules
-        CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}..HEAD)
-        MODULES=$(echo "$CHANGED_FILES" | grep -E "(app|component|lib)" | cut -d'/' -f1 | sort -u || true)
-        
-        if [ -n "$MODULES" ]; then
-          echo "Running lint on changed modules: $MODULES"
-          for module in $MODULES; do
-            if [ -f "$module/build.gradle.kts" ] || [ -f "$module/build.gradle" ]; then
-              ./gradlew :$module:lint --continue || true
-            fi
-          done
-        else
-          echo "No module changes detected, running full lint"
-          ./gradlew lint --continue
-        fi
-        
-    - name: Run unit tests for changed modules
-      run: |
-        # Similar approach for tests
-        CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}..HEAD)
-        MODULES=$(echo "$CHANGED_FILES" | grep -E "(app|component|lib)" | cut -d'/' -f1 | sort -u || true)
-        
-        if [ -n "$MODULES" ]; then
-          echo "Running tests on changed modules: $MODULES"
-          for module in $MODULES; do
-            if [ -f "$module/build.gradle.kts" ] || [ -f "$module/build.gradle" ]; then
-              ./gradlew :$module:testReleaseUnitTest --continue || true
-            fi
-          done
-        else
-          echo "No module changes detected, running all tests"
-          ./gradlew testReleaseUnitTest --continue
-        fi
-        
-    - name: Check APK size impact
-      run: |
-        # Build current PR APK
-        ./gradlew assembleDebug --continue || true
-        
-        if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
-          PR_APK_SIZE=$(stat -c%s "app/build/outputs/apk/debug/app-debug.apk" 2>/dev/null || echo "0")
-          echo "PR APK size: $PR_APK_SIZE bytes"
-          echo "APK_SIZE=$PR_APK_SIZE" >> $GITHUB_ENV
-          
-          # Save size for comparison in future PRs
-          echo "$PR_APK_SIZE" > pr-apk-size.txt
-        else
-          echo "Could not build APK for size comparison"
-        fi
-        
-    - name: Upload PR validation artifacts
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: pr-validation-${{ github.event.pull_request.number }}
-        path: |
-          **/build/reports/lint-results*
-          **/build/reports/tests/
-          pr-apk-size.txt
-        retention-days: 7
-        
-    - name: Comment PR results
-      uses: actions/github-script@v7
-      if: always()
-      with:
-        script: |
-          const fs = require('fs');
-          
-          let comment = '## 🤖 PR Validation Results\n\n';
-          
-          // Add APK size info if available
-          try {
-            if (process.env.APK_SIZE && process.env.APK_SIZE !== '0') {
-              const sizeInMB = (parseInt(process.env.APK_SIZE) / 1024 / 1024).toFixed(2);
-              comment += `📦 **APK Size**: ${sizeInMB} MB\n\n`;
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch full history for proper diff analysis
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Check PR title and description
+        run: |
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "PR Body: ${{ github.event.pull_request.body }}"
+
+          # Check if PR title follows conventional commit format
+          if [[ "${{ github.event.pull_request.title }}" =~ ^(feat|fix|docs|style|refactor|perf|test|chore|ci|build)(\(.+\))?: .+ ]]; then
+            echo "✅ PR title follows conventional commit format"
+          else
+            echo "❌ PR title should follow conventional commit format: type(scope): description"
+            exit 1
+          fi
+
+      - name: Analyze changed files
+        run: |
+          echo "Files changed in this PR:"
+          git diff --name-only origin/${{ github.event.pull_request.base.ref }}..HEAD
+
+          # Check if any critical files were modified
+          CRITICAL_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}..HEAD | grep -E "(build\.gradle|settings\.gradle|gradle\.properties|proguard-rules|signing)" || true)
+          if [ -n "$CRITICAL_FILES" ]; then
+            echo "⚠️  Critical build files modified:"
+            echo "$CRITICAL_FILES"
+          fi
+
+      - name: Run quick compile check
+        run: ./gradlew compileDebugKotlin --continue
+
+      - name: Run basic lint on changed modules
+        run: |
+          # Get changed modules
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          MODULES=$(echo "$CHANGED_FILES" | grep -E "(app|component|lib)" | cut -d'/' -f1 | sort -u || true)
+
+          if [ -n "$MODULES" ]; then
+            echo "Running lint on changed modules: $MODULES"
+            for module in $MODULES; do
+              if [ -f "$module/build.gradle.kts" ] || [ -f "$module/build.gradle" ]; then
+                ./gradlew :$module:lint --continue || true
+              fi
+            done
+          else
+            echo "No module changes detected, running full lint"
+            ./gradlew lint --continue
+          fi
+
+      - name: Run unit tests for changed modules
+        run: |
+          # Similar approach for tests
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}..HEAD)
+          MODULES=$(echo "$CHANGED_FILES" | grep -E "(app|component|lib)" | cut -d'/' -f1 | sort -u || true)
+
+          if [ -n "$MODULES" ]; then
+            echo "Running tests on changed modules: $MODULES"
+            for module in $MODULES; do
+              if [ -f "$module/build.gradle.kts" ] || [ -f "$module/build.gradle" ]; then
+                ./gradlew :$module:testReleaseUnitTest --continue || true
+              fi
+            done
+          else
+            echo "No module changes detected, running all tests"
+            ./gradlew testReleaseUnitTest --continue
+          fi
+
+      - name: Check APK size impact
+        run: |
+          # Build current PR APK
+          ./gradlew assembleDebug --continue || true
+
+          if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
+            PR_APK_SIZE=$(stat -c%s "app/build/outputs/apk/debug/app-debug.apk" 2>/dev/null || echo "0")
+            echo "PR APK size: $PR_APK_SIZE bytes"
+            echo "APK_SIZE=$PR_APK_SIZE" >> $GITHUB_ENV
+            
+            # Save size for comparison in future PRs
+            echo "$PR_APK_SIZE" > pr-apk-size.txt
+          else
+            echo "Could not build APK for size comparison"
+          fi
+
+      - name: Upload PR validation artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr-validation-${{ github.event.pull_request.number }}
+          path: |
+            **/build/reports/lint-results*
+            **/build/reports/tests/
+            pr-apk-size.txt
+          retention-days: 7
+
+      - name: Comment PR results
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+
+            let comment = '## 🤖 PR Validation Results\n\n';
+
+            // Add APK size info if available
+            try {
+              if (process.env.APK_SIZE && process.env.APK_SIZE !== '0') {
+                const sizeInMB = (parseInt(process.env.APK_SIZE) / 1024 / 1024).toFixed(2);
+                comment += `📦 **APK Size**: ${sizeInMB} MB\n\n`;
+              }
+            } catch (e) {
+              console.log('Could not read APK size');
             }
-          } catch (e) {
-            console.log('Could not read APK size');
-          }
-          
-          comment += '✅ **Status**: Validation completed\n';
-          comment += `🔗 **Workflow**: [View details](${context.payload.repository.html_url}/actions/runs/${context.runId})\n\n`;
-          comment += '> This comment was auto-generated by the PR validation workflow.';
-          
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: comment
-          });
+
+            comment += '✅ **Status**: Validation completed\n';
+            comment += `🔗 **Workflow**: [View details](${context.payload.repository.html_url}/actions/runs/${context.runId})\n\n`;
+            comment += '> This comment was auto-generated by the PR validation workflow.';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

@@ -30,6 +30,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.elvishew.xlog.XLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 // Note: SupHelp library integration is not included in this build configuration
 import com.example.thermal_lite.activity.IRThermalLiteActivity
 import com.csl.irCamera.R
@@ -121,6 +122,36 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             recordingService = null
             isServiceBound = false
             Log.i(TAG, "Recording service disconnected")
+        }
+    }
+    
+    /**
+     * Set up remote control with enhanced features
+     */
+    private fun setupRemoteControl() {
+        Log.i(TAG, "Setting up enhanced remote control capabilities")
+        
+        if (!isServiceBound || recordingService == null) {
+            Log.w(TAG, "Recording service not available for remote control setup")
+            return
+        }
+        
+        try {
+            // Enable automatic reconnection with exponential backoff
+            enableAutoReconnection()
+            
+            // Start connection health monitoring
+            startHeartbeat()
+            
+            // Set up UI click handlers for network status
+            networkStatusIndicator?.setOnClickListener { handleNetworkStatusClick() }
+            networkStatusText?.setOnClickListener { handleNetworkStatusClick() }
+            
+            Log.i(TAG, "Enhanced remote control setup completed")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting up remote control", e)
+            showNetworkError("Failed to setup remote control: ${e.message}")
         }
     }
     
@@ -923,7 +954,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             window.decorView.setBackgroundColor(android.graphics.Color.WHITE)
             
             // Add sync marker to recording if active
-            recordingService?.getRecordingController()?.addSyncMarker("pc_sync_flash", System.nanoTime())
+            lifecycleScope.launch {
+                recordingService?.getRecordingController()?.addSyncMarker("pc_sync_flash", System.nanoTime())
+            }
             
             // Restore original background after duration
             window.decorView.postDelayed({
@@ -973,36 +1006,70 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
     
     /**
-     * Show network error to user
+     * Show network error to user with actionable options
      */
     private fun showNetworkError(message: String) {
-        Toast.makeText(this, "Network Error: $message", Toast.LENGTH_LONG).show()
+        Log.e(TAG, "Network error: $message")
+        
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Network Error")
+        builder.setMessage("$message\n\nWhat would you like to do?")
+        
+        builder.setPositiveButton("Retry Discovery") { _, _ ->
+            startNetworkDiscovery()
+        }
+        
+        builder.setNegativeButton("Manual Connect") { _, _ ->
+            showManualConnectionDialog()
+        }
+        
+        builder.setNeutralButton("Ignore") { _, _ ->
+            // Just dismiss - user can try again later
+        }
+        
+        builder.show()
     }
     
     /**
-     * Manual connection to PC by IP address
+     * Enhanced PC connection with better error handling
      */
-    fun connectToPC(ipAddress: String) {
+    fun connectToPC(ipAddress: String, port: Int = 8080) {
         if (networkClient == null) {
             showNetworkError("Network client not initialized")
             return
         }
         
-        Log.i(TAG, "Manual connection to PC at $ipAddress")
+        Log.i(TAG, "Attempting connection to PC at $ipAddress:$port")
         updateConnectionStatus(ConnectionStatus.CONNECTING)
         
-        networkClient?.connectToController(ipAddress, 8080) { success ->
-            runOnUiThread {
-                if (success) {
-                    Log.i(TAG, "Manual connection successful")
-                    Toast.makeText(this@MainActivity, 
-                        "Connected to PC at $ipAddress", 
-                        Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.w(TAG, "Manual connection failed")
-                    updateConnectionStatus(ConnectionStatus.ERROR)
-                    showNetworkError("Failed to connect to PC at $ipAddress")
+        lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    // Try both secure and non-secure connections
+                    var success = networkClient?.connectToController(ipAddress, port, true) ?: false
+                    
+                    if (!success) {
+                        Log.i(TAG, "Secure connection failed, trying non-secure...")
+                        success = networkClient?.connectToController(ipAddress, port, false) ?: false
+                    }
+                    
+                    withContext(Dispatchers.Main) {
+                        if (success) {
+                            Log.i(TAG, "Connection successful to $ipAddress:$port")
+                            Toast.makeText(this@MainActivity, 
+                                "Connected to PC at $ipAddress", 
+                                Toast.LENGTH_LONG).show()
+                        } else {
+                            Log.w(TAG, "Connection failed to $ipAddress:$port")
+                            updateConnectionStatus(ConnectionStatus.ERROR)
+                            showNetworkError("Failed to connect to PC at $ipAddress:$port")
+                        }
+                    }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Connection error to $ipAddress:$port", e)
+                updateConnectionStatus(ConnectionStatus.ERROR)
+                showNetworkError("Connection error: ${e.message}")
             }
         }
     }
@@ -1024,23 +1091,290 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
     
     /**
+     * Enable automatic reconnection with exponential backoff
+     */
+    private fun enableAutoReconnection() {
+        lifecycleScope.launch {
+            var reconnectDelay = 5000L // Start with 5 seconds
+            val maxDelay = 60000L // Max 60 seconds
+            
+            while (!isFinishing) {
+                if (connectionStatus == ConnectionStatus.ERROR || 
+                    connectionStatus == ConnectionStatus.DISCONNECTED) {
+                    
+                    Log.i(TAG, "Attempting auto-reconnection...")
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                    
+                    val success = tryReconnection()
+                    if (success) {
+                        Log.i(TAG, "Auto-reconnection successful")
+                        reconnectDelay = 5000L // Reset delay on success
+                    } else {
+                        Log.w(TAG, "Auto-reconnection failed, retrying in ${reconnectDelay}ms")
+                        kotlinx.coroutines.delay(reconnectDelay)
+                        reconnectDelay = minOf(reconnectDelay * 2, maxDelay) // Exponential backoff
+                    }
+                } else {
+                    kotlinx.coroutines.delay(10000L) // Check every 10 seconds when connected
+                }
+            }
+        }
+    }
+    
+    /**
+     * Try reconnection using various strategies
+     */
+    private suspend fun tryReconnection(): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                // Strategy 1: Try last known controllers
+                val controllers = networkClient?.getDiscoveredControllers()
+                if (!controllers.isNullOrEmpty()) {
+                    for (controller in controllers) {
+                        Log.i(TAG, "Reconnection attempt to ${controller.ipAddress}")
+                        val success = networkClient?.connectToController(
+                            controller.ipAddress, 
+                            controller.port
+                        ) ?: false
+                        
+                        if (success) {
+                            return@withContext true
+                        }
+                    }
+                }
+                
+                // Strategy 2: Start fresh discovery
+                networkClient?.startDiscovery { discoverySuccess ->
+                    if (discoverySuccess) {
+                        val newControllers = networkClient?.getDiscoveredControllers()
+                        if (!newControllers.isNullOrEmpty()) {
+                            // Try connecting to first discovered controller
+                            lifecycleScope.launch {
+                                val controller = newControllers.first()
+                                networkClient?.connectToController(
+                                    controller.ipAddress, 
+                                    controller.port
+                                ) { connectSuccess ->
+                                    if (!connectSuccess) {
+                                        updateConnectionStatus(ConnectionStatus.ERROR)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                return@withContext false
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during reconnection attempt", e)
+                return@withContext false
+            }
+        }
+    }
+    
+    /**
+     * Send keep-alive heartbeat to maintain connection
+     */
+    private fun startHeartbeat() {
+        lifecycleScope.launch {
+            while (!isFinishing) {
+                if (connectionStatus == ConnectionStatus.CONNECTED) {
+                    try {
+                        // Send ping message to keep connection alive
+                        val heartbeat = org.json.JSONObject().apply {
+                            put("type", "heartbeat")
+                            put("timestamp", System.currentTimeMillis())
+                            put("device_id", android.provider.Settings.Secure.getString(
+                                contentResolver,
+                                android.provider.Settings.Secure.ANDROID_ID
+                            ))
+                        }
+                        
+                        val success = try {
+                            // Use sendMeasurementData as a heartbeat mechanism
+                            networkClient?.sendMeasurementData("heartbeat", heartbeat) ?: false
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Heartbeat exception", e)
+                            false
+                        }
+                        if (!success) {
+                            Log.w(TAG, "Heartbeat failed, connection may be lost")
+                            updateConnectionStatus(ConnectionStatus.ERROR)
+                        }
+                        
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Heartbeat error", e)
+                        updateConnectionStatus(ConnectionStatus.ERROR)
+                    }
+                }
+                
+                kotlinx.coroutines.delay(30000L) // Send heartbeat every 30 seconds
+            }
+        }
+    }
+    
+    /**
+     * Get comprehensive status report for debugging
+     */
+    fun getConnectionStatusReport(): String {
+        val sb = StringBuilder()
+        sb.append("=== PC-to-Phone Control Status ===\n")
+        sb.append("Connection Status: ${connectionStatus.name}\n")
+        sb.append("Network Metrics: ${getNetworkMetrics()}\n")
+        
+        val controllers = networkClient?.getDiscoveredControllers()
+        sb.append("Discovered Controllers: ${controllers?.size ?: 0}\n")
+        controllers?.forEach { controller ->
+            sb.append("  - ${controller.deviceName} (${controller.ipAddress}:${controller.port})\n")
+        }
+        
+        sb.append("Service Bound: $isServiceBound\n")
+        if (isServiceBound && recordingService != null) {
+            try {
+                val recordingController = recordingService?.getRecordingController()
+                val summary = recordingController?.getSensorStatusSummary()
+                sb.append("Recording Status: $summary\n")
+            } catch (e: Exception) {
+                sb.append("Recording Status: Error - ${e.message}\n")
+            }
+        } else {
+            sb.append("Recording Status: Service not available\n")
+        }
+        
+        return sb.toString()
+    }
+    
+    /**
      * Handle network status bar click for manual connection
      */
     private fun handleNetworkStatusClick() {
         when (connectionStatus) {
             ConnectionStatus.DISCONNECTED, ConnectionStatus.ERROR -> {
-                // Show dialog for manual IP connection
-                showManualConnectionDialog()
+                // Show dialog for manual IP connection or status report
+                showConnectionOptionsDialog()
             }
             ConnectionStatus.DISCOVERING, ConnectionStatus.CONNECTING -> {
                 // Show discovery progress
-                Toast.makeText(this, "Discovery in progress...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Connection in progress...", Toast.LENGTH_SHORT).show()
             }
             ConnectionStatus.CONNECTED -> {
-                // Show connection info
-                val metrics = getNetworkMetrics()
-                Toast.makeText(this, "Connected: $metrics", Toast.LENGTH_LONG).show()
+                // Show connection info and metrics
+                showConnectionInfoDialog()
             }
+        }
+    }
+    
+    /**
+     * Show comprehensive connection options dialog
+     */
+    private fun showConnectionOptionsDialog() {
+        val options = arrayOf(
+            "Retry Discovery",
+            "Manual IP Connection", 
+            "Connection Status Report",
+            "Cancel"
+        )
+        
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("PC Connection Options")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> {
+                    // Retry Discovery
+                    Log.i(TAG, "Retrying network discovery")
+                    startNetworkDiscovery()
+                }
+                1 -> {
+                    // Manual IP Connection
+                    showManualConnectionDialog()
+                }
+                2 -> {
+                    // Status Report
+                    showStatusReportDialog()
+                }
+                3 -> {
+                    // Cancel - do nothing
+                }
+            }
+        }
+        builder.show()
+    }
+    
+    /**
+     * Show connection information dialog
+     */
+    private fun showConnectionInfoDialog() {
+        val metrics = getNetworkMetrics()
+        val controllers = networkClient?.getDiscoveredControllers()
+        val currentController = controllers?.firstOrNull()
+        
+        val message = StringBuilder()
+        message.append("Connection Status: Connected\n\n")
+        message.append("Performance Metrics:\n$metrics\n\n")
+        
+        if (currentController != null) {
+            message.append("Connected to:\n")
+            message.append("Device: ${currentController.deviceName}\n")
+            message.append("Address: ${currentController.ipAddress}:${currentController.port}\n\n")
+        }
+        
+        message.append("Recording Service: ${if (isServiceBound) "Available" else "Not Available"}\n")
+        
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("PC Connection Info")
+        builder.setMessage(message.toString())
+        builder.setPositiveButton("Test Recording") { _, _ ->
+            testRemoteRecordingCapability()
+        }
+        builder.setNegativeButton("Close", null)
+        builder.show()
+    }
+    
+    /**
+     * Show detailed status report dialog
+     */
+    private fun showStatusReportDialog() {
+        val statusReport = getConnectionStatusReport()
+        
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Detailed Status Report")
+        builder.setMessage(statusReport)
+        builder.setPositiveButton("Copy to Clipboard") { _, _ ->
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            val clip = android.content.ClipData.newPlainText("Status Report", statusReport)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this, "Status report copied to clipboard", Toast.LENGTH_SHORT).show()
+        }
+        builder.setNegativeButton("Close", null)
+        builder.show()
+    }
+    
+    /**
+     * Test remote recording capability
+     */
+    private fun testRemoteRecordingCapability() {
+        if (!isServiceBound || recordingService == null) {
+            Toast.makeText(this, "Recording service not available", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        try {
+            val testSessionInfo = SessionInfo(
+                sessionId = "test_${System.currentTimeMillis()}",
+                startTime = System.currentTimeMillis(),
+                studyName = "Connection Test",
+                participantId = "test_participant"
+            )
+            
+            Toast.makeText(this, "Testing remote recording capability...", Toast.LENGTH_SHORT).show()
+            
+            // Simulate remote recording request
+            handleRemoteRecordingRequest(testSessionInfo)
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error testing remote recording", e)
+            Toast.makeText(this, "Test failed: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
     
@@ -1048,37 +1382,84 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
      * Show dialog for manual PC connection
      */
     private fun showManualConnectionDialog() {
-        val builder = TipDialog.Builder(this)
-            .setTitleMessage("Connect to PC")
-            .setMessage("Enter PC IP address for manual connection:")
-            .setCancelListener("Cancel")
-            .setPositiveListener("Connect") {
-                // For now, try common default IP addresses
-                val commonIPs = listOf("192.168.1.100", "192.168.0.100", "10.0.0.100")
+        val input = android.widget.EditText(this)
+        input.hint = "Enter PC IP address (e.g., 192.168.1.100)"
+        input.inputType = android.text.InputType.TYPE_CLASS_TEXT
+        
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Manual PC Connection")
+        builder.setMessage("Enter the IP address of your PC Controller:")
+        builder.setView(input)
+        
+        builder.setPositiveButton("Connect") { _, _ ->
+            val ipAddress = input.text.toString().trim()
+            if (ipAddress.isNotEmpty()) {
+                connectToPC(ipAddress)
+            } else {
+                // Try common default IP addresses
+                tryCommonIPAddresses()
+            }
+        }
+        
+        builder.setNegativeButton("Try Defaults") { _, _ ->
+            tryCommonIPAddresses()
+        }
+        
+        builder.setNeutralButton("Cancel", null)
+        builder.show()
+    }
+    
+    /**
+     * Try connecting to common IP addresses
+     */
+    private fun tryCommonIPAddresses() {
+        val commonIPs = listOf(
+            "192.168.1.100", "192.168.1.101", "192.168.1.102",
+            "192.168.0.100", "192.168.0.101", "192.168.0.102", 
+            "10.0.0.100", "10.0.0.101", "10.0.0.102",
+            "127.0.0.1" // localhost for testing
+        )
+        
+        Toast.makeText(this, "Trying common IP addresses...", Toast.LENGTH_SHORT).show()
+        
+        lifecycleScope.launch {
+            var connected = false
+            
+            for (ip in commonIPs) {
+                if (connected) break // Stop if we've already connected
                 
-                lifecycleScope.launch {
-                    for (ip in commonIPs) {
-                        Log.i(TAG, "Trying to connect to $ip")
-                        updateConnectionStatus(ConnectionStatus.CONNECTING)
-                        
-                        val success = networkClient?.connectToController(ip, 8080, true) ?: false
-                        if (success) {
-                            Log.i(TAG, "Successfully connected to $ip")
-                            break
-                        } else {
-                            Log.w(TAG, "Failed to connect to $ip")
-                        }
+                Log.i(TAG, "Trying to connect to $ip")
+                updateConnectionStatus(ConnectionStatus.CONNECTING)
+                
+                try {
+                    val success = withContext(Dispatchers.IO) {
+                        // Try secure first, then non-secure
+                        networkClient?.connectToController(ip, 8080, true) ?: false ||
+                        networkClient?.connectToController(ip, 8080, false) ?: false
                     }
                     
-                    // If all failed, restart discovery
-                    if (connectionStatus != ConnectionStatus.CONNECTED) {
-                        updateConnectionStatus(ConnectionStatus.DISCONNECTED)
-                        startNetworkDiscovery()
+                    if (success) {
+                        Log.i(TAG, "Successfully connected to $ip")
+                        Toast.makeText(this@MainActivity, "Connected to PC at $ip", Toast.LENGTH_LONG).show()
+                        connected = true
+                        break
+                    } else {
+                        Log.w(TAG, "Failed to connect to $ip")
                     }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Connection error to $ip: ${e.message}")
                 }
             }
-        
-        builder.create().show()
+            
+            // If all failed, restart discovery
+            if (!connected) {
+                updateConnectionStatus(ConnectionStatus.DISCONNECTED)
+                Toast.makeText(this@MainActivity, 
+                    "No PC found at common addresses. Restarting discovery...", 
+                    Toast.LENGTH_LONG).show()
+                startNetworkDiscovery()
+            }
+        }
     }
     
     override fun onDestroy() {

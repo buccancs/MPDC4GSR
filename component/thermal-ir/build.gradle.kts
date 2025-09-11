@@ -104,8 +104,8 @@ dependencies {
     // Image browser library
     implementation(libs.mn.image.browser)
     
-    // GSY VideoPlayer for video playback - using standard version
-    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v11.1.0") {
+    // GSY VideoPlayer for video playback - using available version
+    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack") {
         exclude(group = "androidx.media3", module = "media3-cast")
         exclude(group = "androidx.media3", module = "media3-session")
         exclude(group = "androidx.media3", module = "media3-ui")
@@ -119,4 +119,7 @@ dependencies {
     
     // Enhanced unified BLE system integration for cross-modal coordination
     implementation(project(":BleModule"))
+    
+    // LocalBroadcastManager support (deprecated but still needed for legacy code)
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
 }

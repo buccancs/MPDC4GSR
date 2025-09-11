@@ -61,7 +61,7 @@ dependencies {
     // Core Android dependencies
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.5.0")
-    implementation("com.google.android.material:material:1.6.1")
+    implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.lifecycle:lifecycle-service:2.5.1")
     implementation("androidx.work:work-runtime-ktx:2.7.1")
     implementation("com.google.code.gson:gson:2.9.1")

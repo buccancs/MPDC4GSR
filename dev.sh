@@ -18,14 +18,22 @@ show_help() {
     echo "Usage: ./dev.sh [command]"
     echo ""
     echo "Commands:"
-    echo "  format    - Format all code files"
-    echo "  lint      - Run linting checks"
-    echo "  build     - Build the project"
-    echo "  test      - Run tests"
-    echo "  validate  - Run all checks (format + lint + build)"
-    echo "  clean     - Clean build artifacts"
-    echo "  setup     - Setup development environment"
-    echo "  help      - Show this help"
+    echo "  format      - Format all code files"
+    echo "  lint        - Run linting checks"
+    echo "  build       - Build the project"
+    echo "  test        - Run tests"
+    echo "  validate    - Run all checks (format + lint + build)"
+    echo "  clean       - Clean build artifacts"
+    echo "  setup       - Setup development environment"
+    echo "  monitor     - Launch quality monitor"
+    echo "  analyze     - Run performance analysis"
+    echo "  health      - Quick health check"
+    echo "  help        - Show this help"
+    echo ""
+    echo -e "${CYAN}Advanced Tools:${NC}"
+    echo "  ./tools/quality-monitor.sh     - Real-time quality monitoring"
+    echo "  ./tools/performance-analyzer.sh - Performance and optimization analysis"
+    echo "  ./status.sh                    - Project status overview"
 }
 
 print_status() {
@@ -62,13 +70,17 @@ setup_dev_environment() {
 format_code() {
     print_status "Formatting code..."
     
-    local files_formatted=0
+    local temp_file
+    temp_file=$(mktemp)
+    echo "0" > "$temp_file"
     
     # Format Kotlin files
     if command -v ktlint &> /dev/null; then
-        find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
+        find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" -print0 | while IFS= read -r -d '' file; do
             if ktlint --format "$file" 2>/dev/null; then
-                ((files_formatted++))
+                local count
+                count=$(cat "$temp_file")
+                echo $((count + 1)) > "$temp_file"
             fi
         done
         print_status "Kotlin files formatted"
@@ -78,8 +90,12 @@ format_code() {
     
     # Format Java files
     if command -v google-java-format &> /dev/null; then
-        find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
-            google-java-format --replace "$file" 2>/dev/null && ((files_formatted++))
+        find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" -print0 | while IFS= read -r -d '' file; do
+            if google-java-format --replace "$file" 2>/dev/null; then
+                local count
+                count=$(cat "$temp_file")
+                echo $((count + 1)) > "$temp_file"
+            fi
         done
         print_status "Java files formatted"
     else
@@ -88,20 +104,32 @@ format_code() {
     
     # Format Python files
     if command -v black &> /dev/null; then
-        find . -name "*.py" | while read -r file; do
-            black --quiet "$file" 2>/dev/null && ((files_formatted++))
+        find . -name "*.py" -print0 | while IFS= read -r -d '' file; do
+            if black --quiet "$file" 2>/dev/null; then
+                local count
+                count=$(cat "$temp_file")
+                echo $((count + 1)) > "$temp_file"
+            fi
         done
         print_status "Python files formatted"
     fi
     
     # Format XML files
-    find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" | while read -r file; do
-        if command -v xmllint &> /dev/null; then
-            xmllint --format "$file" --output "$file" 2>/dev/null && ((files_formatted++))
-        fi
-    done
+    if command -v xmllint &> /dev/null; then
+        find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" -print0 | while IFS= read -r -d '' file; do
+            if xmllint --format "$file" --output "$file" 2>/dev/null; then
+                local count
+                count=$(cat "$temp_file")
+                echo $((count + 1)) > "$temp_file"
+            fi
+        done
+    fi
     
-    print_status "Code formatting completed"
+    local files_formatted
+    files_formatted=$(cat "$temp_file")
+    rm -f "$temp_file"
+    
+    print_status "Code formatting completed ($files_formatted files processed)"
 }
 
 run_lint() {
@@ -111,8 +139,8 @@ run_lint() {
     
     # Kotlin lint
     if command -v ktlint &> /dev/null; then
-        if ! find . -name "*.kt" -not -path "./build/*" | xargs ktlint 2>/dev/null; then
-            ((errors++))
+        if ! find . -name "*.kt" -not -path "./build/*" -print0 | xargs -0 ktlint 2>/dev/null; then
+            errors=$((errors + 1))
             print_error "Kotlin linting issues found"
         else
             print_status "Kotlin linting passed"
@@ -121,8 +149,8 @@ run_lint() {
     
     # Python lint
     if command -v flake8 &> /dev/null; then
-        if ! find . -name "*.py" | xargs flake8 2>/dev/null; then
-            ((errors++))
+        if ! find . -name "*.py" -print0 | xargs -0 flake8 2>/dev/null; then
+            errors=$((errors + 1))
             print_error "Python linting issues found"
         else
             print_status "Python linting passed"
@@ -131,8 +159,8 @@ run_lint() {
     
     # Shell script lint
     if command -v shellcheck &> /dev/null; then
-        if ! find . -name "*.sh" | xargs shellcheck 2>/dev/null; then
-            ((errors++))
+        if ! find . -name "*.sh" -print0 | xargs -0 shellcheck 2>/dev/null; then
+            errors=$((errors + 1))
             print_error "Shell script linting issues found"
         else
             print_status "Shell script linting passed"
@@ -141,8 +169,8 @@ run_lint() {
     
     # YAML lint
     if command -v yamllint &> /dev/null; then
-        if ! find . -name "*.yml" -o -name "*.yaml" | xargs yamllint -d relaxed 2>/dev/null; then
-            ((errors++))
+        if ! find . \( -name "*.yml" -o -name "*.yaml" \) -print0 | xargs -0 yamllint -d relaxed 2>/dev/null; then
+            errors=$((errors + 1))
             print_error "YAML linting issues found"
         else
             print_status "YAML linting passed"
@@ -192,17 +220,61 @@ run_tests() {
 validate_all() {
     print_status "Running full validation..."
     
-    local start_time=$(date +%s)
+    local start_time
+    start_time=$(date +%s)
     
     # Run all validation steps
     format_code
     run_lint
     build_project
     
-    local end_time=$(date +%s)
+    local end_time
+    end_time=$(date +%s)
     local duration=$((end_time - start_time))
     
     print_status "All validation checks passed! (${duration}s)"
+}
+
+quick_health_check() {
+    print_status "Running quick health check..."
+    
+    local issues=0
+    
+    # Check gradle
+    if ./gradlew help --quiet &>/dev/null; then
+        print_status "Gradle: Working"
+    else
+        print_error "Gradle: Issues detected"
+        issues=$((issues + 1))
+    fi
+    
+    # Check dev tools
+    if [ -x "./dev.sh" ]; then
+        print_status "Dev Tools: Ready"
+    else
+        print_warning "Dev Tools: Not executable"
+        issues=$((issues + 1))
+    fi
+    
+    # Check pre-commit
+    if [ -f ".pre-commit-config.yaml" ]; then
+        print_status "Pre-commit: Configured"
+    else
+        print_warning "Pre-commit: Not configured"
+    fi
+    
+    # Quick file count
+    local kotlin_files java_files
+    kotlin_files=$(find . -name "*.kt" -not -path "./build/*" | wc -l)
+    java_files=$(find . -name "*.java" -not -path "./build/*" | wc -l)
+    
+    print_status "Code Files: $kotlin_files Kotlin, $java_files Java"
+    
+    if [ "$issues" -eq 0 ]; then
+        print_status "All systems healthy!"
+    else
+        print_warning "Found $issues issues"
+    fi
 }
 
 clean_artifacts() {
@@ -243,6 +315,23 @@ case "${1:-help}" in
         ;;
     "setup")
         setup_dev_environment
+        ;;
+    "monitor")
+        if [ -x "./tools/quality-monitor.sh" ]; then
+            ./tools/quality-monitor.sh
+        else
+            print_error "Quality monitor not found or not executable"
+        fi
+        ;;
+    "analyze")
+        if [ -x "./tools/performance-analyzer.sh" ]; then
+            ./tools/performance-analyzer.sh
+        else
+            print_error "Performance analyzer not found or not executable"
+        fi
+        ;;
+    "health")
+        quick_health_check
         ;;
     "help"|*)
         show_help

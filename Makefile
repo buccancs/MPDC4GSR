@@ -1,13 +1,13 @@
 # IRCamera Development Makefile
 # Provides convenient shortcuts for common development tasks
 
-.PHONY: help setup format lint build test validate clean install
+.PHONY: help setup format lint build test validate clean install monitor analyze health status
 
 # Default target
 help:
 	@echo "IRCamera Development Commands"
 	@echo ""
-	@echo "Available targets:"
+	@echo "Basic Commands:"
 	@echo "  setup     - Setup development environment"
 	@echo "  format    - Format all code files"
 	@echo "  lint      - Run linting checks"
@@ -17,10 +17,16 @@ help:
 	@echo "  clean     - Clean build artifacts"
 	@echo "  install   - Install development tools"
 	@echo ""
+	@echo "Advanced Commands:"
+	@echo "  monitor   - Launch real-time quality monitor"
+	@echo "  analyze   - Run performance analysis"
+	@echo "  health    - Quick health check"
+	@echo "  status    - Show project status"
+	@echo ""
 	@echo "Examples:"
 	@echo "  make setup     # Setup development environment"
 	@echo "  make validate  # Run all validation checks"
-	@echo "  make build     # Build the Android app"
+	@echo "  make monitor   # Launch quality monitoring"
 
 setup:
 	./dev.sh setup
@@ -42,6 +48,18 @@ validate:
 
 clean:
 	./dev.sh clean
+
+monitor:
+	./dev.sh monitor
+
+analyze:
+	./dev.sh analyze
+
+health:
+	./dev.sh health
+
+status:
+	./status.sh
 
 install:
 	@echo "Installing development tools..."

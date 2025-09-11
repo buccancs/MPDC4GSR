@@ -1,53 +1,45 @@
-# GitHub Actions CI/CD Pipeline
+# GitHub Actions Workflows
 
-This directory contains the CI/CD workflows for the IRCamera Android project.
+This directory contains automated CI/CD workflows for the IRCamera project.
 
-## Workflows Overview
+## 🔄 Core Workflows
 
-### 1. `ci.yml` - Main CI/CD Pipeline
-
-**Trigger:** Push to main branches, Pull Requests **Purpose:** Comprehensive build, test, and
-security scanning
-
-**Jobs:**
-
-- **Test**: Runs on multiple API levels (28, 30, 34)
-  - Lint checks
-  - Unit tests
-  - Test report generation
-- **Build**: Builds debug and release APKs
-  - APK artifact storage
-- **Security Scan**: CodeQL analysis for security vulnerabilities
-
-### 2. `release.yml` - Release Build
-
-**Trigger:** Git tags (v\*), Manual dispatch **Purpose:** Production release builds
-
+### 1. **ci.yml** - Main CI Pipeline
+**Triggers:** Push to main/develop, Pull Requests  
 **Features:**
+- Code formatting and linting
+- Build validation
+- Test execution
+- Artifact upload on failure
 
-- Release APK generation
-- Automatic release notes
-- GitHub release creation
-- Signed APK support (with secrets)
+### 2. **build-variants.yml** - Multi-Target Builds
+**Purpose:** Build APK variants for different targets
+- Google Play Release
+- Topdon Release  
+- Debug Build
 
-### 3. `pr-validation.yml` - Pull Request Validation
+### 3. **release.yml** - Release Management
+**Triggers:** Tag creation (v*.*.*)
+- Automated GitHub releases
+- Signed release artifacts
 
-**Trigger:** Pull Request events **Purpose:** Quick validation of PRs
+### 4. **build-release.yml** - Release Builds
+**Purpose:** Production build automation
 
+### 5. **dependency-check.yml** - Security Scanning
 **Features:**
+- OWASP dependency vulnerability scanning
+- License compliance checking
 
-- PR title validation (conventional commits)
-- Changed file analysis
-- Module-specific testing
-- APK size impact analysis
-- Automated PR comments
+## 🔧 Local Development
 
-### 4. `dependency-check.yml` - Security & Dependencies
-
-**Trigger:** Schedule (weekly), Build file changes, Manual **Purpose:** Dependency security and
-update monitoring
-
-**Features:**
+Use the local development script to mirror CI checks:
+```bash
+./dev.sh validate    # Run all checks
+./dev.sh format      # Format code
+./dev.sh lint        # Run linting
+./dev.sh build       # Build project
+```
 
 - OWASP Dependency Check
 - Vulnerability scanning

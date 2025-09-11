@@ -93,7 +93,7 @@ dependencies {
     // Additional dependencies for Shimmer API compatibility
     implementation("com.google.guava:guava:20.0")
     implementation("java3d:vecmath:1.3.1")
-    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.apache.commons:commons-lang3:3.18.0")
     
     // BLE support for Shimmer3R and other modern devices
     implementation("com.github.Jasonchenlijian:FastBle:2.4.0")

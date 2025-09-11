@@ -2,17 +2,21 @@ package com.topdon.tc001.test
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import com.csl.irCamera.databinding.ActivityRawCaptureTestBinding
-import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 /**
  * Test Activity to demonstrate RAW Image Capture UI
  * Shows the enhanced multi-modal recording interface with RAW capture options
  */
-class RAWCaptureTestActivity : BaseBindingActivity<ActivityRawCaptureTestBinding>() {
+class RAWCaptureTestActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityRawCaptureTestBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityRawCaptureTestBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         // Initialize UI components through view binding
         setupSpinner()
         setupSwitchListeners()

@@ -66,6 +66,9 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.1")
     implementation("com.google.code.gson:gson:2.9.1")
     
+    // Enhanced BLE Module with Nordic BLE backend
+    implementation(project(":BleModule"))
+    
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
@@ -95,9 +98,12 @@ dependencies {
     // BLE support for Shimmer3R and other modern devices
     implementation("com.github.Jasonchenlijian:FastBle:2.4.0")
     
-    // Testing
+    // Testing with Robolectric for context-based tests
     testImplementation(libs.junit)
-    testImplementation("org.mockito:mockito-core:4.6.1")
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 }

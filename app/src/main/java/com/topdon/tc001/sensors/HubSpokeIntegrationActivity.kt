@@ -18,6 +18,11 @@ import com.topdon.tc001.utils.TimeManager
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
+
+// Enhanced BLE Module integration for systematic harmonization
+import com.topdon.ble.EasyBLE
+import com.topdon.ble.Device
+import com.topdon.ble.ConnectionState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -51,13 +56,17 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         private const val DEFAULT_PC_CONTROLLER_PORT = 8080
     }
 
-    override fun getViewBinding(): ActivityHubSpokeIntegrationBinding = 
-        ActivityHubSpokeIntegrationBinding.inflate(layoutInflater)
+    override fun initContentLayoutId(): Int = R.layout.activity_hub_spoke_integration
 
     // Core components
     private lateinit var recordingController: RecordingController
     private lateinit var networkClient: EnhancedNetworkClient
     private lateinit var timeManager: TimeManager
+    
+    // Enhanced BLE Module for systematic harmonization
+    private lateinit var enhancedBLE: EasyBLE
+    private lateinit var unifiedBleManager: com.topdon.ble.UnifiedBleManager
+    private var connectedBLEDevices = mutableListOf<Device>()
     
     // Service connection
     private var recordingService: RecordingService? = null
@@ -121,9 +130,182 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun initializeComponents() {
         timeManager = TimeManager.getInstance(this)
         
+        // Initialize Enhanced BLE Module with Nordic backend for systematic harmonization
+        enhancedBLE = EasyBLE.getBuilder()
+            .setUseNordicBleBackend(true) // Enable Nordic BLE for enhanced reliability
+            .build()
+        
+        Log.i(TAG, "Enhanced BLE Module initialized with Nordic BLE backend")
+        
+        // Initialize Enhanced BLE Manager for advanced multi-device coordination
+        initializeAdvancedBleCoordination()
+        
         // Initialize network client (will be connected to service later)
         recordingController = RecordingController(this, this)
         networkClient = EnhancedNetworkClient(this, recordingController)
+    }
+    
+    /**
+     * Initialize advanced BLE coordination for systematic multi-device management
+     */
+    private fun initializeAdvancedBleCoordination() {
+        lifecycleScope.launch {
+            try {
+                // Initialize Unified BLE Manager with multi-device coordination
+                unifiedBleManager = com.topdon.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
+                unifiedBleManager.initialize(this@HubSpokeIntegrationActivity, true)
+                unifiedBleManager.enableMultiDeviceMode(true)
+                
+                Log.i(TAG, "Advanced BLE coordination initialized for hub-spoke system")
+                
+                // Setup BLE device monitoring for real-time status updates
+                setupBleDeviceMonitoring()
+                
+                // Auto-discover and setup GSR sensors for physiological sensing
+                discoverGsrSensorsForHubSpoke()
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error initializing advanced BLE coordination", e)
+            }
+        }
+    }
+    
+    /**
+     * Setup BLE device monitoring with system-wide status tracking
+     */
+    private fun setupBleDeviceMonitoring() {
+        lifecycleScope.launch {
+            try {
+                // Monitor system BLE status and update UI
+                launch {
+                    while (isServiceBound || !isDestroyed) {
+                        try {
+                            val systemStatus = unifiedBleManager.getSystemStatus()
+                            updateBleStatusUI(systemStatus)
+                            
+                            // Log system status for debugging
+                            Log.d(TAG, "BLE System Status: $systemStatus")
+                            
+                            kotlinx.coroutines.delay(2000) // Update every 2 seconds
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error monitoring BLE status", e)
+                            break
+                        }
+                    }
+                }
+                
+                Log.i(TAG, "BLE device monitoring started")
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error setting up BLE device monitoring", e)
+            }
+        }
+    }
+    
+    /**
+     * Discover and setup GSR sensors for hub-spoke physiological sensing
+     */
+    private fun discoverGsrSensorsForHubSpoke() {
+        lifecycleScope.launch {
+            try {
+                // Start BLE device discovery to find available GSR sensors
+                enhancedBLE.addScanListener(object : com.topdon.ble.callback.ScanListener {
+                    override fun onScanStart() {
+                        Log.d(TAG, "Hub-spoke GSR sensor discovery started")
+                        runOnUiThread {
+                            binding.statusTextView.text = "Scanning for GSR sensors..."
+                        }
+                    }
+                    
+                    override fun onScanStop() {
+                        Log.d(TAG, "Hub-spoke GSR sensor discovery stopped")
+                    }
+                    
+                    override fun onScanResult(device: Device, isConnectedBySys: Boolean) {
+                        // Check if device is a GSR sensor (Shimmer3 GSR+)
+                        val deviceName = device.name?.uppercase() ?: ""
+                        if (deviceName.contains("SHIMMER") || deviceName.contains("GSR")) {
+                            Log.i(TAG, "GSR sensor detected for hub-spoke: ${device.name} (${device.address})")
+                            
+                            // Mark as GSR sensor for enhanced handling
+                            unifiedBleManager.markAsGsrSensor(device.address)
+                            
+                            runOnUiThread {
+                                binding.statusTextView.text = "GSR sensor found: ${device.name}"
+                                updateDiscoveredDevicesUI(device, device.getRssi())
+                            }
+                        }
+                    }
+                    
+                    override fun onScanError(errorCode: Int, errorMsg: String?) {
+                        Log.e(TAG, "Hub-spoke GSR sensor discovery failed: $errorCode, message: $errorMsg")
+                        runOnUiThread {
+                            binding.statusTextView.text = "GSR sensor discovery failed"
+                        }
+                    }
+                })
+                
+                // Start scanning for a limited time
+                enhancedBLE.startScan()
+                
+                // Stop scanning after 30 seconds
+                kotlinx.coroutines.delay(30000)
+                enhancedBLE.stopScan()
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error discovering GSR sensors", e)
+            }
+        }
+    }
+    
+    /**
+     * Update BLE status in the UI with enhanced system information
+     */
+    private fun updateBleStatusUI(systemStatus: com.topdon.ble.UnifiedBleManager.SystemBleStatus?) {
+        runOnUiThread {
+            try {
+                if (systemStatus != null) {
+                    val statusText = "BLE: ${systemStatus.activeConnections} active, " +
+                            "${systemStatus.totalDevicesConnected} total devices, " +
+                            "Multi-device: ${if (systemStatus.multiDeviceMode) "ON" else "OFF"}"
+                    
+                    // Update BLE status display (assuming there's a BLE status TextView)
+                    // binding.bleStatusTextView.text = statusText
+                    
+                    // Update connection indicator based on active connections
+                    val hasActiveDevices = systemStatus.activeConnections > 0
+                    binding.connectButton.isEnabled = !hasActiveDevices || !networkClient.isConnected()
+                    
+                    Log.d(TAG, "BLE Status UI updated: $statusText")
+                } else {
+                    Log.w(TAG, "BLE system status is null")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error updating BLE status UI", e)
+            }
+        }
+    }
+    
+    /**
+     * Update discovered devices UI with real-time device information
+     */
+    private fun updateDiscoveredDevicesUI(device: Device, rssi: Int) {
+        try {
+            // Add device to the connected devices list
+            if (!connectedBLEDevices.any { it.address == device.address }) {
+                connectedBLEDevices.add(device)
+                Log.i(TAG, "Added discovered BLE device: ${device.name} (${device.address})")
+            }
+            
+            // Update device count display
+            val deviceCountText = "Discovered BLE devices: ${connectedBLEDevices.size}"
+            // binding.deviceCountTextView.text = deviceCountText
+            
+            Log.d(TAG, deviceCountText)
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating discovered devices UI", e)
+        }
     }
 
     private fun setupClickListeners() {
@@ -392,6 +574,29 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         
         if (!isRecording) {
             binding.sensorStatusTextView.text = "Sensors: Idle"
+        }
+        
+        // Update BLE device status
+        updateBLEDeviceStatus()
+    }
+    
+    /**
+     * Update BLE device connection status in the UI
+     * Part of systematic harmonization for enhanced BLE monitoring
+     */
+    private fun updateBLEDeviceStatus() {
+        if (::enhancedBLE.isInitialized) {
+            val bleDeviceCount = connectedBLEDevices.size
+            val statusText = if (bleDeviceCount > 0) {
+                "BLE Devices: $bleDeviceCount connected (Enhanced Nordic Backend)"
+            } else {
+                "BLE Devices: Scanning for devices..."
+            }
+            
+            // Update the sensor status to include BLE device information
+            if (binding.sensorStatusTextView.text.toString().startsWith("Sensors: Idle")) {
+                binding.sensorStatusTextView.text = "Sensors: Idle | $statusText"
+            }
         }
     }
 }

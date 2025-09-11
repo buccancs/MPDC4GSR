@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/color_16131E"
-    android:fitsSystemWindows="true"
-    tools:context=".VersionActivity">
+    xmlns:tools="http://schemas.android.com/tools">
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_16131E"
+        android:fitsSystemWindows="true"
+        tools:context=".VersionActivity">
 
     <com.topdon.lib.core.view.TitleView
         android:id="@+id/title_view"
@@ -54,7 +56,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/setting_version_txt" />
 
-    <include layout="@layout/item_new_version"
+    <include android:id="@+id/include_new_version"
+        layout="@layout/item_new_version"
         app:layout_constraintTop_toBottomOf="@id/version_code_text"
         android:layout_width="match_parent"
         android:layout_height="65dp"
@@ -129,3 +132,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

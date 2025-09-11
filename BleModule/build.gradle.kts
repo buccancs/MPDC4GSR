@@ -44,9 +44,6 @@ dependencies {
     // Core library desugaring support
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    // Add libapp dependency to get access to LMS SDK
-    api(project(":libapp"))
-    
     // Compile-time access to LMS SDK for BleModule classes that directly import LMS classes
     compileOnly(files("../shared/libs/lms_international-3.90.009.0.aar"))
     
@@ -55,6 +52,11 @@ dependencies {
     api("com.blankj:utilcodex:1.30.6") // Utility library
     api("com.google.code.gson:gson:2.8.8")
     api("com.elvishew:xlog:1.10.1")
+    
+    // Nordic BLE Library integration for enhanced reliability
+    api("no.nordicsemi.android:ble:2.6.1")
+    api("no.nordicsemi.android:ble-ktx:2.6.1")
+    
     // UMeng Analytics - now available via version catalog
     // api(libs.umeng.analytics) 
     // FastJSON - testing dependency availability

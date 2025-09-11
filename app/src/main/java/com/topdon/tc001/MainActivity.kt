@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 // Note: SupHelp library integration is not included in this build configuration
 import com.example.thermal_lite.activity.IRThermalLiteActivity
+import com.csl.irCamera.R
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -59,7 +60,6 @@ import com.topdon.module.user.fragment.MineFragment
 import com.topdon.tc001.app.App
 import com.topdon.tc001.fragment.MainFragment
 import com.topdon.tc001.utils.AppVersionUtil
-import com.csl.irCamera.R
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.databinding.ActivityMainBinding
 // Zoho dependencies commented out - not available in build
@@ -78,6 +78,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private val versionViewModel: VersionViewModel by viewModels()
 
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
+    
+    override fun initContentLayoutId(): Int = R.layout.activity_main
 
     // 记录设备信息
     private fun logInfo() {
@@ -103,8 +105,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initView()
+        initData()
+    }
 
-    override fun initView() {
+    private fun initView() {
         // Check if clause needs to be shown (moved from SplashActivity)
         if (!SharedManager.getHasShowClause()) {
             NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
@@ -127,9 +135,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             },
         )
-        if (savedInstanceState == null) {
-            binding.viewPage.setCurrentItem(1, false)
-        }
+        binding.viewPage.setCurrentItem(1, false)
 
         binding.viewMinePoint.isVisible = !SharedManager.hasClickWinter
 
@@ -279,7 +285,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    override fun initData() {
+    private fun initData() {
         checkPermissionType = 0
         checkCameraPermission()
     }
@@ -334,7 +340,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWinterClick(event: WinterClickEvent) {
-        viewMinePoint.isVisible = false
+        binding.viewMinePoint.isVisible = false
     }
 
     /**
@@ -603,22 +609,23 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 DeviceTools.isConnect(isSendConnectEvent = true)
             }
             1 -> {
-                viewPage.setCurrentItem(0, false)
+                binding.viewPage.setCurrentItem(0, false)
             }
             2 -> {
                 if (DeviceTools.isTC001PlusConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    startActivityForResult(Intent(this@MainActivity, IRThermalPlusActivity::class.java), 101)
+                    // Fixed: Replaced deprecated startActivityForResult with startActivity as no result processing is needed
+                    startActivity(Intent(this@MainActivity, IRThermalPlusActivity::class.java))
                 } else if (DeviceTools.isTC001LiteConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    startActivityForResult(Intent(this@MainActivity, IRThermalLiteActivity::class.java), 101)
+                    startActivity(Intent(this@MainActivity, IRThermalLiteActivity::class.java))
                 } else if (DeviceTools.isHikConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     // Note: Using IRThermalNightActivity as fallback for HIK thermal devices
-                    startActivityForResult(Intent(this@MainActivity, IRThermalNightActivity::class.java), 101)
+                    startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
                 } else {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
-                    startActivityForResult(Intent(this@MainActivity, IRThermalNightActivity::class.java), 101)
+                    startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
                 }
             }
         }

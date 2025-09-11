@@ -110,7 +110,19 @@ dependencies {
     api(libs.javacpp)  // JavaCV native dependencies
     
     implementation(project(":libapp"))
+    
+    // Add unified BLE module for comprehensive Shimmer Nordic and Topdon BLE support
+    implementation(project(":BleModule"))
+    
     // libcommon needs to be available directly to libir since it uses SurfaceNativeWindow
     // Changed to compileOnly since library modules cannot include AAR dependencies directly
     compileOnly(files("../app/libs/libcommon_1.2.0_24052117.aar"))
+    
+    // Test dependencies for Robolectric testing
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }

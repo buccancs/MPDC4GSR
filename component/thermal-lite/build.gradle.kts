@@ -71,11 +71,15 @@ dependencies {
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))
-    // Removed CommonComponent dependency - module removed as unused
+    // Add CommonComponent dependency - contains RotateDegree class needed by thermal-lite
+    implementation(project(":component:CommonComponent"))
     implementation(project(":component:pseudo"))
     // Re-add thermal-ir dependency - needed for thermal-lite functionality
     implementation(project(":component:thermal-ir"))
     // Removed commonlibrary dependency - module removed as unused
+    
+    // Enhanced BLE harmonization - Thermal-lite cross-modal coordination
+    implementation(project(":BleModule"))
     
     // AAR dependencies as compileOnly for compilation but not packaging
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))  // AC020 SDK for thermal-lite functionality
@@ -92,8 +96,12 @@ dependencies {
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
     
-    // Test dependencies
+    // Test dependencies - using Robolectric for context-based testing
     testImplementation(libs.junit)
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 }

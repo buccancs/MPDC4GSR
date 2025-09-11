@@ -35,8 +35,8 @@ import com.topdon.lib.core.R as RCore
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseFragment
 import com.topdon.lib.core.socket.WebSocketProxy
-import com.topdon.lib.core.tools.AppLanguageUtils
-import com.topdon.lib.core.tools.ConstantLanguages
+// import com.topdon.lib.core.tools.AppLanguageUtils
+// import com.topdon.lib.core.tools.ConstantLanguages
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.utils.Constants
@@ -306,8 +306,9 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserText.gravity = Gravity.CENTER
             settingUserText.layoutParams = layoutParams
             settingUserText.setText(
-                AppLanguageUtils.attachBaseContext(
-                context, ConstantLanguages.ENGLISH).getString(RCore.string.app_sign_in))
+                // AppLanguageUtils.attachBaseContext(
+                // context, ConstantLanguages.ENGLISH).getString(RCore.string.app_sign_in))
+                context?.getString(RCore.string.app_sign_in) ?: "Sign In")
             val drawable = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_arrow_login)
             drawable!!.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
             settingUserText.setCompoundDrawables(null, null, drawable, null)

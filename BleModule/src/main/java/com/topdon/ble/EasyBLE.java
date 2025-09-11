@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.topdon.ble.callback.ScanListener;
+import com.topdon.ble.util.BluetoothPermissionUtils;
 import com.topdon.ble.util.DefaultLogger;
 import com.topdon.ble.util.Logger;
 import com.topdon.commons.observer.Observable;
@@ -37,8 +38,15 @@ import java.util.concurrent.ExecutorService;
 
 
 /**
+ * Enhanced EasyBLE with unified Shimmer Nordic and Topdon BLE integration.
+ * 
+ * This class now provides comprehensive BLE support through the UnifiedBleManager,
+ * maintaining full backward compatibility while adding enterprise-grade features
+ * for both Shimmer and Topdon BLE devices.
+ * 
  * date: 2021/8/12 11:50
  * author: bichuanfeng
+ * enhanced: IRCamera Unified BLE Integration Team
  */
 public class EasyBLE {
     static volatile EasyBLE instance;
@@ -48,6 +56,9 @@ public class EasyBLE {
     private final BondController bondController;
     private final DeviceCreator deviceCreator;
     private final Observable observable;
+    
+    // Unified BLE manager for comprehensive device support
+    private UnifiedBleManager unifiedBleManager;
     private final Logger logger;
     private final ScannerType scannerType;
     public final ScanConfiguration scanConfiguration;
@@ -59,6 +70,7 @@ public class EasyBLE {
     private final Map<String, Connection> connectionMap = new ConcurrentHashMap<>();
     //已连接的设备MAC地址集合
     private final List<String> addressList = new CopyOnWriteArrayList<>();
+    private final boolean useNordicBleBackend;
     private final boolean internalObservable;
 
     private EasyBLE() {
@@ -69,6 +81,7 @@ public class EasyBLE {
         tryGetApplication();
         bondController = builder.bondController;
         scannerType = builder.scannerType;
+        useNordicBleBackend = builder.useNordicBleBackend;
         deviceCreator = builder.deviceCreator == null ? new DefaultDeviceCreator() : builder.deviceCreator;
         scanConfiguration = builder.scanConfiguration == null ? new ScanConfiguration() : builder.scanConfiguration;
         logger = builder.logger == null ? new DefaultLogger("EasyBLE") : builder.logger;
@@ -82,7 +95,12 @@ public class EasyBLE {
             executorService = builder.executorService;
             posterDispatcher = new PosterDispatcher(executorService, builder.methodDefaultThreadMode);
             observable = new Observable(posterDispatcher, builder.isObserveAnnotationRequired);
-        }    
+        }
+        
+        // Initialize unified BLE manager for comprehensive Shimmer and Topdon support
+        if (application != null) {
+            unifiedBleManager = UnifiedBleManager.getInstance(application);
+        }
     }
 
     /**
@@ -163,6 +181,29 @@ public class EasyBLE {
      */
     public boolean isBluetoothOn() {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
+    }
+
+    /**
+     * Get the unified BLE manager for comprehensive Shimmer and Topdon device support.
+     * 
+     * @return UnifiedBleManager instance, or null if not initialized
+     */
+    @Nullable
+    public UnifiedBleManager getUnifiedBleManager() {
+        if (unifiedBleManager == null && application != null) {
+            unifiedBleManager = UnifiedBleManager.getInstance(application);
+        }
+        return unifiedBleManager;
+    }
+
+    /**
+     * Check if unified BLE manager is available and initialized.
+     * 
+     * @return true if unified manager is ready for use
+     */
+    public boolean isUnifiedBleManagerReady() {
+        UnifiedBleManager manager = getUnifiedBleManager();
+        return manager != null && manager.initialize();
     }
 
     private class InnerBroadcastReceiver extends BroadcastReceiver {
@@ -557,11 +598,30 @@ public class EasyBLE {
                 int connectDelay = 0;
                 if (bondController != null && bondController.accept(device)) {
                     BluetoothDevice remoteDevice = bluetoothAdapter.getRemoteDevice(device.getAddress());
-                    if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-                        connectDelay = createBond(device.getAddress()) ? 1500 : 0;
+                    if (BluetoothPermissionUtils.hasBluetoothConnectPermission(getContext())) {
+                        try {
+                            if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
+                                connectDelay = createBond(device.getAddress()) ? 1500 : 0;
+                            }
+                        } catch (SecurityException e) {
+                            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                                "SecurityException checking bond state: " + e.getMessage());
+                        }
+                    } else {
+                        logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                            "Missing BLUETOOTH_CONNECT permission for bonding operations");
                     }
                 }
-                connection = new ConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer);
+                // Choose connection implementation based on configuration
+                if (useNordicBleBackend) {
+                    logger.log(Log.INFO, Logger.TYPE_CONNECTION_STATE, 
+                        "Creating Nordic BLE-enhanced connection for improved reliability: " + device.getAddress());
+                    connection = new NordicConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer);
+                } else {
+                    logger.log(Log.DEBUG, Logger.TYPE_CONNECTION_STATE, 
+                        "Creating standard EasyBLE connection: " + device.getAddress());
+                    connection = new ConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer);
+                }
                 connectionMap.put(device.address, connection);
                 addressList.add(device.address);
                 return connection;
@@ -733,8 +793,18 @@ public class EasyBLE {
      */
     public int getBondState(String address) {
         checkStatus();
+        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(getContext())) {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                "Missing BLUETOOTH_CONNECT permission for getBondState()");
+            return BluetoothDevice.BOND_NONE;
+        }
+        
         try {
             return bluetoothAdapter.getRemoteDevice(address).getBondState();
+        } catch (SecurityException e) {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                "SecurityException getting bond state: " + e.getMessage());
+            return BluetoothDevice.BOND_NONE;
         } catch (Exception e) {
             return BluetoothDevice.BOND_NONE;
         }
@@ -747,9 +817,19 @@ public class EasyBLE {
      */
     public boolean createBond(String address) {
         checkStatus();
+        if (!BluetoothPermissionUtils.hasBluetoothConnectPermission(getContext())) {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                "Missing BLUETOOTH_CONNECT permission for createBond()");
+            return false;
+        }
+        
         try {
             BluetoothDevice remoteDevice = bluetoothAdapter.getRemoteDevice(address);
             return remoteDevice.getBondState() != BluetoothDevice.BOND_NONE || remoteDevice.createBond();
+        } catch (SecurityException e) {
+            logger.log(Log.WARN, Logger.TYPE_CONNECTION_STATE, 
+                "SecurityException creating bond: " + e.getMessage());
+            return false;
         } catch (Exception ignore) {
             return false;
         }

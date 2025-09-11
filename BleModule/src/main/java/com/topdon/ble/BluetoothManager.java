@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -12,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.topdon.ble.callback.MtuChangeCallback;
 import com.topdon.ble.callback.NotificationChangeCallback;
 import com.topdon.ble.callback.ReadCharacteristicCallback;
+import com.topdon.ble.util.BluetoothPermissionUtils;
 import com.topdon.commons.UUIDManager;
 import com.topdon.commons.observer.Observable;
 import com.topdon.commons.observer.Observe;
@@ -35,8 +35,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author chuanfeng.bi
  * @date 2021/11/19 11:10
  */
-@SuppressLint("MissingPermission")
 public class BluetoothManager implements EventObserver {
+    private static final String TAG = "BluetoothManager";
+    
     public static boolean iSReset = false;//是否复位
     public static boolean isSending = false;//是否正在发送蓝牙数据
     public static boolean isClickStopCharging = false;//是否点击了停止充电
@@ -223,13 +224,25 @@ public class BluetoothManager implements EventObserver {
         if (mDevice == null || !mDevice.isConnected()) {
             return false;
         }
-        writeCharact = connection.getCharacteristic(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.WRITE_UUID));
-        connection.getGatt().setCharacteristicNotification(writeCharact, true); // 设置监听
-        // 当数据传递到蓝牙之后 会回调BluetoothGattCallback里面的write方法
-        writeCharact.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-        writeCharact.setValue(data);
-//        LLog.d("ble_bcf_data", "发送到蓝牙的数据为：" + StringUtils.toHex(data));
-        return connection.getGatt().writeCharacteristic(writeCharact);
+        
+        // Check BLUETOOTH_CONNECT permission before GATT operations
+        if (!com.topdon.ble.util.BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+            Log.w(TAG, "Missing BLUETOOTH_CONNECT permission for GATT operations");
+            return false;
+        }
+        
+        try {
+            writeCharact = connection.getCharacteristic(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.WRITE_UUID));
+            connection.getGatt().setCharacteristicNotification(writeCharact, true); // 设置监听
+            // 当数据传递到蓝牙之后 会回调BluetoothGattCallback里面的write方法
+            writeCharact.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+            writeCharact.setValue(data);
+//            LLog.d("ble_bcf_data", "发送到蓝牙的数据为：" + StringUtils.toHex(data));
+            return connection.getGatt().writeCharacteristic(writeCharact);
+        } catch (SecurityException e) {
+            Log.e(TAG, "SecurityException during GATT write operation: " + e.getMessage());
+            return false;
+        }
     }
 
     @Observe

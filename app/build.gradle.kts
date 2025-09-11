@@ -126,7 +126,10 @@ android {
                 "META-INF/NOTICE",
                 "META-INF/NOTICE.txt",
                 "META-INF/notice.txt",
-                "META-INF/ASL2.0"
+                "META-INF/ASL2.0",
+                // Exclude problematic baseline profiles to avoid INSTALL_BASELINE_PROFILE_FAILED
+                "META-INF/com.android.art/baseline.prof",
+                "META-INF/com.android.art/baseline.profm"
             )
         }
         jniLibs {
@@ -209,6 +212,9 @@ dependencies {
     implementation(project(":libir"))
     implementation(project(":libui"))
     implementation(project(":libmenu"))               // Menu resources needed by app
+    
+    // Enhanced BLE Module with Nordic BLE backend for systematic harmonization
+    implementation(project(":BleModule"))
 
     // ARouter configuration
     implementation(libs.arouter.api)
@@ -248,8 +254,7 @@ dependencies {
     // UMeng - Simplified single implementation
     implementation(libs.umeng.common)
     
-    // Enhanced charting and data visualization
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    // Enhanced charting and data visualization (provided by libui module)
     implementation("com.opencsv:opencsv:5.7.1")
     implementation("com.google.code.gson:gson:2.10.1")
     

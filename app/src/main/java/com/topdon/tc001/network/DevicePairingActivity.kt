@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityDevicePairingBinding
 import com.topdon.gsr.model.SessionInfo
-import com.topdon.lib.core.base.BaseBindingActivity
+import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.gsr.MultiModalRecordingActivity
 import kotlinx.coroutines.launch
 
@@ -35,7 +35,7 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
     private val discoveredControllers = mutableListOf<NetworkClient.ControllerInfo>()
     private var connectedController: NetworkClient.ControllerInfo? = null
 
-    override fun getLayoutId() = R.layout.activity_device_pairing
+    override fun initContentLayoutId() = R.layout.activity_device_pairing
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -202,6 +202,24 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
                     flashView.visibility = View.GONE
                 }
                 .start()
+        }
+    }
+
+    override fun onTimeSynchronized(offsetNanoseconds: Long) {
+        runOnUiThread {
+            binding.statusText.text = "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)"
+        }
+    }
+
+    override fun onDataStreamingStarted() {
+        runOnUiThread {
+            binding.statusText.text = "Data streaming started"
+        }
+    }
+
+    override fun onDataStreamingStopped() {
+        runOnUiThread {
+            binding.statusText.text = "Data streaming stopped"
         }
     }
 

@@ -347,21 +347,36 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 binding.progressBar.visibility = View.VISIBLE
                 binding.statusTextView.text = "Connecting to PC Controller..."
                 
-                val connected = networkClient.connectToController(pcAddress, DEFAULT_PC_CONTROLLER_PORT)
-                
-                if (connected) {
-                    binding.statusTextView.text = "Connected to PC Controller successfully"
-                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connected successfully", android.widget.Toast.LENGTH_SHORT).show()
-                    setupNetworkMonitoring()
+                // Use RecordingService to handle the connection
+                if (isServiceBound) {
+                    // Connect through the service which manages the EnhancedNetworkClient
+                    RecordingService.connectToPC(this@HubSpokeIntegrationActivity, pcAddress, DEFAULT_PC_CONTROLLER_PORT)
+                    
+                    // Give some time for connection attempt
+                    kotlinx.coroutines.delay(2000)
+                    
+                    // Check if connected through service
+                    val connected = recordingService?.isConnectedToPC() ?: false
+                    
+                    if (connected) {
+                        binding.statusTextView.text = "Connected to PC Controller"
+                        android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connected to PC Controller", android.widget.Toast.LENGTH_SHORT).show()
+                        Log.i(TAG, "Successfully connected to PC Controller via RecordingService")
+                    } else {
+                        binding.statusTextView.text = "Failed to connect to PC Controller"
+                        android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connection failed", android.widget.Toast.LENGTH_SHORT).show()
+                        Log.e(TAG, "Failed to connect to PC Controller")
+                    }
                 } else {
-                    binding.statusTextView.text = "Failed to connect to PC Controller"
-                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connection failed", android.widget.Toast.LENGTH_SHORT).show()
+                    binding.statusTextView.text = "Recording service not available"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Recording service not ready", android.widget.Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "Recording service not bound")
                 }
                 
             } catch (e: Exception) {
-                Log.e(TAG, "Connection error", e)
                 binding.statusTextView.text = "Connection error: ${e.message}"
-                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connection error", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Connection error: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+                Log.e(TAG, "Error connecting to PC Controller", e)
             } finally {
                 binding.progressBar.visibility = View.GONE
                 updateUI()
@@ -373,9 +388,22 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         lifecycleScope.launch {
             try {
                 binding.statusTextView.text = "Disconnecting from PC Controller..."
-                networkClient.disconnect()
-                binding.statusTextView.text = "Disconnected from PC Controller"
-                android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Disconnected", android.widget.Toast.LENGTH_SHORT).show()
+                
+                // Use RecordingService to handle the disconnection
+                if (isServiceBound) {
+                    RecordingService.disconnectFromPC(this@HubSpokeIntegrationActivity)
+                    
+                    // Give some time for disconnection
+                    kotlinx.coroutines.delay(1000)
+                    
+                    binding.statusTextView.text = "Disconnected from PC Controller"
+                    android.widget.Toast.makeText(this@HubSpokeIntegrationActivity, "Disconnected", android.widget.Toast.LENGTH_SHORT).show()
+                    Log.i(TAG, "Disconnected from PC Controller via RecordingService")
+                } else {
+                    binding.statusTextView.text = "Recording service not available"
+                    Log.e(TAG, "Recording service not bound")
+                }
+                
             } catch (e: Exception) {
                 Log.e(TAG, "Disconnect error", e)
                 binding.statusTextView.text = "Disconnect error: ${e.message}"
@@ -383,6 +411,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 updateUI()
             }
         }
+    }
     }
 
     private fun startCoordinatedRecording() {

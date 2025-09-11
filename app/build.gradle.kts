@@ -255,23 +255,23 @@ dependencies {
     implementation(libs.umeng.common)
     
     // Enhanced charting and data visualization (provided by libui module)
-    implementation("com.opencsv:opencsv:5.7.1")
+    implementation("com.opencsv:opencsv:5.12.0")
     implementation("com.google.code.gson:gson:2.13.2")
     
     // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     
     // Nordic BLE Library for robust Bluetooth communication
     implementation("no.nordicsemi.android:ble:2.11.0")
     implementation("no.nordicsemi.android:ble-ktx:2.11.0")
     
     // CameraX for RGB camera dual-stream capture
-    implementation("androidx.camera:camera-camera2:1.3.1")
-    implementation("androidx.camera:camera-lifecycle:1.3.1")
-    implementation("androidx.camera:camera-video:1.3.1")
-    implementation("androidx.camera:camera-view:1.3.1")
-    implementation("androidx.camera:camera-extensions:1.3.1")
+    implementation("androidx.camera:camera-camera2:1.5.0")
+    implementation("androidx.camera:camera-lifecycle:1.5.0")
+    implementation("androidx.camera:camera-video:1.5.0")
+    implementation("androidx.camera:camera-view:1.5.0")
+    implementation("androidx.camera:camera-extensions:1.5.0")
     
     // Comprehensive Testing Dependencies
     // Unit testing framework

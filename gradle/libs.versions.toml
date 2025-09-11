@@ -66,7 +66,7 @@ rxlifecycle2 = "2.2.2"
 rxlifecycle3 = "3.1.0"
 
 # UI Libraries
-ucrop = "2.2.8"
+ucrop = "2.2.11-native"
 playAppUpdate = "2.1.0"
 immersionbar = "3.2.2"
 xpopup = "2.10.0"

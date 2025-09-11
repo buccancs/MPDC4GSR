@@ -14,6 +14,7 @@ import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.controller.RecordingState
 import com.topdon.tc001.network.EnhancedNetworkClient
 import com.topdon.tc001.network.NetworkClient
+import com.topdon.tc001.network.NetworkServer
 import com.topdon.tc001.utils.TimeManager
 import com.csl.irCamera.R
 import kotlinx.coroutines.flow.launchIn
@@ -132,8 +133,8 @@ class RecordingService : LifecycleService() {
     private lateinit var recordingController: RecordingController
     private var isInitialized = false
     
-    // Network communication
-    private lateinit var networkClient: EnhancedNetworkClient
+    // Network communication - TCP Server for PC connections
+    private lateinit var networkServer: NetworkServer
     private var isConnectedToPC = false
     
     // Current session
@@ -146,7 +147,7 @@ class RecordingService : LifecycleService() {
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
         fun getRecordingController(): RecordingController = recordingController
-        fun getNetworkClient(): EnhancedNetworkClient = networkClient
+        fun getNetworkServer(): NetworkServer = networkServer
         fun isConnectedToPC(): Boolean = isConnectedToPC
     }
 
@@ -161,8 +162,8 @@ class RecordingService : LifecycleService() {
         // Initialize recording controller
         recordingController = RecordingController(this, this)
         
-        // Initialize network client
-        networkClient = EnhancedNetworkClient(this, recordingController)
+        // Initialize network server to listen for PC Controller connections
+        networkServer = NetworkServer(this, 8080)
         
         // Initialize sensors
         lifecycleScope.launch {
@@ -173,7 +174,7 @@ class RecordingService : LifecycleService() {
                 if (success) {
                     Log.i(TAG, "Recording service initialized successfully")
                     setupStatusMonitoring()
-                    setupNetworkMessageHandling()
+                    setupNetworkServer()
                 } else {
                     Log.e(TAG, "Failed to initialize recording service")
                     stopSelf()
@@ -241,10 +242,10 @@ class RecordingService : LifecycleService() {
         
         lifecycleScope.launch {
             try {
-                networkClient.disconnect()
+                networkServer.stop()
                 isConnectedToPC = false
-                Log.i(TAG, "Disconnected from PC Controller")
-                updateNotification("Disconnected from PC")
+                Log.i(TAG, "Network server stopped")
+                updateNotification("Network server stopped")
             } catch (e: Exception) {
                 Log.e(TAG, "Error during service cleanup", e)
             } finally {
@@ -467,54 +468,72 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    // Network communication methods
+    // Network server setup and management
     
-    private fun setupNetworkMessageHandling() {
-        // Monitor network client connection state
+    private fun setupNetworkServer() {
         lifecycleScope.launch {
-            networkClient.connectionStateFlow.collect { state ->
-                when (state) {
-                    EnhancedNetworkClient.ConnectionState.CONNECTED -> {
-                        isConnectedToPC = true
-                        Log.i(TAG, "Connected to PC Controller")
-                        updateNotification("Connected to PC Controller")
-                    }
-                    EnhancedNetworkClient.ConnectionState.DISCONNECTED -> {
-                        isConnectedToPC = false
-                        Log.i(TAG, "Disconnected from PC Controller")
-                        updateNotification("Disconnected from PC")
-                    }
-                    EnhancedNetworkClient.ConnectionState.CONNECTING -> {
-                        Log.i(TAG, "Connecting to PC Controller...")
-                        updateNotification("Connecting to PC...")
-                    }
+            try {
+                // Start the TCP server immediately when service initializes
+                val serverStarted = networkServer.start()
+                
+                if (serverStarted) {
+                    Log.i(TAG, "Network server started automatically, listening on port 8080")
+                    updateNotification("Listening for PC Controller on port 8080")
+                } else {
+                    Log.e(TAG, "Failed to start network server automatically")
+                    updateNotification("Network server failed to start")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error setting up network server", e)
+                updateNotification("Network server error: ${e.message}")
+            }
+        }
+        
+        // Monitor connection state
+        lifecycleScope.launch {
+            networkServer.connectionStateFlow.collect { connected ->
+                isConnectedToPC = connected
+                if (connected) {
+                    Log.i(TAG, "PC Controller connected to network server")
+                    updateNotification("PC Controller connected")
+                } else {
+                    Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
+                    updateNotification("Listening for PC Controller on port 8080")
                 }
             }
         }
         
-        // Monitor incoming network messages for remote control
+        // Monitor incoming messages from PC Controller
         lifecycleScope.launch {
-            networkClient.messageFlow.collect { message ->
+            networkServer.messageFlow.collect { message ->
                 handlePCCommand(message)
             }
         }
     }
     
     private fun connectToPC(ipAddress: String, port: Int) {
+        // With server architecture, we don't "connect" to PC
+        // Instead, we ensure our server is running and ready for PC to connect to us
         lifecycleScope.launch {
             try {
-                Log.i(TAG, "Attempting to connect to PC Controller at $ipAddress:$port")
-                val success = networkClient.connectToController(ipAddress, port)
+                Log.i(TAG, "Ensuring network server is ready for PC Controller connection")
                 
-                if (success) {
-                    Log.i(TAG, "Successfully connected to PC Controller")
+                if (!networkServer.isRunning()) {
+                    val started = networkServer.start()
+                    if (started) {
+                        Log.i(TAG, "Network server started, ready for PC Controller at any IP")
+                        updateNotification("Ready for PC Controller connection")
+                    } else {
+                        Log.e(TAG, "Failed to start network server")
+                        updateNotification("Failed to start network server")
+                    }
                 } else {
-                    Log.e(TAG, "Failed to connect to PC Controller")
-                    updateNotification("Failed to connect to PC")
+                    Log.i(TAG, "Network server already running, ready for PC Controller")
+                    updateNotification("Network server ready")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error connecting to PC Controller", e)
-                updateNotification("PC connection error: ${e.message}")
+                Log.e(TAG, "Error ensuring network server is ready", e)
+                updateNotification("Network server error: ${e.message}")
             }
         }
     }
@@ -522,12 +541,13 @@ class RecordingService : LifecycleService() {
     private fun disconnectFromPC() {
         lifecycleScope.launch {
             try {
-                networkClient.disconnect()
+                // Stop the network server, which will disconnect any connected PC
+                networkServer.stop()
                 isConnectedToPC = false
-                Log.i(TAG, "Disconnected from PC Controller")
-                updateNotification("Disconnected from PC")
+                Log.i(TAG, "Network server stopped, PC Controller disconnected")
+                updateNotification("Network server stopped") 
             } catch (e: Exception) {
-                Log.e(TAG, "Error disconnecting from PC Controller", e)
+                Log.e(TAG, "Error stopping network server", e)
             }
         }
     }
@@ -548,34 +568,62 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    private suspend fun handlePCCommand(message: EnhancedNetworkClient.NetworkMessage) {
+    private suspend fun handlePCCommand(message: JSONObject) {
         try {
-            when (message.messageType) {
+            val messageType = message.optString("message_type")
+            Log.i(TAG, "Processing PC command: $messageType")
+            
+            when (messageType) {
+                "enhanced_device_registration" -> {
+                    Log.i(TAG, "PC Controller device registration request")
+                    sendResponseToPC("enhanced_registration_ack", JSONObject().apply {
+                        put("status", "success")
+                        put("device_type", "android_sensor_node")
+                        put("capabilities", JSONObject().apply {
+                            put("recording", true)
+                            put("sensors", arrayOf("rgb_camera", "thermal_camera", "gsr"))
+                        })
+                    })
+                }
+                
                 "session_start_command" -> {
-                    val sessionDirectory = message.content.optString("session_directory")
+                    val sessionDirectory = message.optString("session_directory")
                     if (sessionDirectory.isNotEmpty()) {
-                        Log.i(TAG, "Received remote start command from PC")
+                        Log.i(TAG, "Received remote start command from PC for session: $sessionDirectory")
                         startRecordingSession(sessionDirectory)
+                        sendResponseToPC("session_start_response", JSONObject().apply {
+                            put("status", "started")
+                            put("session_directory", sessionDirectory)
+                        })
                     }
                 }
                 
                 "session_stop_command" -> {
                     Log.i(TAG, "Received remote stop command from PC")
                     stopRecordingSession()
+                    sendResponseToPC("session_stop_response", JSONObject().apply {
+                        put("status", "stopped")
+                    })
                 }
                 
                 "sync_marker_command" -> {
-                    val markerType = message.content.optString("marker_type")
-                    val timestampNs = message.content.optLong("timestamp_ns", System.nanoTime())
+                    val markerType = message.optString("marker_type")
+                    val timestampNs = message.optLong("timestamp_ns", System.nanoTime())
                     if (markerType.isNotEmpty()) {
                         Log.i(TAG, "Received remote sync marker from PC: $markerType")
                         addSyncMarker(markerType, timestampNs)
+                        sendResponseToPC("sync_marker_response", JSONObject().apply {
+                            put("status", "added")
+                            put("marker_type", markerType)
+                        })
                     }
                 }
                 
                 "ping" -> {
                     Log.d(TAG, "Received ping from PC Controller")
-                    // EnhancedNetworkClient handles pong response automatically
+                    sendResponseToPC("pong", JSONObject().apply {
+                        put("timestamp_ns", System.nanoTime())
+                    })
                 }
                 
                 "status_request" -> {
@@ -584,11 +632,38 @@ class RecordingService : LifecycleService() {
                 }
                 
                 else -> {
-                    Log.w(TAG, "Unknown command from PC Controller: ${message.messageType}")
+                    Log.w(TAG, "Unknown command from PC Controller: $messageType")
+                    sendResponseToPC("error", JSONObject().apply {
+                        put("message", "Unknown command: $messageType")
+                    })
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error handling PC command: ${message.messageType}", e)
+            Log.e(TAG, "Error handling PC command", e)
+            sendResponseToPC("error", JSONObject().apply {
+                put("message", "Error processing command: ${e.message}")
+            })
+        }
+    }
+    
+    private suspend fun sendResponseToPC(messageType: String, data: JSONObject = JSONObject()) {
+        try {
+            val response = JSONObject().apply {
+                put("message_type", messageType)
+                put("device_id", android.provider.Settings.Secure.getString(
+                    contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+                put("timestamp_ns", System.nanoTime())
+                // Merge additional data
+                data.keys().forEach { key ->
+                    put(key, data.get(key))
+                }
+            }
+            
+            networkServer.sendMessage(response)
+            Log.d(TAG, "Sent response to PC: $messageType")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending response to PC", e)
         }
     }
     
@@ -599,12 +674,12 @@ class RecordingService : LifecycleService() {
                 put("current_session", currentSessionDirectory ?: "")
                 put("recording_start_time", recordingStartTime)
                 put("service_initialized", isInitialized)
-                put("sensors_active", recordingController.getActiveSensorCount())
+                put("network_server_running", networkServer.isRunning())
+                put("pc_connected", isConnectedToPC)
             }
             
-            // This would be sent via the networkClient
-            // The actual implementation depends on EnhancedNetworkClient's API
-            Log.i(TAG, "Status sent to PC Controller: $statusData")
+            sendResponseToPC("status_response", statusData)
+            Log.i(TAG, "Status sent to PC Controller")
             
         } catch (e: Exception) {
             Log.e(TAG, "Error sending status to PC", e)

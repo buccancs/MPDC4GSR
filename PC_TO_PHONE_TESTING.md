@@ -1,10 +1,10 @@
-# PC-to-Phone Communication Testing Guide
+# PC-to-Phone Communication Testing Guide - UPDATED
 
 This document provides instructions for testing the PC-to-Phone communication functionality that was implemented to resolve the networking issues described in Issue #76.
 
 ## Overview
 
-The PC-to-Phone communication enables the PC Controller (Hub) to remotely control the Android Sensor Node (Spoke) through a JSON/TCP protocol. The Android app now includes a `RecordingService` that manages network communication and processes commands from the PC.
+The PC-to-Phone communication enables the PC Controller (Hub) to remotely control the Android Sensor Node (Spoke) through a JSON/TCP protocol. The Android app now includes a `NetworkServer` that automatically starts when `RecordingService` initializes, listening for PC Controller connections.
 
 ## Architecture Changes
 
@@ -16,11 +16,19 @@ The PC-to-Phone communication enables the PC Controller (Hub) to remotely contro
 - No automatic discovery/pairing
 
 ### After (Fix Implementation)
-- `RecordingService` now integrates `EnhancedNetworkClient`
-- Automatic command processing for remote control
-- Proper service lifecycle management for persistent connections
-- JSON message protocol fully implemented
-- UI integration through `HubSpokeIntegrationActivity`
+- **NetworkServer** runs TCP server on port 8080 automatically when RecordingService starts
+- **Automatic command processing** for all PC Controller commands 
+- **Proper server-client architecture**: Android is SERVER, PC is CLIENT
+- **Compatible protocol**: 4-byte message length + JSON payload (matches PC test script)
+- **Real-time command handling** for registration, ping/pong, recording control, sync markers
+
+## Key Architecture Change
+
+**IMPORTANT**: The architecture is now:
+- **Android Device**: Runs TCP SERVER on port 8080 (listens for connections)
+- **PC Controller**: Acts as TCP CLIENT (connects to Android)
+
+This resolves the core issue where "the phone never actually connects to the PC, nor listens for the PC's connection."
 
 ## Testing Setup
 
@@ -30,10 +38,8 @@ The PC-to-Phone communication enables the PC Controller (Hub) to remotely contro
 2. **Launch the app** and navigate to the Hub-Spoke Integration activity:
    - From main menu → More/Settings → Hub-Spoke Integration Demo
    - Or directly launch `HubSpokeIntegrationActivity`
-3. **Start the Recording Service**:
-   - The service should start automatically when the activity loads
-   - You can also start it manually through the app
-4. **Connect to WiFi** and note your Android device's IP address
+3. **The NetworkServer starts automatically** when the activity loads or RecordingService initializes
+4. **Note your Android device's IP address** (shown in the app UI or via Settings → About → Status)
 
 ### 2. PC Setup
 
@@ -42,14 +48,7 @@ The PC-to-Phone communication enables the PC Controller (Hub) to remotely contro
    cd pc-controller/
    ```
 
-2. **Install Python dependencies** (if needed):
-   ```bash
-   pip install -r requirements.txt  # or just use built-in socket/json
-   ```
-
-3. **Find your Android device's IP address**:
-   - Android: Settings → About → Status → IP address  
-   - Or use: `adb shell ip addr show wlan0`
+2. **Your Android device should now be listening on port 8080**
 
 ## Running Tests
 
@@ -73,7 +72,7 @@ python test_pc_to_phone.py --android-ip 192.168.1.100 --test all
 ```
 
 This will test:
-- ✅ Device registration
+- ✅ Device registration handshake
 - 🏓 Ping/pong communication  
 - 🔄 Sync marker commands
 - 🎬 Remote recording start/stop
@@ -97,7 +96,7 @@ python test_pc_to_phone.py --android-ip 192.168.1.100 --test sync
 
 ### Successful Test Output
 ```
-Attempting to connect to Android device at 192.168.1.100:8080
+🔌 Connecting to Android NetworkServer at 192.168.1.100:8080
 ✅ Successfully connected to Android device!
 
 🧪 Running test: all

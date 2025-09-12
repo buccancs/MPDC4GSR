@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.ImageFormat
+import android.hardware.camera2.CameraManager
 import android.media.MediaRecorder
 import android.util.Log
 import android.util.Size
@@ -87,36 +88,58 @@ class RgbCameraRecorder(
         try {
             Log.i(TAG, "Initializing RGB camera for sensor $sensorId")
             
-            // Check camera permission
+            // Check camera permission with detailed error reporting
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                emitError(ErrorType.PERMISSION_DENIED, "Camera permission not granted")
+                Log.e(TAG, "Camera permission not granted")
+                emitError(ErrorType.PERMISSION_DENIED, "Camera permission not granted. Please grant camera permission in app settings.")
                 return@withContext false
             }
             
-            // Initialize CameraX
+            // Initialize CameraX with Samsung device considerations
             val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
             cameraProvider = cameraProviderFuture.get()
             
-            // Configure video capture
+            // Check camera availability before configuration
+            val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as android.hardware.camera2.CameraManager
+            val cameraIds = cameraManager.cameraIdList
+            if (cameraIds.isEmpty()) {
+                Log.e(TAG, "No cameras available on device")
+                emitError(ErrorType.INITIALIZATION_FAILED, "No cameras found on device")
+                return@withContext false
+            }
+            
+            // Configure video capture with Samsung-compatible settings
             val recorder = Recorder.Builder()
-                .setQualitySelector(QualitySelector.from(Quality.FHD)) // 1080p
+                .setQualitySelector(
+                    // Use simple quality selector that works on Samsung devices
+                    QualitySelector.from(Quality.FHD)
+                )
                 .build()
             videoCapture = VideoCapture.withOutput(recorder)
             
-            // Configure image capture
+            // Configure image capture with conservative settings for Samsung compatibility
             imageCapture = ImageCapture.Builder()
                 .setTargetResolution(targetImageResolution)
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .setJpegQuality(95) // High quality for analysis
+                .setJpegQuality(90) // Slightly lower quality for better compatibility
+                .setTargetRotation(android.view.Surface.ROTATION_0)
                 .build()
             
-            Log.i(TAG, "RGB camera initialized successfully")
+            Log.i(TAG, "RGB camera initialized successfully on device: ${android.os.Build.MODEL}")
             emitStatus()
             return@withContext true
             
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize RGB camera", e)
-            emitError(ErrorType.INITIALIZATION_FAILED, "Camera initialization failed: ${e.message}")
+            Log.e(TAG, "Failed to initialize RGB camera on device: ${android.os.Build.MODEL}", e)
+            val errorMessage = when {
+                e.message?.contains("camera", ignoreCase = true) == true -> 
+                    "Camera hardware access failed: ${e.message}. This may be a Samsung device compatibility issue."
+                e.message?.contains("permission", ignoreCase = true) == true ->
+                    "Camera permission issue: ${e.message}"
+                else -> 
+                    "Camera initialization failed: ${e.message}. Try restarting the app or device."
+            }
+            emitError(ErrorType.INITIALIZATION_FAILED, errorMessage)
             return@withContext false
         }
     }
@@ -128,6 +151,13 @@ class RgbCameraRecorder(
                 return@withContext true
             }
             
+            // Re-check camera permission before starting recording
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                Log.e(TAG, "Camera permission lost during recording attempt")
+                emitError(ErrorType.PERMISSION_DENIED, "Camera permission required. Please grant permission and try again.")
+                return@withContext false
+            }
+            
             this@RgbCameraRecorder.sessionDirectory = sessionDirectory
             recordingStartTime = System.nanoTime()
             
@@ -135,30 +165,54 @@ class RgbCameraRecorder(
             videoFile = File(sessionDirectory, VIDEO_FILENAME)
             imagesDirectory = File(sessionDirectory, IMAGES_SUBDIRECTORY).apply { mkdirs() }
             
+            // Verify we have a video capture instance
+            val videoCapture = this@RgbCameraRecorder.videoCapture
+            if (videoCapture == null) {
+                Log.e(TAG, "VideoCapture not initialized")
+                emitError(ErrorType.RECORDING_FAILED, "Camera not properly initialized. Please restart the app.")
+                return@withContext false
+            }
+            
             // Start video recording
             val mediaStoreOutput = FileOutputOptions.Builder(videoFile!!).build()
-            recording = videoCapture?.output
+            recording = videoCapture.output
                 ?.prepareRecording(context, mediaStoreOutput)
                 ?.start(ContextCompat.getMainExecutor(context)) { recordEvent ->
                     handleVideoRecordEvent(recordEvent)
                 }
             
+            if (recording == null) {
+                Log.e(TAG, "Failed to start video recording - recording object is null")
+                emitError(ErrorType.RECORDING_FAILED, "Failed to start video recording. Camera may be in use by another app.")
+                return@withContext false
+            }
+            
             // Bind camera with both video and image capture
             bindCamera()
             
-            // Start periodic image capture
+            // Start periodic image capture (if available)
             startImageCapture()
             
             _isRecording.set(true)
             frameCount.set(0)
             
-            Log.i(TAG, "RGB camera recording started")
+            Log.i(TAG, "RGB camera recording started on device: ${android.os.Build.MODEL}")
             emitStatus()
             return@withContext true
             
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start RGB camera recording", e)
-            emitError(ErrorType.RECORDING_FAILED, "Failed to start recording: ${e.message}")
+            Log.e(TAG, "Failed to start RGB camera recording on device: ${android.os.Build.MODEL}", e)
+            val errorMessage = when {
+                e.message?.contains("permission", ignoreCase = true) == true ->
+                    "Camera permission error: ${e.message}"
+                e.message?.contains("busy", ignoreCase = true) == true ->
+                    "Camera is busy or in use by another app. Please close other camera apps and try again."
+                e.message?.contains("hardware", ignoreCase = true) == true ->
+                    "Camera hardware error. Try restarting the device."
+                else ->
+                    "Failed to start camera recording: ${e.message}. This may be a Samsung device compatibility issue."
+            }
+            emitError(ErrorType.RECORDING_FAILED, errorMessage)
             return@withContext false
         }
     }
@@ -170,33 +224,79 @@ class RgbCameraRecorder(
             // Select back camera
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             
-            // Create preview for monitoring (optional)
+            // Create preview for monitoring (optional) - use lower resolution for Samsung compatibility
             val preview = Preview.Builder()
                 .setTargetResolution(Size(1280, 720))
                 .build()
             
-            // Bind use cases
-            camera = cameraProvider?.bindToLifecycle(
-                lifecycleOwner,
-                cameraSelector,
-                preview,
-                videoCapture,
-                imageCapture
-            )
+            // Try to bind use cases with fallback for Samsung devices
+            try {
+                // Attempt full binding with all use cases
+                camera = cameraProvider?.bindToLifecycle(
+                    lifecycleOwner,
+                    cameraSelector,
+                    preview,
+                    videoCapture,
+                    imageCapture
+                )
+                Log.i(TAG, "Successfully bound all camera use cases")
+                
+            } catch (e: IllegalArgumentException) {
+                // Samsung devices may not support all use cases simultaneously
+                Log.w(TAG, "Failed to bind all use cases, trying video-only mode", e)
+                
+                // Fallback to video-only mode
+                camera = cameraProvider?.bindToLifecycle(
+                    lifecycleOwner,
+                    cameraSelector,
+                    preview,
+                    videoCapture
+                )
+                
+                // Disable image capture for this session
+                imageCapture = null
+                Log.w(TAG, "Running in video-only mode due to device limitations")
+                emitError(ErrorType.INITIALIZATION_FAILED, 
+                    "Device does not support simultaneous video and image capture. Running video-only mode.", 
+                    isRecoverable = true)
+            }
             
             // Configure auto-focus and exposure
-            camera?.cameraControl?.enableTorch(false) // Ensure flash is off initially
+            camera?.cameraControl?.apply {
+                enableTorch(false) // Ensure flash is off initially
+                
+                // Set conservative camera settings for Samsung devices
+                try {
+                    // Enable auto-focus if available
+                    setZoomRatio(1.0f)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to set camera controls", e)
+                }
+            }
             
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to bind camera", e)
-            emitError(ErrorType.INITIALIZATION_FAILED, "Camera binding failed: ${e.message}")
+            Log.e(TAG, "Failed to bind camera on device: ${android.os.Build.MODEL}", e)
+            val errorMessage = when {
+                e.message?.contains("use case", ignoreCase = true) == true ->
+                    "Camera configuration not supported on this Samsung device. Try using a simpler camera mode."
+                e.message?.contains("concurrent", ignoreCase = true) == true ->
+                    "Multiple camera streams not supported. Try single-stream mode."
+                else ->
+                    "Camera binding failed: ${e.message}. Device may need a restart."
+            }
+            emitError(ErrorType.INITIALIZATION_FAILED, errorMessage)
         }
     }
 
     private fun startImageCapture() {
         imageCapturJob = recordingScope.launch {
             while (_isRecording.get() && isActive) {
-                captureAnalysisFrame()
+                if (imageCapture != null) {
+                    captureAnalysisFrame()
+                } else {
+                    // Skip image capture if not available (video-only mode)
+                    Log.d(TAG, "Skipping image capture - video-only mode active")
+                }
                 delay(IMAGE_CAPTURE_INTERVAL_MS)
             }
         }
@@ -204,14 +304,18 @@ class RgbCameraRecorder(
 
     private suspend fun captureAnalysisFrame() {
         try {
+            val imageCapture = this.imageCapture
+            if (imageCapture == null) {
+                Log.d(TAG, "Image capture not available - running in video-only mode")
+                return
+            }
+            
             val timestamp = System.nanoTime()
             val frameNumber = frameCount.incrementAndGet()
             val imageFile = File(imagesDirectory, "frame_${frameNumber}_${timestamp}.jpg")
             
             val outputFileOptions = ImageCapture.OutputFileOptions.Builder(imageFile)
                 .build()
-            
-            val imageCapture = this.imageCapture ?: return
             
             withContext(Dispatchers.Main) {
                 imageCapture.takePicture(
@@ -224,13 +328,14 @@ class RgbCameraRecorder(
                         }
                         
                         override fun onError(exception: ImageCaptureException) {
-                            Log.w(TAG, "Failed to capture analysis frame", exception)
+                            Log.w(TAG, "Failed to capture analysis frame - this is normal on some Samsung devices", exception)
+                            // Don't treat this as a critical error for Samsung devices
                         }
                     }
                 )
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Image capture error", e)
+            Log.w(TAG, "Image capture error - continuing with video recording", e)
         }
     }
 

@@ -154,7 +154,7 @@ class WebSocketServer:
             "role_change_request": self._handle_role_change_request,
         }
 
-    async def start(self):
+    async def start(self) -> Any:
         """Start the WebSocket Secure server"""
         if self.is_running:
             logger.warning("WebSocket server already running")
@@ -192,7 +192,7 @@ class WebSocketServer:
             logger.error(f"Failed to start WebSocket server: {e}")
             raise
 
-    async def stop(self):
+    async def stop(self) -> Any:
         """Stop the WebSocket server"""
         if not self.is_running:
             return
@@ -622,7 +622,7 @@ class WebSocketServer:
     async def _broadcast_message(
         self,
         message: dict,
-        exclude_client: str = None,
+        exclude_client: Optional[str] = None,
         authenticated_only: bool = False,
     ):
         """Broadcast message to all connected clients"""
@@ -1415,7 +1415,7 @@ class WebSocketServerPhase4Extension:
 
 
 # Monkey patch the Phase 4 handlers into the main WebSocket server
-def extend_websocket_server_with_phase4(server: WebSocketServer):
+def extend_websocket_server_with_phase4(server: Any = WebSocketServer) -> Any:
     """Extend WebSocket server with Phase 4 security handlers"""
     extension = WebSocketServerPhase4Extension(server)
 

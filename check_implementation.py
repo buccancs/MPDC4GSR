@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Optional
+
 #!/usr/bin/env python3
 """
 Implementation checker for Samsung Camera and Network fixes
@@ -9,7 +11,7 @@ import re
 from pathlib import Path
 
 
-def check_file_contains(file_path, patterns, description):
+def check_file_contains(file_path, patterns, description) -> Any:
     """Check if file contains required patterns"""
     if not os.path.exists(file_path):
         print(f"❌ {description}: File not found - {file_path}")
@@ -37,7 +39,7 @@ def check_file_contains(file_path, patterns, description):
         return False
 
 
-def main():
+def main() -> Any:
     """Run implementation checks"""
     print("🔍 Samsung Camera and Network Communication Fixes - Implementation Check")
     print("=" * 70)

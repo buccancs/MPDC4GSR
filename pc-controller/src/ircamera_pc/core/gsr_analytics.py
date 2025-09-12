@@ -147,11 +147,11 @@ class GSRAnalytics:
 
     def add_gsr_samples(
         self,
-        device_id: str,
-        session_id: str,
-        gsr_values: List[float],
-        timestamps: List[float],
-    ):
+        device_id: None = str,
+        session_id: None = str,
+        gsr_values: None = List[float],
+        timestamps: None = List[float],
+    ) -> None:
         """
         Add GSR samples for real-time analysis
 
@@ -758,7 +758,7 @@ class GSRAnalytics:
             logger.error(f"Failed to export features: {e}")
             return False
 
-    def cleanup_device_session(self, device_id: str, session_id: str):
+    def cleanup_device_session(self, device_id: Any = str, session_id: Any = str) -> Any:
         """Clean up buffers and history for a completed session"""
         device_key = f"{device_id}_{session_id}"
 

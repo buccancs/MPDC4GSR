@@ -26,13 +26,13 @@ except ImportError:
 
     # Mock numpy and cv2 for environments without OpenCV
     class MockOpenCV:
-        def findChessboardCorners(self, *args, **kwargs):
+        def findChessboardCorners(self, *args, **kwargs) -> Any:
             return False, None
 
-        def calibrateCamera(self, *args, **kwargs):
+        def calibrateCamera(self, *args, **kwargs) -> Any:
             return 0, None, None, None, None
 
-        def undistort(self, *args, **kwargs):
+        def undistort(self, *args, **kwargs) -> Any:
             return None
 
         TERM_CRITERIA_EPS = 1
@@ -44,10 +44,10 @@ except ImportError:
     except ImportError:
 
         class MockNumPy:
-            def array(self, *args, **kwargs):
+            def array(self, *args, **kwargs) -> Any:
                 return []
 
-            def zeros(self, *args, **kwargs):
+            def zeros(self, *args, **kwargs) -> Any:
                 return []
 
             float32 = float

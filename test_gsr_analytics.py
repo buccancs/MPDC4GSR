@@ -30,7 +30,7 @@ from ircamera_pc.core.gsr_receiver import GSRReceiver
 class TestGSRAnalytics(unittest.TestCase):
     """Test GSR analytics and signal processing functionality"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test environment"""
         self.temp_dir = tempfile.mkdtemp()
 
@@ -45,7 +45,7 @@ class TestGSRAnalytics(unittest.TestCase):
         self.device_id = "test_device_001"
         self.session_id = "test_session_123"
 
-    def tearDown(self):
+    def tearDown(self) -> Any:
         """Clean up test environment"""
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
@@ -109,7 +109,7 @@ class TestGSRAnalytics(unittest.TestCase):
 
         return gsr_values.tolist(), timestamps.tolist()
 
-    def test_basic_feature_extraction(self):
+    def test_basic_feature_extraction(self) -> Any:
         """Test basic GSR feature extraction"""
         # Generate 20 seconds of normal GSR data
         gsr_values, timestamps = self.generate_test_gsr_data(20, "normal")
@@ -151,7 +151,7 @@ class TestGSRAnalytics(unittest.TestCase):
             f"✓ Basic feature extraction: stress={features.stress_score:.1f}, level={features.stress_level.value}"
         )
 
-    def test_stress_detection(self):
+    def test_stress_detection(self) -> Any:
         """Test stress level detection with different patterns"""
         test_patterns = ["normal", "stress", "increasing"]
         expected_stress_levels = {}
@@ -200,7 +200,7 @@ class TestGSRAnalytics(unittest.TestCase):
                 "Increasing pattern should have higher stress score than normal",
             )
 
-    def test_session_report_generation(self):
+    def test_session_report_generation(self) -> Any:
         """Test comprehensive session report generation"""
         # Generate multiple data points over time
         total_duration = 30
@@ -266,7 +266,7 @@ class TestGSRAnalytics(unittest.TestCase):
             f"✓ Session report: {len(report.features)} features, avg_stress={report.average_stress_score:.1f}, trend={report.stress_trend}"
         )
 
-    def test_feature_export(self):
+    def test_feature_export(self) -> Any:
         """Test feature export functionality"""
         # Generate test data
         gsr_values, timestamps = self.generate_test_gsr_data(20, "normal")
@@ -310,7 +310,7 @@ class TestGSRAnalytics(unittest.TestCase):
 
         print(f"✓ Feature export: {len(df)} feature records exported")
 
-    def test_artifact_handling(self):
+    def test_artifact_handling(self) -> Any:
         """Test handling of GSR artifacts and noise"""
         # Generate data with artifacts
         gsr_values, timestamps = self.generate_test_gsr_data(15, "artifact")
@@ -341,7 +341,7 @@ class TestGSRAnalytics(unittest.TestCase):
             f"✓ Artifact handling: stress={features.stress_score:.1f}, confidence={features.confidence:.1f}"
         )
 
-    def test_multiple_devices(self):
+    def test_multiple_devices(self) -> Any:
         """Test analytics with multiple devices"""
         devices = ["device_001", "device_002", "device_003"]
         patterns = ["normal", "stress", "increasing"]
@@ -370,7 +370,7 @@ class TestGSRAnalytics(unittest.TestCase):
 
         print(f"✓ Multiple devices: {len(sessions)} sessions tracked")
 
-    def test_performance_with_large_dataset(self):
+    def test_performance_with_large_dataset(self) -> None:
         """Test analytics performance with larger dataset"""
         # Generate 5 minutes of data
         gsr_values, timestamps = self.generate_test_gsr_data(300, "stress")
@@ -419,7 +419,7 @@ class TestGSRAnalytics(unittest.TestCase):
 class TestGSRReceiverAnalyticsIntegration(unittest.TestCase):
     """Test integration between GSR receiver and analytics"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test environment"""
         self.temp_dir = tempfile.mkdtemp()
 
@@ -437,11 +437,11 @@ class TestGSRReceiverAnalyticsIntegration(unittest.TestCase):
 
         self.gsr_receiver = GSRReceiver(config)
 
-    def tearDown(self):
+    def tearDown(self) -> Any:
         """Clean up test environment"""
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
-    async def test_integrated_analytics_workflow(self):
+    async def test_integrated_analytics_workflow(self) -> Any:
         """Test complete analytics workflow through GSR receiver"""
         device_id = "android_test_001"
         session_id = "integration_test_123"
@@ -531,7 +531,7 @@ class TestGSRReceiverAnalyticsIntegration(unittest.TestCase):
         print("✓ Integrated analytics workflow completed successfully")
 
 
-def main():
+def main() -> Any:
     """Run all GSR analytics tests"""
     print("Running GSR Analytics Test Suite...")
     print("=" * 50)
@@ -550,7 +550,7 @@ def main():
     runner2 = unittest.TextTestRunner(verbosity=1)
 
     # Run async integration tests
-    async def run_integration_tests():
+    async def run_integration_tests() -> Any:
         test_instance = TestGSRReceiverAnalyticsIntegration()
         test_instance.setUp()
         try:

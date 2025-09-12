@@ -40,15 +40,15 @@ except ImportError:
         def __init__(self, *args):
             self._callbacks = []
 
-        def emit(self, *args):
+        def emit(self, *args) -> Any:
             for callback in self._callbacks:
                 callback(*args)
 
-        def connect(self, callback):
+        def connect(self, callback) -> Any:
             self._callbacks.append(callback)
 
-    def pyqtSlot(*args, **kwargs):
-        def decorator(func):
+    def pyqtSlot(*args, **kwargs) -> Any:
+        def decorator(func) -> Any:
             return func
 
         return decorator
@@ -57,11 +57,11 @@ except ImportError:
         def __init__(self):
             pass
 
-        def start(self):
+        def start(self) -> Any:
             # Run in current thread if PyQt6 not available
             self.run()
 
-        def run(self):
+        def run(self) -> Any:
             pass
 
 
@@ -128,7 +128,7 @@ class WiFiNetwork:
     security_type: NetworkSecurityType
     channel: int
     is_ircamera_hotspot: bool = False
-    last_seen: datetime = None
+    last_seen: Optional[datetime] = None
 
     def __post_init__(self):
         if self.last_seen is None:
@@ -159,7 +159,7 @@ class WiFiScanWorker(BaseThread):
         super().__init__()
         self._running = False
 
-    def run(self):
+    def run(self) -> Any:
         """Run the WiFi scan in a separate thread."""
         self._running = True
         try:
@@ -172,7 +172,7 @@ class WiFiScanWorker(BaseThread):
                 logger.error(f"WiFi scan error: {e}")
                 self.error_occurred.emit(str(e))
 
-    def stop(self):
+    def stop(self) -> Any:
         """Stop the scanning process."""
         self._running = False
 
@@ -481,8 +481,8 @@ class WiFiManager(BaseManager):
 
     def __init__(self):
         super().__init__("wifi_manager")
-        self._networks: Dict[str, WiFiNetwork] = {}  # SSID -> WiFiNetwork
-        self._interfaces: Dict[str, NetworkInterface] = {}
+        self._networks: Dict[str, WiFiNetwork] = {}  # SSID: WiFiNetwork
+        self._interfaces = Dict[str, NetworkInterface] = {}
         self._current_connection: Optional[str] = None  # Current SSID
         self._scan_worker: Optional[WiFiScanWorker] = None
         self._hotspot_state = HotspotState.STOPPED
@@ -573,7 +573,7 @@ class WiFiManager(BaseManager):
         """Handle scan error."""
         self.error_occurred.emit("scan", error)
 
-    async def connect_to_network(self, ssid: str, password: str = None) -> bool:
+    async def connect_to_network(self, ssid: str, password: Optional[str] = None) -> bool:
         """
         Connect to a WiFi network.
 
@@ -630,7 +630,7 @@ class WiFiManager(BaseManager):
             self.error_occurred.emit("disconnect", str(e))
 
     async def start_hotspot(
-        self, ssid: str = None, password: str = None, channel: int = None
+        self, ssid: Optional[str] = None, password: Optional[str] = None, channel: Optional[int] = None
     ) -> bool:
         """
         Start mobile hotspot for IRCamera device connections.

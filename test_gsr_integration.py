@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Optional
+
 #!/usr/bin/env python3
 """
 Comprehensive GSR Integration Test
@@ -31,7 +33,7 @@ from ircamera_pc.network.server import NetworkServer
 class TestGSRHubSpokeIntegration(unittest.TestCase):
     """Test GSR hub-spoke integration"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test environment"""
         self.test_dir = Path(tempfile.mkdtemp())
 
@@ -52,13 +54,13 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
         self.test_device_id = "android_test_001"
         self.test_session_id = "session_test_123"
 
-    def tearDown(self):
+    def tearDown(self) -> Any:
         """Clean up test environment"""
         import shutil
 
         shutil.rmtree(self.test_dir, ignore_errors=True)
 
-    async def test_gsr_receiver_initialization(self):
+    async def test_gsr_receiver_initialization(self) -> Any:
         """Test GSR receiver initialization"""
         # Test database initialization
         self.assertTrue(self.gsr_receiver.db_path.exists())
@@ -79,7 +81,7 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
             )
             self.assertTrue(cursor.fetchone())
 
-    async def test_device_session_registration(self):
+    async def test_device_session_registration(self) -> Any:
         """Test device session registration"""
         # Start GSR receiver
         await self.gsr_receiver.start()
@@ -106,7 +108,7 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
 
         await self.gsr_receiver.stop()
 
-    async def test_gsr_data_processing(self):
+    async def test_gsr_data_processing(self) -> Any:
         """Test GSR data batch processing"""
         await self.gsr_receiver.start()
 
@@ -155,7 +157,7 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
 
         await self.gsr_receiver.stop()
 
-    async def test_heartbeat_handling(self):
+    async def test_heartbeat_handling(self) -> Any:
         """Test heartbeat message handling"""
         await self.gsr_receiver.start()
 
@@ -183,7 +185,7 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
 
         await self.gsr_receiver.stop()
 
-    async def test_quality_metrics_handling(self):
+    async def test_quality_metrics_handling(self) -> Any:
         """Test quality metrics handling"""
         await self.gsr_receiver.start()
 
@@ -213,7 +215,7 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
 
         await self.gsr_receiver.stop()
 
-    async def test_session_ending(self):
+    async def test_session_ending(self) -> Any:
         """Test session ending and data finalization"""
         await self.gsr_receiver.start()
 
@@ -259,7 +261,7 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
 
         await self.gsr_receiver.stop()
 
-    async def test_data_export(self):
+    async def test_data_export(self) -> Any:
         """Test GSR data export functionality"""
         await self.gsr_receiver.start()
 
@@ -307,7 +309,7 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
 class TestNetworkServerGSRIntegration(unittest.TestCase):
     """Test network server GSR integration"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up test environment"""
         self.test_dir = Path(tempfile.mkdtemp())
 
@@ -329,13 +331,13 @@ class TestNetworkServerGSRIntegration(unittest.TestCase):
         with patch("ircamera_pc.core.config.config", self.config):
             self.server = NetworkServer()
 
-    def tearDown(self):
+    def tearDown(self) -> Any:
         """Clean up test environment"""
         import shutil
 
         shutil.rmtree(self.test_dir, ignore_errors=True)
 
-    async def test_gsr_stream_registration(self):
+    async def test_gsr_stream_registration(self) -> Any:
         """Test GSR stream registration"""
         # Mock writer
         mock_writer = Mock()
@@ -358,7 +360,7 @@ class TestNetworkServerGSRIntegration(unittest.TestCase):
         self.assertEqual(response["message_type"], "ack")
         self.assertEqual(response["status"], "registered")
 
-    async def test_gsr_data_stream_handling(self):
+    async def test_gsr_data_stream_handling(self) -> Any:
         """Test GSR data stream handling"""
         # First register the stream
         registration_message = {
@@ -392,7 +394,7 @@ class TestNetworkServerGSRIntegration(unittest.TestCase):
         response = await self.server._handle_gsr_data_stream(data_message, mock_writer)
         self.assertIsNone(response)
 
-    async def test_time_sync_request(self):
+    async def test_time_sync_request(self) -> Any:
         """Test time synchronization request handling"""
         mock_writer = Mock()
 
@@ -409,13 +411,13 @@ class TestNetworkServerGSRIntegration(unittest.TestCase):
         self.assertEqual(response["client_timestamp"], client_timestamp)
         self.assertIn("server_timestamp", response)
 
-    def test_gsr_session_stats(self):
+    def test_gsr_session_stats(self) -> Any:
         """Test GSR session statistics retrieval"""
         # Get stats (should not fail even with empty data)
         stats = self.server.get_gsr_session_stats()
         self.assertIsInstance(stats, dict)
 
-    async def test_gsr_stream_end(self):
+    async def test_gsr_stream_end(self) -> Any:
         """Test GSR stream end handling"""
         # First register the stream
         registration_message = {
@@ -449,17 +451,17 @@ class TestNetworkServerGSRIntegration(unittest.TestCase):
 class TestGSRIntegrationEndToEnd(unittest.TestCase):
     """End-to-end GSR integration test"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up end-to-end test environment"""
         self.test_dir = Path(tempfile.mkdtemp())
 
-    def tearDown(self):
+    def tearDown(self) -> Any:
         """Clean up test environment"""
         import shutil
 
         shutil.rmtree(self.test_dir, ignore_errors=True)
 
-    async def test_complete_gsr_workflow(self):
+    async def test_complete_gsr_workflow(self) -> Any:
         """Test complete GSR workflow from Android to PC"""
         # This would simulate:
         # 1. Android app starts recording
@@ -548,7 +550,7 @@ class TestGSRIntegrationEndToEnd(unittest.TestCase):
 
         await receiver.stop()
 
-    def test_android_kotlin_integration_stubs(self):
+    def test_android_kotlin_integration_stubs(self) -> Any:
         """Test that Android Kotlin integration components are properly structured"""
         # This test verifies the Android side integration points exist
 
@@ -610,7 +612,7 @@ class TestGSRIntegrationEndToEnd(unittest.TestCase):
             self.assertIn("EnhancedNetworkClient", content)
 
 
-async def run_async_tests():
+async def run_async_tests() -> Any:
     """Run all async tests"""
     print("Running GSR Hub-Spoke Integration Tests...")
 
@@ -695,7 +697,7 @@ async def run_async_tests():
     print("\n🚀 GSR Multi-Modal Integration Complete!")
 
 
-def main():
+def main() -> Any:
     """Main test function"""
     if sys.version_info >= (3, 7):
         asyncio.run(run_async_tests())

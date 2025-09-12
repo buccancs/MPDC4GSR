@@ -146,7 +146,7 @@ class FileTransferManager:
             f"Chunk size: {self.chunk_size} bytes, Maxconcurrent: {self.max_concurrent}"
         )
 
-    def add_progress_callback(self, callback: Callable[[str, float, float], None]):
+    def add_progress_callback(self, callback: None = Callable[[str, float, float], None]) -> None:
         """
         Add callback for transfer progress updates
 
@@ -635,7 +635,7 @@ class FileTransferManager:
             "data_directory": str(self.data_dir),
         }
 
-    async def save_job_state(self):
+    async def save_job_state(self) -> Any:
         """Save transfer job states to disk for recovery"""
         try:
             state_file = self.data_dir / "transfer_state.json"
@@ -658,7 +658,7 @@ class FileTransferManager:
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Failed to save transfer state: {e}")
 
-    async def load_job_state(self):
+    async def load_job_state(self) -> Any:
         """Load transfer job states from disk for recovery"""
         try:
             state_file = self.data_dir / "transfer_state.json"

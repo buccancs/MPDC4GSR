@@ -3,6 +3,8 @@ Tests for IRCamera PC Controller
 
 Basic test suite for core functionality validation.
 """
+from typing import Any, Dict, List, Optional
+
 
 import shutil
 import tempfile
@@ -20,7 +22,7 @@ from ..network.server import DeviceInfo, NetworkServer
 class TestConfigManager:
     """Tests for ConfigManager."""
 
-    def test_config_loading_with_defaults(self):
+    def test_config_loading_with_defaults(self) -> Any:
         """Test config loading with default values."""
         # Create config manager with non-existent file
         config_manager = ConfigManager("/nonexistent/config.yaml")
@@ -29,7 +31,7 @@ class TestConfigManager:
         assert config_manager.get("network.server_port") == 8080
         assert config_manager.get("gsr.default_mode") == "local"
 
-    def test_config_get_set(self):
+    def test_config_get_set(self) -> None:
         """Test config get/set operations."""
         config_manager = ConfigManager("/nonexistent/config.yaml")
 
@@ -47,7 +49,7 @@ class TestConfigManager:
 class TestSessionManager:
     """Tests for SessionManager."""
 
-    def setup_method(self):
+    def setup_method(self) -> None:
         """Set up test environment."""
         self.temp_dir = tempfile.mkdtemp()
 
@@ -56,11 +58,11 @@ class TestSessionManager:
             mock_config.get.return_value = self.temp_dir
             self.session_manager = SessionManager()
 
-    def teardown_method(self):
+    def teardown_method(self) -> Any:
         """Clean up test environment."""
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
-    def test_create_session(self):
+    def test_create_session(self) -> Any:
         """Test session creation."""
         session = self.session_manager.create_session("test_session")
 
@@ -69,7 +71,7 @@ class TestSessionManager:
         assert session.session_id is not None
         assert session.created_at is not None
 
-    def test_session_lifecycle(self):
+    def test_session_lifecycle(self) -> Any:
         """Test complete session lifecycle."""
         # Create session
         session = self.session_manager.create_session("test_session")
@@ -92,7 +94,7 @@ class TestSessionManager:
         assert ended_session.ended_at is not None
         assert ended_session.duration_seconds is not None
 
-    def test_session_metadata_persistence(self):
+    def test_session_metadata_persistence(self) -> Any:
         """Test session metadata persistence."""
         # Create session
         session = self.session_manager.create_session("test_session")
@@ -116,7 +118,7 @@ class TestSessionManager:
         assert len(loaded_session.devices) == 1
         assert len(loaded_session.sync_events) == 1
 
-    def test_single_session_constraint(self):
+    def test_single_session_constraint(self) -> Any:
         """Test that only one session can be active at a time."""
         # Create first session
         self.session_manager.create_session("session1")
@@ -130,12 +132,12 @@ class TestSessionManager:
 class TestTimeSyncService:
     """Tests for TimeSyncService."""
 
-    def setup_method(self):
+    def setup_method(self) -> None:
         """Set up test environment."""
         self.time_sync_service = TimeSyncService()
 
     @pytest.mark.asyncio
-    async def test_service_lifecycle(self):
+    async def test_service_lifecycle(self) -> Any:
         """Test time sync service start/stop."""
         assert not self.time_sync_service.is_running
 
@@ -149,7 +151,7 @@ class TestTimeSyncService:
         await self.time_sync_service.stop()
         assert not self.time_sync_service.is_running
 
-    def test_sync_stats_tracking(self):
+    def test_sync_stats_tracking(self) -> Any:
         """Test synchronization statistics tracking."""
         service = self.time_sync_service
 
@@ -168,7 +170,7 @@ class TestTimeSyncService:
         assert stats.device_id == "test_device"
         assert stats.sync_count == 1
 
-    def test_synchronization_quality(self):
+    def test_synchronization_quality(self) -> Any:
         """Test synchronization quality metrics."""
         service = self.time_sync_service
 
@@ -196,12 +198,12 @@ class TestTimeSyncService:
 class TestNetworkServer:
     """Tests for NetworkServer."""
 
-    def setup_method(self):
+    def setup_method(self) -> None:
         """Set up test environment."""
         self.network_server = NetworkServer()
 
     @pytest.mark.asyncio
-    async def test_server_lifecycle(self):
+    async def test_server_lifecycle(self) -> Any:
         """Test network server start/stop."""
         assert not self.network_server.is_running
 
@@ -213,7 +215,7 @@ class TestNetworkServer:
         await self.network_server.stop()
         assert not self.network_server.is_running
 
-    def test_device_info_creation(self):
+    def test_device_info_creation(self) -> Any:
         """Test DeviceInfo creation and serialization."""
         device_info = DeviceInfo(
             device_id="test_device",
@@ -232,7 +234,7 @@ class TestNetworkServer:
         assert isinstance(device_dict, dict)
         assert device_dict["device_id"] == "test_device"
 
-    def test_message_handling(self):
+    def test_message_handling(self) -> Any:
         """Test message handling logic."""
         server = self.network_server
 

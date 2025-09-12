@@ -36,16 +36,16 @@ except ImportError:
         )()
 
         @staticmethod
-        def question(*args, **kwargs):
+        def question(*args, **kwargs) -> Any:
             return QMessageBox.StandardButton.Yes
 
         @staticmethod
-        def warning(*args, **kwargs):
+        def warning(*args, **kwargs) -> Any:
             pass
 
     class QApplication:
         @staticmethod
-        def quit():
+        def quit() -> Any:
             pass
 
 
@@ -235,7 +235,7 @@ class AdminPrivilegesManager(BaseManager):
         logger.warning(f"Unknown operation permission check: {operation}")
         return False
 
-    def run_as_admin(self, command: str, arguments: list = None) -> bool:
+    def run_as_admin(self, command: str, arguments: Optional[list] = None) -> bool:
         """
         Run a command with administrator privileges.
 

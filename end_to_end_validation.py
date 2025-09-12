@@ -170,7 +170,7 @@ class PCToPhoneValidator:
             server_socket.settimeout(2.0)
 
             # Simulate Android client connection
-            async def mock_android_client():
+            async def mock_android_client() -> Any:
                 await asyncio.sleep(0.1)  # Brief delay
                 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 client.connect(("localhost", self.test_server_port))
@@ -402,7 +402,7 @@ class PCToPhoneValidator:
         return recommendations
 
 
-async def main():
+async def main() -> Any:
     """Run the comprehensive validation."""
     validator = PCToPhoneValidator()
 

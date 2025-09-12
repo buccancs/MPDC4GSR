@@ -98,7 +98,7 @@ import sys
 sys.path.append('pc-controller/src')
 from ircamera_pc.gui import main
 import signal
-def handler(sig, frame):
+def handler(sig, frame) -> Any:
     exit(0)
 signal.signal(signal.SIGALRM, handler)
 signal.alarm(2)
@@ -440,7 +440,7 @@ except (SystemExit, KeyboardInterrupt):
             return False
 
 
-async def main():
+async def main() -> Any:
     """Main validation entry point"""
     validator = ComprehensiveValidation()
     results = await validator.run_all_tests()

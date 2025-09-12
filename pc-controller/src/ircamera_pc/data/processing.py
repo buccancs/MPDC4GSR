@@ -18,16 +18,14 @@ from loguru import logger
 
 try:
     import pandas as pd
-except ImportError:
-    pd = None
+except ImportError: Optional[pd] = None
     logger.warning(
         "pandas not available - some data processing features will be limited"
     )
 
 try:
     import h5py
-except ImportError:
-    h5py = None
+except ImportError: Optional[h5py] = None
     logger.warning("h5py not available - HDF5 export will not be available")
 
 

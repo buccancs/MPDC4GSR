@@ -109,7 +109,7 @@ class GSRReceiver:
             f"GSR Receiver initialized with data directory: {self.data_dir} and advanced analytics"
         )
 
-    def init_database(self):
+    def init_database(self) -> Any:
         """Initialize SQLite database for GSR data storage"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -160,7 +160,7 @@ class GSRReceiver:
             logger.error(f"Failed to initialize GSR database: {e}")
             raise
 
-    async def start(self):
+    async def start(self) -> Any:
         """Start GSR receiver background tasks"""
         if self._running:
             logger.warning("GSR Receiver already running")
@@ -174,7 +174,7 @@ class GSRReceiver:
 
         logger.info("GSR Receiver started")
 
-    async def stop(self):
+    async def stop(self) -> Any:
         """Stop GSR receiver and cleanup"""
         if not self._running:
             return

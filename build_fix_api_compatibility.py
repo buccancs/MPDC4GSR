@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 
-def fix_api_compatibility_issues():
+def fix_api_compatibility_issues() -> Any:
     """Fix API level compatibility issues in the build configuration."""
 
     print("🔧 Fixing API compatibility issues...")
@@ -132,7 +132,7 @@ configurations.all {
     print("✅ API compatibility fixes applied successfully")
 
 
-def validate_build_configuration():
+def validate_build_configuration() -> Any:
     """Validate that build configuration is correct."""
     print("\n🔍 Validating build configuration...")
 
@@ -170,7 +170,7 @@ def validate_build_configuration():
         return True
 
 
-def create_compatibility_test():
+def create_compatibility_test() -> Any:
     """Create a simple test to verify API compatibility."""
     test_file = Path("app/src/test/java/com/topdon/tc001/ApiCompatibilityTest.kt")
     test_file.parent.mkdir(parents=True, exist_ok=True)
@@ -222,7 +222,7 @@ class ApiCompatibilityTest {
     print(f"   📝 Created API compatibility test: {test_file}")
 
 
-def main():
+def main() -> Any:
     """Main function to run all compatibility fixes."""
     print("🚀 Android Build Configuration Compatibility Fix")
     print("=" * 50)

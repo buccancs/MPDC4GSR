@@ -36,6 +36,10 @@ import java.nio.ByteBuffer
 import java.util.Collections
 import kotlin.concurrent.thread
 
+/**
+ * Custom Camera view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     /**预览 */
     lateinit var mTextureView: TextureView

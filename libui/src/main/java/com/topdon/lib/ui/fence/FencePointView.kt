@@ -17,6 +17,10 @@ import com.topdon.lib.ui.R as UiR
 /**
  * FencePointView class
  */
+/**
+ * Custom Fence point view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class FencePointView : View {
     var listener: CallBack? = null
     private val iconSize = SizeUtils.dp2px(32f)
@@ -157,6 +161,10 @@ class FencePointView : View {
     /**
      * CallBack class
      */
+/**
+ * Custom Call back view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     interface CallBack {
         /**
          * startPoint: 左上角

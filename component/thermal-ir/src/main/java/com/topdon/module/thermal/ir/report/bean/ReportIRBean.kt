@@ -4,7 +4,11 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 /**
- * 一张图片对应的数据信息.
+\1一张图片对应的data信息.
+ */
+/**
+ * Report i r data model for thermal imaging information.
+ * Encapsulates thermal measurement and configuration data.
  */
 @Parcelize
 data class ReportIRBean(

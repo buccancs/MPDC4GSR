@@ -14,6 +14,10 @@ import com.blankj.utilcode.util.SizeUtils
 /**
  * FenceLineView class
  */
+/**
+ * Custom Fence line view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class FenceLineView : View {
     var listener: CallBack? = null
 
@@ -151,6 +155,10 @@ class FenceLineView : View {
     /**
      * CallBack class
      */
+/**
+ * Custom Call back view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     interface CallBack {
         /**
          * startPoint: 左上角

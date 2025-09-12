@@ -16,6 +16,10 @@ import com.topdon.menu.constant.TargetType
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
+/**
+ * Custom Menu target view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 @Deprecated("旧的标靶菜单，已重构过了")
 class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null

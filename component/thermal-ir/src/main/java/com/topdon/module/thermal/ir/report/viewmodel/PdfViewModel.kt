@@ -25,10 +25,14 @@ import com.topdon.lib.core.R as LibR
  * @author: CaiSongL
  * @date: 2023/5/12 17:43
  */
+/**
+ * Custom Pdf view model view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class PdfViewModel : BaseViewModel() {
     val listData = MutableLiveData<ReportData?>()
 
-    // 获取报告列表
+\1get报告列表
     fun getReportData(
         isTC007: Boolean,
         page: Int,

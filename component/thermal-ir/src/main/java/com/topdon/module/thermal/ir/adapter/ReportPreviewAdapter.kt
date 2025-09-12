@@ -18,6 +18,10 @@ import com.topdon.lib.core.bean.HouseRepPreviewItemBean
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 
+/**
+ * Custom Report preview view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

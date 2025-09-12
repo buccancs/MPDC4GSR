@@ -20,6 +20,10 @@ import com.topdon.lib.ui.R as UiR
 /**
  * BarPickView class
  */
+/**
+ * Custom Bar pick view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class BarPickView : View {
     companion object {
         /**

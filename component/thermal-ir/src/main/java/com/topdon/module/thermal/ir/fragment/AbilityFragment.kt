@@ -23,10 +23,8 @@ import com.topdon.module.thermal.ir.activity.MonitoryHomeActivity
 import org.greenrobot.eventbus.EventBus
 
 /**
- * 功能 Tab 页
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007（不使用，透传）
+ * Ability fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 class AbilityFragment : BaseFragment(), View.OnClickListener {
     private var mIsTC007 = false

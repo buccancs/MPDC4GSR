@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * RecyclerViewProxy(val class
  */
+/**
+ * Custom Recycler view proxy view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
     fun attachView(view: View?) {
         layoutManager.attachView(view!!)

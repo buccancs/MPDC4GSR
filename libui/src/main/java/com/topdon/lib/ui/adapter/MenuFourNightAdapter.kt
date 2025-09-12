@@ -24,6 +24,10 @@ import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
+/**
+ * Custom Menu four night view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 @Deprecated("旧的设置菜单，已重构过了")
 @SuppressLint("NotifyDataSetChanged")
 class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

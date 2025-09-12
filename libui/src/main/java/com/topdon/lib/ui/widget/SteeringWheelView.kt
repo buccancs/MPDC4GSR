@@ -11,6 +11,10 @@ import com.topdon.lib.ui.databinding.UiSteeringWheelViewBinding
 /**
  * 校准方向
  */
+/**
+ * Custom Steering wheel view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class SteeringWheelView : LinearLayout, OnClickListener {
     var listener: ((action: Int, moveX: Int) -> Unit)? = null
     var moveX = 30

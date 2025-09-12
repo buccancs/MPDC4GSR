@@ -5,9 +5,13 @@ import com.topdon.lib.core.utils.CommUtils
 import kotlinx.android.parcel.Parcelize
 
 /**
- * 报告信息.
+\1报告信息.
  *
- * 报告由 3 部分组成：报告信息、检测条件、红外数据.
+\1报告由 3 部分组成：报告信息、检测条件、infrareddata.
+ */
+/**
+ * Report info data model for thermal imaging information.
+ * Encapsulates thermal measurement and configuration data.
  */
 @Parcelize
 data class ReportInfoBean(

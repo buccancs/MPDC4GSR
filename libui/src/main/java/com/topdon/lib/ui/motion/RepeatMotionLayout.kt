@@ -10,6 +10,10 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 /**
  * RepeatMotionLayout class
  */
+/**
+ * Repeat motion layout utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
     private var motionStartId = 0
     private var motionEndId = 0

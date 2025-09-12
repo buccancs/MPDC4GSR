@@ -6,6 +6,10 @@ package com.topdon.menu.util
 /**
  * PseudoColorConfig class
  */
+/**
+ * Pseudo color config utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 object PseudoColorConfig {
     /**
      * 根据指定伪彩代号获取对应的颜色数组

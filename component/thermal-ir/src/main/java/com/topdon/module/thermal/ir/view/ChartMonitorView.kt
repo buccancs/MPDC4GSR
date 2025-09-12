@@ -26,6 +26,10 @@ import com.topdon.module.thermal.ir.utils.ChartTools
 import com.topdon.lib.core.R as LibR
 import com.topdon.module.thermal.R as ThermalR
 
+/**
+ * Custom Chart monitor view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class ChartMonitorView : LineChart, OnChartGestureListener {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
 
@@ -80,7 +84,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
             l.isEnabled = false // 隐藏曲线标签
-            // x轴
+\1x轴
             val xAxis = this.xAxis
             xAxis.textColor = textColor
             xAxis.setDrawGridLines(false) // 竖向格线
@@ -92,7 +96,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             xAxis.granularity = 1f
             xAxis.isGranularityEnabled = true // 重复值不显示
             xAxis.textSize = 8f
-            // y轴
+\1y轴
             val leftAxis = this.axisLeft
             leftAxis.textColor = textColor // y轴文本颜色
             leftAxis.axisLineColor = 0x00000000 // y轴颜色
@@ -110,8 +114,8 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
     private var startTime = 0L
 
     /**
-     * 秒更新图表数据
-     * @param timeType 时分秒
+\1秒update图表data
+\1@param timeType 时分秒
      *
      */
     fun addPointToChart(
@@ -151,7 +155,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         Log.w("123", "添加一个数据:$entity")
                     }
                     2 -> {
-                        // 第一条线
+\1第一条线
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "line max temp")
                             lineData.addDataSet(volDataSet)
@@ -161,7 +165,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         entity.data = bean
                         volDataSet.addEntry(entity)
 
-                        // 第二条线
+\1第二条线
                         var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
                         if (secondDataSet == null) {
                             secondDataSet = createSet(1, "line min temp")
@@ -172,7 +176,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         secondDataSet.addEntry(secondEntity)
                     }
                     else -> {
-                        // 第一条线
+\1第一条线
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "fence max temp")
                             lineData.addDataSet(volDataSet)
@@ -181,7 +185,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         entity.data = bean
                         volDataSet.addEntry(entity)
 
-                        // 第二条线
+\1第二条线
                         var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
                         if (secondDataSet == null) {
                             secondDataSet = createSet(1, "fence min temp")
@@ -199,7 +203,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                 setVisibleXRangeMaximum(ChartTools.getMaximum(type = timeType)) // 设置显示X轴区间大小
                 ChartTools.setX(this, timeType)
 //                ChartTools.setY(this)
-                // 结尾点出现在界面才移动最新数据
+\1结尾点出现在interface才移动最新data
                 if ((highestVisibleX + ChartTools.getMinimum(timeType) / 2f) > xChartMax) {
                     moveViewToX(xChartMax) // 移动到最右端
                 }
@@ -234,7 +238,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         )
 
     /**
-     * 曲线样式
+\1曲线样式
      */
     private fun createSet(
         index: Int,
@@ -291,7 +295,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
         scaleX: Float,
         scaleY: Float,
     ) {
-        // 缩放时关闭
+\1scaling时disabled
         highlightValue(null)
     }
 

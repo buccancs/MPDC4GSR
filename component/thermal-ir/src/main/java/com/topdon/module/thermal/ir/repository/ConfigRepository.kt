@@ -6,12 +6,16 @@ import com.topdon.module.thermal.ir.bean.DataBean
 import com.topdon.module.thermal.ir.bean.ModelBean
 import java.lang.Exception
 
+/**
+ * Config repository utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 object ConfigRepository {
     fun read(isTC007: Boolean): ModelBean =
         try {
             Gson().fromJson(if (isTC007) SharedManager.irConfigJsonTC007 else SharedManager.getIRConfig(), ModelBean::class.java)
         } catch (_: Exception) {
-            // 当SP里没数据必定抛异常，所以这里返回一个默认的
+\1当SP里没data必定抛异常，所以这里返回一个默认的
             ModelBean(DataBean(id = 0, use = true))
         }
 
@@ -27,7 +31,7 @@ object ConfigRepository {
     }
 
     /**
-     * 读取选中的配置信息
+\1读取选中的configuration信息
      */
     fun readConfig(isTC007: Boolean): DataBean {
         val config = read(isTC007)

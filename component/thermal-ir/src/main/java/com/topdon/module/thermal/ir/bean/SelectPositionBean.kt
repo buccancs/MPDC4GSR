@@ -6,8 +6,12 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 /**
- * 温度监控 第1步 第2步 之间传递的要监控的信息.
- * @param type 1-点 2-线 3-面
+\1temperature监控 第1步 第2步 之间传递的要监控的信息.
+\1@param type 1-点 2-线 3-面
+ */
+/**
+ * Select position data model for thermal imaging information.
+ * Encapsulates thermal measurement and configuration data.
  */
 @Parcelize
 data class SelectPositionBean(

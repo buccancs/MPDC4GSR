@@ -10,6 +10,10 @@ import com.topdon.lib.ui.R as UiR
 /**
  * RoundImageView class
  */
+/**
+ * Custom Round image view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class RoundImageView : AppCompatImageView {
     companion object {
         /** 圆角位置 - 左上.  */

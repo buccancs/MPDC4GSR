@@ -43,11 +43,15 @@ import java.io.File
 import com.topdon.lib.core.R as LibR
 
 /**
- * 图库
+\1图库
+ */
+/**
+ * I r gallery fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 class IRGalleryFragment : BaseFragment() {
     /**
-     * 从上一界面传递过来的，进入图库时初始的目录类型
+\1从上一interface传递过来的，进入图库时初始的目录类型
      */
     private var currentDirType = DirType.LINE
 
@@ -66,7 +70,7 @@ class IRGalleryFragment : BaseFragment() {
     private lateinit var irGalleryRecycler: RecyclerView
 
     /**
-     * 从上一界面传递过来的，当前是查看照片还是查看视频.
+\1从上一interface传递过来的，当前是查看照片还是查看视频.
      */
     private var isVideo = false
 
@@ -192,7 +196,7 @@ class IRGalleryFragment : BaseFragment() {
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(requireActivity(), spanCount)
-        // 动态设置span
+\1动态setspan
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {

@@ -12,6 +12,10 @@ import androidx.appcompat.widget.AppCompatImageView
  *
  * Created by LCG on 2024/5/22.
  */
+/**
+ * Custom Battery view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class BatteryView : AppCompatImageView {
     /**
      * 当前电量

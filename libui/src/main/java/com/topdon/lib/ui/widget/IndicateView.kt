@@ -14,6 +14,10 @@ import com.topdon.lib.ui.R as UiR
  *
  * Created by chenggeng.lin on 2023/11/13.
  */
+/**
+ * Custom Indicate view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class IndicateView : View {
     var itemCount: Int = 0
         set(value) {

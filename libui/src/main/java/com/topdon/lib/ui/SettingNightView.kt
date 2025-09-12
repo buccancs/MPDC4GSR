@@ -14,6 +14,10 @@ import com.topdon.lib.ui.databinding.UiSettingViewNightBinding
 /**
  * SettingNightView class
  */
+/**
+ * Custom Setting night view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class SettingNightView : LinearLayout {
     private lateinit var binding: UiSettingViewNightBinding
 

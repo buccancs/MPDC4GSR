@@ -14,6 +14,10 @@ import com.topdon.pseudo.bean.CustomPseudoBean
 import java.io.IOException
 import java.nio.ByteBuffer
 
+/**
+ * Frame tool tools for thermal imaging processing.
+ * Contains specialized algorithms and processing functions.
+ */
 class FrameTool {
     val imageWidth = 256
     val imageHeight = 192
@@ -21,8 +25,8 @@ class FrameTool {
     private val srcTemperatureLen = imageWidth * imageHeight * 2
     private val imageBytes = ByteArray(scrImageLen)
     val temperatureBytes = ByteArray(srcTemperatureLen)
-    private val imageRes = LibIRProcess.ImageRes_t() // 原图尺寸
-    private var struct: FrameStruct = FrameStruct() // 首部信息
+    private val imageRes = LibIRProcess.ImageRes_t() // Original image dimensions
+    private var struct: FrameStruct = FrameStruct() // Header information
 
     private var maxLimit = -273f
     private var minLimit = -273f
@@ -37,18 +41,18 @@ class FrameTool {
             val frame = ByteArray(bytes.size)
             System.arraycopy(bytes, 0, frame, 0, frame.size)
             println("bs len: ${frame.size}")
-            System.arraycopy(frame, 0, imageBytes, 0, scrImageLen) // 图像数据 (192 x 256 x 2) yuv
-            System.arraycopy(frame, scrImageLen, temperatureBytes, 0, srcTemperatureLen) // 温度数据 (192 x 256 x 2)
+            System.arraycopy(frame, 0, imageBytes, 0, scrImageLen) // Image data (192 x 256 x 2) yuv
+            System.arraycopy(frame, scrImageLen, temperatureBytes, 0, srcTemperatureLen) // Temperature data (192 x 256 x 2)
             println("imageBytes len: ${imageBytes.size}")
             println("temperatureBytes len: ${temperatureBytes.size}")
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("读取一帧原始数据失败: ${e.message}")
+            XLog.e("Failed to read frame raw data: ${e.message}")
         }
     }
 
     /**
-     * 设置图像默认尺寸
+     * Set image default dimensions
      */
     fun initStruct(struct: FrameStruct) {
         this.struct = struct
@@ -57,7 +61,7 @@ class FrameTool {
     }
 
     /**
-     * 矫正角度
+     * Correction angle
      */
     fun initRotate(): ImageParams {
         var rotate = ImageParams.ROTATE_0
@@ -71,7 +75,7 @@ class FrameTool {
     }
 
     /**
-     * 获取温度数据
+     * Get temperature data
      */
     fun getTempBytes(rotate: ImageParams = ImageParams.ROTATE_0): ByteArray {
         val tempBytes = ByteArray(srcTemperatureLen)
@@ -116,8 +120,8 @@ class FrameTool {
     }
 
     /**
-     * 灰度图转伪彩图像
-     * yuv -> argb -> 温度尺 -> 旋转 -> bitmap
+     * Convert grayscale image to pseudo-color image
+     * yuv -> argb -> temperature scale -> rotation -> bitmap
      */
     fun getScrPseudoColorScaledBitmap(
         pseudoColorMode: CommonParams.PseudoColorType = CommonParams.PseudoColorType.PSEUDO_3,
@@ -140,7 +144,7 @@ class FrameTool {
         val maxRGB = IntArray(3)
         val minRGB = IntArray(3)
         if (customPseudoBean.isUseCustomPseudo) {
-            // 自定义渲染模式
+            // Custom rendering mode
             LibIRProcess.convertYuyvMapToARGBPseudocolor(imageBytesTemp, pixNum.toLong(), CommonParams.PseudoColorType.PSEUDO_1, argbBytes)
             val colorList: IntArray? = customPseudoBean.getColorList(struct.isTC007())
             val places: FloatArray? = customPseudoBean.getPlaceList()
@@ -157,10 +161,10 @@ class FrameTool {
                 minRGB[2] = minColor and 0xFF
                 var j = 0
                 val argbBytesLength = imageWidth * imageHeight * 4
-                // 遍历像素点，过滤温度阈值
+                // Iterate through pixels, filter temperature thresholds
                 var index = 0
                 while (index < argbBytesLength) {
-                    // 温度换算公式
+                    // Temperature conversion formula
                     var temperature0: Float =
                         (
                             (temperatureBytes[j].toInt() and 0xff) + (
@@ -204,7 +208,7 @@ class FrameTool {
         } else {
             LibIRProcess.convertYuyvMapToARGBPseudocolor(imageBytesTemp, pixNum.toLong(), pseudoColorMode, argbBytes)
             if (!(maxLimit == -273f && minLimit == -273f) && !(maxTemperature == maxLimit && minLimit == minTemperature)) {
-                ImageTools.dualReadFrame(argbBytes, temperatureBytes, maxLimit, minLimit) // 温度尺
+                ImageTools.dualReadFrame(argbBytes, temperatureBytes, maxLimit, minLimit) // Temperature scale
             }
         }
 
@@ -223,7 +227,7 @@ class FrameTool {
             }
         }
 
-        argbBytesRotate(argbBytes, dstArgbBytes!!, rotate) // 旋转
+        argbBytesRotate(argbBytes, dstArgbBytes!!, rotate) // Rotation
         val dstImageRes = getDstImageRes(rotate)
         var scrBitmap: Bitmap? = null
         if (isAmplify)
@@ -269,7 +273,7 @@ class FrameTool {
     }
 
     /**
-     * 获取原始图像的bitmap
+     * Get original image bitmap
      */
     fun getBaseBitmap(rotate: ImageParams): Bitmap  {
         val dstImageRes = getDstImageRes(rotate)
@@ -286,7 +290,7 @@ class FrameTool {
     }
 
     /**
-     * 目标尺寸
+\1目标尺寸
      */
     private fun getDstImageRes(rotate: ImageParams): LibIRProcess.ImageRes_t {
         val dstImageRes = LibIRProcess.ImageRes_t() // 目标尺寸
@@ -301,7 +305,7 @@ class FrameTool {
     }
 
     /**
-     * argb像素矩阵旋转
+     * ARGB pixel matrix rotation
      */
     private fun argbBytesRotate(
         argbBytes: ByteArray,
@@ -336,7 +340,7 @@ class FrameTool {
     }
 
 //    fun getTemp() {
-//        // 获取全图最高温和最低温的数据
+\1// getfull image最high temperature和最low temperature的data
 //        val irTemp = Libirtemp(256, 192)
 //        irTemp.settempdata(mixTemperatureBytes)
 //        val temperatureSampleEasyResult = irTemp.getTemperatureOfRect(Rect(0, 0, 256, 192))
@@ -344,7 +348,7 @@ class FrameTool {
 //    }
 
 //    fun getSrcTemp()：Libirt{
-//        // 获取全图最高温和最低温的数据
+\1// getfull image最high temperature和最low temperature的data
 //        val irTemp = Libirtemp(256, 192)
 //        irTemp.settempdata(temperatureBytes)
 //        val temperatureSampleEasyResult = irTemp.getTemperatureOfRect(Rect(0, 0, 256, 192))
@@ -353,10 +357,10 @@ class FrameTool {
 //    }
 
     /**
-     * 全局测温(原数据)
+     * Global temperature measurement (raw data)
      */
     fun getSrcTemp(): LibIRTemp.TemperatureSampleResult {
-        // 获取全图最高温和最低温的数据
+        // Get full image maximum and minimum temperature data
         val irTemp = LibIRTemp(imageWidth, imageHeight)
         irTemp.setTempData(temperatureBytes)
         return irTemp.getTemperatureOfRect(Rect(0, 0, imageWidth, imageHeight))

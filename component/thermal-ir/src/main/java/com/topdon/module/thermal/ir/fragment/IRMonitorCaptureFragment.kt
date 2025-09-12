@@ -17,15 +17,13 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRMonitorActivity
 
 /**
- * 温度监控-实时（即生成温度监控）.
- *
- * 需要传递参数：
- * - [ExtraKeyConfig.IS_TC007] - 当前设备是否为 TC007
+ * I r monitor capture fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 class IRMonitorCaptureFragment : BaseFragment() {
     /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
+\1从上一interface传递过来的，当前是否为 TC007 device类型.
+\1true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
@@ -83,7 +81,7 @@ class IRMonitorCaptureFragment : BaseFragment() {
     }
 
     /**
-     * 刷新连接状态
+\1刷新连接状态
      */
     private fun refreshUI(isConnect: Boolean) {
         animationView.isVisible = !isConnect

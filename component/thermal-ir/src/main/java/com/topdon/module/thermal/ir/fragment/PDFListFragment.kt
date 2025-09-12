@@ -47,6 +47,10 @@ import java.io.File
  * @author: CaiSongL
  * @date: 2023/5/12 11:34
  */
+/**
+ * P d f list fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
+ */
 class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     // View references using findViewById
     private val titleView: TitleView by lazy { requireView().findViewById(R.id.title_view) }
@@ -54,8 +58,8 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     private val fragmentPdfRecycler: RecyclerView by lazy { requireView().findViewById(R.id.fragment_pdf_recycler) }
 
     /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
+\1从上一interface传递过来的，当前是否为 TC007 device类型.
+\1true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
@@ -63,7 +67,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     private var reportAdapter = PDFAdapter(R.layout.item_pdf)
 
     /**
-     * LMS 登录及退出登录广播.
+\1LMS 登录及退出登录广播.
      */
     private val loginBroadcastReceiver = LoginBroadcastReceiver()
 
@@ -101,7 +105,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                 tvEmpty?.setText(if (page == 1 && data.code != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
 
                 if (page == 1) {
-                    // 刷新
+\1刷新
                     if (data.code == LMS.SUCCESS)
                         {
                             reportAdapter.loadMoreModule.isEnableLoadMore = !data.data?.records.isNullOrEmpty()
@@ -148,7 +152,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     }
 
     /**
-     * 是否已调用过加载初始数据
+\1是否已调用过load初始data
      */
     private var hasLoadData = false
 
@@ -253,14 +257,14 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
         }
         reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         reportAdapter.loadMoreModule.setOnLoadMoreListener {
-            // 加载更多
+\1load更多
             viewModel.getReportData(isTC007, ++page)
         }
 
         fragmentPdfRecycler.adapter = reportAdapter
         fragmentPdfRecycler.layoutManager = LinearLayoutManager(requireContext())
         fragmentPdfRecyclerLay.setOnRefreshListener {
-            // 刷新
+\1刷新
             page = 1
             viewModel.getReportData(isTC007, page)
         }

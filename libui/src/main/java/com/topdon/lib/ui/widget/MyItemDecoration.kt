@@ -16,6 +16,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 /**
  * MyItemDecoration(context: class
  */
+/**
+ * Custom My item decoration view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     /**
      * 整个 RecyclerView 左侧间距，单位 dp.

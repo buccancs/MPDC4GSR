@@ -37,6 +37,10 @@ import java.util.Collections
 /**
  * 相机预览
  */
+/**
+ * Custom Camera pre view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class CameraPreView :
     LinearLayout,
     ScaleGestureDetector.OnScaleGestureListener,

@@ -8,6 +8,10 @@ package com.topdon.lib.ui.config
 /**
  * CameraHelp class
  */
+/**
+ * Camera help utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 object CameraHelp {
     /**
      * 伪彩条

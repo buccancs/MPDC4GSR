@@ -1,13 +1,21 @@
 package com.topdon.module.thermal.ir.bean
 
 /**
- * 模式
+\1模式
+ */
+/**
+ * Model data model for thermal imaging information.
+ * Encapsulates thermal measurement and configuration data.
  */
 data class ModelBean(
     var defaultModel: DataBean,
     var myselfModel: ArrayList<DataBean> = arrayListOf(),
 )
 
+/**
+ * Data data model for thermal imaging information.
+ * Encapsulates thermal measurement and configuration data.
+ */
 data class DataBean(
     var id: Int = 1,
     var name: String = "1",

@@ -34,12 +34,16 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
- * 需要传递
- * - 是否 TC007: [ExtraKeyConfig.IS_TC007]
+\1需要传递
+\1- 是否 TC007: [ExtraKeyConfig.IS_TC007]
  * @author: CaiSongL
  * @date: 2023/5/12 11:34
  */
 // Legacy ARouter route annotation - now using NavigationManager
+/**
+ * P d f list activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
+ */
 class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
     // View references using findViewById
     private val titleView: TitleView by lazy { findViewById(R.id.title_view) }
@@ -47,8 +51,8 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
     private val fragmentPdfRecycler: RecyclerView by lazy { findViewById(R.id.fragment_pdf_recycler) }
 
     /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
+\1从上一interface传递过来的，当前是否为 TC007 device类型.
+\1true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
@@ -80,7 +84,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
             }
             it?.let { data ->
                 if (page == 1) {
-                    // 刷新
+\1刷新
                     if (data.code == LMS.SUCCESS)
                         {
                             reportAdapter.loadMoreModule.isEnableLoadMore = !data.data?.records.isNullOrEmpty()
@@ -123,7 +127,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
     private fun initRecycler() {
         fragmentPdfRecycler.layoutManager = LinearLayoutManager(this)
         fragmentPdfRecyclerLay.setOnRefreshListener {
-            // 刷新
+\1刷新
             page = 1
             viewModel.getReportData(isTC007, page)
         }
@@ -131,7 +135,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
         reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         fragmentPdfRecyclerLay.autoRefresh()
         reportAdapter.loadMoreModule.setOnLoadMoreListener {
-            // 加载更多
+\1load更多
             viewModel.getReportData(isTC007, ++page)
         }
         reportAdapter.jumpDetailListener = { item, position ->

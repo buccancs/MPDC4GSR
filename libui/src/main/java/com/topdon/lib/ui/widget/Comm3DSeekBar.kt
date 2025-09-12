@@ -19,6 +19,10 @@ import kotlin.math.roundToInt
 /**
  * Comm3DSeekBar class
  */
+/**
+ * Comm3 d seek bar utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint
 

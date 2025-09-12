@@ -8,6 +8,10 @@ import com.elvishew.xlog.XLog
 import com.topdon.lib.core.tools.FileTools
 import java.io.File
 
+/**
+ * Write tools for thermal imaging processing.
+ * Contains specialized algorithms and processing functions.
+ */
 object WriteTools {
     fun delete(file: File): Int {
         val uri: Uri = FileTools.getUri(file)
@@ -23,7 +27,7 @@ object WriteTools {
     }
 
     /**
-     * 查询MediaStore.Images.Media._ID
+\1查询MediaStore.Images.Media._ID
      */
     private fun queryId(uri: Uri): Long {
         val fileName = uri.path!!.substring(uri.path!!.lastIndexOf("/") + 1)

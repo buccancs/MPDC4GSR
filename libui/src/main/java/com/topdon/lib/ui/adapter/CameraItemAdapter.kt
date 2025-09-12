@@ -14,6 +14,10 @@ import com.topdon.lib.ui.R as UiR
  * @author: CaiSongL
  * @date: 2023/4/1 13:48
  */
+/**
+ * Custom Camera item view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 @Deprecated("热成像-菜单-拍照已重构，不需要这个类了")
 class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapter.ViewHolder>() {
     val data: List<String> =

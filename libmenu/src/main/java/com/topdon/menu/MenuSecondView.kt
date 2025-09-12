@@ -36,6 +36,10 @@ import kotlinx.coroutines.launch
 /**
  * MenuSecondView class
  */
+/**
+ * Custom Menu second view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class MenuSecondView : FrameLayout {
     /**
      * 该菜单的类型，由于不同的设备（单光、双光、Lite、TC007、2D编辑）菜单存在差异，用该枚举区分.

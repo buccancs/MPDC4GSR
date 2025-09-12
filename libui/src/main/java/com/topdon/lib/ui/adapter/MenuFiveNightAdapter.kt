@@ -17,6 +17,10 @@ import com.topdon.lib.ui.bean.TemperatureBean
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
+/**
+ * Custom Menu five night view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 @Deprecated("旧的温度档位菜单，已重构过了")
 class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var onTempLevelListener: ((index: Int) -> Unit)? = null

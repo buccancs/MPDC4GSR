@@ -45,23 +45,27 @@ import java.io.File
 import com.topdon.lib.core.R as LibR
 
 /**
- * 插件式设备、TC007 图片详情
+\1插件式device、TC007 图片详情
  */
 // Legacy ARouter route annotation - now using NavigationManager
+/**
+ * I r gallery detail01 activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
+ */
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
+\1从上一interface传递过来的，当前是否为 TC007 device类型.
+\1true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
     /**
-     * 当前展示图片在列表中的 position
+\1当前展示图片在列表中的 position
      */
     private var position = 0
 
     /**
-     * 从上一界面传递过来的，当前展示的图片列表.
+\1从上一interface传递过来的，当前展示的图片列表.
      */
     private lateinit var dataList: ArrayList<GalleryBean>
 
@@ -205,7 +209,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 导出为 excel 时的进度条弹窗.
+\1导出为 excel 时的进度条弹窗.
      */
     private var progressDialog: ProgressDialog? = null
     private var excelName: String = ""
@@ -229,12 +233,12 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             findViewById<LinearLayout>(R.id.ll_ir_edit_2D) -> {
-                // 2d编辑
+\12d编辑
                 actionEditOrReport(false)
             }
 
             findViewById<LinearLayout>(R.id.ll_ir_edit_3D) -> {
-                // 跳转到3D
+\1跳转到3D
                 val data = dataList[position]
                 val fileName = data.name.substringBeforeLast(".")
                 val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
@@ -273,7 +277,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
             }
 
             findViewById<LinearLayout>(R.id.ll_ir_report) -> {
-                // 报告
+\1报告
                 actionEditOrReport(true)
             }
 

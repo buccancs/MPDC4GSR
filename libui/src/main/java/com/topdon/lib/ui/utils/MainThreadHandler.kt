@@ -5,6 +5,10 @@ import android.os.Looper
 /**
  * MainThreadHandler class
  */
+/**
+ * Main thread handler utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 object MainThreadHandler {
     private val handler = Handler(Looper.getMainLooper())
 

@@ -12,6 +12,10 @@ import com.topdon.lib.ui.databinding.UiItemMenuSecondViewBinding
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
+/**
+ * Custom Menu a i view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 @Deprecated("旧的高低温源菜单，已重构过了")
 class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.ItemView>() {
     /**

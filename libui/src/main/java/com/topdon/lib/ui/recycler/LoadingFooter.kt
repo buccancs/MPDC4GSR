@@ -11,6 +11,10 @@ import com.topdon.lib.ui.databinding.UiFooterViewBinding
 /**
  * 自定义FooterView - Modernized with view binding
  */
+/**
+ * Custom Loading footer view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class LoadingFooter : LinearLayout {
     private val binding: UiFooterViewBinding
 

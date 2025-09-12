@@ -20,11 +20,15 @@ import com.topdon.lib.ui.R as UiR
  * @author: CaiSongL
  * @date: 2023/4/4 14:28
  */
+/**
+ * I r image util utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 object IRImageUtil {
     /**
-     * 伽马对比度
-     * @param contrast      对比度 1: 复位  0: 增强   2: 减弱变灰
-     * @param brightness    亮度
+\1伽马对比度
+\1@param contrast      对比度 1: 复位  0: 增强   2: 减弱变灰
+\1@param brightness    亮度
      */
     fun showContrast(
         imageView: ImageView,
@@ -61,10 +65,10 @@ object IRImageUtil {
     }
 
     /**
-     * 伽马曲线
+\1伽马曲线
      * https://www.cnblogs.com/AlgrithmsRookie/p/13212369.html
-     * @param a     [0 ~ 1]交界点
-     * @param gamma 变化强度
+\1@param a     [0 ~ 1]交界点
+\1@param gamma 变化强度
      */
     private fun lutGamma(
         @FloatRange(from = 0.0, to = 1.0) x: Double,
@@ -81,10 +85,10 @@ object IRImageUtil {
     }
 
     /**
-     * 锐化
+\1锐化
      * @param sharpen [1,3,5]
      *
-     * kernel_size  锐化程度,设置是奇正数
+\1kernel_size  锐化程度,set是奇正数
      */
     private fun showSharpen(
         imageView: ImageView,

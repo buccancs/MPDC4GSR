@@ -46,6 +46,10 @@ import androidx.annotation.IdRes
 /**
  * RadioGroupPlus class
  */
+/**
+ * Custom Radio group plus view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class RadioGroupPlus : LinearLayout {
     /**
      *
@@ -267,6 +271,10 @@ class RadioGroupPlus : LinearLayout {
     /**
      * LayoutParams class
      */
+/**
+ * Custom Layout params view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     class LayoutParams : LinearLayout.LayoutParams {
         /**
          * {@inheritDoc}
@@ -332,6 +340,10 @@ class RadioGroupPlus : LinearLayout {
     /**
      * OnCheckedChangeListener class
      */
+/**
+ * Custom On checked change listener view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     interface OnCheckedChangeListener {
         /**
          *

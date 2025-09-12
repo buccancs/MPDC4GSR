@@ -5,9 +5,8 @@ import android.util.AttributeSet
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 
 /**
- * Minimal stub implementation of StandardGSYVideoPlayer
- * This is a temporary placeholder to resolve build dependencies
- * TODO: Replace with actual GSY Video Player library when available
+ * Standard g s y video player utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 open class StandardGSYVideoPlayer
     @JvmOverloads

@@ -18,6 +18,10 @@ import com.topdon.lib.ui.R as UiR
 /**
  * CountDownView class
  */
+/**
+ * Custom Count down view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class CountDownView : View {
     // 圆环颜色
     private var mRingColor = 0
@@ -213,6 +217,10 @@ class CountDownView : View {
     /**
      * OnCountDownListener class
      */
+/**
+ * Custom On count down listener view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     interface OnCountDownListener {
         fun countDownFinished()
     }

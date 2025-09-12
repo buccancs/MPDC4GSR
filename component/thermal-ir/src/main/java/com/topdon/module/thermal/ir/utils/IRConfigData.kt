@@ -8,6 +8,10 @@ import com.topdon.lib.core.R as LibcoreR
  * author: CaiSongL
  * date: 2024/4/3 11:12
  **/
+/**
+ * I r config data utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 data class IRConfigData(val name: String, val value: String) {
     companion object {
         fun irConfigData(context: Context): ArrayList<IRConfigData> =
@@ -24,7 +28,7 @@ data class IRConfigData(val name: String, val value: String) {
             )
 
         /**
-         * 根据指定的发射率，拼接与该发射率对应的材料文字并返回.
+\1根据指定的emissivity，拼接与该emissivity对应的材料文字并返回.
          */
         fun getTextByEmissivity(
             context: Context,

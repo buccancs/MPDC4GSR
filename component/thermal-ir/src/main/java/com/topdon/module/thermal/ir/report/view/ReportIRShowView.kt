@@ -15,13 +15,12 @@ import com.topdon.module.thermal.ir.report.bean.ReportTempBean
 import com.topdon.lib.core.R as LibR
 
 /**
- * 一项红外数据预览 View.
- *
- * 包含一张图片对应的 全图、点、线、面 预览信息.
+ * Custom Report i r show view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
  */
 class ReportIRShowView : LinearLayout {
     companion object {
-        private const val TYPE_FULL = 0 // 全图
+        private const val TYPE_FULL = 0 // Full image
         private const val TYPE_POINT = 1 // 点
         private const val TYPE_LINE = 2 // 线
         private const val TYPE_RECT = 3 // 面
@@ -117,7 +116,7 @@ class ReportIRShowView : LinearLayout {
             }
         tvAverageTitle.text =
             when (type) {
-                TYPE_FULL, TYPE_POINT -> "" // 全图、点没有平均温
+                TYPE_FULL, TYPE_POINT -> "" // Full image and points have no average temperature
                 TYPE_LINE -> "L${index + 1} " + context.getString(LibR.string.album_report_mean_temperature)
                 else -> "R${index + 1} " + context.getString(LibR.string.album_report_mean_temperature)
             }
@@ -131,7 +130,7 @@ class ReportIRShowView : LinearLayout {
     }
 
     /**
-     * 获取需要转为 PDF 的所有 View 列表.
+\1get需要转为 PDF 的所有 View 列表.
      */
     fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
@@ -274,7 +273,7 @@ class ReportIRShowView : LinearLayout {
         tvTitleRect4.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible
         tvTitleRect5.isVisible = !clRect1.isVisible && !clRect2.isVisible && !clRect3.isVisible && !clRect4.isVisible
 
-        // 把最后一条分割线藏起来
+\1把最后一条分割线藏起来
         if (rectList.isNotEmpty()) {
             when (rectList.size) {
                 1 -> hideLastLine(isLast, clRect1, rectList[0], TYPE_RECT)

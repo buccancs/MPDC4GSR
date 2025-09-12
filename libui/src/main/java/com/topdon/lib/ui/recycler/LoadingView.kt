@@ -8,6 +8,10 @@ import com.topdon.lib.ui.R as UiR
 /**
  * 自定义FooterView
  */
+/**
+ * Custom Loading view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class LoadingView : LinearLayout {
     constructor(context: Context) : this(context, null)
 

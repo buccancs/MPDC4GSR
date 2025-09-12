@@ -55,5 +55,9 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
     /**
      * ViewHolder(val class
      */
+/**
+ * Custom View holder view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     class ViewHolder(val binding: ItemMenuBinding) : RecyclerView.ViewHolder(binding.root)
 }

@@ -25,6 +25,10 @@ import com.topdon.menu.R as MenuR
 /**
  * ColorView class
  */
+/**
+ * Custom Color view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class ColorView : View {
     /**
      * pseudo color渐变颜色值数组.

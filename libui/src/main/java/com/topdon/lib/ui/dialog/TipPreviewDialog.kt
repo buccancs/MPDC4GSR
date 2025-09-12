@@ -29,6 +29,10 @@ import kotlin.collections.ArrayList
 /**
  * TipPreviewDialog class
  */
+/**
+ * Tip preview fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
+ */
 class TipPreviewDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private var dis: Disposable? = null

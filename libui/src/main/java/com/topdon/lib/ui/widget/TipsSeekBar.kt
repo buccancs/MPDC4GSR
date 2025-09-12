@@ -14,6 +14,10 @@ import com.topdon.lib.ui.R as UiR
 /**
  * TipsSeekBar class
  */
+/**
+ * Custom Tips seek bar view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
     private val seekPercent: Float

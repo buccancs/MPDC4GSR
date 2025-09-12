@@ -14,33 +14,37 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
+/**
+ * Custom I r gallery view model view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class IRGalleryViewModel : BaseViewModel() {
     companion object {
         /**
-         * 分页加载时 1 页数据的条数
+\1分页load时 1 页data的条数
          */
         const val PAGE_COUNT = 20
     }
 
     /**
-     * 未掺杂日期标题的原始数据列表.
+\1未掺杂日期title的raw data列表.
      */
     val sourceListLD: MutableLiveData<ArrayList<GalleryBean>> = MutableLiveData()
 
     /**
-     * 添加了日期标题的用于显示的列表.
+\1添加了日期title的用于display的列表.
      */
     val showListLD: MutableLiveData<ArrayList<GalleryBean>> = MutableLiveData()
 
     /**
-     * 仅供生成报告使用的，加载所有插件式设备图片.
+\1仅供生成报告使用的，load所有插件式device图片.
      */
     fun queryAllReportImg(dirType: GalleryRepository.DirType) {
         viewModelScope.launch(Dispatchers.IO) {
             val sourceList: ArrayList<GalleryBean> = GalleryRepository.loadAllReportImg(dirType)
             sourceListLD.postValue(sourceList)
 
-            // 插入日期 item
+\1插入日期 item
             val showList: ArrayList<GalleryBean> = ArrayList(sourceList.size)
             var beforeTime = 0L
             for (galleryBean in sourceList) {
@@ -56,13 +60,13 @@ class IRGalleryViewModel : BaseViewModel() {
     }
 
     /**
-     * 分页加载时已成功加载的页数
+\1分页load时已successfulload的页数
      */
     var hasLoadPage = 0
 
     /**
-     * 一页请求数据列表.
-     * null-请求失败
+\1一页请求data列表.
+\1null-请求failed
      */
     val pageListLD: MutableLiveData<ArrayList<GalleryBean>?> = MutableLiveData()
 
@@ -81,7 +85,7 @@ class IRGalleryViewModel : BaseViewModel() {
                     hasLoadPage++
                 }
 
-                // 插入日期 item
+\1插入日期 item
                 var beforeTime = if (sourceList.isEmpty()) 0 else TimeTool.timeToMinute(sourceList.last().timeMillis, 4)
                 for (galleryBean in pageList) {
                     val currentTime = TimeTool.timeToMinute(galleryBean.timeMillis, 4)
@@ -100,7 +104,7 @@ class IRGalleryViewModel : BaseViewModel() {
     }
 
     /**
-     * 批量删除文件结果.
+\1批量删除文件结果.
      */
     val deleteResultLD: MutableLiveData<Boolean> = MutableLiveData()
 

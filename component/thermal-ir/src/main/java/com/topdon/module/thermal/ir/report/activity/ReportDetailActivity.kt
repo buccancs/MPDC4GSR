@@ -26,12 +26,16 @@ import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
 /**
- * 报告详情界面.
+\1报告详情interface.
  *
- * 需要传递
- * - 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
+\1需要传递
+\1- 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
  */
 // Legacy ARouter route annotation - now using NavigationManager
+/**
+ * Report detail activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
+ */
 class ReportDetailActivity : BaseActivity() {
     // View declarations
     private lateinit var titleView: TitleView
@@ -41,12 +45,12 @@ class ReportDetailActivity : BaseActivity() {
     private lateinit var watermarkView: WatermarkView
 
     /**
-     * 从上一界面传递过来的，报告所有信息.
+\1从上一interface传递过来的，报告所有信息.
      */
     private var reportBean: ReportBean? = null
 
     /**
-     * 当前预览页面已生成的 PDF 文件绝对路径
+\1当前预览页面已生成的 PDF 文件绝对路径
      */
     private var pdfFilePath: String? = null
 
@@ -137,8 +141,8 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     /**
-     * 获取需要转为 PDF 的所有 View 列表.
-     * 注意：水印 View 不在列表内，需要自行处理.
+\1get需要转为 PDF 的所有 View 列表.
+\1注意：watermark View 不在列表内，需要自行processing.
      */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()

@@ -95,6 +95,10 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
 
     override fun getItemCount(): Int = dataList.size
 
+/**
+ * Custom Data view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

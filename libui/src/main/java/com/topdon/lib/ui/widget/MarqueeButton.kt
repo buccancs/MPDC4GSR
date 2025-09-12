@@ -7,6 +7,10 @@ import androidx.appcompat.widget.AppCompatButton
 /**
  * MarqueeButton class
  */
+/**
+ * Marquee button utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 class MarqueeButton : AppCompatButton {
     constructor (context: Context) : super(context)
 

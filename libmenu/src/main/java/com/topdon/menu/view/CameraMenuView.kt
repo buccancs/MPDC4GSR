@@ -32,6 +32,10 @@ import com.topdon.menu.databinding.ViewCameraMenuBinding
 /**
  * CameraMenuView class
  */
+/**
+ * Custom Camera menu view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class CameraMenuView : FrameLayout, View.OnClickListener {
     companion object {
         /** onCameraClickListener event code: photo/video capture */
@@ -220,6 +224,10 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
     /**
      * MenuCameraAdapter class
      */
+/**
+ * Custom Menu camera view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     class MenuCameraAdapter : RecyclerView.Adapter<MenuCameraAdapter.ViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -241,6 +249,10 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         /**
          * ViewHolder(rootView: class
          */
+/**
+ * Custom View holder view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
         class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
     }
 }

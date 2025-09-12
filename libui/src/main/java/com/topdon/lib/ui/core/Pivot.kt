@@ -7,6 +7,10 @@ import androidx.annotation.IntDef
  * @author: CaiSongL
  * @date: 2023/4/1 14:18
  */
+/**
+ * Custom Pivot view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class Pivot(
     @get:Axis
     @param:Axis val axis: Int,

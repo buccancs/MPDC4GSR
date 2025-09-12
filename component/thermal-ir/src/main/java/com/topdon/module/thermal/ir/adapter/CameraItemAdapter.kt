@@ -11,6 +11,10 @@ import com.topdon.module.thermal.ir.R
  * @author: CaiSongL
  * @date: 2023/4/3 10:18
  */
+/**
+ * Camera item adapter for thermal imaging data presentation.
+ * Manages data binding and view recycling for efficient display.
+ */
 class CameraItemAdapter(
     data: MutableList<CameraItemBean>? = null,
 ) : BaseQuickAdapter<CameraItemBean, BaseViewHolder>(R.layout.item_camera, data) {

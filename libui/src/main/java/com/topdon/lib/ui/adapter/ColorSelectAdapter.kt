@@ -10,6 +10,10 @@ import com.topdon.lib.ui.bean.ColorSelectBean
 import com.topdon.lib.ui.databinding.UiItemColorSelectBinding
 import com.topdon.lib.ui.R as UiR
 
+/**
+ * Custom Color select view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class ColorSelectAdapter(val context: Context) : RecyclerView.Adapter<ColorSelectAdapter.ItemView>() {
     var listener: ((code: Int, color: Int) -> Unit)? = null
     private var type = 0

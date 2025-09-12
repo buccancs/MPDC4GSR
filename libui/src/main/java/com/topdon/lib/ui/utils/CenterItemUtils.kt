@@ -19,6 +19,10 @@ internal object CenterItemUtils {
     /**
      * CenterViewItem class
      */
+/**
+ * Custom Center view item view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     class CenterViewItem
     // 当前Item索引
     // 当前item和居中位置的差值

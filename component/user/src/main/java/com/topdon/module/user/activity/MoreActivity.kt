@@ -33,7 +33,7 @@ import java.text.DecimalFormat
 import com.topdon.lib.core.R as RCore
 
 /**
- * TS004 的 “更多” 页面.
+\1TS004 的 “更多” 页面.
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class MoreActivity : BaseActivity(), View.OnClickListener {
@@ -72,10 +72,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         settingDisconnect.setOnClickListener(this)
         settingAutoSave.setOnClickListener(this)
 
-        /*if (Build.VERSION.SDK_INT < 29) {//低于 Android10
+\1if (Build.VERSION.SDK_INT < 29) {//低于 Android10
             settingVersion.isVisible = false
         }*/
-        // 2024-5-30 09:16 TS004项目APP沟通群决定，3.30版本先把固件升级隐藏
+\12024-5-30 09:16 TS004项目APP沟通群决定，3.30版本先把固件升级hide
         settingVersion.isVisible = false
     }
 
@@ -116,7 +116,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                 NavigationManager.getInstance().build(RouterConfig.STORAGE_SPACE).navigation(this@MoreActivity)
             }
             settingVersion -> { // 固件版本
-                // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
+\1由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释强制登录逻辑
 //                if (LMS.getInstance().isLogin) {
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
@@ -142,7 +142,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示固件升级提示弹框.
+\1display固件升级提示弹框.
      */
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(this)
@@ -151,7 +151,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-            // 由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释下载逻辑
+\1由于双通道方案存在问题，V3.30临时使用 apk 内置固件升级包，此处注释下载逻辑
             // downloadFirmware(firmwareData)
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
@@ -170,7 +170,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         }
 
     /**
-     * 下载指定固件升级包
+\1下载指定固件升级包
      */
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {

@@ -11,6 +11,10 @@ import java.nio.ByteBuffer
  * author: CaiSongL
  * date: 2024/8/1 13:52
  **/
+/**
+ * Custom Lite surface view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class LiteSurfaceView
     @JvmOverloads
     constructor(

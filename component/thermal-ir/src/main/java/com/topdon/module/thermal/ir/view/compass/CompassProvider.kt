@@ -10,6 +10,10 @@ import com.kylecorry.andromeda.sense.compass.LegacyCompass
 import com.kylecorry.andromeda.sense.orientation.GeomagneticRotationSensor
 import com.kylecorry.andromeda.sense.orientation.RotationSensor
 
+/**
+ * Compass provider utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 class CompassProvider(private val context: Context) {
     fun get(): ICompass {
         val smoothing = 1

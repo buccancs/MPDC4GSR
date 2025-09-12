@@ -25,6 +25,10 @@ import kotlin.collections.ArrayList
 /**
  * TipGuideDialog class
  */
+/**
+ * Tip guide fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
+ */
 class TipGuideDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private lateinit var imgList: ArrayList<Int>

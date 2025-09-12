@@ -8,6 +8,10 @@ import com.topdon.lib.ui.R as UiR
 /**
  * 自定义HeaderView
  */
+/**
+ * Custom Header view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class HeaderView : LinearLayout {
     constructor(context: Context) : this(context, null)
 

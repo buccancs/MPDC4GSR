@@ -71,5 +71,9 @@ internal class ColorAdapter : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
     /**
      * ViewHolder(val class
      */
+/**
+ * Custom View holder view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     class ViewHolder(val colorView: ColorView) : RecyclerView.ViewHolder(colorView)
 }

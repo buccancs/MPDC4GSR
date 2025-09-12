@@ -5,6 +5,10 @@ import android.util.Log
 import com.github.mikephil.charting.charts.LineChart
 import kotlin.math.abs
 
+/**
+ * Chart tools for thermal imaging processing.
+ * Contains specialized algorithms and processing functions.
+ */
 object ChartTools {
     fun getLineTemps(
         point1: Point,
@@ -62,7 +66,7 @@ object ChartTools {
         return tempList
     }
 
-    // X数值缩放
+\1X数值scaling
     fun scale(type: Int): Long {
         return when (type) {
             1 -> 1 * 1000 // s
@@ -73,7 +77,7 @@ object ChartTools {
         }
     }
 
-    // 获取显示最小区间
+\1getdisplay最小区间
     fun getMinimum(type: Int): Float {
         val min =
             when (type) {
@@ -86,13 +90,13 @@ object ChartTools {
         return min
     }
 
-    // 获取显示最大区间，以最小区间的50倍
+\1getdisplay最大区间，以最小区间的50倍
     fun getMaximum(type: Int): Float {
         return getMinimum(type) * 50f
     }
 
     /**
-     * 设置Y轴范围
+\1setY轴范围
      */
     fun setY(chart: LineChart) {
         var maxVol = 0f
@@ -139,23 +143,23 @@ object ChartTools {
     }
 
     /**
-     * 设置X轴刻度
+\1setX轴刻度
      */
     fun setX(
         chart: LineChart,
         type: Int,
     ) {
-        // true保证有刻度数量不变,滑动要false
+\1true保证有刻度数量不变,滑动要false
         val xLen = chart.xChartMax - chart.xChartMin
 //        Log.w("chart", "xLen: $xLen")
 //        chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), getLabCount(xLen.toInt()) < 3)
-//        chart.xAxis.setLabelCount(5, false) // 3点 ok
+\1chart.xAxis.setLabelCount(5, false) // 3点 ok
 //        chart.xAxis.setLabelCount(5, true) //
         chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), xLen <= 3)
     }
 
     /**
-     * x轴显示多少个刻度
+\1x轴display多少个刻度
      */
     private fun getLabCount(count: Int): Int {
         return when {

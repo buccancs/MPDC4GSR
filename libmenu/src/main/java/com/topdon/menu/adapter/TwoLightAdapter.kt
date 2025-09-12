@@ -151,6 +151,10 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
      * @param isSingle 是否单选，目前只有1组互斥的单选，故而 Boolean 足够用了
      * @param isSelected 当前是否选中
      */
+/**
+ * Custom Data view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

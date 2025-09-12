@@ -32,6 +32,10 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 // Temporary data class stubs to resolve compilation issues
+/**
+ * Custom House rep preview view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 data class HouseRepPreviewBean(
     var itemBeans: ArrayList<HouseRepPreviewItemBean>? = null,
     var housePhoto: String = "",
@@ -46,29 +50,45 @@ data class HouseRepPreviewBean(
     var houseOwnerWhitePath: String = "",
 )
 
+/**
+ * Custom House rep preview item view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 data class HouseRepPreviewItemBean(
     var projectItemBeans: ArrayList<HouseRepPreviewProjectItemBean>? = null,
     var albumItemBeans: ArrayList<HouseRepPreviewAlbumItemBean>? = null,
     var itemName: String = "",
 )
 
+/**
+ * Custom House rep preview project item view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 data class HouseRepPreviewProjectItemBean(
     var projectName: String = "",
     var state: String = "",
     var remark: String = "",
 )
 
+/**
+ * Custom House rep preview album item view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 data class HouseRepPreviewAlbumItemBean(
     var photoPath: String = "",
     var title: String = "",
 )
 
 /**
- * 需要传递：
- * - [ExtraKeyConfig.IS_REPORT] - true-查看报告即查看 false-查看检测即生成
- * - [ExtraKeyConfig.LONG_ID] - 房屋检测Id(生成时)  房屋报告Id(查看时）
+\1需要传递：
+\1- [ExtraKeyConfig.IS_REPORT] - true-查看报告即查看 false-查看检测即生成
+\1- [ExtraKeyConfig.LONG_ID] - 房屋检测Id(生成时)  房屋报告Id(查看时）
  */
 // Legacy ARouter route annotation - now using NavigationManager
+/**
+ * Report preview activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
+ */
 class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
     // Disabled - ViewModels from removed house module
     // private val detectViewModel: DetectViewModel by viewModels()
@@ -97,7 +117,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
     private lateinit var rcyFloor: androidx.recyclerview.widget.RecyclerView
 
     /**
-     * true-查看报告即查看 false-查看检测即生成
+\1true-查看报告即查看 false-查看检测即生成
      */
     private var isReport = false
     private var houseReport = HouseReport()
@@ -167,9 +187,9 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         // }
 
         // Disabled - ViewModels from removed house module
-        // if (isReport) {//查看报告
+\1if (isReport) {//查看报告
         //     reportViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
-        // } else {//生成报告
+\1} else {//生成报告
         //     detectViewModel.queryById(intent.getLongExtra(ExtraKeyConfig.LONG_ID, 0))
         // }
 
@@ -185,7 +205,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
 
     private fun setAvatorChange() {
         layAppbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            // verticalOffset始终为0以下的负数
+\1verticalOffset始终为0以下的负数
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
             layToolbar.setBackgroundColor(changeAlpha(getColor(R.color.color_23202E), percent))
         }
@@ -282,14 +302,14 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             val blackPath = data.getStringExtra(ExtraKeyConfig.RESULT_PATH_BLACK) ?: return
             when (requestCode) {
                 1000 -> {
-                    // 检测师签名
+\1检测师签名
                     Glide.with(this).load(whitePath).into(ivInspectorSignature)
                     houseReport.inspectorWhitePath = whitePath
                     houseReport.inspectorBlackPath = blackPath
                 }
 
                 1001 -> {
-                    // 房主签名
+\1房主签名
                     Glide.with(this).load(whitePath).into(ivHouseOwnerSignature)
                     houseReport.houseOwnerWhitePath = whitePath
                     houseReport.houseOwnerBlackPath = blackPath

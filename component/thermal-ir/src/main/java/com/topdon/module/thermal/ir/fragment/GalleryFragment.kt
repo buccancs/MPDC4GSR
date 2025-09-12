@@ -9,6 +9,10 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.topdon.module.thermal.ir.R
 
+/**
+ * Gallery fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
+ */
 class GalleryFragment : Fragment() {
     private var path = ""
 

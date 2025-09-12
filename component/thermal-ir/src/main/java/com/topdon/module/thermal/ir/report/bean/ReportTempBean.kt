@@ -3,6 +3,10 @@ package com.topdon.module.thermal.ir.report.bean
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * Report temp data model for thermal imaging information.
+ * Encapsulates thermal measurement and configuration data.
+ */
 @Parcelize
 data class ReportTempBean(
     val max_temperature: String?, // 带单位符号的最高温，单位跟随用户配置

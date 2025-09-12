@@ -12,6 +12,10 @@ import com.topdon.lib.ui.R as UiR
  * 支持竖向的 SeekBar。
  * 暂不支持 thumbOffset.
  */
+/**
+ * Comm seek bar utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 class CommSeekBar : AppCompatSeekBar {
     /**
      * 0-横向 1-竖向

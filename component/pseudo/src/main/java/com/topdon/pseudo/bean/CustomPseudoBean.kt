@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 import java.nio.ByteBuffer
 
 /**
- * 自定义渲染的相关配置.
+\1自定义rendering的相关configuration.
  */
 @Parcelize
 data class CustomPseudoBean(

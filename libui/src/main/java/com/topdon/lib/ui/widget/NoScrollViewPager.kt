@@ -8,6 +8,10 @@ import androidx.viewpager.widget.ViewPager
 /**
  * NoScrollViewPager class
  */
+/**
+ * Custom No scroll view pager view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class NoScrollViewPager : ViewPager {
     private var isCanScroll = false
 

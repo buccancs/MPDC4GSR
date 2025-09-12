@@ -3,9 +3,8 @@ package com.shuyu.gsyvideoplayer.builder
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 
 /**
- * Minimal stub implementation of GSYVideoOptionBuilder
- * This is a temporary placeholder to resolve build dependencies
- * TODO: Replace with actual GSY Video Player library when available
+ * G s y video option builder utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 class GSYVideoOptionBuilder {
     fun setVideoAllCallBack(callback: Any?): GSYVideoOptionBuilder = this

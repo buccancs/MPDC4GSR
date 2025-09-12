@@ -10,6 +10,10 @@ import androidx.core.view.drawToBitmap
  * @author: CaiSongL
  * @date: 2023/6/21 17:13
  */
+/**
+ * Bitmap constraint layout utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 open class BitmapConstraintLayout : ConstraintLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)

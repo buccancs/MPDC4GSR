@@ -15,6 +15,10 @@ import com.topdon.menu.databinding.ViewMenuEditBinding
 /**
  * MenuEditView class
  */
+/**
+ * Custom Menu edit view for thermal imaging display.
+ * Provides specialized rendering and interaction capabilities.
+ */
 class MenuEditView : FrameLayout, View.OnClickListener {
     /**
      * 伪彩条图标当前是否处于选中状态

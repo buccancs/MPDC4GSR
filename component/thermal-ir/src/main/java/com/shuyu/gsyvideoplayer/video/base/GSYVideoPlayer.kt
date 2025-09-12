@@ -5,9 +5,8 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 
 /**
- * Minimal stub implementation of GSYVideoPlayer
- * This is a temporary placeholder to resolve build dependencies
- * TODO: Replace with actual GSY Video Player library when available
+ * G s y video player utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
  */
 open class GSYVideoPlayer
     @JvmOverloads

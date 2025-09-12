@@ -16,6 +16,10 @@ import java.io.InputStream
 import kotlin.math.ceil
 import kotlin.math.floor
 
+/**
+ * I r cmd tool tools for thermal imaging processing.
+ * Contains specialized algorithms and processing functions.
+ */
 object IRCmdTool {
     val TAG = "IRCmdTool"
     var dispNumber = 30
@@ -83,7 +87,7 @@ object IRCmdTool {
                     Log.e(TAG, "read file fail ")
                 }
                 parameters[length] = 1
-                // 先从缓存中查找是否有保存的对齐数据，没有用初始化数据
+\1先从buffer中查找是否有save的对齐data，没有用initializedata
                 val alignByte = SharedManager.getManualData(snStr)
                 System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
                 XLog.w("机芯没存在校正数据，请联系厂商确认")
@@ -116,7 +120,7 @@ object IRCmdTool {
     }
 
     /**
-     * 设置发射率 unit:cnt(128cnt = 1)
+\1setemissivity unit:cnt(128cnt = 1)
      * @param value 1 ~ 128
      */
     fun setTpdEms(
@@ -128,10 +132,10 @@ object IRCmdTool {
     }
 
     /**
-     * 设置距离 unit:cnt(128cnt = 1m, 默认值: 0.25 * 128 = 32)
+\1set距离 unit:cnt(128cnt = 1m, 默认值: 0.25 * 128 = 32)
      * @param value 0 ~ 25600
      *
-     * 现有sdk在设置TPD_PROP_DISTANCE抛异常
+\1现有sdk在setTPD_PROP_DISTANCE抛异常
      */
     fun setTpdDis(
         irCmd: IRCMD?,
@@ -142,7 +146,7 @@ object IRCmdTool {
     }
 
     /**
-     * 设置对比度
+\1set对比度
      * @param value 0 ~ 255
      */
     fun setLevelContrast(
@@ -154,7 +158,7 @@ object IRCmdTool {
     }
 
     /**
-     * 设置锐化
+\1set锐化
      * @param value 0 ~ 4
      *
      */
@@ -175,7 +179,7 @@ object IRCmdTool {
     }
 
     /**
-     * 设置自动增益
+\1set自动gain
      */
     fun setLevelAgc(
         irCmd: IRCMD?,
@@ -191,8 +195,8 @@ object IRCmdTool {
     }
 
     /**
-     * 查询增益模式
-     * @return 1:高增益(常温)    0:低增益(高温)
+\1查询gain模式
+\1@return 1:高gain(常温)    0:低gain(high temperature)
      */
     fun getTpdGainSel(irCmd: IRCMD?): Int {
         val result = queryTpdParam(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL)
@@ -204,8 +208,8 @@ object IRCmdTool {
     }
 
     /**
-     * 设置增益模式
-     * @param value 1:高增益(常温)    0:低增益(高温)
+\1setgain模式
+\1@param value 1:高gain(常温)    0:低gain(high temperature)
      */
     fun setTpdGainSel(
         irCmd: IRCMD?,
@@ -221,7 +225,7 @@ object IRCmdTool {
     }
 
     /**
-     * 查询Tpd
+\1查询Tpd
      */
     fun queryTpdParam(
         irCmd: IRCMD?,
@@ -233,7 +237,7 @@ object IRCmdTool {
     }
 
     /**
-     * 查询Image
+\1查询Image
      */
     fun queryImageParam(
         irCmd: IRCMD?,
@@ -245,7 +249,7 @@ object IRCmdTool {
     }
 
     /**
-     * 设置Tpd
+\1setTpd
      */
     private fun setTpdParams(
         irCmd: IRCMD?,
@@ -261,7 +265,7 @@ object IRCmdTool {
     }
 
     /**
-     * 设置图像参数
+\1setimageparameter
      */
     private fun setImageParams(
         irCmd: IRCMD?,
@@ -277,8 +281,8 @@ object IRCmdTool {
     }
 
     /**
-     * 配准
-     * 水平移动
+\1配准
+\1水平移动
      * @param value (-20 ~ 60)
      */
     fun setDisp(
@@ -299,7 +303,7 @@ object IRCmdTool {
     }
 
     /**
-     * @param moveX 在当前基础上要再偏移的数值
+\1@param moveX 在当前基础上要再偏移的数值
      */
     fun setAlignTranslate(
         dualView: BaseDualView?,
@@ -320,7 +324,7 @@ object IRCmdTool {
     }
 
     /**
-     * 打快门
+\1打快门
      */
     fun shutter(
         irCmd: IRCMD?,
@@ -329,13 +333,13 @@ object IRCmdTool {
         if (syncImage.type == 1) {
             irCmd?.tc1bShutterManual()
         } else {
-            // 执行这段
+\1执行这段
             irCmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
         }
     }
 
     /**
-     * 自动快门
+\1自动快门
      */
     fun autoShutter(
         irCmd: IRCMD?,
@@ -346,9 +350,9 @@ object IRCmdTool {
     }
 
     /**
-     * 开启等温尺
-     * @param highC 温度上限，单位摄氏度
-     * @param lowC 温度下限，单位摄氏度
+\1enabled等温尺
+\1@param highC temperature上限，单位摄氏度
+\1@param lowC temperature下限，单位摄氏度
      */
     fun setIsoColorOpen(
         dualUVCCamera: DualUVCCamera?,
@@ -373,25 +377,25 @@ object IRCmdTool {
     }
 
     /**
-     * 关闭等温尺
+\1disabled等温尺
      */
     fun setIsoColorClose(dualUVCCamera: DualUVCCamera?) {
         dualUVCCamera?.setIsothermal(DualCameraParams.IsothermalState.OFF)
     }
 
     /**
-     * 放大(仅对热成像有效)
-     * ZoomScaleStep.ZOOM_STEP1: 2级倍率
-     * ZoomScaleStep.ZOOM_STEP2: 4级倍率
-     * ZoomScaleStep.ZOOM_STEP3: 8级倍率
-     * ZoomScaleStep.ZOOM_STEP4: 16级倍率
+\1amplification(仅对thermal imaging有效)
+\1ZoomScaleStep.ZOOM_STEP1: 2级倍率
+\1ZoomScaleStep.ZOOM_STEP2: 4级倍率
+\1ZoomScaleStep.ZOOM_STEP3: 8级倍率
+\1ZoomScaleStep.ZOOM_STEP4: 16级倍率
      */
     fun setZoomUp(irCmd: IRCMD?) {
         irCmd?.zoomCenterUp(CommonParams.PreviewPathChannel.PREVIEW_PATH0, CommonParams.ZoomScaleStep.ZOOM_STEP2)
     }
 
     /**
-     * 缩小
+\1缩小
      */
     fun setZoomDown(irCmd: IRCMD?) {
         irCmd?.zoomCenterDown(CommonParams.PreviewPathChannel.PREVIEW_PATH0, CommonParams.ZoomScaleStep.ZOOM_STEP2)

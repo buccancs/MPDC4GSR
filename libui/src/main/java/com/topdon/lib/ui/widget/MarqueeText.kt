@@ -7,6 +7,10 @@ import androidx.appcompat.widget.AppCompatTextView
 /**
  * MarqueeText class
  */
+/**
+ * Marquee text utility class for thermal imaging operations.
+ * Provides helper functions and common functionality.
+ */
 class MarqueeText : AppCompatTextView {
     constructor (context: Context) : super(context)
 

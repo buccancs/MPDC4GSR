@@ -35,11 +35,15 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * 热成像选取点
+\1thermal imaging选取点
+ */
+/**
+ * I r correction fragment for thermal imaging components.
+ * Handles specific UI sections and user interactions.
  */
 class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
-    /** 默认数据流模式：图像+温度复合数据 */
+\1默认data流模式：image+temperature复合data */
     protected var defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
 
     private var ircmd: IRCMD? = null
@@ -89,7 +93,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
     }
 
     /**
-     * 初始数据
+\1初始data
      */
     private fun initDataIR() {
         imageWidth = cameraHeight - tempHeight
@@ -113,7 +117,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         temperatureView.setTemperature(temperature)
         temperatureView.isEnabled = false
         setViewLay()
-        // 某些特定客户的特殊设备需要使用该命令关闭sensor
+\1某些特定客户的特殊device需要使用该命令disabledsensor
         if (Usbcontorl.isload) {
             Usbcontorl.usb3803_mode_setting(1) // 打开5V
             Log.w("123", "打开5V")
@@ -123,7 +127,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
     }
 
     /**
-     * 图像信号处理
+\1image信号processing
      */
     private fun startISP() {
         try {
@@ -160,7 +164,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                                 "ConnectCallback->onIRCMDCreate",
                             )
                             this@IRCorrectionFragment.ircmd = ircmd
-                            // 需要等IRCMD初始化完成之后才可以调用
+\1需要等IRCMDinitialize完成之后才可以调用
 //                        ircmd.setPseudoColor(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
 //                            PseudocodeUtils.changePseudocodeModeByOld(pseudocolorMode))
                         }
@@ -206,7 +210,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         super.onStart()
         Log.w(TAG, "onStart")
         if (!isrun) {
-            // 初始配置,伪彩铁红
+\1初始configuration,pseudo-color铁红
             temperatureView.postDelayed({
                 pseudocolorMode = 3
                 startUSB(false)
@@ -214,7 +218,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                 temperatureView.start()
                 cameraView?.start()
                 isrun = true
-                // 恢复配置
+\1恢复configuration
                 configParam()
             }, 1500)
         }
@@ -265,7 +269,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                 params.height = params.width * imageHeight / imageWidth
                 thermalLay.layoutParams = params
             } else {
-                // 横屏
+\1横屏
                 val params = thermalLay.layoutParams
                 params.height = thermalLay.height
                 params.width = params.height * imageHeight / imageWidth
@@ -278,11 +282,11 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
     fun cameraEvent(event: DeviceCameraEvent) {
         when (event.action) {
             100 -> {
-                // 准备图像
+\1准备image
                 showLoadingDialog()
             }
             101 -> {
-                // 显示图像
+\1displayimage
                 lifecycleScope.launch {
                     delay(500)
                     isConfigWait = false
@@ -295,7 +299,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
     private var isConfigWait = true
 
-    // 配置
+\1configuration
     private fun configParam() {
         lifecycleScope.launch {
             isConfigWait = true
@@ -308,18 +312,18 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
             XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
             val timeMillis = 250L
             delay(timeMillis)
-            // 发射率
+\1emissivity
             ircmd?.setPropTPDParams(
                 CommonParams.PropTPDParams.TPD_PROP_EMS,
                 CommonParams.PropTPDParamsValue.NumberType(emsChar.toString()),
             )
             delay(timeMillis)
-            // 距离
+\1距离
             ircmd?.setPropTPDParams(
                 CommonParams.PropTPDParams.TPD_PROP_DISTANCE,
                 CommonParams.PropTPDParamsValue.NumberType(disChar.toString()),
             )
-            // 自动快门
+\1自动快门
             delay(timeMillis)
             ircmd?.zoomCenterDown(
                 CommonParams.PreviewPathChannel.PREVIEW_PATH0,
@@ -341,7 +345,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                 CommonParams.ZoomScaleStep.ZOOM_STEP2,
             )
             iruvc?.let {
-                // 部分机型在关闭自动快门，初始会花屏
+\1部分机型在disabled自动快门，初始会花屏
                 withContext(Dispatchers.IO) {
                     if (SaveSettingUtil.isAutoShutter) {
                         ircmd?.setPropAutoShutterParameter(
@@ -357,7 +361,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                         }
                 }
             }
-            // 复位对比度、细节
+\1复位对比度、细节
             delay(timeMillis)
             ircmd?.setPropImageParams(
                 CommonParams.PropImageParams.IMAGE_PROP_LEVEL_CONTRAST,
@@ -378,46 +382,46 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
     suspend fun autoStart() {
         withContext(Dispatchers.IO) {
-            //            ToastUtils.showShort("任务开始")
-            // 锅盖开始
-            // 1 锅盖标定开始
-            // 2 关闭自动快门
+\1ToastUtils.showShort("任务开始")
+\1锅盖开始
+\11 锅盖calibration开始
+\12 disabled自动快门
             CalibrationTools.autoShutter(irCmd = ircmd, false)
             XLog.w("锅盖矫正：" + "锅盖标定开始")
-            // 常温
-            // 3 手动打快门命令
+\1常温
+\13 手动打快门命令
 //            CalibrationTools.shutter(irCmd = ircmd, syncImage = syncimage)
-//            XLog.w("锅盖矫正："+"手动打快门命令")
-            // 4 关闭锅盖校正
+\1XLog.w("锅盖矫正："+"手动打快门命令")
+\14 disabled锅盖校正
             delay(2000)
             XLog.w("锅盖矫正：" + "关闭锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
-            // 5 发送锅盖标
+\15 发送锅盖标
             CalibrationTools.pot(irCmd = ircmd!!, 1)
             XLog.w("锅盖矫正：" + "发送锅盖标")
-            // 6 打开锅盖校正
+\16 打开锅盖校正
             delay(5000)
             XLog.w("锅盖矫正：" + "打开锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
             delay(20000)
             XLog.w("锅盖矫正：" + "20000")
-            // 高温
-            // 11 手动打快门命令
+\1high temperature
+\111 手动打快门命令
 //            CalibrationTools.shutter(irCmd = ircmd, syncImage = syncimage)
-//            XLog.w("锅盖矫正："+"手动打快门命令")
-            // 12 关闭锅盖校正
+\1XLog.w("锅盖矫正："+"手动打快门命令")
+\112 disabled锅盖校正
             delay(2000)
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
             XLog.w("锅盖矫正：" + "关闭锅盖校正")
-            // 13 发送锅盖标
+\113 发送锅盖标
             CalibrationTools.pot(irCmd = ircmd!!, 1)
-            // 14 打开锅盖校正
+\114 打开锅盖校正
             delay(5000)
             XLog.w("锅盖矫正：" + "打开锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
-            // 17 打开自动快门
+\117 打开自动快门
             CalibrationTools.autoShutter(irCmd = ircmd, true)
-            // 锅盖结束
+\1锅盖结束
             XLog.w("锅盖矫正：" + "锅盖结束")
         }
     }

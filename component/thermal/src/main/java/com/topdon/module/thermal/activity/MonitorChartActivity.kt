@@ -39,9 +39,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * 温度监控
+\1temperature监控
  */
 // Legacy ARouter route annotation - now using NavigationManager
+/**
+ * Monitor chart activity for thermal imaging interface.
+ * Manages UI interactions and thermal data display.
+ */
 class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueSelectedListener {
     private val viewModel: LogViewModel by viewModels()
 
@@ -81,7 +85,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         initChart()
         initRecycler()
         viewModel.resultLiveData.observe(this) {
-            // 查询到历史数据
+\1查询到历史data
             Log.w("123", "查询到历史数据:${it.dataList.size}")
             resultVol(it)
         }
@@ -122,7 +126,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         monitorChartTimeRecycler.adapter = timeAdapter
         monitorChartSettingRecycler.layoutManager = GridLayoutManager(this, 3)
         monitorChartSettingRecycler.adapter = adapter
-        // 设置时间段类型(秒 分 时 天)
+\1set时间段类型(秒 分 时 天)
         timeAdapter.listener =
             object : SettingTimeAdapter.OnItemClickListener {
                 override fun onClick(
@@ -139,7 +143,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     }
                 }
             }
-        // 时间间隔
+\1时间间隔
         adapter.listener =
             object : SettingCheckAdapter.OnItemClickListener {
                 override fun onClick(
@@ -171,7 +175,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     var rotateType = 3
 
     /**
-     * 开启视频流
+\1enabled视频流
      */
     private fun onIrVideoStart() {
         // Temporarily disabled - guide interface not available
@@ -186,7 +190,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         val ret = mGuideInterface!!.init(this, object : GuideInterface.IrDataCallback {
             override fun processIrData(yuv: ByteArray, temp: FloatArray) {
                 try {
-                    //选取区域
+\1选取区域
                     val centerTempIndex: Int = 256 * (192 / 2) + 256 / 2
                     val maxTempIndex = ArrayUtils.getMaxIndex(temp, rotateType, selectIndex)
                     val minTempIndex = ArrayUtils.getMinIndex(temp, rotateType, selectIndex)
@@ -210,7 +214,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
             Log.w("123", "视频流开启完成")
             recordThermal()//开始记录
         } else {
-//            ToastUtils.showShort("视频流开启失败")
+\1ToastUtils.showShort("视频流enabledfailed")
             Log.w("123", "视频流开启失败")
             mGuideInterface = null
             mIsIrVideoStart = false
@@ -219,7 +223,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     /**
-     * 停止视频流
+\1停止视频流
      */
     private fun onIrVideoStop() {
         // Temporarily disabled - guide interface not available
@@ -245,7 +249,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     var startTime = 0L
 
     /**
-     * 循环监听-数据保存
+\1循环监听-datasave
      */
     private fun recordThermal() {
         recordTask =
@@ -319,7 +323,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         xAxis.granularity = 1f
         xAxis.isGranularityEnabled = true // 重复值不显示
         xAxis.textSize = 9f
-//        xAxis.setLabelCount(6, true)//true保证有刻度数量不变
+\1xAxis.setLabelCount(6, true)//true保证有刻度数量不变
         xAxis.setLabelCount(6, false) // true保证有刻度数量不变
         val leftAxis = chart.axisLeft
         leftAxis.textSize = 9f
@@ -335,31 +339,31 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     /**
-     * 分类处理更新图表数据
+\1分类processingupdate图表data
      */
     private fun updateChart() {
         ++pointIndex
         when (selectTimeType) {
             1 -> {
-                // 秒
+\1秒
                 addPointToChart(bean)
             }
             2 -> {
-                // 分
+\1分
                 val addTime = 2 * 60 * 1000L
                 if (bean.createTime > TimeTool.timeToMinute(latestTime, 2) + addTime) {
                     queryLog(3)
                 }
             }
             3 -> {
-                // 时
+\1时
                 val addTime = 2 * 60 * 60 * 1000L
                 if (bean.createTime > TimeTool.timeToMinute(latestTime, 3) + addTime) {
                     queryLog(3)
                 }
             }
             4 -> {
-                // 天(图表显示最后一个时间在昨天，要多加一天)
+\1天(图表display最后一个时间在昨天，要多加一天)
                 val addTime = 2 * 24 * 60 * 60 * 1000L
                 if (bean.createTime > TimeTool.timeToMinute(latestTime, 4) + addTime) {
                     queryLog(3)
@@ -369,7 +373,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     /**
-     * 秒更新图表数据
+\1秒update图表data
      */
     private fun addPointToChart(bean: ThermalBean) {
         synchronized(chart) {
@@ -404,7 +408,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         Log.w("123", "添加一个数据:$entity")
                     }
                     "line" -> {
-                        // 第一条线
+\1第一条线
                         if (volDataSet == null) {
                             volDataSet = createSet("red")
                             lineData.addDataSet(volDataSet)
@@ -414,7 +418,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         entity.data = data
                         volDataSet.addEntry(entity)
 
-                        // 第二条线
+\1第二条线
                         var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
                         if (secondDataSet == null) {
                             secondDataSet = createSet("blue")
@@ -425,7 +429,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         secondDataSet.addEntry(secondEntity)
                     }
                     else -> {
-                        // 第一条线
+\1第一条线
                         if (volDataSet == null) {
                             volDataSet = createSet("red")
                             lineData.addDataSet(volDataSet)
@@ -434,7 +438,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         entity.data = data
                         volDataSet.addEntry(entity)
 
-                        // 第二条线
+\1第二条线
                         var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
                         if (secondDataSet == null) {
                             secondDataSet = createSet("blue")
@@ -471,14 +475,14 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     private val textColor by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_text) }
 
     /**
-     * 曲线样式
+\1曲线样式
      */
     private fun createSet(label: String): LineDataSet {
         val set = LineDataSet(null, label)
 //        set.mode = LineDataSet.Mode.LINEAR
         set.mode = LineDataSet.Mode.CUBIC_BEZIER
         set.setDrawFilled(false)
-//        set.fillDrawable = fillColor//设置填充颜色渐变
+\1set.fillDrawable = fillColor//set填充颜色渐变
         set.axisDependency = YAxis.AxisDependency.LEFT
 
         when (label) {
@@ -511,20 +515,20 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     /**
-     * 查询历史电压数据(等待蓝牙传输历史记录结束后触发)
-     * 时间区间: 现在时间 => 倒退到开始事件
+\1查询历史电压data(等待蓝牙传输历史记录结束后触发)
+\1时间区间: 现在时间 => 倒退到开始事件
      *
      * @param action
-     * 0: 初始查询
-     * 1: 刷新查询
-     * 2: 切换查询
-     * 3: 监听查询
-     * 4: 加载历史数据后查询
+\10: 初始查询
+\11: 刷新查询
+\12: 切换查询
+\13: 监听查询
+\14: load历史data后查询
      */
     private fun queryLog(action: Int) {
         startMonitor = false
         lifecycleScope.launch(Dispatchers.IO) {
-//            dataList.clear()//清空数据
+\1dataList.clear()//清空data
 //            dataList = arrayListOf()
             viewModel.queryLogThermals(selectTimeType = selectTimeType, action = action)
         }
@@ -536,21 +540,21 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
             val logTime = TimeTool.showDateType(bean.dataList.last().createTime, selectTimeType)
             val nowTime = TimeTool.showDateType(System.currentTimeMillis(), selectTimeType)
             if (TextUtils.equals(logTime, nowTime)) {
-                // 分时天,当前时间段没结束，应当删除最新当前时间段数据
+\1分时天,当前时间段没结束，应当删除最新当前时间段data
                 bean.dataList.removeLast()
             }
         }
 //        dataList = bean.dataList
         if (latestTime == 0L) {
-            // 图表无数据需要更新
+\1图表无data需要update
             addEntity(bean.dataList)
         } else if (bean.dataList.size > 0 && latestTime < bean.dataList.last().createTime) {
-            // 有新数据再更新
+\1有新data再update
             addEntity(bean.dataList)
         }
     }
 
-    // 整体刷新
+\1整体刷新
     private fun addEntity(data: ArrayList<ThermalEntity>) {
         clearEntity(data.size == 0)
         if (data.size == 0) {
@@ -584,7 +588,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     Log.w("123", "添加一个数据:$entity")
                 }
                 "line" -> {
-                    // 第一条线
+\1第一条线
                     if (volDataSet == null) {
                         volDataSet = createSet("red")
                         lineData.addDataSet(volDataSet)
@@ -594,7 +598,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     entity.data = it
                     volDataSet.addEntry(entity)
 
-                    // 第二条线
+\1第二条线
                     var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
                     if (secondDataSet == null) {
                         secondDataSet = createSet("blue")
@@ -605,7 +609,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     secondDataSet.addEntry(secondEntity)
                 }
                 else -> {
-                    // 第一条线
+\1第一条线
                     if (volDataSet == null) {
                         volDataSet = createSet("red")
                         lineData.addDataSet(volDataSet)
@@ -614,7 +618,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     entity.data = it
                     volDataSet.addEntry(entity)
 
-                    // 第二条线
+\1第二条线
                     var secondDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
                     if (secondDataSet == null) {
                         secondDataSet = createSet("blue")
@@ -660,7 +664,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     /**
-     * x轴显示多少个刻度
+\1x轴display多少个刻度
      */
     private fun getLabCount(count: Int): Int {
         return when (count) {
@@ -672,7 +676,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         }
     }
 
-    // 获取显示最小区间
+\1getdisplay最小区间
     private fun getMinimum(): Float {
         val min =
             when (selectTimeType) {
@@ -685,7 +689,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         return min
     }
 
-    // 获取显示最大区间，以最小区间的50倍
+\1getdisplay最大区间，以最小区间的50倍
     private fun getMaximum(): Float {
         return getMinimum() * 50f
     }

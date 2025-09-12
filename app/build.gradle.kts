@@ -93,10 +93,13 @@ android {
     
     kotlinOptions {
         jvmTarget = "17"
+        apiVersion = "1.9"
+        languageVersion = "1.9"
         freeCompilerArgs += listOf(
             "-opt-in=kotlin.RequiresOptIn",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi", 
-            "-opt-in=kotlinx.coroutines.FlowPreview"
+            "-opt-in=kotlinx.coroutines.FlowPreview",
+            "-Xjvm-default=all"
         )
     }
 
@@ -285,6 +288,8 @@ dependencies {
     // Enhanced networking and serialization for Hub-Spoke
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     
     // Nordic BLE Library for robust Bluetooth communication
     implementation("no.nordicsemi.android:ble:2.11.0")

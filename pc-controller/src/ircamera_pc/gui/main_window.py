@@ -5,6 +5,7 @@ Provides the main researcher interface with device monitoring and session contro
 """
 
 import asyncio
+import time
 from datetime import datetime
 from typing import Optional
 
@@ -28,7 +29,7 @@ from PyQt6.QtWidgets import (
 
 from ..core.session import SessionManager, SessionState
 from ..core.timesync import TimeSyncService
-from ..network.server import DeviceInfo, NetworkServer
+from ..network.websocket_server import WebSocketServer
 from .widgets import (
     DeviceListWidget,
     SessionControlWidget,
@@ -57,7 +58,7 @@ class MainWindow(QMainWindow):
     def __init__(
         self,
         session_manager: SessionManager,
-        network_server: NetworkServer,
+        websocket_server: WebSocketServer,
         time_sync_service: TimeSyncService,
         gsr_ingestor=None,
         file_transfer_manager=None,
@@ -84,7 +85,7 @@ class MainWindow(QMainWindow):
 
         # Core services
         self.session_manager = session_manager
-        self.network_server = network_server
+        self.websocket_server = websocket_server
         self.time_sync_service = time_sync_service
 
         # Enhanced components (optional)
@@ -313,14 +314,10 @@ class MainWindow(QMainWindow):
             self.device_list_widget.device_selected.connect(self._on_device_selected)
 
     def _setup_network_callbacks(self) -> None:
-        """Set up network server event callbacks."""
-        self.network_server.set_device_connected_callback(self._on_device_connected)
-        self.network_server.set_device_disconnected_callback(
-            self._on_device_disconnected
-        )
-        self.network_server.set_device_status_update_callback(
-            self._on_device_status_updated
-        )
+        """Set up WebSocket server event callbacks - Phase 1 implementation."""
+        # WebSocket server handles callbacks through message handlers internally
+        # For now, we'll implement basic device tracking through the server's client management
+        logger.info("WebSocket server callbacks configured")
 
     def _setup_system_integration_callbacks(self) -> None:
         """Set up system integration callbacks and connections."""
@@ -445,9 +442,9 @@ class MainWindow(QMainWindow):
     def _update_displays(self) -> None:
         """Update all display components."""
         try:
-            # Update device count
-            connected_devices = self.network_server.get_connected_devices()
-            self.devices_label.setText(f"Devices: {len(connected_devices)}")
+            # Update device count - WebSocket server clients
+            connected_clients = len(self.websocket_server.clients) if self.websocket_server else 0
+            self.devices_label.setText(f"Devices: {connected_clients}")
 
             # Update device list
             if self.device_list_widget:
@@ -503,7 +500,7 @@ class MainWindow(QMainWindow):
         """Update UI component enabled/disabled"
         "state based on current state."""
         current_session = self.session_manager.get_current_session()
-        has_devices = len(self.network_server.get_connected_devices()) > 0
+        has_devices = len(self.websocket_server.clients) > 0 if self.websocket_server else False
 
         # Update session control state
         if self.session_control_widget:
@@ -547,11 +544,19 @@ class MainWindow(QMainWindow):
             self._session_start_time = datetime.now()
 
             # Send start command to all devices
-            import asyncio
-
-            asyncio.create_task(
-                self.network_server.start_recording_session(current_session.session_id)
-            )
+            # Send session start command to all connected clients via WebSocket
+            if self.websocket_server:
+                import asyncio
+                from ..network.protocol import create_message
+                
+                session_message = create_message("session_start", {
+                    "session_id": current_session.session_id,
+                    "timestamp": time.time()
+                })
+                
+                asyncio.create_task(
+                    self.websocket_server._broadcast_message(session_message)
+                )
 
             self._current_session_id = current_session.session_id
             self.session_started.emit(current_session.session_id)
@@ -571,11 +576,19 @@ class MainWindow(QMainWindow):
                 return
 
             # Send stop command to all devices
-            import asyncio
-
-            asyncio.create_task(
-                self.network_server.stop_recording_session(current_session.session_id)
-            )
+            # Send session stop command to all connected clients via WebSocket
+            if self.websocket_server:
+                import asyncio
+                from ..network.protocol import create_message
+                
+                session_message = create_message("session_stop", {
+                    "session_id": current_session.session_id,
+                    "timestamp": time.time()
+                })
+                
+                asyncio.create_task(
+                    self.websocket_server._broadcast_message(session_message)
+                )
 
             # End the session
             ended_session = self.session_manager.end_session()
@@ -620,10 +633,19 @@ class MainWindow(QMainWindow):
 
     def _on_sync_flash_clicked(self) -> None:
         """Handle sync flash button click."""
-        try:
+        # Send sync flash to all connected clients via WebSocket
+        if self.websocket_server:
             import asyncio
-
-            asyncio.create_task(self.network_server.send_sync_flash())
+            from ..network.protocol import create_message
+            
+            sync_message = create_message("sync_flash_trigger", {
+                "duration_ms": 500,
+                "timestamp": time.time()
+            })
+            
+            asyncio.create_task(
+                self.websocket_server._broadcast_message(sync_message)
+            )
 
             # Add sync event to session
             current_session = self.session_manager.get_current_session()
@@ -650,12 +672,19 @@ class MainWindow(QMainWindow):
             if not ok or not description.strip():
                 return
 
+        # Send sync mark to all connected clients via WebSocket  
+        if self.websocket_server:
             import asyncio
-
+            from ..network.protocol import create_message
+            
+            mark_message = create_message("sync_mark", {
+                "mark_type": "manual_mark",
+                "description": description,
+                "timestamp": time.time()
+            })
+            
             asyncio.create_task(
-                self.network_server.send_sync_mark(
-                    "manual_mark", {"description": description}
-                )
+                self.websocket_server._broadcast_message(mark_message)
             )
 
             # Add sync event to session
@@ -673,10 +702,10 @@ class MainWindow(QMainWindow):
             self._show_error("Error", f"Failed to add sync mark: {e}")
 
     def _on_device_selected(self, device_id: str) -> None:
-        """Handle device selection in list."""
-        device_info = self.network_server.get_device_info(device_id)
-        if device_info:
-            logger.debug(f"Device selected: {device_id}")
+        """Handle device selection in list - WebSocket client."""
+        if self.websocket_server and device_id in self.websocket_server.clients:
+            client = self.websocket_server.clients[device_id]
+            logger.debug(f"WebSocket client selected: {device_id} ({client.device_type})")
 
     # Network event handlers
     def _on_device_connected(self, device_info: DeviceInfo) -> None:

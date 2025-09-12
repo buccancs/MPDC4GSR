@@ -124,8 +124,14 @@ dependencies {
     //     exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
     // }
     
-    // GSYVideoPlayer - using base player without extra dependencies
-    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack")
+    // GSYVideoPlayer for video playback - using available version with exclusions
+    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack") {
+        exclude(group = "androidx.media3", module = "media3-cast")
+        exclude(group = "androidx.media3", module = "media3-session")
+        exclude(group = "androidx.media3", module = "media3-ui")
+        exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
+        exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
+    }
     
     // LocalBroadcastManager - add androidx.localbroadcastmanager
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
@@ -141,4 +147,7 @@ dependencies {
     
     // Enhanced unified BLE system integration for cross-modal coordination
     implementation(project(":BleModule"))
+    
+    // LocalBroadcastManager support (deprecated but still needed for legacy code)
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
 }

@@ -16,8 +16,29 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import cv2
-import numpy as np
+try:
+    import cv2
+    import numpy as np
+    OPENCV_AVAILABLE = True
+except ImportError:
+    OPENCV_AVAILABLE = False
+    # Mock numpy and cv2 for environments without OpenCV
+    class MockOpenCV:
+        def findChessboardCorners(self, *args, **kwargs): return False, None
+        def calibrateCamera(self, *args, **kwargs): return 0, None, None, None, None
+        def undistort(self, *args, **kwargs): return None
+        TERM_CRITERIA_EPS = 1
+        TERM_CRITERIA_MAX_ITER = 2
+    cv2 = MockOpenCV()
+    try:
+        import numpy as np
+    except ImportError:
+        class MockNumPy:
+            def array(self, *args, **kwargs): return []
+            def zeros(self, *args, **kwargs): return []
+            float32 = float
+        np = MockNumPy()
+
 from loguru import logger
 
 

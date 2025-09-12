@@ -8,9 +8,9 @@ import android.widget.FrameLayout
 import com.topdon.menu.databinding.ViewMenuEditBinding
 
 /**
- * 2D编辑页面所用底部菜单栏.
+ * 2D编辑页面所用底部menu栏.
  *
- * 点线面、伪彩、设置、伪彩条
+ * point/line/area、pseudo color、settings、pseudo color条
  */
 /**
  * MenuEditView class
@@ -21,7 +21,7 @@ import com.topdon.menu.databinding.ViewMenuEditBinding
  */
 class MenuEditView : FrameLayout, View.OnClickListener {
     /**
-     * 伪彩条图标当前是否处于选中状态
+     * pseudo color条图标current是否处于selectedstate
      */
     var isBarSelect: Boolean
         get() = binding.ivMenu4.isSelected
@@ -31,12 +31,12 @@ class MenuEditView : FrameLayout, View.OnClickListener {
         }
 
     /**
-     * 0-点线面、1-伪彩颜色、2-设置 菜单点击事件监听.
+     * 0-point/line/area、1-pseudo colorcolor、2-settings menuclickevent listener.
      */
     var onTabClickListener: ((selectPosition: Int) -> Unit)? = null
 
     /**
-     * 伪彩条图标点击事件监听.
+     * pseudo color条图标clickevent listener.
      */
     var onBarClickListener: ((isBarSelect: Boolean) -> Unit)? = null
 
@@ -66,7 +66,7 @@ class MenuEditView : FrameLayout, View.OnClickListener {
     }
 
     /**
-     * 当前选中那个 tab，取值 `[0,2]`
+     * currentselected那个 tab，取值 `[0,2]`
      */
     private var selectPosition = -1
         set(value) {

@@ -5,13 +5,21 @@ Final validation to confirm 100% functionality
 """
 
 import asyncio
+from typing import Any
 import json
+from typing import Any
 import logging
+from typing import Any
 import socket
+from typing import Any
 import ssl
+from typing import Any
 import subprocess
+from typing import Any
 import sys
+from typing import Any
 import time
+from typing import Any
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -95,9 +103,11 @@ class ComprehensiveValidation:
                 "-c",
                 """
 import sys
+from typing import Any
 sys.path.append('pc-controller/src')
 from ircamera_pc.gui import main
 import signal
+from typing import Any
 def handler(sig, frame) -> Any:
     exit(0)
 signal.signal(signal.SIGALRM, handler)

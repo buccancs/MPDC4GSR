@@ -23,7 +23,7 @@ import com.topdon.lib.ui.R as UiR
  * Provides specialized rendering and interaction capabilities.
  */
 class CountDownView : View {
-    // 圆环颜色
+    // 圆环color
     private var mRingColor = 0
 
     // 圆环宽度
@@ -133,7 +133,7 @@ class CountDownView : View {
     }
 
     /**
-     * 设置倒计时间 单位秒
+     * settings倒计时间 单位秒
      */
     fun setCountdownTime(mCountdownTime: Int) {
         this.mCountdownTime = mCountdownTime

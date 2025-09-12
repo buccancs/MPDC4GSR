@@ -24,7 +24,7 @@ internal object CenterItemUtils {
  * Provides specialized rendering and interaction capabilities.
  */
     class CenterViewItem
-    // 当前Item索引
-    // 当前item和居中位置的差值
+    // currentItemindex
+    // currentitem和居中位置的差值
     (var position: Int, var differ: Int)
 }

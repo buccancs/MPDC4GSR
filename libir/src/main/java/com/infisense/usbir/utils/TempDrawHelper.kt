@@ -10,7 +10,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * TC007、2D编辑、插件的 点线面温度图层有 View、SurfaceView 两种实现，
+ * TC007、2D编辑、插件的 point/line/area温度图层有 View、SurfaceView 两种实现，
  * 先用这个工具类抽取相同 draw 逻辑，后续考虑优化。
  *
  * Created by LCG on 2024/12/6.
@@ -58,7 +58,7 @@ class TempDrawHelper {
     }
 
     /**
-     * 温度值文字、趋势图 AB 两个字母、点线面名称 文字大小，单位 px.
+     * 温度值文字、趋势图 AB 两个字母、point/line/area名称 文字大小，单位 px.
      */
     var textSize: Int
         get() = textPaint.textSize.toInt()
@@ -67,7 +67,7 @@ class TempDrawHelper {
         }
 
     /**
-     * 温度值文字、趋势图 AB 两个字母、点线面名称 文字颜色值.
+     * 温度值文字、趋势图 AB 两个字母、point/line/area名称 文字color值.
      */
     var textColor: Int
         @ColorInt get() = textPaint.color
@@ -94,8 +94,8 @@ class TempDrawHelper {
     private val redPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     /**
-     * 高温温度文字、低温温度文字、趋势图 AB 两个字母、点线面名称 Paint，
-     * 颜色默认白色，大小默认 14sp，可由文字颜色、大小设置更改.
+     * 高温温度文字、低温温度文字、趋势图 AB 两个字母、point/line/area名称 Paint，
+     * color默认白色，大小默认 14sp，可由文字color、大小settings更改.
      */
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -147,7 +147,7 @@ class TempDrawHelper {
     }
 
     /**
-     * 按指定范围绘制一个矩形.
+     * 按指定range绘制一个矩形.
      *
      * 注意，不对 坐标参数 进行处理，传进来是哪就在哪绘制。
      */
@@ -273,15 +273,15 @@ class TempDrawHelper {
         if (textX + textWidth > width) { // x超出右边界
             textX = width - textWidth
         }
-        if (textY > height) { // 若名字放点下面要超出范围时，放点上面
+        if (textY > height) { // 若名字放点下面要超出range时，放点上面
             textY = y - POINT_SIZE / 2 - textPaint.fontMetrics.bottom
         }
         canvas.drawText(name, textX, textY, textPaint)
     }
 
     /**
-     * 指定的 线段或矩形 坐标为范围，
-     * 以该范围为基准绘制指定线名称文字，放置于范围中心。
+     * 指定的 线段或矩形 坐标为range，
+     * 以该range为基准绘制指定线名称文字，放置于range中心。
      *
      * 注意，不对 x、y 进行处理，传进来是哪就在哪绘制。
      */

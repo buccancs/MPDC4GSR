@@ -9,33 +9,33 @@ import com.topdon.menu.constant.MenuType
 import com.topdon.menu.constant.SettingType
 
 /**
- * 设置菜单所用 Adapter，所有选项互相独立，可多选.
+ * settingsmenuAdapter used for，所有选项互相独立，可多选.
  *
- * - 单光：   伪彩条、对比度、锐度、警示、旋转、字体、镜像
- * - 双光：   伪彩条、对比度、锐度、警示、旋转、字体
- * - Lite：  伪彩条、对比度、警示、旋转、字体、镜像
- * - TC007： 伪彩条、对比度、锐度、警示、字体、镜像
- * - 2D 编辑：警示、字体、水印
+ * - 单光：   pseudo color条、对比度、锐度、warning、旋转、font、镜像
+ * - dual light：   pseudo color条、对比度、锐度、warning、旋转、font
+ * - Lite：  pseudo color条、对比度、warning、旋转、font、镜像
+ * - TC007： pseudo color条、对比度、锐度、warning、font、镜像
+ * - 2D 编辑：warning、font、watermark
  *
- * - TS001 观测：指南针、旋转、镜像、对比度
+ * - TS001 observation：指南针、旋转、镜像、对比度
  *
  * Created by LCG on 2024/11/28.
  */
 @SuppressLint("NotifyDataSetChanged")
 internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObserver: Boolean = false) : BaseMenuAdapter() {
     /**
-     * 设置菜单点击事件监听。
-     * isSelected：点击时是否处于选中状态
+     * settingsmenuclickevent listener。
+     * isSelected：click时是否处于selectedstate
      */
     var onSettingListener: ((settingType: SettingType, isSelected: Boolean) -> Unit)? = null
 
     /**
      * 这里有几个坑：
-     * - 对于机芯而言，256x192 横屏尺寸才是旋转角度为 0 的未旋转状态；
-     * 对于APP而言，192x256 竖屏尺寸(机芯旋转角度270)才是旋转角度为 0 的未旋转状态。
-     * - 对某供应商而言，机芯里的旋转角度是逆时针旋转角度，而非一般理解的顺时针旋转角度。
+     * - 对于core而言，256x192 横屏尺寸才是rotation angle为 0 的未旋转state；
+     * 对于APP而言，192x256 竖屏尺寸(corerotation angle270)才是rotation angle为 0 的未旋转state。
+     * - 对某供应商而言，core里的rotation angle是逆时针rotation angle，而非一般理解的顺时针rotation angle。
      *
-     * 考虑到旧代码兼容，这个属性用来放 **机芯旋转角度**
+     * 考虑到旧代码兼容，这个属性用来放 **corerotation angle**
      */
     var rotateAngle: Int = 270
         set(value) {
@@ -46,7 +46,7 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
         }
 
     /**
-     * 设置指定选项的选中状态，旋转不要调这个方法，因为旋转有 4 个状态
+     * settingsspecified option的selectedstate，旋转不要调这个方法，因为旋转有 4 个state
      */
     fun setSelected(
         settingType: SettingType,
@@ -111,8 +111,8 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
         }
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
-            // 警示、字体、水印是以生效才视为高亮选中的，这里先保持旧代码逻辑，
-            // 菜单的选中刷新丢给上层的 listener 去做，后面有空再考虑更改
+            // warning、font、watermark是以effective才视为highlightselected的，Maintain original code logic here，
+            // menu的selectedrefreshleave to upper-layer listener to handle，consider changes later when time permits
 //            data.isSelected = !data.isSelected
 //            holder.binding.ivIcon.isSelected = data.isSelected
 //            holder.binding.tvText.isSelected = data.isSelected

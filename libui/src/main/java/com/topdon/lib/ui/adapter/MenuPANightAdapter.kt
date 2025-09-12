@@ -13,7 +13,7 @@ import com.topdon.lib.ui.R as UiR
  * Menu p a night adapter for thermal imaging data presentation.
  * Manages data binding and view recycling for efficient display.
  */
-@Deprecated("旧的双光菜单，已重构过了")
+@Deprecated("旧的dual lightmenu，已重构过了")
 class MenuPANightAdapter(
     data: MutableList<ColorBean>,
     layoutId: Int,

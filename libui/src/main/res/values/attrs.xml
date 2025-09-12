@@ -39,13 +39,13 @@
 
     <!-- 倒计时控件属性 -->
     <declare-styleable name="CountDownView">
-        <!-- 颜色 -->
+        <!-- color -->
         <attr name="ringColor" format="color" />
-        <!-- ProgressText的字体大小 -->
+        <!-- ProgressText的font大小 -->
         <attr name="progressTextSize" format="dimension" />
         <!-- 圆环宽度 -->
         <attr name="ringWidth" format="dimension" />
-        <!-- ProgressText颜色 -->
+        <!-- ProgressTextcolor -->
         <attr name="progressTextColor" format="color" />
         <!-- Text -->
         <attr name="progressText" format="string" />

@@ -27,13 +27,13 @@ import com.topdon.lib.ui.R as UiR
 class BarPickView : View {
     companion object {
         /**
-         * 默认条条背景颜色.
+         * 默认条条背景color.
          */
         @ColorInt
         private const val DEFAULT_BG_COLOR = 0xff787878.toInt()
 
         /**
-         * 默认进度条颜色.
+         * 默认进度条color.
          */
         @ColorInt
         private const val DEFAULT_PROGRESS_COLOR = 0xffffffff.toInt()
@@ -82,7 +82,7 @@ class BarPickView : View {
         }
 
     /**
-     * 条条当前进度.
+     * 条条current进度.
      */
     private var progress: Int = 0
         set(value) {
@@ -103,7 +103,7 @@ class BarPickView : View {
     private val barSize: Int
 
     /**
-     * 顺时针旋转角度，仅支持 0、90、180、270.
+     * 顺时针rotation angle，仅支持 0、90、180、270.
      */
     private val rotate: Int
 

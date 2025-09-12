@@ -18,7 +18,7 @@ import com.infisense.usbdual.Const;
 import com.infisense.usbir.utils.OpencvTools;
 
 /**
- * 红外图像展示控件，可以为TextureView或SurfaceView
+ * infrared图像展示控件，可以为TextureView或SurfaceView
  */
 public class CameraView extends TextureView {
     private String TAG = "CameraView";
@@ -76,10 +76,10 @@ public class CameraView extends TextureView {
         paint = new Paint();  //画笔
         paint = new Paint(Paint.FILTER_BITMAP_FLAG);
 //        paint = new Paint();  //画笔
-        paint.setStrokeWidth(2);  //设置线宽。单位为像素
+        paint.setStrokeWidth(2);  //settings线宽。单位为像素
         paint.setAntiAlias(true); //抗锯齿
         paint.setDither(true);    //防抖动
-        paint.setColor(Color.WHITE);  //画笔颜色
+        paint.setColor(Color.WHITE);  //画笔color
         //
         greenPaint = new Paint();
         greenPaint.setStrokeWidth(6);
@@ -107,10 +107,10 @@ public class CameraView extends TextureView {
                                 continue;
                             }
                             // 画面中心的十字交叉线绘制
-                            paint.setStrokeWidth(2);  //设置线宽。单位为像素
+                            paint.setStrokeWidth(2);  //settings线宽。单位为像素
                             paint.setAntiAlias(true); //抗锯齿
                             paint.setDither(true);    //防抖动
-                            paint.setColor(Color.WHITE);  //画笔颜色
+                            paint.setColor(Color.WHITE);  //画笔color
                             /**
                              * 图片缩放，这里简单的使用getWidth()作为宽，getHeight()作为高，可能会出现画面拉伸情况，
                              * 实际使用的时候请参考设备的宽高按照设备的图像尺寸做等比例缩放

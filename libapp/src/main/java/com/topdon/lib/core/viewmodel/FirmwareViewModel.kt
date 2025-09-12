@@ -38,12 +38,12 @@ import java.util.concurrent.CountDownLatch
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         /**
-         * TS004 固件升级包 软件编码.
+         * TS004 固件升级包 软件encoding.
          */
         private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
 
         /**
-         * TC007 固件升级包 软件编码.
+         * TC007 固件升级包 软件encoding.
          */
         private const val TC007_SOFT_CODE = "TC007_FirmwareSW_Wireless"
 
@@ -75,7 +75,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * 用一个变量来存储请求状态，避免重复请求.
+     * 用一个变量来存储请求state，避免重复请求.
      */
     @Volatile
     private var isRequest = false
@@ -197,8 +197,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val newVersion: Double = getVersionFromStr(apkVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - 当前版本：$currentVersion apk内置版本：$newVersion")
-        if (newVersion <= currentVersion) { // 当前固件升级包已是最新
+        XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - current版本：$currentVersion apk内置版本：$newVersion")
+        if (newVersion <= currentVersion) { // current固件升级包已是最新
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -249,7 +249,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             return
         }
 
-        // 获取固件升级包列表
+        // 获取固件升级包list
         val packageData: PackageData? = querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
         if (packageData == null) {
             XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 获取固件升级包信息失败!")
@@ -260,8 +260,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val record: PackageData.Record? = packageData.getFirstRecord()
         val newVersionStr: String? = record?.maxUpdateVersion
-        if (record == null || newVersionStr == null) { // 没有固件升级包，即当前固件已是最新
-            XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - 没有固件升级包，即当前固件已是最新")
+        if (record == null || newVersionStr == null) { // 没有固件升级包，即current固件已是最新
+            XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - 没有固件升级包，即current固件已是最新")
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -269,8 +269,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val newVersion: Double = getVersionFromStr(newVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - 当前版本：$currentVersion 服务器版本：$newVersion")
-        if (newVersion <= currentVersion) { // 当前固件升级包已是最新
+        XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - current版本：$currentVersion 服务器版本：$newVersion")
+        if (newVersion <= currentVersion) { // current固件升级包已是最新
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -295,7 +295,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * 将设备 SN、注册码与当前账号绑定.
+     * 将设备 SN、注册码与current账号绑定.
      */
     private suspend fun bindDevice(
         sn: String,
@@ -314,7 +314,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * 查询指定 SN 的固件升级包列表
+     * 查询指定 SN 的固件升级包list
      */
     private suspend fun querySoftPackage(
         sn: String,
@@ -413,7 +413,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
 
     /**
-     * 用来解析 获取固件升级包列表 接口返回的数据.
+     * 用来解析 获取固件升级包list 接口返回的数据.
      */
     private class PackageData {
         var records: List<Record>? = null
@@ -443,7 +443,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         )
 
         data class OtherExplain(
-            val valueType: Int, // 1-软件名称 2-软件介绍 3-更新说明 4-注意事项
+            val valueType: Int, // 1-软件名称 2-软件介绍 3-update说明 4-注意事项
             val textDescription: String?,
         )
     }

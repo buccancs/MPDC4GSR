@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-present 贵州纳雍穿青人李裕江<1032694760@qq.com>
+ * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
  *
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
@@ -51,7 +51,7 @@ public interface LinkageProvider {
     /**
      * 根据第一级数据联动第二级数据
      *
-     * @param firstIndex 第一级数据索引
+     * @param firstIndex 第一级数据index
      * @return 第二级数据
      */
     @NonNull
@@ -60,37 +60,37 @@ public interface LinkageProvider {
     /**
      * 根据第一二级数据联动第三级数据
      *
-     * @param firstIndex  第一级数据索引
-     * @param secondIndex 第二级数据索引
+     * @param firstIndex  第一级数据index
+     * @param secondIndex 第二级数据index
      * @return 第三级数据
      */
     @NonNull
     List<?> linkageThirdData(int firstIndex, int secondIndex);
 
     /**
-     * 根据第一数据值查找其索引
+     * 根据第一数据值查找其index
      *
      * @param firstValue 第一级数据值
-     * @return 第一级数据索引
+     * @return 第一级数据index
      */
     int findFirstIndex(Object firstValue);
 
     /**
-     * 根据第二数据值查找其索引
+     * 根据第二数据值查找其index
      *
-     * @param firstIndex  第一级数据索引
+     * @param firstIndex  第一级数据index
      * @param secondValue 第二级数据值
-     * @return 第二级数据索引
+     * @return 第二级数据index
      */
     int findSecondIndex(int firstIndex, Object secondValue);
 
     /**
-     * 根据第三数据值查找其索引
+     * 根据第三数据值查找其index
      *
-     * @param firstIndex  第一级数据索引
-     * @param secondIndex 第二级数据索引
+     * @param firstIndex  第一级数据index
+     * @param secondIndex 第二级数据index
      * @param thirdValue  第三级数据值
-     * @return 第三级数据索引
+     * @return 第三级数据index
      */
     int findThirdIndex(int firstIndex, int secondIndex, Object thirdValue);
 

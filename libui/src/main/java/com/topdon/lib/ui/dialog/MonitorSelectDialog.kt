@@ -34,7 +34,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         private var isFirstStep = true
 
         /**
-         * 当前选中的监控类型 1-点 2-线 3-面.
+         * currentselected的监控类型 1-点 2-线 3-面.
          */
         private var monitorType = 0
 
@@ -53,7 +53,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             dialog.setContentView(binding.root)
 
             val lp = dialog.window!!.attributes
-            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // settings宽度
             dialog.window!!.attributes = lp
 
             binding.btnConfirmOrBack.setOnClickListener {

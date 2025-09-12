@@ -14,7 +14,7 @@ import java.io.IOException
  * @date: 2024/1/17 9:54
  */
 class IRImageHelp {
-    // 自定义的颜色值
+    // 自定义的color值
     @Volatile
     private var colorList: IntArray? = null
 
@@ -32,7 +32,7 @@ class IRImageHelp {
     }
 
     /**
-     * 设置自定义伪彩条属性
+     * settings自定义pseudo color条属性
      * @author: CaiSongL
      * @date: 2024/1/17 10:07
      */
@@ -65,7 +65,7 @@ class IRImageHelp {
     }
 
     /**
-     * 自定义伪彩处理，在执行这个方法之前，变更伪彩属性时先通过 上面setColorList进行属性设置
+     * 自定义pseudo color处理，在执行这个方法之前，变更pseudo color属性时先通过 上面setColorList进行属性settings
      * @param imageDst ByteArray ： 图像数据，argb格式
      * @param temperatureSrc ByteArray ： 温度数据
      * @param imageWidth Int ：
@@ -145,7 +145,7 @@ class IRImageHelp {
     }
 
     /**
-     * 等温尺处理,展示伪彩的温度范围内信息
+     * 等温尺处理,展示pseudo color的温度range内信息
      */
     fun setPseudoColorMaxMin(
         imageDst: ByteArray?,

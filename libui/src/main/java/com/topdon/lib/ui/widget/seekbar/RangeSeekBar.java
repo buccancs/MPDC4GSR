@@ -39,7 +39,7 @@ import java.util.List;
 
 public class RangeSeekBar extends View {
 
-    //伪彩代号
+    //pseudo colorcode
     private int pseudocode = 3;
 
     private final static int MIN_INTERCEPT_DISTANCE = 100;
@@ -52,7 +52,7 @@ public class RangeSeekBar extends View {
 
     private boolean noNegativeNumber = false;
 
-    public final static int TEMP_MODE_CLOSE = 0;//关闭
+    public final static int TEMP_MODE_CLOSE = 0;//close
     public final static int TEMP_MODE_MAX = 2;//阈值下
     public final static int TEMP_MODE_MIN = 1;//阈值上
     public final static int TEMP_MODE_INTERVAL = 3;//区间
@@ -159,10 +159,10 @@ public class RangeSeekBar extends View {
     //进度条圆角
     //radius of progress bar
     private float progressRadius;
-    //进度中进度条的颜色
+    //进度中进度条的color
     //the color of seekBar in progress
     private int progressColor;
-    //默认进度条颜色
+    //默认进度条color
     //the default color of the progress bar
     private int progressDefaultColor;
 
@@ -220,13 +220,13 @@ public class RangeSeekBar extends View {
     private OnRangeChangedListener callback;
 
     /**
-     * 自定义渲染颜色值.
+     * 自定义渲染color值.
      */
     @Nullable
     private int[] colorList;
 
     /**
-     * 自定义渲染颜色位置，每个元素取值范围 [0,1]
+     * 自定义渲染color位置，每个元素取值range [0,1]
      */
     @Nullable
     private float[] places;
@@ -446,7 +446,7 @@ public class RangeSeekBar extends View {
         onDrawSeekBar(canvas); //滑动标签
     }
 
-    //绘制刻度，并且根据当前位置是否在刻度范围内设置不同的颜色显示
+    //绘制刻度，并且根据current位置是否在刻度range内settings不同的color显示
     // Draw the scales, and according to the current position is set within
     // the scale range of different color display
     protected void onDrawTickMark(Canvas canvas, Paint paint) {
@@ -584,7 +584,7 @@ public class RangeSeekBar extends View {
         }
     }
 
-    //初始化画笔
+    //initialize画笔
     private void initPaint() {
         paint.setStyle(Paint.Style.FILL);
 
@@ -925,7 +925,7 @@ public class RangeSeekBar extends View {
 
 
     /**
-     * 设置范围
+     * settingsrange
      *
      * @param min 最小值
      * @param max 最大值
@@ -937,8 +937,8 @@ public class RangeSeekBar extends View {
 
     /**
      *
-     * @param editMin ： 手动设置的最小值
-     * @param editMax : 手动设置的最小值
+     * @param editMin ： 手动settings的最小值
+     * @param editMax : 手动settings的最小值
      * @param realLeftValue : 实际最低温度
      * @param realRightValue ： 实际最高温度
      */
@@ -971,7 +971,7 @@ public class RangeSeekBar extends View {
     }
 
     /**
-     * 设置范围
+     * settingsrange
      * @param min         最小值
      * @param max         最大值
      * @param minInterval 最小间隔
@@ -987,7 +987,7 @@ public class RangeSeekBar extends View {
 //            throw new IllegalArgumentException("setRange() interval must be less than (max - min) ! #minInterval:" + minInterval + " #max - min:" + (max - min));
 //        }
         if (maxProgress == max && min == minProgress){
-//            Log.w("数据更新拦截",max+"//"+min+"");
+//            Log.w("数据update拦截",max+"//"+min+"");
             return;
         }
         maxProgress = max;
@@ -1016,7 +1016,7 @@ public class RangeSeekBar extends View {
 //            throw new IllegalArgumentException("setRange() interval must be less than (max - min) ! #minInterval:" + minInterval + " #max - min:" + (max - min));
 //        }
         if (maxProgress == max && min == minProgress){
-//            Log.w("数据更新拦截",max+"//"+min+"");
+//            Log.w("数据update拦截",max+"//"+min+"");
             return;
         }
         maxProgress = max;

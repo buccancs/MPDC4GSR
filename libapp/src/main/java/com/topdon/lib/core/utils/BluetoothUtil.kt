@@ -20,7 +20,7 @@ import com.topdon.lib.core.tools.PermissionTool
 
 object BluetoothUtil {
     /**
-     * 在给定 activity 生命周期内添加 蓝牙 开关状态监听.
+     * 在给定 activity 生命周期内添加 蓝牙 开关state监听.
      */
     fun addBtStateListener(
         activity: ComponentActivity,
@@ -57,7 +57,7 @@ object BluetoothUtil {
     private val scanCallback = MyScanCallback()
 
     /**
-     * 设置低功耗蓝牙搜索回调.
+     * settings低功耗蓝牙搜索回调.
      */
     fun setLeScanListener(
         isTS004: Boolean,

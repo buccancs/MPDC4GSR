@@ -11,14 +11,14 @@ class VersionViewModel : BaseViewModel() {
     val updateLiveData = SingleLiveEvent<VersionUpData>()
 
     /**
-     * forcedUpgradeFlag: 1 强制更新    0 非强制更新
+     * forcedUpgradeFlag: 1 强制update    0 非强制update
      * descType: 包含3时,显示给用户(descType获取升级描述信息)
      */
     fun checkVersion() {
 //        viewModelScope.launch(Dispatchers.IO) {
 //            try {
 //                if (TimeUtils.isToday(SharedManager.getVersionCheckDate())) {
-//                    Log.w("123", "今天已有版本更新提示")
+//                    Log.w("123", "今天已有版本update提示")
 //                    return@launch
 //                }
 //                val result: CheckVersionJson = LmsRepository.getVersionInfo() ?: return@launch

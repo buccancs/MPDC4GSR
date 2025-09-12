@@ -8,7 +8,7 @@ import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.TempPointType
 
 /**
- * 观测模式-菜单5-高低温点 菜单所用 Adapter，按旧逻辑存在全部未选择的状态。
+ * observation模式-menu5-high/low temperature点 menuAdapter used for，按旧逻辑存在全部未选择的state。
  *
  * - 高温点、低温点 互相独立，可多选
  * - {高温点、低温点} 与 删除 互斥
@@ -18,12 +18,12 @@ import com.topdon.menu.constant.TempPointType
 @SuppressLint("NotifyDataSetChanged")
 internal class TempPointAdapter : BaseMenuAdapter() {
     /**
-     * 观测模式-菜单5-高低温点 点击事件监听.
+     * Observation mode - Menu 5 - High/Low temperature points click event listener.
      */
     var onTempPointListener: ((type: TempPointType, isSelected: Boolean) -> Unit)? = null
 
     /**
-     * 设置 高温点 或 低稳点 的选中状态。
+     * settings 高温点 或 低稳点 的selectedstate。
      */
     fun setSelected(
         tempPointType: TempPointType,
@@ -39,8 +39,8 @@ internal class TempPointAdapter : BaseMenuAdapter() {
     }
 
     /**
-     * 清除所有菜单的选中状态。
-     * 这里维持原有逻辑，后续考虑是否直接给选中删除得了。
+     * clear所有menu的selectedstate。
+     * Maintain original logic here, consider whether to directly delete selected items later。
      */
     fun clearAllSelect() {
         for (data in dataArray) {
@@ -67,7 +67,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
             if (data.tempPointType == TempPointType.DELETE) {
-                if (!data.isSelected) { // 选中时再次删除没卵用，未选中时才处理
+                if (!data.isSelected) { // selected时再次删除没卵用，未selected时才处理
                     for (temp in dataArray) {
                         temp.isSelected = temp.tempPointType == TempPointType.DELETE
                     }
@@ -78,7 +78,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
                 data.isSelected = !data.isSelected
                 holder.binding.ivIcon.isSelected = data.isSelected
                 holder.binding.tvText.isSelected = data.isSelected
-                if (data.isSelected) { // 选中高温点、低温点时要把“删除”设为未选中；取消选中时不耦合删除
+                if (data.isSelected) { // selected高温点、低温点时要把“删除”设为未selected；取消selected时不耦合删除
                     for (i in dataArray.indices) {
                         if (dataArray[i].tempPointType == TempPointType.DELETE && dataArray[i].isSelected) {
                             dataArray[i].isSelected = false

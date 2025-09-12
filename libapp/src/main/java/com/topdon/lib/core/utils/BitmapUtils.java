@@ -40,7 +40,7 @@ public class BitmapUtils {
     public static Bitmap rotateBitmap(Bitmap bm, int degree) {
         Bitmap returnBm = null;
 
-        // 根据旋转角度，生成旋转矩阵
+        // 根据rotation angle，生成旋转矩阵
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
         try {
@@ -77,11 +77,11 @@ public class BitmapUtils {
     }
 
     /**
-     * 将图片保存到磁盘中
+     * 将图片saved到磁盘中
      *
      * @param bitmap
-     * @param file   图片保存目录——不包含图片名
-     * @param path   图片保存文件路径——包含图片名
+     * @param file   图片saved目录——不包含图片名
+     * @param path   图片saved文件路径——包含图片名
      * @return
      */
     public static boolean saveBitmap(Bitmap bitmap, File file, File path) {
@@ -117,7 +117,7 @@ public class BitmapUtils {
      * @param width  压缩后的宽度，单位像素
      */
     public static Bitmap imageZoom(Bitmap bitmap, double width) {
-        // 将bitmap放至数组中，意在获得bitmap的大小（与实际读取的原文件要大）
+        // 将bitmap放至array中，意在获得bitmap的大小（与实际读取的原文件要大）
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // 格式、质量、输出流
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
@@ -153,7 +153,7 @@ public class BitmapUtils {
     }
 
     /**
-     * bitmap保存到指定路径
+     * bitmapsaved到指定路径
      *
      * @param file 图片的绝对路径
      * @param file 位图
@@ -301,12 +301,12 @@ public class BitmapUtils {
     }
 
     /**
-     * 添加水印
+     * 添加watermark
      * @param bmp
      * @param title
      * @param address
      * @param time
-     * @param seekBarWidth : 右边伪彩控件的宽度，防止内容和控件重叠
+     * @param seekBarWidth : 右边pseudo color控件的宽度，防止内容和控件重叠
      * @return
      */
     public static Bitmap drawCenterLable(Bitmap bmp, String title,String address,String time,int seekBarWidth) {

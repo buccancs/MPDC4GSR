@@ -45,7 +45,7 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
     }
 
     /**
-     * 恢复状态
+     * Restore state
      */
     fun cancelTransition() {
         removeTransitionListener(this)

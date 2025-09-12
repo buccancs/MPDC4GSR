@@ -40,10 +40,10 @@ object ImageTools {
             bean = selectBean,
             maxColor = maxColor,
             minColor = minColor,
-        ) // 换颜色
+        ) // 换color
     }
 
-    // 选取区域转颜色
+    // 选取区域转color
     private fun bitmapFromRgba(
         bytes: ByteArray,
         bean: SelectIndexBean,
@@ -160,7 +160,7 @@ object ImageTools {
 //        val pixels = IntArray(len)
 //        for (i in pixels.indices) {
 //            if (i > len / 4 * 3 && i < len) {
-//                //指定区域颜色
+//                //指定区域color
 //                val r = 255
 //                val g = 215
 //                val b = 0
@@ -212,7 +212,7 @@ object ImageTools {
     }
 
     /**
-     * 替换颜色
+     * 替换color
      */
     @JvmStatic
     private fun dualReplaceColor(
@@ -279,7 +279,7 @@ object ImageTools {
                 }
             }
         } catch (e: Exception) {
-            XLog.w("颜色替换失败: ${e.message}")
+            XLog.w("color替换失败: ${e.message}")
         }
     }
 }

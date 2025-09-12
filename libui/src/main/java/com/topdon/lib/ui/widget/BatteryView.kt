@@ -18,7 +18,7 @@ import androidx.appcompat.widget.AppCompatImageView
  */
 class BatteryView : AppCompatImageView {
     /**
-     * 当前电量
+     * current电量
      */
     var battery = -1
         set(value) {
@@ -27,7 +27,7 @@ class BatteryView : AppCompatImageView {
         }
 
     /**
-     * 当前是否充电中
+     * current是否充电中
      */
     var isCharging = false
         set(value) {

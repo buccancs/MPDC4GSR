@@ -55,7 +55,7 @@ abstract class BaseApplication : Application() {
     var hasOtgShow = false // otg提示只出现一次
 
     /**
-     * 获取软件编码.
+     * 获取软件encoding.
      */
     abstract fun getSoftWareCode(): String
 
@@ -123,7 +123,7 @@ abstract class BaseApplication : Application() {
 
     private fun connectWebSocket() {
         val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return
-        Log.i("WebSocket", "当前连接 Wifi SSID: $ssid")
+        Log.i("WebSocket", "current连接 Wifi SSID: $ssid")
         if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
             SharedManager.hasTS004 = true
             WebSocketProxy.getInstance().startWebSocket(ssid)
@@ -148,13 +148,13 @@ abstract class BaseApplication : Application() {
         if (TextUtils.isEmpty(msgJson)) return
         EventBus.getDefault().post(SocketMsgEvent(msgJson))
 
-        if (SharedManager.is04AutoSync) { // 自动保存到手机开启
+        if (SharedManager.is04AutoSync) { // 自动saved到手机开启
             when (SocketCmdUtil.getCmdResponse(msgJson)) {
-                WsCmdConstants.AR_COMMAND_SNAPSHOT -> { // 拍照事件
+                WsCmdConstants.AR_COMMAND_SNAPSHOT -> { // capture事件
                     autoSaveNewest(false)
                 }
 
-                WsCmdConstants.AR_COMMAND_VRECORD -> { // 开始或结束录像事件
+                WsCmdConstants.AR_COMMAND_VRECORD -> { // 开始或结束recording事件
                     try {
                         val data: JSONObject = JSONObject(msgJson).getJSONObject("data")
                         val enable: Boolean = data.getBoolean("enable")
@@ -214,7 +214,7 @@ abstract class BaseApplication : Application() {
     }
 
     /**
-     * 设置webview的android9以上系统的多进程兼容性处理
+     * settingswebview的android9以上系统的多进程兼容性处理
      */
     @RequiresApi(api = 28)
     open fun webviewSetPath(context: Context?) {
@@ -237,7 +237,7 @@ abstract class BaseApplication : Application() {
         return null
     }
 
-    // 清除无用数据
+    // clear无用数据
     fun clearDb() {
         GlobalScope.launch(Dispatchers.Default) {
             try {

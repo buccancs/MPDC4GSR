@@ -19,7 +19,7 @@ public class DragViewUtil {
      * 拖动View方法
      *
      * @param v     view
-     * @param delay 延迟
+     * @param delay delayed
      */
     public static void registerDragAction(View v, long delay) {
         v.setOnTouchListener(new TouchListener(delay));

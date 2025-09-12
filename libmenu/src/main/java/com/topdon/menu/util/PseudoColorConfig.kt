@@ -1,20 +1,19 @@
 package com.topdon.menu.util
 
 /**
- * 伪彩菜单、伪彩条所用的预设伪彩配置.
- */
-/**
- * PseudoColorConfig class
- */
-/**
- * Pseudo color config utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
+ * Pseudo color configuration presets for pseudo color menu and color bar.
+ * Provides predefined color configurations for thermal imaging display.
  */
 object PseudoColorConfig {
     /**
-     * 根据指定伪彩代号获取对应的颜色数组
-     * 1-白热 3-铁红 4-彩虹1 5-彩虹2 6-彩虹3 7-红热 8-热铁 9-彩虹4 10-彩虹5 11-黑热
-     * @param code 伪彩代号，由于历史遗留（2D编辑的数据、保存设置开关的伪彩）没法改了
+     * Gets the corresponding color array based on the specified pseudo color code.
+     * Available color schemes:
+     * 1-White Hot, 3-Iron Red, 4-Rainbow 1, 5-Rainbow 2, 6-Rainbow 3, 
+     * 7-Red Hot, 8-Hot Iron, 9-Rainbow 4, 10-Rainbow 5, 11-Black Hot
+     * 
+     * @param code Pseudo color code (legacy format maintained for compatibility 
+     *             with 2D editing data and saved settings)
+     * @return IntArray containing the color gradient for the specified scheme
      */
     @JvmStatic
     fun getColors(code: Int): IntArray =

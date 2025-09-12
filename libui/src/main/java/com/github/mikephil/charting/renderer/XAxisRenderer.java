@@ -223,7 +223,7 @@ public class XAxisRenderer extends AxisRenderer {
                 //chart 绘制刻度文本  -------- start --------
 
                 if (i == 0 && mXAxis.isJumpFirstLabel()) {
-                    //不是哥们，你好歹好个参数来保存要不要绘制啊，查了我半天结果是因为你这里给跳过了
+                    //不是哥们，你好歹好个参数来saved要不要绘制啊，查了我半天结果是因为你这里给跳过了
                     //起始刻度不需要绘制
                     continue;
                 }

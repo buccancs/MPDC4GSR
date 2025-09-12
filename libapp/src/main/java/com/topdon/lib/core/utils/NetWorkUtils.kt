@@ -190,7 +190,7 @@ object NetWorkUtils {
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
-                    XLog.i("切换到 ${if (isWifi) "WIFI" else "流量"} onAvailable()")
+                    XLog.i("switch到 ${if (isWifi) "WIFI" else "流量"} onAvailable()")
                     if (isWifi) {
                         TS004Repository.netWork = network
                     }
@@ -202,7 +202,7 @@ object NetWorkUtils {
                 override fun onUnavailable() {
                     super.onUnavailable()
                     connectivityManager.unregisterNetworkCallback(this)
-                    XLog.w("切换到 ${if (isWifi) "WIFI" else "流量"} onUnavailable()")
+                    XLog.w("switch到 ${if (isWifi) "WIFI" else "流量"} onUnavailable()")
                     listener?.invoke(null)
                 }
             },

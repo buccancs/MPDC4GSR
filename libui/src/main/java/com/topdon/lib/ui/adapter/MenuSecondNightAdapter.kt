@@ -18,7 +18,7 @@ import com.topdon.menu.R as MenuR
  * Custom Menu second night view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
  */
-@Deprecated("旧的高低温点菜单，已重构过了")
+@Deprecated("旧的high/low temperature点menu，已重构过了")
 class MenuSecondNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val curMultipleArray: HashMap<Int, Int> by lazy { hashMapOf() }
 
@@ -92,7 +92,7 @@ class MenuSecondNightAdapter(val context: Context) : RecyclerView.Adapter<Recycl
         }
         // 2.执行listener
         multipleListener?.invoke(secondBean[position].code, curMultipleArray.contains(position))
-        // 3.刷新数据
+        // 3.refresh数据
         notifyDataSetChanged()
     }
 

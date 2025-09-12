@@ -8,7 +8,7 @@
         </shape>
     </item>
 
-    <!-- SettingsProgress条颜色 -->
+    <!-- SettingsProgress条color -->
     <item android:id="@android:id/progress">
         <scale android:scaleWidth="100%">
             <shape>

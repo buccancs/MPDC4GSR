@@ -59,8 +59,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
 
     /**
-     * 选中操作灵敏度，当 Touch Down 坐标与点线面坐标偏差在该值范围内，视为选中，单位 px.<br>
-     * 删除操作灵敏度，当 Touch UP 与 Touch Down 坐标偏差在该值范围内，视为删除，单位 px.
+     * selected操作灵敏度，当 Touch Down 坐标与point/line/area坐标偏差在该值range内，视为selected，单位 px.<br>
+     * 删除操作灵敏度，当 Touch UP 与 Touch Down 坐标偏差在该值range内，视为删除，单位 px.
      */
     private static final int TOUCH_TOLERANCE = SizeUtils.sp2px(7f);
 
@@ -87,11 +87,11 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
      */
     private float yScale = 0;
     /**
-     * 当前 View 去除 padding 后剩余的可用宽度，单位 px.
+     * current View 去除 padding 后剩余的可用宽度，单位 px.
      */
     private int viewWidth = 0;
     /**
-     * 当前 View 去除 padding 后剩余的可用高度，单位 px.
+     * current View 去除 padding 后剩余的可用高度，单位 px.
      */
     private int viewHeight = 0;
     /**
@@ -109,7 +109,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
 
     /**
-     * 温度区域模式 - 高低温点重置.
+     * 温度区域模式 - high/low temperature点reset.
      */
     public static final int REGION_MODE_RESET = -1;
     /**
@@ -133,7 +133,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
      */
     public static final int REGION_NODE_TREND = 4;
     /**
-     * 温度区域模式 - 清除.
+     * 温度区域模式 - clear.
      */
     public static final int REGION_MODE_CLEAN = 5;
 
@@ -143,7 +143,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * 温度区域模式，由 REGION_MODE_** 定义，默认清除.
+     * 温度区域模式，由 REGION_MODE_** 定义，默认clear.
      */
     @RegionMode
     private int temperatureRegionMode = REGION_MODE_CLEAN;
@@ -161,7 +161,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * 当前是否显示了全图.
+     * current是否显示了全图.
      */
     private boolean isShowFull;
     public boolean isShowFull() {
@@ -199,7 +199,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     @Nullable
     private OnTrendChangeListener onTrendChangeListener = null;
     /**
-     * 设置趋势图温度变化时监听，注意，回调不在主线程！！
+     * settings趋势图温度变化时监听，注意，回调不在主线程！！
      */
     public void setOnTrendChangeListener(@Nullable OnTrendChangeListener onTrendChangeListener) {
         this.onTrendChangeListener = onTrendChangeListener;
@@ -208,7 +208,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     @Nullable
     private Runnable onTrendAddListener = null;
     /**
-     * 设置趋势图添加事件监听，放心，回调在主线程.
+     * settings趋势图添加event listener，放心，回调在主线程.
      */
     public void setOnTrendAddListener(@Nullable Runnable onTrendAddListener) {
         this.onTrendAddListener = onTrendAddListener;
@@ -217,7 +217,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     @Nullable
     private Runnable onTrendRemoveListener = null;
     /**
-     * 设置趋势图移除事件监听，放心，回调在主线程.
+     * settings趋势图移除event listener，放心，回调在主线程.
      */
     public void setOnTrendRemoveListener(@Nullable Runnable onTrendRemoveListener) {
         this.onTrendRemoveListener = onTrendRemoveListener;
@@ -230,7 +230,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
 
     /**
-     * 单位摄氏度
+     * 单位Celsius
      */
     private TempListener listener;
     public TempListener getListener() {
@@ -241,14 +241,14 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
 
-    private boolean isMonitor = false;//如果是温度监控，则进行实时校验点线面的比例
+    private boolean isMonitor = false;//如果是温度监控，则进行实时校验point/line/area的比例
     public void setMonitor(boolean monitor) {
         isMonitor = monitor;
     }
 
 
     /**
-     * 观测模式时高温点是否开启
+     * observation模式时高温点是否开启
      */
     private boolean isUserHighTemp = false;
     public boolean isUserHighTemp() {
@@ -259,7 +259,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * 观测模式时低温点是否开启
+     * observation模式时低温点是否开启
      */
     private boolean isUserLowTemp = false;
     public boolean isUserLowTemp() {
@@ -339,20 +339,20 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
 
     /**
-     * 以 View 尺寸为坐标系，当前已添加的趋势图对应直线，坐标为修正过后的坐标，null 表示未绘制.
+     * 以 View 尺寸为坐标系，current已添加的趋势图对应直线，坐标为修正过后的坐标，null 表示未绘制.
      */
     @Nullable
     private Line trendLine;
     /**
-     * 以 View 尺寸为坐标系，当前已添加的点列表，坐标为修正过后的坐标.
+     * 以 View 尺寸为坐标系，current已添加的点list，坐标为修正过后的坐标.
      */
     private final ArrayList<Point> pointList = new ArrayList<>();
     /**
-     * 以 View 尺寸为坐标系，当前已添加的点列表，坐标为修正过后的坐标.
+     * 以 View 尺寸为坐标系，current已添加的点list，坐标为修正过后的坐标.
      */
     private final ArrayList<Line> lineList = new ArrayList<>();
     /**
-     * 当前绘制的面列表，坐标采用 view 的宽高坐标.
+     * current绘制的面list，坐标采用 view 的宽高坐标.
      */
     private final ArrayList<Rect> rectList = new ArrayList<>();
 
@@ -382,7 +382,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private volatile boolean runflag = false;
 
     /**
-     * true-使用摄氏度 flase-使用华氏度
+     * true-使用Celsius flase-使用Fahrenheit
      */
     private final boolean isShowC = SharedManager.INSTANCE.getTemperature() == 1;
 
@@ -622,7 +622,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 }else {
                     try {
                         synchronized (syncimage.dataLock) {
-                            // 用来关联温度数据和TemperatureView,方便后面的点线框测温
+                            // 用来关联温度数据和TemperatureView,方便后面的点线框temperature measurement
                             irtemp.setTempData(temperature);
                             if (syncimage.type == 1) irtemp.setScale(16);
                         }
@@ -827,8 +827,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     /* **************************************** Touch **************************************** */
     /**
-     * 是否为添加 点线面 模式。<br>
-     * true-添加一个新点线面 false-移动一个已有点线面
+     * 是否为添加 point/line/area 模式。<br>
+     * true-添加一个新point/line/area false-移动一个已有point/line/area
      */
     private boolean isAddAction = true;
 
@@ -1064,7 +1064,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     Canvas bitmapCanvas = new Canvas(regionBitmap);
 
-                    // TODO: 2024/12/13 这里有历史遗留问题，拖动的时候可以把直线拖成点
+                    // TODO: 2024/12/13 这里有legacy问题，拖动的时候可以把直线拖成点
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
                         Point start = new Point();
                         Point end = new Point();
@@ -1118,7 +1118,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     * 指定坐标 (x, y) 是否视为指定 Line 的选中.
+     * 指定坐标 (x, y) 是否视为指定 Line 的selected.
      */
     private static boolean isLineConcat(@NonNull Line line, int x, int y) {
         int tempDistance = ((line.end.y - line.start.y) * x - (line.end.x - line.start.x) * y + line.end.x * line.start.y - line.start.x * line.end.y);
@@ -1150,7 +1150,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     private enum RectMoveType { ALL, EDGE, CORNER }
     /**
-     * 面移动方式：点击面内部-整体移动、点击面4条边-边移动、点击面4个角-角移动。
+     * 面移动方式：click面内部-整体移动、click面4条边-边移动、click面4个角-角移动。
      */
     private RectMoveType rectMoveType = RectMoveType.ALL;
 
@@ -1181,7 +1181,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     isAddAction = false;
                     movingRect = rect;
 
-                    if (isIn(downX, rect.left)) {//选中最左那条边
+                    if (isIn(downX, rect.left)) {//selected最左那条边
                         if (isIn(downY, rect.top)) {
                             rectMoveType = RectMoveType.CORNER;
                             rectMoveCorner = RectMoveCorner.LT;
@@ -1192,7 +1192,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             rectMoveType = RectMoveType.EDGE;
                             rectMoveEdge = RectMoveEdge.LEFT;
                         }
-                    } else if (isIn(downX, rect.right)) {//选中最右那条边
+                    } else if (isIn(downX, rect.right)) {//selected最右那条边
                         if (isIn(downY, rect.top)) {
                             rectMoveType = RectMoveType.CORNER;
                             rectMoveCorner = RectMoveCorner.RT;
@@ -1203,10 +1203,10 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             rectMoveType = RectMoveType.EDGE;
                             rectMoveEdge = RectMoveEdge.RIGHT;
                         }
-                    } else if (isIn(downY, rect.top)) {//选中顶边
+                    } else if (isIn(downY, rect.top)) {//selected顶边
                         rectMoveType = RectMoveType.EDGE;
                         rectMoveEdge = RectMoveEdge.TOP;
-                    } else if (isIn(downY, rect.bottom)) {//选中底边
+                    } else if (isIn(downY, rect.bottom)) {//selected底边
                         rectMoveType = RectMoveType.EDGE;
                         rectMoveEdge = RectMoveEdge.BOTTOM;
                     } else {
@@ -1302,7 +1302,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                     Canvas bitmapCanvas = new Canvas(regionBitmap);
-                    // TODO: 2024/12/13 这里有历史遗留问题，拖动的时候可以把矩形拖成直线
+                    // TODO: 2024/12/13 这里有legacy问题，拖动的时候可以把矩形拖成直线
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
                         switch (rectMoveType) {
                             case ALL:
@@ -1412,8 +1412,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
      * 绘制以 View 尺寸为坐标的一根线段，这里的 x,y 为 View 坐标原始值
      */
     private void drawLine(Canvas canvas, int x1, int y1, int x2, int y2, boolean isTrend) {
-        // 由于线段与实心点的的绘制是分开的，线段使用当前 View 坐标，而实心点使用温度(192x256)坐标转换为 View 坐标
-        // 故而这里需要把当前的坐标，尽量贴近温度坐标的整数倍，否则会出现实心圆偏离直线太远的情况
+        // 由于线段与实心点的的绘制是分开的，线段使用current View 坐标，而实心点使用温度(192x256)坐标转换为 View 坐标
+        // 故而这里需要把current的坐标，尽量贴近温度坐标的整数倍，否则会出现实心圆偏离直线太远的情况
         int startX = (int) ((int) (x1 / xScale) * xScale);
         int startY = (int) ((int) (y1 / yScale) * yScale);
         int stopX = (int) ((int) (x2 / xScale) * xScale);
@@ -1522,7 +1522,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     /**
-     *  ----------------------双光设备--------------------------------
+     *  ----------------------dual light设备--------------------------------
      */
 
     public void setUseIRISP(boolean useIRISP) {

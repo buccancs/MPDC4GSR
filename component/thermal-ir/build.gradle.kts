@@ -93,6 +93,7 @@ dependencies {
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
@@ -106,7 +107,18 @@ dependencies {
     implementation("com.github.anzaizai:EasySwipeMenuLayout:1.1.4")
     // Image browser library
     implementation(libs.mn.image.browser)
+
+    // GSY VideoPlayer for video playback - temporarily disabled due to dependency resolution issues
+    // TODO: Re-enable with correct version once dependency issues are resolved
+    // implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v10.2.1") {
+    //     exclude(group = "androidx.media3", module = "media3-cast")
+    //     exclude(group = "androidx.media3", module = "media3-session")
+    //     exclude(group = "androidx.media3", module = "media3-ui")
+    //     exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
+    //     exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
+    // }
     
+
     // GSY VideoPlayer for video playback - temporarily disabled due to dependency issues
     // TODO: Re-enable when GSY Video Player v11.1.0 is available or use alternative version
     // implementation(libs.gsy.video.player) {
@@ -116,6 +128,15 @@ dependencies {
     //     exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
     //     exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
     // }
+
+    // LocalBroadcastManager replacement (deprecated in Android API 30+)
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
+    
+    // Alternative video player for immediate functionality
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+
     
     // SmartRefreshLayout for pull-to-refresh functionality
     implementation("io.github.scwang90:refresh-layout-kernel:2.1.1")

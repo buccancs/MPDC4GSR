@@ -214,7 +214,7 @@ class RGBCameraRecorder(
         XXPermissions.with(activity)
             .permission(Permission.CAMERA)
             .request(object : OnPermissionCallback {
-                override fun onGranted(permissions: MutableList<String>?, all: Boolean) {
+                override fun onGranted(permissions: MutableList<String>, all: Boolean) {
                     if (all) {
                         Log.i(TAG, "Camera permission granted")
                         onPermissionGranted?.invoke()
@@ -226,7 +226,7 @@ class RGBCameraRecorder(
                     }
                 }
 
-                override fun onDenied(permissions: MutableList<String>?, never: Boolean) {
+                override fun onDenied(permissions: MutableList<String>, never: Boolean) {
                     val message = if (never) {
                         "Camera permission permanently denied. Please enable in app settings."
                     } else {
@@ -535,12 +535,18 @@ class RGBCameraRecorder(
             Log.i(TAG, "Camera capabilities: ${supportedFeatures.joinToString(", ")}")
             
             // Log high-speed video configurations for Samsung debugging
-            val highSpeedConfigs = characteristics.get(CameraCharacteristics.CONTROL_AVAILABLE_HIGH_SPEED_VIDEO_CONFIGURATIONS)
-            if (highSpeedConfigs != null) {
-                // val availableHighSpeedModes = highSpeedConfigs.map { 
-                    "${it.width}x${it.height}@${it.fpsMax}fps" 
-                }.joinToString(", ")
-                Log.i(TAG, "High-speed video modes: $availableHighSpeedModes")
+            try {
+                @Suppress("DEPRECATION")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    val highSpeedConfigsKey = CameraCharacteristics.CONTROL_AVAILABLE_HIGH_SPEED_VIDEO_CONFIGURATIONS
+                    val highSpeedConfigs = characteristics.get(highSpeedConfigsKey)
+                    if (highSpeedConfigs != null && highSpeedConfigs.isNotEmpty()) {
+                        val modeCount = highSpeedConfigs.size
+                        Log.i(TAG, "High-speed video modes available: $modeCount configurations")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "High-speed video configurations not available: ${e.message}")
             }
             
         } catch (e: Exception) {
@@ -1705,108 +1711,6 @@ class RGBCameraRecorder(
         }
     }
 
-    private fun openCamera() {
-        val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-
-        try {
-            if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
-                throw RuntimeException("Time out waiting to lock camera opening.")
-            }
-
-            val cameraId = getCameraId(currentCameraFacing)
-            val characteristics = manager.getCameraCharacteristics(cameraId)
-
-            // Setup sizes for dual-mode operation
-            setupCameraSizesForDualMode(characteristics)
-
-            // Log camera capabilities for Samsung debugging
-            logCameraCapabilities(characteristics)
-
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                onError?.invoke("Camera permission not granted")
-                return
-            }
-
-            manager.openCamera(cameraId, stateCallback, backgroundHandler)
-            
-        } catch (e: CameraAccessException) {
-            Log.e(TAG, "Failed to open camera", e)
-            onError?.invoke("Failed to open camera: ${e.message}")
-        } catch (e: InterruptedException) {
-            throw RuntimeException("Interrupted while trying to lock camera opening.", e)
-        }
-    }
-
-    /**
-     * Setup camera sizes optimized for dual-mode operation (RAW + Video)
-     */
-    private fun setupCameraSizesForDualMode(characteristics: CameraCharacteristics) {
-        val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) ?: return
-
-        // Setup video sizes for 4K mode
-        val videoSizes = map.getOutputSizes(MediaRecorder::class.java)
-        videoSize = chooseOptimalSize(
-            videoSizes,
-            recordingSettings.resolution.width,
-            recordingSettings.resolution.height,
-        )
-
-        // Setup preview size (reused across modes)
-        val previewSizes = map.getOutputSizes(SurfaceTexture::class.java)
-        previewSize = chooseOptimalSize(
-            previewSizes,
-            MAX_PREVIEW_WIDTH,
-            MAX_PREVIEW_HEIGHT,
-        )
-
-        // Setup RAW sensor size for 50MP mode
-        val rawSizes = map.getOutputSizes(ImageFormat.RAW_SENSOR)
-        if (!rawSizes.isNullOrEmpty()) {
-            rawSensorSize = rawSizes.maxByOrNull { it.width * it.height } ?: rawSizes[0]
-            maxRawSize = rawSensorSize
-            
-            val megapixels = (rawSensorSize.width * rawSensorSize.height) / 1_000_000
-            Log.i(TAG, "RAW sensor size: ${rawSensorSize.width}x${rawSensorSize.height} (~${megapixels}MP)")
-        }
-
-        textureView.surfaceTexture?.setDefaultBufferSize(previewSize.width, previewSize.height)
-        
-        Log.i(TAG, "Camera sizes configured - Video: ${videoSize.width}x${videoSize.height}, Preview: ${previewSize.width}x${previewSize.height}")
-    }
-
-    /**
-     * Log camera capabilities for Samsung device debugging
-     */
-    private fun logCameraCapabilities(characteristics: CameraCharacteristics) {
-        try {
-            val capabilities = characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES)
-            val supportedFeatures = mutableListOf<String>()
-            
-            capabilities?.forEach { capability ->
-                when (capability) {
-                    CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW -> supportedFeatures.add("RAW")
-                    CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_CONSTRAINED_HIGH_SPEED_VIDEO -> supportedFeatures.add("HIGH_SPEED_VIDEO")
-                    CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_BURST_CAPTURE -> supportedFeatures.add("BURST_CAPTURE")
-                    CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_MANUAL_SENSOR -> supportedFeatures.add("MANUAL_SENSOR")
-                }
-            }
-            
-            Log.i(TAG, "Camera capabilities: ${supportedFeatures.joinToString(", ")}")
-            
-            // Log high-speed video configurations for Samsung debugging
-            val highSpeedConfigs = characteristics.get(CameraCharacteristics.CONTROL_AVAILABLE_HIGH_SPEED_VIDEO_CONFIGURATIONS)
-            if (highSpeedConfigs != null) {
-                // val availableHighSpeedModes = highSpeedConfigs.map { 
-                    "${it.width}x${it.height}@${it.fpsMax}fps" 
-                }.joinToString(", ")
-                Log.i(TAG, "High-speed video modes: $availableHighSpeedModes")
-            }
-            
-        } catch (e: Exception) {
-            Log.w(TAG, "Error logging camera capabilities", e)
-        }
-    }
-
     private fun closeCamera() {
         try {
             cameraOpenCloseLock.acquire()
@@ -2930,4 +2834,4 @@ class RGBCameraRecorder(
         
         return cameraList
     }
-}
+}}}

@@ -81,7 +81,10 @@ nifty = "2.4.0"
 # Image Loading
 glide = "4.15.1"
 mnImageBrowser = "V3.1.2X"
-gsyVideoPlayer = "v8.6.0-release-jitpack"
+gsyVideoPlayer = "v11.1.0"
+
+# Shimmer GSR Sensor SDK
+shimmerAndroidApi = "1.0.0"
 
 # OpenGL
 opengl = "2.0.0"
@@ -202,7 +205,10 @@ nifty = { group = "com.nineoldandroids", name = "library", version.ref = "nifty"
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 mn-image-browser = { group = "com.github.maning0303", name = "MNImageBrowser", version.ref = "mnImageBrowser" }
-gsy-video-player = { group = "com.github.CarGuo", name = "GSYVideoPlayer", version.ref = "gsyVideoPlayer" }
+gsy-video-player = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayer" }
+
+# Shimmer GSR sensor integration
+# shimmer-android-api = { group = "com.shimmerresearch", name = "shimmer-android-api", version.ref = "shimmerAndroidApi" }
 
 # OpenGL
 opengl-android = { group = "org.khronos", name = "opengl-api", version.ref = "opengl" }

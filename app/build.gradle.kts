@@ -266,6 +266,11 @@ dependencies {
     implementation("no.nordicsemi.android:ble:2.11.0")
     implementation("no.nordicsemi.android:ble-ktx:2.11.0")
     
+    // Note: Official Shimmer Android SDK integration
+    // In production, add the official Shimmer SDK dependency:
+    // implementation("com.shimmerresearch:shimmer-android-api:1.0.0")
+    // For now, using existing GSR component implementation
+    
     // CameraX for RGB camera dual-stream capture
     implementation("androidx.camera:camera-camera2:1.5.0")
     implementation("androidx.camera:camera-lifecycle:1.5.0")

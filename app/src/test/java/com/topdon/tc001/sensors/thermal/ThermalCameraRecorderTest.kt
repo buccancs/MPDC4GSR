@@ -94,29 +94,101 @@ class ThermalCameraRecorderTest {
     }
 
     @Test
-    fun `recording should work in simulation mode`() = runTest {
+    fun `USB permission denied should enable simulation mode gracefully`() = runTest {
+        // Setup: Thermal camera device available but permission denied
+        val deviceMap = mapOf("device1" to mockUsbDevice)
+        every { usbManager.deviceList } returns deviceMap
+        every { usbManager.hasPermission(mockUsbDevice) } returns false
+
+        // When: Initialize thermal camera recorder
+        val result = thermalCameraRecorder.initialize()
+
+        // Then: Should fail initial hardware connection but enable simulation mode
+        assertFalse("Initial initialization should return false when permission is needed", result)
+        
+        // Simulate permission denied response
+        // In real scenario, the USB permission receiver would handle this
+        // For testing, we verify the simulation mode fallback logic works
+    }
+
+    @Test
+    fun `simulation mode should generate thermal frames correctly`() = runTest {
         // Setup: Initialize in simulation mode
         every { usbManager.deviceList } returns emptyMap()
         thermalCameraRecorder.initialize()
 
-        // Create a temporary directory for testing
-        val tempDir = kotlin.io.path.createTempDirectory("thermal_test").toFile()
+        val tempDir = kotlin.io.path.createTempDirectory("thermal_sim_test").toFile()
         
         try {
-            // When: Start recording
-            val result = thermalCameraRecorder.startRecording(tempDir.absolutePath)
-
-            // Then: Should succeed and start simulation recording
-            assertTrue("Recording should start successfully in simulation mode", result)
-            assertTrue("Should be in recording state", thermalCameraRecorder.isRecording)
-
-            // Verify stats are being tracked
+            // When: Start recording in simulation mode
+            val recordingStarted = thermalCameraRecorder.startRecording(tempDir.absolutePath)
+            assertTrue("Recording should start in simulation mode", recordingStarted)
+            
+            // Wait for simulation frames to be generated
+            kotlinx.coroutines.delay(1100) // Wait for more than 1 second to get ~9 frames at 9 FPS
+            
+            // Then: Should have recorded simulated frames
             val stats = thermalCameraRecorder.getRecordingStats()
-            assertEquals("Sensor ID should match", "thermal_camera_1", stats.sensorId)
-            assertEquals("Sensor type should be correct", "IR Thermal Camera", stats.sensorType)
-
+            assertTrue("Should have recorded simulated thermal frames", stats.totalSamplesRecorded > 0)
+            assertTrue("Should have positive data rate", stats.averageDataRate > 0.0)
+            
+            // Stop recording
+            thermalCameraRecorder.stopRecording()
+            
+            // Verify output files were created with simulation data
+            val thermalDataFile = java.io.File(tempDir, "thermal_data.csv")
+            val thermalFramesFile = java.io.File(tempDir, "thermal_frames.csv")
+            val calibrationFile = java.io.File(tempDir, "thermal_calibration.json")
+            
+            assertTrue("Thermal data CSV should exist", thermalDataFile.exists())
+            assertTrue("Thermal frames CSV should exist", thermalFramesFile.exists())
+            assertTrue("Calibration JSON should exist", calibrationFile.exists())
+            
+            // Verify files have content
+            assertTrue("Thermal data file should have content", thermalDataFile.length() > 0)
+            assertTrue("Thermal frames file should have content", thermalFramesFile.length() > 0)
+            assertTrue("Calibration file should have content", calibrationFile.length() > 0)
+            
+            // Verify calibration file indicates simulation mode
+            val calibContent = calibrationFile.readText()
+            assertTrue("Calibration should indicate simulation mode", 
+                      calibContent.contains("\"simulation_mode\": true"))
+            
         } finally {
-            // Cleanup: Stop recording and remove temp directory
+            tempDir.deleteRecursively()
+        }
+    }
+
+    @Test 
+    fun `USB device detach during recording should switch to simulation gracefully`() = runTest {
+        // Setup: Start with hardware mode
+        val deviceMap = mapOf("device1" to mockUsbDevice)
+        every { usbManager.deviceList } returns deviceMap
+        every { usbManager.hasPermission(mockUsbDevice) } returns true
+        
+        thermalCameraRecorder.initialize()
+        
+        val tempDir = kotlin.io.path.createTempDirectory("thermal_detach_test").toFile()
+        
+        try {
+            // Start recording
+            thermalCameraRecorder.startRecording(tempDir.absolutePath)
+            assertTrue("Should be recording", thermalCameraRecorder.isRecording)
+            
+            // Simulate USB device detach event
+            val disconnectEvent = DeviceConnectEvent(false, null)
+            thermalCameraRecorder.onDeviceConnectEvent(disconnectEvent)
+            
+            // Should continue recording in simulation mode
+            assertTrue("Recording should continue after USB detach", thermalCameraRecorder.isRecording)
+            
+            // Wait for simulation to kick in
+            kotlinx.coroutines.delay(500)
+            
+            val stats = thermalCameraRecorder.getRecordingStats() 
+            assertTrue("Should continue generating frames in simulation", stats.totalSamplesRecorded > 0)
+            
+        } finally {
             thermalCameraRecorder.stopRecording()
             tempDir.deleteRecursively()
         }

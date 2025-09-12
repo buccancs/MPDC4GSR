@@ -28,6 +28,7 @@ import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lib.core.config.DeviceConfig.isTcTsDevice
 import com.topdon.lib.core.broadcast.DeviceBroadcastReceiver
 import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
+import com.topdon.lib.core.bean.event.device.DevicePermissionEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -138,7 +139,19 @@ class ThermalCameraRecorder(
                 Log.w(TAG, "No thermal cameras found, enabling simulation mode")
                 isSimulationMode = true
                 emitError(ErrorType.DEVICE_ERROR, "No thermal camera detected - using simulation mode")
-                return@withContext true // Return true to allow simulation mode
+                
+                // Test simulation mode by generating a test frame
+                recordingScope.launch {
+                    Log.i(TAG, "Testing simulation mode with sample thermal frame generation")
+                    try {
+                        generateSimulatedThermalFrame()
+                        Log.i(TAG, "Simulation mode test successful - thermal frame generated")
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Simulation mode test failed", e)
+                    }
+                }
+                
+                return@withContext true // Always return true to allow simulation mode
             }
             
             // Check if we have USB permission for the detected device
@@ -148,9 +161,14 @@ class ThermalCameraRecorder(
                 
                 if (!hasUsbPermission) {
                     Log.w(TAG, "USB permission not granted for thermal camera")
+                    Log.i(TAG, "Device info: VID=${device.vendorId.toString(16)}, PID=${device.productId.toString(16)}, Name=${device.productName}")
+                    
                     // Request USB permission using existing infrastructure
                     requestUsbPermission(device)
-                    return@withContext false // Will retry after permission is granted
+                    
+                    // Return false to indicate initialization is pending permission
+                    Log.i(TAG, "Thermal camera initialization pending USB permission grant")
+                    return@withContext false
                 }
                 
                 // Initialize real thermal camera with permission
@@ -172,6 +190,18 @@ class ThermalCameraRecorder(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize thermal camera", e)
             isSimulationMode = true
+            
+            // Test that simulation mode will work
+            recordingScope.launch {
+                Log.i(TAG, "Testing simulation mode due to initialization failure")
+                try {
+                    generateSimulatedThermalFrame()
+                    Log.i(TAG, "Simulation mode ready - can generate thermal frames")
+                } catch (simError: Exception) {
+                    Log.e(TAG, "Simulation mode also failed", simError)
+                }
+            }
+            
             emitError(ErrorType.INITIALIZATION_FAILED, "Thermal camera initialization failed: ${e.message} - using simulation mode")
             return@withContext true // Allow simulation mode for development
         }
@@ -214,16 +244,36 @@ class ThermalCameraRecorder(
         
         // Use existing DeviceTools infrastructure for permission request
         try {
-            if (context is android.app.Activity) {
-                DeviceTools.requestUsb(context, 0, device)
-                Log.i(TAG, "USB permission request sent for thermal camera")
-            } else {
-                Log.e(TAG, "Context is not an Activity, cannot request USB permission")
+            // Get the current activity from context if possible
+            val activity = when {
+                context is android.app.Activity -> context
+                context is androidx.appcompat.app.AppCompatActivity -> context
+                else -> {
+                    // Try to find an activity in the application context
+                    Log.w(TAG, "Context is not an Activity, requesting permission via DevicePermissionEvent")
+                    // Use EventBus to trigger permission request
+                    EventBus.getDefault().post(DevicePermissionEvent(device))
+                    return
+                }
             }
+            
+            DeviceTools.requestUsb(activity, 0, device)
+            Log.i(TAG, "USB permission request sent for thermal camera")
+            
         } catch (e: Exception) {
             Log.e(TAG, "Failed to request USB permission for thermal camera", e)
-            // Fall back to simulation mode
-            isSimulationMode = true
+            // Try fallback approach using EventBus
+            try {
+                EventBus.getDefault().post(DevicePermissionEvent(device))
+                Log.i(TAG, "USB permission request sent via EventBus fallback")
+            } catch (eventBusError: Exception) {
+                Log.e(TAG, "EventBus fallback also failed", eventBusError)
+                // Fall back to simulation mode
+                isSimulationMode = true
+                recordingScope.launch {
+                    emitError(ErrorType.DEVICE_ERROR, "USB permission request failed - using simulation mode")
+                }
+            }
         }
     }
     
@@ -234,36 +284,69 @@ class ThermalCameraRecorder(
         
         usbPermissionReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent?.action == DeviceBroadcastReceiver.ACTION_USB_PERMISSION) {
-                    val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                when (intent?.action) {
+                    DeviceBroadcastReceiver.ACTION_USB_PERMISSION -> {
+                        val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                        }
+                        
+                        val permissionGranted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
+                        
+                        Log.i(TAG, "USB permission result: granted=$permissionGranted for device=${device?.productName}")
+                        
+                        if (device != null && device == thermalCameraDevice) {
+                            hasUsbPermission = permissionGranted
+                            
+                            if (permissionGranted) {
+                                // Retry initialization now that we have permission
+                                recordingScope.launch {
+                                    val success = initializeRealThermalCamera(device)
+                                    if (!success) {
+                                        Log.w(TAG, "Failed to initialize thermal camera after permission granted")
+                                        isSimulationMode = true
+                                    }
+                                    emitStatus()
+                                }
+                            } else {
+                                Log.w(TAG, "USB permission denied, enabling simulation mode")
+                                isSimulationMode = true
+                                recordingScope.launch {
+                                    emitError(ErrorType.DEVICE_ERROR, "USB permission denied - using simulation mode")
+                                }
+                            }
+                        }
                     }
                     
-                    val permissionGranted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-                    
-                    Log.i(TAG, "USB permission result: granted=$permissionGranted for device=${device?.productName}")
-                    
-                    if (device != null && device == thermalCameraDevice) {
-                        hasUsbPermission = permissionGranted
-                        
-                        if (permissionGranted) {
-                            // Retry initialization now that we have permission
-                            recordingScope.launch {
-                                val success = initializeRealThermalCamera(device)
-                                if (!success) {
-                                    Log.w(TAG, "Failed to initialize thermal camera after permission granted")
-                                    isSimulationMode = true
-                                }
-                                emitStatus()
-                            }
+                    UsbManager.ACTION_USB_DEVICE_DETACHED -> {
+                        val detachedDevice = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
                         } else {
-                            Log.w(TAG, "USB permission denied, enabling simulation mode")
-                            isSimulationMode = true
+                            @Suppress("DEPRECATION")
+                            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                        }
+                        
+                        Log.i(TAG, "USB device detached: ${detachedDevice?.productName}")
+                        
+                        if (detachedDevice != null && detachedDevice == thermalCameraDevice) {
+                            Log.w(TAG, "Thermal camera device detached, switching to simulation mode")
+                            
                             recordingScope.launch {
-                                emitError(ErrorType.DEVICE_ERROR, "USB permission denied - using simulation mode")
+                                // Gracefully switch to simulation mode
+                                isSimulationMode = true
+                                isIRCameraConnected = false
+                                hasUsbPermission = false
+                                
+                                // If recording, continue in simulation mode
+                                if (_isRecording.get()) {
+                                    Log.i(TAG, "Continuing recording in simulation mode after USB detach")
+                                    startSimulatedThermalRecording()
+                                }
+                                
+                                emitError(ErrorType.DEVICE_ERROR, "Thermal camera USB disconnected - switched to simulation mode")
+                                emitStatus()
                             }
                         }
                     }
@@ -271,12 +354,19 @@ class ThermalCameraRecorder(
             }
         }
         
-        val filter = IntentFilter(DeviceBroadcastReceiver.ACTION_USB_PERMISSION)
+        // Register for both permission responses and USB detach events
+        val filter = IntentFilter().apply {
+            addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION)
+            addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
+        }
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(usbPermissionReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
         } else {
             context.registerReceiver(usbPermissionReceiver, filter)
         }
+        
+        Log.d(TAG, "USB permission and detach receiver registered")
     }
     
     private suspend fun initializeRealThermalCamera(device: UsbDevice): Boolean = withContext(Dispatchers.IO) {
@@ -510,18 +600,35 @@ class ThermalCameraRecorder(
     private suspend fun startSimulatedThermalRecording() = withContext(Dispatchers.IO) {
         Log.i(TAG, "Starting simulated thermal data generation")
         
+        // Verify simulation mode is enabled
+        if (!isSimulationMode) {
+            Log.w(TAG, "startSimulatedThermalRecording called but simulation mode is disabled")
+            return@withContext
+        }
+        
         // Start a coroutine to generate simulated thermal frames
         recordingScope.launch {
+            Log.i(TAG, "Simulation coroutine started, generating thermal frames at ${thermalFrameRate} FPS")
+            val frameInterval = (1000.0 / thermalFrameRate).toLong()
+            
             while (_isRecording.get() && isSimulationMode) {
                 try {
                     generateSimulatedThermalFrame()
-                    delay((1000.0 / thermalFrameRate).toLong()) // Maintain proper frame rate
+                    
+                    // Log progress every 30 frames for debugging
+                    if (frameCount.get() % 30 == 0L) {
+                        Log.d(TAG, "Simulation mode: generated ${frameCount.get()} thermal frames")
+                    }
+                    
+                    delay(frameInterval) // Maintain proper frame rate
+                    
                 } catch (e: Exception) {
                     Log.e(TAG, "Error generating simulated thermal frame", e)
-                    break
+                    // Continue simulation even if individual frames fail
                 }
             }
-            Log.i(TAG, "Simulated thermal data generation stopped")
+            
+            Log.i(TAG, "Simulated thermal data generation stopped (recording: ${_isRecording.get()}, simulation: $isSimulationMode)")
         }
     }
     

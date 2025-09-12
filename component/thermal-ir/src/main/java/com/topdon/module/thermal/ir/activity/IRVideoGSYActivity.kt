@@ -229,11 +229,7 @@ class IRVideoGSYActivity : BaseActivity() {
 
     /*
     private fun getCurPlay(): GSYVideoPlayer {
-        return if (gsyPlay.fullWindowPlayer != null) {
-            gsyPlay.fullWindowPlayer
-        } else {
-            gsyPlay
-        }
+        return gsyPlay.fullWindowPlayer ?: gsyPlay
     }
     */
 }

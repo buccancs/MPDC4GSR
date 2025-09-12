@@ -69,6 +69,12 @@ android {
     }
     
     lint {
+        abortOnError = false
+        ignoreWarnings = true
+        checkReleaseBuilds = false
+    }
+    
+    lint {
         // Disable lint for third-party and compatibility issues
         abortOnError = false
         checkReleaseBuilds = false

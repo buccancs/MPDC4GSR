@@ -13,16 +13,11 @@ import kotlinx.coroutines.flow.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-// Real Shimmer Android API imports (using existing real implementation)
-import com.shimmerresearch.android.Shimmer
-import com.shimmerresearch.driver.ObjectCluster
-import com.shimmerresearch.driver.Configuration
-
-// Enhanced unified BLE imports for comprehensive device support
+// BLE imports for comprehensive device support
 import com.topdon.ble.UnifiedBleManager
 import com.topdon.ble.ShimmerDeviceConfig
-import com.topdon.ble.UnifiedDevice
-import com.topdon.ble.util.BluetoothPermissionUtils
+import com.topdon.ble.ShimmerDevice
+import com.topdon.ble.ShimmerBleController
 
 /**
  * GSR (Galvanic Skin Response) sensor recorder using Shimmer3 GSR+ device with unified BLE support.
@@ -56,15 +51,15 @@ class GSRSensorRecorder(
         private const val TAG = "GSRSensorRecorder"
         // Shimmer3 GSR+ specific constants
         private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0 // Hz
-        private const val GSR_CHANNEL_ID = Configuration.SENSOR_GSR
-        private const val GSR_RANGE_AUTO = Configuration.GSR_RANGE_AUTO
+        private const val GSR_CHANNEL_ID = 0x01  // GSR sensor channel ID
+        private const val GSR_RANGE_AUTO = 0x00  // Auto range setting
         
         /**
          * Check if all required permissions for GSR sensor are available
          * This addresses the comment's requirement for proper permission handling
          */
         fun hasRequiredPermissions(context: Context): Boolean {
-            return BluetoothPermissionUtils.hasBleScanningPermissions(context)
+            return hasBleScanningPermissions(context)
         }
         
         /**
@@ -72,7 +67,22 @@ class GSRSensorRecorder(
          * This can be used by UI to request specific permissions
          */
         fun getMissingPermissions(context: Context): List<String> {
-            return BluetoothPermissionUtils.getMissingPermissions(context)
+            val missing = mutableListOf<String>()
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                missing.add(android.Manifest.permission.BLUETOOTH)
+            }
+            if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+                missing.add(android.Manifest.permission.BLUETOOTH_ADMIN)
+            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                    missing.add(android.Manifest.permission.BLUETOOTH_SCAN)
+                }
+                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    missing.add(android.Manifest.permission.BLUETOOTH_CONNECT)
+                }
+            }
+            return missing
         }
         
         /**
@@ -81,7 +91,11 @@ class GSRSensorRecorder(
          * @return true if all BLE scanning permissions are granted, false otherwise
          */
         fun hasComprehensiveBluetoothPermissions(context: Context): Boolean {
-            return BluetoothPermissionUtils.hasBleScanningPermissions(context)
+            return hasBleScanningPermissions(context)
+        }
+        
+        private fun hasBleScanningPermissions(context: Context): Boolean {
+            return getMissingPermissions(context).isEmpty()
         }
     }
 
@@ -93,11 +107,11 @@ class GSRSensorRecorder(
 
     // Unified BLE manager for comprehensive device support
     private var unifiedBleManager: UnifiedBleManager? = null
-    private var unifiedShimmerDevice: UnifiedDevice? = null
+    private var unifiedShimmerDevice: ShimmerDevice? = null
 
     // Real Shimmer components using existing GSR recording module with enhanced BLE backend
     private var realShimmerGSRRecorder: ShimmerGSRRecorder? = null
-    private var shimmerDevice: Shimmer? = null
+    private var shimmerDevice: ShimmerBleController? = null
     
     // Enhanced data persistence with cross-sensor timestamp alignment
     private var gsrDataPersistence: GSRDataPersistence? = null
@@ -132,7 +146,7 @@ class GSRSensorRecorder(
             Log.i(TAG, "Initializing GSR sensor with Shimmer3 integration for $sensorId")
             
             // Check Bluetooth permissions first (critical for Shimmer GSR device connection)
-            if (!BluetoothPermissionUtils.hasBluetoothPermissions(context)) {
+            if (!hasRequiredPermissions(context)) {
                 Log.w(TAG, "Missing required Bluetooth permissions for Shimmer GSR device")
                 Log.i(TAG, "GSR sensor will initialize but Shimmer functionality will be limited until permissions are granted")
                 // Don't fail initialization - continue with limited functionality
@@ -867,7 +881,7 @@ class GSRSensorRecorder(
             "unified_ble_backend" to true,
             "enhanced_reliability" to true,
             "shimmer_connected" to isDeviceConnected(),
-            "permissions_available" to BluetoothPermissionUtils.hasBluetoothPermissions(context)
+            "permissions_available" to hasRequiredPermissions(context)
         )
     }
 
@@ -878,7 +892,7 @@ class GSRSensorRecorder(
     suspend fun getAvailableShimmerDevices(): List<String> {
         return withContext(Dispatchers.IO) {
             try {
-                if (!BluetoothPermissionUtils.hasBluetoothPermissions(context)) {
+                if (!hasRequiredPermissions(context)) {
                     Log.w(TAG, "Cannot scan for devices without Bluetooth permissions")
                     return@withContext emptyList()
                 }
@@ -908,7 +922,7 @@ class GSRSensorRecorder(
     suspend fun connectToShimmerDevice(deviceAddress: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!BluetoothPermissionUtils.hasBluetoothPermissions(context)) {
+                if (!hasRequiredPermissions(context)) {
                     Log.e(TAG, "Cannot connect to device without Bluetooth permissions")
                     emitError(ErrorType.PERMISSION_DENIED, "Bluetooth permissions required for device connection")
                     return@withContext false

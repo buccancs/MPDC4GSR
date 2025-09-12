@@ -474,7 +474,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 
                 deviceAdapter.notifyDataSetChanged()
                 
-            } catch (SecurityException e) {
+            } catch (e: SecurityException) {
                 Log.e(TAG, "SecurityException during device scan - permissions may have been revoked", e)
                 binding.deviceInfoText.text = "Permission error during scan. Please check app permissions."
                 availableDevices.clear()
@@ -540,7 +540,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                     Log.w(TAG, "Failed to connect to Shimmer device: $selectedDevice")
                 }
                 
-            } catch (SecurityException e) {
+            } catch (e: SecurityException) {
                 Log.e(TAG, "SecurityException during device connection - permissions may have been revoked", e)
                 updateDeviceStatus("Permission Error")
                 binding.deviceInfoText.text = "Permission error during connection. Please check app permissions."

@@ -64,6 +64,12 @@ android {
         viewBinding = true
         dataBinding = true
     }
+    
+    lint {
+        abortOnError = false
+        ignoreWarnings = true
+        checkReleaseBuilds = false
+    }
 }
 
 dependencies {

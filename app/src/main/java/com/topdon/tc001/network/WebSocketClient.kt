@@ -7,6 +7,8 @@ import android.util.Log
 import com.topdon.tc001.config.FeatureFlags
 import com.topdon.tc001.config.ProtocolVersion
 import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.sync.EnhancedTimeSyncService
+import com.topdon.tc001.sync.SessionManager
 import kotlinx.coroutines.*
 import okhttp3.*
 import okhttp3.internal.ws.RealWebSocket
@@ -790,5 +792,171 @@ class WebSocketClient(private val context: Context) {
             context.contentResolver,
             android.provider.Settings.Secure.ANDROID_ID
         ) ?: "unknown"
+    }
+    
+    // Phase 2 - Enhanced Time Synchronization & Session Management
+    
+    /**
+     * Initialize Phase 2 services for enhanced time sync and session management
+     */
+    private fun initializePhase2Services() {
+        // Initialize enhanced time synchronization service
+        timeSyncService = EnhancedTimeSyncService(context, logger).apply {
+            start { syncResult ->
+                if (syncResult.success) {
+                    Log.i(TAG, "Enhanced time sync completed: offset=${syncResult.offset/1_000_000.0}ms, quality=${syncResult.quality}")
+                    logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "enhanced_sync_completed", mapOf(
+                        "offset_ms" to (syncResult.offset / 1_000_000.0).toString(),
+                        "rtt_ms" to (syncResult.rtt / 1_000_000.0).toString(),
+                        "jitter_ms" to syncResult.jitter.toString(),
+                        "quality" to syncResult.quality.name
+                    ))
+                } else {
+                    Log.w(TAG, "Enhanced time sync failed")
+                    logger.log(StructuredLogger.LogLevel.WARNING, "WebSocketClient", "enhanced_sync_failed", emptyMap())
+                }
+            }
+        }
+        
+        // Initialize session manager
+        sessionManager = SessionManager(context, logger).apply {
+            start(
+                onSessionStateChanged = { state ->
+                    Log.i(TAG, "Session state changed: $state")
+                    logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "session_state_changed", mapOf(
+                        "new_state" to state.name
+                    ))
+                },
+                onDeviceJoined = { device ->
+                    Log.i(TAG, "Device joined session: ${device.deviceId} (${device.deviceType})")
+                    logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "device_joined", mapOf(
+                        "device_id" to device.deviceId,
+                        "device_type" to device.deviceType
+                    ))
+                },
+                onDeviceLeft = { device ->
+                    Log.i(TAG, "Device left session: ${device.deviceId}")
+                    logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "device_left", mapOf(
+                        "device_id" to device.deviceId
+                    ))
+                },
+                onSyncRequired = { devices ->
+                    Log.i(TAG, "Cross-device synchronization required for ${devices.size} devices")
+                    performCrossDeviceSync(devices)
+                }
+            )
+        }
+        
+        Log.i(TAG, "Phase 2 services initialized: Enhanced Time Sync + Session Management")
+    }
+    
+    /**
+     * Stop Phase 2 services
+     */
+    private fun stopPhase2Services() {
+        timeSyncService?.stop()
+        timeSyncService = null
+        
+        sessionManager?.stop()
+        sessionManager = null
+        
+        Log.i(TAG, "Phase 2 services stopped")
+    }
+    
+    /**
+     * Perform cross-device synchronization
+     */
+    private fun performCrossDeviceSync(devices: List<SessionManager.DeviceInfo>) {
+        GlobalScope.launch {
+            try {
+                logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "cross_device_sync_started", mapOf(
+                    "device_count" to devices.size.toString()
+                ))
+                
+                // Send sync flash command to PC for coordination
+                val syncMessage = JSONObject().apply {
+                    put("type", "sync_flash")
+                    put("device_count", devices.size)
+                    put("sync_timestamp", timeSyncService?.getSynchronizedTime() ?: System.nanoTime())
+                }
+                
+                sendMessage(syncMessage)
+                
+                // Update device heartbeats after sync
+                devices.forEach { device ->
+                    sessionManager?.updateDeviceHeartbeat(
+                        device.deviceId,
+                        timeSyncService?.getCurrentOffset() ?: 0L,
+                        SessionManager.ConnectionQuality.GOOD
+                    )
+                }
+                
+                logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "cross_device_sync_completed", emptyMap())
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Cross-device sync error", e)
+                logger.log(StructuredLogger.LogLevel.ERROR, "WebSocketClient", "cross_device_sync_error", mapOf(
+                    "error" to e.message.orEmpty()
+                ))
+            }
+        }
+    }
+    
+    /**
+     * Create new recording session
+     */
+    fun createRecordingSession(metadata: Map<String, Any> = emptyMap()): String? {
+        val manager = sessionManager ?: return null
+        val sessionId = manager.createSession(metadata)
+        
+        // Join this device to the session
+        val deviceCapabilities = setOf("recording", "camera", "sensors")
+        manager.joinDevice(
+            deviceId = getDeviceId(),
+            deviceType = "android_phone",
+            capabilities = deviceCapabilities
+        )
+        
+        return sessionId
+    }
+    
+    /**
+     * Start synchronized recording across connected devices
+     */
+    fun startSynchronizedRecording(): Boolean {
+        return sessionManager?.startSyncRecording() ?: false
+    }
+    
+    /**
+     * Stop synchronized recording
+     */
+    fun stopSynchronizedRecording() {
+        sessionManager?.stopSyncRecording()
+    }
+    
+    /**
+     * Get enhanced time synchronization diagnostics
+     */
+    fun getTimeSyncDiagnostics(): JSONObject {
+        return timeSyncService?.getDiagnostics() ?: JSONObject()
+    }
+    
+    /**
+     * Get session management diagnostics
+     */
+    fun getSessionDiagnostics(): JSONObject {
+        return sessionManager?.getDiagnostics() ?: JSONObject()
+    }
+    
+    /**
+     * Get comprehensive Phase 2 diagnostics
+     */
+    fun getPhase2Diagnostics(): JSONObject {
+        return JSONObject().apply {
+            put("time_sync", getTimeSyncDiagnostics())
+            put("session_management", getSessionDiagnostics())
+            put("phase2_enabled", true)
+            put("services_active", timeSyncService != null && sessionManager != null)
+        }
     }
 }

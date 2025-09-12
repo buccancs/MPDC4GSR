@@ -31,6 +31,7 @@ from ..core.config import config
 from .protocol import create_message, validate_message, get_protocol_manager
 from .security import SecurityManager
 from .discovery import NetworkDiscoveryService
+from ..sync import EnhancedTimeSyncServer
 
 
 @dataclass
@@ -114,7 +115,7 @@ class WebSocketServer:
             logger.warning("Running without TLS encryption")
 
     def _setup_message_handlers(self):
-        """Setup message type handlers"""
+        """Setup message type handlers with Phase 2 enhancements"""
         self.message_handlers = {
             "protocol_handshake": self._handle_handshake,
             "auth_request": self._handle_auth,
@@ -123,7 +124,10 @@ class WebSocketServer:
             "sync_flash": self._handle_sync_flash,
             "status_request": self._handle_status_request,
             "heartbeat": self._handle_heartbeat,
-            "pong": self._handle_pong
+            "pong": self._handle_pong,
+            # Phase 2 - Enhanced time synchronization
+            "time_sync_request": self._handle_time_sync_request,
+            "multi_round_sync_request": self._handle_multi_round_sync_request
         }
 
     async def start(self):
@@ -453,6 +457,34 @@ class WebSocketServer:
             client = self.clients.get(client_id)
             if client:
                 client.last_ping = time.time()
+
+    # Phase 2 - Enhanced Time Synchronization Handlers
+    
+    async def _handle_time_sync_request(self, client_id: str, message: dict):
+        """Handle time synchronization request with enhanced precision"""
+        try:
+            if client_id not in self.authenticated_clients:
+                await self._send_error(client_id, "auth_required", "Authentication required for time sync")
+                return
+            
+            # Get device ID for this client
+            device_id = "unknown"
+            async with self.client_lock:
+                client = self.clients.get(client_id)
+                if client:
+                    device_id = client.device_id or client_id
+            
+            # Handle sync request with enhanced precision
+            response_data = await self.time_sync_server.handle_time_sync_request(message, device_id)
+            
+            # Send response
+            await self._send_message(client_id, response_data)
+            
+            logger.debug(f"Time sync response sent to {client_id} (device: {device_id})")
+            
+        except Exception as e:
+            logger.error(f"Error handling time sync request from {client_id}: {e}")
+            await self._send_error(client_id, "time_sync_error", str(e))
 
     async def _heartbeat_monitor(self):
         """Monitor client heartbeats and disconnect stale clients"""

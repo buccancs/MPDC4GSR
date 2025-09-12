@@ -90,7 +90,7 @@ class DualModeCameraActivity : AppCompatActivity() {
                 enableHighSpeedVideo = false // Start conservative for Samsung compatibility
             )
             
-            rgbCameraRecorder?.configure(settings)
+            rgbCameraRecorder?.updateRecordingSettings(settings)
             
             Toast.makeText(this, "Dual-mode camera system initialized", Toast.LENGTH_SHORT).show()
             
@@ -109,14 +109,14 @@ class DualModeCameraActivity : AppCompatActivity() {
         }
         
         // Configure mode selector callback
-        cameraModeSelector.onModeChangedListener = { newMode ->
+        cameraModeSelector.setOnModeChangeListener { newMode ->
             lifecycleScope.launch {
                 switchCameraMode(newMode)
             }
         }
         
         // Set initial mode in selector
-        cameraModeSelector.setCurrentMode(mode)
+        cameraModeSelector.setMode(mode)
     }
     
     private suspend fun switchCameraMode(newMode: RGBCameraRecorder.CameraMode) {

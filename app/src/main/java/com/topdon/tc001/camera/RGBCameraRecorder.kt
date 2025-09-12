@@ -274,6 +274,35 @@ class RGBCameraRecorder(
         }
     }
 
+    // Mode support checking methods
+    fun isModeSupported(mode: CameraMode): Boolean {
+        val caps = getDeviceCaps()
+        return when (mode) {
+            CameraMode.RAW_50MP -> caps?.supportsRaw ?: false
+            CameraMode.VIDEO_4K -> caps?.supports4k60 ?: true // Video is generally supported
+            CameraMode.PREVIEW_ONLY -> true // Always supported
+        }
+    }
+    
+    fun getAvailableModes(): List<CameraMode> {
+        val modes = mutableListOf<CameraMode>()
+        modes.add(CameraMode.PREVIEW_ONLY) // Always available
+        if (isModeSupported(CameraMode.VIDEO_4K)) modes.add(CameraMode.VIDEO_4K)
+        if (isModeSupported(CameraMode.RAW_50MP)) modes.add(CameraMode.RAW_50MP)
+        return modes
+    }
+    
+    fun supportsRawCapture(): Boolean = isModeSupported(CameraMode.RAW_50MP)
+    fun supportsVideoRecording(): Boolean = isModeSupported(CameraMode.VIDEO_4K)
+    fun supportsHighSpeed60fps(): Boolean = getDeviceCaps()?.supports4k60 ?: false
+    
+    fun getMaxRawResolution(): VideoResolution? {
+        // Return the highest resolution available
+        return VideoResolution.UHD_4K // Simplified
+    }
+    
+    fun getCurrentVideoResolution(): VideoResolution = recordingSettings.resolution
+
     // Additional compatibility methods for legacy API
     fun updateSettings(settings: RecordingSettings) = updateRecordingSettings(settings)
     fun getCurrentSettings(): RecordingSettings = getRecordingSettings()

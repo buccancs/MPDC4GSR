@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 
 from loguru import logger
+from .gsr_analytics import GSRAnalytics, GSRFeatures, GSRAnalysisReport
 
 
 @dataclass
@@ -85,12 +86,21 @@ class GSRReceiver:
         self.time_offset_correction = self.config.get("time_offset_correction", True)
         self.sync_precision_threshold = self.config.get("sync_precision_threshold", 1000000)  # 1ms in ns
         
+        # Advanced analytics integration
+        analytics_config = self.config.get("analytics", {})
+        self.analytics = GSRAnalytics(
+            window_size_seconds=analytics_config.get("window_size_seconds", 60),
+            overlap_seconds=analytics_config.get("overlap_seconds", 30),
+            sampling_rate=analytics_config.get("sampling_rate", 128.0)
+        )
+        
         # Background tasks
         self._running = False
         self._flush_task: Optional[asyncio.Task] = None
         self._quality_monitor_task: Optional[asyncio.Task] = None
+        self._analytics_task: Optional[asyncio.Task] = None
         
-        logger.info(f"GSR Receiver initialized with data directory: {self.data_dir}")
+        logger.info(f"GSR Receiver initialized with data directory: {self.data_dir} and advanced analytics")
     
     def init_database(self):
         """Initialize SQLite database for GSR data storage"""
@@ -284,6 +294,11 @@ class GSRReceiver:
                     "avg_quality": sum(qualities) / len(qualities),
                     "quality_samples": len(qualities)
                 })
+                
+                # Send samples to analytics engine for real-time processing
+                gsr_values = [s.gsr_value for s in processed_samples]
+                timestamps = [s.timestamp for s in processed_samples]
+                self.analytics.add_gsr_samples(device_id, session_id, gsr_values, timestamps)
             
             logger.debug(f"Processed GSR batch: {len(processed_samples)} samples from {session_key}")
             return True
@@ -398,6 +413,48 @@ class GSRReceiver:
                     WHERE device_id = ? AND session_id = ?
                 """, (end_time, session.sample_count, avg_quality, device_id, session_id))
                 conn.commit()
+            
+            # Generate analytics report for completed session
+            analysis_report = self.analytics.generate_session_report(device_id, session_id)
+            if analysis_report:
+                # Save analytics report
+                report_filename = f"gsr_analysis_{device_id}_{session_id}_{int(end_time)}.json"
+                report_path = self.data_dir / "analytics" / report_filename
+                report_path.parent.mkdir(exist_ok=True)
+                
+                # Convert report to JSON-serializable format
+                report_dict = {
+                    'session_id': analysis_report.session_id,
+                    'device_id': analysis_report.device_id,
+                    'start_time': analysis_report.start_time.isoformat(),
+                    'end_time': analysis_report.end_time.isoformat(),
+                    'duration_minutes': analysis_report.duration_minutes,
+                    'total_samples': analysis_report.total_samples,
+                    'sampling_rate': analysis_report.sampling_rate,
+                    'data_quality': analysis_report.data_quality,
+                    'average_stress_score': analysis_report.average_stress_score,
+                    'peak_stress_score': analysis_report.peak_stress_score,
+                    'stress_distribution': analysis_report.stress_distribution,
+                    'stress_trend': analysis_report.stress_trend,
+                    'trend_confidence': analysis_report.trend_confidence,
+                    'recommendations': analysis_report.recommendations,
+                    'feature_count': len(analysis_report.features)
+                }
+                
+                with open(report_path, 'w') as f:
+                    json.dump(report_dict, f, indent=2)
+                
+                # Export features to CSV
+                features_filename = f"gsr_features_{device_id}_{session_id}_{int(end_time)}.csv"
+                features_path = self.data_dir / "analytics" / features_filename
+                self.analytics.export_features_csv(device_id, session_id, str(features_path))
+                
+                logger.info(f"Generated analytics report for session {session_key}: "
+                          f"avg_stress={analysis_report.average_stress_score:.1f}, "
+                          f"trend={analysis_report.stress_trend}")
+            
+            # Clean up analytics buffers
+            self.analytics.cleanup_device_session(device_id, session_id)
             
             # Move to completed sessions
             self.completed_sessions[session_key] = session
@@ -562,6 +619,81 @@ class GSRReceiver:
             session_key: self.get_session_stats(session.device_id, session.session_id)
             for session_key, session in self.active_sessions.items()
         }
+    
+    def get_real_time_analytics(self, device_id: str, session_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get real-time analytics features for a session
+        
+        Args:
+            device_id: Device identifier
+            session_id: Session identifier
+            
+        Returns:
+            Dictionary with latest analytics features or None
+        """
+        features = self.analytics.get_real_time_features(device_id, session_id)
+        if not features:
+            return None
+            
+        return {
+            'timestamp': features.timestamp,
+            'stress_score': features.stress_score,
+            'stress_level': features.stress_level.value,
+            'confidence': features.confidence,
+            'mean_gsr': features.mean_gsr,
+            'std_gsr': features.std_gsr,
+            'peak_frequency': features.peak_frequency,
+            'rising_time': features.rising_time,
+            'rapid_changes': features.rapid_changes,
+            'trend_slope': features.slope,
+            'trend_significance': features.slope_significance
+        }
+    
+    def get_stress_summary(self) -> Dict[str, Any]:
+        """Get stress level summary for all active sessions"""
+        return self.analytics.get_stress_summary()
+    
+    def get_analytics_alerts(self) -> List[Dict[str, Any]]:
+        """Get current analytics-based alerts"""
+        alerts = []
+        
+        for session_key, session in self.active_sessions.items():
+            features = self.analytics.get_real_time_features(session.device_id, session.session_id)
+            if features:
+                # High stress alert
+                if features.stress_score > 80:
+                    alerts.append({
+                        'type': 'high_stress',
+                        'device_id': session.device_id,
+                        'session_id': session.session_id,
+                        'stress_score': features.stress_score,
+                        'message': f'High stress detected: {features.stress_score:.1f}/100',
+                        'timestamp': features.timestamp
+                    })
+                
+                # Low confidence alert
+                if features.confidence < 50:
+                    alerts.append({
+                        'type': 'low_confidence',
+                        'device_id': session.device_id,
+                        'session_id': session.session_id,
+                        'confidence': features.confidence,
+                        'message': f'Low analysis confidence: {features.confidence:.1f}%',
+                        'timestamp': features.timestamp
+                    })
+                
+                # Rapid changes alert
+                if features.rapid_changes > 20:
+                    alerts.append({
+                        'type': 'unstable_signal',
+                        'device_id': session.device_id,
+                        'session_id': session.session_id,
+                        'rapid_changes': features.rapid_changes,
+                        'message': f'Unstable GSR signal: {features.rapid_changes} rapid changes',
+                        'timestamp': features.timestamp
+                    })
+        
+        return alerts
     
     async def export_session_data(self, device_id: str, session_id: str, 
                                 format: str = "csv") -> Optional[Path]:

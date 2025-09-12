@@ -602,3 +602,524 @@ class GSRMainWidget(QWidget):
         except Exception as e:
             logger.error(f"Error exporting GSR data: {e}")
             QMessageBox.critical(self, "Export Error", f"Export failed: {str(e)}")
+
+
+class GSRAnalyticsWidget(QWidget):
+    """Advanced GSR analytics and stress monitoring widget"""
+    
+    def __init__(self, gsr_receiver=None, parent=None):
+        super().__init__(parent)
+        self.gsr_receiver = gsr_receiver
+        self.analytics_data = {}
+        self.stress_history = {}
+        self.init_ui()
+        
+        # Update timer for real-time analytics
+        self.analytics_timer = QTimer()
+        self.analytics_timer.timeout.connect(self.update_analytics)
+        self.analytics_timer.start(2000)  # Update every 2 seconds
+        
+    def init_ui(self):
+        """Initialize analytics UI"""
+        layout = QVBoxLayout(self)
+        
+        # Title
+        title = QLabel("GSR Analytics & Stress Monitoring")
+        title.setFont(QFont("Arial", 16, QFont.Weight.Bold))
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(title)
+        
+        # Main content in splitter
+        splitter = QSplitter(Qt.Orientation.Horizontal)
+        layout.addWidget(splitter)
+        
+        # Left panel - Current status
+        left_widget = QWidget()
+        left_layout = QVBoxLayout(left_widget)
+        
+        # Stress levels group
+        stress_group = QGroupBox("Current Stress Levels")
+        stress_layout = QVBoxLayout(stress_group)
+        
+        self.stress_table = QTableWidget(0, 4)
+        self.stress_table.setHorizontalHeaderLabels([
+            "Device", "Stress Score", "Level", "Confidence"
+        ])
+        self.stress_table.horizontalHeader().setStretchLastSection(True)
+        stress_layout.addWidget(self.stress_table)
+        
+        left_layout.addWidget(stress_group)
+        
+        # Analytics alerts
+        alerts_group = QGroupBox("Analytics Alerts")
+        alerts_layout = QVBoxLayout(alerts_group)
+        
+        self.alerts_text = QTextEdit()
+        self.alerts_text.setMaximumHeight(120)
+        self.alerts_text.setReadOnly(True)
+        alerts_layout.addWidget(self.alerts_text)
+        
+        left_layout.addWidget(alerts_group)
+        
+        # Recommendations
+        rec_group = QGroupBox("Recommendations")
+        rec_layout = QVBoxLayout(rec_group)
+        
+        self.recommendations_text = QTextEdit()
+        self.recommendations_text.setMaximumHeight(100)
+        self.recommendations_text.setReadOnly(True)
+        rec_layout.addWidget(self.recommendations_text)
+        
+        left_layout.addWidget(rec_group)
+        
+        splitter.addWidget(left_widget)
+        
+        # Right panel - Charts
+        right_widget = QWidget()
+        right_layout = QVBoxLayout(right_widget)
+        
+        # Stress trend chart
+        chart_group = QGroupBox("Stress Trend Analysis")
+        chart_layout = QVBoxLayout(chart_group)
+        
+        self.stress_plot = PlotWidget()
+        self.stress_plot.setLabel('left', 'Stress Score', units='0-100')
+        self.stress_plot.setLabel('bottom', 'Time', units='seconds')
+        self.stress_plot.setTitle('Real-time Stress Levels')
+        self.stress_plot.showGrid(x=True, y=True)
+        self.stress_plot.setYRange(0, 100)
+        
+        # Setup plot lines for different devices
+        self.stress_curves = {}
+        colors = ['r', 'g', 'b', 'c', 'm', 'y']
+        self.color_index = 0
+        
+        chart_layout.addWidget(self.stress_plot)
+        right_layout.addWidget(chart_group)
+        
+        # Feature analysis
+        features_group = QGroupBox("GSR Features")
+        features_layout = QGridLayout(features_group)
+        
+        # Feature displays
+        self.feature_labels = {}
+        feature_names = [
+            ("Mean GSR", "μS"), ("Peak Frequency", "/min"), 
+            ("Rising Time", "%"), ("Rapid Changes", "count"),
+            ("Trend Slope", "μS/s"), ("Spectral Entropy", "bits")
+        ]
+        
+        for i, (name, unit) in enumerate(feature_names):
+            label = QLabel(f"{name}:")
+            value_label = QLabel("--")
+            value_label.setStyleSheet("font-weight: bold; color: blue;")
+            unit_label = QLabel(unit)
+            
+            row = i // 2
+            col = (i % 2) * 3
+            
+            features_layout.addWidget(label, row, col)
+            features_layout.addWidget(value_label, row, col + 1)
+            features_layout.addWidget(unit_label, row, col + 2)
+            
+            self.feature_labels[name] = value_label
+        
+        right_layout.addWidget(features_group)
+        
+        # Session summary
+        summary_group = QGroupBox("Session Summary")
+        summary_layout = QVBoxLayout(summary_group)
+        
+        self.summary_table = QTableWidget(0, 3)
+        self.summary_table.setHorizontalHeaderLabels([
+            "Metric", "Value", "Interpretation"
+        ])
+        self.summary_table.horizontalHeader().setStretchLastSection(True)
+        self.summary_table.setMaximumHeight(150)
+        summary_layout.addWidget(self.summary_table)
+        
+        right_layout.addWidget(summary_group)
+        
+        splitter.addWidget(right_widget)
+        splitter.setSizes([300, 500])
+        
+        # Control buttons
+        button_layout = QHBoxLayout()
+        
+        self.export_analytics_btn = QPushButton("Export Analytics")
+        self.export_analytics_btn.clicked.connect(self.export_analytics_data)
+        button_layout.addWidget(self.export_analytics_btn)
+        
+        self.clear_history_btn = QPushButton("Clear History")
+        self.clear_history_btn.clicked.connect(self.clear_stress_history)
+        button_layout.addWidget(self.clear_history_btn)
+        
+        button_layout.addStretch()
+        
+        self.auto_scroll_cb = QCheckBox("Auto-scroll Charts")
+        self.auto_scroll_cb.setChecked(True)
+        button_layout.addWidget(self.auto_scroll_cb)
+        
+        layout.addLayout(button_layout)
+        
+    def update_analytics(self):
+        """Update analytics display with latest data"""
+        if not self.gsr_receiver:
+            return
+            
+        try:
+            # Get stress summary
+            stress_summary = self.gsr_receiver.get_stress_summary()
+            self.update_stress_table(stress_summary)
+            
+            # Get analytics alerts
+            alerts = self.gsr_receiver.get_analytics_alerts()
+            self.update_alerts_display(alerts)
+            
+            # Update stress trend plots
+            self.update_stress_plots(stress_summary)
+            
+            # Update selected device features
+            self.update_feature_display()
+            
+        except Exception as e:
+            logger.error(f"Error updating analytics display: {e}")
+    
+    def update_stress_table(self, stress_summary: Dict):
+        """Update the stress levels table"""
+        sessions = stress_summary.get('sessions', {})
+        
+        self.stress_table.setRowCount(len(sessions))
+        
+        for row, (session_key, data) in enumerate(sessions.items()):
+            device_id = data.get('device_id', 'Unknown')
+            stress_score = data.get('latest_stress_score', 0)
+            stress_level = data.get('latest_stress_level', 'unknown')
+            confidence = data.get('confidence', 0)
+            
+            # Format stress level with color coding
+            stress_item = QTableWidgetItem(f"{stress_score:.1f}")
+            if stress_score > 80:
+                stress_item.setBackground(QColor(255, 200, 200))  # Light red
+            elif stress_score > 60:
+                stress_item.setBackground(QColor(255, 255, 200))  # Light yellow
+            else:
+                stress_item.setBackground(QColor(200, 255, 200))  # Light green
+            
+            level_item = QTableWidgetItem(stress_level.replace('_', ' ').title())
+            confidence_item = QTableWidgetItem(f"{confidence:.1f}%")
+            
+            self.stress_table.setItem(row, 0, QTableWidgetItem(device_id))
+            self.stress_table.setItem(row, 1, stress_item)
+            self.stress_table.setItem(row, 2, level_item)
+            self.stress_table.setItem(row, 3, confidence_item)
+    
+    def update_alerts_display(self, alerts: List[Dict]):
+        """Update analytics alerts display"""
+        if not alerts:
+            self.alerts_text.setText("No alerts")
+            return
+            
+        alert_text = ""
+        for alert in alerts[-5:]:  # Show last 5 alerts
+            timestamp = datetime.fromtimestamp(alert['timestamp']).strftime("%H:%M:%S")
+            device = alert['device_id']
+            message = alert['message']
+            alert_text += f"[{timestamp}] {device}: {message}\n"
+        
+        self.alerts_text.setText(alert_text)
+        
+        # Auto-scroll to bottom
+        cursor = self.alerts_text.textCursor()
+        cursor.movePosition(cursor.MoveOperation.End)
+        self.alerts_text.setTextCursor(cursor)
+    
+    def update_stress_plots(self, stress_summary: Dict):
+        """Update stress trend plots"""
+        current_time = datetime.now().timestamp()
+        
+        sessions = stress_summary.get('sessions', {})
+        
+        for session_key, data in sessions.items():
+            device_id = data.get('device_id', 'Unknown')
+            stress_score = data.get('latest_stress_score', 0)
+            
+            # Initialize history for new devices
+            if device_id not in self.stress_history:
+                self.stress_history[device_id] = {'times': [], 'scores': []}
+                
+                # Create plot curve for this device
+                color = ['r', 'g', 'b', 'c', 'm', 'y'][self.color_index % 6]
+                self.stress_curves[device_id] = self.stress_plot.plot(
+                    pen=mkPen(color, width=2), name=device_id
+                )
+                self.color_index += 1
+            
+            # Add current data point
+            self.stress_history[device_id]['times'].append(current_time)
+            self.stress_history[device_id]['scores'].append(stress_score)
+            
+            # Keep last 100 points (about 3 minutes at 2-second intervals)
+            if len(self.stress_history[device_id]['times']) > 100:
+                self.stress_history[device_id]['times'] = self.stress_history[device_id]['times'][-100:]
+                self.stress_history[device_id]['scores'] = self.stress_history[device_id]['scores'][-100:]
+            
+            # Update plot
+            if device_id in self.stress_curves:
+                times = self.stress_history[device_id]['times']
+                scores = self.stress_history[device_id]['scores']
+                
+                # Convert to relative time (seconds from start)
+                if times:
+                    start_time = times[0]
+                    rel_times = [(t - start_time) for t in times]
+                    self.stress_curves[device_id].setData(rel_times, scores)
+        
+        # Auto-scroll if enabled
+        if self.auto_scroll_cb.isChecked() and self.stress_history:
+            all_times = []
+            for history in self.stress_history.values():
+                all_times.extend(history['times'])
+            
+            if all_times:
+                latest_time = max(all_times)
+                earliest_time = min(all_times)
+                time_range = latest_time - earliest_time
+                
+                if time_range > 0:
+                    self.stress_plot.setXRange(0, time_range, padding=0.1)
+    
+    def update_feature_display(self):
+        """Update feature display for selected device"""
+        if not self.gsr_receiver or not self.stress_table.currentRow() >= 0:
+            return
+            
+        try:
+            # Get selected device
+            row = self.stress_table.currentRow()
+            if row < 0 or row >= self.stress_table.rowCount():
+                return
+                
+            device_item = self.stress_table.item(row, 0)
+            if not device_item:
+                return
+                
+            device_id = device_item.text()
+            
+            # Find active session for this device
+            active_sessions = getattr(self.gsr_receiver, 'active_sessions', {})
+            session_id = None
+            
+            for session_key, session in active_sessions.items():
+                if session.device_id == device_id:
+                    session_id = session.session_id
+                    break
+            
+            if not session_id:
+                return
+                
+            # Get real-time analytics
+            analytics = self.gsr_receiver.get_real_time_analytics(device_id, session_id)
+            if not analytics:
+                return
+                
+            # Update feature labels
+            feature_mapping = {
+                "Mean GSR": analytics.get('mean_gsr', 0),
+                "Peak Frequency": analytics.get('peak_frequency', 0),
+                "Rising Time": analytics.get('rising_time', 0),
+                "Rapid Changes": analytics.get('rapid_changes', 0),
+                "Trend Slope": analytics.get('trend_slope', 0),
+                "Spectral Entropy": 0  # Not available in simplified analytics
+            }
+            
+            for name, value in feature_mapping.items():
+                if name in self.feature_labels:
+                    if isinstance(value, float):
+                        self.feature_labels[name].setText(f"{value:.2f}")
+                    else:
+                        self.feature_labels[name].setText(str(value))
+            
+            # Update session summary
+            self.update_session_summary(analytics)
+            
+        except Exception as e:
+            logger.error(f"Error updating feature display: {e}")
+    
+    def update_session_summary(self, analytics: Dict):
+        """Update session summary table"""
+        summary_data = [
+            ("Current Stress Score", f"{analytics.get('stress_score', 0):.1f}/100", 
+             self.interpret_stress_score(analytics.get('stress_score', 0))),
+            ("Confidence Level", f"{analytics.get('confidence', 0):.1f}%", 
+             self.interpret_confidence(analytics.get('confidence', 0))),
+            ("GSR Trend", f"{analytics.get('trend_slope', 0):.3f} μS/s", 
+             self.interpret_trend(analytics.get('trend_slope', 0))),
+            ("Signal Stability", f"{analytics.get('rapid_changes', 0)} changes", 
+             self.interpret_stability(analytics.get('rapid_changes', 0)))
+        ]
+        
+        self.summary_table.setRowCount(len(summary_data))
+        
+        for row, (metric, value, interpretation) in enumerate(summary_data):
+            self.summary_table.setItem(row, 0, QTableWidgetItem(metric))
+            self.summary_table.setItem(row, 1, QTableWidgetItem(value))
+            self.summary_table.setItem(row, 2, QTableWidgetItem(interpretation))
+    
+    def interpret_stress_score(self, score: float) -> str:
+        """Interpret stress score"""
+        if score > 80:
+            return "Very High - Consider intervention"
+        elif score > 60:
+            return "High - Monitor closely"
+        elif score > 40:
+            return "Moderate - Normal range"
+        elif score > 20:
+            return "Low - Relaxed state"
+        else:
+            return "Very Low - Calm state"
+    
+    def interpret_confidence(self, confidence: float) -> str:
+        """Interpret confidence level"""
+        if confidence > 80:
+            return "High confidence"
+        elif confidence > 60:
+            return "Good confidence"
+        elif confidence > 40:
+            return "Moderate confidence"
+        else:
+            return "Low confidence - Check signal quality"
+    
+    def interpret_trend(self, slope: float) -> str:
+        """Interpret trend slope"""
+        if abs(slope) < 0.001:
+            return "Stable"
+        elif slope > 0.001:
+            return "Increasing stress"
+        else:
+            return "Decreasing stress"
+    
+    def interpret_stability(self, rapid_changes: int) -> str:
+        """Interpret signal stability"""
+        if rapid_changes > 30:
+            return "Very unstable"
+        elif rapid_changes > 15:
+            return "Moderately unstable"
+        elif rapid_changes > 5:
+            return "Slightly unstable"
+        else:
+            return "Stable"
+    
+    def export_analytics_data(self):
+        """Export analytics data to file"""
+        try:
+            filename, _ = QFileDialog.getSaveFileName(
+                self, "Export Analytics Data", 
+                f"gsr_analytics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                "JSON files (*.json);;CSV files (*.csv);;All files (*.*)"
+            )
+            
+            if not filename:
+                return
+                
+            if not self.gsr_receiver:
+                QMessageBox.warning(self, "No Data", "No GSR receiver available")
+                return
+                
+            # Get current analytics data
+            stress_summary = self.gsr_receiver.get_stress_summary()
+            alerts = self.gsr_receiver.get_analytics_alerts()
+            
+            export_data = {
+                'timestamp': datetime.now().isoformat(),
+                'stress_summary': stress_summary,
+                'alerts': alerts,
+                'stress_history': {
+                    device_id: {
+                        'times': [datetime.fromtimestamp(t).isoformat() for t in history['times']],
+                        'scores': history['scores']
+                    }
+                    for device_id, history in self.stress_history.items()
+                }
+            }
+            
+            if filename.endswith('.json'):
+                import json
+                with open(filename, 'w') as f:
+                    json.dump(export_data, f, indent=2)
+            else:
+                # Export as CSV
+                import pandas as pd
+                
+                # Flatten stress history for CSV
+                csv_data = []
+                for device_id, history in self.stress_history.items():
+                    for time_val, score in zip(history['times'], history['scores']):
+                        csv_data.append({
+                            'device_id': device_id,
+                            'timestamp': datetime.fromtimestamp(time_val).isoformat(),
+                            'stress_score': score
+                        })
+                
+                df = pd.DataFrame(csv_data)
+                df.to_csv(filename, index=False)
+            
+            QMessageBox.information(self, "Export Complete", 
+                                  f"Analytics data exported to:\n{filename}")
+                                  
+        except Exception as e:
+            logger.error(f"Error exporting analytics data: {e}")
+            QMessageBox.critical(self, "Export Error", f"Export failed: {str(e)}")
+    
+    def clear_stress_history(self):
+        """Clear stress history and reset plots"""
+        self.stress_history.clear()
+        
+        # Clear all plot curves
+        for curve in self.stress_curves.values():
+            self.stress_plot.removeItem(curve)
+        self.stress_curves.clear()
+        self.color_index = 0
+        
+        # Clear feature displays
+        for label in self.feature_labels.values():
+            label.setText("--")
+        
+        # Clear summary table
+        self.summary_table.setRowCount(0)
+        
+        logger.info("Cleared GSR analytics history")
+
+
+class GSRMainWidget(QTabWidget):
+    """Main GSR monitoring widget with all tabs"""
+    
+    def __init__(self, gsr_receiver=None, parent=None):
+        super().__init__(parent)
+        self.gsr_receiver = gsr_receiver
+        self.init_ui()
+        
+    def init_ui(self):
+        """Initialize tabbed interface"""
+        # Device status tab
+        self.device_widget = GSRDeviceStatusWidget()
+        self.addTab(self.device_widget, "Device Status")
+        
+        # Real-time monitoring tab
+        self.monitor_widget = GSRMonitorWidget(self.gsr_receiver)
+        self.addTab(self.monitor_widget, "Real-time Monitor")
+        
+        # Analytics tab
+        self.analytics_widget = GSRAnalyticsWidget(self.gsr_receiver)
+        self.addTab(self.analytics_widget, "Analytics & Stress")
+        
+        # Data export tab
+        self.export_widget = GSRDataExportWidget(self.gsr_receiver)
+        self.addTab(self.export_widget, "Data Export")
+        
+    def set_gsr_receiver(self, gsr_receiver):
+        """Set GSR receiver for all widgets"""
+        self.gsr_receiver = gsr_receiver
+        self.monitor_widget.gsr_receiver = gsr_receiver
+        self.analytics_widget.gsr_receiver = gsr_receiver
+        self.export_widget.gsr_receiver = gsr_receiver

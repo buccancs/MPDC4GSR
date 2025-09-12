@@ -52,7 +52,7 @@ from ..core.file_transfer import FileTransferManager
 from ..core.gsr_ingestor import GSRIngestor
 from ..core.timesync import TimeSyncService
 from ..core.wifi_manager import WiFiManager
-from ..network.server import NetworkServer
+from ..network.websocket_server import WebSocketServer
 from .utils import setup_logging
 
 # Only import MainWindow if GUI is available
@@ -82,7 +82,7 @@ class IRCameraApp:
         # Core services
         self.session_manager = SessionManager()
         self.time_sync_service = TimeSyncService()
-        self.network_server = NetworkServer()
+        self.websocket_server = WebSocketServer()
 
         # Enhanced components for system integration
         self.gsr_ingestor = GSRIngestor(self.config)
@@ -108,7 +108,7 @@ class IRCameraApp:
         components = [
             "Session Manager",
             "Time Sync",
-            "Network Server",
+            "WebSocket Server",
             "GSR Ingestor",
             "File Transfer",
             "Camera Calibrator",
@@ -227,7 +227,7 @@ class IRCameraApp:
         if GUI_AVAILABLE:
             self.main_window = MainWindow(
                 session_manager=self.session_manager,
-                network_server=self.network_server,
+                websocket_server=self.websocket_server,
                 time_sync_service=self.time_sync_service,
                 gsr_ingestor=self.gsr_ingestor,
                 file_transfer_manager=self.file_transfer_manager,
@@ -285,8 +285,8 @@ class IRCameraApp:
             # Start time synchronization service
             await self.time_sync_service.start()
 
-            # Start network server
-            await self.network_server.start()
+            # Start WebSocket server - Phase 1
+            await self.websocket_server.start()
 
             logger.info("All services started successfully")
 
@@ -305,7 +305,7 @@ class IRCameraApp:
                 await self.bluetooth_manager.cleanup()
 
             # Stop core services in reverse order
-            await self.network_server.stop()
+            await self.websocket_server.stop()
             await self.time_sync_service.stop()
 
             logger.info("All services and system integration managers stopped")

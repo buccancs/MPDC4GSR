@@ -93,6 +93,7 @@ dependencies {
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
@@ -104,8 +105,8 @@ dependencies {
     // Image browser library
     implementation(libs.mn.image.browser)
     
-    // GSY VideoPlayer for video playback - using standard version
-    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v11.1.0") {
+    // GSY VideoPlayer for video playback - using working version
+    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack") {
         exclude(group = "androidx.media3", module = "media3-cast")
         exclude(group = "androidx.media3", module = "media3-session")
         exclude(group = "androidx.media3", module = "media3-ui")

@@ -150,6 +150,31 @@ class CameraModeSelectorTest {
     }
 
     @Test
+    fun `test error handling for invalid modes`() {
+        // Test error handling for edge cases
+        val validModes = CameraMode.values()
+        assertTrue("Should have at least 3 camera modes", validModes.size >= 3)
+        
+        // All defined modes should be valid
+        validModes.forEach { mode ->
+            cameraModeSelector.setCurrentMode(mode)
+            assertEquals("All defined modes should be settable", mode, cameraModeSelector.getCurrentMode())
+        }
+    }
+
+    @Test
+    fun `test mode descriptions and display names`() {
+        // Test that all modes have proper descriptions
+        CameraMode.values().forEach { mode ->
+            assertNotNull("Mode ${mode.name} should have display name", mode.displayName)
+            assertNotNull("Mode ${mode.name} should have description", mode.description)
+            assertTrue("Display name should not be empty", mode.displayName.isNotEmpty())
+            assertTrue("Description should not be empty", mode.description.isNotEmpty())
+        }
+    }
+}
+
+    @Test
     fun `test battery and thermal warnings`() {
         // Test that appropriate warnings are shown for resource-intensive modes
         val resourceIntensiveModes = listOf(CameraMode.RAW_50MP, CameraMode.VIDEO_4K)

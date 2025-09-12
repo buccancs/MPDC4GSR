@@ -6,13 +6,43 @@ Implements FR6: User Interface for Monitoring & Control requirements.
 """
 
 import asyncio
+import os
 import signal
 import sys
 from typing import Optional
 
 from loguru import logger
-from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import QApplication
+
+# Handle headless mode for environments without display
+GUI_AVAILABLE = True
+try:
+    # Set Qt platform to offscreen if no display is available
+    if 'DISPLAY' not in os.environ and 'QT_QPA_PLATFORM' not in os.environ:
+        os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+    
+    from PyQt6.QtCore import QTimer
+    from PyQt6.QtWidgets import QApplication
+except ImportError as e:
+    logger.warning(f"GUI libraries not available, running in headless mode: {e}")
+    GUI_AVAILABLE = False
+    # Mock classes for headless mode
+    class QApplication:
+        def __init__(self, *args): pass
+        def setApplicationName(self, name): pass
+        def setApplicationVersion(self, version): pass
+        def setStyleSheet(self, style): pass
+        def exec(self): return 0
+    class QTimer:
+        def __init__(self): 
+            self.timeout_func = None
+        def timeout(self): 
+            return self
+        def connect(self, func): 
+            self.timeout_func = func
+        def start(self, interval): 
+            pass
+        def stop(self):
+            pass
 
 from ..core import SessionManager, config
 from ..core.admin_privileges import AdminPrivilegesManager
@@ -23,8 +53,17 @@ from ..core.gsr_ingestor import GSRIngestor
 from ..core.timesync import TimeSyncService
 from ..core.wifi_manager import WiFiManager
 from ..network.server import NetworkServer
-from .main_window import MainWindow
 from .utils import setup_logging
+
+# Only import MainWindow if GUI is available
+if GUI_AVAILABLE:
+    from .main_window import MainWindow
+else:
+    class MainWindow:
+        def __init__(self, *args, **kwargs):
+            logger.info("MainWindow created in headless mode")
+        def show(self): pass
+        def resize(self, w, h): pass
 
 
 class IRCameraApp:
@@ -81,6 +120,11 @@ class IRCameraApp:
 
     def setup_qt_app(self) -> None:
         """Set up Qt application."""
+        if not GUI_AVAILABLE:
+            logger.info("Running in headless mode - GUI not available")
+            self.qt_app = QApplication(sys.argv)
+            return
+            
         if self.qt_app is None:
             self.qt_app = QApplication(sys.argv)
             self.qt_app.setApplicationName("IRCamera PC Controller")
@@ -180,21 +224,24 @@ class IRCameraApp:
             )
 
         # Create main window with all components including system integration
-        self.main_window = MainWindow(
-            session_manager=self.session_manager,
-            network_server=self.network_server,
-            time_sync_service=self.time_sync_service,
-            gsr_ingestor=self.gsr_ingestor,
-            file_transfer_manager=self.file_transfer_manager,
-            camera_calibrator=self.camera_calibrator,
-            bluetooth_manager=self.bluetooth_manager,
-            wifi_manager=self.wifi_manager,
-            admin_privileges_manager=self.admin_privileges_manager,
-        )
+        if GUI_AVAILABLE:
+            self.main_window = MainWindow(
+                session_manager=self.session_manager,
+                network_server=self.network_server,
+                time_sync_service=self.time_sync_service,
+                gsr_ingestor=self.gsr_ingestor,
+                file_transfer_manager=self.file_transfer_manager,
+                camera_calibrator=self.camera_calibrator,
+                bluetooth_manager=self.bluetooth_manager,
+                wifi_manager=self.wifi_manager,
+                admin_privileges_manager=self.admin_privileges_manager,
+            )
 
-        # Set up window size from config (increased for system integration features)
-        window_size = config.get("gui.window_size", [1400, 900])
-        self.main_window.resize(window_size[0], window_size[1])
+            # Set up window size from config (increased for system integration features)
+            window_size = config.get("gui.window_size", [1400, 900])
+            self.main_window.resize(window_size[0], window_size[1])
+        else:
+            logger.info("Main window not created - running in headless mode")
 
         logger.info("Qt application set up")
 
@@ -291,12 +338,29 @@ class IRCameraApp:
             asyncio.run_coroutine_threadsafe(self.start_services(), self._loop)
 
             # Show main window
-            self.main_window.show()
+            if GUI_AVAILABLE and self.main_window:
+                self.main_window.show()
+            else:
+                logger.info("Running in headless mode - no GUI window to show")
 
             logger.info("IRCamera PC Controller started")
 
             # Run Qt event loop
-            return self.qt_app.exec_()
+            if GUI_AVAILABLE:
+                return self.qt_app.exec_()
+            else:
+                # In headless mode, keep running until interrupted
+                logger.info("Headless mode - press Ctrl+C to stop")
+                try:
+                    while True:
+                        if self._loop:
+                            # Process any pending async tasks
+                            self._process_async_events()
+                        import time
+                        time.sleep(0.1)
+                except KeyboardInterrupt:
+                    logger.info("Keyboard interrupt received, shutting down...")
+                    return 0
 
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Application error: {e}")

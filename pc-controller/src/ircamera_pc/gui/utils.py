@@ -76,14 +76,30 @@ def setup_logging() -> LogHandler:
     # Create and configure GUI log handler
     gui_handler = LogHandler()
 
-    # Add custom sink for GUI integration
+    # Add custom sink for GUI integration only if GUI is available
     def gui_sink(record):
-        level = record["level"].name
-        message = record["message"]
-        timestamp = record["time"].strftime("%H:%M:%S")
-        gui_handler.log_message.emit(level, message, timestamp)
+        try:
+            if hasattr(record, 'get'):
+                # New loguru format
+                level = record.get("level", {}).get("name", "INFO")
+                message = record.get("message", "")
+                timestamp = record.get("time", "").strftime("%H:%M:%S") if record.get("time") else ""
+            else:
+                # Old format fallback
+                level = getattr(record.get("level", {}), "name", "INFO") if hasattr(record, "get") else "INFO"
+                message = str(record)
+                timestamp = ""
+            gui_handler.log_message.emit(level, message, timestamp)
+        except Exception:
+            # Silently ignore GUI logging errors in headless mode
+            pass
 
-    logger.add(gui_sink, level=log_level)
+    # Only add GUI sink if GUI components are available
+    try:
+        logger.add(gui_sink, level=log_level)
+    except Exception:
+        # GUI not available, skip GUI logging
+        pass
 
     logger.info("Logging system initialized")
     return gui_handler

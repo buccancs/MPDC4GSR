@@ -184,6 +184,14 @@ class NetworkClient(private val context: Context) {
     fun setEventListener(listener: NetworkEventListener?) {
         eventListener = listener
     }
+    
+    /**
+     * Set message handler for specific message types
+     */
+    fun setMessageHandler(messageType: String, handler: (JSONObject) -> Unit) {
+        messageHandlers[messageType] = handler
+        Log.d(TAG, "Message handler registered for type: $messageType")
+    }
 
     private fun setupErrorRecoveryListener() {
         errorRecoveryManager.setEventListener(object : NetworkErrorRecoveryManager.RecoveryEventListener {
@@ -660,7 +668,20 @@ class NetworkClient(private val context: Context) {
 
     private fun handleIncomingMessage(message: JSONObject) {
         val messageType = message.optString("message_type")
+        
+        Log.d(TAG, "Received message: $messageType")
 
+        // First, call registered message handlers
+        messageHandlers[messageType]?.let { handler ->
+            try {
+                Log.d(TAG, "Calling registered handler for message type: $messageType")
+                handler(message)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in message handler for type $messageType", e)
+            }
+        }
+
+        // Then handle built-in message types
         when (messageType) {
             "session_start" -> {
                 val sessionId = message.optString("session_id")

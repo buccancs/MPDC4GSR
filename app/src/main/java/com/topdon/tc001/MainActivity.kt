@@ -72,6 +72,11 @@ import com.topdon.tc001.network.NetworkClient
 import com.topdon.tc001.service.RecordingService
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.gsr.model.SessionInfo
+// Phase 0 baseline imports
+import com.topdon.tc001.config.FeatureFlags
+import com.topdon.tc001.config.ProtocolVersion
+import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.supervisor.CrashSafeSupervisor
 // Zoho dependencies commented out - not available in build
 // import com.zoho.commons.LauncherModes
 // import com.zoho.commons.LauncherProperties
@@ -98,6 +103,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     // UI elements for network status
     private var networkStatusIndicator: ImageView? = null
     private var networkStatusText: TextView? = null
+    
+    // Phase 0 baseline components
+    private lateinit var structuredLogger: StructuredLogger
+    private lateinit var crashSafeSupervisor: CrashSafeSupervisor
     
     enum class ConnectionStatus {
         DISCONNECTED,
@@ -188,6 +197,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Phase 0 - Initialize baseline components first
+        initializePhase0Baseline()
+        
         initView()
         initData()
         
@@ -744,27 +757,112 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         appVersionUtil?.checkVersion(isShow)
     }
     
+    // ==================== PHASE 0 BASELINE & GUARDRAILS ====================
+    
+    /**
+     * Initialize Phase 0 baseline components: feature flags, structured logging, 
+     * protocol versioning, and crash-safe supervision
+     */
+    private fun initializePhase0Baseline() {
+        Log.i(TAG, "Initializing Phase 0 baseline components")
+        
+        try {
+            // 1. Initialize feature flags with defaults
+            FeatureFlags.initialize(this)
+            
+            // 2. Initialize structured logging system
+            structuredLogger = StructuredLogger.getInstance(this)
+            
+            // 3. Initialize crash-safe supervisor
+            crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
+            crashSafeSupervisor.initialize()
+            
+            // 4. Validate configuration
+            val configWarnings = FeatureFlags.validateConfiguration()
+            if (configWarnings.isNotEmpty()) {
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.WARNING,
+                    "MainActivity",
+                    "configuration_warnings",
+                    mapOf("warnings" to configWarnings.joinToString("; "))
+                )
+            }
+            
+            // 5. Log protocol information
+            val protocolInfo = ProtocolVersion.getProtocolInfo()
+            structuredLogger.log(
+                StructuredLogger.LogLevel.INFO,
+                "MainActivity",
+                "protocol_version_info",
+                protocolInfo
+            )
+            
+            // 6. Log feature flags
+            val featureFlags = FeatureFlags.getAllFlags()
+            structuredLogger.log(
+                StructuredLogger.LogLevel.INFO,
+                "MainActivity",
+                "feature_flags_initialized",
+                featureFlags
+            )
+            
+            Log.i(TAG, "Phase 0 baseline initialization completed successfully")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize Phase 0 baseline components", e)
+            // Continue with app startup even if Phase 0 fails
+        }
+    }
+    
     // ==================== PC-to-Phone Control Networking ====================
     
     /**
-     * Initialize the PC-to-phone control networking system
+     * Initialize the PC-to-phone control networking system with Phase 0 supervision
      */
     private fun initNetworking() {
-        Log.i(TAG, "Initializing PC-to-phone control networking")
+        Log.i(TAG, "Initializing PC-to-phone control networking with Phase 0 baseline")
+        
+        structuredLogger.log(
+            StructuredLogger.LogLevel.INFO,
+            "MainActivity",
+            "networking_initialization_started",
+            mapOf(
+                "feature_flags" to FeatureFlags.getAllFlags(),
+                "protocol_version" to ProtocolVersion.CURRENT_VERSION
+            )
+        )
         
         try {
-            // Initialize network client
-            networkClient = NetworkClient(this).apply {
-                // Initialize the enhanced network client
-                val initSuccess = initialize()
-                if (!initSuccess) {
-                    Log.w(TAG, "Network client initialization failed")
-                    updateConnectionStatus(ConnectionStatus.ERROR)
-                    return
+            // Initialize network client with supervision
+            crashSafeSupervisor.registerJob(
+                id = "network_client",
+                name = "NetworkClient",
+                critical = false,
+                restartable = true,
+                healthCheck = object : CrashSafeSupervisor.HealthCheck {
+                    override suspend fun checkHealth(): CrashSafeSupervisor.HealthStatus {
+                        val client = networkClient
+                        return if (client != null && connectionStatus == ConnectionStatus.CONNECTED) {
+                            CrashSafeSupervisor.HealthStatus(
+                                isHealthy = true,
+                                message = "NetworkClient connected and operational",
+                                details = mapOf(
+                                    "connection_status" to connectionStatus.name,
+                                    "latency_ms" to (client.getLatencyMs() ?: -1),
+                                    "secure_connection" to client.isSecureConnection()
+                                )
+                            )
+                        } else {
+                            CrashSafeSupervisor.HealthStatus(
+                                isHealthy = false,
+                                message = "NetworkClient not connected",
+                                details = mapOf("connection_status" to connectionStatus.name)
+                            )
+                        }
+                    }
                 }
-                
-                // Set up event listener for network events
-                setEventListener(createNetworkEventListener())
+            ) { stopToken ->
+                initializeNetworkClientSupervised(stopToken)
             }
             
             // Bind to recording service for remote control capability
@@ -773,23 +871,101 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             // Start recording service with server socket automatically
             RecordingService.startServer(this)
             
-            // Start automatic discovery and connection
-            startNetworkDiscovery()
+            structuredLogger.log(
+                StructuredLogger.LogLevel.INFO,
+                "MainActivity",
+                "networking_initialization_completed"
+            )
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize networking", e)
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "MainActivity",
+                "networking_initialization_failed",
+                mapOf("error" to e.message)
+            )
             updateConnectionStatus(ConnectionStatus.ERROR)
             showNetworkError("Network initialization failed: ${e.message}")
         }
     }
     
     /**
-     * Create network event listener to handle PC controller events
+     * Initialize network client under supervision with stop token
+     */
+    private suspend fun initializeNetworkClientSupervised(stopToken: CrashSafeSupervisor.StopToken) {
+        while (!stopToken.isStopRequested()) {
+            try {
+                // Initialize network client
+                networkClient = NetworkClient(this@MainActivity).apply {
+                    // Initialize the enhanced network client
+                    val initSuccess = initialize()
+                    if (!initSuccess) {
+                        structuredLogger.log(
+                            StructuredLogger.LogLevel.WARNING,
+                            "NetworkClient",
+                            "initialization_failed"
+                        )
+                        updateConnectionStatus(ConnectionStatus.ERROR)
+                        kotlinx.coroutines.delay(5000) // Wait before retry
+                        return@apply
+                    }
+                    
+                    // Set up event listener for network events
+                    setEventListener(createNetworkEventListener())
+                }
+                
+                // Start automatic discovery and connection if enabled
+                if (FeatureFlags.MDNS_ENABLE) {
+                    startNetworkDiscovery()
+                } else {
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.INFO,
+                        "NetworkClient",
+                        "mdns_discovery_disabled"
+                    )
+                }
+                
+                // Wait for stop signal or connection status changes
+                while (!stopToken.isStopRequested() && connectionStatus != ConnectionStatus.ERROR) {
+                    kotlinx.coroutines.delay(1000)
+                }
+                
+            } catch (e: Exception) {
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "NetworkClient",
+                    "supervised_execution_error",
+                    mapOf("error" to e.message)
+                )
+                
+                if (!stopToken.isStopRequested()) {
+                    kotlinx.coroutines.delay(10000) // Wait before retry
+                }
+            }
+        }
+        
+        // Cleanup
+        networkClient?.disconnect()
+        networkClient?.cleanup()
+        networkClient = null
+    }
+    
+    /**
+     * Create network event listener to handle PC controller events with structured logging
      */
     private fun createNetworkEventListener(): NetworkClient.NetworkEventListener {
         return object : NetworkClient.NetworkEventListener {
             override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-                Log.i(TAG, "PC Controller discovered: ${controller.deviceName} at ${controller.ipAddress}")
+                structuredLogger.logConnection(
+                    "controller_discovered",
+                    controller.ipAddress,
+                    mapOf(
+                        "device_name" to controller.deviceName,
+                        "ip_address" to controller.ipAddress,
+                        "port" to controller.port
+                    )
+                )
                 
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
@@ -802,9 +978,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 networkClient?.connectToController(controller.ipAddress, controller.port) { success ->
                     runOnUiThread {
                         if (success) {
-                            Log.i(TAG, "Successfully connected to PC Controller")
+                            structuredLogger.logConnection(
+                                "connection_established",
+                                controller.ipAddress,
+                                mapOf("device_name" to controller.deviceName)
+                            )
                         } else {
-                            Log.w(TAG, "Failed to connect to PC Controller")
+                            structuredLogger.logConnection(
+                                "connection_failed",
+                                controller.ipAddress,
+                                mapOf("device_name" to controller.deviceName)
+                            )
                             updateConnectionStatus(ConnectionStatus.ERROR)
                         }
                     }
@@ -812,7 +996,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
             
             override fun onConnected(controller: NetworkClient.ControllerInfo) {
-                Log.i(TAG, "Connected to PC Controller: ${controller.deviceName}")
+                structuredLogger.logConnection(
+                    "connection_success",
+                    controller.ipAddress,
+                    mapOf(
+                        "device_name" to controller.deviceName,
+                        "secure_connection" to (networkClient?.isSecureConnection() ?: false),
+                        "protocol_version" to ProtocolVersion.CURRENT_VERSION
+                    )
+                )
                 
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.CONNECTED)
@@ -823,7 +1015,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
             
             override fun onDisconnected(reason: String) {
-                Log.i(TAG, "Disconnected from PC Controller: $reason")
+                structuredLogger.logConnection(
+                    "disconnected",
+                    "",
+                    mapOf("reason" to reason)
+                )
                 
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.DISCONNECTED)
@@ -834,7 +1030,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
             
             override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
-                Log.i(TAG, "Remote measurement request received: ${sessionInfo.sessionId}")
+                structuredLogger.logSessionEvent(
+                    "remote_measurement_request",
+                    sessionInfo.sessionId,
+                    mapOf(
+                        "study_name" to (sessionInfo.studyName ?: "unknown"),
+                        "participant_id" to (sessionInfo.participantId ?: "unknown")
+                    )
+                )
                 
                 runOnUiThread {
                     handleRemoteRecordingRequest(sessionInfo)
@@ -842,7 +1045,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
             
             override fun onSyncFlash(durationMs: Int) {
-                Log.i(TAG, "Sync flash requested: ${durationMs}ms")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "SyncFlash",
+                    "sync_flash_requested",
+                    mapOf("duration_ms" to durationMs)
+                )
                 
                 runOnUiThread {
                     performSyncFlash(durationMs)
@@ -850,19 +1058,43 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
             
             override fun onTimeSynchronized(offsetNanoseconds: Long) {
-                Log.i(TAG, "Time synchronized with PC (offset: ${offsetNanoseconds}ns)")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "TimeSync",
+                    "time_synchronized",
+                    mapOf(
+                        "offset_nanoseconds" to offsetNanoseconds,
+                        "offset_milliseconds" to (offsetNanoseconds / 1_000_000.0)
+                    )
+                )
             }
             
             override fun onDataStreamingStarted() {
-                Log.i(TAG, "Data streaming to PC started")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "DataStreaming",
+                    "streaming_started"
+                )
             }
             
             override fun onDataStreamingStopped() {
-                Log.i(TAG, "Data streaming to PC stopped")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "DataStreaming",
+                    "streaming_stopped"
+                )
             }
             
             override fun onError(operation: String, error: String) {
-                Log.e(TAG, "Network error in $operation: $error")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "NetworkClient",
+                    "network_error",
+                    mapOf(
+                        "operation" to operation,
+                        "error" to error
+                    )
+                )
                 
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.ERROR)
@@ -1479,6 +1711,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     override fun onDestroy() {
         super.onDestroy()
         
+        structuredLogger.log(
+            StructuredLogger.LogLevel.INFO,
+            "MainActivity",
+            "activity_destroying"
+        )
+        
         // Cleanup networking
         try {
             networkClient?.disconnect()
@@ -1495,6 +1733,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             
         } catch (e: Exception) {
             Log.e(TAG, "Error during networking cleanup", e)
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "MainActivity",
+                "networking_cleanup_error",
+                mapOf("error" to e.message)
+            )
+        }
+        
+        // Cleanup Phase 0 components
+        try {
+            crashSafeSupervisor.shutdown()
+            structuredLogger.cleanup()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during Phase 0 cleanup", e)
         }
     }
 }

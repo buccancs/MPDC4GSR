@@ -17,6 +17,11 @@ import com.topdon.tc001.controller.RecordingState
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.csl.irCamera.R
+// Phase 0 baseline imports
+import com.topdon.tc001.config.FeatureFlags
+import com.topdon.tc001.config.ProtocolVersion
+import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.supervisor.CrashSafeSupervisor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -148,6 +153,10 @@ class RecordingService : LifecycleService() {
     private var nsdServiceInfo: NsdServiceInfo? = null
     private var isServiceRegistered = false
     
+    // Phase 0 baseline components
+    private lateinit var structuredLogger: StructuredLogger
+    private lateinit var crashSafeSupervisor: CrashSafeSupervisor
+    
     /**
      * Represents an active client connection from PC
      */
@@ -167,6 +176,9 @@ class RecordingService : LifecycleService() {
         super.onCreate()
         Log.i(TAG, "RecordingService created")
         
+        // Initialize Phase 0 baseline components
+        initializePhase0Baseline()
+        
         // Initialize notification manager
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
@@ -177,26 +189,77 @@ class RecordingService : LifecycleService() {
         // Initialize recording controller
         recordingController = RecordingController(this, this)
         
-        // Initialize sensors
-        lifecycleScope.launch {
+        // Initialize sensors under supervision
+        crashSafeSupervisor.registerJob(
+            id = "recording_service_init",
+            name = "RecordingService Initialization",
+            critical = true,
+            restartable = false
+        ) { stopToken ->
             try {
                 val success = recordingController.initializeSensors()
                 isInitialized = success
                 
                 if (success) {
-                    Log.i(TAG, "Recording service initialized successfully")
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.INFO,
+                        "RecordingService",
+                        "service_initialized"
+                    )
                     setupStatusMonitoring()
                     
-                    // Start server socket automatically
-                    startServerSocket()
+                    // Start server socket automatically if enabled
+                    if (FeatureFlags.MDNS_ENABLE) {
+                        startServerSocket()
+                    }
                 } else {
-                    Log.e(TAG, "Failed to initialize recording service")
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.ERROR,
+                        "RecordingService",
+                        "initialization_failed"
+                    )
                     stopSelf()
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error initializing recording service", e)
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "RecordingService",
+                    "initialization_exception",
+                    mapOf("error" to e.message)
+                )
                 stopSelf()
+                throw e
             }
+        }
+    }
+    
+    /**
+     * Initialize Phase 0 baseline components for the service
+     */
+    private fun initializePhase0Baseline() {
+        try {
+            // Initialize feature flags if not already done
+            FeatureFlags.initialize(this)
+            
+            // Initialize structured logger
+            structuredLogger = StructuredLogger.getInstance(this)
+            
+            // Initialize crash-safe supervisor
+            crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
+            crashSafeSupervisor.initialize()
+            
+            structuredLogger.log(
+                StructuredLogger.LogLevel.INFO,
+                "RecordingService",
+                "phase0_baseline_initialized",
+                mapOf(
+                    "feature_flags" to FeatureFlags.getAllFlags(),
+                    "protocol_version" to ProtocolVersion.CURRENT_VERSION
+                )
+            )
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize Phase 0 baseline in service", e)
         }
     }
 
@@ -244,7 +307,12 @@ class RecordingService : LifecycleService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG, "RecordingService destroyed")
+        
+        structuredLogger.log(
+            StructuredLogger.LogLevel.INFO,
+            "RecordingService",
+            "service_destroying"
+        )
         
         lifecycleScope.launch {
             try {
@@ -253,8 +321,26 @@ class RecordingService : LifecycleService() {
                 
                 // Stop recording if active
                 recordingController.cleanup()
+                
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "RecordingService",
+                    "service_cleanup_completed"
+                )
             } catch (e: Exception) {
-                Log.e(TAG, "Error during service cleanup", e)
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "RecordingService",
+                    "service_cleanup_error",
+                    mapOf("error" to e.message)
+                )
+            } finally {
+                // Cleanup Phase 0 components
+                try {
+                    crashSafeSupervisor.shutdown()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error shutting down supervisor", e)
+                }
             }
         }
     }
@@ -471,51 +557,130 @@ class RecordingService : LifecycleService() {
     // ==================== SERVER SOCKET IMPLEMENTATION ====================
     
     /**
-     * Start persistent server socket for PC connections
+     * Start persistent server socket for PC connections with supervision
      */
     private fun startServerSocket() {
         if (isServerRunning.get()) {
-            Log.i(TAG, "Server socket already running")
+            structuredLogger.logServerEvent("server_already_running", mapOf("port" to SERVER_PORT))
             return
         }
         
-        lifecycleScope.launch {
-            try {
-                // Create server socket
-                serverSocket = ServerSocket(SERVER_PORT)
-                isServerRunning.set(true)
-                
-                Log.i(TAG, "Server socket started on port $SERVER_PORT")
-                
-                // Register NSD service
-                registerNsdService()
-                
-                // Start as foreground service if not already
-                if (!isServiceForeground()) {
-                    startForeground(NOTIFICATION_ID, createServerNotification("Server listening for PC connections"))
+        // Register server socket under supervision
+        crashSafeSupervisor.registerJob(
+            id = "server_socket",
+            name = "Server Socket",
+            critical = true,
+            restartable = true,
+            healthCheck = object : CrashSafeSupervisor.HealthCheck {
+                override suspend fun checkHealth(): CrashSafeSupervisor.HealthStatus {
+                    return if (isServerRunning.get() && serverSocket?.isClosed == false) {
+                        CrashSafeSupervisor.HealthStatus(
+                            isHealthy = true,
+                            message = "Server socket running normally",
+                            details = mapOf(
+                                "port" to SERVER_PORT,
+                                "active_connections" to activeConnections.size,
+                                "nsd_registered" to isServiceRegistered
+                            )
+                        )
+                    } else {
+                        CrashSafeSupervisor.HealthStatus(
+                            isHealthy = false,
+                            message = "Server socket not running or closed"
+                        )
+                    }
                 }
-                
-                // Start accept loop
-                startAcceptLoop()
-                
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start server socket", e)
-                isServerRunning.set(false)
-                updateNotification("Server start failed: ${e.message}")
             }
+        ) { stopToken ->
+            runServerSocketSupervised(stopToken)
         }
     }
     
     /**
-     * Stop server socket and cleanup
+     * Run server socket under supervision
      */
-    private fun stopServerSocket() {
-        if (!isServerRunning.get()) {
-            Log.i(TAG, "Server socket not running")
-            return
+    private suspend fun runServerSocketSupervised(stopToken: CrashSafeSupervisor.StopToken) {
+        try {
+            // Create server socket
+            serverSocket = ServerSocket(SERVER_PORT)
+            isServerRunning.set(true)
+            
+            structuredLogger.logServerEvent(
+                "server_socket_started",
+                mapOf("port" to SERVER_PORT)
+            )
+            
+            // Register NSD service if enabled
+            if (FeatureFlags.MDNS_ENABLE) {
+                registerNsdService()
+            }
+            
+            // Start as foreground service if not already
+            if (!isServiceForeground()) {
+                startForeground(NOTIFICATION_ID, createServerNotification("Server listening for PC connections"))
+            }
+            
+            // Run accept loop
+            while (!stopToken.isStopRequested() && isServerRunning.get()) {
+                try {
+                    val clientSocket = withContext(Dispatchers.IO) {
+                        serverSocket?.accept()
+                    }
+                    
+                    if (clientSocket != null && isServerRunning.get()) {
+                        val clientId = "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
+                        
+                        structuredLogger.logConnection(
+                            "pc_client_connected",
+                            clientId,
+                            mapOf("client_address" to clientSocket.inetAddress.hostAddress)
+                        )
+                        
+                        // Handle client connection
+                        handleNewClientConnection(clientSocket, clientId)
+                        
+                        // Update notification
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Connected PCs: ${activeConnections.size}")
+                        }
+                    }
+                } catch (e: SocketException) {
+                    if (isServerRunning.get() && !stopToken.isStopRequested()) {
+                        structuredLogger.logServerEvent(
+                            "accept_socket_error",
+                            mapOf("error" to e.message)
+                        )
+                        delay(1000)
+                    }
+                } catch (e: Exception) {
+                    structuredLogger.logServerEvent(
+                        "accept_unexpected_error", 
+                        mapOf("error" to e.message)
+                    )
+                    if (isServerRunning.get() && !stopToken.isStopRequested()) {
+                        delay(5000) // Longer delay for unexpected errors
+                    }
+                }
+            }
+            
+        } catch (e: Exception) {
+            structuredLogger.logServerEvent(
+                "server_socket_failed",
+                mapOf("error" to e.message)
+            )
+            isServerRunning.set(false)
+            throw e
+        } finally {
+            // Cleanup
+            structuredLogger.logServerEvent("server_socket_cleanup_started")
+            cleanupServerSocket()
         }
-        
-        Log.i(TAG, "Stopping server socket")
+    }
+    
+    /**
+     * Clean up server socket resources
+     */
+    private fun cleanupServerSocket() {
         isServerRunning.set(false)
         
         // Cancel server job
@@ -528,7 +693,11 @@ class RecordingService : LifecycleService() {
                 connection.job.cancel()
                 connection.socket.close()
             } catch (e: Exception) {
-                Log.w(TAG, "Error closing connection", e)
+                structuredLogger.logConnection(
+                    "connection_cleanup_error",
+                    connection.clientId,
+                    mapOf("error" to e.message)
+                )
             }
         }
         activeConnections.clear()
@@ -537,7 +706,10 @@ class RecordingService : LifecycleService() {
         try {
             serverSocket?.close()
         } catch (e: Exception) {
-            Log.w(TAG, "Error closing server socket", e)
+            structuredLogger.logServerEvent(
+                "server_socket_close_error",
+                mapOf("error" to e.message)
+            )
         } finally {
             serverSocket = null
         }
@@ -545,7 +717,26 @@ class RecordingService : LifecycleService() {
         // Unregister NSD service
         unregisterNsdService()
         
-        Log.i(TAG, "Server socket stopped")
+        structuredLogger.logServerEvent("server_socket_cleanup_completed")
+    }
+    
+    /**
+     * Stop server socket and cleanup
+     */
+    private fun stopServerSocket() {
+        if (!isServerRunning.get()) {
+            structuredLogger.logServerEvent("server_not_running")
+            return
+        }
+        
+        structuredLogger.logServerEvent("server_socket_stop_requested")
+        
+        // Unregister from supervisor
+        crashSafeSupervisor.unregisterJob("server_socket")
+        
+        cleanupServerSocket()
+        
+        structuredLogger.logServerEvent("server_socket_stopped")
     }
     
     /**
@@ -681,7 +872,7 @@ class RecordingService : LifecycleService() {
     }
     
     /**
-     * Process message from PC client
+     * Process message from PC client with protocol validation and structured logging
      */
     private suspend fun processClientMessage(
         clientId: String, 
@@ -689,13 +880,73 @@ class RecordingService : LifecycleService() {
         outputStream: DataOutputStream
     ) {
         val messageType = message.optString("message_type")
-        Log.d(TAG, "Processing message from $clientId: $messageType")
+        val messageId = message.optString("msg_id", "unknown")
+        
+        structuredLogger.logProtocolMessage(
+            "message_received",
+            messageId,
+            clientId,
+            mapOf(
+                "message_type" to messageType,
+                "protocol_version" to message.optString("protocol_version", "unknown")
+            )
+        )
+        
+        // Validate protocol version
+        if (!ProtocolVersion.validateMessageVersion(message)) {
+            val errorMsg = "Unsupported protocol version"
+            structuredLogger.logProtocolMessage(
+                "protocol_version_error", 
+                messageId,
+                clientId,
+                mapOf("error" to errorMsg)
+            )
+            sendError(outputStream, errorMsg)
+            return
+        }
         
         try {
             when (messageType) {
+                "protocol_handshake" -> {
+                    val handshakeResult = ProtocolVersion.validateHandshakeResponse(message)
+                    if (handshakeResult.success) {
+                        structuredLogger.logProtocolMessage(
+                            "handshake_success",
+                            messageId,
+                            clientId,
+                            mapOf(
+                                "negotiated_version" to (handshakeResult.negotiatedVersion ?: "unknown"),
+                                "capabilities" to handshakeResult.commonCapabilities.joinToString(",")
+                            )
+                        )
+                        
+                        val responseMessage = ProtocolVersion.createHandshakeMessage(
+                            android.provider.Settings.Secure.getString(
+                                contentResolver,
+                                android.provider.Settings.Secure.ANDROID_ID
+                            )
+                        )
+                        sendMessage(outputStream, responseMessage)
+                    } else {
+                        structuredLogger.logProtocolMessage(
+                            "handshake_failed",
+                            messageId,
+                            clientId,
+                            mapOf("error" to (handshakeResult.error ?: "unknown"))
+                        )
+                        sendError(outputStream, handshakeResult.error ?: "Handshake failed")
+                    }
+                }
+                
                 "session_start" -> {
                     val sessionId = message.optString("session_id", "remote_${System.currentTimeMillis()}")
                     val sessionName = message.optString("session_name", "PC Remote Session")
+                    
+                    structuredLogger.logSessionEvent(
+                        "remote_session_start_request",
+                        sessionId,
+                        mapOf("session_name" to sessionName, "client_id" to clientId)
+                    )
                     
                     // Create session directory
                     val baseDir = File(getExternalFilesDir(null), "recordings")
@@ -706,40 +957,106 @@ class RecordingService : LifecycleService() {
                     }
                     
                     // Send acknowledgment
-                    sendAck(outputStream, "session_start", "Recording started")
+                    val ackMessage = ProtocolVersion.createProtocolMessage("ack", JSONObject().apply {
+                        put("ack_for", "session_start")
+                        put("result", "Recording started")
+                        put("session_id", sessionId)
+                    })
+                    sendMessage(outputStream, ackMessage)
                 }
                 
                 "session_stop" -> {
+                    structuredLogger.logSessionEvent(
+                        "remote_session_stop_request",
+                        "current",
+                        mapOf("client_id" to clientId)
+                    )
+                    
                     withContext(Dispatchers.Main) {
                         stopRecordingSession()
                     }
-                    sendAck(outputStream, "session_stop", "Recording stopped")
+                    
+                    val ackMessage = ProtocolVersion.createProtocolMessage("ack", JSONObject().apply {
+                        put("ack_for", "session_stop")
+                        put("result", "Recording stopped")
+                    })
+                    sendMessage(outputStream, ackMessage)
                 }
                 
                 "sync_flash" -> {
                     val durationMs = message.optInt("duration_ms", 100)
+                    
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.INFO,
+                        "SyncFlash",
+                        "remote_sync_flash_request",
+                        mapOf("duration_ms" to durationMs, "client_id" to clientId)
+                    )
+                    
                     withContext(Dispatchers.Main) {
                         performSyncFlash(durationMs)
                     }
-                    sendAck(outputStream, "sync_flash", "Flash performed")
+                    
+                    val ackMessage = ProtocolVersion.createProtocolMessage("ack", JSONObject().apply {
+                        put("ack_for", "sync_flash")
+                        put("result", "Flash performed")
+                    })
+                    sendMessage(outputStream, ackMessage)
                 }
                 
                 "status_request" -> {
+                    structuredLogger.logProtocolMessage(
+                        "status_request_received",
+                        messageId,
+                        clientId
+                    )
                     sendStatusResponse(outputStream)
                 }
                 
                 "heartbeat" -> {
-                    sendAck(outputStream, "heartbeat", "alive")
+                    structuredLogger.logProtocolMessage(
+                        "heartbeat_received",
+                        messageId,
+                        clientId,
+                        mapOf("timestamp" to message.optLong("timestamp", 0))
+                    )
+                    
+                    val ackMessage = ProtocolVersion.createProtocolMessage("ack", JSONObject().apply {
+                        put("ack_for", "heartbeat")
+                        put("result", "alive")
+                    })
+                    sendMessage(outputStream, ackMessage)
                 }
                 
                 else -> {
-                    Log.w(TAG, "Unknown message type from $clientId: $messageType")
-                    sendError(outputStream, "Unknown message type: $messageType")
+                    structuredLogger.logProtocolMessage(
+                        "unknown_message_type",
+                        messageId,
+                        clientId,
+                        mapOf("message_type" to messageType)
+                    )
+                    
+                    val errorMessage = ProtocolVersion.createProtocolMessage("error", JSONObject().apply {
+                        put("error", "Unknown message type: $messageType")
+                    })
+                    sendMessage(outputStream, errorMessage)
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error processing message $messageType from $clientId", e)
-            sendError(outputStream, "Error processing $messageType: ${e.message}")
+            structuredLogger.logProtocolMessage(
+                "message_processing_error",
+                messageId,
+                clientId,
+                mapOf(
+                    "message_type" to messageType,
+                    "error" to e.message
+                )
+            )
+            
+            val errorMessage = ProtocolVersion.createProtocolMessage("error", JSONObject().apply {
+                put("error", "Error processing $messageType: ${e.message}")
+            })
+            sendMessage(outputStream, errorMessage)
         }
     }
     
@@ -798,17 +1115,38 @@ class RecordingService : LifecycleService() {
     }
     
     /**
-     * Send message to PC client
+     * Send message to PC client with protocol versioning
      */
     private suspend fun sendMessage(outputStream: DataOutputStream, message: JSONObject) {
         withContext(Dispatchers.IO) {
             try {
+                // Ensure protocol version is included
+                if (!message.has("protocol_version")) {
+                    message.put("protocol_version", ProtocolVersion.CURRENT_VERSION)
+                }
+                
                 val messageData = message.toString().toByteArray(Charsets.UTF_8)
                 outputStream.writeInt(messageData.size)
                 outputStream.write(messageData)
                 outputStream.flush()
+                
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.DEBUG,
+                    "ServerSocket",
+                    "message_sent",
+                    mapOf(
+                        "message_type" to message.optString("message_type", "unknown"),
+                        "size_bytes" to messageData.size
+                    )
+                )
+                
             } catch (e: Exception) {
-                Log.w(TAG, "Error sending message to PC client", e)
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "ServerSocket",
+                    "message_send_error",
+                    mapOf("error" to e.message)
+                )
                 throw e
             }
         }

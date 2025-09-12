@@ -184,6 +184,14 @@ class NetworkClient(private val context: Context) {
     fun setEventListener(listener: NetworkEventListener?) {
         eventListener = listener
     }
+    
+    /**
+     * Set message handler for specific message types
+     */
+    fun setMessageHandler(messageType: String, handler: (JSONObject) -> Unit) {
+        messageHandlers[messageType] = handler
+        Log.d(TAG, "Message handler registered for type: $messageType")
+    }
 
     private fun setupErrorRecoveryListener() {
         errorRecoveryManager.setEventListener(object : NetworkErrorRecoveryManager.RecoveryEventListener {
@@ -660,7 +668,20 @@ class NetworkClient(private val context: Context) {
 
     private fun handleIncomingMessage(message: JSONObject) {
         val messageType = message.optString("message_type")
+        
+        Log.d(TAG, "Received message: $messageType")
 
+        // First, call registered message handlers
+        messageHandlers[messageType]?.let { handler ->
+            try {
+                Log.d(TAG, "Calling registered handler for message type: $messageType")
+                handler(message)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in message handler for type $messageType", e)
+            }
+        }
+
+        // Then handle built-in message types
         when (messageType) {
             "session_start" -> {
                 val sessionId = message.optString("session_id")
@@ -757,6 +778,27 @@ class NetworkClient(private val context: Context) {
     fun getSynchronizedTimestamp(): Long {
         return System.nanoTime() + clockOffset
     }
+    
+    /**
+     * Send a message to the connected PC Controller
+     */
+    suspend fun sendMessage(message: JSONObject): Boolean = 
+        withContext(Dispatchers.IO) {
+            try {
+                if (!isConnected) {
+                    Log.w(TAG, "Cannot send message - not connected to PC Controller")
+                    return@withContext false
+                }
+                
+                sendMessage(message)
+                Log.d(TAG, "Message sent successfully: ${message.optString("message_type", "unknown")}")
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to send message", e)
+                errorRecoveryManager.handleNetworkError("send_message", e.message ?: "Send failed")
+                false
+            }
+        }
 
     /**
      * Start continuous data streaming to PC Controller

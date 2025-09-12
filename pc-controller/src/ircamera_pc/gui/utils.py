@@ -79,20 +79,30 @@ def setup_logging() -> LogHandler:
     # Add custom sink for GUI integration only if GUI is available
     def gui_sink(record):
         try:
-            if hasattr(record, 'get'):
-                # New loguru format
+            # Handle both dict and Record object formats
+            if hasattr(record, 'level'):
+                # New loguru Record object format
+                level = record.level.name
+                message = record.message
+                timestamp = record.time.strftime("%H:%M:%S")
+            elif hasattr(record, 'get'):
+                # Dictionary format for backwards compatibility
                 level = record.get("level", {}).get("name", "INFO")
                 message = record.get("message", "")
                 timestamp = record.get("time", "").strftime("%H:%M:%S") if record.get("time") else ""
             else:
-                # Old format fallback
-                level = getattr(record.get("level", {}), "name", "INFO") if hasattr(record, "get") else "INFO"
+                # Fallback for unknown formats
+                level = "INFO"
                 message = str(record)
                 timestamp = ""
             gui_handler.log_message.emit(level, message, timestamp)
         except Exception:
-            # Silently ignore GUI logging errors in headless mode
-            pass
+            # Fallback for any formatting issues - handle both modes
+            try:
+                gui_handler.log_message.emit("INFO", str(record), "")
+            except Exception:
+                # Silently ignore GUI logging errors in headless mode
+                pass
 
     # Only add GUI sink if GUI components are available
     try:

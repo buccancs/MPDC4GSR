@@ -10,6 +10,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     
+    <!-- Location permissions required for BLE device scanning on most Android versions -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
     <!-- Storage permissions for GSR data recording -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -146,6 +150,11 @@
             android:name="com.topdon.tc001.gsr.GSRDemoActivity"
             android:screenOrientation="userPortrait"
             android:exported="false" />
+        <activity
+            android:name="com.topdon.tc001.gsr.GSRQuickRecordingActivity"
+            android:screenOrientation="userPortrait"
+            android:exported="false"
+            android:label="@string/gsr_quick_access" />
             
         <!-- Session Management and Research Template Activities -->
         <activity

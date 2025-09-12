@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.topdon.tc001.sensors.*
-import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
+import com.topdon.tc001.camera.RGBCameraRecorder
 import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.*
@@ -75,8 +75,9 @@ class RecordingController(
             try {
                 Log.i(TAG, "Initializing sensor recorders with robust error handling")
                 
-                // Create sensor recorders
-                val rgbCamera = RgbCameraRecorder(context, lifecycleOwner, "rgb_camera_1")
+                // Create sensor recorders - NOTE: RGB camera requires TextureView which may not be available here
+                // This is a structural issue that needs to be addressed
+                // val rgbCamera = RGBCameraRecorder(context, textureView) // TextureView needed
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor = GSRSensorRecorder(context, "gsr_shimmer_1")
                 
@@ -107,6 +108,7 @@ class RecordingController(
                         }
                     }
                 )
+                )
                 
                 val initResults = initJobs.awaitAll()
                 
@@ -114,7 +116,7 @@ class RecordingController(
                 initResults.forEach { (sensorId, success) ->
                     if (success) {
                         when (sensorId) {
-                            "rgb_camera_1" -> sensorRecorders[sensorId] = rgbCamera
+                            // "rgb_camera_1" -> sensorRecorders[sensorId] = rgbCamera // Commented out
                             "thermal_camera_1" -> sensorRecorders[sensorId] = thermalCamera
                             "gsr_shimmer_1" -> sensorRecorders[sensorId] = gsrSensor
                         }
@@ -475,6 +477,7 @@ class RecordingController(
     }
 
     /**
+<<<<<<< HEAD
      * Get detailed status of all sensors including initialization and recording state
      */
     fun getSensorStatusSummary(): SensorStatusSummary {
@@ -500,6 +503,13 @@ class RecordingController(
             sessionState = _recordingStateFlow.value,
             sensors = sensors
         )
+    }
+
+    /**
+     * Get count of currently active (recording) sensors
+     */
+    fun getActiveSensorCount(): Int {
+        return sensorRecorders.values.count { it.isRecording }
     }
 
     /**

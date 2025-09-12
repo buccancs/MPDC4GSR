@@ -98,6 +98,11 @@ class GSRSensorRecorder(
     // Real Shimmer components using existing GSR recording module with enhanced BLE backend
     private var realShimmerGSRRecorder: ShimmerGSRRecorder? = null
     private var shimmerDevice: Shimmer? = null
+    
+    // Enhanced data persistence with cross-sensor timestamp alignment
+    private var gsrDataPersistence: GSRDataPersistence? = null
+    private var currentSessionId: String? = null
+    private val sampleSequence = AtomicLong(0)
     private var isShimmerConnected = false
     
     // Legacy GSR components integration for backward compatibility
@@ -348,15 +353,31 @@ class GSRSensorRecorder(
                 _isRecording.set(true)
                 sampleCount.set(0)
                 syncMarkerCount.set(0)
+                sampleSequence.set(0)
+                
+                // Initialize enhanced data persistence with cross-sensor alignment
+                currentSessionId = sessionDirectory.substringAfterLast("/").ifEmpty { 
+                    "session_${System.currentTimeMillis()}" 
+                }
+                
+                try {
+                    gsrDataPersistence = GSRDataPersistence(context, currentSessionId!!)
+                    val persistenceInitialized = gsrDataPersistence?.initialize() ?: false
+                    
+                    if (persistenceInitialized) {
+                        gsrDataPersistence?.startPersistence()
+                        Log.i(TAG, "Enhanced GSR data persistence initialized for session: $currentSessionId")
+                    } else {
+                        Log.w(TAG, "GSR data persistence initialization failed - recording will continue without persistence")
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to initialize GSR data persistence", e)
+                }
                 
                 // Initialize network streaming for hub-spoke communication
                 if (isNetworkStreamingEnabled) {
                     try {
-                        val sessionId = sessionDirectory.substringAfterLast("/").ifEmpty { 
-                            "session_${System.currentTimeMillis()}" 
-                        }
-                        
-                        gsrNetworkStreamer = GSRNetworkStreamer(context, sessionId)
+                        gsrNetworkStreamer = GSRNetworkStreamer(context, currentSessionId!!)
                         val networkInitialized = gsrNetworkStreamer?.initialize() ?: false
                         
                         if (networkInitialized) {
@@ -499,6 +520,23 @@ class GSRSensorRecorder(
                 }
             }
             
+            // Stop and cleanup enhanced data persistence
+            gsrDataPersistence?.let { persistence ->
+                try {
+                    persistence.stopPersistence()
+                    persistence.cleanup()
+                    
+                    val stats = persistence.getStatistics()
+                    Log.i(TAG, "GSR data persistence stopped - Written: ${stats.samplesWritten} samples to ${stats.csvFilePath}")
+                    
+                    gsrDataPersistence = null
+                    currentSessionId = null
+                    
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to stop GSR data persistence", e)
+                }
+            }
+            
             _isRecording.set(false)
             
             Log.i(TAG, "Real Shimmer GSR sensor recording stopped")
@@ -590,11 +628,36 @@ class GSRSensorRecorder(
     /**
      * Callback for processing GSR samples and streaming to PC hub
      * This method is called whenever a new GSR sample is available
+     * Enhanced with comprehensive data persistence and cross-sensor timestamp alignment
      */
     private fun onGSRSampleReceived(sample: GSRSample) {
         try {
-            // Update sample count
-            sampleCount.incrementAndGet()
+            // Update sample count and sequence
+            val currentCount = sampleCount.incrementAndGet()
+            val currentSequence = sampleSequence.incrementAndGet()
+            
+            // Update last sample timestamp for monitoring
+            lastSampleTimestamp = TimestampManager.getCurrentTimestampNanos()
+            
+            // Convert GSR sample to enhanced persistence format
+            val gsrSampleData = GSRSampleData(
+                rawValue = sample.rawValue,
+                microsiemens = sample.gsrValue,
+                resistanceKohm = calculateResistanceFromGSR(sample.gsrValue),
+                ppgRawValue = sample.ppgRawValue ?: 0,
+                ppgFiltered = sample.ppgFiltered ?: 0.0,
+                heartRateBpm = sample.heartRateBpm ?: 0,
+                deviceId = sample.deviceId ?: sensorId,
+                batteryLevel = sample.batteryLevel ?: 100,
+                signalQuality = sample.signalQuality ?: 100,
+                samplingRateHz = samplingRateHz,
+                packetSequence = currentSequence,
+                participantId = "participant_${currentSessionId}",
+                recordingMode = determineRecordingMode()
+            )
+            
+            // Persist data with enhanced timestamp alignment
+            gsrDataPersistence?.queueDataRecord(gsrSampleData)
             
             // Stream to PC hub if network streaming is enabled
             gsrNetworkStreamer?.let { streamer ->
@@ -604,12 +667,41 @@ class GSRSensorRecorder(
             }
             
             // Log sample for debugging (reduce frequency for performance)
-            if (sampleCount.get() % 100 == 0L) {
-                Log.d(TAG, "GSR sample processed: ${sample.gsrValue} µS (${sampleCount.get()} total)")
+            if (currentCount % 100 == 0L) {
+                Log.d(TAG, "GSR sample processed: ${sample.gsrValue} µS, Resistance: ${gsrSampleData.resistanceKohm} kΩ (${currentCount} total)")
+                
+                // Log persistence statistics periodically
+                gsrDataPersistence?.getStatistics()?.let { stats ->
+                    Log.d(TAG, "Persistence stats - Written: ${stats.samplesWritten}, Pending: ${stats.pendingSamples}")
+                }
             }
             
         } catch (e: Exception) {
             Log.w(TAG, "Error processing GSR sample", e)
+        }
+    }
+    
+    /**
+     * Calculate resistance in kΩ from GSR conductance in µS
+     * Formula: R = 1 / G (where G is in Siemens, R is in Ohms)
+     */
+    private fun calculateResistanceFromGSR(gsrMicrosiemens: Double): Double {
+        return if (gsrMicrosiemens > 0) {
+            1000000.0 / gsrMicrosiemens // Convert µS to kΩ
+        } else {
+            Double.MAX_VALUE // Infinite resistance for zero conductance
+        }
+    }
+    
+    /**
+     * Determine current recording mode based on active components
+     */
+    private fun determineRecordingMode(): String {
+        return when {
+            realShimmerGSRRecorder != null && unifiedBleManager != null -> "shimmer_unified_ble"
+            realShimmerGSRRecorder != null -> "shimmer_ble"
+            legacyGSRRecorder != null -> "legacy_gsr"
+            else -> "unknown"
         }
     }
     
@@ -665,9 +757,24 @@ class GSRSensorRecorder(
                 }
             }
             
+            // Cleanup enhanced data persistence system
+            gsrDataPersistence?.let { persistence ->
+                try {
+                    if (persistence.getStatistics().isActive) {
+                        persistence.stopPersistence()
+                    }
+                    persistence.cleanup()
+                    Log.i(TAG, "GSR data persistence cleaned up successfully")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error cleaning up GSR data persistence", e)
+                }
+            }
+            
             // Clear references
             legacyGSRRecorder = null
             realShimmerGSRRecorder = null
+            gsrDataPersistence = null
+            currentSessionId = null
             
             Log.i(TAG, "GSR sensor cleaned up successfully")
             

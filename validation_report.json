@@ -1,11 +1,11 @@
 {
   "validation_summary": {
     "total_tests": 8,
-    "passed_tests": 6,
-    "failed_tests": 2,
-    "success_rate": "75.0%",
-    "total_duration": "2.12s",
-    "timestamp": 1757637157.569
+    "passed_tests": 7,
+    "failed_tests": 1,
+    "success_rate": "87.5%",
+    "total_duration": "2.03s",
+    "timestamp": 1757647604.923883
   },
   "test_results": [
     {
@@ -24,7 +24,7 @@
       "test": "Android Connection Simulation",
       "status": "FAILED",
       "details": "Error: Android connection simulation failed: timed out",
-      "duration": "2.01s"
+      "duration": "2.00s"
     },
     {
       "test": "Time Synchronization Protocol",
@@ -46,9 +46,9 @@
     },
     {
       "test": "Security Features",
-      "status": "FAILED",
-      "details": "Error: Security validation failed: module 'ssl' has no attribute 'PROTOCOL_SSLv2'",
-      "duration": "0.11s"
+      "status": "PASSED",
+      "details": "Test completed successfully",
+      "duration": "0.02s"
     },
     {
       "test": "Performance Metrics",
@@ -61,7 +61,6 @@
   "recommendations": [
     "\u26a0\ufe0f  Some tests failed. Review the following areas:",
     "   - Android Connection Simulation: Error: Android connection simulation failed: timed out",
-    "   - Security Features: Error: Security validation failed: module 'ssl' has no attribute 'PROTOCOL_SSLv2'",
     "\ud83d\udccb Next steps:",
     "   1. Test with physical Android device on same network",
     "   2. Verify firewall settings allow TCP connections on port 8080",

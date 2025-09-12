@@ -65,6 +65,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             showGSROptions()
             true
         }
+        
+        // Add prominent GSR access button for research features
+        binding.fabGsrRecording.setOnClickListener {
+            showGSROptions()
+        }
 
         adapter.hasConnectLine = DeviceTools.isConnect()
         adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
@@ -431,7 +436,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
 
     /**
      * Show GSR Multi-modal Recording options for research purposes
-     * Accessed via long-press on app title
+     * Accessed via long-press on app title or GSR FAB
      */
     private fun showGSROptions() {
         TipDialog.Builder(requireContext())
@@ -441,11 +446,17 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 // Launch dual-mode camera interface (RAW 50MP + 4K Video)
                 showDualModeCameraOptions()
             }
-            .setCancelListener("Full Recording") {
-                // Launch full multi-modal recording interface
-                NavigationManager.getInstance()
-                    .build(RouterConfig.GSR_MULTI_MODAL)
-                    .navigation(requireContext())
+            .setCancelListener("Quick Recording") {
+                // Launch quick GSR recording interface with direct RecordingController access
+                try {
+                    val intent = Intent(requireContext(), Class.forName("com.topdon.tc001.gsr.GSRQuickRecordingActivity"))
+                    startActivity(intent)
+                } catch (e: ClassNotFoundException) {
+                    // Fallback to full setup
+                    NavigationManager.getInstance()
+                        .build(RouterConfig.GSR_MULTI_MODAL)
+                        .navigation(requireContext())
+                }
             }
             .setNeutralListener("GSR Demo") {
                 // Launch simple GSR demo

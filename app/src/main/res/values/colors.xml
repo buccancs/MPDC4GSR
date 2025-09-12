@@ -14,4 +14,13 @@
     <color name="text_secondary">#FFCCCCCC</color>
     <color name="text_tertiary">#FF999999</color>
     <color name="segmented_button_text">@color/text_primary</color>
+    
+    <!-- GSR Multi-Modal Recording Colors -->
+    <color name="fab_gsr_background">#FF1565C0</color>
+    <color name="gsr_pulse_color">#FF00E676</color>
+    <color name="gsr_recording_active">#FFFF5722</color>
+    
+    <!-- Material Design Colors -->
+    <color name="colorPrimary">#FF1976D2</color>
+    <color name="colorAccent">#FF03DAC5</color>
 </resources>

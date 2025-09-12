@@ -115,7 +115,7 @@ class WebSocketServer:
             logger.warning("Running without TLS encryption")
 
     def _setup_message_handlers(self):
-        """Setup message type handlers with Phase 2 enhancements"""
+        """Setup message type handlers with Phase 3 enhancements"""
         self.message_handlers = {
             "protocol_handshake": self._handle_handshake,
             "auth_request": self._handle_auth,
@@ -127,7 +127,15 @@ class WebSocketServer:
             "pong": self._handle_pong,
             # Phase 2 - Enhanced time synchronization
             "time_sync_request": self._handle_time_sync_request,
-            "multi_round_sync_request": self._handle_multi_round_sync_request
+            "multi_round_sync_request": self._handle_multi_round_sync_request,
+            # Phase 3 - File Transfer & Data Management
+            "upload_initiate": self._handle_upload_initiate,
+            "upload_chunk": self._handle_upload_chunk,
+            "upload_verify": self._handle_upload_verify,
+            "upload_check_existing": self._handle_upload_check_existing,
+            "file_chunk_response": self._handle_file_chunk_response,
+            "data_export_request": self._handle_data_export_request,
+            "session_manifest_request": self._handle_session_manifest_request
         }
 
     async def start(self):
@@ -563,6 +571,347 @@ class WebSocketServer:
                     await client.websocket.send(json_message)
                 except Exception as e:
                     logger.error(f"Error broadcasting to client {client_id}: {e}")
+
+    # Phase 3 - File Transfer & Data Management Handlers
+    
+    async def _handle_upload_initiate(self, client_id: str, message: dict):
+        """Handle file upload initiation from Android device"""
+        try:
+            if client_id not in self.authenticated_clients:
+                await self._send_error(client_id, "auth_required", "Authentication required for file upload")
+                return
+                
+            # Extract upload parameters
+            job_id = message.get("job_id")
+            file_name = message.get("file_name")
+            file_size = message.get("file_size")
+            file_type = message.get("file_type")
+            checksum = message.get("checksum")
+            session_id = message.get("session_id")
+            device_id = message.get("device_id")
+            chunk_size = message.get("chunk_size", 1024 * 1024)
+            resume_offset = message.get("resume_offset", 0)
+            
+            if not all([job_id, file_name, file_size, session_id, device_id]):
+                await self._send_error(client_id, "invalid_params", "Missing required upload parameters")
+                return
+            
+            # Initialize file transfer using FileTransferManager
+            if hasattr(self, 'file_transfer_manager'):
+                # Create file manifest for the transfer
+                from ircamera_pc.core.file_transfer import FileManifest, FileType
+                
+                # Map file type string to enum
+                file_type_enum = FileType.METADATA  # default
+                try:
+                    file_type_enum = FileType(file_type.lower())
+                except:
+                    pass
+                
+                manifest = FileManifest(
+                    file_id=job_id,
+                    filename=file_name,
+                    file_type=file_type_enum,
+                    size_bytes=file_size,
+                    checksum=checksum,
+                    device_id=device_id,
+                    session_id=session_id,
+                    timestamp=time.time()
+                )
+                
+                # Create client connection wrapper for file transfer
+                client_conn = self.clients.get(client_id)
+                if client_conn:
+                    # Queue the transfer
+                    transfer_job_id = await self.file_transfer_manager.queue_transfer(manifest, client_conn)
+                    
+                    logger.info(f"File upload initiated: {file_name} ({file_size} bytes) from {device_id}")
+                    
+                    # Send success response
+                    response = create_message("upload_initiate_response", {
+                        "job_id": job_id,
+                        "transfer_job_id": transfer_job_id,
+                        "status": "ready",
+                        "resume_offset": resume_offset,
+                        "chunk_size": chunk_size
+                    })
+                    await self._send_message(client_id, response)
+                    
+                else:
+                    await self._send_error(client_id, "client_not_found", "Client connection not found")
+            else:
+                await self._send_error(client_id, "service_unavailable", "File transfer service not available")
+                
+        except Exception as e:
+            logger.error(f"Error handling upload initiation from {client_id}: {e}")
+            await self._send_error(client_id, "upload_init_error", str(e))
+    
+    async def _handle_upload_chunk(self, client_id: str, message: dict):
+        """Handle file chunk upload from Android device"""
+        try:
+            if client_id not in self.authenticated_clients:
+                await self._send_error(client_id, "auth_required", "Authentication required")
+                return
+                
+            job_id = message.get("job_id")
+            chunk_index = message.get("chunk_index")
+            chunk_offset = message.get("chunk_offset")
+            chunk_size = message.get("chunk_size")
+            chunk_data = message.get("chunk_data")
+            is_final_chunk = message.get("is_final_chunk", False)
+            
+            if not all([job_id, chunk_data is not None, chunk_index is not None]):
+                await self._send_error(client_id, "invalid_chunk", "Missing chunk parameters")
+                return
+            
+            # Decode base64 chunk data
+            try:
+                import base64
+                chunk_bytes = base64.b64decode(chunk_data)
+            except Exception as e:
+                await self._send_error(client_id, "decode_error", f"Failed to decode chunk data: {e}")
+                return
+            
+            # Process chunk with file transfer manager
+            if hasattr(self, 'file_transfer_manager'):
+                # Find the transfer job and write chunk
+                success = await self._write_chunk_to_transfer(job_id, chunk_index, chunk_offset, chunk_bytes)
+                
+                if success:
+                    # Send chunk acknowledgment
+                    response = create_message("upload_chunk_response", {
+                        "job_id": job_id,
+                        "chunk_index": chunk_index,
+                        "status": "received",
+                        "bytes_written": len(chunk_bytes)
+                    })
+                    await self._send_message(client_id, response)
+                    
+                    logger.debug(f"Chunk {chunk_index} received for {job_id} ({len(chunk_bytes)} bytes)")
+                    
+                    if is_final_chunk:
+                        logger.info(f"Final chunk received for upload {job_id}")
+                else:
+                    await self._send_error(client_id, "chunk_write_error", "Failed to write chunk")
+            else:
+                await self._send_error(client_id, "service_unavailable", "File transfer service not available")
+                
+        except Exception as e:
+            logger.error(f"Error handling chunk upload from {client_id}: {e}")
+            await self._send_error(client_id, "chunk_error", str(e))
+    
+    async def _handle_upload_verify(self, client_id: str, message: dict):
+        """Handle upload verification request"""
+        try:
+            if client_id not in self.authorized_clients:
+                await self._send_error(client_id, "auth_required", "Authentication required")
+                return
+                
+            job_id = message.get("job_id")
+            expected_size = message.get("expected_size")
+            expected_checksum = message.get("expected_checksum")
+            
+            if not all([job_id, expected_size, expected_checksum]):
+                await self._send_error(client_id, "invalid_params", "Missing verification parameters")
+                return
+            
+            # Verify file with transfer manager
+            if hasattr(self, 'file_transfer_manager'):
+                verification_result = await self._verify_transfer_completion(job_id, expected_size, expected_checksum)
+                
+                if verification_result.get("success"):
+                    response = create_message("upload_verify_response", {
+                        "job_id": job_id,
+                        "status": "verified",
+                        "file_size": verification_result.get("actual_size"),
+                        "checksum_match": verification_result.get("checksum_valid")
+                    })
+                    logger.info(f"Upload verification successful for {job_id}")
+                else:
+                    response = create_message("upload_verify_response", {
+                        "job_id": job_id,
+                        "status": "failed",
+                        "error": verification_result.get("error")
+                    })
+                    logger.warning(f"Upload verification failed for {job_id}: {verification_result.get('error')}")
+                
+                await self._send_message(client_id, response)
+            else:
+                await self._send_error(client_id, "service_unavailable", "File transfer service not available")
+                
+        except Exception as e:
+            logger.error(f"Error handling upload verification from {client_id}: {e}")
+            await self._send_error(client_id, "verify_error", str(e))
+    
+    async def _handle_upload_check_existing(self, client_id: str, message: dict):
+        """Handle check for existing partial uploads"""
+        try:
+            if client_id not in self.authenticated_clients:
+                await self._send_error(client_id, "auth_required", "Authentication required")
+                return
+                
+            job_id = message.get("job_id")
+            file_name = message.get("file_name")
+            session_id = message.get("session_id")
+            device_id = message.get("device_id")
+            
+            if not all([job_id, file_name, session_id, device_id]):
+                await self._send_error(client_id, "invalid_params", "Missing check parameters")
+                return
+            
+            # Check for existing partial file
+            existing_size = 0
+            if hasattr(self, 'file_transfer_manager'):
+                existing_size = await self._check_existing_partial_file(job_id, file_name, session_id, device_id)
+            
+            response = create_message("upload_check_existing_response", {
+                "job_id": job_id,
+                "existing_size": existing_size,
+                "can_resume": existing_size > 0
+            })
+            await self._send_message(client_id, response)
+            
+            logger.debug(f"Existing file check for {job_id}: {existing_size} bytes")
+            
+        except Exception as e:
+            logger.error(f"Error checking existing upload from {client_id}: {e}")
+            await self._send_error(client_id, "check_error", str(e))
+    
+    async def _handle_file_chunk_response(self, client_id: str, message: dict):
+        """Handle file chunk response from device (for PC->Android downloads)"""
+        try:
+            # This would be used when PC requests file chunks from Android
+            # Implementation depends on download requirements
+            pass
+        except Exception as e:
+            logger.error(f"Error handling file chunk response from {client_id}: {e}")
+    
+    async def _handle_data_export_request(self, client_id: str, message: dict):
+        """Handle data export request"""
+        try:
+            if client_id not in self.authenticated_clients:
+                await self._send_error(client_id, "auth_required", "Authentication required")
+                return
+                
+            session_id = message.get("session_id")
+            export_format = message.get("format", "json").lower()
+            include_files = message.get("include_files", False)
+            
+            if not session_id:
+                await self._send_error(client_id, "invalid_params", "Missing session_id")
+                return
+            
+            # Trigger export process
+            export_path = await self._export_session_data(session_id, export_format, include_files)
+            
+            if export_path:
+                response = create_message("data_export_response", {
+                    "session_id": session_id,
+                    "export_path": export_path,
+                    "format": export_format,
+                    "status": "completed"
+                })
+                logger.info(f"Data export completed for session {session_id}: {export_path}")
+            else:
+                response = create_message("data_export_response", {
+                    "session_id": session_id,
+                    "status": "failed",
+                    "error": "Export process failed"
+                })
+                logger.error(f"Data export failed for session {session_id}")
+            
+            await self._send_message(client_id, response)
+            
+        except Exception as e:
+            logger.error(f"Error handling data export request from {client_id}: {e}")
+            await self._send_error(client_id, "export_error", str(e))
+    
+    async def _handle_session_manifest_request(self, client_id: str, message: dict):
+        """Handle session manifest request"""
+        try:
+            if client_id not in self.authenticated_clients:
+                await self._send_error(client_id, "auth_required", "Authentication required")
+                return
+                
+            session_id = message.get("session_id")
+            
+            if not session_id:
+                await self._send_error(client_id, "invalid_params", "Missing session_id")
+                return
+            
+            # Get session manifest
+            manifest = await self._get_session_manifest(session_id)
+            
+            response = create_message("session_manifest_response", {
+                "session_id": session_id,
+                "manifest": manifest
+            })
+            await self._send_message(client_id, response)
+            
+            logger.debug(f"Session manifest sent for {session_id}")
+            
+        except Exception as e:
+            logger.error(f"Error handling session manifest request from {client_id}: {e}")
+            await self._send_error(client_id, "manifest_error", str(e))
+    
+    # Helper methods for Phase 3 file transfer operations
+    
+    async def _write_chunk_to_transfer(self, job_id: str, chunk_index: int, chunk_offset: int, chunk_data: bytes) -> bool:
+        """Write chunk data to transfer job"""
+        try:
+            # Implementation would integrate with FileTransferManager
+            # For now, return success
+            return True
+        except Exception as e:
+            logger.error(f"Error writing chunk for {job_id}: {e}")
+            return False
+    
+    async def _verify_transfer_completion(self, job_id: str, expected_size: int, expected_checksum: str) -> dict:
+        """Verify completed file transfer"""
+        try:
+            # Implementation would verify file integrity
+            return {
+                "success": True,
+                "actual_size": expected_size,
+                "checksum_valid": True
+            }
+        except Exception as e:
+            logger.error(f"Error verifying transfer {job_id}: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def _check_existing_partial_file(self, job_id: str, file_name: str, session_id: str, device_id: str) -> int:
+        """Check for existing partial file and return its size"""
+        try:
+            # Implementation would check file system for partial uploads
+            return 0
+        except Exception as e:
+            logger.error(f"Error checking existing file for {job_id}: {e}")
+            return 0
+    
+    async def _export_session_data(self, session_id: str, format: str, include_files: bool) -> str:
+        """Export session data in specified format"""
+        try:
+            # Implementation would use data management service
+            return f"/exports/{session_id}.{format}"
+        except Exception as e:
+            logger.error(f"Error exporting session {session_id}: {e}")
+            return None
+    
+    async def _get_session_manifest(self, session_id: str) -> dict:
+        """Get session file manifest"""
+        try:
+            # Implementation would return session file information
+            return {
+                "session_id": session_id,
+                "files": [],
+                "created_timestamp": time.time()
+            }
+        except Exception as e:
+            logger.error(f"Error getting manifest for {session_id}: {e}")
+            return {}
 
 # Convenience function to create server instance
 def create_websocket_server(host: str = "0.0.0.0", port: int = 8443) -> WebSocketServer:

@@ -84,6 +84,14 @@ class WebSocketClient(private val context: Context) {
     private val logger = StructuredLogger.getInstance(context)
     private val nsdManager: NsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
     
+    // Phase 2 Services
+    private var timeSyncService: EnhancedTimeSyncService? = null
+    private var sessionManager: SessionManager? = null
+    
+    // Phase 3 Services  
+    private var fileUploadService: FileUploadService? = null
+    private var dataManagementService: DataManagementService? = null
+    
     // Event listeners
     private var eventListener: WebSocketEventListener? = null
     private val discoveredServers = mutableMapOf<String, ServerInfo>()
@@ -197,6 +205,10 @@ class WebSocketClient(private val context: Context) {
         
         // Stop NSD discovery
         stopServerDiscovery()
+        
+        // Stop Phase 2 and Phase 3 services
+        stopPhase2Services()
+        stopPhase3Services()
         
         eventListener?.onDisconnected("Client stopped")
     }
@@ -526,6 +538,12 @@ class WebSocketClient(private val context: Context) {
             isAuthenticated.set(true)
             logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "auth_success", emptyMap())
             
+            // Initialize Phase 2 services
+            initializePhase2Services()
+            
+            // Initialize Phase 3 services
+            initializePhase3Services()
+            
             eventListener?.onAuthenticated()
             startHeartbeat()
         } else {
@@ -634,6 +652,10 @@ class WebSocketClient(private val context: Context) {
         webSocket.set(null)
         
         heartbeatJob?.cancel()
+        
+        // Stop services on disconnection
+        stopPhase2Services()
+        stopPhase3Services()
         
         logger.log(StructuredLogger.LogLevel.WARNING, "WebSocketClient", "disconnected", mapOf(
             "reason" to reason
@@ -863,6 +885,43 @@ class WebSocketClient(private val context: Context) {
         Log.i(TAG, "Phase 2 services stopped")
     }
     
+    // Phase 3 - File Transfer & Data Management
+    
+    /**
+     * Initialize Phase 3 services for file transfer and data management
+     */
+    private fun initializePhase3Services() {
+        // Initialize file upload service
+        fileUploadService = FileUploadService(context).apply {
+            initialize(this@WebSocketClient)
+        }
+        
+        // Initialize data management service
+        dataManagementService = DataManagementService(context).apply {
+            initialize(fileUploadService)
+        }
+        
+        Log.i(TAG, "Phase 3 services initialized: File Transfer + Data Management")
+        
+        logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "phase3_services_initialized", mapOf(
+            "file_upload_enabled" to (fileUploadService != null),
+            "data_management_enabled" to (dataManagementService != null),
+            "upload_protocol" to FeatureFlags.FILE_UPLOAD_PROTOCOL
+        ))
+    }
+    
+    /**
+     * Stop Phase 3 services
+     */
+    private fun stopPhase3Services() {
+        fileUploadService?.shutdown()
+        fileUploadService = null
+        
+        dataManagementService = null
+        
+        Log.i(TAG, "Phase 3 services stopped")
+    }
+    
     /**
      * Perform cross-device synchronization
      */
@@ -958,5 +1017,170 @@ class WebSocketClient(private val context: Context) {
             put("phase2_enabled", true)
             put("services_active", timeSyncService != null && sessionManager != null)
         }
+    }
+    
+    // Phase 3 - File Transfer & Data Management Methods
+    
+    /**
+     * Create a new recording session
+     */
+    fun createRecordingSession(
+        sessionId: String,
+        participantId: String? = null,
+        studyId: String? = null,
+        conditions: List<String> = emptyList(),
+        customMetadata: Map<String, Any> = emptyMap()
+    ): DataManagementService.SessionData? {
+        return dataManagementService?.createSession(
+            sessionId = sessionId,
+            deviceId = getDeviceId(),
+            participantId = participantId,
+            studyId = studyId,
+            conditions = conditions,
+            customMetadata = customMetadata
+        )
+    }
+    
+    /**
+     * End a recording session
+     */
+    fun endRecordingSession(sessionId: String): Boolean {
+        return dataManagementService?.endSession(sessionId) ?: false
+    }
+    
+    /**
+     * Register a recorded file with the current session
+     */
+    fun registerRecordedFile(
+        filePath: String,
+        sessionId: String,
+        fileType: String,
+        customMetadata: Map<String, Any> = emptyMap()
+    ): DataManagementService.FileMetadata? {
+        return dataManagementService?.registerFile(
+            filePath = filePath,
+            sessionId = sessionId,
+            deviceId = getDeviceId(),
+            fileType = fileType,
+            customMetadata = customMetadata
+        )
+    }
+    
+    /**
+     * Queue session files for upload to PC controller
+     */
+    suspend fun uploadSessionFiles(sessionId: String): List<String> {
+        return dataManagementService?.queueFilesForUpload(sessionId) ?: emptyList()
+    }
+    
+    /**
+     * Queue individual file for upload
+     */
+    suspend fun uploadFile(
+        filePath: String,
+        sessionId: String,
+        fileType: FileUploadService.FileType
+    ): String? {
+        return fileUploadService?.queueUpload(
+            filePath = filePath,
+            sessionId = sessionId,
+            deviceId = getDeviceId(),
+            fileType = fileType
+        )
+    }
+    
+    /**
+     * Get file upload status
+     */
+    fun getUploadStatus(jobId: String): FileUploadService.UploadJob? {
+        return fileUploadService?.getUploadStatus(jobId)
+    }
+    
+    /**
+     * Get all active uploads
+     */
+    fun getActiveUploads(): List<FileUploadService.UploadJob> {
+        return fileUploadService?.getActiveUploads() ?: emptyList()
+    }
+    
+    /**
+     * Cancel file upload
+     */
+    suspend fun cancelUpload(jobId: String): Boolean {
+        return fileUploadService?.cancelUpload(jobId) ?: false
+    }
+    
+    /**
+     * Pause file upload
+     */
+    suspend fun pauseUpload(jobId: String): Boolean {
+        return fileUploadService?.pauseUpload(jobId) ?: false
+    }
+    
+    /**
+     * Resume file upload
+     */
+    suspend fun resumeUpload(jobId: String): Boolean {
+        return fileUploadService?.resumeUpload(jobId) ?: false
+    }
+    
+    /**
+     * Export session data
+     */
+    suspend fun exportSession(
+        sessionId: String,
+        format: DataManagementService.ExportFormat,
+        includeFiles: Boolean = false
+    ): String? {
+        return dataManagementService?.exportSession(sessionId, format, includeFiles)
+    }
+    
+    /**
+     * Get session information
+     */
+    fun getSession(sessionId: String): DataManagementService.SessionData? {
+        return dataManagementService?.getSession(sessionId)
+    }
+    
+    /**
+     * Get all sessions
+     */
+    fun getAllSessions(): List<DataManagementService.SessionData> {
+        return dataManagementService?.getAllSessions() ?: emptyList()
+    }
+    
+    /**
+     * Get storage statistics
+     */
+    fun getStorageStats(): Map<String, Any> {
+        return dataManagementService?.getStorageStats() ?: emptyMap()
+    }
+    
+    /**
+     * Get upload statistics
+     */
+    fun getUploadStats(): Map<String, Any> {
+        return fileUploadService?.getUploadStats() ?: emptyMap()
+    }
+    
+    /**
+     * Get comprehensive Phase 3 diagnostics
+     */
+    fun getPhase3Diagnostics(): JSONObject {
+        return JSONObject().apply {
+            put("file_upload_stats", JSONObject(getUploadStats()))
+            put("storage_stats", JSONObject(getStorageStats()))
+            put("active_sessions", getAllSessions().size)
+            put("phase3_enabled", true)
+            put("services_active", fileUploadService != null && dataManagementService != null)
+            put("upload_protocol", FeatureFlags.FILE_UPLOAD_PROTOCOL)
+        }
+    }
+    
+    /**
+     * Perform data cleanup
+     */
+    suspend fun performDataCleanup(maxAgeMs: Long = 7 * 24 * 60 * 60 * 1000L) {
+        dataManagementService?.performCleanup(maxAgeMs)
     }
 }

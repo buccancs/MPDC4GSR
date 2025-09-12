@@ -163,7 +163,7 @@ class EnhancedAuthenticationManager:
 
         # Enhanced credentials beyond admin/admin
         self.enhanced_credentials = {
-            "admin" = "admin",
+            "admin": "admin",
             "researcher": "research2024!",
             "operator": "operate@safe",
             "observer": "view_only_123",
@@ -548,8 +548,8 @@ class EnhancedSecurityMonitor:
         ]
 
     def report_connection_attempt(
-        self, device_id: Any = str, successful: Any = bool, details: Any = Dict[str, Any] = None
-    ) -> Any:
+        self, device_id: str, successful: bool, details: Optional[Dict[str, Any]] = None
+    ) -> None:
         """Report connection attempt for monitoring"""
         current_time = time.time()
 

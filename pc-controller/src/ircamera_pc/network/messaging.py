@@ -292,7 +292,8 @@ class ReliableMessageService:
         return message_id
 
     async def handle_acknowledgment(
-        self, message_id: Any = str, success: Any = bool, error_message: Any = Optional[str] = None) -> Any:
+        self, message_id: str, success: bool, error_message: Optional[str] = None
+    ) -> None:
         """
         Handle an acknowledgment for a sent message.
 

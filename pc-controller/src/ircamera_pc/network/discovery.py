@@ -410,15 +410,21 @@ class ServiceBrowserHandler:
         self.discovery_service = discovery_service
         self.service_type = service_type
 
-    def add_service(self, zc: None = Zeroconf, type_: None = str, name: None = str) -> None:
+    def add_service(
+        self, zc: None = Zeroconf, type_: None = str, name: None = str
+    ) -> None:
         """Called when a service is discovered."""
         asyncio.create_task(self._add_service_async(zc, type_, name))
 
-    def remove_service(self, zc: None = Zeroconf, type_: None = str, name: None = str) -> None:
+    def remove_service(
+        self, zc: None = Zeroconf, type_: None = str, name: None = str
+    ) -> None:
         """Called when a service is removed."""
         asyncio.create_task(self.discovery_service._on_device_lost(name))
 
-    def update_service(self, zc: None = Zeroconf, type_: None = str, name: None = str) -> None:
+    def update_service(
+        self, zc: None = Zeroconf, type_: None = str, name: None = str
+    ) -> None:
         """Called when a service is updated."""
         # Treat updates as new discoveries
         asyncio.create_task(self._add_service_async(zc, type_, name))

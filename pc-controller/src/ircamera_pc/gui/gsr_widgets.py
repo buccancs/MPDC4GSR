@@ -158,7 +158,9 @@ class GSRDeviceStatusWidget(QWidget):
         group.setLayout(layout)
         return group
 
-    def update_device_info(self, device_id: None = str, device_info: None = Dict) -> None:
+    def update_device_info(
+        self, device_id: None = str, device_info: None = Dict
+    ) -> None:
         """Update device information display"""
         if device_id not in self.devices:
             return
@@ -249,7 +251,9 @@ class GSRPlotWidget(QWidget):
 
         self.setLayout(layout)
 
-    def add_device_data(self, device_id: None = str, timestamp: None = float, gsr_value: None = float) -> None:
+    def add_device_data(
+        self, device_id: None = str, timestamp: None = float, gsr_value: None = float
+    ) -> None:
         """Add data point for a device"""
         if device_id not in self.data_buffers:
             self.data_buffers[device_id] = ([], [])
@@ -582,7 +586,9 @@ class GSRMainWidget(QWidget):
         # Force immediate update
         self.update_gsr_data()
 
-    def export_gsr_data(self, device_ids: Any = List[str], format_str: Any = str, export_dir: Any = str) -> Any:
+    def export_gsr_data(
+        self, device_ids: Any = List[str], format_str: Any = str, export_dir: Any = str
+    ) -> Any:
         """Export GSR data for selected devices"""
         if not self.network_server:
             QMessageBox.warning(

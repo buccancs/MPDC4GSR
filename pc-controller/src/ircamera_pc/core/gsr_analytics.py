@@ -758,7 +758,9 @@ class GSRAnalytics:
             logger.error(f"Failed to export features: {e}")
             return False
 
-    def cleanup_device_session(self, device_id: Any = str, session_id: Any = str) -> Any:
+    def cleanup_device_session(
+        self, device_id: Any = str, session_id: Any = str
+    ) -> Any:
         """Clean up buffers and history for a completed session"""
         device_key = f"{device_id}_{session_id}"
 

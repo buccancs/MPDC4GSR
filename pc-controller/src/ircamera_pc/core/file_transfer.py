@@ -146,7 +146,9 @@ class FileTransferManager:
             f"Chunk size: {self.chunk_size} bytes, Maxconcurrent: {self.max_concurrent}"
         )
 
-    def add_progress_callback(self, callback: None = Callable[[str, float, float], None]) -> None:
+    def add_progress_callback(
+        self, callback: None = Callable[[str, float, float], None]
+    ) -> None:
         """
         Add callback for transfer progress updates
 

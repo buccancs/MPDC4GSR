@@ -48,7 +48,7 @@ class GSRPlotWidget(pg.PlotWidget):
         self.gsr_data: Dict[str, deque] = (
             {}
         )  # device_id: deque of (timestamp, gsr_value)
-        self.plot_items = Dict[str, pg.PlotDataItem] = {}
+        self.plot_items: Dict[str, pg.PlotDataItem] = {}
         self.sync_markers: List[pg.InfiniteLine] = []
 
         self._setup_plot()

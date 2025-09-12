@@ -14,11 +14,11 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.menu.R as MenuR
 
 /**
- * temperature measurementmode-menu3-pseudo color/observationmode-menu4-pseudo color 其中一个pseudo color块.
+ * One pseudo color block in temperature measurement mode - Menu 3 - pseudo color / observation mode - Menu 4 - pseudo color.
  *
- * 这个 View only在menu-pseudo color中使用, 太过定制化不能通用, 故而里面很多尺寸, 比例直接写死.
+ * This View is only used in menu pseudo color, too customized and not universal, so many dimensions and proportions are hard-coded.
  *
- * only提供一个方法 [refreshColor] 用于刷新 UI.
+ * Only provides one method [refreshColor] for refreshing UI.
  *
  * Created by LCG on 2024/11/12.
  */
@@ -31,29 +31,29 @@ import com.topdon.menu.R as MenuR
  */
 class ColorView : View {
     /**
-     * pseudo color渐变颜色值数组.
+     * Pseudo color gradient color value array.
      */
     var colors: IntArray = intArrayOf(0xfffbda00.toInt(), 0xffea0e0e.toInt(), 0xff6907af.toInt())
 
     /**
-     * pseudo color渐变颜色对应的位置数组.
+     * Position array corresponding to pseudo color gradient colors.
      */
     var positions: FloatArray = floatArrayOf(0f, 0.5f, 1f)
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     /**
-     * 已selected时 paint 的 shader.
+     * Shader for paint when selected.
      */
     private var shaderSelectYes = LinearGradient(0f, 0f, 0f, 0f, colors, positions, Shader.TileMode.CLAMP)
 
     /**
-     * 未selected时 paint 的 shader.
+     * Shader for paint when not selected.
      */
     private var shaderSelectNot = LinearGradient(0f, 0f, 0f, 0f, colors, positions, Shader.TileMode.CLAMP)
 
     /**
-     * selected时的bottom三角形
+     * Bottom triangle when selected.
      */
     private val triangleDrawable: Drawable
 
@@ -84,9 +84,9 @@ class ColorView : View {
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
         val width: Int = if (widthMode == MeasureSpec.UNSPECIFIED) 100 else widthSize
-        val barHeight: Int = (width * 73f / 62).toInt() // 62和73是根据UI图 选中时含描边在内色块宽高比 62:73
-        val triangleSize: Int = (width * 12f / 62).toInt() // 62和12是根据UI图 三角形宽度12，总宽度62
-        val margin: Int = SizeUtils.dp2px(4f) // 色块和三角形中间有 4dp 间距
+        val barHeight: Int = (width * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
+        val triangleSize: Int = (width * 12f / 62).toInt() // 62 and 12 from UI design - triangle width 12, total width 62
+        val margin: Int = SizeUtils.dp2px(4f) // 4dp spacing between color block and triangle
         val wantHeight: Int = barHeight + margin + triangleSize
         val height =
             when (heightMode) {
@@ -103,10 +103,10 @@ class ColorView : View {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val radius: Float = SizeUtils.dp2px(10f).toFloat()
-        val barHeight: Int = (width * 73f / 62).toInt() // 62和73是根据UI图 选中时含描边在内色块宽高比 62:73
+        val barHeight: Int = (width * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
 
         if (isSelected) {
-            val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // 描边宽度2dp
+            val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // Border width 2dp
             val selectBarHeight: Int = (barHeight - strokeSize * 2).toInt()
             paint.shader = null
             canvas.drawRoundRect(0f, 0f, width.toFloat(), barHeight.toFloat(), radius, radius, paint)
@@ -114,8 +114,8 @@ class ColorView : View {
             canvas.drawRoundRect(strokeSize, strokeSize, width - strokeSize, strokeSize + selectBarHeight, radius, radius, paint)
             triangleDrawable.draw(canvas)
         } else {
-            val normalBarWidth: Int = (width * 50f / 62).toInt() // 未选中时宽度50，整体宽度62
-            val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() // 宽高比为 50:60
+            val normalBarWidth: Int = (width * 50f / 62).toInt() // Unselected width 50, total width 62
+            val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() // Aspect ratio 50:60
             val top: Float = ((barHeight - normalBarHeight) / 2).toFloat()
             val left: Float = ((width - normalBarWidth) / 2).toFloat()
             paint.shader = shaderSelectNot
@@ -124,7 +124,7 @@ class ColorView : View {
     }
 
     /**
-     * 使用指定的颜色及位置重新绘制.
+     * Redraw using specified colors and positions.
      */
     fun refreshColor(
         colors: IntArray,
@@ -137,13 +137,13 @@ class ColorView : View {
     }
 
     private fun refreshShader() {
-        val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // 描边宽度2dp
-        val barHeight: Int = (measuredWidth * 73f / 62).toInt() // 62和73是根据UI图 选中时含描边在内色块宽高比 62:73
+        val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // Border width 2dp
+        val barHeight: Int = (measuredWidth * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
         val selectBarHeight: Int = (barHeight - strokeSize * 2).toInt()
         shaderSelectYes = LinearGradient(0f, strokeSize, 0f, strokeSize + selectBarHeight, colors, positions, Shader.TileMode.CLAMP)
 
-        val normalBarWidth: Int = (measuredWidth * 50f / 62).toInt() // 未选中时宽度50，整体宽度62
-        val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() // 宽高比为 50:60
+        val normalBarWidth: Int = (measuredWidth * 50f / 62).toInt() // Unselected width 50, total width 62
+        val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() // Aspect ratio 50:60
         val top: Float = ((barHeight - normalBarHeight) / 2).toFloat()
         shaderSelectNot = LinearGradient(0f, top, 0f, top + normalBarHeight, colors, positions, Shader.TileMode.CLAMP)
     }

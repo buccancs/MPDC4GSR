@@ -260,7 +260,7 @@ class SystemIntegrationWidget(QWidget):
         self.status_label = QLabel("Ready")
         layout.addWidget(self.status_label)
 
-    def update_privilege_level(self, level: None = str) -> None:
+    def update_privilege_level(self, level: str) -> None:
         """Update privilege level display."""
         self.privilege_label.setText(f"Privilege Level: {level}")
 
@@ -342,12 +342,12 @@ class BluetoothControlWidget(QWidget):
             name = device.get("name", "Unknown Device")
             self.device_list.addItem(f"{addr} - {name}")
 
-    def set_connection_status(self, device_addr: None = str, connected: None = bool) -> None:
+    def set_connection_status(self, device_addr: str, connected: bool) -> None:
         """Update connection status for a device."""
         status = "Connected" if connected else "Disconnected"
         self.status_label.setText(f"{device_addr}: {status}")
 
-    def set_error_status(self, error: None = str) -> None:
+    def set_error_status(self, error: str) -> None:
         """Set error status."""
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")
@@ -446,7 +446,7 @@ class IntegrationManagementWidget(QWidget):
         # This would be connected to actual metric sources in production
         pass
 
-    def update_hub_status(self, connected: None = bool, address: None = str = "") -> None:
+    def update_hub_status(self, connected: bool = False, address: str = "") -> None:
         """Update Hub connection status."""
         if connected:
             self.hub_status_label.setText(f"Hub: Connected ({address})")
@@ -457,7 +457,9 @@ class IntegrationManagementWidget(QWidget):
             self.hub_status_label.setStyleSheet("color: red;")
             self.hub_connect_btn.setText("Connect to Hub")
 
-    def update_spoke_count(self, count: None = int, active_spokes: None = List[str] = None) -> None:
+    def update_spoke_count(
+        self, count: int = 0, active_spokes: Optional[List[str]] = None
+    ) -> None:
         """Update active spoke count and list."""
         self.spoke_count_label.setText(f"Active Spokes: {count}")
         if count > 0:
@@ -468,7 +470,9 @@ class IntegrationManagementWidget(QWidget):
         else:
             self.spoke_count_label.setStyleSheet("color: gray;")
 
-    def update_sync_status(self, synchronized: None = bool, max_offset_ms: None = float = 0) -> None:
+    def update_sync_status(
+        self, synchronized: bool = False, max_offset_ms: float = 0
+    ) -> None:
         """Update time synchronization status."""
         if synchronized:
             self.sync_status_label.setText(
@@ -483,7 +487,8 @@ class IntegrationManagementWidget(QWidget):
             self.sync_status_label.setStyleSheet("color: red;")
 
     def update_metrics(
-        self, data_rate_mbps: None = float, latency_ms: None = float, error_count: None = int) -> None:
+        self, data_rate_mbps: float, latency_ms: float, error_count: int
+    ) -> None:
         """Update real-time performance metrics."""
         self.data_rate_label.setText(f"Data Rate: {data_rate_mbps:.2f} MB/s")
         self.latency_label.setText(f"Network Latency: {latency_ms:.1f} ms")
@@ -497,7 +502,7 @@ class IntegrationManagementWidget(QWidget):
         else:
             self.latency_label.setStyleSheet("color: red;")
 
-    def add_status_message(self, message: None = str, level: None = str = "INFO") -> None:
+    def add_status_message(self, message: str, level: str = "INFO") -> None:
         """Add a status message to the log."""
         timestamp = QTimer().time().toString("hh:mm:ss")
         formatted_msg = f"[{timestamp}] {level}: {message}"
@@ -520,7 +525,7 @@ class IntegrationManagementWidget(QWidget):
         # Emit status change signal
         self.integration_status_changed.emit(message, level == "ERROR")
 
-    def set_integration_error(self, error: None = str) -> None:
+    def set_integration_error(self, error: str) -> None:
         """Handle integration errors."""
         self.add_status_message(f"Integration Error: {error}", "ERROR")
         self.logger.error(f"Integration error: {error}")
@@ -587,19 +592,19 @@ class WiFiControlWidget(QWidget):
             signal = network.get("signal_strength", 0)
             self.network_list.addItem(f"{ssid} ({signal}%)")
 
-    def set_connection_status(self, ssid: None = str, connected: None = bool, ip: None = str = "") -> None:
+    def set_connection_status(self, ssid: str, connected: bool, ip: str = "") -> None:
         """Update connection status."""
         if connected:
             self.status_label.setText(f"Connected to {ssid} ({ip})")
         else:
             self.status_label.setText(f"Disconnected from {ssid}")
 
-    def set_hotspot_status(self, active: None = bool, message: None = str = "") -> None:
+    def set_hotspot_status(self, active: bool, message: str = "") -> None:
         """Update hotspot status."""
         status = "Active" if active else "Inactive"
         self.status_label.setText(f"Hotspot: {status} {message}")
 
-    def set_error_status(self, error: None = str) -> None:
+    def set_error_status(self, error: str) -> None:
         """Set error status."""
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")

@@ -3,12 +3,11 @@ Tests for IRCamera PC Controller
 
 Basic test suite for core functionality validation.
 """
-from typing import Any, Dict, List, Optional
-
 
 import shutil
 import tempfile
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 from unittest.mock import Mock, patch
 
 import pytest

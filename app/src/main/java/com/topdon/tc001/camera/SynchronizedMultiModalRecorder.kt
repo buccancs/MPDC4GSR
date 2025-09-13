@@ -10,10 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
-/**
- * Synchronized Multi-Modal Recorder
- * Coordinates thermal, RGB, and GSR recording with unified Samsung S22 ground truth timing
- */
+
 class SynchronizedMultiModalRecorder(
     private val context: Context,
     private val thermalRecorder: EnhancedThermalRecorder,
@@ -45,9 +42,7 @@ class SynchronizedMultiModalRecorder(
     var onRecordingStopped: ((RecordingSession) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
 
-    /**
-     * Initialize all recording components
-     */
+
     fun initialize() {
         rgbCameraRecorder =
             RGBCameraRecorder(context, rgbTextureView).apply {
@@ -68,9 +63,7 @@ class SynchronizedMultiModalRecorder(
             }
     }
 
-    /**
-     * Start synchronized multi-modal recording
-     */
+
     fun startSynchronizedRecording(
         sessionId: String? = null,
         rgbSettings: RGBCameraRecorder.RecordingSettings = RGBCameraRecorder.RecordingSettings(),
@@ -146,9 +139,7 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Stop synchronized multi-modal recording
-     */
+
     fun stopSynchronizedRecording(): RecordingSession? {
         if (!isRecording || currentSessionId == null) {
             Log.w(TAG, "Not currently recording")
@@ -205,9 +196,7 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Add synchronized event marker across all recording streams
-     */
+
     fun addSyncEvent(
         eventName: String,
         metadata: Map<String, String> = emptyMap(),
@@ -228,9 +217,7 @@ class SynchronizedMultiModalRecorder(
         Log.d(TAG, "Added synchronized event: $eventName at timestamp $timestamp")
     }
 
-    /**
-     * Switch RGB camera (front/back)
-     */
+
     fun switchRGBCamera(): RGBCameraRecorder.CameraFacing? {
         val currentFacing = rgbCameraRecorder?.getCurrentCameraFacing()
         val newFacing =
@@ -245,9 +232,7 @@ class SynchronizedMultiModalRecorder(
         return if (success) newFacing else currentFacing
     }
 
-    /**
-     * Update RGB recording settings
-     */
+
     fun updateRGBSettings(settings: RGBCameraRecorder.RecordingSettings) {
         rgbCameraRecorder?.updateSettings(settings)
 
@@ -264,9 +249,7 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Enable/disable RGB flash
-     */
+
     fun setRGBFlash(enabled: Boolean) {
         runBlocking { rgbCameraRecorder?.setFlashEnabled(enabled) }
 
@@ -280,9 +263,7 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Pause/resume RGB recording (Android N+)
-     */
+
     fun pauseRGBRecording() {
         runBlocking { rgbCameraRecorder?.pauseRecording() }
 
@@ -299,9 +280,7 @@ class SynchronizedMultiModalRecorder(
         }
     }
 
-    /**
-     * Get current recording state
-     */
+
     fun isRecording() = isRecording
 
     fun getCurrentSessionId() = currentSessionId
@@ -314,16 +293,12 @@ class SynchronizedMultiModalRecorder(
 
     fun getSupportedRGBResolutions() = rgbCameraRecorder?.getSupportedResolutions() ?: emptyList()
 
-    /**
-     * Get session directory with all synchronized files
-     */
+
     fun getSessionDirectory(): File? {
         return thermalRecorder.getSessionDirectory()
     }
 
-    /**
-     * Cleanup all resources
-     */
+
     fun cleanup() {
         if (isRecording) {
             stopSynchronizedRecording()
@@ -336,10 +311,7 @@ class SynchronizedMultiModalRecorder(
         isRecording = false
     }
 
-    /**
-     * Create a new session combining thermal video recording with RGB+GSR
-     * This integrates with the existing thermal recording workflow
-     */
+
     fun createThermalRGBSession(thermalVideoFile: File): RecordingSession? {
         val sessionId = currentSessionId ?: return null
         val sessionDir = getSessionDirectory() ?: return null
@@ -355,9 +327,7 @@ class SynchronizedMultiModalRecorder(
         )
     }
 
-    /**
-     * Generate comprehensive session metadata including Samsung S22 processor information
-     */
+
     fun generateSessionMetadata(): Map<String, Any> {
         return mapOf(
             "session_id" to (currentSessionId ?: "unknown"),

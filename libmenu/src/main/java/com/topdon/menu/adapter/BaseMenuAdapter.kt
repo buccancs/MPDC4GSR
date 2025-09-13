@@ -5,11 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.menu.databinding.ItemMenuBinding
 
-/**
- * Shared logic extraction for all menu adapters except pseudo color.
- *
- * Created by LCG on 2024/11/29.
- */
+
 internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.ViewHolder>() {
     companion object {
         private const val VIEW_TYPE_DEFAULT = 0
@@ -52,12 +48,7 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
         return ViewHolder(binding)
     }
 
-    /**
-     * ViewHolder(val class
-     */
-/**
- * Custom View holder view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
     class ViewHolder(val binding: ItemMenuBinding) : RecyclerView.ViewHolder(binding.root)
 }

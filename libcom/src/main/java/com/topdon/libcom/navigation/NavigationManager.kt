@@ -8,14 +8,9 @@ import android.os.Parcelable
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.tools.DeviceTools
 
-/**
- * Modern navigation system to replace ARouter
- * Provides type-safe navigation with Intent-based routing
- */
+
 object NavigationManager {
-    /**
-     * Navigation builder class for fluent API
-     */
+
     class NavigationBuilder(private val route: String) {
         private val extras = Bundle()
         private var requestCode: Int? = null
@@ -76,21 +71,15 @@ object NavigationManager {
         }
     }
 
-    /**
-     * Build navigation to a specific route
-     */
+
     fun build(route: String): NavigationBuilder {
         return NavigationBuilder(route)
     }
 
-    /**
-     * Get instance for API compatibility with ARouter
-     */
+
     fun getInstance(): NavigationManager = this
 
-    /**
-     * Create Intent based on route configuration
-     */
+
     private fun createIntent(
         context: Context,
         route: String,
@@ -164,9 +153,7 @@ object NavigationManager {
         return Intent(context, activityClass)
     }
 
-    /**
-     * Device-aware navigation for image picking
-     */
+
     fun jumpImagePick(
         activity: Activity,
         isTC007: Boolean,
@@ -186,9 +173,7 @@ object NavigationManager {
             .navigation(activity, 101)
     }
 
-    /**
-     * Get class by name with error handling
-     */
+
     private fun getClassByName(className: String): Class<*> {
         return try {
             Class.forName(className)

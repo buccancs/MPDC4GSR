@@ -14,16 +14,8 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
 
-/**
- * Custom Fence point view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * FencePointView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
 class FencePointView : View {
     var listener: CallBack? = null
     private val iconSize = SizeUtils.dp2px(32f)
@@ -131,9 +123,7 @@ class FencePointView : View {
         return true
     }
 
-    /**
-     * Executes result functionality.
-     */
+
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         if (startPoint[0] - destW / 2 < 0) {
@@ -158,9 +148,7 @@ class FencePointView : View {
         }
     }
 
-    /**
-     * Clears data and resets internal state.
-     */
+
     fun clear() {
         startPoint = intArrayOf(0, 0)
         result()
@@ -168,21 +156,10 @@ class FencePointView : View {
     }
 
     
-/**
- * Custom Call back view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * CallBack manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
     interface CallBack {
-        /**
-         * startPoint: 左上角
-         * endPoint: 右下角
-         */
+
         fun callback(
             startPoint: IntArray,
             srcRect: IntArray,

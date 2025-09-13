@@ -17,14 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Terms and Conditions Activity
- * 
- * Displays different types of terms:
- * 1: User terms  2: Privacy terms  3: Third-party terms
- *
- * When service returns an error, loads default terms
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     private val mHandler = Handler(Looper.getMainLooper())
@@ -86,9 +79,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         mHandler.removeCallbacksAndMessages(null)
     }
 
-    /**
-     * 为解决闪缩白屏问题，延时打开webView
-     */
+
     private fun delayShowWebView() {
         lifecycleScope.launch(Dispatchers.IO) {
             delay(200)
@@ -166,14 +157,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         binding.policyWeb.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
     }
 
-    /**
-     * 处理富文本
-     *
-     * @param bodyHTML body
-     * @param fontColor 需要改变的字体颜色
-     * @param backgroundColor 修改字体颜色
-     * @return String
-     */
+
     fun getHtmlData(
         htmlBody: String,
         fontColor: String,
@@ -219,9 +203,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         }
     }
 
-    /**
-     * 加载默认协议网址(英文版)
-     */
+
     fun loadHttp(view: android.webkit.WebView) {
         reloadCount--
         when (themeType) {

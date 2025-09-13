@@ -10,24 +10,7 @@ import com.topdon.ble.util.BluetoothPermissionUtils;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Comprehensive example demonstrating cross-modal synchronization and harmonization.
- * 
- * This example shows how to:
- * 1. Initialize the unified BLE system with cross-modal capabilities
- * 2. Register multiple device types for synchronized operation
- * 3. Coordinate BLE and non-BLE devices for multi-modal recording
- * 4. Monitor synchronization quality and performance
- * 5. Handle advanced error recovery and device management
- * 
- * Use Cases:
- * - Multi-modal physiological sensing (GSR + thermal + RGB)
- * - Research-grade data collection with precise timing
- * - Clinical studies requiring synchronized multi-device recording
- * - Industrial monitoring with multiple sensor modalities
- * 
- * @author IRCamera Cross-Modal Integration Team
- */
+
 public class CrossModalIntegrationExample {
     private static final String TAG = "CrossModalExample";
     
@@ -39,9 +22,7 @@ public class CrossModalIntegrationExample {
         this.context = context;
     }
     
-    /**
-     * Complete initialization and setup example
-     */
+
     public boolean initializeComprehensiveSystem() {
         Log.i(TAG, "=== Initializing Comprehensive Cross-Modal System ===");
         
@@ -78,9 +59,7 @@ public class CrossModalIntegrationExample {
         }
     }
     
-    /**
-     * Start comprehensive device discovery for all modalities
-     */
+
     private boolean startComprehensiveDeviceDiscovery() {
         try {
             // Start BLE device discovery
@@ -100,9 +79,7 @@ public class CrossModalIntegrationExample {
         }
     }
     
-    /**
-     * Register non-BLE devices for cross-modal coordination
-     */
+
     public boolean registerNonBleDevices() {
         Log.i(TAG, "=== Registering Non-BLE Devices for Cross-Modal Sync ===");
         
@@ -171,9 +148,7 @@ public class CrossModalIntegrationExample {
         }
     }
     
-    /**
-     * Start comprehensive multi-modal recording
-     */
+
     public boolean startMultiModalRecording() {
         Log.i(TAG, "=== Starting Multi-Modal Recording ===");
         
@@ -218,9 +193,7 @@ public class CrossModalIntegrationExample {
         }
     }
     
-    /**
-     * Stop comprehensive recording
-     */
+
     public boolean stopMultiModalRecording() {
         Log.i(TAG, "=== Stopping Multi-Modal Recording ===");
         
@@ -243,9 +216,7 @@ public class CrossModalIntegrationExample {
         }
     }
     
-    /**
-     * Get comprehensive system status
-     */
+
     public void printSystemStatus() {
         Log.i(TAG, "=== Comprehensive System Status ===");
         
@@ -282,9 +253,7 @@ public class CrossModalIntegrationExample {
         }
     }
     
-    /**
-     * Comprehensive device discovery listener
-     */
+
     private class ComprehensiveDeviceListener implements UnifiedBleManager.UnifiedScanListener {
         @Override
         public void onShimmerDeviceFound(android.bluetooth.BluetoothDevice device, 
@@ -365,9 +334,7 @@ public class CrossModalIntegrationExample {
         }
     }
     
-    /**
-     * Comprehensive synchronization listener
-     */
+
     private class ComprehensiveSyncListener implements CrossModalSyncManager.CrossModalSyncListener {
         @Override
         public void onDeviceRegistered(@NonNull CrossModalSyncManager.RegisteredDevice device) {

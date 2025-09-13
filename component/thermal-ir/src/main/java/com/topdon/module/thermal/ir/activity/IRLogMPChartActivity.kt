@@ -32,16 +32,11 @@ import kotlin.collections.ArrayList
 import com.topdon.lib.core.R as LibR
 
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * I r log m p chart activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class IRLogMPChartActivity : BaseActivity() {
     private val viewModel: IRMonitorViewModel by viewModels()
 
-    /**
-\1从上一interface传递过来的，当前查看的监控记录开始时间戳.
-     */
+
     private var startTime = 0L
 
     private val permissionList by lazy {
@@ -128,7 +123,7 @@ class IRLogMPChartActivity : BaseActivity() {
                                         doNotAskAgain: Boolean,
                                     ) {
                                         if (doNotAskAgain) {
-\1拒绝授权并且不再提醒
+//拒绝授权并且不再提醒
                                             if (BaseApplication.instance.isDomestic())
                                                 {
                                                     ToastUtils.showShort(getString(LibR.string.app_storage_content))

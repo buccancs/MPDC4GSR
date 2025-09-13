@@ -41,12 +41,7 @@ open class GalleryBean(
     )
 }
 
-/**
- * GalleryTitle manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class GalleryTitle(timeMillis: Long) : GalleryBean(
     id = 0,
     path = "",

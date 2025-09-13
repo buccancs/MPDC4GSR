@@ -36,25 +36,7 @@ import java.net.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * Background service for multi-modal sensor recording with PC-to-Phone server socket support.
- * 
- * This service ensures continuous recording operation even when the app is in the background.
- * It manages the RecordingController and provides status updates through notifications.
- * 
- * Key Features:
- * - Foreground service for uninterrupted recording
- * - Persistent server socket for PC connections
- * - Multi-connection support with re-accept loop
- * - NSD service advertisement for discovery
- * - Real-time status notifications
- * - Automatic recovery from errors
- * - Integration with PC Controller communication
- * - Power management awareness
- * - Graceful shutdown and resource management
- * 
- * @author IRCamera Android Sensor Node (Spoke)
- */
+
 class RecordingService : LifecycleService() {
 
     companion object {
@@ -87,9 +69,7 @@ class RecordingService : LifecycleService() {
         const val EXTRA_PC_IP = "pc_ip"
         const val EXTRA_PC_PORT = "pc_port"
         
-        /**
-         * Start the recording service
-         */
+
         fun startRecording(context: Context, sessionDirectory: String) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_START_RECORDING
@@ -98,9 +78,7 @@ class RecordingService : LifecycleService() {
             context.startForegroundService(intent)
         }
         
-        /**
-         * Stop the recording service
-         */
+
         fun stopRecording(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_STOP_RECORDING
@@ -108,9 +86,7 @@ class RecordingService : LifecycleService() {
             context.startService(intent)
         }
         
-        /**
-         * Start server socket for PC connections
-         */
+
         fun startServer(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_START_SERVER
@@ -118,9 +94,7 @@ class RecordingService : LifecycleService() {
             context.startForegroundService(intent)
         }
         
-        /**
-         * Stop server socket
-         */
+
         fun stopServer(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_STOP_SERVER
@@ -128,9 +102,7 @@ class RecordingService : LifecycleService() {
             context.startService(intent)
         }
         
-        /**
-         * Add sync marker through service
-         */
+
         fun addSyncMarker(context: Context, markerType: String, timestampNs: Long) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_ADD_SYNC_MARKER
@@ -140,9 +112,7 @@ class RecordingService : LifecycleService() {
             context.startService(intent)
         }
         
-        /**
-         * Connect to PC Controller
-         */
+
         fun connectToPC(context: Context, ipAddress: String, port: Int = 8080) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_CONNECT_PC
@@ -152,9 +122,7 @@ class RecordingService : LifecycleService() {
             context.startService(intent)
         }
         
-        /**
-         * Disconnect from PC Controller
-         */
+
         fun disconnectFromPC(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_DISCONNECT_PC
@@ -162,9 +130,7 @@ class RecordingService : LifecycleService() {
             context.startService(intent)
         }
         
-        /**
-         * Start PC Controller discovery
-         */
+
         fun startDiscovery(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_START_DISCOVERY
@@ -208,9 +174,7 @@ class RecordingService : LifecycleService() {
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
     
-    /**
-     * Represents an active client connection from PC
-     */
+
     private data class ClientConnection(
         val socket: Socket,
         val clientId: String,
@@ -312,9 +276,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Initialize Phase 0 baseline components for the service
-     */
+
     private fun initializePhase0Baseline() {
         try {
             // Initialize feature flags if not already done
@@ -646,21 +608,15 @@ class RecordingService : LifecycleService() {
         }
     }
 
-    /**
-     * Get the recording controller instance
-     */
+
     fun getRecordingController(): RecordingController = recordingController
 
-    /**
-     * Check if service is initialized and ready
-     */
+
     fun isInitialized(): Boolean = isInitialized
 
     }
     
-    /**
-     * Initialize network client and set up command handlers
-     */
+
 <<<<<<< HEAD
     fun getCurrentSession(): SessionInfo? {
         return currentSessionDirectory?.let { directory ->
@@ -673,9 +629,7 @@ class RecordingService : LifecycleService() {
     
     // ==================== SERVER SOCKET IMPLEMENTATION ====================
     
-    /**
-     * Start persistent server socket for PC connections with supervision
-     */
+
     private fun startServerSocket() {
         if (isServerRunning.get()) {
             structuredLogger.logServerEvent("server_already_running", mapOf("port" to SERVER_PORT))
@@ -713,9 +667,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Run server socket under supervision
-     */
+
     private suspend fun runServerSocketSupervised(stopToken: CrashSafeSupervisor.StopToken) {
         try {
             // Create server socket
@@ -794,9 +746,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Clean up server socket resources
-     */
+
     private fun cleanupServerSocket() {
         isServerRunning.set(false)
         
@@ -837,9 +787,7 @@ class RecordingService : LifecycleService() {
         structuredLogger.logServerEvent("server_socket_cleanup_completed")
     }
     
-    /**
-     * Stop server socket and cleanup
-     */
+
     private fun stopServerSocket() {
         if (!isServerRunning.get()) {
             structuredLogger.logServerEvent("server_not_running")
@@ -856,9 +804,7 @@ class RecordingService : LifecycleService() {
         structuredLogger.logServerEvent("server_socket_stopped")
     }
     
-    /**
-     * Start accept loop to handle multiple PC connections
-     */
+
     private fun startAcceptLoop() {
         serverJob = lifecycleScope.launch(Dispatchers.IO) {
             while (isServerRunning.get() && !currentCoroutineContext().isActive.not()) {
@@ -893,9 +839,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle new PC client connection
-     */
+
     private suspend fun handleNewClientConnection(clientSocket: Socket, clientId: String) {
         try {
             // Set socket timeout
@@ -948,9 +892,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle messages from PC client
-     */
+
     private suspend fun handleClientMessages(
         clientId: String, 
         inputStream: DataInputStream, 
@@ -1001,9 +943,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Set up network command handlers for PC Controller communication
-     */
+
     private fun setupNetworkCommandHandlers() {
         // Set up command handlers for legacy NetworkClient compatibility
         try {
@@ -1031,9 +971,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Start network discovery to find PC Controllers
-     */
+
     private fun startNetworkDiscovery() {
         lifecycleScope.launch {
             try {
@@ -1044,9 +982,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle start recording command from PC Controller
-     */
+
     private fun handleStartRecordingCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -1062,9 +998,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle stop recording command from PC Controller
-     */
+
     private fun handleStopRecordingCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -1077,9 +1011,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle sync flash command from PC Controller
-     */
+
     private fun handleSyncFlashCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -1095,9 +1027,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle query capabilities command from PC Controller
-     */
+
     private fun handleQueryCapabilitiesCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -1109,9 +1039,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle query status command from PC Controller  
-     */
+
     private fun handleQueryStatusCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -1123,9 +1051,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Get network client instance (for testing/debugging)
-     */
+
     fun getNetworkClient(): NetworkClient = networkClient
     
     // Network server setup and management
@@ -1219,9 +1145,7 @@ class RecordingService : LifecycleService() {
     }
     
 <<<<<<< HEAD
-    /**
-     * Process message from PC client with protocol validation and structured logging
-     */
+
     private suspend fun processClientMessage(
         clientId: String, 
         message: JSONObject, 
@@ -1408,9 +1332,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Send acknowledgment to PC client
-     */
+
     private suspend fun sendAck(outputStream: DataOutputStream, messageType: String, result: String) {
         val ackMessage = JSONObject().apply {
             put("message_type", "ack")
@@ -1421,9 +1343,7 @@ class RecordingService : LifecycleService() {
         sendMessage(outputStream, ackMessage)
     }
     
-    /**
-     * Send error to PC client
-     */
+
     private suspend fun sendError(outputStream: DataOutputStream, error: String) {
         val errorMessage = JSONObject().apply {
             put("message_type", "error")
@@ -1433,9 +1353,7 @@ class RecordingService : LifecycleService() {
         sendMessage(outputStream, errorMessage)
     }
     
-    /**
-     * Send status response to PC client
-     */
+
     private suspend fun sendStatusResponse(outputStream: DataOutputStream) {
         val statusMessage = JSONObject().apply {
             put("message_type", "status_response")
@@ -1451,9 +1369,7 @@ class RecordingService : LifecycleService() {
         sendMessage(outputStream, statusMessage)
     }
     
-    /**
-     * Send keepalive to PC client
-     */
+
     private suspend fun sendKeepAlive(outputStream: DataOutputStream) {
         val keepAliveMessage = JSONObject().apply {
             put("message_type", "keepalive")
@@ -1462,9 +1378,7 @@ class RecordingService : LifecycleService() {
         sendMessage(outputStream, keepAliveMessage)
     }
     
-    /**
-     * Send message to PC client with protocol versioning
-     */
+
     private suspend fun sendMessage(outputStream: DataOutputStream, message: JSONObject) {
         withContext(Dispatchers.IO) {
             try {
@@ -1634,9 +1548,7 @@ class RecordingService : LifecycleService() {
     }
     
 <<<<<<< HEAD
-    /**
-     * Initialize network client and set up command handlers
-     */
+
     private suspend fun initializeNetworkClient(): Boolean {
         return try {
             val success = networkClient.initialize()
@@ -1653,9 +1565,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Set up network command handlers for PC Controller communication
-     */
+
     private fun setupNetworkCommandHandlers() {
         // Set up command handlers
         networkClient.setMessageHandler("start_recording") { message ->
@@ -1734,9 +1644,7 @@ class RecordingService : LifecycleService() {
         })
     }
     
-    /**
-     * Start network discovery to find PC Controllers
-     */
+
     private fun startNetworkDiscovery() {
         lifecycleScope.launch {
             try {
@@ -1753,9 +1661,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle start recording command from PC Controller
-     */
+
     private fun handleStartRecordingCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -1791,10 +1697,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-<<<<<<< HEAD
-     * Perform sync flash for PC synchronization
-     */
+
     private fun performSyncFlash(durationMs: Int) {
         // This would need to be handled by the main activity
         // For now, just add a sync marker
@@ -1803,9 +1706,7 @@ class RecordingService : LifecycleService() {
     
     // ==================== NSD SERVICE MANAGEMENT ====================
     
-    /**
-     * Register NSD service for PC discovery
-     */
+
     private fun registerNsdService() {
         if (isServiceRegistered) {
             Log.i(TAG, "NSD service already registered")
@@ -1845,9 +1746,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Unregister NSD service
-     */
+
     private fun unregisterNsdService() {
         if (!isServiceRegistered || nsdServiceInfo == null) {
             return
@@ -1871,17 +1770,13 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Check if service is running in foreground
-     */
+
     private fun isServiceForeground(): Boolean {
         // This is a simplified check - in production you might want more sophisticated detection
         return currentSessionDirectory != null || isServerRunning.get()
     }
     
-    /**
-     * Create notification for server status
-     */
+
     private fun createServerNotification(contentText: String): Notification {
         val stopIntent = Intent(this, RecordingService::class.java).apply {
             action = ACTION_STOP_SERVER
@@ -1906,9 +1801,7 @@ class RecordingService : LifecycleService() {
             .build()
     }
     
-    /**
-     * Get server connection status
-     */
+
     fun getServerStatus(): String {
         return if (isServerRunning.get()) {
             "Running on port $SERVER_PORT (${activeConnections.size} clients)"
@@ -1917,9 +1810,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Get list of connected PC clients
-     */
+
     fun getConnectedClients(): List<String> {
         return activeConnections.keys.toList()
     }
@@ -1957,9 +1848,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle sync flash command from PC Controller
-     */
+
     private fun handleSyncFlashCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -1990,9 +1879,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle query capabilities command from PC Controller
-     */
+
     private fun handleQueryCapabilitiesCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -2023,9 +1910,7 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Handle query status command from PC Controller  
-     */
+
     private fun handleQueryStatusCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -2055,15 +1940,10 @@ class RecordingService : LifecycleService() {
         }
     }
     
-    /**
-     * Get network client instance (for testing/debugging)
-     */
+
     fun getNetworkClient(): NetworkClient = networkClient
     
-    /**
-     * Manually connect to a PC Controller using IP address
-     * This can be used as a fallback when automatic discovery fails
-     */
+
     fun connectToPC(ipAddress: String, port: Int = 8080, callback: ((Boolean) -> Unit)? = null) {
         if (!isNetworkInitialized) {
             Log.e(TAG, "Network client not initialized")
@@ -2314,9 +2194,7 @@ class RecordingService : LifecycleService() {
 >>>>>>> dev
 }
 
-/**
- * Current session information
- */
+
 data class SessionInfo(
     val directory: String,
     val startTime: Long,

@@ -7,10 +7,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionExportBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-/**
- * Session Export Activity
- * Export session data in various research formats
- */
+
 class SessionExportActivity : BaseBindingActivity<ActivitySessionExportBinding>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"

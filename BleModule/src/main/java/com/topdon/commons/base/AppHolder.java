@@ -179,9 +179,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         return null;
     }
 
-    /**
-     * 程序是否在前台运行
-     */
+
     public boolean isAppOnForeground() {
         ActivityManager am = (ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE);
         if (am != null) {
@@ -210,9 +208,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         return false;
     }
         
-    /**
-     * finish掉Activity
-     */
+
     public void finish(String className, String... classNames) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
         Collections.reverse(list);//倒序，后开的先finish
@@ -227,11 +223,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
     }
 
-    /**
-     * finish掉除参数外的所有Activity
-     *
-     * @param classNames 此Activity的类名，如果是null将finish所有Activity
-     */
+
     public void finishAllWithout(@Nullable String className, String... classNames) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
         Collections.reverse(list);//倒序，后开的先finish
@@ -246,18 +238,12 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
     }
 
-    /**
-     * finish掉所有Activity
-     */
+
     public void finishAll() {
         finishAllWithout(null);
     }
 
-    /**
-     * 退回到指定Activity
-     *
-     * @param className 完整类名
-     */
+
     public void backTo(String className) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
         Collections.reverse(list);//倒序，后开的先finish
@@ -298,9 +284,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         return activities;
     }
 
-    /**
-     * finish所有Activity后杀死进程
-     */
+
     public void completeExit() {
         isCompleteExit = true;
         List<RunningActivity> list = new ArrayList<>(runningActivities);

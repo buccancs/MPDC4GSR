@@ -19,12 +19,7 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 数字滚轮控件
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2019/5/13 19:13
- */
+
 public class NumberWheelView extends WheelView {
 
     public NumberWheelView(Context context) {
@@ -48,9 +43,7 @@ public class NumberWheelView extends WheelView {
         return data;
     }
 
-    /**
-     * @deprecated 使用 {@link #setRange} 代替
-     */
+
     @Deprecated
     @Override
     public void setData(List<?> data) {

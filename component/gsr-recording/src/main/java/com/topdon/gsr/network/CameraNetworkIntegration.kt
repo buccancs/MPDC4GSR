@@ -10,10 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Camera-Network Integration service for real-time thermal and RGB streaming
- * Provides optimized frame streaming with adaptive quality and compression
- */
+
 class CameraNetworkIntegration(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -79,9 +76,7 @@ class CameraNetworkIntegration(
         val avgLatency: Long,
     )
 
-    /**
-     * Initialize camera streaming for session
-     */
+
     suspend fun initializeCameraStreaming(sessionId: String) =
         withContext(Dispatchers.IO) {
             currentSessionId = sessionId
@@ -106,9 +101,7 @@ class CameraNetworkIntegration(
             networkClient.sendMessage(initMessage)
         }
 
-    /**
-     * Start RGB camera streaming
-     */
+
     suspend fun startRgbStreaming() =
         withContext(Dispatchers.IO) {
             if (isRgbStreamingActive.getAndSet(true)) {
@@ -138,9 +131,7 @@ class CameraNetworkIntegration(
             networkClient.sendMessage(startMessage)
         }
 
-    /**
-     * Start thermal camera streaming
-     */
+
     suspend fun startThermalStreaming() =
         withContext(Dispatchers.IO) {
             if (isThermalStreamingActive.getAndSet(true)) {
@@ -170,9 +161,7 @@ class CameraNetworkIntegration(
             networkClient.sendMessage(startMessage)
         }
 
-    /**
-     * Process RGB frame from camera data (byte array format)
-     */
+
     fun processRgbFrame(
         frameData: ByteArray,
         width: Int,
@@ -213,9 +202,7 @@ class CameraNetworkIntegration(
         }
     }
 
-    /**
-     * Process thermal frame data
-     */
+
     fun processThermalFrame(
         thermalData: FloatArray,
         width: Int,
@@ -256,9 +243,7 @@ class CameraNetworkIntegration(
         }
     }
 
-    /**
-     * Determine JPEG quality based on network conditions
-     */
+
     private fun determineJpegQuality(): Int {
         val networkMetrics = qosManager.getNetworkQualityMetrics()
 
@@ -271,9 +256,7 @@ class CameraNetworkIntegration(
         }
     }
 
-    /**
-     * Process RGB frame queue and send frames to PC Controller
-     */
+
     private suspend fun processRgbFrameQueue() {
         val frame = rgbFrameQueue.poll() ?: return
 
@@ -314,9 +297,7 @@ class CameraNetworkIntegration(
         }
     }
 
-    /**
-     * Compress thermal data for efficient transmission
-     */
+
     private fun compressThermalData(thermalData: FloatArray): ByteArray {
         return try {
             // Convert float array to byte array for transmission
@@ -373,9 +354,7 @@ class CameraNetworkIntegration(
         }
     }
 
-    /**
-     * Process thermal frame queue and send frames to PC Controller
-     */
+
     private suspend fun processThermalFrameQueue() {
         val frame = thermalFrameQueue.poll() ?: return
 
@@ -419,9 +398,7 @@ class CameraNetworkIntegration(
         }
     }
 
-    /**
-     * Compress thermal data for efficient transmission
-     */
+
     private fun serializeThermalData(thermalData: FloatArray): ByteArray {
         // Convert float array to byte array for transmission
         val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
@@ -432,9 +409,7 @@ class CameraNetworkIntegration(
         return byteBuffer.array()
     }
 
-    /**
-     * Stop RGB streaming
-     */
+
     suspend fun stopRgbStreaming() =
         withContext(Dispatchers.IO) {
             if (!isRgbStreamingActive.getAndSet(false)) {
@@ -459,9 +434,7 @@ class CameraNetworkIntegration(
             networkClient.sendMessage(stopMessage)
         }
 
-    /**
-     * Stop thermal streaming
-     */
+
     suspend fun stopThermalStreaming() =
         withContext(Dispatchers.IO) {
             if (!isThermalStreamingActive.getAndSet(false)) {
@@ -486,9 +459,7 @@ class CameraNetworkIntegration(
             networkClient.sendMessage(stopMessage)
         }
 
-    /**
-     * Get streaming metrics for monitoring
-     */
+
     fun getStreamingMetrics(): List<StreamMetrics> {
         val metrics = mutableListOf<StreamMetrics>()
 
@@ -521,18 +492,14 @@ class CameraNetworkIntegration(
         return metrics
     }
 
-    /**
-     * Calculate frame rate based on frame count and time
-     */
+
     private fun calculateFrameRate(frameCount: Long): Float {
         // This would track timing over a window
         // For now, return a placeholder value
         return if (frameCount > 0) 30.0f else 0.0f
     }
 
-    /**
-     * Stop all streaming and cleanup resources
-     */
+
     suspend fun stopAllStreaming() =
         withContext(Dispatchers.IO) {
             stopRgbStreaming()

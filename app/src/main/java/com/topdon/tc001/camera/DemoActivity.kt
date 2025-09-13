@@ -10,10 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.camera.core.ModeManager
 import kotlinx.coroutines.*
 
-/**
- * Demo activity for testing the clean Camera2System
- * Shows how to use the new clean architecture
- */
+
 class DemoActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "DemoActivity"

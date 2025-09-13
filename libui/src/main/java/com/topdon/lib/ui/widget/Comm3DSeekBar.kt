@@ -12,23 +12,13 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
 import kotlin.math.roundToInt
 
-/**
- * 支持竖向的 SeekBar。
- * 暂不支持 thumbOffset.
- */
-/**
- * Comm3DSeekBar class
- */
-/**
- * Comm3 d seek bar utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
+
+
+
 class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint
 
-    /**
-     * 0-横向 1-竖向
-     */
+
     private val orientation: Int
 
     private var mMaxWidth = 48
@@ -227,9 +217,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
         return true
     }
 
-    /**
-     * 通过级别分层进行粘性处理
-     */
+
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()

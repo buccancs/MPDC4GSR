@@ -12,10 +12,7 @@ import com.csl.irCamera.R
 import kotlinx.coroutines.*
 import java.io.File
 
-/**
- * GSR Data Fragment
- * Displays CSV data files from GSR recordings with metadata
- */
+
 class GSRDataFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -142,10 +139,7 @@ class GSRDataFragment : Fragment() {
     }
 }
 
-/**
- * GSR Video Fragment
- * Displays recorded video files from multi-modal sessions
- */
+
 class GSRVideoFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -221,10 +215,7 @@ class GSRVideoFragment : Fragment() {
     }
 }
 
-/**
- * GSR RAW Image Fragment
- * Displays captured RAW DNG images from parallel recording
- */
+
 class GSRRawImageFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
@@ -300,10 +291,7 @@ class GSRRawImageFragment : Fragment() {
     }
 }
 
-/**
- * GSR Session Fragment
- * Displays complete recording sessions with all associated files
- */
+
 class GSRSessionFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View

@@ -8,35 +8,13 @@ import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.MenuType
 import com.topdon.menu.constant.SettingType
 
-/**
- * settingsmenuAdapter used for，所有选项互相独立，可多选.
- *
- * - 单光：   pseudo color条、对比度、锐度、warning、旋转、font、镜像
- * - dual light：   pseudo color条、对比度、锐度、warning、旋转、font
- * - Lite：  pseudo color条、对比度、warning、旋转、font、镜像
- * - TC007： pseudo color条、对比度、锐度、warning、font、镜像
- * - 2D 编辑：warning、font、watermark
- *
- * - TS001 observation：指南针、旋转、镜像、对比度
- *
- * Created by LCG on 2024/11/28.
- */
+
 @SuppressLint("NotifyDataSetChanged")
 internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObserver: Boolean = false) : BaseMenuAdapter() {
-    /**
-     * settingsmenuclickevent listener。
-     * isSelected：click时是否处于selectedstate
-     */
+
     var onSettingListener: ((settingType: SettingType, isSelected: Boolean) -> Unit)? = null
 
-    /**
-     * 这里有几个坑：
-     * - 对于core而言，256x192 横屏尺寸才是rotation angle为 0 的未旋转state；
-     * 对于APP而言，192x256 竖屏尺寸(corerotation angle270)才是rotation angle为 0 的未旋转state。
-     * - 对某供应商而言，core里的rotation angle是逆时针rotation angle，而非一般理解的顺时针rotation angle。
-     *
-     * 考虑到旧代码兼容，这个属性用来放 **corerotation angle**
-     */
+
     var rotateAngle: Int = 270
         set(value) {
             if (field != value) {
@@ -45,9 +23,7 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
             }
         }
 
-    /**
-     * settingsspecified option的selectedstate，旋转不要调这个方法，因为旋转有 4 个state
-     */
+
     fun setSelected(
         settingType: SettingType,
         isSelected: Boolean,
@@ -122,10 +98,7 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
 
     override fun getItemCount(): Int = dataList.size
 
-/**
- * Custom Data view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

@@ -14,10 +14,7 @@ import com.csl.irCamera.R
 // Enhanced unified BLE integration for comprehensive sensor discovery
 import com.topdon.ble.UnifiedBleManager
 
-/**
- * Dialog for selecting which sensors to include in multi-modal recording
- * Allows any combination of Thermal (IR), RGB Camera, and GSR sensors
- */
+
 class SensorSelectionDialog(
     context: Context,
     private val availableSensors: Set<SensorType>,
@@ -61,9 +58,7 @@ class SensorSelectionDialog(
             return available
         }
 
-        /**
-         * Show sensor selection dialog with enhanced BLE-aware sensor detection
-         */
+
         fun show(
             context: Context,
             onSensorsSelected: (Set<SensorType>) -> Unit,

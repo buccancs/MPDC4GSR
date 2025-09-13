@@ -8,27 +8,15 @@ import android.os.Parcelable
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.tools.DeviceTools
 
-/**
- * Modern navigation system to replace ARouter
- * Provides type-safe navigation with Intent-based routing
- */
+
 object NavigationManager {
-    /**
-     * Navigation builder class for fluent API
-     */
-/**
- * NavigationBuilder manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
     class NavigationBuilder(private val route: String) {
         private val extras = Bundle()
         private var requestCode: Int? = null
 
-    /**
-     * Executes withstring functionality.
-     */
+
         fun withString(
             key: String,
             value: String,
@@ -36,9 +24,7 @@ object NavigationManager {
             extras.putString(key, value)
         }
 
-    /**
-     * Executes withboolean functionality.
-     */
+
         fun withBoolean(
             key: String,
             value: Boolean,
@@ -46,9 +32,7 @@ object NavigationManager {
             extras.putBoolean(key, value)
         }
 
-    /**
-     * Executes withint functionality.
-     */
+
         fun withInt(
             key: String,
             value: Int,
@@ -56,9 +40,7 @@ object NavigationManager {
             extras.putInt(key, value)
         }
 
-    /**
-     * Executes withfloat functionality.
-     */
+
         fun withFloat(
             key: String,
             value: Float,
@@ -66,9 +48,7 @@ object NavigationManager {
             extras.putFloat(key, value)
         }
 
-    /**
-     * Executes withlong functionality.
-     */
+
         fun withLong(
             key: String,
             value: Long,
@@ -76,9 +56,7 @@ object NavigationManager {
             extras.putLong(key, value)
         }
 
-    /**
-     * Executes withparcelable functionality.
-     */
+
         fun withParcelable(
             key: String,
             value: Parcelable,
@@ -86,9 +64,7 @@ object NavigationManager {
             extras.putParcelable(key, value)
         }
 
-    /**
-     * Executes withparcelablearraylist functionality.
-     */
+
         fun withParcelableArrayList(
             key: String,
             value: ArrayList<out Parcelable>,
@@ -96,17 +72,13 @@ object NavigationManager {
             extras.putParcelableArrayList(key, value)
         }
 
-    /**
-     * Executes withextras functionality.
-     */
+
         fun withExtras(bundle: Bundle) =
             apply {
                 extras.putAll(bundle)
             }
 
-    /**
-     * Executes navigation functionality.
-     */
+
         fun navigation(
             context: Context,
             requestCode: Int? = null,
@@ -123,21 +95,15 @@ object NavigationManager {
         }
     }
 
-    /**
-     * Build navigation to a specific route
-     */
+
     fun build(route: String): NavigationBuilder {
         return NavigationBuilder(route)
     }
 
-    /**
-     * Get instance for API compatibility with ARouter
-     */
+
     fun getInstance(): NavigationManager = this
 
-    /**
-     * Create Intent based on route configuration
-     */
+
     private fun createIntent(
         context: Context,
         route: String,
@@ -236,9 +202,7 @@ object NavigationManager {
         return Intent(context, activityClass)
     }
 
-    /**
-     * Device-aware navigation for image picking
-     */
+
     fun jumpImagePick(
         activity: Activity,
         isTC007: Boolean,
@@ -258,9 +222,7 @@ object NavigationManager {
             .navigation(activity, 101)
     }
 
-    /**
-     * Get class by name with error handling
-     */
+
     private fun getClassByName(className: String): Class<*> {
         return try {
             Class.forName(className)

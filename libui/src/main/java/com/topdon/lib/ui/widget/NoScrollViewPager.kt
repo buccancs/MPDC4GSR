@@ -5,16 +5,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
-/**
- * Custom No scroll view pager view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * NoScrollViewPager implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
 class NoScrollViewPager : ViewPager {
     private var isCanScroll = false
 

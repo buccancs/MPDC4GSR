@@ -10,10 +10,7 @@ import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import javax.net.ssl.*
 
-/**
- * Manages TLS certificates for secure communication with PC controllers and thermal cameras.
- * Handles device authentication and certificate validation.
- */
+
 class CertificateManager(private val context: Context) {
     companion object {
         private const val TAG = "CertificateManager"
@@ -26,9 +23,7 @@ class CertificateManager(private val context: Context) {
     private var keyManager: X509KeyManager? = null
     private var deviceKeyStore: KeyStore? = null
 
-    /**
-     * Initialize certificate manager with device-specific certificates
-     */
+
     fun initialize(): Boolean {
         return try {
             // Initialize device keystore for client certificates
@@ -49,9 +44,7 @@ class CertificateManager(private val context: Context) {
         }
     }
 
-    /**
-     * Create SSL context for secure WebSocket connections
-     */
+
     fun createSSLContext(): SSLContext? {
         return try {
             val sslContext = SSLContext.getInstance(TLS_PROTOCOL)
@@ -68,21 +61,15 @@ class CertificateManager(private val context: Context) {
         }
     }
 
-    /**
-     * Create SSL socket factory for OkHttp client
-     */
+
     fun createSSLSocketFactory(): SSLSocketFactory? {
         return createSSLContext()?.socketFactory
     }
 
-    /**
-     * Get trust manager for certificate validation
-     */
+
     fun getTrustManager(): X509TrustManager? = trustManager
 
-    /**
-     * Validate device certificate for thermal camera connections
-     */
+
     fun validateDeviceCertificate(certificate: X509Certificate): Boolean {
         return try {
             // Check if certificate is from a valid Topdon device
@@ -115,9 +102,7 @@ class CertificateManager(private val context: Context) {
         }
     }
 
-    /**
-     * Install device certificate for trusted communications
-     */
+
     fun installDeviceCertificate(
         certificateData: ByteArray,
         alias: String,
@@ -146,9 +131,7 @@ class CertificateManager(private val context: Context) {
         }
     }
 
-    /**
-     * Create custom trust manager that validates device certificates
-     */
+
     private fun createCustomTrustManager(): X509TrustManager {
         return object : X509TrustManager {
             override fun checkClientTrusted(
@@ -202,9 +185,7 @@ class CertificateManager(private val context: Context) {
         }
     }
 
-    /**
-     * Create key manager for client certificate authentication
-     */
+
     private fun createKeyManager(): X509KeyManager? {
         return try {
             // For now, return null as we don't have client certificates
@@ -216,9 +197,7 @@ class CertificateManager(private val context: Context) {
         }
     }
 
-    /**
-     * Create hostname verifier for WebSocket connections
-     */
+
     fun createHostnameVerifier(): HostnameVerifier {
         return HostnameVerifier { hostname, session ->
             // Allow connections to known thermal camera IP addresses
@@ -241,9 +220,7 @@ class CertificateManager(private val context: Context) {
         }
     }
 
-    /**
-     * Generate device authentication token
-     */
+
     fun generateAuthToken(): String {
         val deviceId =
             android.provider.Settings.Secure.getString(
@@ -261,9 +238,7 @@ class CertificateManager(private val context: Context) {
         return "$payload:$hash"
     }
 
-    /**
-     * Validate authentication token from remote device
-     */
+
     fun validateAuthToken(
         token: String,
         maxAgeMs: Long = 300000,

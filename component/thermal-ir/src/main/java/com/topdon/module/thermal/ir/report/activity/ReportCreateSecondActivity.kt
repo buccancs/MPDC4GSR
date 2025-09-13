@@ -23,22 +23,9 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
-\1生成报告第2步（共2步）.
- *
-\1需要传递
-\1- 必选：是否 TC007: [ExtraKeyConfig.IS_TC007] 透传，再次拾取图片时进入目录不同，上传报告parameter不同
-\1- 必选：当前编辑的图片绝对路径 [ExtraKeyConfig.FILE_ABSOLUTE_PATH]
-\1- 必选：当前编辑的图片点线面full imagetemperaturedata [ExtraKeyConfig.IMAGE_TEMP_BEAN]
-\1- 必选：报告信息 [ExtraKeyConfig.REPORT_INFO]
-\1- 可选：检测条件 [ExtraKeyConfig.REPORT_CONDITION]
-\1- 可选：当前已确认的图片信息列表 [ExtraKeyConfig.REPORT_IR_LIST]
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * Report create second activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
     // View references using findViewById with lazy initialization
     private val tvAddImage: TextView by lazy { findViewById(R.id.tv_add_image) }
@@ -62,19 +49,13 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
     private val reportTempViewRect4: ReportIRInputView by lazy { findViewById(R.id.report_temp_view_rect4) }
     private val reportTempViewRect5: ReportIRInputView by lazy { findViewById(R.id.report_temp_view_rect5) }
 
-    /**
-\1当前已添加的图片信息列表.
-     */
+
     private var reportIRList: ArrayList<ReportIRBean> = ArrayList(0)
 
-    /**
-\1从上一interface传递过来的，添加的图片绝对路径.
-     */
+
     private var currentFilePath: String = ""
 
-    /**
-\1从上一interface传递过来的，当前编辑的图片点线面full imagetemperaturedata
-     */
+
     private var imageTempBean: ImageTempBean? = null
 
     override fun initContentView() = R.layout.activity_report_create_second
@@ -242,10 +223,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         return ReportIRBean("", filePath, full, pointList, lienList, rectList)
     }
 
-    /**
-\1构建报告点线面data列表.
-\1@param type 1-点 2-线 3-面
-     */
+
     private fun buildReportTempBeanList(type: Int): ArrayList<ReportTempBean> {
         val size =
             when (type) {

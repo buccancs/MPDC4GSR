@@ -10,10 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.csl.irCamera.R
 
-/**
- * Real-time status indicator for parallel multi-modal recording
- * Shows active sensors, recording duration, and session information
- */
+
 class RecordingStatusIndicator
     @JvmOverloads
     constructor(
@@ -79,9 +76,7 @@ class RecordingStatusIndicator
             updateDisplay()
         }
 
-        /**
-         * Start recording indicator
-         */
+        
         fun startRecording(
             sessionId: String,
             sensors: Set<SensorSelectionDialog.SensorType>,
@@ -97,17 +92,13 @@ class RecordingStatusIndicator
             startDurationCounter()
         }
 
-        /**
-         * Stop recording indicator
-         */
+        
         fun stopRecording() {
             this.isRecording = false
             updateDisplay()
         }
 
-        /**
-         * Update sensor status with detailed status information
-         */
+        
         fun updateSensorStatus(
             sensor: SensorSelectionDialog.SensorType,
             status: String,
@@ -116,9 +107,7 @@ class RecordingStatusIndicator
             updateDisplay()
         }
 
-        /**
-         * Update with comprehensive sensor status from RecordingController
-         */
+        
         fun updateWithSensorSummary(summary: com.topdon.tc001.controller.SensorStatusSummary) {
             // Update based on comprehensive sensor status
             if (summary.isSessionActive) {
@@ -223,9 +212,7 @@ class RecordingStatusIndicator
             postDelayed({ startDurationCounter() }, 1000)
         }
 
-        /**
-         * Show/hide the indicator
-         */
+        
         fun setVisible(visible: Boolean) {
             visibility = if (visible) VISIBLE else GONE
         }

@@ -9,15 +9,10 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
 
-/**
- * 颜色选择自定义 View.
- * 只支持在已经定死的 120 种颜色中拾取一种.
- */
+
 class ColorSelectView : View {
     companion object {
-        /**
-         * 选中描边宽度，单位 dp.
-         */
+        
         private const val DEFAULT_STROKE_WIDTH = 3
 
         private val ROW_COLOR_1 =
@@ -81,18 +76,14 @@ class ColorSelectView : View {
             }
     }
 
-    /**
-     * 是否需要整体描边.
-     */
+    
     var isNeedStroke: Boolean = false
         set(value) {
             invalidate()
             field = value
         }
 
-    /**
-     * 颜色拾取事件监听.
-     */
+    
     var onSelectListener: ((color: Int) -> Unit)? = null
 
     fun reset() {

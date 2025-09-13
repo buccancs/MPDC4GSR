@@ -3,10 +3,7 @@ package com.topdon.module.thermal.ir.utils
 import com.energy.iruvc.utils.DualCameraParams
 import com.topdon.lib.core.common.SaveSettingUtil
 
-/**
- * Dual params util utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
+
 object DualParamsUtil {
     fun wifiFusionTypeToParams(fusionType: Int): Int  {
         return when (fusionType) {

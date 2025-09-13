@@ -7,10 +7,7 @@ import android.util.Log
 import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * mDNS/Zeroconf service discovery for PC Controllers
- * Provides automatic discovery and registration using Android NSD API
- */
+
 class ZeroconfDiscoveryService(private val context: Context) {
     companion object {
         private const val TAG = "ZeroconfDiscovery"
@@ -48,9 +45,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         serviceListener = listener
     }
 
-    /**
-     * Start discovering PC Controllers using mDNS
-     */
+
     suspend fun startDiscovery(): Boolean =
         withContext(Dispatchers.Main) {
             if (isDiscovering) {
@@ -71,9 +66,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
             }
         }
 
-    /**
-     * Stop service discovery
-     */
+
     fun stopDiscovery() {
         if (!isDiscovering) return
 
@@ -87,9 +80,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Register this device as a service for PC Controller discovery
-     */
+
     suspend fun registerService(
         deviceId: String,
         port: Int,
@@ -120,9 +111,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
             }
         }
 
-    /**
-     * Unregister the service
-     */
+
     fun unregisterService() {
         if (!isRegistered) return
 
@@ -135,9 +124,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Get list of discovered PC Controllers
-     */
+
     fun getDiscoveredControllers(): List<NetworkClient.ControllerInfo> {
         return discoveredServices.values.mapNotNull { serviceInfo ->
             try {
@@ -276,9 +263,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Clean up resources
-     */
+
     fun cleanup() {
         stopDiscovery()
         unregisterService()

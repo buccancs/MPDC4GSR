@@ -8,10 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * Crash-safe supervisor system for PC-to-phone communication
- * Phase 0 implementation - Android Service + CoroutineScope with stop tokens
- */
+
 class CrashSafeSupervisor private constructor(private val context: Context) {
     companion object {
         private const val TAG = "CrashSafeSupervisor"
@@ -50,9 +47,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
 
     private val logger = StructuredLogger.getInstance(context)
 
-    /**
-     * Represents a managed job with recovery capabilities
-     */
+    
     data class ManagedJob(
         val id: String,
         val name: String,
@@ -63,25 +58,19 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         val startTime: Long = System.currentTimeMillis(),
     )
 
-    /**
-     * Health check interface for monitored components
-     */
+    
     interface HealthCheck {
         suspend fun checkHealth(): HealthStatus
     }
 
-    /**
-     * Health status result
-     */
+    
     data class HealthStatus(
         val isHealthy: Boolean,
         val message: String,
         val details: Map<String, Any> = emptyMap(),
     )
 
-    /**
-     * Stop token for graceful shutdown
-     */
+    
     class StopToken {
         private val stopped = AtomicBoolean(false)
 
@@ -96,9 +85,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Initialize the supervisor system
-     */
+    
     fun initialize() {
         if (isRunning.getAndSet(true)) {
             Log.i(TAG, "Crash-safe supervisor already running")
@@ -118,9 +105,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         Log.i(TAG, "Crash-safe supervisor initialized")
     }
 
-    /**
-     * Register a managed job with automatic restart capabilities
-     */
+    
     fun registerJob(
         id: String,
         name: String,
@@ -185,9 +170,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         return job
     }
 
-    /**
-     * Unregister a managed job
-     */
+    
     fun unregisterJob(id: String) {
         val managedJob = managedJobs.remove(id)
         healthChecks.remove(id)
@@ -208,9 +191,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Request graceful stop for a specific job
-     */
+    
     fun stopJob(id: String) {
         val managedJob = managedJobs[id]
         if (managedJob != null) {
@@ -225,9 +206,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Get status of all managed jobs
-     */
+    
     fun getJobStatuses(): Map<String, JobStatus> {
         return managedJobs.mapValues { (_, managedJob) ->
             JobStatus(
@@ -445,9 +424,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Graceful shutdown of the supervisor
-     */
+    
     fun shutdown() {
         if (!isRunning.getAndSet(false)) {
             return

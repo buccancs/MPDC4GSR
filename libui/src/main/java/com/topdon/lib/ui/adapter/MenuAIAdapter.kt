@@ -12,27 +12,11 @@ import com.topdon.lib.ui.databinding.UiItemMenuSecondViewBinding
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-/**
- * Custom Menu a i view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 @Deprecated("旧的high/low temperature源menu，已重构过了")
-/**
- * MenuAIAdapter provides data binding between data source and UI components.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.ItemView>() {
-    /**
-     * currentselected的选项 code.
-     *
-     * Due to legacy constraints (saved in SharedPreferences), the code values are:
-     * - Nothing selected: -1
-     * - Dynamic recognition: 0
-     * - High temperature source: 1
-     * - Low temperature source: 2
-     */
+
     var selectCode: Int = -1
         set(value) {
             if (field != value) {
@@ -41,9 +25,7 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
             }
         }
 
-    /**
-     * Observation mode - Menu 2 - High/Low temperature source click event listener，single selection。
-     */
+
     var onTempSourceListener: ((code: Int) -> Unit)? = null
 
     private val secondBean =

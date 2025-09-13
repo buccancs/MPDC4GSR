@@ -23,14 +23,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Topdon device implementation using Nordic BLE backend.
- * 
- * Provides enhanced reliability and comprehensive Topdon device support
- * for thermal cameras, environmental sensors, and multi-sensor platforms.
- * 
- * @author IRCamera Topdon Integration Team
- */
+
 public class TopdonDevice implements UnifiedDevice {
     private static final String TAG = "TopdonDevice";
     
@@ -65,9 +58,7 @@ public class TopdonDevice implements UnifiedDevice {
     // Device info
     private DeviceInfo deviceInfo;
     
-    /**
-     * Constructor
-     */
+
     public TopdonDevice(@NonNull BluetoothDevice bluetoothDevice,
                        @NonNull TopdonDeviceConfig config,
                        @Nullable UnifiedBleManager.UnifiedConnectionListener listener) {
@@ -330,9 +321,7 @@ public class TopdonDevice implements UnifiedDevice {
         this.connectionListener = listener;
     }
     
-    /**
-     * GATT callback for handling Topdon BLE communication
-     */
+
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -458,9 +447,7 @@ public class TopdonDevice implements UnifiedDevice {
         }
     };
     
-    /**
-     * Notify connection error
-     */
+
     private void notifyConnectionError(int errorCode, String message) {
         if (connectionListener != null) {
             connectionListener.onConnectionError(this, errorCode, message);

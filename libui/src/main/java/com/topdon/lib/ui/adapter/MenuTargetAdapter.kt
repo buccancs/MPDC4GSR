@@ -16,23 +16,13 @@ import com.topdon.menu.constant.TargetType
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-/**
- * Custom Menu target view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 @Deprecated("旧的targetmenu，已重构过了")
-/**
- * MenuTargetAdapter provides data binding between data source and UI components.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
 
-    /**
-     * settingsspecified option的selectedstate
-     */
+
     fun setSelected(
         targetType: TargetType,
         isSelected: Boolean,
@@ -73,9 +63,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             ),
         )
 
-    /**
-     * refreshmeasurement mode图标
-     */
+
     fun upCurrentMeasureMode(measureMode: Int) {
         secondBean.clear()
         when (measureMode) {

@@ -14,12 +14,7 @@ import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.BluetoothPermissionUtils;
 import com.topdon.ble.util.Logger;
 
-/**
- * 蓝牙搜索器
- * <p>
- * date: 2021/8/12 12:30
- * author: bichuanfeng
- */
+
 class LeScanner extends AbstractScanner {
     private static final String TAG = "LeScanner";
     private BluetoothLeScanner bleScanner;

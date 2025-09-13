@@ -10,24 +10,15 @@ import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.module.thermal.ir.R
 
-/**
-\1图库目录切换 PopupWindow.
- *
- * Created by LCG on 2024/1/5.
- */
-/**
- * Custom Gallery change popup view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
     // View references using findViewById
     private val tvLine: TextView by lazy { contentView.findViewById(R.id.tv_line) }
     private val tvTs004: TextView by lazy { contentView.findViewById(R.id.tv_ts004) }
     private val tvTc007: TextView by lazy { contentView.findViewById(R.id.tv_tc007) }
 
-    /**
-\1一个option被选中事件监听.
-     */
+
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
 
     init {

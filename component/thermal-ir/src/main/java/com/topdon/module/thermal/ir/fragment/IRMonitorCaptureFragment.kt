@@ -16,15 +16,9 @@ import com.topdon.lib.core.tools.ToastTools
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRMonitorActivity
 
-/**
- * I r monitor capture fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
+
 class IRMonitorCaptureFragment : BaseFragment() {
-    /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
-     */
+    
     private var isTC007 = false
 
     // View properties
@@ -80,9 +74,7 @@ class IRMonitorCaptureFragment : BaseFragment() {
     override fun initData() {
     }
 
-    /**
-\1刷新连接状态
-     */
+    
     private fun refreshUI(isConnect: Boolean) {
         animationView.isVisible = !isConnect
         ivIcon.isVisible = isConnect

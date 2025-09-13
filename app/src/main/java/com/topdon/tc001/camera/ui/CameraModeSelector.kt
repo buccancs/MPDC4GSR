@@ -10,16 +10,7 @@ import com.csl.irCamera.R
 import com.topdon.tc001.camera.RGBCameraRecorder
 import kotlinx.coroutines.*
 
-/**
- * Camera Mode Selector UI Component for Dual RAW/Video Mode Switching
- *
- * Provides intuitive UI for switching between:
- * - RAW 50MP mode for high-resolution capture
- * - 4K Video mode for video recording
- * - Preview-only mode for battery saving
- *
- * Features Samsung S22 compatibility indicators and performance warnings.
- */
+
 class CameraModeSelector
     @JvmOverloads
     constructor(
@@ -98,24 +89,18 @@ class CameraModeSelector
             }
         }
 
-        /**
-         * Set the camera recorder instance
-         */
+        
         fun setCameraRecorder(recorder: RGBCameraRecorder) {
             this.cameraRecorder = recorder
             updateAvailableModes()
         }
 
-        /**
-         * Set mode change callback
-         */
+        
         fun setOnModeChangeListener(listener: (RGBCameraRecorder.CameraMode) -> Unit) {
             this.onModeChangeListener = listener
         }
 
-        /**
-         * Switch to specified camera mode with UI feedback
-         */
+        
         private fun switchToMode(mode: RGBCameraRecorder.CameraMode) {
             val recorder = cameraRecorder ?: return
 
@@ -160,9 +145,7 @@ class CameraModeSelector
             }
         }
 
-        /**
-         * Update available modes based on device capabilities
-         */
+        
         private fun updateAvailableModes() {
             val recorder = cameraRecorder ?: return
             val availableModes = recorder.getAvailableModes()
@@ -200,9 +183,7 @@ class CameraModeSelector
             }
         }
 
-        /**
-         * Update mode information display
-         */
+        
         private fun updateModeInfo(mode: RGBCameraRecorder.CameraMode) {
             when (mode) {
                 RGBCameraRecorder.CameraMode.RAW_50MP -> {
@@ -221,47 +202,35 @@ class CameraModeSelector
             }
         }
 
-        /**
-         * Show switching progress indicator
-         */
+        
         private fun showSwitchingProgress(show: Boolean) {
             switchingProgressBar.visibility = if (show) VISIBLE else GONE
             modeSegmentedControl.isEnabled = !show
         }
 
-        /**
-         * Show performance warning
-         */
+        
         private fun showPerformanceWarning(message: String) {
             performanceWarning.text = message
             performanceWarning.visibility = VISIBLE
             performanceWarning.setTextColor(ContextCompat.getColor(context, android.R.color.holo_orange_dark))
         }
 
-        /**
-         * Hide performance warning
-         */
+        
         private fun hidePerformanceWarning() {
             performanceWarning.visibility = GONE
         }
 
-        /**
-         * Show error message
-         */
+        
         private fun showError(message: String) {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
 
-        /**
-         * Show mode change success
-         */
+        
         private fun showModeChangeSuccess(mode: RGBCameraRecorder.CameraMode) {
             Toast.makeText(context, "Switched to ${mode.displayName}", Toast.LENGTH_SHORT).show()
         }
 
-        /**
-         * Revert UI to current camera mode (on failed switch)
-         */
+        
         private fun revertToCurrentMode() {
             val currentMode = cameraRecorder?.getCurrentMode() ?: RGBCameraRecorder.CameraMode.PREVIEW_ONLY
 
@@ -274,9 +243,7 @@ class CameraModeSelector
             updateModeInfo(currentMode)
         }
 
-        /**
-         * Get currently selected mode from UI
-         */
+        
         fun getSelectedMode(): RGBCameraRecorder.CameraMode {
             return when (modeSegmentedControl.checkedRadioButtonId) {
                 R.id.raw_mode_button -> RGBCameraRecorder.CameraMode.RAW_50MP
@@ -285,9 +252,7 @@ class CameraModeSelector
             }
         }
 
-        /**
-         * Programmatically set mode (updates UI)
-         */
+        
         fun setMode(mode: RGBCameraRecorder.CameraMode) {
             when (mode) {
                 RGBCameraRecorder.CameraMode.RAW_50MP -> rawModeButton.isChecked = true

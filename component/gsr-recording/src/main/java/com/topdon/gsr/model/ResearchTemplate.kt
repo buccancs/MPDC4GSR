@@ -1,9 +1,6 @@
 package com.topdon.gsr.model
 
-/**
- * Research Template Configuration
- * Predefined recording profiles for common research scenarios
- */
+
 data class ResearchTemplate(
     val id: String,
     val name: String,
@@ -41,9 +38,7 @@ data class ResearchTemplate(
     }
 
     companion object {
-        /**
-         * Predefined research templates for common scenarios
-         */
+
         val PREDEFINED_TEMPLATES =
             listOf(
                 // Stress Response Studies

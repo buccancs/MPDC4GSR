@@ -11,13 +11,8 @@ import com.topdon.module.thermal.R
 import com.topdon.module.thermal.adapter.GalleryAdapter
 import com.topdon.module.thermal.viewmodel.GalleryViewModel
 
-/**
-\1图片
- */
-/**
- * Gallery video fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
+
+
 class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
     private val adapter by lazy { GalleryAdapter(requireContext()) }
 

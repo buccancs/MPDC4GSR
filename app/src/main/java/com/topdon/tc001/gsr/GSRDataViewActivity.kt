@@ -22,10 +22,7 @@ import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * GSR Data View Activity
- * Detailed view of GSR CSV data files with statistics and export options
- */
+
 class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     companion object {
         private const val EXTRA_FILE_PATH = "file_path"
@@ -790,9 +787,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         return "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL} (Android ${android.os.Build.VERSION.RELEASE})"
     }
 
-    /**
-     * Show error dialog for user-friendly error reporting
-     */
+
     private fun showErrorDialog(
         title: String,
         message: String,
@@ -804,9 +799,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             .show()
     }
 
-    /**
-     * Convert dataRows to gsrDataPoints for export functions
-     */
+
     private fun loadGSRDataPoints() {
         gsrDataPoints.clear()
         dataRows.forEachIndexed { index, row ->

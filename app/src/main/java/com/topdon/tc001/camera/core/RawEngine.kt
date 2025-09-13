@@ -11,12 +11,7 @@ import android.view.Surface
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * RAW Engine for 50MP DNG capture (Camera2-only)
- *
- * Handles high-resolution RAW image capture with proper TotalCaptureResult pairing
- * and Samsung S22 optimizations for sustained performance.
- */
+
 class RawEngine(private val context: Context) {
     companion object {
         private const val TAG = "RawEngine"
@@ -34,9 +29,7 @@ class RawEngine(private val context: Context) {
     var onRawImageSaved: ((File) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
 
-    /**
-     * Setup RAW ImageReader for 50MP capture
-     */
+
     fun setup(
         rawSize: Size,
         outputDirectory: File,
@@ -65,31 +58,23 @@ class RawEngine(private val context: Context) {
         }
     }
 
-    /**
-     * Get RAW capture surface for session configuration
-     */
+
     fun getSurface(): Surface? = rawImageReader?.surface
 
-    /**
-     * Start continuous RAW capture at ~15fps
-     */
+
     fun startCapture() {
         isCapturing = true
         rawCaptureCount = 0
         Log.i(TAG, "RAW capture started")
     }
 
-    /**
-     * Stop RAW capture
-     */
+
     fun stopCapture() {
         isCapturing = false
         Log.i(TAG, "RAW capture stopped, captured $rawCaptureCount images")
     }
 
-    /**
-     * Store capture result for DNG creation
-     */
+
     fun storeCaptureResult(result: TotalCaptureResult) {
         if (isCapturing) {
             val timestamp = result.get(CaptureResult.SENSOR_TIMESTAMP) ?: System.nanoTime()
@@ -103,19 +88,13 @@ class RawEngine(private val context: Context) {
         }
     }
 
-    /**
-     * Check if currently capturing
-     */
+
     fun isCapturing(): Boolean = isCapturing
 
-    /**
-     * Get capture count
-     */
+
     fun getCaptureCount(): Int = rawCaptureCount
 
-    /**
-     * Release resources
-     */
+
     fun release() {
         stopCapture()
         rawImageReader?.close()

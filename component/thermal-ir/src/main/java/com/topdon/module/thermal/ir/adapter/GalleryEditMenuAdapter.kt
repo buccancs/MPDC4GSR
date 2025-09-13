@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.ir.R
 import com.topdon.menu.R as MenuR
 
-/**
- * Custom Gallery edit menu view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 @Deprecated("旧的2D编辑一级菜单，已重构过了")
 class GalleryEditMenuAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
@@ -104,7 +101,7 @@ class GalleryEditMenuAdapter(val context: Context) : RecyclerView.Adapter<Recycl
         }
     }
 
-\1状态变化
+//状态变化
     private fun iconUI(
         isActive: Boolean,
         img: ImageView,
@@ -130,10 +127,7 @@ class GalleryEditMenuAdapter(val context: Context) : RecyclerView.Adapter<Recycl
         }
     }
 
-/**
- * Custom Icon view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 data class IconBean(
         val name: String,
         @DrawableRes val icon: Int,

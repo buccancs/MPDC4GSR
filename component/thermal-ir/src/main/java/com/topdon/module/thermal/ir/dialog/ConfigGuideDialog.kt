@@ -29,15 +29,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
-\1temperature correction操作指引.
- *
- * Created by LCG on 2024/11/13.
- */
-/**
- * Custom Config guide view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
 class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: DataBean) : Dialog(context, R.style.TransparentDialog) {
     // Initialize views with findViewById
     private lateinit var tvDefaultTempTitle: TextView

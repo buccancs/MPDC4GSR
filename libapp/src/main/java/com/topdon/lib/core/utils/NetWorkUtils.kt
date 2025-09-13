@@ -14,11 +14,7 @@ import com.elvishew.xlog.XLog
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.repository.TS004Repository
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/3/5 9:07
- **/
+
 object NetWorkUtils {
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var netWorkListener: ((network: Network?) -> Unit)? = null
@@ -29,9 +25,7 @@ object NetWorkUtils {
         BaseApplication.instance.getSystemService(Context.WIFI_SERVICE) as WifiManager
     }
 
-    /**
-     * Executes iswifinamevalid functionality.
-     */
+
     fun isWifiNameValid(
         context: Context,
         prefixes: List<String>,
@@ -49,9 +43,7 @@ object NetWorkUtils {
         return false
     }
 
-    /**
-     * Establishes connection to external resource.
-     */
+
     fun connectWifi(
         ssid: String,
         password: String,
@@ -171,9 +163,7 @@ object NetWorkUtils {
         }
     }
 
-    /**
-     * Executes switchnetwork functionality.
-     */
+
     fun switchNetwork(
         isWifi: Boolean,
         listener: ((network: Network?) -> Unit)? = null,

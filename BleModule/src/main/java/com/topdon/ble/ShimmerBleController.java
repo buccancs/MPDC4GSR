@@ -27,35 +27,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Shimmer BLE Controller for enhanced Shimmer Nordic BLE device management.
- * 
- * This controller provides comprehensive support for all Shimmer devices using
- * the Nordic BLE library backend for maximum reliability and performance.
- * 
- * Supported Shimmer Devices:
- * - Shimmer3 GSR+ (Galvanic Skin Response sensors)
- * - Shimmer3 PPG (Photoplethysmography sensors) 
- * - Shimmer3 IMU (Inertial Measurement Units)
- * - Shimmer4 devices with enhanced capabilities
- * 
- * Features:
- * - Nordic BLE library integration for enhanced reliability
- * - Automatic device type detection and classification
- * - Real-time GSR data streaming with 12-bit ADC precision
- * - Advanced connection management with auto-reconnection
- * - Research-grade timing synchronization
- * - Comprehensive error handling and recovery
- * 
- * Technical Specifications:
- * - Supports 128Hz sampling rate for GSR data
- * - 12-bit ADC resolution (0-4095 range) as mandated
- * - Real-time conversion to microsiemens for GSR
- * - Proper start/stop command handling (0x07/0x20)
- * - Multi-device coordination support
- * 
- * @author IRCamera Shimmer Integration Team
- */
+
 public class ShimmerBleController {
     private static final String TAG = "ShimmerBleController";
     
@@ -94,18 +66,14 @@ public class ShimmerBleController {
     // Connected devices tracking
     private final List<ShimmerDevice> connectedShimmerDevices = new ArrayList<>();
     
-    /**
-     * Shimmer scan listener interface
-     */
+
     public interface ShimmerScanListener {
         void onShimmerDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord);
         void onScanError(int errorCode, String message);
         void onScanComplete();
     }
     
-    /**
-     * Constructor
-     */
+
     public ShimmerBleController(@NonNull Context context, @NonNull UnifiedBleManager unifiedManager) {
         this.context = context;
         this.unifiedManager = unifiedManager;
@@ -114,9 +82,7 @@ public class ShimmerBleController {
         this.mainHandler = new Handler(Looper.getMainLooper());
     }
     
-    /**
-     * Initialize Shimmer BLE controller
-     */
+
     public boolean initialize() {
         try {
             if (bluetoothAdapter == null || leScanner == null) {
@@ -138,9 +104,7 @@ public class ShimmerBleController {
         }
     }
     
-    /**
-     * Start Shimmer device discovery
-     */
+
     public boolean startDeviceDiscovery(@NonNull ShimmerScanListener listener) {
         if (isScanning.get()) {
             Log.w(TAG, "Shimmer scan already in progress");
@@ -194,9 +158,7 @@ public class ShimmerBleController {
         }
     }
     
-    /**
-     * Stop Shimmer device discovery
-     */
+
     public void stopDeviceDiscovery() {
         if (!isScanning.get()) {
             return;
@@ -225,9 +187,7 @@ public class ShimmerBleController {
         }
     }
     
-    /**
-     * Connect to Shimmer device
-     */
+
     public UnifiedDevice connectDevice(@NonNull BluetoothDevice device,
                                      @NonNull ShimmerDeviceConfig config,
                                      @NonNull UnifiedBleManager.UnifiedConnectionListener listener) {
@@ -248,16 +208,12 @@ public class ShimmerBleController {
         }
     }
     
-    /**
-     * Get connected Shimmer devices
-     */
+
     public List<ShimmerDevice> getConnectedDevices() {
         return new ArrayList<>(connectedShimmerDevices);
     }
     
-    /**
-     * Cleanup resources
-     */
+
     public void cleanup() {
         try {
             stopDeviceDiscovery();
@@ -275,9 +231,7 @@ public class ShimmerBleController {
         }
     }
     
-    /**
-     * Scan callback for Shimmer device discovery
-     */
+
     private final ScanCallback shimmerScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -322,9 +276,7 @@ public class ShimmerBleController {
         }
     };
     
-    /**
-     * Check if device is a Shimmer device
-     */
+
     private boolean isShimmerDevice(String deviceName) {
         if (deviceName == null) return false;
         
@@ -336,9 +288,7 @@ public class ShimmerBleController {
         return false;
     }
     
-    /**
-     * Determine specific Shimmer device type
-     */
+
     private UnifiedBleManager.DeviceType determineShimmerDeviceType(String deviceName, @Nullable android.bluetooth.le.ScanRecord scanRecord) {
         String name = deviceName.toLowerCase();
         

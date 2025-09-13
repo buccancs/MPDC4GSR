@@ -6,11 +6,7 @@ import com.topdon.lib.core.bean.AlarmBean
 import com.topdon.libcom.util.SingletonHolder
 import com.topdon.libcom.view.TempLayout
 
-/**
- * 预警逻辑统一处理
- * @author: CaiSongL
- * @date: 2023/5/5 15:13
- */
+
 class AlarmHelp private constructor(val context: Context) {
     companion object : SingletonHolder<AlarmHelp, Context>(::AlarmHelp)
 

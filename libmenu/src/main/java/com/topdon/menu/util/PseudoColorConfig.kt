@@ -1,20 +1,8 @@
 package com.topdon.menu.util
 
-/**
- * Pseudo color configuration presets for pseudo color menu and color bar.
- * Provides predefined color configurations for thermal imaging display.
- */
+
 object PseudoColorConfig {
-    /**
-     * Gets the corresponding color array based on the specified pseudo color code.
-     * Available color schemes:
-     * 1-White Hot, 3-Iron Red, 4-Rainbow 1, 5-Rainbow 2, 6-Rainbow 3, 
-     * 7-Red Hot, 8-Hot Iron, 9-Rainbow 4, 10-Rainbow 5, 11-Black Hot
-     * 
-     * @param code Pseudo color code (legacy format maintained for compatibility 
-     *             with 2D editing data and saved settings)
-     * @return IntArray containing the color gradient for the specified scheme
-     */
+    
     @JvmStatic
     fun getColors(code: Int): IntArray =
         when (code) {

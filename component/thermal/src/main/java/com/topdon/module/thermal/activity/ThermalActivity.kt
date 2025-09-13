@@ -15,10 +15,7 @@ import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibR
 
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * Thermal activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class ThermalActivity : BaseActivity() {
     private val menuAdapter by lazy { MenuTabAdapter(this) }
 
@@ -37,7 +34,7 @@ class ThermalActivity : BaseActivity() {
 
         val thermalTab = findViewById<MenuFirstTabView>(R.id.thermal_tab)
         thermalTab.onTabClickListener = { view ->
-\1一级menu选择
+//一级menu选择
             showRecycler(view.selectPosition)
         }
     }
@@ -54,7 +51,7 @@ class ThermalActivity : BaseActivity() {
         menuAdapter.listener =
             object : MenuTabAdapter.OnItemClickListener {
                 override fun onClick(index: Int) {
-\1二级menu选择
+//二级menu选择
                     Log.w("123", "index: $index")
                     EventBus.getDefault().post(ThermalActionEvent(action = index))
                 }

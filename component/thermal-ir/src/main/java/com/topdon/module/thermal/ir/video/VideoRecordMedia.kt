@@ -14,10 +14,7 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-/**
- * Video record media utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
+
 class VideoRecordMedia(
     private var cameraView: CameraView,
     private var temperatureView: TemperatureView,
@@ -33,7 +30,7 @@ class VideoRecordMedia(
         encoder.setFrameDelay(25)
         width = 480
         height = width * cameraView.height / cameraView.width
-\1宽高不能出现奇数
+//宽高不能出现奇数
         if (height % 2 == 1) {
             height -= 1
         }
@@ -47,13 +44,13 @@ class VideoRecordMedia(
         }
         encoder.setOutputFilePath(exportedFile.path)
 //        if (bitmap == null) {
-\1Log.w("123", "录制准备failed")
+//Log.w("123", "录制准备failed")
 //            return
 //        }
         encoder.setOutputSize(width, height)
         encoder.startEncode()
         isRunning = true
-\1默认frame率20,间隔50ms一frame
+//默认frame率20,间隔50ms一frame
         exportDisposable =
             Observable.interval(50, TimeUnit.MILLISECONDS)
                 .map {
@@ -83,7 +80,7 @@ class VideoRecordMedia(
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap = cameraView.bitmap
         if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {
-\1gettemperature图层的data，包括点线框，temperature值等，重新合成bitmap
+//gettemperature图层的data，包括点线框，temperature值等，重新合成bitmap
             cameraViewBitmap =
                 BitmapUtils.mergeBitmap(
                     cameraViewBitmap,

@@ -6,10 +6,7 @@ import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-/**
- * Network error recovery and reconnection management
- * Handles automatic reconnection, connection health monitoring, and error recovery strategies
- */
+
 class NetworkErrorRecoveryManager(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -70,9 +67,7 @@ class NetworkErrorRecoveryManager(
         eventListener = listener
     }
 
-    /**
-     * Start monitoring connection health and enable automatic recovery
-     */
+
     fun enableAutoRecovery() {
         if (isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery already enabled")
@@ -84,9 +79,7 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Network error recovery enabled")
     }
 
-    /**
-     * Stop automatic recovery and health monitoring
-     */
+
     fun disableAutoRecovery() {
         if (!isRecoveryActive.get()) {
             Log.w(TAG, "Auto recovery not active")
@@ -98,9 +91,7 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Network error recovery disabled")
     }
 
-    /**
-     * Manually trigger connection recovery
-     */
+
     suspend fun triggerRecovery(reason: String): Boolean {
         if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {
             Log.w(TAG, "Recovery already in progress")
@@ -110,9 +101,7 @@ class NetworkErrorRecoveryManager(
         return performRecovery(reason)
     }
 
-    /**
-     * Record a successful connection for future recovery attempts
-     */
+
     fun recordSuccessfulConnection(controller: NetworkClient.ControllerInfo) {
         lastKnownGoodController = controller
         reconnectionAttempts.set(0)
@@ -122,9 +111,7 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Recorded successful connection: ${controller.deviceName}")
     }
 
-    /**
-     * Handle network error and potentially trigger recovery
-     */
+
     fun handleNetworkError(
         operation: String,
         error: String,
@@ -329,9 +316,7 @@ class NetworkErrorRecoveryManager(
         return rapidFailureCount.get() >= RAPID_FAILURE_THRESHOLD
     }
 
-    /**
-     * Reset recovery state (useful after manual intervention)
-     */
+
     fun resetRecoveryState() {
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
@@ -339,9 +324,7 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Recovery state reset")
     }
 
-    /**
-     * Get current recovery statistics
-     */
+
     fun getRecoveryStats(): Map<String, Any> {
         return mapOf(
             "recovery_active" to isRecoveryActive.get(),
@@ -352,9 +335,7 @@ class NetworkErrorRecoveryManager(
         )
     }
 
-    /**
-     * Record a network latency measurement for performance tracking
-     */
+
     fun recordLatency(latencyMs: Long) {
         synchronized(latencyMeasurements) {
             latencyMeasurements.add(latencyMs)
@@ -364,9 +345,7 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Record data transfer for throughput calculation
-     */
+
     fun recordDataTransfer(bytes: Long) {
         val currentTime = System.currentTimeMillis()
         if (lastDataTransferTime > 0) {
@@ -390,9 +369,7 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Get average network latency in milliseconds based on actual measurements
-     */
+
     fun getAverageLatency(): Long {
         synchronized(latencyMeasurements) {
             return if (latencyMeasurements.isNotEmpty()) {
@@ -410,9 +387,7 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Get current throughput in KB/s based on actual measurements
-     */
+
     fun getThroughputKBps(): Double {
         synchronized(throughputMeasurements) {
             return if (throughputMeasurements.isNotEmpty()) {
@@ -430,9 +405,7 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Clean up resources
-     */
+
     fun cleanup() {
         disableAutoRecovery()
         recoveryJob.cancel()

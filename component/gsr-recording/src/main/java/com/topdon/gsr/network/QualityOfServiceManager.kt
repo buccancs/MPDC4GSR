@@ -11,10 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Quality of Service (QoS) manager for adaptive network performance optimization
- * Monitors bandwidth, implements adaptive streaming, and manages data priority queuing
- */
+
 class QualityOfServiceManager(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -98,14 +95,7 @@ class QualityOfServiceManager(
         val congestionLevel: Float, // 0.0 to 1.0
     )
 
-    /**
-     * Start QoS monitoring and optimization
-     *
-     * Initializes bandwidth monitoring, latency measurement, adaptive processing,
-     * and priority queue processing. Must be called before using other QoS features.
-     *
-     * @throws IllegalStateException if QoS monitoring is already active
-     */
+
     suspend fun startQoSMonitoring() =
         withContext(Dispatchers.IO) {
             if (isMonitoring.getAndSet(true)) {
@@ -128,9 +118,7 @@ class QualityOfServiceManager(
             startPriorityQueueProcessor()
         }
 
-    /**
-     * Monitor available bandwidth continuously
-     */
+
     private fun startBandwidthMonitoring() {
         qosScope.launch {
             while (isMonitoring.get()) {
@@ -148,9 +136,7 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Monitor network latency
-     */
+
     private fun startLatencyMonitoring() {
         qosScope.launch {
             while (isMonitoring.get()) {
@@ -162,9 +148,7 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Measure current network bandwidth
-     */
+
     private suspend fun measureBandwidth(): Long =
         withContext(Dispatchers.IO) {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -182,9 +166,7 @@ class QualityOfServiceManager(
             }
         }
 
-    /**
-     * Measure WiFi bandwidth using signal strength and theoretical capacity
-     */
+
     private fun measureWiFiBandwidth(): Long {
         val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val wifiInfo = wifiManager.connectionInfo
@@ -206,9 +188,7 @@ class QualityOfServiceManager(
         return (linkSpeed * 1024 * 1024 / 8 * signalQuality).toLong()
     }
 
-    /**
-     * Measure cellular bandwidth estimation
-     */
+
     private fun measureCellularBandwidth(): Long {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
@@ -222,9 +202,7 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Measure network latency using ping-like mechanism
-     */
+
     private suspend fun measureNetworkLatency(): Long =
         withContext(Dispatchers.IO) {
             val samples = mutableListOf<Long>()
@@ -257,9 +235,7 @@ class QualityOfServiceManager(
             samples.sorted()[samples.size / 2]
         }
 
-    /**
-     * Update network tier classification
-     */
+
     private fun updateNetworkTier(bandwidth: Long) {
         currentNetworkTier =
             when {
@@ -273,9 +249,7 @@ class QualityOfServiceManager(
         Log.d(TAG, "Network tier updated: $currentNetworkTier (${bandwidth / 1024}KB/s)")
     }
 
-    /**
-     * Adjust compression level based on available bandwidth
-     */
+
     private fun adjustCompressionLevel(bandwidth: Long) {
         compressionLevel =
             when (currentNetworkTier) {
@@ -287,9 +261,7 @@ class QualityOfServiceManager(
             }
     }
 
-    /**
-     * Start adaptive processing based on network conditions
-     */
+
     private fun startAdaptiveProcessing() {
         qosScope.launch {
             while (isMonitoring.get()) {
@@ -299,9 +271,7 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Adapt streaming parameters based on network conditions
-     */
+
     private fun adaptParameters() {
         val bandwidth = currentBandwidth.get()
         val latency = networkLatency.get()
@@ -324,9 +294,7 @@ class QualityOfServiceManager(
         Log.v(TAG, "Adapted batch size: $adaptiveBatchSize, utilization: $utilization")
     }
 
-    /**
-     * Calculate current bandwidth utilization
-     */
+
     private fun calculateBandwidthUtilization(): Float {
         val availableBandwidth = currentBandwidth.get()
         if (availableBandwidth <= 0) return 1.0f
@@ -335,9 +303,7 @@ class QualityOfServiceManager(
         return (usedBandwidth.toFloat() / availableBandwidth.toFloat()).coerceAtMost(1.0f)
     }
 
-    /**
-     * Calculate current bandwidth usage
-     */
+
     private fun calculateCurrentUsage(): Long {
         // This would track actual data transmission rates
         // For now, estimate based on queue sizes
@@ -345,9 +311,7 @@ class QualityOfServiceManager(
         return queueSize * 100L // Rough estimate
     }
 
-    /**
-     * Queue data packet with appropriate priority
-     */
+
     fun queueData(
         data: ByteArray,
         dataType: DataType,
@@ -382,9 +346,7 @@ class QualityOfServiceManager(
         targetQueue.offer(packet)
     }
 
-    /**
-     * Start processing priority queues
-     */
+
     private fun startPriorityQueueProcessor() {
         qosScope.launch {
             while (isMonitoring.get()) {
@@ -394,9 +356,7 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Process packets from priority queues
-     */
+
     private suspend fun processPriorityQueues() {
         val batch = mutableListOf<QoSDataPacket>()
         val maxBatchSize = adaptiveBatchSize
@@ -429,9 +389,7 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Send batch of packets with compression and error handling
-     */
+
     private suspend fun sendBatch(batch: List<QoSDataPacket>) {
         try {
             val compressedBatch = compressBatch(batch)
@@ -447,9 +405,7 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Compress batch based on current compression level
-     */
+
     private fun compressBatch(batch: List<QoSDataPacket>): List<QoSDataPacket> {
         if (compressionLevel == CompressionLevel.NONE) return batch
 
@@ -464,27 +420,21 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Compress thermal data packet
-     */
+
     private fun compressThermalData(packet: QoSDataPacket): QoSDataPacket {
         // Implement thermal data compression based on compression level
         // For now, return original packet
         return packet
     }
 
-    /**
-     * Compress video metadata packet
-     */
+
     private fun compressVideoMetadata(packet: QoSDataPacket): QoSDataPacket {
         // Implement video metadata compression
         // For now, return original packet
         return packet
     }
 
-    /**
-     * Create batch message for transmission
-     */
+
     private fun createBatchMessage(batch: List<QoSDataPacket>): JSONObject {
         return JSONObject().apply {
             put("type", "qos_batch")
@@ -495,9 +445,7 @@ class QualityOfServiceManager(
         }
     }
 
-    /**
-     * Get current network quality metrics
-     */
+
     fun getNetworkQualityMetrics(): NetworkQualityMetrics {
         return NetworkQualityMetrics(
             bandwidth = currentBandwidth.get(),
@@ -510,9 +458,7 @@ class QualityOfServiceManager(
         )
     }
 
-    /**
-     * Get total queue sizes for monitoring
-     */
+
     fun getQueueStatistics(): QueueStatistics {
         return QueueStatistics(
             criticalQueueSize = criticalQueue.size,
@@ -538,9 +484,7 @@ class QualityOfServiceManager(
             normalPriorityQueue.size + lowPriorityQueue.size
     }
 
-    /**
-     * Stop QoS monitoring and cleanup
-     */
+
     fun stopQoSMonitoring() {
         isMonitoring.set(false)
 

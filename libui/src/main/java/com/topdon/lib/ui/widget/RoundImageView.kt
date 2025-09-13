@@ -7,31 +7,26 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import com.topdon.lib.ui.R as UiR
 
-/**
- * RoundImageView class
- */
-/**
- * Custom Round image view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
 class RoundImageView : AppCompatImageView {
     companion object {
-        /** 圆角位置 - 左上.  */
+        //
         const val LEFT_TOP = 1
 
-        /** 圆角位置 - 右上.  */
+        //
         const val RIGHT_TOP = 2
 
-        /** 圆角位置 - 左下.  */
+        //
         const val LEFT_BOTTOM = 4
 
-        /** 圆角位置 - 右下.  */
+        //
         const val RIGHT_BOTTOM = 8
 
-        /** 默认圆角半径 - 10dp  */
+        //
         private const val DEFAULT_RADIUS = 10f
 
-        /** 默认圆角位置 - 4个角均圆角  */
+        //
         private const val DEFAULT_POSITION = 15
     }
 
@@ -99,9 +94,7 @@ class RoundImageView : AppCompatImageView {
         super.onDraw(canvas)
     }
 
-    /**
-     * settings圆角半径，单位**dp**.
-     */
+
     fun setRadius(radius: Float) {
         if (this.radius != dp2px(radius)) {
             this.radius = dp2px(radius)

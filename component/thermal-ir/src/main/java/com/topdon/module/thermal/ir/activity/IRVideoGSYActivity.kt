@@ -32,10 +32,7 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * I r video g s y activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class IRVideoGSYActivity : BaseActivity() {
     private var isRemote = false
     private lateinit var data: GalleryBean
@@ -118,7 +115,7 @@ class IRVideoGSYActivity : BaseActivity() {
         GSYVideoOptionBuilder()
             .setUrl(url)
             .build(gsyPlay)
-\1interfaceset
+//interfaceset
         gsyPlay.isNeedShowWifiTip = false //不显示消耗流量弹框
         gsyPlay.titleTextView.visibility = View.GONE
         gsyPlay.backButton.visibility = View.GONE
@@ -163,7 +160,7 @@ class IRVideoGSYActivity : BaseActivity() {
         str.append(getString(R.string.detail_date)).append("\n")
         str.append(TimeTool.showDateType(data.timeMillis)).append("\n\n")
         str.append(getString(R.string.detail_info)).append("\n")
-\1str.append("尺寸: ").append(whStr).append("\n")
+//str.append("尺寸: ").append(whStr).append("\n")
         str.append("${getString(R.string.detail_len)}: ").append(sizeStr).append("\n")
         str.append("${getString(R.string.detail_path)}: ").append(data.path).append("\n")
         TipDialog.Builder(this)

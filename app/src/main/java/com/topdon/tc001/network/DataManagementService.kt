@@ -10,18 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * Data Management Service for Phase 3 implementation
- * Manages recorded files, sessions, and data export functionality
- *
- * Features:
- * - Session-based file organization
- * - Automatic file categorization and metadata generation
- * - Data export and compression capabilities
- * - Storage cleanup and archival management
- * - Cross-device session synchronization
- * - Offline data management with sync capabilities
- */
+
 class DataManagementService(private val context: Context) {
     companion object {
         private const val TAG = "DataManagementService"
@@ -71,9 +60,7 @@ class DataManagementService(private val context: Context) {
     // File upload service integration
     private var fileUploadService: FileUploadService? = null
 
-    /**
-     * Session data container
-     */
+
     data class SessionData(
         val sessionId: String,
         val deviceId: String,
@@ -103,9 +90,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * File metadata container
-     */
+
     data class FileMetadata(
         val fileId: String,
         val fileName: String,
@@ -130,9 +115,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Initialize the data management service
-     */
+
     fun initialize(fileUploadService: FileUploadService? = null) {
         this.fileUploadService = fileUploadService
 
@@ -156,9 +139,7 @@ class DataManagementService(private val context: Context) {
         )
     }
 
-    /**
-     * Create a new recording session
-     */
+
     fun createSession(
         sessionId: String,
         deviceId: String,
@@ -210,9 +191,7 @@ class DataManagementService(private val context: Context) {
         return session
     }
 
-    /**
-     * End an active recording session
-     */
+
     fun endSession(sessionId: String): Boolean {
         val session = activeSessions[sessionId] ?: return false
 
@@ -240,9 +219,7 @@ class DataManagementService(private val context: Context) {
         return true
     }
 
-    /**
-     * Register a new file with the session
-     */
+
     fun registerFile(
         filePath: String,
         sessionId: String,
@@ -328,9 +305,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Queue files for upload to PC controller
-     */
+
     suspend fun queueFilesForUpload(sessionId: String): List<String> {
         val uploadService = fileUploadService ?: return emptyList()
         val session = activeSessions[sessionId] ?: return emptyList()
@@ -395,9 +370,7 @@ class DataManagementService(private val context: Context) {
         return uploadJobIds
     }
 
-    /**
-     * Export session data in specified format
-     */
+
     suspend fun exportSession(
         sessionId: String,
         format: ExportFormat,
@@ -453,37 +426,27 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Get session data
-     */
+
     fun getSession(sessionId: String): SessionData? {
         return activeSessions[sessionId]
     }
 
-    /**
-     * Get all sessions
-     */
+
     fun getAllSessions(): List<SessionData> {
         return activeSessions.values.toList()
     }
 
-    /**
-     * Get file metadata
-     */
+
     fun getFile(fileId: String): FileMetadata? {
         return fileRegistry[fileId]
     }
 
-    /**
-     * Get files for session
-     */
+
     fun getSessionFiles(sessionId: String): List<FileMetadata> {
         return activeSessions[sessionId]?.files ?: emptyList()
     }
 
-    /**
-     * Get storage statistics
-     */
+
     fun getStorageStats(): Map<String, Any> {
         val totalFiles = fileRegistry.size
         val totalSize = fileRegistry.values.sumOf { it.sizeBytes }
@@ -502,9 +465,7 @@ class DataManagementService(private val context: Context) {
         )
     }
 
-    /**
-     * Clean up old sessions and temporary files
-     */
+
     suspend fun performCleanup(maxAgeMs: Long = 7 * 24 * 60 * 60 * 1000L) { // 7 days default
         val currentTime = System.currentTimeMillis()
         var cleanedSessions = 0
@@ -549,9 +510,7 @@ class DataManagementService(private val context: Context) {
         )
     }
 
-    /**
-     * Archive session data
-     */
+
     private fun archiveSession(sessionId: String): Boolean {
         val session = activeSessions[sessionId] ?: return false
 
@@ -604,9 +563,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Setup storage directories
-     */
+
     private fun setupStorageDirectories() {
         val externalDir = context.getExternalFilesDir(null) ?: context.filesDir
 
@@ -624,9 +581,7 @@ class DataManagementService(private val context: Context) {
         exportsDirectory.mkdirs()
     }
 
-    /**
-     * Load existing sessions from storage
-     */
+
     private fun loadExistingSessions() {
         try {
             val sessionDirs = sessionsDirectory.listFiles { file -> file.isDirectory } ?: return
@@ -646,9 +601,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Load session from metadata file
-     */
+
     private fun loadSessionFromMetadata(metadataFile: File) {
         try {
             val jsonContent = metadataFile.readText()
@@ -704,9 +657,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Load file manifest for session
-     */
+
     private fun loadFileManifest(session: SessionData) {
         try {
             val sessionDir = File(sessionsDirectory, session.sessionId)
@@ -759,9 +710,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Save session metadata to file
-     */
+
     private fun saveSessionMetadata(session: SessionData) {
         try {
             val sessionDir = File(sessionsDirectory, session.sessionId)
@@ -808,9 +757,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Create file manifest for session
-     */
+
     private fun createFileManifest(session: SessionData) {
         try {
             val sessionDir = File(sessionsDirectory, session.sessionId)
@@ -864,9 +811,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Export session as JSON
-     */
+
     private fun exportSessionAsJSON(
         session: SessionData,
         exportFile: File,
@@ -910,9 +855,7 @@ class DataManagementService(private val context: Context) {
         exportFile.writeText(json.toString(2))
     }
 
-    /**
-     * Export session as CSV (file list)
-     */
+
     private fun exportSessionAsCSV(
         session: SessionData,
         exportFile: File,
@@ -932,9 +875,7 @@ class DataManagementService(private val context: Context) {
         exportFile.writeText(csvContent.toString())
     }
 
-    /**
-     * Export session as HDF5 (placeholder - would need HDF5 library)
-     */
+
     private fun exportSessionAsHDF5(
         session: SessionData,
         exportFile: File,
@@ -943,9 +884,7 @@ class DataManagementService(private val context: Context) {
         exportSessionAsJSON(session, exportFile, includeFiles = true)
     }
 
-    /**
-     * Export session as ZIP archive
-     */
+
     private fun exportSessionAsZIP(
         session: SessionData,
         exportFile: File,
@@ -956,9 +895,7 @@ class DataManagementService(private val context: Context) {
         exportSessionAsJSON(exportFile, session, includeFiles)
     }
 
-    /**
-     * Calculate file checksum
-     */
+
     private fun calculateFileChecksum(file: File): String {
         return try {
             val digest = java.security.MessageDigest.getInstance("SHA-256")
@@ -975,9 +912,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Get MIME type from file extension
-     */
+
     private fun getMimeType(extension: String): String {
         return when (extension.lowercase()) {
             "mp4" -> "video/mp4"
@@ -990,9 +925,7 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    /**
-     * Generate unique file ID
-     */
+
     private fun generateFileId(
         sessionId: String,
         deviceId: String,

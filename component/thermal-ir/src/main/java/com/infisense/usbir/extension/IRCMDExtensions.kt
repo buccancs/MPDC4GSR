@@ -3,20 +3,11 @@ package com.infisense.usbir.extension
 import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
 
-/**
- * Extension functions for IRCMD using real vendor SDK integration.
- *
- * These implementations use the actual IRCMD hardware interface
- * to provide complete thermal camera control functionality.
- *
- * No stubs or simulation - full vendor SDK integration as required.
- */
+
 
 private const val TAG = "IRCMDExtensions"
 
-/**
- * Set mirror mode for the IR camera using real hardware control
- */
+
 fun IRCMD.setMirror(enabled: Boolean) {
     try {
         // Use real IRCMD native methods for mirror control
@@ -34,9 +25,7 @@ fun IRCMD.setMirror(enabled: Boolean) {
     }
 }
 
-/**
- * Set auto shutter mode using real hardware interface
- */
+
 fun IRCMD.setAutoShutter(enabled: Boolean) {
     try {
         // Use real IRCMD native methods for auto shutter control
@@ -52,9 +41,7 @@ fun IRCMD.setAutoShutter(enabled: Boolean) {
     }
 }
 
-/**
- * Set DDE (Digital Detail Enhancement) level using real hardware interface
- */
+
 fun IRCMD.setPropDdeLevel(level: Int) {
     try {
         // Use real IRCMD native methods for DDE level control
@@ -66,9 +53,7 @@ fun IRCMD.setPropDdeLevel(level: Int) {
     }
 }
 
-/**
- * Set contrast level using real hardware interface
- */
+
 fun IRCMD.setContrast(level: Int) {
     try {
         // Use real IRCMD native methods for contrast control
@@ -80,10 +65,7 @@ fun IRCMD.setContrast(level: Int) {
     }
 }
 
-/**
- * Generic property setter for IRCMD hardware interface
- * This would map to actual native SDK calls
- */
+
 private fun IRCMD.nativeSetProperty(
     property: String,
     value: Int,

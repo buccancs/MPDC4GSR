@@ -18,10 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Enhanced GSR data persistence with proper timestamping and cross-sensor alignment
- * Provides research-grade CSV output with multiple timestamp formats for compatibility
- */
+
 class GSRDataPersistence(
     private val context: Context,
     private val sessionId: String,
@@ -43,9 +40,7 @@ class GSRDataPersistence(
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault())
 
-    /**
-     * Initialize data persistence for GSR recording session
-     */
+
     suspend fun initialize(): Boolean {
         return try {
             val sessionDir = createSessionDirectory()
@@ -68,9 +63,7 @@ class GSRDataPersistence(
         }
     }
 
-    /**
-     * Create session directory with proper structure
-     */
+
     private fun createSessionDirectory(): File {
         val baseDir = File(context.getExternalFilesDir(null), "GSR_Sessions")
         val sessionDir = File(baseDir, sessionId)
@@ -82,18 +75,14 @@ class GSRDataPersistence(
         return sessionDir
     }
 
-    /**
-     * Create CSV file with timestamp-based naming
-     */
+
     private fun createCsvFile(sessionDir: File): File {
         val timestamp = dateFormat.format(Date())
         val filename = "gsr_data_${sessionId}_$timestamp.csv"
         return File(sessionDir, filename)
     }
 
-    /**
-     * Write comprehensive CSV header with all timestamp formats
-     */
+
     private suspend fun writeCsvHeader() {
         writeMutex.withLock {
             try {
@@ -129,9 +118,7 @@ class GSRDataPersistence(
         }
     }
 
-    /**
-     * Queue GSR data record for asynchronous writing
-     */
+
     fun queueDataRecord(gsrData: GSRSampleData) {
         val timestamp = TimestampManager.createTimestampRecord()
         val record =
@@ -156,9 +143,7 @@ class GSRDataPersistence(
         dataQueue.offer(record)
     }
 
-    /**
-     * Start background batch writer for efficient data persistence
-     */
+
     private fun startBatchWriter() {
         scope.launch {
             while (isWriting.get() || dataQueue.isNotEmpty()) {
@@ -172,9 +157,7 @@ class GSRDataPersistence(
         }
     }
 
-    /**
-     * Write batch of data records to CSV file
-     */
+
     private suspend fun writeBatch() {
         if (dataQueue.isEmpty()) return
 
@@ -203,18 +186,14 @@ class GSRDataPersistence(
         }
     }
 
-    /**
-     * Start data persistence (called when recording starts)
-     */
+
     fun startPersistence() {
         isWriting.set(true)
         TimestampManager.startSession()
         Log.i(TAG, "GSR data persistence started")
     }
 
-    /**
-     * Stop data persistence and flush remaining data
-     */
+
     suspend fun stopPersistence() {
         isWriting.set(false)
 
@@ -228,9 +207,7 @@ class GSRDataPersistence(
         Log.i(TAG, "GSR data persistence stopped. Total samples written: ${samplesWritten.get()}")
     }
 
-    /**
-     * Cleanup resources
-     */
+
     suspend fun cleanup() {
         stopPersistence()
 
@@ -245,9 +222,7 @@ class GSRDataPersistence(
         }
     }
 
-    /**
-     * Get recording statistics
-     */
+
     fun getStatistics(): GSRPersistenceStats {
         return GSRPersistenceStats(
             samplesWritten = samplesWritten.get(),
@@ -259,9 +234,7 @@ class GSRDataPersistence(
     }
 }
 
-/**
- * GSR data record with comprehensive information for research analysis
- */
+
 data class GSRDataRecord(
     val timestamp: TimestampRecord,
     val gsrRawValue: Int,
@@ -279,9 +252,7 @@ data class GSRDataRecord(
     val participantId: String,
     val recordingMode: String,
 ) {
-    /**
-     * Convert record to CSV line format
-     */
+
     fun toCsvLine(): String {
         return buildString {
             // Timestamp data
@@ -304,9 +275,7 @@ data class GSRDataRecord(
     }
 }
 
-/**
- * GSR sample data structure for sensor readings
- */
+
 data class GSRSampleData(
     val rawValue: Int,
     val microsiemens: Double,
@@ -323,9 +292,7 @@ data class GSRSampleData(
     val recordingMode: String = "shimmer_ble",
 )
 
-/**
- * Statistics for GSR data persistence monitoring
- */
+
 data class GSRPersistenceStats(
     val samplesWritten: Long,
     val pendingSamples: Int,

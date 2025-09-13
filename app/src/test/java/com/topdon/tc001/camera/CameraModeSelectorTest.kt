@@ -15,12 +15,7 @@ import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
-/**
- * Unit tests for CameraModeSelector UI component
- * 
- * Tests mode selection, UI state management, Samsung device warnings,
- * and performance indicator behavior.
- */
+
 @RunWith(RobolectricTestRunner::class)
 class CameraModeSelectorTest {
 

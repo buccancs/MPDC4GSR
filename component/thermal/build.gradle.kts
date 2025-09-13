@@ -7,14 +7,7 @@ plugins {
 }
 
 // Temporarily disable kapt configuration
-// kapt {
-//     arguments {
-//         arg("AROUTER_MODULE_NAME", project.name)
-//     }
-//     // Enable Kotlin 2.1.0 compatibility
-//     correctErrorTypes = true
-//     useBuildCache = true
-// }
+
 
 android {
     namespace = "com.topdon.module.thermal"

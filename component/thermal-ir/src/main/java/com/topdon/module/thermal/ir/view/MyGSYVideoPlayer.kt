@@ -9,15 +9,7 @@ import com.topdon.module.thermal.ir.R
 // TODO: Replace with ExoPlayer/Media3 implementation once GSY VideoPlayer dependency is resolved
 // This is a temporary compatibility stub to enable builds
 
-/**
- * Temporary video player stub to replace GSY VideoPlayer dependency.
- *
- * This class provides basic video player functionality using Media3/ExoPlayer
- * until the GSY VideoPlayer dependency issue is resolved.
- *
- * Created by chenggeng.lin on 2023/12/8.
- * Modified for GSY VideoPlayer compatibility.
- */
+
 class MyGSYVideoPlayer : FrameLayout {
     // Compatibility constants for GSY VideoPlayer
     companion object {

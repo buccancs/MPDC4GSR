@@ -30,9 +30,7 @@
 //import java.util.Set;
 //import java.util.concurrent.ConcurrentHashMap;
 //
-///**
-// * 替换libusbirsdk_1.2.0.aar类,为兼容android 12
-// */
+//
 //public class USBMonitor {
 //    private static final boolean DEBUG = false;
 //    private static final String TAG = "USBMonitor";

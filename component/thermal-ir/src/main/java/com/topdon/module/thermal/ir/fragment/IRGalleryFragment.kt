@@ -42,17 +42,10 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import com.topdon.lib.core.R as LibR
 
-/**
-\1图库
- */
-/**
- * I r gallery fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
+
+
 class IRGalleryFragment : BaseFragment() {
-    /**
-\1从上一interface传递过来的，进入图库时初始的目录类型
-     */
+
     private var currentDirType = DirType.LINE
 
     private val viewModel: IRGalleryViewModel by viewModels()
@@ -69,9 +62,7 @@ class IRGalleryFragment : BaseFragment() {
     private lateinit var clBottom: View
     private lateinit var irGalleryRecycler: RecyclerView
 
-    /**
-\1从上一interface传递过来的，当前是查看照片还是查看视频.
-     */
+
     private var isVideo = false
 
     override fun initContentView() = R.layout.fragment_ir_gallery
@@ -196,7 +187,7 @@ class IRGalleryFragment : BaseFragment() {
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(requireActivity(), spanCount)
-\1动态setspan
+//动态setspan
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {

@@ -9,10 +9,7 @@ import com.energy.iruvc.utils.DualCameraParams;
 
 import java.io.File;
 
-/**
- * Created by fengjibo on 2022/7/6.
- * 动态调整参数类
- */
+
 public class Const {
 
     public static final int TYPE_IR = 0;//单光

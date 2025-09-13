@@ -1,13 +1,6 @@
 package com.topdon.ble;
 
-/**
- * Configuration class for Shimmer devices.
- * 
- * Provides comprehensive configuration options for all Shimmer device types
- * including GSR, PPG, IMU, and multi-sensor configurations.
- * 
- * @author IRCamera Shimmer Integration Team
- */
+
 public class ShimmerDeviceConfig {
     
     // Sampling rates (Hz)
@@ -69,9 +62,7 @@ public class ShimmerDeviceConfig {
     public int getConnectionTimeout() { return connectionTimeout; }
     public String getSessionId() { return sessionId; }
     
-    /**
-     * Builder class for ShimmerDeviceConfig
-     */
+
     public static class Builder {
         private UnifiedBleManager.DeviceType deviceType = UnifiedBleManager.DeviceType.SHIMMER_GSR;
         private int samplingRate = SAMPLING_RATE_128HZ;
@@ -145,9 +136,7 @@ public class ShimmerDeviceConfig {
         }
     }
     
-    /**
-     * Create default GSR configuration
-     */
+
     public static ShimmerDeviceConfig createDefaultGSRConfig() {
         return new Builder()
             .setDeviceType(UnifiedBleManager.DeviceType.SHIMMER_GSR)
@@ -161,9 +150,7 @@ public class ShimmerDeviceConfig {
             .build();
     }
     
-    /**
-     * Create default PPG configuration
-     */
+
     public static ShimmerDeviceConfig createDefaultPPGConfig() {
         return new Builder()
             .setDeviceType(UnifiedBleManager.DeviceType.SHIMMER_PPG)
@@ -177,9 +164,7 @@ public class ShimmerDeviceConfig {
             .build();
     }
     
-    /**
-     * Create multi-sensor configuration
-     */
+
     public static ShimmerDeviceConfig createMultiSensorConfig() {
         return new Builder()
             .setDeviceType(UnifiedBleManager.DeviceType.SHIMMER_GSR)

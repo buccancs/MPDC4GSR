@@ -16,10 +16,7 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ImageTempBean
 import com.topdon.lib.core.R as LibR
 
-/**
- * Custom Report i r input view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class ReportIRInputView : LinearLayout {
     companion object {
         private const val TYPE_FULL = 0 // 全图

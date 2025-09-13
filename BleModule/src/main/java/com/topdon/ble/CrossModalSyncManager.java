@@ -13,30 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Cross-Modal Synchronization Manager for unified device coordination.
- * 
- * This advanced manager provides synchronized coordination between:
- * - BLE devices (Shimmer GSR sensors, Topdon thermal sensors)  
- * - Non-BLE devices (USB thermal cameras, RGB cameras)
- * - Network-connected devices (PC Controllers, hub-spoke systems)
- * 
- * Features:
- * - Sub-5ms synchronization accuracy across all device types
- * - Unified timestamp alignment using monotonic clocks
- * - Cross-device event coordination (start/stop/sync marks)  
- * - Advanced clock drift compensation
- * - Automatic device discovery and capability detection
- * - Real-time sync quality monitoring and reporting
- * 
- * Usage:
- * CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
- * syncManager.registerDevice(bleDevice, DeviceCategory.BLE_SENSOR);
- * syncManager.registerDevice(thermalCamera, DeviceCategory.USB_CAMERA);
- * syncManager.startSynchronizedRecording();
- * 
- * @author IRCamera Cross-Modal Integration Team
- */
+
 public class CrossModalSyncManager {
     private static final String TAG = "CrossModalSyncManager";
     
@@ -61,9 +38,7 @@ public class CrossModalSyncManager {
     // Listeners
     private final List<CrossModalSyncListener> listeners = new ArrayList<>();
     
-    /**
-     * Device categories for cross-modal coordination
-     */
+    
     public enum DeviceCategory {
         BLE_SENSOR("BLE Sensors", "Shimmer GSR, Topdon BLE devices"),
         USB_CAMERA("USB Cameras", "Thermal cameras, thermal-lite devices"),
@@ -83,9 +58,7 @@ public class CrossModalSyncManager {
         public String getDescription() { return description; }
     }
     
-    /**
-     * Registered device information
-     */
+    
     public static class RegisteredDevice {
         private final String deviceId;
         private final String deviceName;
@@ -118,9 +91,7 @@ public class CrossModalSyncManager {
         void setLastSyncTimestamp(long timestamp) { this.lastSyncTimestamp = timestamp; }
     }
     
-    /**
-     * Device capabilities for synchronization optimization
-     */
+    
     public static class DeviceCapabilities {
         private final boolean supportsHardwareSync;
         private final boolean supportsTimestampGeneration;
@@ -142,9 +113,7 @@ public class CrossModalSyncManager {
         public long getSyncAccuracyMicros() { return syncAccuracyMicros; }
     }
     
-    /**
-     * Synchronization quality metrics
-     */
+    
     public static class SyncQualityMetrics {
         private final long avgClockDriftNanos;
         private final long maxClockDriftNanos;
@@ -169,9 +138,7 @@ public class CrossModalSyncManager {
         public long getLastUpdateTimestamp() { return lastUpdateTimestamp; }
     }
     
-    /**
-     * Listener interface for cross-modal sync events
-     */
+    
     public interface CrossModalSyncListener {
         void onDeviceRegistered(@NonNull RegisteredDevice device);
         void onDeviceUnregistered(@NonNull String deviceId);
@@ -181,17 +148,13 @@ public class CrossModalSyncManager {
         void onSyncQualityUpdate(@NonNull String deviceId, @NonNull SyncQualityMetrics metrics);
     }
     
-    /**
-     * Private constructor for singleton
-     */
+    
     private CrossModalSyncManager(@NonNull Context context) {
         this.context = context.getApplicationContext();
         initializeDeviceCategories();
     }
     
-    /**
-     * Get singleton instance
-     */
+    
     public static CrossModalSyncManager getInstance(@NonNull Context context) {
         if (instance == null) {
             synchronized (instanceLock) {
@@ -203,9 +166,7 @@ public class CrossModalSyncManager {
         return instance;
     }
     
-    /**
-     * Initialize device category tracking
-     */
+    
     private void initializeDeviceCategories() {
         for (DeviceCategory category : DeviceCategory.values()) {
             devicesByCategory.put(category, new ArrayList<>());
@@ -214,9 +175,7 @@ public class CrossModalSyncManager {
         Log.i(TAG, "CrossModalSyncManager initialized with " + DeviceCategory.values().length + " device categories");
     }
     
-    /**
-     * Register a device for cross-modal synchronization
-     */
+    
     public boolean registerDevice(@NonNull String deviceId, @NonNull String deviceName,
                                 @NonNull DeviceCategory category, @NonNull Object deviceRef,
                                 @NonNull DeviceCapabilities capabilities) {
@@ -256,9 +215,7 @@ public class CrossModalSyncManager {
         }
     }
     
-    /**
-     * Unregister a device
-     */
+    
     public boolean unregisterDevice(@NonNull String deviceId) {
         RegisteredDevice device = registeredDevices.remove(deviceId);
         if (device != null) {
@@ -282,9 +239,7 @@ public class CrossModalSyncManager {
         return false;
     }
     
-    /**
-     * Start synchronized recording across all registered devices
-     */
+    
     public boolean startSynchronizedRecording() {
         if (!isInitialized.get()) {
             Log.e(TAG, "Cannot start recording - manager not initialized");
@@ -331,9 +286,7 @@ public class CrossModalSyncManager {
         }
     }
     
-    /**
-     * Stop synchronized recording
-     */
+    
     public boolean stopSynchronizedRecording() {
         if (!isSynchronizing.get()) {
             Log.w(TAG, "No synchronization in progress");
@@ -361,9 +314,7 @@ public class CrossModalSyncManager {
         }
     }
     
-    /**
-     * Send synchronization command to all active devices
-     */
+    
     private boolean sendSyncCommand(@NonNull String command, long masterTimestamp) {
         boolean overallSuccess = true;
         Map<String, Long> deviceTimestamps = new ConcurrentHashMap<>();
@@ -396,9 +347,7 @@ public class CrossModalSyncManager {
         return overallSuccess;
     }
     
-    /**
-     * Send command to specific device based on its category
-     */
+    
     private boolean sendCommandToDevice(@NonNull RegisteredDevice device, @NonNull String command, long timestamp) {
         try {
             switch (device.getCategory()) {
@@ -422,9 +371,7 @@ public class CrossModalSyncManager {
         }
     }
     
-    /**
-     * Send command to BLE device (Shimmer, Topdon)
-     */
+    
     private boolean sendBleDeviceCommand(@NonNull RegisteredDevice device, @NonNull String command, long timestamp) {
         Object deviceRef = device.getDeviceRef();
         
@@ -439,9 +386,7 @@ public class CrossModalSyncManager {
         return false;
     }
     
-    /**
-     * Send command to unified BLE device
-     */
+    
     private boolean sendUnifiedDeviceCommand(@NonNull UnifiedDevice device, @NonNull String command, long timestamp) {
         try {
             switch (command) {
@@ -461,86 +406,66 @@ public class CrossModalSyncManager {
         }
     }
     
-    /**
-     * Send command to USB camera device
-     */
+    
     private boolean sendUsbCameraCommand(@NonNull RegisteredDevice device, @NonNull String command, long timestamp) {
         // Placeholder for USB camera command implementation
         Log.d(TAG, "USB Camera command: " + command + " for device: " + device.getDeviceName());
         return true;
     }
     
-    /**
-     * Send command to RGB camera device
-     */
+    
     private boolean sendRgbCameraCommand(@NonNull RegisteredDevice device, @NonNull String command, long timestamp) {
         // Placeholder for RGB camera command implementation
         Log.d(TAG, "RGB Camera command: " + command + " for device: " + device.getDeviceName());
         return true;
     }
     
-    /**
-     * Send command to network device
-     */
+    
     private boolean sendNetworkDeviceCommand(@NonNull RegisteredDevice device, @NonNull String command, long timestamp) {
         // Placeholder for network device command implementation  
         Log.d(TAG, "Network Device command: " + command + " for device: " + device.getDeviceName());
         return true;
     }
     
-    /**
-     * Send command to audio device
-     */
+    
     private boolean sendAudioDeviceCommand(@NonNull RegisteredDevice device, @NonNull String command, long timestamp) {
         // Placeholder for audio device command implementation
         Log.d(TAG, "Audio Device command: " + command + " for device: " + device.getDeviceName());
         return true;
     }
     
-    /**
-     * Get all registered devices
-     */
+    
     @NonNull
     public List<RegisteredDevice> getRegisteredDevices() {
         return new ArrayList<>(registeredDevices.values());
     }
     
-    /**
-     * Get devices by category
-     */
+    
     @NonNull
     public List<RegisteredDevice> getDevicesByCategory(@NonNull DeviceCategory category) {
         List<RegisteredDevice> categoryDevices = devicesByCategory.get(category);
         return categoryDevices != null ? new ArrayList<>(categoryDevices) : new ArrayList<>();
     }
     
-    /**
-     * Get sync quality metrics for device
-     */
+    
     @Nullable
     public SyncQualityMetrics getSyncQualityMetrics(@NonNull String deviceId) {
         return syncQualityMap.get(deviceId);
     }
     
-    /**
-     * Check if synchronization is active
-     */
+    
     public boolean isSynchronizing() {
         return isSynchronizing.get();
     }
     
-    /**
-     * Add sync listener
-     */
+    
     public void addSyncListener(@NonNull CrossModalSyncListener listener) {
         synchronized (listeners) {
             listeners.add(listener);
         }
     }
     
-    /**
-     * Remove sync listener
-     */
+    
     public void removeSyncListener(@NonNull CrossModalSyncListener listener) {
         synchronized (listeners) {
             listeners.remove(listener);

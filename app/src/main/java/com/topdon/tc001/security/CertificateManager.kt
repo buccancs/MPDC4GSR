@@ -13,11 +13,7 @@ import java.security.spec.X509EncodedKeySpec
 import java.util.concurrent.ConcurrentHashMap
 import javax.crypto.Cipher
 
-/**
- * Certificate Manager for Phase 4 Security Enhancement
- *
- * Handles device certificate generation, validation, and rotation for secure authentication
- */
+
 class CertificateManager(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -56,9 +52,7 @@ class CertificateManager(
     private var deviceCertificate: X509Certificate? = null
     private var deviceKeyPair: KeyPair? = null
 
-    /**
-     * Initialize certificate manager
-     */
+
     fun initialize(): Boolean {
         return try {
             Log.i(TAG, "Initializing certificate manager")
@@ -100,9 +94,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Validate device certificate and signature
-     */
+
     fun validateCertificate(
         deviceId: String,
         certificate: ByteArray,
@@ -159,9 +151,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Generate device certificate and key pair
-     */
+
     private fun generateDeviceCertificate() {
         try {
             Log.i(TAG, "Generating new device certificate")
@@ -198,9 +188,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Create self-signed certificate (simplified for demo)
-     */
+
     private fun createSelfSignedCertificate(keyPair: KeyPair): X509Certificate {
         // This is a simplified implementation
         // In a real implementation, you would use BouncyCastle or similar library
@@ -215,9 +203,7 @@ class CertificateManager(
         )
     }
 
-    /**
-     * Load device certificate from storage
-     */
+
     private fun loadDeviceCertificate(): Boolean {
         return try {
             val certFile = File(certDirectory, DEVICE_CERT_FILE)
@@ -253,9 +239,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Save device certificate to storage
-     */
+
     private fun saveDeviceCertificate(
         certificate: X509Certificate,
         keyPair: KeyPair,
@@ -277,9 +261,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Load trusted certificates
-     */
+
     private fun loadTrustedCertificates() {
         try {
             val trustedFile = File(certDirectory, TRUSTED_CERTS_FILE)
@@ -296,18 +278,14 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Verify certificate chain
-     */
+
     private fun verifyCertificateChain(certificate: X509Certificate): Boolean {
         // Simplified verification - in production, this would verify the full chain
         // For now, accept all certificates for development
         return true
     }
 
-    /**
-     * Verify digital signature
-     */
+
     private fun verifySignature(
         publicKey: PublicKey,
         data: ByteArray,
@@ -324,9 +302,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Start certificate rotation monitoring
-     */
+
     private fun startCertificateRotationMonitoring() {
         GlobalScope.launch {
             while (true) {
@@ -350,9 +326,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Rotate device certificate
-     */
+
     private fun rotateCertificate() {
         try {
             Log.i(TAG, "Rotating device certificate")
@@ -388,19 +362,13 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Get device certificate for authentication
-     */
+
     fun getDeviceCertificate(): X509Certificate? = deviceCertificate
 
-    /**
-     * Get device private key for signing
-     */
+
     fun getDevicePrivateKey(): PrivateKey? = deviceKeyPair?.private
 
-    /**
-     * Sign data with device private key
-     */
+
     fun signData(data: ByteArray): ByteArray? {
         return try {
             val privateKey = deviceKeyPair?.private ?: return null
@@ -415,9 +383,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Encrypt data with certificate public key
-     */
+
     fun encryptData(
         data: ByteArray,
         certificate: X509Certificate,
@@ -432,9 +398,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Decrypt data with device private key
-     */
+
     fun decryptData(encryptedData: ByteArray): ByteArray? {
         return try {
             val privateKey = deviceKeyPair?.private ?: return null
@@ -448,9 +412,7 @@ class CertificateManager(
         }
     }
 
-    /**
-     * Get certificate diagnostics
-     */
+
     fun getDiagnostics(): Map<String, Any> {
         return mapOf(
             "device_cert_available" to (deviceCertificate != null),

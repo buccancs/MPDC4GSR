@@ -13,10 +13,7 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
 
-/**
- * Comprehensive unit tests for RangeSeekBar widget using Robolectric
- * Tests range seek bar functionality and utilities
- */
+
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = {Build.VERSION_CODES.O}, manifest = Config.NONE)
 public class RangeSeekBarModuleTest {

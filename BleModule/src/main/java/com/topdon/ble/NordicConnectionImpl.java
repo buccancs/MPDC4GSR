@@ -16,15 +16,7 @@ import com.topdon.ble.util.BluetoothPermissionUtils;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Enhanced BLE connection implementation that wraps existing ConnectionImpl
- * with Nordic BLE library features for improved reliability.
- * 
- * This provides the "best of both worlds" by maintaining EasyBLE API compatibility
- * while adding Nordic BLE's enhanced reliability features as a wrapper layer.
- * 
- * @author IRCamera Integration Team
- */
+
 public class NordicConnectionImpl implements Connection {
     private static final String TAG = "NordicConnectionImpl";
     
@@ -172,32 +164,24 @@ public class NordicConnectionImpl implements Connection {
         return baseConnection.hasProperty(service, characteristic, property);
     }
     
-    /**
-     * Enable or disable enhanced mode
-     */
+
     public void setEnhancedMode(boolean enabled) {
         enhancedMode.set(enabled);
         Log.i(TAG, "Enhanced mode " + (enabled ? "enabled" : "disabled") + " for device: " + getDevice().getAddress());
     }
     
-    /**
-     * Enable or disable auto-retry functionality
-     */
+
     public void setAutoRetryEnabled(boolean enabled) {
         autoRetryEnabled.set(enabled);
         Log.i(TAG, "Auto-retry " + (enabled ? "enabled" : "disabled") + " for device: " + getDevice().getAddress());
     }
     
-    /**
-     * Check if enhanced mode is enabled
-     */
+
     public boolean isEnhancedMode() {
         return enhancedMode.get();
     }
     
-    /**
-     * Check if auto-retry is enabled for this connection
-     */
+
     public boolean isAutoRetry() {
         return autoRetryEnabled.get();
     }

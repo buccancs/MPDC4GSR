@@ -11,10 +11,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Demonstration of Robolectric-based testing vs Mockito approach
- * Shows how real Android context eliminates need for mocking
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -26,10 +23,7 @@ class MockitoVsRobolectricTest {
         context = ApplicationProvider.getApplicationContext()
     }
 
-    /**
-     * OLD APPROACH (Mockito): Would require mocking Context, SharedPreferences, Editor
-     * NEW APPROACH (Robolectric): Uses real Android context and components
-     */
+
     @Test
     fun testSharedPreferencesWithRealContext() {
         // Instead of mocking Context and SharedPreferences, we use real ones
@@ -56,10 +50,7 @@ class MockitoVsRobolectricTest {
         assertFalse("is_active should be false", prefs.getBoolean("is_active", false))
     }
 
-    /**
-     * OLD APPROACH: Would mock File operations
-     * NEW APPROACH: Uses real file system (in test environment)
-     */
+
     @Test
     fun testFileOperationsWithRealFileSystem() {
         // Use real file operations instead of mocking File, FileWriter, etc.
@@ -82,10 +73,7 @@ class MockitoVsRobolectricTest {
         assertFalse("File should be deleted", testFile.exists())
     }
 
-    /**
-     * OLD APPROACH: Would mock System services
-     * NEW APPROACH: Uses real Android system services (shadowed by Robolectric)
-     */
+
     @Test
     fun testSystemServiceAccess() {
         // No mocking needed - Robolectric provides real service implementations
@@ -104,10 +92,7 @@ class MockitoVsRobolectricTest {
         assertNotNull("BluetoothAdapter should be available", bluetoothAdapter)
     }
 
-    /**
-     * Demonstrates how real context enables integration testing
-     * vs unit testing with mocks
-     */
+
     @Test
     fun testIntegrationWithMultipleServices() {
         // Real integration between multiple Android components
@@ -150,10 +135,7 @@ class MockitoVsRobolectricTest {
         configFile.delete()
     }
 
-    /**
-     * Shows how Robolectric enables testing of Android-specific behavior
-     * that would be difficult to mock properly
-     */
+
     @Test
     fun testAndroidSpecificBehavior() {
         // Test Android version-specific behavior

@@ -137,54 +137,9 @@ android {
                     "META-INF/com.android.art/baseline.prof",
                     "META-INF/com.android.art/baseline.profm",
                     // Exclude duplicate Shimmer Bluetooth classes to avoid conflicts
-                    "**/it/gerdavax/easybluetooth/**",
-                    // Exclude duplicate Bluetooth classes from AndroidBluetoothLibrary
-                    "**/android/bluetooth/IBluetoothDeviceCallback*",
+                    "**/it/gerdavax/easybluetoothandroid/bluetooth/IBluetoothDeviceCallback*",
                     // Exclude duplicate AndroidPlot classes
-                    "**/com/androidplot/**",
-                    // Exclude duplicate Shimmer Biophysical Processing classes
-                    "**/com/shimmerresearch/biophysicalprocessing/**",
-                    "**/com/shimmerresearch/utilityfunctions/**",
-                )
-        }
-        jniLibs {
-            useLegacyPackaging = true
-            pickFirsts +=
-                listOf(
-                    "lib/x86/libc++_shared.so",
-                    "lib/x86_64/libc++_shared.so",
-                    "lib/arm64-v8a/libc++_shared.so",
-                    "lib/armeabi-v7a/libc++_shared.so",
-                    "lib/arm64-v8a/libnative-window.so",
-                    "lib/armeabi-v7a/libnative-window.so",
-                    "lib/armeabi-v7a/libyuv.so",
-                    "lib/arm64-v8a/libyuv.so",
-                    "lib/armeabi-v7a/libopencv_java4.so",
-                    "lib/arm64-v8a/libopencv_java4.so",
-                    "lib/armeabi-v7a/libomp.so",
-                    "lib/arm64-v8a/libomp.so",
-                    "lib/arm64-v8a/liblog.so",
-                    "lib/armeabi-v7a/liblog.so",
-                    "lib/arm64-v8a/libijkffmpeg.so",
-                    "lib/arm64-v8a/libijkplayer.so",
-                    "lib/arm64-v8a/libijksdl.so",
-                    "lib/armeabi/libijkffmpeg.so",
-                    "lib/armeabi/libijkplayer.so",
-                    "lib/armeabi/libijksdl.so",
-                    "lib/armeabi-v7a/libijkffmpeg.so",
-                    "lib/armeabi-v7a/libijkplayer.so",
-                    "lib/armeabi-v7a/libijksdl.so",
-                    "lib/x86/libijkffmpeg.so",
-                    "lib/x86/libijkplayer.so",
-                    "lib/x86/libijksdl.so",
-                    "lib/x86_64/libijkffmpeg.so",
-                    "lib/x86_64/libijkplayer.so",
-                    "lib/x86_64/libijksdl.so",
-                )
-            // Enhanced native library stripping configuration
-            keepDebugSymbols +=
-                listOf(
-                    "**/*.so", // Keep all debug symbols to prevent stripping issues
+                    "**/com/androidplotcom/shimmerresearch/biophysicalprocessingcom/shimmerresearch/utilityfunctions*.so", // Keep all debug symbols to prevent stripping issues
                 )
             // Exclude libraries that can't be stripped due to corrupt headers
             excludes +=

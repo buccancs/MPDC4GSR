@@ -1,13 +1,6 @@
 package com.topdon.ble;
 
-/**
- * Configuration class for Topdon devices.
- * 
- * Provides comprehensive configuration options for all Topdon device types
- * including thermal cameras, environmental sensors, and multi-sensor platforms.
- * 
- * @author IRCamera Topdon Integration Team
- */
+
 public class TopdonDeviceConfig {
     
     // Thermal camera resolutions
@@ -88,9 +81,7 @@ public class TopdonDeviceConfig {
     public boolean isCalibrationEnabled() { return enableCalibration; }
     public int getDataOutputFormat() { return dataOutputFormat; }
     
-    /**
-     * Builder class for TopdonDeviceConfig
-     */
+
     public static class Builder {
         private UnifiedBleManager.DeviceType deviceType = UnifiedBleManager.DeviceType.TOPDON_THERMAL;
         private String thermalResolution = RESOLUTION_256x192;
@@ -179,9 +170,7 @@ public class TopdonDeviceConfig {
         }
     }
     
-    /**
-     * Create default thermal camera configuration
-     */
+
     public static TopdonDeviceConfig createDefaultThermalConfig() {
         return new Builder()
             .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_THERMAL)
@@ -195,9 +184,7 @@ public class TopdonDeviceConfig {
             .build();
     }
     
-    /**
-     * Create default environmental sensor configuration
-     */
+
     public static TopdonDeviceConfig createDefaultEnvironmentalConfig() {
         return new Builder()
             .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_ENV)
@@ -207,9 +194,7 @@ public class TopdonDeviceConfig {
             .build();
     }
     
-    /**
-     * Create high-resolution thermal configuration
-     */
+
     public static TopdonDeviceConfig createHighResThermalConfig() {
         return new Builder()
             .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_THERMAL)
@@ -223,9 +208,7 @@ public class TopdonDeviceConfig {
             .build();
     }
     
-    /**
-     * Create multi-sensor configuration
-     */
+
     public static TopdonDeviceConfig createMultiSensorConfig() {
         return new Builder()
             .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_MULTI)

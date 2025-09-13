@@ -18,28 +18,7 @@ import com.topdon.ble.UnifiedBleManager
 import com.topdon.ble.ShimmerDevice
 import com.topdon.ble.ShimmerBleController
 
-/**
- * GSR (Galvanic Skin Response) sensor recorder using Shimmer3 GSR+ device with unified BLE support.
- *
- * This implementation uses the OFFICIAL Shimmer Android API combined with the UnifiedBleManager
- * for enhanced reliability, comprehensive device support, and cross-platform integration.
- * No stubs or simulation - full vendor SDK integration as required.
- *
- * Technical Requirements:
- * - Uses official Shimmer Android API through UnifiedBleManager for BLE communication
- * - 12-bit ADC resolution (0-4095 range) as mandated
- * - 128Hz sampling rate for high-frequency GSR analysis
- * - Proper start/stop command handling (0x07/0x20)
- * - Real-time data conversion from raw to microsiemens
- * - Enhanced Nordic BLE backend for improved reliability
- *
- * Connection Modes:
- * - High-Mobility Mode: Direct BLE connection to Shimmer3 GSR+ via UnifiedBleManager
- * - High-Integrity Mode: PC docked sensor via network relay
- * - Enhanced Mode: Cross-device coordination with thermal cameras and other sensors
- *
- * @author IRCamera Android Sensor Node (Spoke) - Enhanced Unified BLE Integration
- */
+
 class GSRSensorRecorder(
     private val context: Context,
     override val sensorId: String = "gsr_shimmer_1",
@@ -53,18 +32,12 @@ class GSRSensorRecorder(
         private const val GSR_CHANNEL_ID = 0x01 // GSR sensor channel ID
         private const val GSR_RANGE_AUTO = 0x00 // Auto range setting
 
-        /**
-         * Check if all required permissions for GSR sensor are available
-         * This addresses the comment's requirement for proper permission handling
-         */
+
         fun hasRequiredPermissions(context: Context): Boolean {
             return hasBleScanningPermissions(context)
         }
 
-        /**
-         * Get list of missing permissions for GSR sensor
-         * This can be used by UI to request specific permissions
-         */
+
         fun getMissingPermissions(context: Context): List<String> {
             val missing = mutableListOf<String>()
             if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
@@ -84,11 +57,7 @@ class GSRSensorRecorder(
             return missing
         }
 
-        /**
-         * Check if the app has comprehensive BLE scanning permissions (including location)
-         * @param context Application context
-         * @return true if all BLE scanning permissions are granted, false otherwise
-         */
+
         fun hasComprehensiveBluetoothPermissions(context: Context): Boolean {
             return hasBleScanningPermissions(context)
         }
@@ -663,11 +632,7 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Callback for processing GSR samples and streaming to PC hub
-     * This method is called whenever a new GSR sample is available
-     * Enhanced with comprehensive data persistence and cross-sensor timestamp alignment
-     */
+
     private fun onGSRSampleReceived(sample: GSRSample) {
         try {
             // Update sample count and sequence
@@ -722,10 +687,7 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Calculate resistance in kΩ from GSR conductance in µS
-     * Formula: R = 1 / G (where G is in Siemens, R is in Ohms)
-     */
+
     private fun calculateResistanceFromGSR(gsrMicrosiemens: Double): Double {
         return if (gsrMicrosiemens > 0) {
             1000000.0 / gsrMicrosiemens // Convert µS to kΩ
@@ -734,9 +696,7 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Determine current recording mode based on active components
-     */
+
     private fun determineRecordingMode(): String {
         return when {
             realShimmerGSRRecorder != null && unifiedBleManager != null -> "shimmer_unified_ble"
@@ -746,10 +706,7 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Configure GSR sample callback for real-time streaming
-     * This integrates with the existing GSR recording modules
-     */
+
     private fun setupGSRSampleCallback() {
         try {
             // Setup callback for Enhanced Shimmer recorder
@@ -881,9 +838,7 @@ class GSRSensorRecorder(
         _errorFlow.emit(error)
     }
 
-    /**
-     * Get connection status of the GSR devices
-     */
+
     fun getShimmerConnectionStatus(): String {
         return when {
             realShimmerGSRRecorder != null && realShimmerGSRRecorder!!.isDeviceConnected() -> "Enhanced Shimmer Connected (Merged BLE Backend)"
@@ -893,16 +848,12 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Check if device connection is available
-     */
+
     private fun isDeviceConnected(): Boolean {
         return realShimmerGSRRecorder?.isDeviceConnected() ?: false
     }
 
-    /**
-     * Get current GSR device configuration
-     */
+
     fun getGSRConfiguration(): Map<String, Any> {
         return mapOf(
             "sampling_rate_hz" to samplingRateHz,
@@ -917,10 +868,7 @@ class GSRSensorRecorder(
         )
     }
 
-    /**
-     * Get available Shimmer devices for connection
-     * This can be used by UI to show device selection dialog
-     */
+
     suspend fun getAvailableShimmerDevices(): List<String> {
         return withContext(Dispatchers.IO) {
             try {
@@ -947,10 +895,7 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Request connection to a specific Shimmer device
-     * This addresses the comment's requirement for device selection capability
-     */
+
     suspend fun connectToShimmerDevice(deviceAddress: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {

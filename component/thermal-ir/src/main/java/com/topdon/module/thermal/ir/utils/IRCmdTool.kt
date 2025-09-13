@@ -16,10 +16,7 @@ import java.io.InputStream
 import kotlin.math.ceil
 import kotlin.math.floor
 
-/**
- * I r cmd tool tools for thermal imaging processing.
- * Contains specialized algorithms and processing functions.
- */
+
 object IRCmdTool {
     val TAG = "IRCmdTool"
     var dispNumber = 30
@@ -87,7 +84,7 @@ object IRCmdTool {
                     Log.e(TAG, "read file fail ")
                 }
                 parameters[length] = 1
-\1先从buffer中查找是否有save的对齐data，没有用initializedata
+//先从buffer中查找是否有save的对齐data，没有用initializedata
                 val alignByte = SharedManager.getManualData(snStr)
                 System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
                 XLog.w("机芯没存在校正数据，请联系厂商确认")
@@ -119,10 +116,7 @@ object IRCmdTool {
             }
     }
 
-    /**
-\1setemissivity unit:cnt(128cnt = 1)
-     * @param value 1 ~ 128
-     */
+
     fun setTpdEms(
         irCmd: IRCMD?,
         value: Int,
@@ -131,12 +125,7 @@ object IRCmdTool {
         setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_EMS, value = data)
     }
 
-    /**
-\1set距离 unit:cnt(128cnt = 1m, 默认值: 0.25 * 128 = 32)
-     * @param value 0 ~ 25600
-     *
-\1现有sdk在setTPD_PROP_DISTANCE抛异常
-     */
+
     fun setTpdDis(
         irCmd: IRCMD?,
         value: Int,
@@ -145,10 +134,7 @@ object IRCmdTool {
         setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_DISTANCE, value = data)
     }
 
-    /**
-\1set对比度
-     * @param value 0 ~ 255
-     */
+
     fun setLevelContrast(
         irCmd: IRCMD?,
         value: Int,
@@ -157,11 +143,7 @@ object IRCmdTool {
         setImageParams(irCmd = irCmd, params = CommonParams.PropImageParams.IMAGE_PROP_LEVEL_CONTRAST, value = data)
     }
 
-    /**
-\1set锐化
-     * @param value 0 ~ 4
-     *
-     */
+
     fun setLevelDdd(
         irCmd: IRCMD?,
         value: Int,
@@ -178,9 +160,7 @@ object IRCmdTool {
         setImageParams(irCmd = irCmd, params = CommonParams.PropImageParams.IMAGE_PROP_LEVEL_DDE, value = data)
     }
 
-    /**
-\1set自动gain
-     */
+
     fun setLevelAgc(
         irCmd: IRCMD?,
         value: Boolean,
@@ -194,10 +174,7 @@ object IRCmdTool {
         setImageParams(irCmd = irCmd, params = CommonParams.PropImageParams.IMAGE_PROP_ONOFF_AGC, value = data)
     }
 
-    /**
-\1查询gain模式
-\1@return 1:高gain(常温)    0:低gain(high temperature)
-     */
+
     fun getTpdGainSel(irCmd: IRCMD?): Int {
         val result = queryTpdParam(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL)
         return if (result == CommonParams.PropTPDParamsValue.GAINSELStatus.GAIN_SEL_HIGH.value) {
@@ -207,10 +184,7 @@ object IRCmdTool {
         }
     }
 
-    /**
-\1setgain模式
-\1@param value 1:高gain(常温)    0:低gain(high temperature)
-     */
+
     fun setTpdGainSel(
         irCmd: IRCMD?,
         value: Int,
@@ -224,9 +198,7 @@ object IRCmdTool {
         return setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, value = data)
     }
 
-    /**
-\1查询Tpd
-     */
+
     fun queryTpdParam(
         irCmd: IRCMD?,
         params: CommonParams.PropTPDParams,
@@ -236,9 +208,7 @@ object IRCmdTool {
         return value[0]
     }
 
-    /**
-\1查询Image
-     */
+
     fun queryImageParam(
         irCmd: IRCMD?,
         params: CommonParams.PropImageParams,
@@ -248,9 +218,7 @@ object IRCmdTool {
         return value[0]
     }
 
-    /**
-\1setTpd
-     */
+
     private fun setTpdParams(
         irCmd: IRCMD?,
         params: CommonParams.PropTPDParams,
@@ -264,9 +232,7 @@ object IRCmdTool {
         }
     }
 
-    /**
-\1setimageparameter
-     */
+
     private fun setImageParams(
         irCmd: IRCMD?,
         params: CommonParams.PropImageParams,
@@ -280,11 +246,7 @@ object IRCmdTool {
         }
     }
 
-    /**
-\1配准
-\1水平移动
-     * @param value (-20 ~ 60)
-     */
+
     fun setDisp(
         dualView: BaseDualView?,
         value: Int,
@@ -302,9 +264,7 @@ object IRCmdTool {
         }
     }
 
-    /**
-\1@param moveX 在当前基础上要再偏移的数值
-     */
+
     fun setAlignTranslate(
         dualView: BaseDualView?,
         moveX: Int,
@@ -323,9 +283,7 @@ object IRCmdTool {
         dualView?.dualUVCCamera?.setAlignTranslateParameter(newSrc)
     }
 
-    /**
-\1打快门
-     */
+
     fun shutter(
         irCmd: IRCMD?,
         syncImage: SynchronizedBitmap,
@@ -333,14 +291,12 @@ object IRCmdTool {
         if (syncImage.type == 1) {
             irCmd?.tc1bShutterManual()
         } else {
-\1执行这段
+//执行这段
             irCmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
         }
     }
 
-    /**
-\1自动快门
-     */
+
     fun autoShutter(
         irCmd: IRCMD?,
         flag: Boolean,
@@ -349,11 +305,7 @@ object IRCmdTool {
         irCmd?.setPropAutoShutterParameter(CommonParams.PropAutoShutterParameter.SHUTTER_PROP_SWITCH, data)
     }
 
-    /**
-\1enabled等温尺
-\1@param highC temperature上限，单位摄氏度
-\1@param lowC temperature下限，单位摄氏度
-     */
+
     fun setIsoColorOpen(
         dualUVCCamera: DualUVCCamera?,
         highC: Float,
@@ -376,27 +328,17 @@ object IRCmdTool {
         dualUVCCamera?.setTempH(tempHFin) // 高温 - convert to Int
     }
 
-    /**
-\1disabled等温尺
-     */
+
     fun setIsoColorClose(dualUVCCamera: DualUVCCamera?) {
         dualUVCCamera?.setIsothermal(DualCameraParams.IsothermalState.OFF)
     }
 
-    /**
-\1amplification(仅对thermal imaging有效)
-\1ZoomScaleStep.ZOOM_STEP1: 2级倍率
-\1ZoomScaleStep.ZOOM_STEP2: 4级倍率
-\1ZoomScaleStep.ZOOM_STEP3: 8级倍率
-\1ZoomScaleStep.ZOOM_STEP4: 16级倍率
-     */
+
     fun setZoomUp(irCmd: IRCMD?) {
         irCmd?.zoomCenterUp(CommonParams.PreviewPathChannel.PREVIEW_PATH0, CommonParams.ZoomScaleStep.ZOOM_STEP2)
     }
 
-    /**
-\1缩小
-     */
+
     fun setZoomDown(irCmd: IRCMD?) {
         irCmd?.zoomCenterDown(CommonParams.PreviewPathChannel.PREVIEW_PATH0, CommonParams.ZoomScaleStep.ZOOM_STEP2)
     }

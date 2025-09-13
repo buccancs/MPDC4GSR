@@ -12,19 +12,11 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Utility class for safe Bluetooth operations with proper permission handling
- * Provides wrapper methods that check permissions before calling Bluetooth APIs
- * Enhanced with comprehensive runtime permission support for Shimmer GSR integration
- */
+
 public class BluetoothPermissionUtils {
     private static final String TAG = "BluetoothPermissionUtils";
     
-    /**
-     * Check if the app has required Bluetooth permissions for the current Android version
-     * @param context Application context
-     * @return true if permissions are granted, false otherwise
-     */
+
     public static boolean hasBluetoothPermissions(Context context) {
         if (context == null) return false;
         
@@ -39,11 +31,7 @@ public class BluetoothPermissionUtils {
         }
     }
     
-    /**
-     * Check if the app has all required permissions for BLE scanning (including location)
-     * @param context Application context
-     * @return true if all scanning permissions are granted, false otherwise
-     */
+
     public static boolean hasBleScanningPermissions(Context context) {
         if (context == null) return false;
         
@@ -68,11 +56,7 @@ public class BluetoothPermissionUtils {
         return hasLocationPermission;
     }
     
-    /**
-     * Get list of all missing permissions required for Shimmer GSR integration
-     * @param context Application context
-     * @return List of missing permission strings that should be requested
-     */
+
     public static List<String> getMissingPermissions(Context context) {
         List<String> missingPermissions = new ArrayList<>();
         
@@ -109,11 +93,7 @@ public class BluetoothPermissionUtils {
         return missingPermissions;
     }
     
-    /**
-     * Get human-readable description of why permissions are needed
-     * @param permission The permission string
-     * @return User-friendly explanation of why this permission is required
-     */
+
     public static String getPermissionRationale(String permission) {
         switch (permission) {
             case Manifest.permission.BLUETOOTH_SCAN:
@@ -132,11 +112,7 @@ public class BluetoothPermissionUtils {
         }
     }
     
-    /**
-     * Check if the app has BLUETOOTH_CONNECT permission (required for device property access)
-     * @param context Application context
-     * @return true if permission is granted, false otherwise
-     */
+
     public static boolean hasBluetoothConnectPermission(Context context) {
         if (context == null) return false;
         
@@ -147,11 +123,7 @@ public class BluetoothPermissionUtils {
         }
     }
     
-    /**
-     * Check if the app has BLUETOOTH_SCAN permission (required for scanning operations)
-     * @param context Application context
-     * @return true if permission is granted, false otherwise
-     */
+
     public static boolean hasBluetoothScanPermission(Context context) {
         if (context == null) return false;
         
@@ -163,12 +135,7 @@ public class BluetoothPermissionUtils {
         }
     }
     
-    /**
-     * Safely get device name with permission check
-     * @param context Application context
-     * @param device Bluetooth device
-     * @return Device name or fallback string if permission denied
-     */
+
     public static String getDeviceName(Context context, BluetoothDevice device) {
         if (device == null) return "Unknown Device";
         
@@ -186,12 +153,7 @@ public class BluetoothPermissionUtils {
         }
     }
     
-    /**
-     * Safely get device address with permission check
-     * @param context Application context
-     * @param device Bluetooth device
-     * @return Device address or fallback string if permission denied
-     */
+
     public static String getDeviceAddress(Context context, BluetoothDevice device) {
         if (device == null) return "Unknown Address";
         
@@ -208,12 +170,7 @@ public class BluetoothPermissionUtils {
         }
     }
     
-    /**
-     * Safely get device type with permission check
-     * @param context Application context
-     * @param device Bluetooth device
-     * @return Device type or DEVICE_TYPE_UNKNOWN if permission denied
-     */
+
     public static int getDeviceType(Context context, BluetoothDevice device) {
         if (device == null) return BluetoothDevice.DEVICE_TYPE_UNKNOWN;
         
@@ -230,12 +187,7 @@ public class BluetoothPermissionUtils {
         }
     }
     
-    /**
-     * Safely get device bond state with permission check
-     * @param context Application context
-     * @param device Bluetooth device
-     * @return Bond state or BOND_NONE if permission denied
-     */
+
     public static int getDeviceBondState(Context context, BluetoothDevice device) {
         if (device == null) return BluetoothDevice.BOND_NONE;
         

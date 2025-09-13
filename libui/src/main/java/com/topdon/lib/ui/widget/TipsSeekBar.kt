@@ -11,13 +11,8 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
 
-/**
- * TipsSeekBar class
- */
-/**
- * Custom Tips seek bar view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
     private val seekPercent: Float
@@ -38,9 +33,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             }
         }
 
-    /**
-     * 指示 View current显示的文字.
-     */
+
     var valueText: String
         get() {
             return tvTips.text.toString()
@@ -49,19 +42,13 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             tvTips.text = value
         }
 
-    /**
-     * seekBar 的 onProgressChange event listener.
-     */
+
     var onProgressChangeListener: ((progress: Int, fromUser: Boolean) -> Unit)? = null
 
-    /**
-     * seekBar 的 onStopTrackingTouch event listener.
-     */
+
     var onStopTrackingTouch: ((progress: Int) -> Unit)? = null
 
-    /**
-     * 根据进度格式化指示 View 文字.
-     */
+
     var valueFormatListener: ((progress: Int) -> CharSequence?)? = null
         set(value) {
             tvTips.text = value?.invoke(seekBar.progress)

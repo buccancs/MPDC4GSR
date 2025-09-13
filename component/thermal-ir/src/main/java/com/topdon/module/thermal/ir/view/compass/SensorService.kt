@@ -9,10 +9,7 @@ import com.kylecorry.andromeda.sense.compass.ICompass
 // Ex. SensorPurpose.Background, SensorPurpose.Calibration, SensorPurpose.Diagnostics
 // Using those, it can adjust settings to be more appropriate for the use case
 
-/**
- * Sensor background service for thermal imaging operations.
- * Performs long-running thermal data processing tasks.
- */
+
 class SensorService(ctx: Context) {
     private var context = ctx.applicationContext
 

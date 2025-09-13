@@ -1,9 +1,6 @@
 package com.infisense.usbir.tools
 
-/**
- * @author: CaiSongL
- * @date: 2023/5/18 9:46
- */
+
 object OpencvTools {
     //    init {
 //        System.loadLibrary("opencv_java4");

@@ -10,12 +10,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.topdon.libcom.R
 
-/**
- *
- * 高低温闪烁动画
- * @author: CaiSongL
- * @date: 2023/4/28 15:52
- */
+
 class TempLayout : LinearLayout {
     companion object {
         val TYPE_HOT = 1 // 高温预警

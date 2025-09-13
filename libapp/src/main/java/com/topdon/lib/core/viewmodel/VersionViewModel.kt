@@ -10,10 +10,7 @@ import com.topdon.lib.core.utils.SingleLiveEvent
 class VersionViewModel : BaseViewModel() {
     val updateLiveData = SingleLiveEvent<VersionUpData>()
 
-    /**
-     * forcedUpgradeFlag: 1 强制update    0 非强制update
-     * descType: 包含3时,显示给用户(descType获取升级描述信息)
-     */
+
     fun checkVersion() {
 //        viewModelScope.launch(Dispatchers.IO) {
 //            try {
@@ -57,9 +54,7 @@ class VersionViewModel : BaseViewModel() {
         updateLiveData.postValue(versionUpData)
     }
 
-    /**
-     * 获取升级信息
-     */
+
     private fun getDescription(list: List<SoftConfigOtherTypeVO>?): String {
         list?.forEach {
             if (it.descType == 3) {

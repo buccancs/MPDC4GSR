@@ -7,20 +7,10 @@ import com.topdon.lib.core.R
 import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.MenuType
 
-/**
- * temperature measurement模式-menu6-high/low temperature档 menuAdapter used for，single selection且必须selected其中一个.
- *
- * 低温档(高gain)、高温档(低gain)、auto switch
- *
- * Created by LCG on 2024/11/28.
- */
+
 @SuppressLint("NotifyDataSetChanged")
 internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
-    /**
-     * 是否使用Fahrenheit作为单位
-     *
-     * true-Fahrenheit false-Celsius
-     */
+
     var isUnitF = false
         set(value) {
             if (field != value) {
@@ -29,14 +19,7 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
             }
         }
 
-    /**
-     * currentselected的level code.
-     *
-     * Due to legacy constraints (saved in SharedPreferences), the code values are:
-     * - Auto switch: -1
-     * - High temperature (low gain): 0
-     * - Normal temperature (high gain): 1
-     */
+
     var selectCode: Int = 1
         set(value) {
             if (field != value) {
@@ -45,9 +28,7 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
             }
         }
 
-    /**
-     * menuclickevent listener，single selection。
-     */
+
     var onTempLevelListener: ((code: Int) -> Unit)? = null
 
     private val dataList: ArrayList<Data> = ArrayList(6)
@@ -88,17 +69,12 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
             "${start}\n~\n$endInclusive°C"
         }
 
-    /**
-     * 将指定 Celsius°C 转换为 Fahrenheit°F
-     */
+
     private fun c2f(cValue: Int): Int = (cValue * 1.8f + 32).toInt()
 
     override fun getItemCount(): Int = dataList.size
 
-/**
- * Custom Data view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

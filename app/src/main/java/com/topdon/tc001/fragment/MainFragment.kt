@@ -40,11 +40,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
-/**
- * 首页 Fragment.
- *
- * Created by LCG on 2024/4/18.
- */
+
 @SuppressLint("NotifyDataSetChanged")
 class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickListener {
     private lateinit var adapter: MyAdapter
@@ -224,36 +220,28 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     }
 
     private class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
-        /**
-         * 有线设备当前是否已连接.
-         */
+
         var hasConnectLine: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, 3)
             }
 
-        /**
-         * TS004 当前是否已连接.
-         */
+
         var hasConnectTS004: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, itemCount)
             }
 
-        /**
-         * TC007 当前是否已连接.
-         */
+
         var hasConnectTC007: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, itemCount)
             }
 
-        /**
-         * TC007 设备电池信息.
-         */
+
         var tc007Battery: BatteryInfo? = null
             set(value) {
                 if (field != value) {
@@ -434,10 +422,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
     }
 
-    /**
-     * Show GSR Multi-modal Recording options for research purposes
-     * Accessed via long-press on app title or GSR FAB
-     */
+
     private fun showGSROptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("GSR Multi-modal Recording")
@@ -467,10 +452,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             .create().show()
     }
 
-    /**
-     * Show dual-mode camera options (RAW 50MP vs 4K Video)
-     * Enhanced for Samsung S22 compatibility
-     */
+
     private fun showDualModeCameraOptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera System")
@@ -486,9 +468,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             .create().show()
     }
 
-    /**
-     * Launch the enhanced dual-mode camera system
-     */
+
     private fun launchDualModeCamera(initialMode: String) {
         try {
             val intent = Intent(requireContext(), com.topdon.tc001.camera.integration.DualModeCameraActivity::class.java)
@@ -503,9 +483,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
     }
 
-    /**
-     * Show dual-mode integration example for development/testing
-     */
+
     private fun showDualModeIntegrationExample() {
         // This would normally launch the DualModeIntegrationExample
         // For now, show a placeholder dialog with implementation details

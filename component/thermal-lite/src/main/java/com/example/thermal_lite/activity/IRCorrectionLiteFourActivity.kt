@@ -15,12 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-/**
- *
-\1锅盖矫正
- * @author: CaiSongL
- * @date: 2023/8/4 9:06
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class IRCorrectionLiteFourActivity : BaseActivity() {
     private lateinit var binding: ActivityIrCorrectionLiteFourBinding
@@ -61,7 +56,7 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
         }
 
         binding.timeDownView.postDelayed({
-\1开始矫正
+//开始矫正
             if (binding.timeDownView.downTimeWatcher == null)
                 {
                     binding.timeDownView.setOnTimeDownListener(

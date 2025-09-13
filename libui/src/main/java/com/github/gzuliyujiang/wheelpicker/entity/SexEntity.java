@@ -21,10 +21,7 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/10/28 9:17
- */
+
 public class SexEntity implements TextProvider, Serializable {
     private static final boolean IS_CHINESE;
     private String id;

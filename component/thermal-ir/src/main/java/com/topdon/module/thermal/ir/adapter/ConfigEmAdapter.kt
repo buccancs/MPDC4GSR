@@ -15,14 +15,8 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.utils.IRConfigData
 
-/**
-\1temperature correction（ambient temperature、temperature measurement距离、emissivity修改那个页面）常用emissivity表 Adapter.
- * Created by LCG on 2024/11/13.
- */
-/**
- * Custom Config em view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
 class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
     private val dataList: ArrayList<IRConfigData> = IRConfigData.irConfigData(context)
 
@@ -45,10 +39,7 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
 
     override fun getItemCount(): Int = dataList.size
 
-/**
- * Custom View holder view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
         val tvEmName: TextView = rootView.findViewById(R.id.tv_em_name)
         val tvEmNum: TextView = rootView.findViewById(R.id.tv_em_num)

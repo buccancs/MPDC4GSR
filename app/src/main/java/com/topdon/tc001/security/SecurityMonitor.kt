@@ -9,11 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Security Monitor for Phase 4 Security Enhancement
- *
- * Provides real-time security monitoring, intrusion detection, and threat analysis
- */
+
 class SecurityMonitor(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -113,9 +109,7 @@ class SecurityMonitor(
 
     private var securityListener: SecurityEventListener? = null
 
-    /**
-     * Initialize security monitoring
-     */
+
     fun initialize(): Boolean {
         return try {
             Log.i(TAG, "Initializing security monitoring system")
@@ -146,16 +140,12 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Set security event listener
-     */
+
     fun setSecurityEventListener(listener: SecurityEventListener) {
         this.securityListener = listener
     }
 
-    /**
-     * Start security monitoring
-     */
+
     fun startMonitoring() {
         if (isMonitoring.get()) {
             Log.w(TAG, "Security monitoring already started")
@@ -200,9 +190,7 @@ class SecurityMonitor(
         )
     }
 
-    /**
-     * Stop security monitoring
-     */
+
     fun stopMonitoring() {
         isMonitoring.set(false)
         scope.cancel()
@@ -221,9 +209,7 @@ class SecurityMonitor(
         )
     }
 
-    /**
-     * Report connection attempt
-     */
+
     fun reportConnectionAttempt(
         deviceId: String,
         successful: Boolean,
@@ -259,9 +245,7 @@ class SecurityMonitor(
         )
     }
 
-    /**
-     * Report security event
-     */
+
     fun reportSecurityEvent(
         eventType: String,
         details: Map<String, Any>,
@@ -289,9 +273,7 @@ class SecurityMonitor(
         )
     }
 
-    /**
-     * Check session activity for anomalies
-     */
+
     fun checkSessionActivity(deviceId: String) {
         val activity = sessionActivities[deviceId] ?: return
         val currentTime = System.currentTimeMillis()
@@ -328,9 +310,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Perform comprehensive security check
-     */
+
     private suspend fun performSecurityCheck() {
         val currentTime = System.currentTimeMillis()
 
@@ -352,9 +332,7 @@ class SecurityMonitor(
         updateMonitoringStatistics()
     }
 
-    /**
-     * Check for brute force attacks
-     */
+
     private fun checkBruteForceAttack(deviceId: String) {
         val recentFailures = getRecentFailedLogins(deviceId, 60 * 60 * 1000L) // Last hour
 
@@ -371,9 +349,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Check connection patterns for anomalies
-     */
+
     private fun checkConnectionPatterns() {
         connectionAttempts.forEach { (deviceId, attempts) ->
             val recentAttempts =
@@ -395,17 +371,13 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Check for certificate violations
-     */
+
     private fun checkCertificateViolations() {
         // Placeholder for certificate violation detection
         // This would integrate with CertificateManager to detect invalid or suspicious certificates
     }
 
-    /**
-     * Analyze threat patterns using simple heuristics
-     */
+
     private fun analyzeThreatPatterns() {
         val recentAlerts = getRecentAlerts(60 * 60 * 1000L) // Last hour
 
@@ -443,9 +415,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Update session activity
-     */
+
     private fun updateSessionActivity(
         deviceId: String,
         activityType: String,
@@ -482,9 +452,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Determine if activity is suspicious
-     */
+
     private fun isSuspiciousActivity(
         activityType: String,
         details: Map<String, Any>,
@@ -499,9 +467,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Generate security alert
-     */
+
     private fun generateSecurityAlert(
         alertType: String,
         severity: Severity,
@@ -546,9 +512,7 @@ class SecurityMonitor(
         )
     }
 
-    /**
-     * Determine event severity
-     */
+
     private fun determineSeverity(
         eventType: String,
         details: Map<String, Any>,
@@ -566,9 +530,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Generate alert description
-     */
+
     private fun generateAlertDescription(
         alertType: String,
         details: Map<String, Any>,
@@ -586,16 +548,12 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Generate unique alert ID
-     */
+
     private fun generateAlertId(): String {
         return "ALERT_${System.currentTimeMillis()}_${(Math.random() * 1000).toInt()}"
     }
 
-    /**
-     * Get recent failed logins for device
-     */
+
     private fun getRecentFailedLogins(
         deviceId: String,
         timeWindowMs: Long,
@@ -604,9 +562,7 @@ class SecurityMonitor(
         return failedLogins[deviceId]?.filter { it > cutoffTime } ?: emptyList()
     }
 
-    /**
-     * Get recent security alerts
-     */
+
     private fun getRecentAlerts(timeWindowMs: Long): List<SecurityAlert> {
         val cutoffTime = System.currentTimeMillis() - timeWindowMs
         synchronized(securityAlerts) {
@@ -614,9 +570,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Perform periodic cleanup
-     */
+
     private fun performCleanup() {
         val currentTime = System.currentTimeMillis()
         val cleanupCutoff = currentTime - (24 * 60 * 60 * 1000L) // 24 hours
@@ -651,25 +605,19 @@ class SecurityMonitor(
         )
     }
 
-    /**
-     * Update monitoring statistics
-     */
+
     private fun updateMonitoringStatistics() {
         // This could update dashboard metrics, send to monitoring systems, etc.
     }
 
-    /**
-     * Get security alerts
-     */
+
     fun getSecurityAlerts(limit: Int = 100): List<SecurityAlert> {
         synchronized(securityAlerts) {
             return securityAlerts.takeLast(limit)
         }
     }
 
-    /**
-     * Acknowledge security alert
-     */
+
     fun acknowledgeAlert(alertId: String): Boolean {
         synchronized(securityAlerts) {
             val alert = securityAlerts.find { it.id == alertId }
@@ -690,9 +638,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Get monitoring statistics
-     */
+
     fun getMonitoringStatistics(): JSONObject {
         return JSONObject().apply {
             put("monitoring_active", isMonitoring.get())
@@ -705,9 +651,7 @@ class SecurityMonitor(
         }
     }
 
-    /**
-     * Get comprehensive security diagnostics
-     */
+
     fun getSecurityDiagnostics(): JSONObject {
         return JSONObject().apply {
             put("monitoring_statistics", getMonitoringStatistics())

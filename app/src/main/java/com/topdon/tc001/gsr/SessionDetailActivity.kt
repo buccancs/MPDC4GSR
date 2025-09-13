@@ -7,10 +7,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionDetailBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-/**
- * Session Detail Activity
- * Detailed view of recording session with data analysis and export options
- */
+
 class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"

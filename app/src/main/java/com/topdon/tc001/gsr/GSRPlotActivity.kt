@@ -13,10 +13,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-/**
- * GSR Plot Activity
- * Advanced visualization of GSR data with multiple analysis views
- */
+
 class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     private lateinit var plotData: GSRDataViewActivity.GSRPlotData
 
@@ -244,9 +241,7 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
         }
     }
 
-    /**
-     * Custom formatter for time axis
-     */
+
     private class TimeFormatter : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
             val seconds = value.toInt()

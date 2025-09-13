@@ -10,10 +10,7 @@ import androidx.annotation.NonNull;
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.BluetoothPermissionUtils;
 
-/**
- * date: 2019/10/1 15:13
- * author: bichuanfeng
- */
+
 class LegacyScanner extends AbstractScanner implements BluetoothAdapter.LeScanCallback {
     private static final String TAG = "LegacyScanner";
     

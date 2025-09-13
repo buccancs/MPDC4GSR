@@ -24,9 +24,7 @@ object DeviceConfig {
     const val HIK_VENDOR_ID = 11231
     const val HIK_PRODUCT_ID = 258
 
-    /**
-     * 判断该 UsbDevice 是否为TC、TS插件式设备.
-     */
+
     fun UsbDevice.isTcTsDevice(): Boolean {
         return (productId == TOPDON_PRODUCT_ID && vendorId == TOPDON_VENDOR_ID) ||
             (productId == IR_PRODUCT_ID && vendorId == IR_VENDOR_ID) ||
@@ -34,16 +32,12 @@ object DeviceConfig {
             (productId == HIK_PRODUCT_ID && vendorId == HIK_VENDOR_ID)
     }
 
-    /**
-     * Executes usbdevice functionality.
-     */
+
     fun UsbDevice.isTcLiteDevice(): Boolean {
         return (productId == TCLITE_PRODUCT_ID && vendorId == TCLITE_VENDOR_ID)
     }
 
-    /**
-     * Executes usbdevice functionality.
-     */
+
     fun UsbDevice.isHik256(): Boolean = productId == HIK_PRODUCT_ID && vendorId == HIK_VENDOR_ID
 
     const val SKU = "TDTC001A11"

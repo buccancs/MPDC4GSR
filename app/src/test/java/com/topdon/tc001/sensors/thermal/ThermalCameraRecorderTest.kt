@@ -5,6 +5,7 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
 import com.topdon.lib.core.bean.event.device.DevicePermissionEvent
+import com.topdon.lib.core.config.DeviceConfig.isTcTsDevice
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -13,9 +14,7 @@ import org.junit.Assert.*
 import io.mockk.*
 import org.junit.After
 
-/**
- * Unit tests for ThermalCameraRecorder USB permission integration
- */
+
 @ExperimentalCoroutinesApi
 class ThermalCameraRecorderTest {
 

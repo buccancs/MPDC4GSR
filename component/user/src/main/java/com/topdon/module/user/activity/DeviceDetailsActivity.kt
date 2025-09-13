@@ -17,12 +17,7 @@ import com.topdon.module.user.R
 import kotlinx.coroutines.launch
 import com.topdon.lib.core.R as RCore
 
-/**
-\1TS004、TC007 device信息
- *
-\1需要传递parameter：
-\1- [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
     // View references - migrated from synthetic views
@@ -32,10 +27,7 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
     private lateinit var tvSn: TextView
     private lateinit var tvDeviceModel: TextView
 
-    /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
-     */
+
     private var isTC007 = false
 
     override fun initContentView() = R.layout.activity_device_details

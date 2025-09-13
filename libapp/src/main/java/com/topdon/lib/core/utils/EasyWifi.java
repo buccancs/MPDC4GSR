@@ -17,11 +17,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.topdon.lib.core.BaseApplication;
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/5/23 17:39
- **/
+
 public class EasyWifi {
     private static volatile EasyWifi mInstance;
     private WifiConnectCallback wifiConnectCallback;

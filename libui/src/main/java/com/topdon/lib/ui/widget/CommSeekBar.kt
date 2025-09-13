@@ -8,24 +8,11 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import kotlin.math.roundToInt
 import com.topdon.lib.ui.R as UiR
 
-/**
- * 支持竖向的 SeekBar。
- * 暂不支持 thumbOffset.
- */
-/**
- * Comm seek bar utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
-/**
- * CommSeekBar manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
+
 class CommSeekBar : AppCompatSeekBar {
-    /**
-     * 0-横向 1-竖向
-     */
+
     private val orientation: Int
 
     private var mMaxWidth = 48
@@ -122,9 +109,7 @@ class CommSeekBar : AppCompatSeekBar {
         }
     }
 
-    /**
-     * Calculates drawable based on input parameters.
-     */
+
     private fun calculateDrawable(
         w: Int,
         h: Int,
@@ -206,9 +191,7 @@ class CommSeekBar : AppCompatSeekBar {
         return true
     }
 
-    /**
-     * 通过级别分层进行粘性处理
-     */
+
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
@@ -216,9 +199,7 @@ class CommSeekBar : AppCompatSeekBar {
         }
     }
 
-    /**
-     * Handles touch gesture events.
-     */
+
     private fun trackTouchEvent(event: MotionEvent) {
         val y = event.y.roundToInt()
         progress =

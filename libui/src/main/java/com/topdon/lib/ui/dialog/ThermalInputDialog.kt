@@ -31,21 +31,10 @@ import com.topdon.lib.ui.adapter.ColorSelectAdapter
 import com.topdon.lib.ui.databinding.DialogThermalInputBinding
 import java.math.BigDecimal
 
-/**
- * 提示窗
- * create by fylder on 2018/6/15
- **/
 
-/**
- * Thermal input dialog for thermal imaging user interaction.
- * Provides specialized input and configuration interfaces.
- */
-/**
- * ThermalInputDialog displays modal dialog interface for user interaction.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
+
 class ThermalInputDialog : Dialog {
     private var action = 100 // 100:初始温度输入界面     201: 温度上限color选择界面   301: 温度下限color选择界面
 
@@ -58,16 +47,8 @@ class ThermalInputDialog : Dialog {
     }
 
     
-/**
- * Builder dialog for thermal imaging user interaction.
- * Provides specialized input and configuration interfaces.
- */
-/**
- * Builder handles thermal imaging functionality and processing.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
     class Builder {
         var dialog: ThermalInputDialog? = null
 
@@ -214,9 +195,7 @@ class ThermalInputDialog : Dialog {
             return this
         }
 
-    /**
-     * Executes dismiss functionality.
-     */
+
         fun dismiss() {
             this.dialog!!.dismiss()
         }
@@ -224,9 +203,7 @@ class ThermalInputDialog : Dialog {
         private val adapter by lazy { ColorSelectAdapter(context!!) }
         private lateinit var binding: DialogThermalInputBinding
 
-    /**
-     * Creates and configures a new  instance.
-     */
+
         fun create(): ThermalInputDialog {
             if (dialog == null) {
                 dialog = ThermalInputDialog(context!!, R.style.InfoDialog)
@@ -451,9 +428,7 @@ class ThermalInputDialog : Dialog {
             return dialog as ThermalInputDialog
         }
 
-    /**
-     * Executes sub functionality.
-     */
+
         fun sub(
             doubleValA: String?,
             doubleValB: String?,

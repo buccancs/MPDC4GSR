@@ -7,34 +7,18 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 
-/**
- * TC007 电池电量图标.
- *
- * Created by LCG on 2024/5/22.
- */
-/**
- * Custom Battery view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * BatteryView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
+
 class BatteryView : AppCompatImageView {
-    /**
-     * current电量
-     */
+    
     var battery = -1
         set(value) {
             field = value
             invalidate()
         }
 
-    /**
-     * current是否充电中
-     */
+    
     var isCharging = false
         set(value) {
             field = value

@@ -10,15 +10,8 @@ import org.bytedeco.javacv.FFmpegFrameRecorder
 import java.lang.ref.WeakReference
 import java.nio.ShortBuffer
 
-/**
-\1音频采集并且与视频合并一起
- * @author: CaiSongL
- * @date: 2023/3/28
- */
-/**
- * Audio record help utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
+
+
 class AudioRecordHelp private constructor() {
     private var audioRecord: AudioRecord? = null
     private var audioRecordRunnable: AudioRecordRunnable? = null
@@ -41,10 +34,7 @@ class AudioRecordHelp private constructor() {
     var type: Int = 0
     private var startRecordTime: Long = 0L
 
-/**
- * Audio util holder utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
+
 object AudioUtilHolder {
         val INSTANCE = AudioRecordHelp()
     }
@@ -96,9 +86,7 @@ object AudioUtilHolder {
                     audioData = ShortBuffer.allocate(bufferSize)
                 }
             audioRecord!!.startRecording()
-            /**
-\1音频进行循环编码
-             */
+
             try {
                 while (runAudioThread) {
                     bufferReadResult = audioRecord!!.read(audioData!!.array(), 0, audioData!!.capacity())
@@ -111,7 +99,7 @@ object AudioUtilHolder {
                                 VideoRecordFFmpeg.AUDIO_CHANNELS,
                                 audioData,
                             )
-\1Log.w("音频采集中2",""+recorder?.get()?.frameNumber)
+//Log.w("音频采集中2",""+recorder?.get()?.frameNumber)
                         }
                     } else
                         {
@@ -126,7 +114,7 @@ object AudioUtilHolder {
                             Thread.sleep(1000L / VideoRecordFFmpeg.RATE)
                         }
                 }
-\1Log.w("停止采集",""+recorder?.get()?.frameNumber)
+//Log.w("停止采集",""+recorder?.get()?.frameNumber)
             } catch (e: Exception) {
                 XLog.e("采集容器异常")
             }

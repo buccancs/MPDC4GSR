@@ -4,138 +4,90 @@ import android.bluetooth.BluetoothDevice;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-/**
- * Unified Device interface for all BLE devices in the system.
- * 
- * This interface provides a common API for interacting with both
- * Shimmer and Topdon BLE devices, enabling unified device management
- * and cross-device coordination.
- * 
- * @author IRCamera Unified BLE Integration Team
- */
+
 public interface UnifiedDevice {
     
-    /**
-     * Get the underlying Bluetooth device
-     */
+    
     @NonNull
     BluetoothDevice getBluetoothDevice();
     
-    /**
-     * Get device type
-     */
+    
     @NonNull
     UnifiedBleManager.DeviceType getDeviceType();
     
-    /**
-     * Get device address
-     */
+    
     @NonNull
     String getAddress();
     
-    /**
-     * Get device name
-     */
+    
     @Nullable
     String getName();
     
-    /**
-     * Check if device is connected
-     */
+    
     boolean isConnected();
     
-    /**
-     * Connect to device
-     */
+    
     void connect();
     
-    /**
-     * Disconnect from device
-     */
+    
     void disconnect();
     
-    /**
-     * Start data streaming
-     */
+    
     boolean startDataStreaming();
     
-    /**
-     * Stop data streaming
-     */
+    
     boolean stopDataStreaming();
     
-    /**
-     * Send command to device
-     */
+    
     boolean sendCommand(@NonNull byte[] command);
     
-    /**
-     * Get connection status
-     */
+    
     @NonNull
     ConnectionState getConnectionState();
     
-    /**
-     * Get signal strength (RSSI)
-     */
+    
     int getRssi();
     
-    /**
-     * Get device information
-     */
+    
     @NonNull
     DeviceInfo getDeviceInfo();
     
-    /**
-     * Set connection listener
-     */
+    
     void setConnectionListener(@Nullable UnifiedBleManager.UnifiedConnectionListener listener);
     
     // ========== Cross-Modal Synchronization Methods ==========
     
-    /**
-     * Get unique device identifier for cross-modal sync
-     */
+    
     @NonNull
     default String getDeviceId() {
         return getAddress();
     }
     
-    /**
-     * Get device name for cross-modal sync
-     */
+    
     @NonNull
     default String getDeviceName() {
         String name = getName();
         return name != null ? name : "Unknown Device";
     }
     
-    /**
-     * Start synchronized recording
-     */
+    
     default boolean startRecording(long timestamp) {
         return startDataStreaming();
     }
     
-    /**
-     * Stop synchronized recording
-     */
+    
     default boolean stopRecording(long timestamp) {
         return stopDataStreaming();
     }
     
-    /**
-     * Add synchronization mark
-     */
+    
     default boolean addSyncMark(long timestamp) {
         // Default implementation - send sync mark command
         byte[] syncCommand = new byte[]{0x00, 0x01}; // Generic sync mark
         return sendCommand(syncCommand);
     }
     
-    /**
-     * Device connection states
-     */
+    
     enum ConnectionState {
         DISCONNECTED,
         CONNECTING,
@@ -144,9 +96,7 @@ public interface UnifiedDevice {
         ERROR
     }
     
-    /**
-     * Device information container
-     */
+    
     class DeviceInfo {
         private final String deviceName;
         private final String deviceAddress;

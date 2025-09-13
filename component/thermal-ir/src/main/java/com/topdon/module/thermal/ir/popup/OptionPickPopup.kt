@@ -14,15 +14,8 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.view.MyTextView
 import com.topdon.module.thermal.ir.R
 
-/**
-\1option拾取 PopupWindow.
- *
- * Created by LCG on 2024/1/5.
- */
-/**
- * Custom Option pick popup view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
 class OptionPickPopup(
     private val context: Context,
     private val strArray: Array<String>,
@@ -32,20 +25,14 @@ class OptionPickPopup(
     private val recyclerView: RecyclerView by lazy { contentView.findViewById(R.id.recycler_view) }
 
     companion object {
-        /**
-\1option文字大小，单位 ***sp***
-         */
+        
         private const val TEXT_SIZE_SP: Float = 14f
 
-        /**
-\1option文字顶部或底部 padding，单位 ***dp***
-         */
+        
         private const val TEXT_PADDING: Float = 7f
     }
 
-    /**
-\1一个option被选中事件监听.
-     */
+    
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
 
     init {
@@ -88,9 +75,7 @@ class OptionPickPopup(
     }
 
     private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
-        /**
-\1item 点击事件监听.
-         */
+        
         var onItemClickListener: ((position: Int) -> Unit)? = null
 
         override fun onCreateViewHolder(

@@ -32,39 +32,25 @@ import java.lang.NumberFormatException
 import java.util.TimeZone
 import java.util.concurrent.CountDownLatch
 
-/**
- * 固件升级包
- */
+
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
-        /**
-         * TS004 固件升级包 软件encoding.
-         */
+
         private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
 
-        /**
-         * TC007 固件升级包 软件encoding.
-         */
+
         private const val TC007_SOFT_CODE = "TC007_FirmwareSW_Wireless"
 
-        /**
-         * TS004 apk 内置固件升级包版本.
-         */
+
         private const val TS004_FIRMWARE_VERSION = "V1.70"
 
-        /**
-         * TS004 apk 内置固件升级包文件名.
-         */
+
         private const val TS004_FIRMWARE_NAME = "TS004V1.70.zip"
 
-        /**
-         * TC007 apk 内置固件升级包版本.
-         */
+
         private const val TC007_FIRMWARE_VERSION = "V4.06"
 
-        /**
-         * TC007 apk 内置固件升级包文件名.
-         */
+
         private const val TC007_FIRMWARE_NAME = "TC007V4.06.zip"
 
         private const val USE_DEBUG_SN = false
@@ -74,31 +60,17 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         private const val TC007_DEBUG_RANDOM_NUM = "EN6L6Q"
     }
 
-    /**
-     * 用一个变量来存储请求state，避免重复请求.
-     */
+
     @Volatile
     private var isRequest = false
 
-    /**
-     * 查询固件升级包成功 LiveData.
-     * null表示查询成功但没有配固件升级包
-     */
+
     val firmwareDataLD: MutableLiveData<FirmwareData?> = MutableLiveData()
 
-    /**
-     * 查询固件升级包失败 LiveData.
-     * true-设备已被其他用户绑定错误 false-普通错误
-     */
+
     val failLD: MutableLiveData<Boolean> = MutableLiveData()
 
-    /**
-     * 一个固件升级包信息.
-     * @param version 该固件升级包版本，V1.00格式
-     * @param updateStr 升级文案信息
-     * @param downUrl 固件升级包 URL
-     * @param size 固件升级包大小，单位 byte
-     */
+
     data class FirmwareData(
         val version: String,
         val updateStr: String,
@@ -106,12 +78,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val size: Long,
     )
 
-    /**
-     * 执行一次固件升级包查询，结果发送往：
-     * - [firmwareDataLD] (成功)
-     * - [failLD] (失败)
-     * @param isTS004 true-TS004 false-TC007
-     */
+
     fun queryFirmware(isTS004: Boolean) {
         if (isRequest) { // 别催别催，在查了
             return
@@ -185,9 +152,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-     * 将 assets 中的固件升级包导出，并将相关信息 post 到对应 LiveData
-     */
+
     private fun getInfoFromAssets(
         isTS004: Boolean,
         firmware: String,
@@ -231,9 +196,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         isRequest = false
     }
 
-    /**
-     * 调接口走完整的获取固件升级包信息流程.
-     */
+
     private suspend fun getInfoFromNetwork(
         isTS004: Boolean,
         sn: String,
@@ -294,9 +257,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         isRequest = false
     }
 
-    /**
-     * 将设备 SN、注册码与current账号绑定.
-     */
+
     private suspend fun bindDevice(
         sn: String,
         randomNum: String,
@@ -313,9 +274,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-     * 查询指定 SN 的固件升级包list
-     */
+
     private suspend fun querySoftPackage(
         sn: String,
         softCode: String,
@@ -357,9 +316,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             return@withContext packageData
         }
 
-    /**
-     * 查询指定 SN 指定固件升级包的下载信息.
-     */
+
     private suspend fun queryDownloadUrl(
         sn: String,
         businessId: Int,
@@ -412,9 +369,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             0.0
         }
 
-    /**
-     * 用来解析 获取固件升级包list 接口返回的数据.
-     */
+
     private class PackageData {
         var records: List<Record>? = null
 
@@ -448,9 +403,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         )
     }
 
-    /**
-     * 用来解析 获取固件升级包对应下载信息 接口返回数据.
-     */
+
     private data class DownloadData(
         val downUrl: String?,
         val size: Long?,

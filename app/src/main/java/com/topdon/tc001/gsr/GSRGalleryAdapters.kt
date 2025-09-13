@@ -12,9 +12,7 @@ import com.csl.irCamera.databinding.ItemGsrRawImageFileBinding
 import com.csl.irCamera.databinding.ItemGsrVideoFileBinding
 import java.io.File
 
-/**
- * Adapter for GSR Data Files RecyclerView
- */
+
 class GSRDataAdapter(
     private val dataFiles: List<GSRDataFragment.GSRDataFile>,
     private val onItemClick: (GSRDataFragment.GSRDataFile) -> Unit,
@@ -77,9 +75,7 @@ class GSRDataAdapter(
     }
 }
 
-/**
- * Adapter for GSR Video Files RecyclerView
- */
+
 class GSRVideoAdapter(
     private val videoFiles: List<File>,
     private val onItemClick: (File) -> Unit,
@@ -151,9 +147,7 @@ class GSRVideoAdapter(
     }
 }
 
-/**
- * Adapter for GSR RAW Image Files RecyclerView
- */
+
 class GSRRawImageAdapter(
     private val rawImageFiles: List<File>,
     private val onItemClick: (File) -> Unit,
@@ -216,9 +210,7 @@ class GSRRawImageAdapter(
     }
 }
 
-/**
- * Adapter for GSR Sessions RecyclerView
- */
+
 class GSRSessionAdapter(
     private val sessions: List<GSRSessionFragment.GSRSessionInfo>,
     private val onItemClick: (GSRSessionFragment.GSRSessionInfo) -> Unit,

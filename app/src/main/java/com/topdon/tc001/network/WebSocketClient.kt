@@ -22,18 +22,7 @@ import javax.net.ssl.*
 import kotlin.math.min
 import kotlin.random.Random
 
-/**
- * WebSocket client for PC-to-phone communication
- * Phase 1 implementation - Android as WebSocket client connecting to PC WSS server
- *
- * Features:
- * - WebSocket Secure (WSS) connections with TLS
- * - mDNS/Zeroconf discovery of PC controllers
- * - Basic authentication (admin/admin)
- * - Auto-reconnection with exponential backoff (1-8s with jitter)
- * - WebSocket heartbeat (PING every 5s, disconnect on 15s silence)
- * - Persistent connection across network interruptions
- */
+
 class WebSocketClient(private val context: Context) {
     companion object {
         private const val TAG = "WebSocketClient"
@@ -196,16 +185,12 @@ class WebSocketClient(private val context: Context) {
         return builder.build()
     }
 
-    /**
-     * Set event listener for WebSocket events
-     */
+
     fun setEventListener(listener: WebSocketEventListener) {
         this.eventListener = listener
     }
 
-    /**
-     * Start discovery and connection process
-     */
+
     fun start() {
         if (isConnected.get()) {
             Log.w(TAG, "WebSocket client already connected")
@@ -219,9 +204,7 @@ class WebSocketClient(private val context: Context) {
         startServerDiscovery()
     }
 
-    /**
-     * Stop WebSocket client and cleanup resources
-     */
+
     fun stop() {
         Log.i(TAG, "Stopping WebSocket client")
         logger.log(StructuredLogger.LogLevel.INFO, "WebSocketClient", "stop_requested", emptyMap())
@@ -252,9 +235,7 @@ class WebSocketClient(private val context: Context) {
         eventListener?.onDisconnected("Client stopped")
     }
 
-    /**
-     * Start mDNS/NSD server discovery
-     */
+
     private fun startServerDiscovery() {
         if (!FeatureFlags.MDNS_ENABLE) {
             Log.w(TAG, "mDNS discovery disabled, trying manual connection")
@@ -336,9 +317,7 @@ class WebSocketClient(private val context: Context) {
             }
     }
 
-    /**
-     * Resolve discovered NSD service
-     */
+
     private fun resolveService(serviceInfo: NsdServiceInfo) {
         val resolveListener =
             object : NsdManager.ResolveListener {
@@ -381,9 +360,7 @@ class WebSocketClient(private val context: Context) {
         nsdManager.resolveService(serviceInfo, resolveListener)
     }
 
-    /**
-     * Try manual connection to common IP addresses
-     */
+
     private fun tryManualConnection() {
         val commonAddresses =
             listOf(
@@ -419,9 +396,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Connect to a specific server
-     */
+
     private fun connectToServer(serverInfo: ServerInfo) {
         if (isConnected.get()) {
             Log.w(TAG, "Already connected")
@@ -523,9 +498,7 @@ class WebSocketClient(private val context: Context) {
         okHttpClient.newWebSocket(request, webSocketListener)
     }
 
-    /**
-     * Perform protocol handshake
-     */
+
     private suspend fun performHandshake() {
         try {
             val handshakeMessage = ProtocolVersion.createHandshakeMessage(getDeviceId())
@@ -546,9 +519,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Perform authentication
-     */
+
     private suspend fun performAuthentication() {
         try {
             isAuthenticating.set(true)
@@ -583,9 +554,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Handle incoming WebSocket message
-     */
+
     private suspend fun handleMessage(text: String) {
         try {
             val message = JSONObject(text)
@@ -626,9 +595,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Handle protocol handshake response
-     */
+
     private suspend fun handleHandshakeResponse(message: JSONObject) {
         val authRequired = message.optBoolean("auth_required", false)
 
@@ -640,9 +607,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Handle authentication response
-     */
+
     private suspend fun handleAuthResponse(message: JSONObject) {
         isAuthenticating.set(false)
         val success = message.optBoolean("success", false)
@@ -680,9 +645,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Handle ping from server
-     */
+
     private suspend fun handlePing(message: JSONObject) {
         lastHeartbeatTime = System.currentTimeMillis()
 
@@ -697,31 +660,23 @@ class WebSocketClient(private val context: Context) {
         sendMessage(pongMessage)
     }
 
-    /**
-     * Handle heartbeat response
-     */
+
     private suspend fun handleHeartbeatResponse(message: JSONObject) {
         lastHeartbeatTime = System.currentTimeMillis()
         eventListener?.onHeartbeatReceived()
     }
 
-    /**
-     * Handle sync flash trigger
-     */
+
     private suspend fun handleSyncFlash(message: JSONObject) {
         eventListener?.onMessage("sync_flash", message)
     }
 
-    /**
-     * Handle session response
-     */
+
     private suspend fun handleSessionResponse(message: JSONObject) {
         eventListener?.onMessage(message.optString("message_type"), message)
     }
 
-    /**
-     * Handle error message
-     */
+
     private suspend fun handleError(message: JSONObject) {
         val errorType = message.optString("error_type", "unknown")
         val errorMessage = message.optString("error_message", "Unknown error")
@@ -740,9 +695,7 @@ class WebSocketClient(private val context: Context) {
         eventListener?.onError("Server error: $errorMessage", null)
     }
 
-    /**
-     * Start heartbeat monitoring
-     */
+
     private fun startHeartbeat() {
         heartbeatJob?.cancel()
         heartbeatJob =
@@ -778,9 +731,7 @@ class WebSocketClient(private val context: Context) {
             }
     }
 
-    /**
-     * Handle disconnection and start reconnection if needed
-     */
+
     private fun handleDisconnection(reason: String) {
         isConnected.set(false)
         isAuthenticated.set(false)
@@ -810,9 +761,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Start auto-reconnection with exponential backoff
-     */
+
     private fun startReconnection() {
         if (isReconnecting.get()) return
 
@@ -859,9 +808,7 @@ class WebSocketClient(private val context: Context) {
             }
     }
 
-    /**
-     * Stop server discovery
-     */
+
     private fun stopServerDiscovery() {
         try {
             // Note: We don't keep a reference to the discovery listener,
@@ -872,9 +819,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Send message to server
-     */
+
     suspend fun sendMessage(message: JSONObject) {
         try {
             val webSocket = this.webSocket.get()
@@ -910,9 +855,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Send session start request
-     */
+
     suspend fun sendSessionStart(sessionId: String = "") {
         val message =
             ProtocolVersion.createProtocolMessage(
@@ -925,9 +868,7 @@ class WebSocketClient(private val context: Context) {
         sendMessage(message)
     }
 
-    /**
-     * Send session stop request
-     */
+
     suspend fun sendSessionStop(sessionId: String = "") {
         val message =
             ProtocolVersion.createProtocolMessage(
@@ -940,9 +881,7 @@ class WebSocketClient(private val context: Context) {
         sendMessage(message)
     }
 
-    /**
-     * Send status request
-     */
+
     suspend fun sendStatusRequest() {
         val message =
             ProtocolVersion.createProtocolMessage(
@@ -954,28 +893,20 @@ class WebSocketClient(private val context: Context) {
         sendMessage(message)
     }
 
-    /**
-     * Get connection status
-     */
+
     fun isConnected(): Boolean = isConnected.get()
 
     fun isAuthenticated(): Boolean = isAuthenticated.get()
 
     fun isReconnecting(): Boolean = isReconnecting.get()
 
-    /**
-     * Get current server info
-     */
+
     fun getCurrentServer(): ServerInfo? = currentServerInfo.get()
 
-    /**
-     * Get discovered servers
-     */
+
     fun getDiscoveredServers(): Map<String, ServerInfo> = discoveredServers.toMap()
 
-    /**
-     * Get device ID
-     */
+
     private fun getDeviceId(): String {
         return android.provider.Settings.Secure.getString(
             context.contentResolver,
@@ -985,9 +916,7 @@ class WebSocketClient(private val context: Context) {
 
     // Phase 2 - Enhanced Time Synchronization & Session Management
 
-    /**
-     * Initialize Phase 2 services for enhanced time sync and session management
-     */
+
     private fun initializePhase2Services() {
         // Initialize enhanced time synchronization service
         timeSyncService =
@@ -1053,9 +982,7 @@ class WebSocketClient(private val context: Context) {
         Log.i(TAG, "Phase 2 services initialized: Enhanced Time Sync + Session Management")
     }
 
-    /**
-     * Stop Phase 2 services
-     */
+
     private fun stopPhase2Services() {
         timeSyncService?.stop()
         timeSyncService = null
@@ -1068,9 +995,7 @@ class WebSocketClient(private val context: Context) {
 
     // Phase 3 - File Transfer & Data Management
 
-    /**
-     * Initialize Phase 3 services for file transfer and data management
-     */
+
     private fun initializePhase3Services() {
         // Initialize file upload service
         fileUploadService =
@@ -1098,9 +1023,7 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * Stop Phase 3 services
-     */
+
     private fun stopPhase3Services() {
         fileUploadService?.shutdown()
         fileUploadService = null
@@ -1110,9 +1033,7 @@ class WebSocketClient(private val context: Context) {
         Log.i(TAG, "Phase 3 services stopped")
     }
 
-    /**
-     * Perform cross-device synchronization
-     */
+
     private fun performCrossDeviceSync(devices: List<SessionManager.DeviceInfo>) {
         GlobalScope.launch {
             try {
@@ -1159,9 +1080,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Create new recording session
-     */
+
     fun createRecordingSession(metadata: Map<String, Any> = emptyMap()): String? {
         val manager = sessionManager ?: return null
         val sessionId = manager.createSession(metadata)
@@ -1177,37 +1096,27 @@ class WebSocketClient(private val context: Context) {
         return sessionId
     }
 
-    /**
-     * Start synchronized recording across connected devices
-     */
+
     fun startSynchronizedRecording(): Boolean {
         return sessionManager?.startSyncRecording() ?: false
     }
 
-    /**
-     * Stop synchronized recording
-     */
+
     fun stopSynchronizedRecording() {
         sessionManager?.stopSyncRecording()
     }
 
-    /**
-     * Get enhanced time synchronization diagnostics
-     */
+
     fun getTimeSyncDiagnostics(): JSONObject {
         return timeSyncService?.getDiagnostics() ?: JSONObject()
     }
 
-    /**
-     * Get session management diagnostics
-     */
+
     fun getSessionDiagnostics(): JSONObject {
         return sessionManager?.getDiagnostics() ?: JSONObject()
     }
 
-    /**
-     * Get comprehensive Phase 2 diagnostics
-     */
+
     fun getPhase2Diagnostics(): JSONObject {
         return JSONObject().apply {
             put("time_sync", getTimeSyncDiagnostics())
@@ -1219,9 +1128,7 @@ class WebSocketClient(private val context: Context) {
 
     // Phase 3 - File Transfer & Data Management Methods
 
-    /**
-     * Create a new recording session
-     */
+
     fun createRecordingSession(
         sessionId: String,
         participantId: String? = null,
@@ -1239,16 +1146,12 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * End a recording session
-     */
+
     fun endRecordingSession(sessionId: String): Boolean {
         return dataManagementService?.endSession(sessionId) ?: false
     }
 
-    /**
-     * Register a recorded file with the current session
-     */
+
     fun registerRecordedFile(
         filePath: String,
         sessionId: String,
@@ -1264,16 +1167,12 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * Queue session files for upload to PC controller
-     */
+
     suspend fun uploadSessionFiles(sessionId: String): List<String> {
         return dataManagementService?.queueFilesForUpload(sessionId) ?: emptyList()
     }
 
-    /**
-     * Queue individual file for upload
-     */
+
     suspend fun uploadFile(
         filePath: String,
         sessionId: String,
@@ -1287,44 +1186,32 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * Get file upload status
-     */
+
     fun getUploadStatus(jobId: String): FileUploadService.UploadJob? {
         return fileUploadService?.getUploadStatus(jobId)
     }
 
-    /**
-     * Get all active uploads
-     */
+
     fun getActiveUploads(): List<FileUploadService.UploadJob> {
         return fileUploadService?.getActiveUploads() ?: emptyList()
     }
 
-    /**
-     * Cancel file upload
-     */
+
     suspend fun cancelUpload(jobId: String): Boolean {
         return fileUploadService?.cancelUpload(jobId) ?: false
     }
 
-    /**
-     * Pause file upload
-     */
+
     suspend fun pauseUpload(jobId: String): Boolean {
         return fileUploadService?.pauseUpload(jobId) ?: false
     }
 
-    /**
-     * Resume file upload
-     */
+
     suspend fun resumeUpload(jobId: String): Boolean {
         return fileUploadService?.resumeUpload(jobId) ?: false
     }
 
-    /**
-     * Export session data
-     */
+
     suspend fun exportSession(
         sessionId: String,
         format: DataManagementService.ExportFormat,
@@ -1333,37 +1220,27 @@ class WebSocketClient(private val context: Context) {
         return dataManagementService?.exportSession(sessionId, format, includeFiles)
     }
 
-    /**
-     * Get session information
-     */
+
     fun getSession(sessionId: String): DataManagementService.SessionData? {
         return dataManagementService?.getSession(sessionId)
     }
 
-    /**
-     * Get all sessions
-     */
+
     fun getAllSessions(): List<DataManagementService.SessionData> {
         return dataManagementService?.getAllSessions() ?: emptyList()
     }
 
-    /**
-     * Get storage statistics
-     */
+
     fun getStorageStats(): Map<String, Any> {
         return dataManagementService?.getStorageStats() ?: emptyMap()
     }
 
-    /**
-     * Get upload statistics
-     */
+
     fun getUploadStats(): Map<String, Any> {
         return fileUploadService?.getUploadStats() ?: emptyMap()
     }
 
-    /**
-     * Get comprehensive Phase 3 diagnostics
-     */
+
     fun getPhase3Diagnostics(): JSONObject {
         return JSONObject().apply {
             put("file_upload_stats", JSONObject(getUploadStats()))
@@ -1375,18 +1252,14 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Perform data cleanup
-     */
+
     suspend fun performDataCleanup(maxAgeMs: Long = 7 * 24 * 60 * 60 * 1000L) {
         dataManagementService?.performCleanup(maxAgeMs)
     }
 
     // Phase 4 - Advanced Authentication & Security Methods
 
-    /**
-     * Initialize Phase 4 services for advanced authentication and security
-     */
+
     private fun initializePhase4Services() {
         // Initialize advanced authentication manager
         advancedAuthManager =
@@ -1483,9 +1356,7 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * Stop Phase 4 services
-     */
+
     private fun stopPhase4Services() {
         advancedAuthManager?.shutdown()
         advancedAuthManager = null
@@ -1493,9 +1364,7 @@ class WebSocketClient(private val context: Context) {
         Log.i(TAG, "Phase 4 services stopped")
     }
 
-    /**
-     * Perform enhanced authentication with multiple tiers
-     */
+
     suspend fun performEnhancedAuthentication(
         authLevel: Int,
         credentials: Map<String, Any>,
@@ -1526,9 +1395,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Attempt advanced reauthentication
-     */
+
     private suspend fun attemptAdvancedReauthentication() {
         try {
             // Try certificate-based authentication first
@@ -1577,9 +1444,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Get certificate credentials for authentication
-     */
+
     private fun getCertificateCredentials(): Map<String, Any> {
         // In a real implementation, this would retrieve certificate from secure storage
         return mapOf(
@@ -1590,9 +1455,7 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * Get token credentials for authentication
-     */
+
     private fun getTokenCredentials(): Map<String, Any> {
         // In a real implementation, this would retrieve valid token from secure storage
         return mapOf(
@@ -1603,9 +1466,7 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * Get basic credentials for authentication
-     */
+
     private fun getBasicCredentials(): Map<String, Any> {
         return mapOf(
             "device_type" to "ANDROID_PHONE",
@@ -1614,41 +1475,31 @@ class WebSocketClient(private val context: Context) {
         )
     }
 
-    /**
-     * Get device certificate (placeholder implementation)
-     */
+
     private fun getDeviceCertificate(): ByteArray {
         // Placeholder - in production this would return actual certificate
         return "DEVICE_CERTIFICATE_PLACEHOLDER".toByteArray()
     }
 
-    /**
-     * Sign challenge for certificate authentication (placeholder)
-     */
+
     private fun signChallenge(challenge: String): ByteArray {
         // Placeholder - in production this would use private key to sign
         return "SIGNATURE_PLACEHOLDER".toByteArray()
     }
 
-    /**
-     * Generate authentication token (placeholder)
-     */
+
     private fun generateAuthToken(): String {
         // Placeholder - in production this would generate secure token
         return "AUTH_TOKEN_${System.currentTimeMillis()}_${getDeviceId().take(8)}"
     }
 
-    /**
-     * Generate token HMAC (placeholder)
-     */
+
     private fun generateTokenHmac(): String {
         // Placeholder - in production this would generate actual HMAC
         return "HMAC_PLACEHOLDER"
     }
 
-    /**
-     * Send security alert to PC controller
-     */
+
     private suspend fun sendSecurityAlert(
         alertType: String,
         details: Map<String, Any>,
@@ -1679,9 +1530,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Determine alert severity
-     */
+
     private fun determineSeverity(alertType: String): String {
         return when (alertType) {
             "brute_force_attack", "session_hijack_attempt", "system_compromise" -> "CRITICAL"
@@ -1691,23 +1540,17 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Check if current session has specific permission
-     */
+
     fun hasAdvancedPermission(permission: String): Boolean {
         return advancedAuthManager?.hasPermission(permission) ?: false
     }
 
-    /**
-     * Get current authentication context
-     */
+
     fun getAdvancedAuthContext(): AdvancedAuthenticationManager.AuthenticationContext? {
         return advancedAuthManager?.getCurrentContext()
     }
 
-    /**
-     * Get comprehensive Phase 4 diagnostics
-     */
+
     fun getPhase4Diagnostics(): JSONObject {
         return JSONObject().apply {
             put("advanced_auth_active", advancedAuthManager != null)
@@ -1722,9 +1565,7 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-    /**
-     * Perform advanced security self-test
-     */
+
     suspend fun performSecuritySelfTest(): JSONObject {
         val results = JSONObject()
 

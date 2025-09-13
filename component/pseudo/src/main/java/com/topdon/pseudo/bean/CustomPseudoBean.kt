@@ -7,9 +7,7 @@ import com.topdon.pseudo.constant.ColorRecommend
 import kotlinx.android.parcel.Parcelize
 import java.nio.ByteBuffer
 
-/**
-\1自定义rendering的相关configuration.
- */
+
 @Parcelize
 data class CustomPseudoBean(
     var selectIndex: Int = 0, // 当前选中色块在列表中 index

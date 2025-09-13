@@ -14,10 +14,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Comprehensive unit tests for libcom module using Robolectric
- * Tests common utilities, beans, and shared functionality
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)

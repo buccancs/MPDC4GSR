@@ -74,19 +74,14 @@ import java.util.*
 import com.example.thermal_lite.R as ThermalLiteR
 import com.topdon.module.thermal.ir.R as ThermalIrR
 
-/**
- * 图片二次编辑
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(), View.OnClickListener, ITsTempListener {
     private val TAG = "IRGalleryEditActivity"
 
     private var isShowC: Boolean = false
 
-    /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
-     */
+
     private var isTC007 = false
 
     private val imageWidth = 256
@@ -313,9 +308,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         }
     }
 
-    /**
-     * 更新图像
-     */
+
     private fun updateImage(bitmap: Bitmap?) {
         bitmap?.let {
             val params = irImageView.layoutParams as ConstraintLayout.LayoutParams
@@ -345,9 +338,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         }
     }
 
-    /**
-     * 一级菜单
-     */
+
     private fun initRecycler() {
         editRecyclerFirst.onTabClickListener = {
             when (it) {
@@ -394,9 +385,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         }
     }
 
-    /**
-     * 最高最低温复原
-     */
+
     private fun setDefLimit() {
         val tempResult = frameTool.getSrcTemp()
         rightValue = showUnitValue(tempCorrect(tempResult.maxTemperature), isShowC)
@@ -591,9 +580,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
 //        tvTempContent.visibility = View.VISIBLE
     }
 
-    /**
-     * 从上一界面传递过来的，是否从生成报告拾取图片中跳转过来.
-     */
+
     private var isReportPick = false
 
     private fun initUI() {
@@ -807,9 +794,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         return tmp!!
     }
 
-    /**
-     * 单点修正过程
-     */
+
     private fun tempCorrect(temp: Float): Float {
         var newTemp = temp
         try {

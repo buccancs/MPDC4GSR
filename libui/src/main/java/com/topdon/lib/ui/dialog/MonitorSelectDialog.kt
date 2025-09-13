@@ -8,34 +8,17 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
 
-/**
- * 提示窗
- * create by fylder on 2018/6/15
- **/
-/**
- * MonitorSelectDialog(context: class
- */
-/**
- * Monitor select dialog for thermal imaging user interaction.
- * Provides specialized input and configuration interfaces.
- */
+
+
+
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
-    /**
-     * Builder(private class
-     */
-/**
- * Builder dialog for thermal imaging user interaction.
- * Provides specialized input and configuration interfaces.
- */
+
+
     class Builder(private val context: Context) {
-        /**
-         * 是否处于第 1 步.
-         */
+
         private var isFirstStep = true
 
-        /**
-         * currentselected的监控类型 1-点 2-线 3-面.
-         */
+
         private var monitorType = 0
 
         private var positiveClickListener: ((select: Int) -> Unit)? = null

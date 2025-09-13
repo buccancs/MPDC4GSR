@@ -12,10 +12,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Comprehensive unit tests for thermal module using Robolectric
- * Tests thermal imaging functionality and processing
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)

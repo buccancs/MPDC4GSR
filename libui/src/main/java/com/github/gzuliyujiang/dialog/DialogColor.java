@@ -19,10 +19,7 @@ import androidx.annotation.ColorInt;
 
 import java.io.Serializable;
 
-/**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/9/17 17:04
- */
+
 public class DialogColor implements Serializable {
     private int contentBackgroundColor = 0xff3b3e44;
     private int topLineColor = 0x33ffffff;

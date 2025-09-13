@@ -12,10 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-/**
- * Example demonstrating usage of the enhanced networking features.
- * This shows how to integrate TLS, discovery, time sync, and reliable messaging.
- */
+
 class EnhancedNetworkingExample(private val context: Context) {
     companion object {
         private const val TAG = "NetworkingExample"
@@ -27,9 +24,7 @@ class EnhancedNetworkingExample(private val context: Context) {
     private val webSocketProxy = WebSocketProxy.getInstance()
     private val exampleScope = CoroutineScope(Dispatchers.IO)
 
-    /**
-     * Demonstrates the complete networking enhancement workflow
-     */
+    
     fun demonstrateEnhancedNetworking() {
         exampleScope.launch {
             try {
@@ -99,9 +94,7 @@ class EnhancedNetworkingExample(private val context: Context) {
         }
     }
 
-    /**
-     * Demonstrates reliable messaging with acknowledgments
-     */
+    
     private suspend fun demonstrateReliableMessaging(
         targetHost: String,
         targetPort: Int,
@@ -181,9 +174,7 @@ class EnhancedNetworkingExample(private val context: Context) {
         reliableMessaging.shutdown()
     }
 
-    /**
-     * Demonstrates secure WebSocket connection to thermal camera
-     */
+    
     private fun demonstrateSecureWebSocket(deviceName: String = "TS004_DEMO_DEVICE") {
         Log.i(TAG, "7. Demonstrating secure WebSocket connection...")
 
@@ -201,9 +192,7 @@ class EnhancedNetworkingExample(private val context: Context) {
         Log.i(TAG, "Sent command to thermal camera via secure WebSocket")
     }
 
-    /**
-     * Cleanup all resources
-     */
+    
     fun cleanup() {
         discoveryService.stopDiscovery()
         webSocketProxy.stopWebSocket()

@@ -7,29 +7,13 @@ import com.topdon.lib.core.R
 import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.TargetType
 
-/**
- * observation模式-menu4-target menuAdapter used for.
- *
- * measurement mode(MODE)、target(STYLE)、targetcolor(COLOR)、删除(DELETE)、帮助(HELP)
- *
- * - measurement mode(MODE)、target(STYLE) 捆绑，要么都selected，要么都不selected，与 删除(DELETE) 互斥
- * - 删除(DELETE) 与 {measurement mode(MODE)、target(STYLE)、targetcolor(COLOR)} 互斥
- * - targetcolor(COLOR) effective且未处于删除亮，color为默认绿色或处于删除不亮，丢给上层维护这个state
- * - 帮助(HELP) 显示弹框亮，close弹框不亮，丢给上层维护这个state
- *
- * Created by LCG on 2024/11/28.
- */
+
 @SuppressLint("NotifyDataSetChanged")
 internal class TargetAdapter : BaseMenuAdapter() {
-    /**
-     * Observation mode - Menu 4 - Target click event listener.
-     */
+
     var onTargetListener: ((targetType: TargetType) -> Unit)? = null
 
-    /**
-     * settingsspecified option的selectedstate.
-     * 对于一些互斥的selected取消selected操作，由于legacy现在先不改动，丢给上层去维护这个互斥state.
-     */
+
     fun setSelected(
         targetType: TargetType,
         isSelected: Boolean,
@@ -43,15 +27,7 @@ internal class TargetAdapter : BaseMenuAdapter() {
         }
     }
 
-    /**
-     * Set icon type for Observation mode - Menu 4 - Target - Measurement mode.
-     *
-     * Due to legacy constraints (saved in SharedPreferences), the code values are:
-     * - Human: 10
-     * - Sheep: 11
-     * - Dog: 12
-     * - Bird: 13
-     */
+
     fun setTargetMode(modeCode: Int) {
         for (i in dataArray.indices) {
             if (dataArray[i].targetType == TargetType.MODE) {
@@ -98,10 +74,7 @@ internal class TargetAdapter : BaseMenuAdapter() {
 
     override fun getItemCount(): Int = dataArray.size
 
-/**
- * Custom Data view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes var drawableId: Int,

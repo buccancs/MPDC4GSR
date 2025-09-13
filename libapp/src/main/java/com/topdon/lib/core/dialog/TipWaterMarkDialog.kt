@@ -29,9 +29,7 @@ import com.topdon.lib.core.utils.CommUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import java.util.*
 
-/**
- * 2D-编辑 水印
- */
+
 class TipWaterMarkDialog : Dialog {
     constructor(context: Context) : super(context)
     constructor(context: Context, themeResId: Int) : super(context, themeResId)

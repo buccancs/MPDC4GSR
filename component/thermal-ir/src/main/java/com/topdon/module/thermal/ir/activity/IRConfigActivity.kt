@@ -37,22 +37,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.topdon.lib.core.R as LibR
 
-/**
-\1temperature correction（即setambient temperature、temperature measurement距离、emissivity）
- *
-\1需要传递parameter：
-\1- [ExtraKeyConfig.IS_TC007] - 当前device是否为 TC007
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * I r config activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class IRConfigActivity : BaseActivity(), View.OnClickListener {
-    /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
-     */
+
     private var isTC007 = false
 
     private val viewModel: IRConfigViewModel by viewModels()
@@ -122,7 +111,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         recyclerView.adapter = ConcatAdapter(adapter, ConfigEmAdapter(this))
 
         viewModel.configLiveData.observe(this) {
-\1先只刷新默认的configuration，等操作指引display完再刷新自定义configuration
+//先只刷新默认的configuration，等操作指引display完再刷新自定义configuration
             tvDefaultTempValue.text = NumberTools.to02(UnitTools.showUnitValue(it.defaultModel.environment))
             tvDefaultDisValue.text = NumberTools.to02(it.defaultModel.distance)
             tvDefaultEmValue.text = NumberTools.to02(it.defaultModel.radiation)
@@ -143,9 +132,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
     override fun initData() {
     }
 
-    /**
-\1display操作指引弹框.
-     */
+
     private fun showGuideDialog(modelBean: ModelBean) {
         val ivDefaultSelector = findViewById<android.widget.ImageView>(R.id.iv_default_selector)
         val llRoot = findViewById<android.widget.LinearLayout>(R.id.ll_root)
@@ -169,7 +156,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
             window?.decorView?.setRenderEffect(RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.MIRROR))
         } else {
             lifecycleScope.launch {
-\1interface刷新需要时间，所以需要等待100毫秒再去刷新背景
+//interface刷新需要时间，所以需要等待100毫秒再去刷新背景
                 delay(100)
                 guideDialog.blurBg(llRoot)
             }
@@ -216,24 +203,16 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
     private class ConfigAdapter(val context: Context, val isTC007: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         private val dataList: ArrayList<DataBean> = ArrayList()
 
-        /**
-\1item（一项自定义configuration）选中事件监听.
-         */
+
         var onSelectListener: ((id: Int) -> Unit)? = null
 
-        /**
-\1item（一项自定义configuration）删除件监听.
-         */
+
         var onDeleteListener: ((bean: DataBean) -> Unit)? = null
 
-        /**
-\1item（一项自定义configuration）变更事件监听.
-         */
+
         var onUpdateListener: ((bean: DataBean) -> Unit)? = null
 
-        /**
-\1添加事件监听.
-         */
+
         var onAddListener: View.OnClickListener? = null
 
         @SuppressLint("NotifyDataSetChanged")

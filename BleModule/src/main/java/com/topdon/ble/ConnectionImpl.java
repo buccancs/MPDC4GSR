@@ -46,10 +46,7 @@ import com.topdon.commons.poster.PosterDispatcher;
 import com.topdon.commons.util.MathUtils;
 import com.topdon.commons.util.StringUtils;
 
-/**
- * date: 2021/8/12 19:47
- * author: bichuanfeng
- */
+
 class ConnectionImpl implements Connection, ScanListener {
     private static final int MSG_REQUEST_TIMEOUT = 0;
     private static final int MSG_CONNECT = 1;
@@ -512,11 +509,7 @@ class ConnectionImpl implements Connection, ScanListener {
         connHandler.postDelayed(connectRunnable, 500);
     }
 
-    /**
-     * 处理断开
-     *
-     * @param reconnect 断开后是否重连
-     */
+
     private void doDisconnect(boolean reconnect) {
         clearRequestQueueAndNotify();
         connHandler.removeCallbacks(connectRunnable);
@@ -1306,9 +1299,7 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-    /**
-     * 清空请求队列并触发通知事件
-     */
+
     private void clearRequestQueueAndNotify() {
         synchronized (this) {
             for (GenericRequest request : requestQueue) {

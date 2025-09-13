@@ -20,10 +20,7 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-/**
- * @author: CaiSongL
- * @date: 2023/5/5 17:41
- */
+
 object PDFHelp {
     fun savePdfFileByListView(
         name: String,

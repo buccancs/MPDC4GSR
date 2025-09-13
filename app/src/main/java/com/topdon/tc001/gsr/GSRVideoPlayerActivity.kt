@@ -15,10 +15,7 @@ import com.csl.irCamera.databinding.ActivityGsrVideoPlayerBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import java.io.File
 
-/**
- * GSR Video Player Activity
- * Video playback for recorded videos from multi-modal sessions
- */
+
 class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding>() {
     companion object {
         private const val TAG = "GSRVideoPlayerActivity"

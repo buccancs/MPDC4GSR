@@ -87,25 +87,17 @@ public class USBMonitorManager {
         isReStart = reStart;
     }
 
-    /**
-     * @param pid                 需要initialize的设备的pid
-     * @param isUseIRISP
-     * @param defaultDataFlowMode
-     */
+
     public void init(int pid, boolean isUseIRISP, CommonParams.DataFlowMode defaultDataFlowMode) {
         this.mPid = pid;
         this.isUseIRISP = isUseIRISP;
         this.mDefaultDataFlowMode = defaultDataFlowMode;
         if (defaultDataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
-            /**
-             * 图像+温度
-             */
+
             cameraWidth = 256; // 传感器的原始宽度
             cameraHeight = 384; // 传感器的原始高度
         } else {
-            /**
-             * 图像
-             */
+
             cameraWidth = 256;// 传感器的原始宽度
             cameraHeight = 192;// 传感器的原始高度
         }
@@ -118,10 +110,7 @@ public class USBMonitorManager {
                         public void onAttach(UsbDevice device) {
                             Log.w(TAG, "USBMonitorManager-onAttach-getProductId = " + device.getProductId());
                             Log.w(TAG, "USBMonitorManager-onAttach-mPid = " + mPid);
-                            /**
-                             * USBMonitor会同时响应所有的UVC设备，
-                             * 需要根据自己的initializepid判断自己需要initialize的设备
-                             */
+
                             if (device.getProductId() != mPid) {
                                 return;
                             }
@@ -209,16 +198,11 @@ public class USBMonitorManager {
         mUvcCamera = concreateUVCBuilder
                 .setUVCType(UVCType.USB_UVC)
                 .build();
-        /**
-         * 调整带宽
-         * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要configuration对应的带宽
-         */
+
         mUvcCamera.setDefaultBandwidth(1f);
     }
 
-    /**
-     * @param ctrlBlock
-     */
+
     public void openUVCCamera(USBMonitor.UsbControlBlock ctrlBlock) {
         if (mUvcCamera == null) {
             initUVCCamera();
@@ -227,16 +211,12 @@ public class USBMonitorManager {
         mUvcCamera.openUVCCamera(ctrlBlock);
     }
 
-    /**
-     * @return
-     */
+
     public UVCCamera getUvcCamera() {
         return mUvcCamera;
     }
 
-    /**
-     * @return
-     */
+
     public IRCMD getIrcmd() {
         return mIrcmd;
     }
@@ -267,11 +247,7 @@ public class USBMonitorManager {
         }
     }
 
-    /**
-     * 获取支持的分辨率list
-     *
-     * @return
-     */
+
     private List<CameraSize> getAllSupportedSize() {
         Log.w(TAG, "getSupportedSize = " + mUvcCamera.getSupportedSize());
         List<CameraSize> previewList = new ArrayList<>();
@@ -284,12 +260,7 @@ public class USBMonitorManager {
         return previewList;
     }
 
-    /**
-     * init IRCMD
-     * 可以根据获取到的分辨率list，来区分不同的模组，从而改变不同的cmd参数来调用不同的SDK
-     *
-     * @param previewList
-     */
+
     public void initIRCMD(List<CameraSize> previewList) {
         for (CameraSize size : previewList) {
             Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
@@ -307,12 +278,7 @@ public class USBMonitorManager {
         }
     }
 
-    /**
-     * 之前的openUVCCamera方法中传入的都是默认值，这里需要根据实际传入对应的值
-     *
-     * @param cameraWidth
-     * @param cameraHeight
-     */
+
     private int setPreviewSize(int cameraWidth, int cameraHeight) {
         int result = -1;
         //有时候可能上电后不稳定或者模组没插稳，setUSBPreviewSize会settings失败，这里可以捕获异常，提示用户重新插拔模组，重启app
@@ -328,9 +294,7 @@ public class USBMonitorManager {
         return result;
     }
 
-    /**
-     *
-     */
+
     private void startPreview() {
         Log.d(TAG, "startPreview");
 

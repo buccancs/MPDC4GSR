@@ -122,9 +122,7 @@ class WebSocketProxy {
         return builder.build()
     }
 
-    /**
-     * TC007 Socket 一帧数据回调，由于没有同时监听多个回调的需求，这里只搞一个就行了。
-     */
+
     private var onFrameListener: ((frame: SocketFrameBean) -> Unit)? = null
 
     fun setOnFrameListener(
@@ -184,9 +182,7 @@ class WebSocketProxy {
         mWsManager?.startConnect()
     }
 
-    /**
-     * 断开 Socket 连接.
-     */
+
     fun stopWebSocket() {
         XLog.tag("WebSocket").d("stopWebSocket()")
         webSocketListener?.isNeedReconnect = false
@@ -210,9 +206,7 @@ class WebSocketProxy {
         mWsManager?.sendMessage(cmd)
     }
 
-    /**
-     * Determine appropriate WebSocket URL based on device type and security settings
-     */
+
     private fun getWebSocketUrl(ssid: String): String {
         val isTS004 = ssid.startsWith(DeviceConfig.TS004_NAME_START)
 
@@ -232,12 +226,7 @@ class WebSocketProxy {
         val onMessageListener: ((text: String) -> Unit)?,
         val onFrameListener: (frame: SocketFrameBean) -> Unit,
     ) : WsManager.IWebSocketListener() {
-        /**
-         * onFailure 时是否需要重连。
-         * 使用该变量是因为，恢复出厂、格式化存储等操作后，由于需要重启会主动断开与设备的连接。
-         * 而主动断开操作触发 onFailure 又触发重连从而导致逻辑存在问题。
-         * 使用该变量进行区分，当主动断开连接触发 onFailure 时，需不需要执行重连。
-         */
+
         var isNeedReconnect = true
 
         override fun onOpen(
@@ -262,9 +251,7 @@ class WebSocketProxy {
             onMessageListener?.invoke(text)
         }
 
-        /**
-         * TC007 温度帧一秒两帧，每帧都输出太过频繁，用该变量控制
-         */
+
         private var needPrint = false
 
         override fun onMessage(
@@ -335,9 +322,7 @@ class WebSocketProxy {
             handler.handleFail(ssid)
         }
 
-        /**
-         * 判断当前是否需要重连
-         */
+
         private fun checkNeedReconnect(): Boolean {
             if (!isNeedReconnect) {
                 return false
@@ -353,14 +338,10 @@ class WebSocketProxy {
 
     private class ReconnectHandler : Handler(Looper.getMainLooper()) {
         companion object {
-            /**
-             * 最大重连次数.
-             */
+
             private const val MAX_RECONNECT_COUNT = 3
 
-            /**
-             * 每次重连间隔，单位毫秒.
-             */
+
             private const val RECONNECT_MILLIS = 3000L
         }
 

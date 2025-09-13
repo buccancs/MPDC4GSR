@@ -8,35 +8,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Enhanced System Integration Manager for comprehensive BLE and multi-modal coordination.
- * 
- * This manager provides advanced integration capabilities including:
- * - Real-time cross-modal device synchronization with sub-5ms accuracy
- * - Comprehensive BLE health monitoring and diagnostics  
- * - Advanced predictive connection management with AI-driven optimization
- * - Enterprise-grade device discovery and pairing automation
- * - Research-grade data quality assurance and validation
- * - Seamless integration between BLE and non-BLE sensor systems
- * 
- * Features:
- * - Automatic device capability detection and configuration
- * - Real-time synchronization quality monitoring
- * - Advanced error recovery with progressive reconnection strategies
- * - Cross-platform integration with PC Controller hub systems
- * - Enterprise security compliance (HIPAA/GDPR ready)
- * - Research-grade temporal precision and data integrity
- * 
- * Usage Example:
- * <pre>
- * EnhancedSystemIntegrationManager manager = EnhancedSystemIntegrationManager.getInstance(context);
- * manager.enableAdvancedFeatures();
- * manager.startComprehensiveDeviceDiscovery();
- * manager.initializeCrossModalSynchronization();
- * </pre>
- * 
- * @author IRCamera Enhanced Integration Team
- */
+
 public class EnhancedSystemIntegrationManager {
     private static final String TAG = "EnhancedSystemIntegration";
     
@@ -57,9 +29,7 @@ public class EnhancedSystemIntegrationManager {
     // Monitoring and listeners
     private final List<SystemIntegrationListener> listeners = new CopyOnWriteArrayList<>();
     
-    /**
-     * System integration event listener interface
-     */
+
     public interface SystemIntegrationListener {
         void onDeviceDiscovered(@NonNull UnifiedDevice device);
         void onCrossModalSyncEstablished();
@@ -67,9 +37,7 @@ public class EnhancedSystemIntegrationManager {
         void onAdvancedFeatureActivated(@NonNull String featureName);
     }
     
-    /**
-     * System health and performance metrics
-     */
+
     public static class SystemHealthMetrics {
         public final int connectedDeviceCount;
         public final double averageConnectionQuality;
@@ -86,9 +54,7 @@ public class EnhancedSystemIntegrationManager {
         }
     }
     
-    /**
-     * Private constructor for singleton pattern
-     */
+
     private EnhancedSystemIntegrationManager(@NonNull Context context) {
         this.context = context.getApplicationContext();
         this.unifiedBleManager = UnifiedBleManager.getInstance(context);
@@ -97,9 +63,7 @@ public class EnhancedSystemIntegrationManager {
         initializeCore();
     }
     
-    /**
-     * Get singleton instance with thread-safe initialization
-     */
+
     public static EnhancedSystemIntegrationManager getInstance(@NonNull Context context) {
         if (instance == null) {
             synchronized (instanceLock) {
@@ -111,9 +75,7 @@ public class EnhancedSystemIntegrationManager {
         return instance;
     }
     
-    /**
-     * Initialize core system components
-     */
+
     private void initializeCore() {
         if (isInitialized.compareAndSet(false, true)) {
             Log.i(TAG, "Initializing Enhanced System Integration Manager");
@@ -128,9 +90,7 @@ public class EnhancedSystemIntegrationManager {
         }
     }
     
-    /**
-     * Enable advanced enterprise features
-     */
+
     public void enableAdvancedFeatures() {
         if (isAdvancedFeaturesEnabled.compareAndSet(false, true)) {
             Log.i(TAG, "Enabling advanced enterprise features");
@@ -153,9 +113,7 @@ public class EnhancedSystemIntegrationManager {
         }
     }
     
-    /**
-     * Start comprehensive device discovery with enhanced capabilities
-     */
+
     public void startComprehensiveDeviceDiscovery() {
         if (isDiscoveryActive.compareAndSet(false, true)) {
             Log.i(TAG, "Starting comprehensive device discovery");
@@ -188,9 +146,7 @@ public class EnhancedSystemIntegrationManager {
         }
     }
     
-    /**
-     * Initialize cross-modal synchronization with all connected devices
-     */
+
     public void initializeCrossModalSynchronization() {
         Log.i(TAG, "Initializing cross-modal synchronization");
         
@@ -204,9 +160,7 @@ public class EnhancedSystemIntegrationManager {
         Log.i(TAG, "Cross-modal synchronization initialized");
     }
     
-    /**
-     * Get comprehensive system health metrics
-     */
+
     @NonNull
     public SystemHealthMetrics getSystemHealthMetrics() {
         // Calculate metrics from various managers
@@ -219,34 +173,26 @@ public class EnhancedSystemIntegrationManager {
         return new SystemHealthMetrics(deviceCount, avgQuality, syncAccuracy, isOptimal, status);
     }
     
-    /**
-     * Enable predictive connection management with AI optimization
-     */
+
     private void enablePredictiveConnectionManagement() {
         Log.d(TAG, "Activating predictive connection management");
         // Implementation would include ML-based connection prediction
         // For now, enable enhanced monitoring and proactive management
     }
     
-    /**
-     * Enable research-grade quality assurance
-     */
+
     private void enableResearchGradeQualityAssurance() {
         Log.d(TAG, "Activating research-grade quality assurance");
         // Implementation would include comprehensive data validation
         // For now, enable enhanced error detection and reporting
     }
     
-    /**
-     * Add system integration listener
-     */
+
     public void addListener(@NonNull SystemIntegrationListener listener) {
         listeners.add(listener);
     }
     
-    /**
-     * Remove system integration listener  
-     */
+
     public void removeListener(@NonNull SystemIntegrationListener listener) {
         listeners.remove(listener);
     }
@@ -292,30 +238,22 @@ public class EnhancedSystemIntegrationManager {
         }
     }
     
-    /**
-     * Check if manager is initialized
-     */
+
     public boolean isInitialized() {
         return isInitialized.get();
     }
     
-    /**
-     * Check if advanced features are enabled
-     */
+
     public boolean areAdvancedFeaturesEnabled() {
         return isAdvancedFeaturesEnabled.get();
     }
     
-    /**
-     * Check if device discovery is active
-     */
+
     public boolean isDiscoveryActive() {
         return isDiscoveryActive.get();
     }
     
-    /**
-     * Cleanup resources
-     */
+
     public void cleanup() {
         Log.i(TAG, "Cleaning up Enhanced System Integration Manager");
         

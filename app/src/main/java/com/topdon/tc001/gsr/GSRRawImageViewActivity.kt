@@ -18,10 +18,7 @@ import com.csl.irCamera.databinding.ActivityGsrRawImageViewBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import java.io.File
 
-/**
- * GSR RAW Image View Activity
- * Viewer for captured RAW DNG images with metadata display
- */
+
 class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBinding>() {
     companion object {
         private const val EXTRA_IMAGE_PATH = "image_path"

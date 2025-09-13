@@ -10,19 +10,7 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.*
 
-/**
- * Enhanced Time Synchronization Service - Phase 2 Implementation
- *
- * Provides sub-millisecond precision time synchronization between PC and Android devices
- * with statistical analysis, clock drift compensation, and continuous synchronization.
- *
- * Features:
- * - Multi-round synchronization with statistical accuracy (target: ±0.5ms)
- * - Network latency measurement and compensation
- * - Clock drift detection and correction
- * - Continuous background synchronization
- * - Quality metrics and validation
- */
+
 class EnhancedTimeSyncService(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -83,9 +71,7 @@ class EnhancedTimeSyncService(
         UNKNOWN,
     }
 
-    /**
-     * Start continuous time synchronization service
-     */
+
     fun start(onSyncCompleted: (SyncResult) -> Unit) {
         if (isRunning.get()) {
             Log.w(TAG, "Time sync service already running")
@@ -129,9 +115,7 @@ class EnhancedTimeSyncService(
         Log.i(TAG, "Enhanced time synchronization service started")
     }
 
-    /**
-     * Get current synchronized time in nanoseconds
-     */
+
     fun getSynchronizedTime(): Long {
         val localTime = System.nanoTime()
         val offset = currentOffset.get()
@@ -140,9 +124,7 @@ class EnhancedTimeSyncService(
         return localTime + offset + drift
     }
 
-    /**
-     * Get diagnostic information
-     */
+
     fun getDiagnostics(): JSONObject {
         return JSONObject().apply {
             put("is_running", isRunning.get())

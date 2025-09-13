@@ -8,72 +8,36 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-/**
- * RecyclerView 所用，控制间距.
- *
- * Created by LCG on 2023/9/20.
- */
-/**
- * MyItemDecoration(context: class
- */
-/**
- * Custom My item decoration view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * MyItemDecoration manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
+
+
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
-    /**
-     * 整个 RecyclerView 左侧间距，单位 dp.
-     * 该值仅对最左侧 item 有效，且与 [itemLeft] 不叠加（优先使用current值）.
-     */
+
     var wholeLeft: Float? = null
 
-    /**
-     * 整个 RecyclerView 右侧间距，单位 dp.
-     * 该值仅对最右侧 item 有效，且与 [itemRight] 不叠加（优先使用current值）.
-     */
+
     var wholeRight: Float? = null
 
-    /**
-     * 整个 RecyclerView 顶部间距，单位 dp.
-     * 该值仅对最顶部 item 有效，且与 [itemTop] 不叠加（优先使用current值）.
-     */
+
     var wholeTop: Float? = null
 
-    /**
-     * 整个 RecyclerView 底部间距，单位 dp.
-     * 该值仅对最底部 item 有效，且与 [itemBottom] 不叠加（优先使用current值）.
-     */
+
     var wholeBottom: Float? = null
 
-    /**
-     * 每个 item 左侧间距，单位 dp.
-     */
+
     var itemLeft: Float? = null
 
-    /**
-     * 每个 item 右侧间距，单位 dp.
-     */
+
     var itemRight: Float? = null
 
-    /**
-     * 每个 item 顶部间距，单位 dp.
-     */
+
     var itemTop: Float? = null
 
-    /**
-     * 每个 item 底部间距，单位 dp.
-     */
+
     var itemBottom: Float? = null
 
-    /**
-     * 屏幕Scale倍率，用于 dp 与 px
-     */
+
     private val density: Float = context.resources.displayMetrics.density
 
     override fun getItemOffsets(
@@ -115,10 +79,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         }
     }
 
-    /**
-     * 当 RecyclerView 为纵向且只有 1 列时，settings间距.
-     * @param itemCount 数据总条数
-     */
+
     private fun setVerticalOne(
         outRect: Rect,
         position: Int,
@@ -131,10 +92,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         outRect.set(left, top, right, bottom)
     }
 
-    /**
-     * 当 RecyclerView 为横向且只有 1 行时，settings间距.
-     * @param itemCount 数据总条数
-     */
+
     private fun setHorizontalOne(
         outRect: Rect,
         position: Int,
@@ -147,11 +105,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         outRect.set(left, top, right, bottom)
     }
 
-    /**
-     * 当 RecyclerView 为纵向且有多列时，settings间距.
-     * @param itemCount 数据总条数
-     * @param spanCount 总列数(共有多少列)
-     */
+
     private fun setVerticalMulti(
         outRect: Rect,
         position: Int,
@@ -169,12 +123,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         outRect.set(left, top, right, bottom)
     }
 
-    /**
-     * 当 RecyclerView 为纵向且为瀑布流布局时，settings间距.
-     * @param itemCount 数据总条数
-     * @param spanCount 总列数(共有多少列)
-     * @param spanIndex current数据在列数中的index[0, spanCount)，即第几列
-     */
+
     private fun setVerticalMultiStaggered(
         outRect: Rect,
         position: Int,
@@ -192,11 +141,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         outRect.set(left, top, right, bottom)
     }
 
-    /**
-     * 当 RecyclerView 为横向且有多行时，settings间距.
-     * @param itemCount 数据总条数
-     * @param spanCount 总行数(共有多少行)
-     */
+
     private fun setHorizontalMulti(
         outRect: Rect,
         position: Int,
@@ -206,8 +151,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         // Note: Implementation to be added when specific requirements are defined
     }
 
-    /**
-     * Executes dp2px functionality.
-     */
+
     private fun dp2px(dpValue: Float): Int = (dpValue * density + 0.5f).toInt()
 }

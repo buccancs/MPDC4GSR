@@ -11,18 +11,7 @@ import com.topdon.tc001.controller.RecordingController
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * Test activity to demonstrate the robust parallel recording functionality.
- *
- * This activity allows testing of the enhanced RecordingController that can handle
- * individual sensor failures gracefully without aborting the entire session.
- *
- * Features tested:
- * - Sensor initialization with partial failures
- * - Recording start with some sensors failing
- * - Real-time status monitoring
- * - Graceful session continuation with available sensors
- */
+
 class ParallelRecordingTestActivity : ComponentActivity() {
     companion object {
         private const val TAG = "ParallelRecordingTest"

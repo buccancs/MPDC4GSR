@@ -11,16 +11,7 @@ import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Advanced Multi-Modal Recorder with True Parallel Recording
- *
- * Features:
- * - Truly parallel recording starts for all selected sensors
- * - Flexible sensor combination selection (any combination of Thermal/RGB/GSR)
- * - Samsung S22 ground truth timing with sub-millisecond precision
- * - Comprehensive error handling and sensor availability detection
- * - Research-grade synchronization with unified timestamps
- */
+
 class ParallelMultiModalRecorder(
     private val context: Context,
     private val thermalRecorder: EnhancedThermalRecorder,
@@ -61,9 +52,7 @@ class ParallelMultiModalRecorder(
     var onError: ((String) -> Unit)? = null
     var onSensorStatusChanged: ((SensorSelectionDialog.SensorType, String) -> Unit)? = null
 
-    /**
-     * Initialize all recording components
-     */
+
     fun initialize() {
         rgbCameraRecorder =
             RGBCameraRecorder(context, rgbTextureView).apply {
@@ -88,9 +77,7 @@ class ParallelMultiModalRecorder(
         Log.i(TAG, "Parallel multi-modal recorder initialized")
     }
 
-    /**
-     * Start parallel multi-modal recording with selected sensors
-     */
+
     fun startParallelRecording(
         selectedSensors: Set<SensorSelectionDialog.SensorType>,
         sessionId: String? = null,
@@ -241,9 +228,7 @@ class ParallelMultiModalRecorder(
         }
     }
 
-    /**
-     * Stop parallel multi-modal recording
-     */
+
     fun stopParallelRecording(): ParallelRecordingSession? {
         if (!isRecording.get() || currentSessionId == null) {
             Log.w(TAG, "Not currently recording")
@@ -362,9 +347,7 @@ class ParallelMultiModalRecorder(
         }
     }
 
-    /**
-     * Add synchronized event marker across all active recording streams
-     */
+
     fun addParallelSyncEvent(
         eventName: String,
         metadata: Map<String, String> = emptyMap(),
@@ -389,9 +372,7 @@ class ParallelMultiModalRecorder(
         Log.d(TAG, "Added parallel synchronized event: $eventName at timestamp $timestamp")
     }
 
-    /**
-     * Switch RGB camera (front/back) during recording
-     */
+
     fun switchRGBCamera(): RGBCameraRecorder.CameraFacing? {
         if (!selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
             Log.w(TAG, "RGB sensor not active, cannot switch camera")
@@ -422,9 +403,7 @@ class ParallelMultiModalRecorder(
         return resultFacing
     }
 
-    /**
-     * Update RGB recording settings during recording
-     */
+
     fun updateRGBSettings(settings: RGBCameraRecorder.RecordingSettings) {
         if (!selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
             Log.w(TAG, "RGB sensor not active, cannot update settings")
@@ -445,9 +424,7 @@ class ParallelMultiModalRecorder(
         }
     }
 
-    /**
-     * Get current recording state
-     */
+
     fun isRecording() = isRecording.get()
 
     fun getCurrentSessionId() = currentSessionId
@@ -456,9 +433,7 @@ class ParallelMultiModalRecorder(
 
     fun getSessionDirectory(): File? = thermalRecorder.getSessionDirectory()
 
-    /**
-     * Get RGB camera information (only available if RGB sensor is selected)
-     */
+
     fun getCurrentRGBSettings() =
         if (selectedSensors.contains(SensorSelectionDialog.SensorType.RGB)) {
             rgbCameraRecorder?.getCurrentSettings()
@@ -477,9 +452,7 @@ class ParallelMultiModalRecorder(
 
     fun getSupportedRGBResolutions() = rgbCameraRecorder?.getSupportedResolutions() ?: emptyList()
 
-    /**
-     * Cleanup all resources
-     */
+
     fun cleanup() {
         if (isRecording.get()) {
             stopParallelRecording()

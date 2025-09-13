@@ -40,29 +40,17 @@ import java.io.File
 import com.topdon.lib.core.R as LibR
 import com.topdon.lib.ui.R as UiR
 
-/**
-\1TS004 图片详情
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
-/**
- * I r gallery detail04 activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class IRGalleryDetail04Activity : BaseActivity() {
-    /**
-\1是否查看远端data.
-\1true-远端data false-手机本地data
-     */
+
     private var isRemote = false
 
-    /**
-\1当前展示图片在列表中的 position
-     */
+
     private var position = 0
 
-    /**
-\1从上一interface传递过来的，当前展示的图片列表.
-     */
+
     private lateinit var dataList: ArrayList<GalleryBean>
 
     override fun initContentView() = R.layout.activity_ir_gallery_detail_04

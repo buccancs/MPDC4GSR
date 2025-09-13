@@ -5,9 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Usbjni是framework提供的jni接口，必须保持类名不变，由继承类实现so加载判断。
- */
+
 public class Usbcontorl extends Usbjni {
 
     public static boolean isload = false;

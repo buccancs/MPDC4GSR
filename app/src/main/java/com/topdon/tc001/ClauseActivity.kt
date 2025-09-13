@@ -24,9 +24,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import com.topdon.lib.core.R as LibCoreR
 
-/**
- * 条款
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog

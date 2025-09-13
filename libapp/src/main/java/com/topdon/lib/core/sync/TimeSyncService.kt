@@ -9,18 +9,8 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import kotlin.math.abs
 
-/**
- * Network Time Protocol (NTP-like) service for precise time synchronization
- * between Android devices and PC controllers/thermal cameras.
- *
- * Implements a simplified NTP protocol to calculate clock offset and round-trip delay.
- */
-/**
- * TimeSyncService provides background service functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
 class TimeSyncService {
     companion object {
         private const val TAG = "TimeSyncService"
@@ -51,26 +41,15 @@ class TimeSyncService {
         val clockOffset: Long,
     )
 
-/**
- * TimeSyncListener manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
     interface TimeSyncListener {
-    /**
-     * Callback method triggered when synccompleted occurs.
-     */
+
         fun onSyncCompleted(result: SyncResult)
 
-    /**
-     * Callback method triggered when syncstarted occurs.
-     */
+
         fun onSyncStarted(targetHost: String)
 
-    /**
-     * Callback method triggered when syncerror occurs.
-     */
+
         fun onSyncError(error: String)
     }
 
@@ -80,9 +59,7 @@ class TimeSyncService {
         this.listener = listener
     }
 
-    /**
-     * Perform one-time time synchronization with target host
-     */
+
     suspend fun synchronizeTime(
         targetHost: String,
         targetPort: Int = 8080,
@@ -137,9 +114,7 @@ class TimeSyncService {
             result
         }
 
-    /**
-     * Start periodic time synchronization
-     */
+
     fun startPeriodicSync(
         targetHost: String,
         targetPort: Int = 8080,
@@ -164,18 +139,14 @@ class TimeSyncService {
         Log.i(TAG, "Started periodic time sync with $targetHost:$targetPort (interval: ${intervalMs}ms)")
     }
 
-    /**
-     * Stop periodic time synchronization
-     */
+
     fun stopPeriodicSync() {
         periodicSyncJob?.cancel()
         periodicSyncJob = null
         Log.i(TAG, "Stopped periodic time sync")
     }
 
-    /**
-     * Perform a single NTP-like sync request
-     */
+
     private suspend fun performSyncRequest(
         host: String,
         port: Int,
@@ -237,9 +208,7 @@ class TimeSyncService {
         }
     }
 
-    /**
-     * Calculate final sync result from multiple samples
-     */
+
     private fun calculateSyncResult(samples: List<SyncSample>): SyncResult {
         // Sort samples by round-trip delay (prefer lower delay samples)
         val sortedSamples = samples.sortedBy { it.roundTripDelay }
@@ -264,10 +233,7 @@ class TimeSyncService {
         )
     }
 
-    /**
-     * Get high-precision timestamp in milliseconds
-     * Uses System.nanoTime() for monotonic, high-precision timing
-     */
+
     private fun getHighPrecisionTime(): Long {
         // Use nanoTime for precision, but convert to wall-clock time
         val systemTime = System.currentTimeMillis()
@@ -275,16 +241,12 @@ class TimeSyncService {
         return systemTime * 1000 + nanoOffset // Return in microseconds
     }
 
-    /**
-     * Get synchronized timestamp accounting for calculated offset
-     */
+
     fun getSynchronizedTime(clockOffsetMs: Long): Long {
         return getHighPrecisionTime() + (clockOffsetMs * 1000) // Convert offset to microseconds
     }
 
-    /**
-     * Validate that two timestamps are synchronized within tolerance
-     */
+
     fun validateSync(
         localTime: Long,
         remoteTime: Long,
@@ -297,9 +259,7 @@ class TimeSyncService {
         return diff <= toleranceMs
     }
 
-    /**
-     * Create time sync packet for other devices
-     */
+
     fun createSyncPacket(): JSONObject {
         val currentTime = getHighPrecisionTime()
 
@@ -311,9 +271,7 @@ class TimeSyncService {
         }
     }
 
-    /**
-     * Process incoming sync packet from other device
-     */
+
     fun processSyncPacket(packet: JSONObject): Long? {
         return try {
             if (packet.optString("message_type") == "time_sync_broadcast") {
@@ -331,9 +289,7 @@ class TimeSyncService {
         }
     }
 
-    /**
-     * Cleanup resources
-     */
+
     fun cleanup() {
         stopPeriodicSync()
         syncScope.cancel()

@@ -83,9 +83,7 @@ public class RangeSeekBar extends View {
         }
     }
 
-    /**
-     * @hide
-     */
+
     @IntDef({SEEKBAR_MODE_SINGLE, SEEKBAR_MODE_RANGE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SeekBarModeDef {
@@ -96,9 +94,7 @@ public class RangeSeekBar extends View {
     //other equally arranged
     public final static int TRICK_MARK_MODE_OTHER = 1;
 
-    /**
-     * @hide
-     */
+
     @IntDef({TRICK_MARK_MODE_NUMBER, TRICK_MARK_MODE_OTHER})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkModeDef {
@@ -109,25 +105,19 @@ public class RangeSeekBar extends View {
     public final static int TICK_MARK_GRAVITY_CENTER = 1;
     public final static int TICK_MARK_GRAVITY_RIGHT = 2;
 
-    /**
-     * @hide
-     */
+
     @IntDef({TICK_MARK_GRAVITY_LEFT, TICK_MARK_GRAVITY_CENTER, TICK_MARK_GRAVITY_RIGHT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkGravityDef {
     }
 
-    /**
-     * @hide
-     */
+
     @IntDef({Gravity.TOP, Gravity.BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkLayoutGravityDef {
     }
 
-    /**
-     * @hide
-     */
+
     @IntDef({Gravity.TOP, Gravity.CENTER, Gravity.BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface GravityDef {
@@ -197,7 +187,7 @@ public class RangeSeekBar extends View {
     private int stepsDrawableId;
     //True values set by the user
     private float minProgress, maxProgress;
-    //****************** the above is attr value  ******************//
+    ////
 
     private boolean isEnable = true;
     float touchDownX, touchDownY;
@@ -219,15 +209,11 @@ public class RangeSeekBar extends View {
     private int progressPaddingRight;
     private OnRangeChangedListener callback;
 
-    /**
-     * 自定义渲染color值.
-     */
+
     @Nullable
     private int[] colorList;
 
-    /**
-     * 自定义渲染color位置，每个元素取值range [0,1]
-     */
+
     @Nullable
     private float[] places;
 
@@ -311,9 +297,7 @@ public class RangeSeekBar extends View {
     }
 
 
-    /**
-     * measure progress bar position
-     */
+
     protected void onMeasureProgress(int w, int h) {
         int viewHeight = h - getPaddingBottom() - getPaddingTop();
         if (h <= 0) return;
@@ -621,9 +605,7 @@ public class RangeSeekBar extends View {
         return event.getY();
     }
 
-    /**
-     * scale the touch seekBar thumb
-     */
+
     private void scaleCurrentSeekBarThumb() {
         if (currTouchSB != null && currTouchSB.getThumbScaleRatio() > 1f && !isScaleThumb) {
             isScaleThumb = true;
@@ -631,9 +613,7 @@ public class RangeSeekBar extends View {
         }
     }
 
-    /**
-     * reset the touch seekBar thumb
-     */
+
     private void resetCurrentSeekBarThumb() {
         if (currTouchSB != null && currTouchSB.getThumbScaleRatio() > 1f && isScaleThumb) {
             isScaleThumb = false;
@@ -834,12 +814,10 @@ public class RangeSeekBar extends View {
 
     }
 
-    //******************* Attributes getter and setter *******************//
+    ////
 
 
-    /**
-     * 临时处理负数
-     */
+
     public void setNoNegativeNumber(Boolean noNegativeNumber){
         this.noNegativeNumber = noNegativeNumber;
         if (leftSB!=null){
@@ -924,24 +902,13 @@ public class RangeSeekBar extends View {
     }
 
 
-    /**
-     * settingsrange
-     *
-     * @param min 最小值
-     * @param max 最大值
-     */
+
     public void setRange(float min, float max) {
         setRange(min, max, minInterval);
         setProgress(getLeftSeekBar().left,getRightSeekBar().right);
     }
 
-    /**
-     *
-     * @param editMin ： 手动settings的最小值
-     * @param editMax : 手动settings的最小值
-     * @param realLeftValue : 实际最低温度
-     * @param realRightValue ： 实际最高温度
-     */
+
     public void setRangeAndPro(float editMin,float editMax,float realLeftValue,float realRightValue){
         if (editMin == Float.MIN_VALUE && editMax == Float.MAX_VALUE){
             setRangeNoInvalidate(realLeftValue,realRightValue,0.1f);
@@ -970,12 +937,7 @@ public class RangeSeekBar extends View {
         }
     }
 
-    /**
-     * settingsrange
-     * @param min         最小值
-     * @param max         最大值
-     * @param minInterval 最小间隔
-     */
+
     public void setRange(float min, float max, float minInterval) {
 //        if (max <= min) {
 //            throw new IllegalArgumentException("setRange() max must be greater than min ! #max:" + max + " #min:" + min);
@@ -1034,9 +996,7 @@ public class RangeSeekBar extends View {
         }
     }
 
-    /**
-     * @return the two seekBar state , see {@link SeekBarState}
-     */
+
     public SeekBarState[] getRangeSeekBarState() {
         SeekBarState leftSeekBarState = new SeekBarState();
         leftSeekBarState.value = leftSB.getProgress();
@@ -1076,11 +1036,7 @@ public class RangeSeekBar extends View {
         }
     }
 
-    /**
-     * format number indicator text
-     *
-     * @param formatPattern format rules
-     */
+
     public void setIndicatorTextDecimalFormat(String formatPattern) {
         leftSB.setIndicatorTextDecimalFormat(formatPattern);
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
@@ -1088,11 +1044,7 @@ public class RangeSeekBar extends View {
         }
     }
 
-    /**
-     * format string indicator text
-     *
-     * @param formatPattern format rules
-     */
+
     public void setIndicatorTextStringFormat(String formatPattern) {
         leftSB.setIndicatorTextStringFormat(formatPattern);
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
@@ -1100,11 +1052,7 @@ public class RangeSeekBar extends View {
         }
     }
 
-    /**
-     * if is single mode, please use it to get the SeekBar
-     *
-     * @return left seek bar
-     */
+
     public SeekBar getLeftSeekBar() {
         return leftSB;
     }
@@ -1175,12 +1123,7 @@ public class RangeSeekBar extends View {
         return seekBarMode;
     }
 
-    /**
-     * {@link #SEEKBAR_MODE_SINGLE} is single SeekBar
-     * {@link #SEEKBAR_MODE_RANGE} is range SeekBar
-     *
-     * @param seekBarMode
-     */
+
     public void setSeekBarMode(@SeekBarModeDef int seekBarMode) {
         this.seekBarMode = seekBarMode;
         rightSB.setVisible(seekBarMode != SEEKBAR_MODE_SINGLE);
@@ -1190,12 +1133,7 @@ public class RangeSeekBar extends View {
         return tickMarkMode;
     }
 
-    /**
-     * {@link #TICK_MARK_GRAVITY_LEFT} is number tick mark, it will locate the position according to the value.
-     * {@link #TICK_MARK_GRAVITY_RIGHT} is text tick mark, it will be equally positioned.
-     *
-     * @param tickMarkMode
-     */
+
     public void setTickMarkMode(@TickMarkModeDef int tickMarkMode) {
         this.tickMarkMode = tickMarkMode;
     }
@@ -1220,14 +1158,7 @@ public class RangeSeekBar extends View {
         return tickMarkGravity;
     }
 
-    /**
-     * the tick mark text gravity
-     * {@link #TICK_MARK_GRAVITY_LEFT}
-     * {@link #TICK_MARK_GRAVITY_RIGHT}
-     * {@link #TICK_MARK_GRAVITY_CENTER}
-     *
-     * @param tickMarkGravity
-     */
+
     public void setTickMarkGravity(@TickMarkGravityDef int tickMarkGravity) {
         this.tickMarkGravity = tickMarkGravity;
     }
@@ -1369,12 +1300,7 @@ public class RangeSeekBar extends View {
         return tickMarkLayoutGravity;
     }
 
-    /**
-     * the tick mark layout gravity
-     * Gravity.TOP and Gravity.BOTTOM
-     *
-     * @param tickMarkLayoutGravity
-     */
+
     public void setTickMarkLayoutGravity(@TickMarkLayoutGravityDef int tickMarkLayoutGravity) {
         this.tickMarkLayoutGravity = tickMarkLayoutGravity;
     }
@@ -1383,12 +1309,7 @@ public class RangeSeekBar extends View {
         return gravity;
     }
 
-    /**
-     * the RangeSeekBar gravity
-     * Gravity.TOP and Gravity.BOTTOM
-     *
-     * @param gravity
-     */
+
     public void setGravity(@GravityDef int gravity) {
         this.gravity = gravity;
     }

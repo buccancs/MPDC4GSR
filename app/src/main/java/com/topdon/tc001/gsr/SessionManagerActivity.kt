@@ -31,10 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Production-Ready Session Management UI
- * Browse, manage, and delete recording sessions with comprehensive file cleanup
- */
+
 class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding>() {
     private lateinit var adapter: SessionAdapter
     private lateinit var sessionManager: SessionManager
@@ -370,9 +367,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     }
 }
 
-/**
- * RecyclerView Adapter for Session List
- */
+
 class SessionAdapter(
     private val context: Context,
     private val sessions: List<SessionInfo>,

@@ -1,11 +1,6 @@
 package com.topdon.lib.core.bean
 
-/**
- * continuouscaptureconfiguration.
- * @param isOpen 是否开启
- * @param continuaTime continuouscapture时间间隔，单位毫秒
- * @param count continuouscapturequantity
- */
+
 data class ContinuousBean(var isOpen: Boolean = false, var continuaTime: Long = 1000, var count: Int = 3)
 
 class ObserveBean {

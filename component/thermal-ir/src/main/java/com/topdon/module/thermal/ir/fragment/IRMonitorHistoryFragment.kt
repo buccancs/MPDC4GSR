@@ -32,10 +32,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.Calendar
 import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
 
-/**
- * I r monitor history fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
+
 class IRMonitorHistoryFragment : Fragment() {
     private val adapter = MyAdapter(ArrayList())
 
@@ -138,14 +135,10 @@ class IRMonitorHistoryFragment : Fragment() {
             BaseViewHolder,
             >(R.layout.item_monitory_history, dataList),
         LoadMoreModule {
-        /**
-\1item 点击事件监听.
-         */
+
         var onItemClickListener: ((position: Int) -> Unit)? = null
 
-        /**
-\1item 长按事件监听.
-         */
+
         var onItemLongClickListener: ((position: Int) -> Unit)? = null
 
         override fun convert(

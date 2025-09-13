@@ -9,19 +9,7 @@ import java.io.*
 import java.net.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * TCP Server for accepting connections from PC Controller.
- *
- * This server implements the protocol expected by the PC Controller test scripts,
- * allowing the PC to remotely control the Android device via JSON commands over TCP.
- *
- * Protocol:
- * - PC connects to Android on port 8080
- * - Messages are sent as: 4-byte length (big-endian) + JSON payload
- * - Android processes commands and sends responses in same format
- *
- * @author IRCamera Android Sensor Node (Spoke)
- */
+
 class NetworkServer(
     private val context: Context,
     private val port: Int = 8080,
@@ -51,9 +39,7 @@ class NetworkServer(
     private var serverJob: Job? = null
     private var messageListenerJob: Job? = null
 
-    /**
-     * Start the TCP server
-     */
+
     suspend fun start(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -83,9 +69,7 @@ class NetworkServer(
         }
     }
 
-    /**
-     * Stop the TCP server
-     */
+
     suspend fun stop() {
         withContext(Dispatchers.IO) {
             try {
@@ -119,9 +103,7 @@ class NetworkServer(
         }
     }
 
-    /**
-     * Send a message to the connected PC
-     */
+
     suspend fun sendMessage(message: JSONObject): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -148,9 +130,7 @@ class NetworkServer(
         }
     }
 
-    /**
-     * Accept incoming connections from PC Controller
-     */
+
     private suspend fun acceptConnections() {
         while (isRunning.get() && !serverJob?.isCancelled!!) {
             try {
@@ -191,9 +171,7 @@ class NetworkServer(
         }
     }
 
-    /**
-     * Listen for messages from connected PC
-     */
+
     private suspend fun listenForMessages() {
         while (isClientConnected.get() && isRunning.get() && !messageListenerJob?.isCancelled!!) {
             try {
@@ -217,9 +195,7 @@ class NetworkServer(
         disconnectClient()
     }
 
-    /**
-     * Receive a message from PC using the test script protocol
-     */
+
     private suspend fun receiveMessage(): JSONObject? {
         return withContext(Dispatchers.IO) {
             try {
@@ -249,9 +225,7 @@ class NetworkServer(
         }
     }
 
-    /**
-     * Disconnect the current client
-     */
+
     private fun disconnectClient() {
         if (isClientConnected.get()) {
             Log.i(TAG, "Disconnecting PC Controller client")
@@ -275,19 +249,13 @@ class NetworkServer(
         }
     }
 
-    /**
-     * Check if server is running
-     */
+
     fun isRunning(): Boolean = isRunning.get()
 
-    /**
-     * Check if PC is connected
-     */
+
     fun isClientConnected(): Boolean = isClientConnected.get()
 
-    /**
-     * Clean up server resources
-     */
+
     suspend fun cleanup() {
         stop()
         serverScope.cancel()

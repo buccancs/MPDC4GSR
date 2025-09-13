@@ -54,9 +54,7 @@ object TC007Repository {
             .build()
             .create(TC007Service::class.java)
 
-    /**
-     * 获取产品信息
-     */
+
     suspend fun getProductInfo(): ProductBean? =
         withContext(Dispatchers.IO) {
             try {
@@ -66,9 +64,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 获取设备电池信息
-     */
+
     suspend fun getBatteryInfo(): BatteryInfo? =
         withContext(Dispatchers.IO) {
             try {
@@ -78,9 +74,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 同步时间.
-     */
+
     suspend fun syncTime(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -98,9 +92,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 执行固件升级.
-     */
+
     suspend fun updateFirmware(file: File): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -178,9 +170,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 恢复出厂设置
-     */
+
     suspend fun resetToFactory(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -190,9 +180,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 执行锅盖标定
-     */
+
     suspend fun correction(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -202,9 +190,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 获取测温属性参数
-     */
+
     suspend fun getEnvAttr(): EnvAttr? =
         withContext(Dispatchers.IO) {
             try {
@@ -214,11 +200,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 设置温度单位是否为摄氏度
-     * @param isCelsius true-摄氏度 false-华氏度
-     * @param Level 测温档位,0:高增益 1:低增益 3:自动切换
-     */
+
     suspend fun setEnvAttr(
         isCelsius: Boolean,
         Level: Int,
@@ -237,12 +219,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 设置温度修正参数
-     * @param environment 环境温度，单位摄氏度
-     * @param distance 测温距离，单位米
-     * @param radiation 发射率 `[0.01,1]`
-     */
+
     suspend fun setIRConfig(
         environment: Float,
         distance: Float,
@@ -262,9 +239,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 清除所有点、线、面.
-     */
+
     suspend fun clearAllTemp(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -278,9 +253,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 切换全局测温开关状态
-     */
+
     suspend fun getTempFrame(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -294,9 +267,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 设置全局测温开启或关闭.
-     */
+
     suspend fun setTempFrame(boolean: Boolean): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -313,9 +284,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 设置测温点列表.
-     */
+
     suspend fun setTempPointList(pointList: List<Point>): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -329,9 +298,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 设置测温线列表.
-     */
+
     suspend fun setTempLineList(lineList: List<Point>): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -347,9 +314,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 设置测温面列表.
-     */
+
     suspend fun setTempRectList(rectList: List<Rect>): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -363,9 +328,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 拍照
-     */
+
     suspend fun getPhoto(): TC007Response<PhotoBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -376,9 +339,7 @@ object TC007Repository {
             }
         }
 
-    /**
-     * 设置图像模式
-     */
+
     suspend fun setMode(mode: Int): TC007Response<Any?>? =
         withContext(Dispatchers.IO) {
             try {

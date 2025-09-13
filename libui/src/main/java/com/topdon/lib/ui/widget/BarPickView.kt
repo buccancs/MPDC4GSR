@@ -14,42 +14,24 @@ import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
 
-/**
- * 3D 编辑使用的，长地像 SeekBar 的那个条条.
- */
 
-/**
- * Custom Bar pick view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * BarPickView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
+
 class BarPickView : View {
     companion object {
-        /**
-         * 默认条条背景color.
-         */
+
         @ColorInt
         private const val DEFAULT_BG_COLOR = 0xff787878.toInt()
 
-        /**
-         * 默认进度条color.
-         */
+
         @ColorInt
         private const val DEFAULT_PROGRESS_COLOR = 0xffffffff.toInt()
 
-        /**
-         * Thumb 圆角尺寸，单位 dp.
-         */
+
         private const val THUMB_CORNERS = 11f
 
-        /**
-         * Thumb 描边尺寸，单位 dp.
-         */
+
         private const val THUMB_STROKE_WIDTH = 1.5f
     }
 
@@ -59,16 +41,12 @@ class BarPickView : View {
 
     var onStopTrackingTouch: ((progress: Int, max: Int) -> Unit)? = null
 
-    /**
-     * 根据进度格式化指示 View 文字.
-     */
+
     var valueFormatListener: ((progress: Int) -> String) = {
         it.toString()
     }
 
-    /**
-     * 条条进度最大值.
-     */
+
     var max: Int = 100
         set(value) {
             if (field != value) {
@@ -85,9 +63,7 @@ class BarPickView : View {
             }
         }
 
-    /**
-     * 条条current进度.
-     */
+
     private var progress: Int = 0
         set(value) {
             if (field != value) {
@@ -101,19 +77,13 @@ class BarPickView : View {
         onProgressChanged?.invoke(this.progress, max)
     }
 
-    /**
-     * 条条尺寸，单位 px（横向时是高度，竖向时是宽度）
-     */
+
     private val barSize: Int
 
-    /**
-     * 顺时针rotation angle，仅支持 0、90、180、270.
-     */
+
     private val rotate: Int
 
-    /**
-     * 标签文字.
-     */
+
     private val labelText: String
 
     private val path = Path()
@@ -176,9 +146,7 @@ class BarPickView : View {
         return true
     }
 
-    /**
-     * 计算 Thumb 宽度，单位 px.
-     */
+
     private fun computeThumbWidth(): Int {
         val minTextWidth = paint.measureText(valueFormatListener.invoke(min)).toInt()
         val maxTextWidth = paint.measureText(valueFormatListener.invoke(max)).toInt()
@@ -242,9 +210,7 @@ class BarPickView : View {
         drawText(canvas)
     }
 
-    /**
-     * Executes computebarrect functionality.
-     */
+
     private fun computeBarRect() {
         val textHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top
         val textMargin = SizeUtils.dp2px(4f)
@@ -271,9 +237,7 @@ class BarPickView : View {
         }
     }
 
-    /**
-     * Executes computethumbrect functionality.
-     */
+
     private fun computeThumbRect() {
         val thumbWidth = computeThumbWidth()
         val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
@@ -302,9 +266,7 @@ class BarPickView : View {
         }
     }
 
-    /**
-     * Executes cliptobarrect functionality.
-     */
+
     private fun clipToBarRect(canvas: Canvas) {
         canvas.save()
         val radius = (barSize / 2).toFloat()
@@ -331,9 +293,7 @@ class BarPickView : View {
         }
     }
 
-    /**
-     * Executes drawbgbar functionality.
-     */
+
     private fun drawBgBar(canvas: Canvas) {
         paint.color = DEFAULT_BG_COLOR
 
@@ -366,9 +326,7 @@ class BarPickView : View {
         }
     }
 
-    /**
-     * Executes drawprogress functionality.
-     */
+
     private fun drawProgress(canvas: Canvas) {
         paint.color = DEFAULT_PROGRESS_COLOR
 
@@ -401,9 +359,7 @@ class BarPickView : View {
         }
     }
 
-    /**
-     * Executes drawthumb functionality.
-     */
+
     private fun drawThumb(canvas: Canvas) {
         paint.style = Paint.Style.STROKE
         val radius = SizeUtils.dp2px(THUMB_CORNERS).toFloat()
@@ -417,9 +373,7 @@ class BarPickView : View {
         canvas.drawText(progressText, x, y, paint)
     }
 
-    /**
-     * Executes drawtext functionality.
-     */
+
     private fun drawText(canvas: Canvas) {
         if (rotate == 0 || rotate == 180) {
             val y = thumbRect.top + SizeUtils.dp2px(2f) - paint.fontMetricsInt.top

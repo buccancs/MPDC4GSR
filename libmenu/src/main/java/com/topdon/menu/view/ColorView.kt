@@ -13,52 +13,26 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.menu.R as MenuR
 
-/**
- * One pseudo color block in temperature measurement mode - Menu 3 - pseudo color / observation mode - Menu 4 - pseudo color.
- *
- * This View is only used in menu pseudo color, too customized and not universal, so many dimensions and proportions are hard-coded.
- *
- * Only provides one method [refreshColor] for refreshing UI.
- *
- * Created by LCG on 2024/11/12.
- */
 
-/**
- * Custom Color view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * ColorView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
+
 class ColorView : View {
-    /**
-     * Pseudo color gradient color value array.
-     */
+
     var colors: IntArray = intArrayOf(0xfffbda00.toInt(), 0xffea0e0e.toInt(), 0xff6907af.toInt())
 
-    /**
-     * Position array corresponding to pseudo color gradient colors.
-     */
+
     var positions: FloatArray = floatArrayOf(0f, 0.5f, 1f)
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    /**
-     * Shader for paint when selected.
-     */
+
     private var shaderSelectYes = LinearGradient(0f, 0f, 0f, 0f, colors, positions, Shader.TileMode.CLAMP)
 
-    /**
-     * Shader for paint when not selected.
-     */
+
     private var shaderSelectNot = LinearGradient(0f, 0f, 0f, 0f, colors, positions, Shader.TileMode.CLAMP)
 
-    /**
-     * Bottom triangle when selected.
-     */
+
     private val triangleDrawable: Drawable
 
     constructor(context: Context) : this(context, null)
@@ -127,9 +101,7 @@ class ColorView : View {
         }
     }
 
-    /**
-     * Redraw using specified colors and positions.
-     */
+
     fun refreshColor(
         colors: IntArray,
         positions: FloatArray,
@@ -140,9 +112,7 @@ class ColorView : View {
         invalidate()
     }
 
-    /**
-     * Executes refreshshader functionality.
-     */
+
     private fun refreshShader() {
         val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // Border width 2dp
         val barHeight: Int = (measuredWidth * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73

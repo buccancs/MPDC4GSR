@@ -5,9 +5,7 @@ import com.infisense.usbdual.Const;
 
 import java.util.ArrayList;
 
-/**
- * Created by fengjibo on 2022/7/28.
- */
+
 public abstract class BaseDualView {
 
     protected ArrayList<OnFrameCallback> onFrameCallbacks;

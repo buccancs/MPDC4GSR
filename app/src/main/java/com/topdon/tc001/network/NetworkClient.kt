@@ -18,10 +18,7 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentHashMap
 import javax.net.ssl.*
 
-/**
- * Enhanced Network client for communicating with PC Controller
- * Implements secure communication, device discovery, time sync, and reliable messaging
- */
+
 class NetworkClient(private val context: Context) {
     companion object {
         private const val TAG = "NetworkClient"
@@ -100,9 +97,7 @@ class NetworkClient(private val context: Context) {
         setupErrorRecoveryListener()
     }
 
-    /**
-     * Initialize the enhanced network client with security and discovery services
-     */
+
     fun initialize(): Boolean {
         return try {
             // Initialize certificate manager for secure connections
@@ -206,9 +201,7 @@ class NetworkClient(private val context: Context) {
         eventListener = listener
     }
 
-    /**
-     * Set message handler for specific message types
-     */
+
     fun setMessageHandler(
         messageType: String,
         handler: (JSONObject) -> Unit,
@@ -253,9 +246,7 @@ class NetworkClient(private val context: Context) {
         )
     }
 
-    /**
-     * Enhanced discovery using both mDNS service discovery and subnet scanning
-     */
+
     suspend fun discoverControllers(): List<ControllerInfo> =
         withContext(Dispatchers.IO) {
             val controllers = mutableListOf<ControllerInfo>()
@@ -301,9 +292,7 @@ class NetworkClient(private val context: Context) {
             controllers
         }
 
-    /**
-     * Fallback subnet scanning (original implementation)
-     */
+
     private suspend fun performSubnetScan(): List<ControllerInfo> =
         withContext(Dispatchers.IO) {
             val controllers = mutableListOf<ControllerInfo>()
@@ -358,9 +347,7 @@ class NetworkClient(private val context: Context) {
             controllers
         }
 
-    /**
-     * Enhanced connection with TLS support and time synchronization
-     */
+
     suspend fun connectToController(
         ipAddress: String,
         port: Int = PC_CONTROLLER_PORT,
@@ -450,9 +437,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Fallback plaintext connection method
-     */
+
     private suspend fun connectPlaintext(
         ipAddress: String,
         port: Int,
@@ -497,9 +482,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Enhanced disconnect with cleanup
-     */
+
     fun disconnect() {
         isConnected = false
         heartbeatJob.cancel()
@@ -530,9 +513,7 @@ class NetworkClient(private val context: Context) {
         Log.i(TAG, "Disconnected from PC Controller")
     }
 
-    /**
-     * Send measurement data to PC Controller
-     */
+
     suspend fun sendMeasurementData(
         sessionId: String,
         data: JSONObject,
@@ -560,9 +541,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Report device status to PC Controller
-     */
+
     suspend fun reportStatus(
         status: String,
         batteryLevel: Int? = null,
@@ -806,16 +785,12 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Get synchronized timestamp using the calculated clock offset
-     */
+
     fun getSynchronizedTimestamp(): Long {
         return System.nanoTime() + clockOffset
     }
 
-    /**
-     * Send a message to the connected PC Controller
-     */
+
     suspend fun sendMessage(message: JSONObject): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -834,9 +809,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Start continuous data streaming to PC Controller
-     */
+
     suspend fun startDataStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isConnected) return@withContext false
@@ -859,9 +832,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Stop continuous data streaming
-     */
+
     suspend fun stopDataStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isConnected) return@withContext false
@@ -976,9 +947,7 @@ class NetworkClient(private val context: Context) {
 
     fun getDiscoveredControllers(): List<ControllerInfo> = discoveredControllers.values.toList()
 
-    /**
-     * Send message directly through current connection
-     */
+
     private suspend fun sendDirectMessage(message: JSONObject) =
         withContext(Dispatchers.IO) {
             val output = outputStream ?: throw IOException("Not connected")
@@ -989,16 +958,12 @@ class NetworkClient(private val context: Context) {
             output.flush()
         }
 
-    /**
-     * Get connection security status
-     */
+
     fun isSecureConnection(): Boolean = isSecureConnection
 
     fun isConnected(): Boolean = isConnected
 
-    /**
-     * Enable/disable TLS encryption (for development/testing)
-     */
+
     fun setSecureConnectionDefault(enabled: Boolean) {
         if (isConnected) {
             Log.w(TAG, "Cannot change security setting while connected")
@@ -1008,14 +973,10 @@ class NetworkClient(private val context: Context) {
         Log.i(TAG, "Secure connection default ${if (enabled) "enabled" else "disabled"}")
     }
 
-    /**
-     * Get error recovery manager for advanced configuration
-     */
+
     fun getErrorRecoveryManager(): NetworkErrorRecoveryManager = errorRecoveryManager
 
-    /**
-     * Start device discovery with callback-based result handling
-     */
+
     fun startDiscovery(callback: (Boolean) -> Unit) {
         heartbeatScope.launch {
             try {
@@ -1028,9 +989,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Connect to controller with callback-based result handling
-     */
+
     fun connectToController(
         address: String,
         port: Int,
@@ -1047,23 +1006,17 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Get current network latency in milliseconds
-     */
+
     fun getLatencyMs(): Long {
         return errorRecoveryManager.getAverageLatency()
     }
 
-    /**
-     * Get current throughput in KB/s
-     */
+
     fun getThroughputKBps(): Double {
         return errorRecoveryManager.getThroughputKBps()
     }
 
-    /**
-     * Cleanup all resources
-     */
+
     fun cleanup() {
         disconnect()
         discoveryService.cleanup()

@@ -3,15 +3,8 @@ package com.topdon.module.thermal.ir.report.bean
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-/**
-\1检测条件.
- *
-\1报告由 3 部分组成：报告信息、检测条件、infrareddata.
- */
-/**
- * Report condition data model for thermal imaging information.
- * Encapsulates thermal measurement and configuration data.
- */
+
+
 @Parcelize
 data class ReportConditionBean(
     val ambient_humidity: String?, // 环境湿度

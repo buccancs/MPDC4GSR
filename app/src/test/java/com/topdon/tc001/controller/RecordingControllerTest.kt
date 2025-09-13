@@ -19,10 +19,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-/**
- * Tests for RecordingController focusing on robust parallel sensor recording
- * and proper error handling when individual sensors fail.
- */
+
 @RunWith(RobolectricTestRunner::class)
 class RecordingControllerTest {
     @Mock

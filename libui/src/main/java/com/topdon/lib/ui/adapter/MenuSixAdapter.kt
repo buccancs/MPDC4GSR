@@ -14,10 +14,7 @@ import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-/**
- * Custom Menu six view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 @Deprecated("看起来是旧版 2D 编辑的menu，根本没使用了")
 class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null

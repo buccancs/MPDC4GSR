@@ -24,10 +24,7 @@ import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
 
-/**
- * Custom Menu four night view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 @Deprecated("旧的settingsmenu，已重构过了")
 @SuppressLint("NotifyDataSetChanged")
 class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -89,15 +86,7 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         notifyDataSetChanged()
     }
 
-    /**
-     * 不知道干嘛的
-     * 参数 [Constants.IR_TEMPERATURE_MODE] = 1 temperature measurement模式   pseudo color条、对比度、锐度、warning、旋转、font、镜像
-     * 参数 [Constants.IR_TCPLUS_MODE] = 5 dual light设备        pseudo color条、对比度、锐度、warning、旋转、font、
-     * 参数 [Constants.IR_TEMPERATURE_LITE] = 7 Lite设备  pseudo color条、对比度、warning、旋转、font、镜像
-     * 参数 [Constants.IR_TC007_MODE] = 6 TC007          pseudo color条、对比度、锐度、warning、font、镜像
-     * else - 2D编辑menu                                  warning、font、watermark
-     * 参数 [Constants.IR_OBSERVE_MODE] = 2 observation模式  指南针、旋转、镜像、对比度
-     */
+
     fun setShowMenuFour(modeType: Int) {
         fourBean.clear()
         when (modeType) {

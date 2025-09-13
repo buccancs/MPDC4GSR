@@ -136,9 +136,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Set up remote control with enhanced features
-     */
+
     private fun setupRemoteControl() {
         Log.i(TAG, "Setting up enhanced remote control capabilities")
         
@@ -455,10 +453,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.viewMinePoint.isVisible = false
     }
 
-    /**
-     * 刷新 3 个 tab 的选中状态
-     * @param index 当前选中哪个 tab，`[0, 2]`
-     */
+
     private fun refreshTabSelect(index: Int) {
         binding.ivIconGallery.isSelected = false
         binding.tvIconGallery.isSelected = false
@@ -547,11 +542,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    /**
-     * 权限检测
-     * 因申请权限前需要弹窗提示用户，所以修改成key value形式
-     * @return key：权限种类 value：具体权限
-     */
+
     private fun getNeedPermissionList(): SparseArray<List<String>> {
         val sparseArray = SparseArray<List<String>>()
         sparseArray.append(R.string.permission_request_camera_app, listOf(Manifest.permission.CAMERA))
@@ -604,9 +595,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    /**
-     * 动态申请权限
-     */
+
     private fun initCameraPermission() {
         XXPermissions.with(this)
             .permission(getNeedPermissionList()[R.string.permission_request_camera_app])
@@ -670,9 +659,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    /**
-     * 动态申请权限
-     */
+
     private fun initStoragePermission() {
         if (PermissionUtils.isVisualUser()) {
             jumpIRActivity()
@@ -765,10 +752,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 <<<<<<< HEAD
     // ==================== PHASE 0 BASELINE & GUARDRAILS ====================
     
-    /**
-     * Initialize Phase 0 baseline components: feature flags, structured logging, 
-     * protocol versioning, and crash-safe supervision
-     */
+
     private fun initializePhase0Baseline() {
         Log.i(TAG, "Initializing Phase 0 baseline components")
         
@@ -822,9 +806,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     
     // ==================== PC-to-Phone Control Networking ====================
     
-    /**
-     * Initialize the PC-to-phone control networking system with Phase 0 supervision
-     */
+
     private fun initNetworking() {
         Log.i(TAG, "Initializing PC-to-phone control networking with Phase 0 baseline")
         
@@ -896,9 +878,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Initialize WebSocket client under supervision - Phase 1 implementation
-     */
+
     private suspend fun initializeWebSocketClientSupervised(stopToken: CrashSafeSupervisor.StopToken) {
         while (!stopToken.isStopRequested()) {
             try {
@@ -986,12 +966,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         webSocketClient = null
     }
     
-    /**
-     * Create network event listener to handle PC controller events with structured logging
-     */
-    /**
-     * Create WebSocket event listener - Phase 1 implementation
-     */
+
+
     private fun createWebSocketEventListener(): WebSocketClient.WebSocketEventListener {
         return object : WebSocketClient.WebSocketEventListener {
             override fun onServerDiscovered(serverInfo: WebSocketClient.ServerInfo) {
@@ -1147,9 +1123,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Handle remote session start request - Phase 1
-     */
+
     private fun handleRemoteSessionStart(sessionId: String) {
         try {
             structuredLogger.logSessionEvent(
@@ -1174,9 +1148,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Handle remote session stop request - Phase 1
-     */
+
     private fun handleRemoteSessionStop() {
         try {
             structuredLogger.log(
@@ -1202,20 +1174,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Bind to the recording service for remote control capability
-     */
+
     private fun bindRecordingService() {
         val intent = Intent(this, RecordingService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
     
-    /**
-     * Start network discovery to find PC controllers
-     */
-    /**
-     * Start network discovery to find PC controllers - Phase 1 WebSocket implementation
-     */
+
+
     private fun startNetworkDiscovery() {
         Log.i(TAG, "Starting WebSocket discovery for PC servers")
         updateConnectionStatus(ConnectionStatus.DISCOVERING)
@@ -1233,9 +1199,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Event callbacks handle the UI updates
     }
     
-    /**
-     * Handle remote recording request from PC controller
-     */
+
     private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
         Log.i(TAG, "Processing remote recording request for session: ${sessionInfo.sessionId}")
         
@@ -1267,9 +1231,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Perform screen flash for synchronization
-     */
+
     private fun performSyncFlash(durationMs: Int) {
         Log.i(TAG, "Performing sync flash for ${durationMs}ms")
         
@@ -1297,9 +1259,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Update connection status and UI
-     */
+
     private fun updateConnectionStatus(status: ConnectionStatus) {
         connectionStatus = status
         
@@ -1332,9 +1292,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Show network error to user with actionable options
-     */
+
     private fun showNetworkError(message: String) {
         Log.e(TAG, "Network error: $message")
         
@@ -1357,9 +1315,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.show()
     }
     
-    /**
-     * Enhanced PC connection with better error handling
-     */
+
     fun connectToPC(ipAddress: String, port: Int = 8080) {
         if (networkClient == null) {
             showNetworkError("Network client not initialized")
@@ -1401,17 +1357,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Get current connection status
-     */
+
     fun getConnectionStatus(): ConnectionStatus = connectionStatus
     
-    /**
-     * Get network performance metrics
-     */
-    /**
-     * Get network metrics for WebSocket connection - Phase 1
-     */
+
+
     fun getNetworkMetrics(): String {
         val client = webSocketClient ?: return "WebSocket client not available"
         
@@ -1420,9 +1370,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                "Reconnecting: ${client.isReconnecting()}"
     }
     
-    /**
-     * Enable automatic reconnection with exponential backoff
-     */
+
     private fun enableAutoReconnection() {
         lifecycleScope.launch {
             var reconnectDelay = 5000L // Start with 5 seconds
@@ -1451,9 +1399,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Try reconnection using various strategies
-     */
+
     private suspend fun tryReconnection(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -1503,9 +1449,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Send keep-alive heartbeat to maintain connection
-     */
+
     private fun startHeartbeat() {
         lifecycleScope.launch {
             while (!isFinishing) {
@@ -1526,9 +1470,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Get comprehensive status report for debugging
-     */
+
     fun getConnectionStatusReport(): String {
         val sb = StringBuilder()
         sb.append("=== PC-to-Phone Control Status ===\n")
@@ -1573,9 +1515,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         return sb.toString()
     }
     
-    /**
-     * Handle network status bar click for manual connection
-     */
+
     private fun handleNetworkStatusClick() {
         when (connectionStatus) {
             ConnectionStatus.DISCONNECTED, ConnectionStatus.ERROR -> {
@@ -1593,9 +1533,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Show comprehensive connection options dialog
-     */
+
     private fun showConnectionOptionsDialog() {
         val options = arrayOf(
             "Retry Discovery",
@@ -1629,9 +1567,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.show()
     }
     
-    /**
-     * Show connection information dialog
-     */
+
     private fun showConnectionInfoDialog() {
         val metrics = getNetworkMetrics()
         val servers = webSocketClient?.getDiscoveredServers()
@@ -1661,9 +1597,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.show()
     }
     
-    /**
-     * Show detailed status report dialog
-     */
+
     private fun showStatusReportDialog() {
         val statusReport = getConnectionStatusReport()
         
@@ -1680,9 +1614,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.show()
     }
     
-    /**
-     * Test remote recording capability
-     */
+
     private fun testRemoteRecordingCapability() {
         if (!isServiceBound || recordingService == null) {
             Toast.makeText(this, "Recording service not available", Toast.LENGTH_SHORT).show()
@@ -1708,9 +1640,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Show dialog for manual PC connection
-     */
+
     private fun showManualConnectionDialog() {
         val input = android.widget.EditText(this)
         input.hint = "Enter PC IP address (e.g., 192.168.1.100)"
@@ -1739,9 +1669,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.show()
     }
     
-    /**
-     * Try connecting to common IP addresses
-     */
+
     private fun tryCommonIPAddresses() {
         val commonIPs = listOf(
             "192.168.1.100", "192.168.1.101", "192.168.1.102",
@@ -1833,10 +1761,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    /**
-     * Launch GSR Quick Recording Activity
-     * This provides direct access to the GSR recording functionality from the main app
-     */
+
     fun launchGSRRecording() {
         // Check GSR permissions first
         if (GSRSensorRecorder.hasRequiredPermissions(this)) {

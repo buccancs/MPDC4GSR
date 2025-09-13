@@ -11,9 +11,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-/**
- * create by fylder on 2018/8/9
- **/
+
 // Legacy ARouter route annotation - now using NavigationManager
 class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
     // Note: Using TextView placeholder until PDFView library is integrated

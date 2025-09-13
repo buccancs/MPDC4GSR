@@ -6,11 +6,7 @@ import com.topdon.tc001.logging.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * Role-Based Access Control (RBAC) for Phase 4 Security Enhancement
- *
- * Manages permissions and access control for different device types and user roles
- */
+
 class RoleBasedAccessControl(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -142,9 +138,7 @@ class RoleBasedAccessControl(
         val reason: String,
     )
 
-    /**
-     * Initialize RBAC system
-     */
+
     fun initialize(): Boolean {
         return try {
             Log.i(TAG, "Initializing Role-Based Access Control")
@@ -181,9 +175,7 @@ class RoleBasedAccessControl(
         }
     }
 
-    /**
-     * Assign role to device
-     */
+
     fun assignRole(
         deviceId: String,
         role: Role,
@@ -215,9 +207,7 @@ class RoleBasedAccessControl(
         }
     }
 
-    /**
-     * Determine role based on device type and authentication context
-     */
+
     fun determineRole(
         deviceId: String,
         deviceType: DeviceType,
@@ -250,9 +240,7 @@ class RoleBasedAccessControl(
         return adjustedRole
     }
 
-    /**
-     * Check if device has specific permission
-     */
+
     fun hasPermission(
         deviceId: String,
         permission: String,
@@ -280,9 +268,7 @@ class RoleBasedAccessControl(
         return granted
     }
 
-    /**
-     * Check if device has all required permissions
-     */
+
     fun hasAllPermissions(
         deviceId: String,
         requiredPermissions: Set<String>,
@@ -290,9 +276,7 @@ class RoleBasedAccessControl(
         return requiredPermissions.all { hasPermission(deviceId, it) }
     }
 
-    /**
-     * Grant temporary permissions to device
-     */
+
     fun grantTemporaryPermissions(
         deviceId: String,
         permissions: Set<String>,
@@ -313,9 +297,7 @@ class RoleBasedAccessControl(
         )
     }
 
-    /**
-     * Grant session-specific permissions
-     */
+
     fun grantSessionPermissions(
         deviceId: String,
         permissions: Set<String>,
@@ -333,9 +315,7 @@ class RoleBasedAccessControl(
         )
     }
 
-    /**
-     * Revoke all temporary and session permissions for device
-     */
+
     fun revokePermissions(deviceId: String) {
         temporaryPermissions.remove(deviceId)
         sessionPermissions.remove(deviceId)
@@ -350,9 +330,7 @@ class RoleBasedAccessControl(
         )
     }
 
-    /**
-     * Get effective permissions for device
-     */
+
     fun getEffectivePermissions(deviceId: String): Set<String> {
         val role = deviceRoles[deviceId] ?: Role.GUEST
         val rolePermissions =
@@ -374,9 +352,7 @@ class RoleBasedAccessControl(
         return rolePermissions + temporaryPerms + sessionPerms
     }
 
-    /**
-     * Get all available permissions
-     */
+
     private fun getAllPermissions(): Set<String> {
         return setOf(
             PERM_VIEW_STATUS,
@@ -393,9 +369,7 @@ class RoleBasedAccessControl(
         )
     }
 
-    /**
-     * Log access attempt for audit trail
-     */
+
     private fun logAccessAttempt(
         deviceId: String,
         permission: String,
@@ -436,9 +410,7 @@ class RoleBasedAccessControl(
         }
     }
 
-    /**
-     * Get access audit trail
-     */
+
     fun getAccessAuditTrail(
         deviceId: String? = null,
         limit: Int = 100,
@@ -450,9 +422,7 @@ class RoleBasedAccessControl(
         }
     }
 
-    /**
-     * Get security violations (denied access attempts)
-     */
+
     fun getSecurityViolations(timeWindowMs: Long = 24 * 60 * 60 * 1000L): List<AccessAttempt> {
         val cutoffTime = System.currentTimeMillis() - timeWindowMs
 
@@ -462,9 +432,7 @@ class RoleBasedAccessControl(
         }
     }
 
-    /**
-     * Clean up expired temporary permissions
-     */
+
     private fun cleanupExpiredPermissions() {
         val currentTime = System.currentTimeMillis()
         val expiredDevices =
@@ -488,48 +456,36 @@ class RoleBasedAccessControl(
         }
     }
 
-    /**
-     * Load role assignments from persistent storage
-     */
+
     private fun loadRoleAssignments() {
         // Simplified implementation - in production, this would load from secure storage
         // For now, we'll start with empty assignments and let roles be determined dynamically
         Log.i(TAG, "Role assignments loaded (placeholder implementation)")
     }
 
-    /**
-     * Save role assignments to persistent storage
-     */
+
     private fun saveRoleAssignments() {
         // Simplified implementation - in production, this would save to secure storage
         Log.d(TAG, "Role assignments saved (placeholder implementation)")
     }
 
-    /**
-     * Initialize default device type mappings
-     */
+
     private fun initializeDefaultMappings() {
         // Set up any default role assignments based on device discovery
         Log.i(TAG, "Default device type mappings initialized")
     }
 
-    /**
-     * Get role for device
-     */
+
     fun getRole(deviceId: String): Role {
         return deviceRoles[deviceId] ?: Role.GUEST
     }
 
-    /**
-     * Get all device roles
-     */
+
     fun getAllDeviceRoles(): Map<String, Role> {
         return deviceRoles.toMap()
     }
 
-    /**
-     * Get RBAC diagnostics
-     */
+
     fun getDiagnostics(): JSONObject {
         cleanupExpiredPermissions()
 
@@ -544,9 +500,7 @@ class RoleBasedAccessControl(
         }
     }
 
-    /**
-     * Create permission enforcement decorator
-     */
+
     inline fun <T> withPermission(
         deviceId: String,
         permission: String,
@@ -560,9 +514,7 @@ class RoleBasedAccessControl(
         }
     }
 
-    /**
-     * Create multi-permission enforcement decorator
-     */
+
     inline fun <T> withPermissions(
         deviceId: String,
         permissions: Set<String>,

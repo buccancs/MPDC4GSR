@@ -27,10 +27,7 @@
 //
 //import java.util.List;
 //
-///**
-// * device -> bytes
-// * infrared出图核心工具类
-// */
+//
 //public class IRUVCTC {
 //
 //    private static final String TAG = "IRUVC";
@@ -48,9 +45,7 @@
 //    private int pids[] = {0x5840, 0x3901, 0x5830, 0x5838};
 //    public boolean auto_gain_switch = false;
 //    private boolean auto_over_portect = false;
-//    /**
-//     * 自动gainswitch
-//     */
+//
 //    private LibIRProcess.AutoGainSwitchInfo_t auto_gain_switch_info = new LibIRProcess.AutoGainSwitchInfo_t();
 //    private LibIRProcess.GainSwitchParam_t gain_switch_param = new LibIRProcess.GainSwitchParam_t();
 //    private int count = 0;
@@ -63,12 +58,7 @@
 //    public byte[] imageEditTemp = null;
 //    Long updateTime = 0L;
 //
-//    /**
-//     * @param cameraHeight
-//     * @param cameraWidth
-//     * @param context
-//     * @param syncimage
-//     */
+//
 //    public IRUVCTC(int cameraHeight, int cameraWidth, Context context, SynchronizedBitmap syncimage,
 //                   CommonParams.DataFlowMode dataFlowMode, boolean isUseIRISP, boolean isUseGPU,
 //                   ConnectCallback connectCallback, USBMonitorCallback usbMonitorCallback) {
@@ -172,12 +162,7 @@
 //                    XLog.tag(TAG).i("RESTART_USB");
 //                    return;
 //                }
-//                /**
-//                 * copyinfrared数据到imagearray中
-//                 * 出图的framearray中前半部分是infrared数据，后半部分是温度数据，
-//                 * 例如256*384分辨率的设备，前面的256*192是infrared数据，后面的256*192是温度数据，
-//                 * 其中的数据是旋转90度的，需要旋转回来。
-//                 */
+//
 //                if (imageEditTemp != null && imageEditTemp.length >= length) {
 //                    //部分场景不需要saved帧数据
 //                    System.arraycopy(frame, 0, imageEditTemp, 0, length);
@@ -235,23 +220,17 @@
 //        };
 //    }
 //
-//    /**
-//     * @param rotate
-//     */
+//
 //    public void setRotate(int rotate) {
 //        this.rotate = rotate;
 //    }
 //
-//    /**
-//     * @param image
-//     */
+//
 //    public void setImage(byte[] image) {
 //        this.image = image;
 //    }
 //
-//    /**
-//     * @param temperature
-//     */
+//
 //    public void setTemperature(byte[] temperature) {
 //        this.temperature = temperature;
 //    }
@@ -260,12 +239,7 @@
 //        this.imageEditTemp = imageEditTemp;
 //    }
 //
-//    /**
-//     * 判断是否是infrared设备，请把您的设备的PID添加进设备PID白名单
-//     *
-//     * @param devpid
-//     * @return
-//     */
+//
 //    private boolean isIRpid(int devpid) {
 //        for (int x : pids) {
 //            if (x == devpid) return true;
@@ -273,11 +247,7 @@
 //        return false;
 //    }
 //
-//    /**
-//     * @param cameraHeight
-//     * @param cameraWidth
-//     * @param context
-//     */
+//
 //    public void init(int cameraHeight, int cameraWidth, Context context) {
 //        XLog.tag(TAG).w("init");
 //        uvcCamera = new UVCCamera(cameraWidth, cameraHeight, context);
@@ -285,27 +255,21 @@
 //        EventBus.getDefault().post(new DeviceCameraEvent(100));
 //    }
 //
-//    /**
-//     *
-//     */
+//
 //    public void registerUSB() {
 //        if (mUSBMonitor != null) {
 //            mUSBMonitor.register();
 //        }
 //    }
 //
-//    /**
-//     *
-//     */
+//
 //    public void unregisterUSB() {
 //        if (mUSBMonitor != null) {
 //            mUSBMonitor.unregister();
 //        }
 //    }
 //
-//    /**
-//     * @return
-//     */
+//
 //    public List<UsbDevice> getUsbDeviceList() {
 ////        List<DeviceFilter> deviceFiltersTemp = DeviceFilter.getDeviceFilters(context, R.xml.device_filter);
 //        List<DeviceFilter> deviceFilters = DeviceFilter.getDeviceFilters(context, R.xml.ir_device_filter);
@@ -316,9 +280,7 @@
 //        return mUSBMonitor.getDeviceList(deviceFilters);
 //    }
 //
-//    /**
-//     * @param index
-//     */
+//
 //    public void requestPermission(int index) {
 //        List<UsbDevice> devList = getUsbDeviceList();
 //        if (devList == null || devList.size() == 0) {
@@ -332,9 +294,7 @@
 //        }
 //    }
 //
-//    /**
-//     * @param ctrlBlock
-//     */
+//
 //    public void open(USBMonitor.UsbControlBlock ctrlBlock) {
 //        if (ctrlBlock.getProductId() == TinyB) {
 //            if (syncimage != null) {
@@ -347,9 +307,7 @@
 //        uvcCamera.open(ctrlBlock);
 //    }
 //
-//    /**
-//     *
-//     */
+//
 //    public void start() {
 //        try {
 //            XLog.tag(TAG).w("start");
@@ -382,9 +340,7 @@
 //
 //    }
 //
-//    /**
-//     *
-//     */
+//
 //    public void stop() {
 //        XLog.tag(TAG).w("stop");
 ////        if (uvcCamera != null) {

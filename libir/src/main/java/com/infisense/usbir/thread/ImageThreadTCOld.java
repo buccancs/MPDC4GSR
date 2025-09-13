@@ -12,10 +12,7 @@
 //
 //import java.nio.ByteBuffer;
 //
-///**
-// * bytes -> bitmap
-// * 将源数据转出图像照片
-// */
+//
 //public class ImageThreadTCOld extends Thread {
 //
 //    private static final int TYPE_TINY1B = 1;

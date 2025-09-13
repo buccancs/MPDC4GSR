@@ -14,19 +14,11 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Comprehensive unit tests for libir module using Robolectric
- * Tests IR image processing, thermal analysis, and related utilities
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)
-/**
- * LibIRModuleTest manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class LibIRModuleTest {
     private lateinit var context: Context
 
@@ -36,18 +28,14 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testcontextaccess functionality.
-     */
+
     fun testContextAccess() {
         assertNotNull("Context should be available", context)
         assertNotNull("Package name should be available", context.packageName)
     }
 
     @Test
-    /**
-     * Executes testirimageprocessing functionality.
-     */
+
     fun testIRImageProcessing() =
         runTest {
             // Test IR image processing with mock thermal data
@@ -83,9 +71,7 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testhotcoldspotdetection functionality.
-     */
+
     fun testHotColdSpotDetection() =
         runTest {
             // Test hot and cold spot detection algorithms
@@ -136,9 +122,7 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testiractivitycreation functionality.
-     */
+
     fun testIRActivityCreation() {
         // Test IR activity classes can be referenced
         try {
@@ -151,9 +135,7 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testirviewcreation functionality.
-     */
+
     fun testIRViewCreation() {
         // Test IR view classes can be referenced
         try {
@@ -169,9 +151,7 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testthermalcalibration functionality.
-     */
+
     fun testThermalCalibration() =
         runTest {
             // Test thermal calibration functions
@@ -194,9 +174,7 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testirimagefiltering functionality.
-     */
+
     fun testIRImageFiltering() =
         runTest {
             // Test IR image filtering algorithms
@@ -237,9 +215,7 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testsystemserviceaccess functionality.
-     */
+
     fun testSystemServiceAccess() {
         // Test system services that IR processing might use
         val displayService = context.getSystemService(Context.DISPLAY_SERVICE)
@@ -253,9 +229,7 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testresourceaccess functionality.
-     */
+
     fun testResourceAccess() {
         val resources = context.resources
         assertNotNull("Resources should be available", resources)
@@ -266,9 +240,7 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testbitmapoperations functionality.
-     */
+
     fun testBitmapOperations() =
         runTest {
             // Test bitmap operations for IR image display
@@ -292,9 +264,7 @@ class LibIRModuleTest {
         }
 
     @Test
-    /**
-     * Executes testfilesystemaccess functionality.
-     */
+
     fun testFileSystemAccess() {
         // Test file system access for IR image storage
         val filesDir = context.filesDir
@@ -307,9 +277,7 @@ class LibIRModuleTest {
     }
 
     @Test
-    /**
-     * Executes testasyncoperations functionality.
-     */
+
     fun testAsyncOperations() =
         runTest {
             // Test that coroutines work with IR processing context

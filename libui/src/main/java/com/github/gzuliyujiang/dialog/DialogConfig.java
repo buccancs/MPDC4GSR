@@ -13,10 +13,7 @@
 
 package com.github.gzuliyujiang.dialog;
 
-/**
- * @author 贵州山魈羡民 (1032694760@qq.com)
- * @since 2021/9/16 15:55
- */
+
 public final class DialogConfig {
     private static int dialogStyle = DialogStyle.Default;
     private static DialogColor dialogColor = new DialogColor();

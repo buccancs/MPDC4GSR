@@ -23,14 +23,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Shimmer device implementation using Nordic BLE backend.
- * 
- * Provides enhanced reliability and comprehensive Shimmer device support
- * for GSR, PPG, IMU, and multi-sensor configurations.
- * 
- * @author IRCamera Shimmer Integration Team
- */
+
 public class ShimmerDevice implements UnifiedDevice {
     private static final String TAG = "ShimmerDevice";
     
@@ -59,9 +52,7 @@ public class ShimmerDevice implements UnifiedDevice {
     // Device info
     private DeviceInfo deviceInfo;
     
-    /**
-     * Constructor
-     */
+
     public ShimmerDevice(@NonNull BluetoothDevice bluetoothDevice, 
                         @NonNull ShimmerDeviceConfig config,
                         @Nullable UnifiedBleManager.UnifiedConnectionListener listener) {
@@ -86,9 +77,7 @@ public class ShimmerDevice implements UnifiedDevice {
         Log.i(TAG, "Created ShimmerDevice: " + bluetoothDevice.getAddress());
     }
     
-    /**
-     * Check if Bluetooth permissions are available for device operations
-     */
+
     private boolean hasBluetoothPermission(Context context) {
         if (context == null) return false;
         
@@ -319,9 +308,7 @@ public class ShimmerDevice implements UnifiedDevice {
         this.connectionListener = listener;
     }
     
-    /**
-     * GATT callback for handling Shimmer BLE communication
-     */
+
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -443,9 +430,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
     };
     
-    /**
-     * Notify connection error
-     */
+
     private void notifyConnectionError(int errorCode, String message) {
         if (connectionListener != null) {
             connectionListener.onConnectionError(this, errorCode, message);

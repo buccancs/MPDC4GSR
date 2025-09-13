@@ -10,17 +10,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import com.infisense.usbir.R
 
-/**
- * 卡尺图片
- * @author: CaiSongL
- * @date: 2023/10/25 13:31
- */
-/**
- * CaliperImageView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
 class CaliperImageView : AppCompatImageView {
     private var showBitmapWidth: Float = 0f
     private var showBitmapHeight: Float = 0F
@@ -51,9 +42,7 @@ class CaliperImageView : AppCompatImageView {
         defStyleAttr,
     )
 
-    /**
-     * Initializes the component with default configuration.
-     */
+
     private fun initView() {
         originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
         originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f

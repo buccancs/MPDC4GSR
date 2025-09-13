@@ -13,19 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.random.Random
 
-/**
- * File Upload Service for Phase 3 implementation
- * Handles resumable file uploads from Android to PC controller
- *
- * Features:
- * - Resumable uploads with checkpoint recovery
- * - File integrity verification with SHA-256 checksums
- * - Chunked transfer protocol (1MB chunks by default)
- * - Concurrent upload management (up to 3 simultaneous uploads)
- * - Progress tracking and error recovery
- * - Session-based file organization
- * - WebSocket-based transfer protocol
- */
+
 class FileUploadService(private val context: Context) {
     companion object {
         private const val TAG = "FileUploadService"
@@ -73,9 +61,7 @@ class FileUploadService(private val context: Context) {
     // WebSocket client for transfer communication
     private var webSocketClient: WebSocketClient? = null
 
-    /**
-     * Data class representing an upload job
-     */
+
     data class UploadJob(
         val jobId: String,
         val filePath: String,
@@ -111,9 +97,7 @@ class FileUploadService(private val context: Context) {
             }
     }
 
-    /**
-     * Initialize the file upload service
-     */
+
     fun initialize(webSocketClient: WebSocketClient) {
         this.webSocketClient = webSocketClient
         isActive.set(true)
@@ -133,9 +117,7 @@ class FileUploadService(private val context: Context) {
         startUploadProcessor()
     }
 
-    /**
-     * Queue a file for upload
-     */
+
     suspend fun queueUpload(
         filePath: String,
         sessionId: String,
@@ -216,9 +198,7 @@ class FileUploadService(private val context: Context) {
         }
     }
 
-    /**
-     * Cancel an upload
-     */
+
     suspend fun cancelUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
 
@@ -238,9 +218,7 @@ class FileUploadService(private val context: Context) {
         return true
     }
 
-    /**
-     * Pause an upload
-     */
+
     suspend fun pauseUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
 
@@ -262,9 +240,7 @@ class FileUploadService(private val context: Context) {
         return false
     }
 
-    /**
-     * Resume a paused upload
-     */
+
     suspend fun resumeUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
 
@@ -288,23 +264,17 @@ class FileUploadService(private val context: Context) {
         return false
     }
 
-    /**
-     * Get upload status
-     */
+
     fun getUploadStatus(jobId: String): UploadJob? {
         return activeUploads[jobId]
     }
 
-    /**
-     * Get all active uploads
-     */
+
     fun getActiveUploads(): List<UploadJob> {
         return activeUploads.values.toList()
     }
 
-    /**
-     * Get upload statistics
-     */
+
     fun getUploadStats(): Map<String, Any> {
         val jobs = activeUploads.values
         return mapOf(
@@ -317,9 +287,7 @@ class FileUploadService(private val context: Context) {
         )
     }
 
-    /**
-     * Start the upload processor coroutine
-     */
+
     private fun startUploadProcessor() {
         GlobalScope.launch {
             while (isActive.get()) {
@@ -356,9 +324,7 @@ class FileUploadService(private val context: Context) {
         }
     }
 
-    /**
-     * Execute individual upload
-     */
+
     private suspend fun executeUpload(job: UploadJob) {
         concurrentUploads.incrementAndGet()
 
@@ -450,9 +416,7 @@ class FileUploadService(private val context: Context) {
         }
     }
 
-    /**
-     * Initiate upload with PC controller
-     */
+
     private suspend fun initiateUpload(job: UploadJob): Boolean {
         return try {
             val initMessage =
@@ -484,9 +448,7 @@ class FileUploadService(private val context: Context) {
         }
     }
 
-    /**
-     * Upload file in chunks
-     */
+
     private suspend fun uploadFileChunks(job: UploadJob) {
         val file = File(job.filePath)
 
@@ -536,9 +498,7 @@ class FileUploadService(private val context: Context) {
         }
     }
 
-    /**
-     * Verify upload completion with PC
-     */
+
     private suspend fun verifyUploadCompletion(job: UploadJob): Boolean {
         return try {
             val verifyMessage =
@@ -564,9 +524,7 @@ class FileUploadService(private val context: Context) {
         }
     }
 
-    /**
-     * Check for existing partial upload on PC
-     */
+
     private suspend fun checkExistingUpload(job: UploadJob): Long {
         return try {
             val checkMessage =
@@ -595,9 +553,7 @@ class FileUploadService(private val context: Context) {
         }
     }
 
-    /**
-     * Calculate SHA-256 checksum of file
-     */
+
     private fun calculateSHA256(file: File): String {
         val digest = MessageDigest.getInstance("SHA-256")
 
@@ -613,9 +569,7 @@ class FileUploadService(private val context: Context) {
         return digest.digest().joinToString("") { "%02x".format(it) }
     }
 
-    /**
-     * Generate unique job ID
-     */
+
     private fun generateJobId(
         sessionId: String,
         deviceId: String,
@@ -626,9 +580,7 @@ class FileUploadService(private val context: Context) {
         return "upload_${sessionId}_${deviceId}_${timestamp}_$random"
     }
 
-    /**
-     * Shutdown the service
-     */
+
     fun shutdown() {
         isActive.set(false)
 

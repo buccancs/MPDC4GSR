@@ -14,12 +14,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
-/**
- * Unit tests for RGBCameraRecorder dual-mode functionality
- *
- * Tests camera mode switching, Samsung S22 compatibility,
- * session management, and error handling.
- */
+
 @ExperimentalCoroutinesApi
 class RGBCameraRecorderTest {
     @MockK

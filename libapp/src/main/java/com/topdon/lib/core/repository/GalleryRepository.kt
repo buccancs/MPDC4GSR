@@ -74,9 +74,7 @@ object GalleryRepository {
         }
     }
 
-    /**
-     * 读取本地图库指定设备类型的最新文件
-     */
+
     fun readLatest(dirType: DirType): String {
         var firstPath = ""
         try {
@@ -100,11 +98,7 @@ object GalleryRepository {
         return firstPath
     }
 
-    /**
-     * 分页加载
-     * @param pageNum 页码，从1开始
-     * @param pageCount 每页数据条数
-     */
+
     suspend fun loadByPage(
         isVideo: Boolean,
         dirType: DirType,
@@ -143,9 +137,7 @@ object GalleryRepository {
         }
     }
 
-    /**
-     * 仅供生成报告使用的，加载所有指定设备类型的图片.
-     */
+
     suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> =
         withContext(Dispatchers.IO) {
             val resultList: ArrayList<GalleryBean> = ArrayList()
@@ -165,9 +157,7 @@ object GalleryRepository {
             return@withContext resultList
         }
 
-    /**
-     * 加载本地所有指定类型的图片或视频列表.
-     */
+
     private fun loadAllLocale(
         isVideo: Boolean,
         dirType: DirType,
@@ -206,9 +196,7 @@ object GalleryRepository {
         return resultList
     }
 
-    /**
-     * 使用 MediaStore API 而不是 File 加载本地所有指定类型的图片或视频列表.
-     */
+
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
         val tc001Files: MutableList<File> = ArrayList()
         // 定义查询的列

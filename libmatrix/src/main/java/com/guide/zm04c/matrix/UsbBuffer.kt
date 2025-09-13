@@ -34,9 +34,7 @@ class UsbBuffer {
     private var findHeadFrame = false
     private var findHeadFramePos = -1
 
-    /**
-     * 转无符号
-     */
+
     private fun getMark(
         buf: ByteArray,
         offset: Int,

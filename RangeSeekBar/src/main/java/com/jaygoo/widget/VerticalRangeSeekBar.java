@@ -14,21 +14,12 @@ import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * ================================================
- * 作    者：JayGoo
- * 版    本：
- * 创建日期：2018/5/10
- * 描    述:
- * ================================================
- */
+
 public class VerticalRangeSeekBar extends DefRangeSeekBar {
 
     //text direction of VerticalRangeSeekBar. include indicator and tickMark
 
-    /**
-     * @hide
-     */
+
     @IntDef({TEXT_DIRECTION_VERTICAL, TEXT_DIRECTION_HORIZONTAL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TextDirectionDef {
@@ -39,9 +30,7 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
 
     //direction of VerticalRangeSeekBar
 
-    /**
-     * @hide
-     */
+
     @IntDef({DIRECTION_LEFT, DIRECTION_RIGHT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface DirectionDef {
@@ -232,11 +221,7 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
         }
     }
 
-    /**
-     * if is single mode, please use it to get the SeekBar
-     *
-     * @return left seek bar
-     */
+
     public VerticalSeekBar getLeftSeekBar() {
         return (VerticalSeekBar) leftSB;
     }
@@ -249,12 +234,7 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
         return orientation;
     }
 
-    /**
-     * set VerticalRangeSeekBar Orientation
-     * {@link #DIRECTION_LEFT}
-     * {@link #DIRECTION_RIGHT}
-     * @param orientation
-     */
+
     public void setOrientation(@DirectionDef int orientation) {
         this.orientation = orientation;
     }
@@ -263,12 +243,7 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
         return tickMarkDirection;
     }
 
-    /**
-     * set tick mark text direction
-     * {@link #TEXT_DIRECTION_VERTICAL}
-     * {@link #TEXT_DIRECTION_HORIZONTAL}
-     * @param tickMarkDirection
-     */
+
     public void setTickMarkDirection(@TextDirectionDef int tickMarkDirection) {
         this.tickMarkDirection = tickMarkDirection;
     }

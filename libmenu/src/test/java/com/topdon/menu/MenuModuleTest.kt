@@ -14,20 +14,12 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Comprehensive unit tests for libmenu module using Robolectric
- * Tests menu constants, configurations, and view utilities
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O], manifest = Config.NONE)
 @OptIn(ExperimentalCoroutinesApi::class)
 
-/**
- * MenuModuleTest manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
 class MenuModuleTest {
     private lateinit var context: Context
 
@@ -37,18 +29,14 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testcontextaccess functionality.
-     */
+
     fun testContextAccess() {
         assertNotNull("Context should be available", context)
         assertNotNull("Package name should be available", context.packageName)
     }
 
     @Test
-    /**
-     * Executes testmenutypeconstants functionality.
-     */
+
     fun testMenuTypeConstants() {
         // Test MenuType enum accessibility
         try {
@@ -69,9 +57,7 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testtargettypeconstants functionality.
-     */
+
     fun testTargetTypeConstants() {
         try {
             val targetTypeClass = Class.forName("com.topdon.menu.constant.TargetType")
@@ -83,9 +69,7 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testtemppointtypeconstants functionality.
-     */
+
     fun testTempPointTypeConstants() {
         try {
             val tempPointTypeClass = Class.forName("com.topdon.menu.constant.TempPointType")
@@ -97,9 +81,7 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testfencetypeconstants functionality.
-     */
+
     fun testFenceTypeConstants() {
         try {
             val fenceTypeClass = Class.forName("com.topdon.menu.constant.FenceType")
@@ -111,9 +93,7 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testsettingtypeconstants functionality.
-     */
+
     fun testSettingTypeConstants() {
         try {
             val settingTypeClass = Class.forName("com.topdon.menu.constant.SettingType")
@@ -125,9 +105,7 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testcolorprocessing functionality.
-     */
+
     fun testColorProcessing() =
         runTest {
             // Test color processing functionality used in menu
@@ -159,9 +137,7 @@ class MenuModuleTest {
         }
 
     @Test
-    /**
-     * Executes testmenuconfigurationscenarios functionality.
-     */
+
     fun testMenuConfigurationScenarios() =
         runTest {
             // Test various menu configuration scenarios
@@ -186,9 +162,7 @@ class MenuModuleTest {
         }
 
     @Test
-    /**
-     * Executes testsystemserviceaccess functionality.
-     */
+
     fun testSystemServiceAccess() {
         // Test system services that menu functionality might use
         val windowService = context.getSystemService(Context.WINDOW_SERVICE)
@@ -199,9 +173,7 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testresourceaccess functionality.
-     */
+
     fun testResourceAccess() {
         val resources = context.resources
         assertNotNull("Resources should be available", resources)
@@ -212,9 +184,7 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testmenuadapterfunctionality functionality.
-     */
+
     fun testMenuAdapterFunctionality() {
         // Test menu adapter related functionality
         try {
@@ -226,9 +196,7 @@ class MenuModuleTest {
     }
 
     @Test
-    /**
-     * Executes testasyncoperations functionality.
-     */
+
     fun testAsyncOperations() =
         runTest {
             // Test that coroutines work with menu processing context

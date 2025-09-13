@@ -8,14 +8,8 @@ import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ReportData
 
-/**
- * @author: CaiSongL
- * @date: 2023/5/12 15:38
- */
-/**
- * P d f adapter for thermal imaging data presentation.
- * Manages data binding and view recycling for efficient display.
- */
+
+
 class PDFAdapter : BaseQuickAdapter<ReportData.Records?, BaseViewHolder>, LoadMoreModule {
     constructor(layoutResId: Int) : super(layoutResId) {}
     constructor(layoutResId: Int, data: MutableList<ReportData.Records?>?) : super(layoutResId, data) {}
@@ -75,7 +69,7 @@ class PDFAdapter : BaseQuickAdapter<ReportData.Records?, BaseViewHolder>, LoadMo
                 {
                     dataList[i]?.isShowTitleTime = true
                 } else {
-\1上一次
+//上一次
                 val lastTimes = dataList[i - 1]?.uploadTime?.split(" ")
                 val times = dataList[i]?.uploadTime?.split(" ")
                 if (lastTimes?.size!! > 1 && times?.size!! > 1)

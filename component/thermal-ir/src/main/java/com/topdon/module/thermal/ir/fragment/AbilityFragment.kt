@@ -22,10 +22,7 @@ import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
 import com.topdon.module.thermal.ir.activity.MonitoryHomeActivity
 import org.greenrobot.eventbus.EventBus
 
-/**
- * Ability fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
+
 class AbilityFragment : BaseFragment(), View.OnClickListener {
     private var mIsTC007 = false
 

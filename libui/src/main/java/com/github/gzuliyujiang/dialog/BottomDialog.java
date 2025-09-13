@@ -30,12 +30,7 @@ import androidx.annotation.StyleRes;
 
 import com.topdon.lib.ui.R;
 
-/**
- * 屏幕底部弹出对话框
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/4/15 20:54
- */
+
 public abstract class BottomDialog extends BaseDialog {
     protected View maskView;
 

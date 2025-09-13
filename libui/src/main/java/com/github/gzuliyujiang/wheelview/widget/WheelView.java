@@ -55,14 +55,7 @@ import com.topdon.lib.ui.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 滚轮控件。Adapted from https://github.com/florent37/SingleDateAndTimePicker/.../WheelPicker.java
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @see TextProvider
- * @see OnWheelChangedListener
- * @since 2019/5/8 11:11
- */
+
 @SuppressWarnings({"unused"})
 public class WheelView extends View implements Runnable {
     @Deprecated

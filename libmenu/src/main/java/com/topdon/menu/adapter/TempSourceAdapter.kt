@@ -6,24 +6,10 @@ import androidx.annotation.StringRes
 import com.topdon.lib.core.R
 import com.topdon.menu.R as MenuR
 
-/**
- * observation模式-menu2-high/low temperature源menu Adapter used for，single selection可全不selected.
- *
- * dynamic recognition、high temperature source、low temperature source
- *
- * Created by LCG on 2024/11/29.
- */
+
 @SuppressLint("NotifyDataSetChanged")
 internal class TempSourceAdapter : BaseMenuAdapter() {
-    /**
-     * currentselected的选项 code.
-     *
-     * Due to legacy constraints (saved in SharedPreferences), the code values are:
-     * - Nothing selected: -1
-     * - Dynamic recognition: 0
-     * - High temperature source: 1
-     * - Low temperature source: 2
-     */
+
     var selectCode: Int = -1
         set(value) {
             if (field != value) {
@@ -32,9 +18,7 @@ internal class TempSourceAdapter : BaseMenuAdapter() {
             }
         }
 
-    /**
-     * Observation mode - Menu 2 - High/Low temperature source click event listener，single selection。
-     */
+
     var onTempSourceListener: ((code: Int) -> Unit)? = null
 
     private val dataArray: Array<Data> =
@@ -61,10 +45,7 @@ internal class TempSourceAdapter : BaseMenuAdapter() {
 
     override fun getItemCount(): Int = dataArray.size
 
-/**
- * Custom Data view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

@@ -119,11 +119,7 @@ object ImageTools {
         }
     }
 
-    /**
-     * 温度选取点
-     *
-     * @param bytes 温度数据
-     */
+
     private fun getTempIndex(
         bytes: ByteArray,
         max: Float,
@@ -191,12 +187,7 @@ object ImageTools {
 //        return bitmap
 //    }
 
-    /**
-     * @param imageBytes    图像数据
-     * @param tempBytes     温度数据
-     * @param max           温度上限阈值
-     * @param min           温度下限阈值
-     */
+
     fun dualReadFrame(
         imageBytes: ByteArray,
         tempBytes: ByteArray,
@@ -211,9 +202,7 @@ object ImageTools {
         dualReplaceColor(imageBytes, tempBytes, max, min, maxColor, minColor)
     }
 
-    /**
-     * 替换color
-     */
+
     @JvmStatic
     private fun dualReplaceColor(
         imageBytes: ByteArray,

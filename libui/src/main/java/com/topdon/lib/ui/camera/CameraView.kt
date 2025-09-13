@@ -36,12 +36,9 @@ import java.nio.ByteBuffer
 import java.util.Collections
 import kotlin.concurrent.thread
 
-/**
- * Custom Camera view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
-    /**预览 */
+    //
     lateinit var mTextureView: TextureView
     private lateinit var binding: CameraLayBinding
 
@@ -141,43 +138,43 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private lateinit var lis: ScaleGestureDetector
 
 // ////////////////
-    /**相机权限请求标识 */
+    //
     private val REQUEST_CAMERA_CODE = 0x100
 
-    /**capturebutton */
+    //
     private var mBtnTake: Button? = null
 
-    /**图片 */
+    //
     private var mImageView: ImageView? = null
 
-    /**照相机ID，标识前置后置 */
+    //
     private lateinit var mCameraId: String
 
-    /**相机尺寸 */
+    //
     private var mCaptureSize: Size? = null
 
-    /**图像读取者 */
+    //
     private lateinit var mImageReader: ImageReader
 
-    /**图像主线程Handler */
+    //
     private lateinit var mCameraHandler: Handler
 
-    /**相机设备 */
+    //
     private var mCameraDevice: CameraDevice? = null
 
-    /**预览大小 */
+    //
     private var mPreviewSize: Size? = null
 
-    /**相机请求 */
+    //
     private lateinit var mCameraCaptureBuilder: CaptureRequest.Builder
 
-    /**相机capture捕获会话 */
+    //
     private var mCameraCaptureSession: CameraCaptureSession? = null
 
-    /**相机管理者 */
+    //
     private var mCameraManager: CameraManager? = null
 
-    /**相机设备state回调 */
+    //
     private val mStateCallback: CameraDevice.StateCallback =
         object : CameraDevice.StateCallback() {
             override fun onOpened(
@@ -207,9 +204,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             }
         }
 
-    /**
-     * 预览
-     */
+
     private fun takePreview() {
 //        mTextureView.rotation = 270f
         mTextureView.rotation = 0f
@@ -300,9 +295,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             }
     }
 
-    /**
-     * 打开相机
-     */
+
     @SuppressLint("MissingPermission")
     fun openCamera() {
         // 获取照相机管理者
@@ -315,11 +308,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         }
     }
 
-    /**
-     * settings相机参数
-     * @param width 宽度
-     * @param height 高度
-     */
+
     private fun setUpCamera(
         width: Int,
         height: Int,
@@ -370,13 +359,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         }
     }
 
-    /**
-     * 选择SizeMap中大于并且最接近width和height的size
-     * @param sizeMap 可选的尺寸
-     * @param width 宽
-     * @param height 高
-     * @return 最接近width和height的size
-     */
+
     private fun getOptimalSize(
         sizeMap: Array<Size>,
         width: Int,
@@ -409,9 +392,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
 
     private var flag = 0
 
-    /**
-     * settingsImageReader
-     */
+
     private fun setupImageReader() {
         // 2代表ImageReader中最多可以获取两帧图像流
         mImageReader =
@@ -463,11 +444,9 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
         }, mCameraHandler)
     }
 
-    /**
-     * saved图片任务
-     */
+
     private inner class ImageSaver(image: Image) : Runnable {
-        /**图像 */
+        //
         private val mImage: Image = image
 
         override fun run() {

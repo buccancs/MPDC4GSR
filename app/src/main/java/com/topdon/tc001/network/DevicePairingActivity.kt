@@ -15,10 +15,7 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.gsr.MultiModalRecordingActivity
 import kotlinx.coroutines.launch
 
-/**
- * Device Pairing Activity for connecting to PC Controllers
- * Allows discovery, pairing, and remote measurement initiation
- */
+
 class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(), NetworkClient.NetworkEventListener {
     companion object {
         private const val TAG = "DevicePairingActivity"
@@ -247,9 +244,7 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
     }
 }
 
-/**
- * RecyclerView adapter for displaying discovered PC Controllers
- */
+
 class ControllersAdapter(
     private val controllers: List<NetworkClient.ControllerInfo>,
     private val onControllerClick: (NetworkClient.ControllerInfo) -> Unit,

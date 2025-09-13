@@ -12,15 +12,7 @@ import android.view.Surface
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 
-/**
- * Camera2-only module for Samsung S22 dual-mode camera system
- *
- * Implements the clean architecture requested:
- * - One camera client only (no CameraX conflicts)
- * - Fast switching without closing CameraDevice
- * - Deterministic state machine
- * - Capabilities detection once at camera open
- */
+
 class CameraController(private val context: Context) {
     companion object {
         private const val TAG = "CameraController"
@@ -46,9 +38,7 @@ class CameraController(private val context: Context) {
         startBackgroundThread()
     }
 
-    /**
-     * Open camera and detect capabilities once
-     */
+
     fun openCamera(cameraId: String = "0") {
         Log.i(TAG, "Opening camera $cameraId")
 
@@ -75,10 +65,7 @@ class CameraController(private val context: Context) {
         }
     }
 
-    /**
-     * Create capture session for specific mode
-     * Fast switching without closing CameraDevice
-     */
+
     fun createCaptureSession(
         surfaces: List<Surface>,
         callback: CameraCaptureSession.StateCallback,
@@ -101,9 +88,7 @@ class CameraController(private val context: Context) {
         }
     }
 
-    /**
-     * Create capture request builder for specific template
-     */
+
     fun createCaptureRequest(template: Int): CaptureRequest.Builder? {
         return try {
             cameraDevice?.createCaptureRequest(template)
@@ -113,31 +98,21 @@ class CameraController(private val context: Context) {
         }
     }
 
-    /**
-     * Get device capabilities (detected once at open)
-     */
+
     fun getDeviceCaps(): DeviceCaps? = deviceCaps
 
-    /**
-     * Check if camera is open
-     */
+
     fun isOpen(): Boolean = cameraDevice != null
 
-    /**
-     * Set current capture session
-     */
+
     fun setCaptureSession(session: CameraCaptureSession) {
         captureSession = session
     }
 
-    /**
-     * Get current capture session
-     */
+
     fun getCaptureSession(): CameraCaptureSession? = captureSession
 
-    /**
-     * Close camera and cleanup
-     */
+
     fun close() {
         try {
             cameraOpenCloseLock.acquire()
@@ -154,9 +129,7 @@ class CameraController(private val context: Context) {
         stopBackgroundThread()
     }
 
-    /**
-     * Capabilities detection (once, at camera open)
-     */
+
     private fun detectCapabilities(characteristics: CameraCharacteristics): DeviceCaps {
         val capabilities = characteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) ?: IntArray(0)
         val supportsRaw = capabilities.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW)

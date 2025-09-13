@@ -54,18 +54,10 @@ abstract class BaseApplication : Application() {
     var activitys = arrayListOf<Activity>()
     var hasOtgShow = false // otg提示只出现一次
 
-    /**
-     * 获取软件encoding.
-     */
+
     abstract fun getSoftWareCode(): String
 
-    /**
-     * 是否国内渠道。
-     *
-     * 国内渠道一些逻辑不同，如国内渠道可以应用内升级，权限申请前有提示弹窗等。
-     * 根据 2024/8/27 邮件结论，“热视界和电小搭其实没有形成销售，可以不用维护。”
-     * @return true-国内渠道 false-非国内渠道
-     */
+
     abstract fun isDomestic(): Boolean
 
     override fun onCreate() {
@@ -140,10 +132,7 @@ abstract class BaseApplication : Application() {
         WebSocketProxy.getInstance().stopWebSocket()
     }
 
-    /**
-     * 解析socket消息
-     * @param msgJson
-     */
+
     private fun parserSocketMessage(msgJson: String) {
         if (TextUtils.isEmpty(msgJson)) return
         EventBus.getDefault().post(SocketMsgEvent(msgJson))
@@ -213,9 +202,7 @@ abstract class BaseApplication : Application() {
         }
     }
 
-    /**
-     * settingswebview的android9以上系统的多进程兼容性处理
-     */
+
     @RequiresApi(api = 28)
     open fun webviewSetPath(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -260,9 +247,7 @@ abstract class BaseApplication : Application() {
         return ConstantLanguages.ENGLISH
     }
 
-    /**
-     * 退出所有
-     */
+
     fun exitAll() {
         hasOtgShow = false
         activitys.forEach {

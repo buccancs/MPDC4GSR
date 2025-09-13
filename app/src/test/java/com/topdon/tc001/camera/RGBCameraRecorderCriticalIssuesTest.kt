@@ -17,14 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
-/**
- * Unit tests for critical camera integration issues fixes
- * Tests for:
- * 1. Runtime permission handling
- * 2. Camera switching functionality
- * 3. Proper lifecycle management
- * 4. Error handling and user feedback
- */
+
 @RunWith(RobolectricTestRunner::class)
 class RGBCameraRecorderCriticalIssuesTest {
     private lateinit var mockContext: Context

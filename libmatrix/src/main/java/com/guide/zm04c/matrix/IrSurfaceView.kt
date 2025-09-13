@@ -57,13 +57,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 //        mMatrix.getValues(mBeforeRotateMatrixValues)
 //    }
 
-    /**
-     * @param rotate
-     * 0
-     * 90
-     * 180
-     * 270
-     */
+
     fun setMatrix(
         rotate: Float,
         w: Float,
@@ -97,9 +91,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    /**
-     * 自定义画图方法
-     */
+
     fun doDraw(
         bitmap: Bitmap?,
         shutterFlag: Int,
@@ -183,10 +175,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         openLut = true
     }
 
-    /**
-     * 设置对比度
-     * @param saturation 0 ~ 100
-     */
+
     fun setSaturationValue(saturation: Int) {
         this.saturation = saturation
     }
@@ -201,9 +190,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    /**
-     * 当SurfaceView创建的时候，调用此函数
-     */
+
     override fun surfaceCreated(holder: SurfaceHolder) {
         isPrepare = true
         if (callback != null) {
@@ -212,9 +199,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         Logger.d(TAG, "holder onSurfaceCreated")
     }
 
-    /**
-     * 当SurfaceView的视图发生改变的时候，调用此函数
-     */
+
     override fun surfaceChanged(
         holder: SurfaceHolder,
         format: Int,
@@ -224,9 +209,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         Logger.d(TAG, "holder surfaceChanged")
     }
 
-    /**
-     * 当SurfaceView销毁的时候，调用此函数
-     */
+
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         synchronized(this) {
             isPrepare = false

@@ -16,9 +16,7 @@ import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
- * 发射率的提示弹窗
- */
+
 class TipEmissivityDialog : Dialog {
     constructor(context: Context) : super(context)
 

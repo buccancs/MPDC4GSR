@@ -15,10 +15,7 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowApplication
 
-/**
- * Test for GSRSensorRecorder focusing on Bluetooth permission handling
- * and Shimmer integration fixes from issue #63
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.S]) // Android 12+ for new Bluetooth permissions
 @OptIn(ExperimentalCoroutinesApi::class)

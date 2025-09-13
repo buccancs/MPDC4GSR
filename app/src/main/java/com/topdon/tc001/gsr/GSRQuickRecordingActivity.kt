@@ -17,10 +17,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Quick GSR recording activity that directly uses the RecordingController
- * This provides the main integration point between GSR functionality and the Android app
- */
+
 class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingBinding>() {
     companion object {
         private const val TAG = "GSRQuickRecording"

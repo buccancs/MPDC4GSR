@@ -7,16 +7,8 @@ import android.util.Log
 import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * Network Service Discovery manager for automatic device discovery using mDNS/Zeroconf.
- * Discovers PC Controllers and thermal cameras on the local network.
- */
-/**
- * NetworkDiscoveryService provides background service functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
 class NetworkDiscoveryService(private val context: Context) {
     companion object {
         private const val TAG = "NetworkDiscovery"
@@ -48,12 +40,7 @@ class NetworkDiscoveryService(private val context: Context) {
         val discoveredAt: Long = System.currentTimeMillis(),
     )
 
-/**
- * Type definition for device classification.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
     enum class DeviceType {
         PC_CONTROLLER,
         THERMAL_CAMERA_TS004,
@@ -61,36 +48,21 @@ class NetworkDiscoveryService(private val context: Context) {
         UNKNOWN,
     }
 
-/**
- * DiscoveryEventListener manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
     interface DiscoveryEventListener {
-    /**
-     * Callback method triggered when devicediscovered occurs.
-     */
+
         fun onDeviceDiscovered(device: DiscoveredDevice)
 
-    /**
-     * Callback method triggered when devicelost occurs.
-     */
+
         fun onDeviceLost(serviceName: String)
 
-    /**
-     * Callback method triggered when discoverystarted occurs.
-     */
+
         fun onDiscoveryStarted()
 
-    /**
-     * Callback method triggered when discoverystopped occurs.
-     */
+
         fun onDiscoveryStopped()
 
-    /**
-     * Callback method triggered when error occurs.
-     */
+
         fun onError(
             operation: String,
             error: String,
@@ -103,9 +75,7 @@ class NetworkDiscoveryService(private val context: Context) {
         eventListener = listener
     }
 
-    /**
-     * Start network service discovery for PC controllers and thermal cameras
-     */
+
     fun startDiscovery(): Boolean {
         return try {
             if (isDiscovering) {
@@ -141,9 +111,7 @@ class NetworkDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Stop network service discovery
-     */
+
     fun stopDiscovery() {
         if (!isDiscovering) return
 
@@ -166,9 +134,7 @@ class NetworkDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Register this device as discoverable service
-     */
+
     fun registerService(
         serviceName: String,
         port: Int,
@@ -245,9 +211,7 @@ class NetworkDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Unregister the service
-     */
+
     fun unregisterService() {
         if (!isRegistered) return
 
@@ -263,30 +227,22 @@ class NetworkDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Get list of currently discovered devices
-     */
+
     fun getDiscoveredDevices(): List<DiscoveredDevice> {
         return discoveredServices.values.toList()
     }
 
-    /**
-     * Get discovered devices by type
-     */
+
     fun getDiscoveredDevicesByType(deviceType: DeviceType): List<DiscoveredDevice> {
         return discoveredServices.values.filter { it.deviceType == deviceType }
     }
 
-    /**
-     * Clear discovery cache
-     */
+
     fun clearDiscoveredDevices() {
         discoveredServices.clear()
     }
 
-    /**
-     * Initiates the operation or service.
-     */
+
     private fun startServiceDiscovery(serviceType: String) {
         val discoveryListener =
             object : NsdManager.DiscoveryListener {
@@ -336,9 +292,7 @@ class NetworkDiscoveryService(private val context: Context) {
         nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
     }
 
-    /**
-     * Executes resolveservice functionality.
-     */
+
     private fun resolveService(serviceInfo: NsdServiceInfo) {
         val resolveListener =
             object : NsdManager.ResolveListener {
@@ -379,9 +333,7 @@ class NetworkDiscoveryService(private val context: Context) {
         nsdManager.resolveService(serviceInfo, resolveListener)
     }
 
-    /**
-     * Executes determinedevicetype functionality.
-     */
+
     private fun determineDeviceType(serviceInfo: NsdServiceInfo): DeviceType {
         val deviceTypeAttr =
             serviceInfo.attributes["device_type"]?.let {
@@ -400,9 +352,7 @@ class NetworkDiscoveryService(private val context: Context) {
         }
     }
 
-    /**
-     * Executes extractattributes functionality.
-     */
+
     private fun extractAttributes(serviceInfo: NsdServiceInfo): Map<String, String> {
         val attributes = mutableMapOf<String, String>()
 
@@ -413,9 +363,7 @@ class NetworkDiscoveryService(private val context: Context) {
         return attributes
     }
 
-    /**
-     * Cleanup resources
-     */
+
     fun cleanup() {
         stopDiscovery()
         unregisterService()

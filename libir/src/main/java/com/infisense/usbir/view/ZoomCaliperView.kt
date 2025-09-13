@@ -17,9 +17,7 @@ import com.infisense.usbir.R
 import com.infisense.usbir.utils.TargetUtils
 import com.topdon.lib.core.bean.ObserveBean
 
-/**
- * 缩放view基类 - Optimized findViewById usage
- */
+
 class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private var centerX: Float = Float.MAX_VALUE
     private var centerY: Float = Float.MAX_VALUE
@@ -289,7 +287,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     override fun onScaleEnd(detector: ScaleGestureDetector) {
     }
 
-    /**预览大小 */
+    //
     private var mPreviewSize: Size? = null
 
     fun setRotation(isReverse: Boolean)  {
@@ -443,9 +441,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         }
     }
 
-    /**
-     * 还原
-     */
+
     fun del(reductionXY: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             magnifier?.dismiss()

@@ -23,10 +23,7 @@ import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Shimmer3-based GSR recorder using official Shimmer Android API
- * Replaces simulated data with real GSR sensor data from Shimmer3 devices
- */
+
 class ShimmerGSRRecorder(
     private val context: Context,
     private val samplingRateHz: Int = 128,
@@ -74,9 +71,7 @@ class ShimmerGSRRecorder(
     private val listeners = mutableListOf<GSRRecordingListener>()
     private val shimmerAPIBridge = ShimmerAPIBridge.getInstance()
 
-    /**
-     * Interface for listening to GSR recording events
-     */
+
     interface GSRRecordingListener {
         fun onRecordingStarted(session: SessionInfo)
 
@@ -101,9 +96,7 @@ class ShimmerGSRRecorder(
         listeners.remove(listener)
     }
 
-    /**
-     * Initialize Shimmer device connection
-     */
+
     suspend fun initializeDevice(deviceAddress: String? = null): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -210,9 +203,7 @@ class ShimmerGSRRecorder(
             }
         }
 
-    /**
-     * Start GSR recording session
-     */
+
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
@@ -270,9 +261,7 @@ class ShimmerGSRRecorder(
             }
         }
 
-    /**
-     * Stop GSR recording session
-     */
+
     fun stopRecording(): SessionInfo? {
         if (!isRecording.get()) {
             Log.w(TAG, "No recording in progress")
@@ -301,9 +290,7 @@ class ShimmerGSRRecorder(
         return completedSession
     }
 
-    /**
-     * Trigger a synchronization event
-     */
+
     fun triggerSyncEvent(
         eventType: String,
         metadata: String = "",
@@ -339,9 +326,7 @@ class ShimmerGSRRecorder(
         return false
     }
 
-    /**
-     * Handle incoming Shimmer data
-     */
+
     private fun handleShimmerData(objectCluster: ObjectCluster) {
         if (!isRecording.get()) return
 
@@ -380,10 +365,7 @@ class ShimmerGSRRecorder(
         }
     }
 
-    /**
-     * Extract raw GSR value from Shimmer ObjectCluster for processing by ShimmerAPIBridge
-     * This extracts the raw ADC value which will be processed using official Shimmer algorithms
-     */
+
     private fun extractRawGSRValue(objectCluster: ObjectCluster): Double {
         try {
             // Try to extract raw GSR data first
@@ -428,10 +410,7 @@ class ShimmerGSRRecorder(
         }
     }
 
-    /**
-     * Create GSR configuration for Shimmer3
-     * Uses conservative configuration approach for compatibility
-     */
+
     private fun createGSRConfiguration(): ByteArray {
         try {
             // Create basic GSR configuration with sampling rate
@@ -539,9 +518,7 @@ class ShimmerGSRRecorder(
         listeners.forEach { it.onError(message) }
     }
 
-    /**
-     * Disconnect from Shimmer device
-     */
+
     fun disconnect() {
         if (isRecording.get()) {
             stopRecording()
@@ -554,13 +531,9 @@ class ShimmerGSRRecorder(
         Log.i(TAG, "Shimmer device disconnected")
     }
 
-    /**
-     * Get current recording status
-     */
+
     fun isRecording(): Boolean = isRecording.get()
 
-    /**
-     * Get current device connection status
-     */
+
     fun isDeviceConnected(): Boolean = isDeviceConnected.get()
 }

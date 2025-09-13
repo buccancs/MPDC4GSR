@@ -3,10 +3,7 @@ package com.topdon.tc001.config
 import android.util.Log
 import org.json.JSONObject
 
-/**
- * Protocol versioning system for PC-to-phone communication
- * Phase 0 implementation - Freeze minimal protocol version v1
- */
+
 object ProtocolVersion {
     private const val TAG = "ProtocolVersion"
 
@@ -27,9 +24,7 @@ object ProtocolVersion {
             "basic_auth",
         )
 
-    /**
-     * Check if a protocol version is supported
-     */
+
     fun isVersionSupported(version: String): Boolean {
         return when (version) {
             "v1" -> true
@@ -37,9 +32,7 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Get capabilities for a specific protocol version
-     */
+
     fun getCapabilities(version: String): Set<String> {
         return when (version) {
             "v1" -> V1_CAPABILITIES
@@ -47,9 +40,7 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Create protocol handshake message
-     */
+
     fun createHandshakeMessage(deviceId: String): JSONObject {
         return JSONObject().apply {
             put("message_type", "protocol_handshake")
@@ -62,9 +53,7 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Validate incoming handshake response
-     */
+
     fun validateHandshakeResponse(response: JSONObject): HandshakeResult {
         try {
             val remoteVersion = response.optString("protocol_version")
@@ -113,9 +102,7 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Create protocol message with version header
-     */
+
     fun createProtocolMessage(
         messageType: String,
         content: JSONObject = JSONObject(),
@@ -132,9 +119,7 @@ object ProtocolVersion {
         }
     }
 
-    /**
-     * Validate incoming message protocol version
-     */
+
     fun validateMessageVersion(message: JSONObject): Boolean {
         val version = message.optString("protocol_version", CURRENT_VERSION)
         val isValid = isVersionSupported(version)
@@ -146,9 +131,7 @@ object ProtocolVersion {
         return isValid
     }
 
-    /**
-     * Get protocol information for debugging
-     */
+
     fun getProtocolInfo(): Map<String, Any> {
         return mapOf(
             "current_version" to CURRENT_VERSION,
@@ -158,9 +141,7 @@ object ProtocolVersion {
         )
     }
 
-    /**
-     * Result of protocol handshake negotiation
-     */
+
     data class HandshakeResult(
         val success: Boolean,
         val negotiatedVersion: String? = null,

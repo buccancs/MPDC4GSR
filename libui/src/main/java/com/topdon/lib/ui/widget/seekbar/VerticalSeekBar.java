@@ -13,34 +13,7 @@ import android.util.Log;
 
 import com.topdon.lib.ui.R;
 
-/**
- * //                       _ooOoo_
- * //                      o8888888o
- * //                      88" . "88
- * //                      (| -_- |)
- * //                       O\ = /O
- * //                   ____/`---'\____
- * //                 .   ' \\| |// `.
- * //                  / \\||| : |||// \
- * //                / _||||| -:- |||||- \
- * //                  | | \\\ - /// | |
- * //                | \_| ''\---/'' | |
- * //                 \ .-\__ `-` ___/-. /
- * //              ______`. .' /--.--\ `. . __
- * //           ."" '< `.___\_<|>_/___.' >'"".
- * //          | | : `- \`.;`\ _ /`;.`/ - ` : | |
- * //            \ \ `-. \_ __\ /__ _/ .-` / /
- * //    ======`-.____`-.___\_____/___.-`____.-'======
- * //                       `=---='
- * //
- * //    .............................................
- * //             佛祖保佑             永无BUG
- * =====================================================
- * 作    者：JayGoo
- * 创建日期：2019-06-05
- * 描    述:
- * =====================================================
- */
+
 public class VerticalSeekBar extends SeekBar {
 
     private int indicatorTextOrientation;
@@ -79,19 +52,11 @@ public class VerticalSeekBar extends SeekBar {
         drawIndPathBg = draw;
     }
     private boolean noNegativeNumber = false;
-    /**
-     * 临时处理负数
-     */
+
     public void setNoNegativeNumber(Boolean noNegativeNumber){
         this.noNegativeNumber = noNegativeNumber;
     }
-    /**
-     * 竖标签绘制
-     *
-     * @param canvas
-     * @param paint
-     * @param text2Draw
-     */
+
     protected void drawVerticalIndicator(Canvas canvas, Paint paint, String text2Draw) {
         //measure indicator text
         try {

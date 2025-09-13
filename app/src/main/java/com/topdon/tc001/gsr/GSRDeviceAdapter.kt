@@ -9,11 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 
-/**
- * RecyclerView adapter for GSR device list
- * Displays discovered Shimmer GSR devices with connection status and device info
- * Following IR camera device list UI patterns
- */
+
 class GSRDeviceAdapter(
     private val devices: MutableList<GSRDeviceInfo>,
     private val onDeviceClick: (GSRDeviceInfo) -> Unit,
@@ -42,9 +38,7 @@ class GSRDeviceAdapter(
 
     override fun getItemCount(): Int = devices.size
 
-    /**
-     * ViewHolder for GSR device items
-     */
+
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val deviceNameText: TextView = itemView.findViewById(R.id.deviceNameText)
         private val deviceAddressText: TextView = itemView.findViewById(R.id.deviceAddressText)
@@ -107,10 +101,7 @@ class GSRDeviceAdapter(
             itemView.alpha = if (device.isConnected) 1.0f else 0.8f
         }
 
-        /**
-         * Convert RSSI to signal strength percentage
-         * RSSI typically ranges from -100 (weak) to -30 (strong)
-         */
+
         private fun calculateSignalStrengthPercent(rssi: Int): Int {
             return when {
                 rssi >= -30 -> 100 // Excellent signal

@@ -8,26 +8,10 @@ import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.FenceType
 import com.topdon.menu.constant.MenuType
 
-/**
- * 点、线、面、全图、趋势图(可选)、删除 menu Adapter.
- *
- * - 单光：   点、线、面、全图、趋势图、删除
- * - dual light：   点、线、面、全图、趋势图、删除
- * - Lite：  点、线、面、全图、趋势图、删除
- * - TC007： 点、线、面、全图、趋势图、删除
- * - 2D 编辑：点、线、面、全图、删除
- *
- * 点、线、面、趋势图、全图 与 删除互斥
- *
- * 点、线、面、趋势图 互斥，全图独立可选
- *
- * Created by LCG on 2024/11/18.
- */
+
 @SuppressLint("NotifyDataSetChanged")
 internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
-    /**
-     * currentselected的menu类型，if null indicates所有都未selected.
-     */
+
     var selectType: FenceType? = null
         set(value) {
             when (value) {
@@ -40,14 +24,10 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
             notifyDataSetChanged()
         }
 
-    /**
-     * 全图是否已selected.
-     */
+
     private var isFullSelect: Boolean = false
 
-    /**
-     * menuclickevent listener，目前都是single selection，等后续有空重构了，再搞成 IOS 那样“全图”可以多选。
-     */
+
     var onFenceListener: ((fenceType: FenceType, isSelected: Boolean) -> Unit)? = null
 
     private val dataList: ArrayList<Data> = ArrayList(6)
@@ -94,10 +74,7 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
 
     override fun getItemCount(): Int = dataList.size
 
-/**
- * Custom Data view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

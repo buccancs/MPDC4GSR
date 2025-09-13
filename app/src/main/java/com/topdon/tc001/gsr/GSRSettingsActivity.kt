@@ -22,11 +22,7 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.launch
 
-/**
- * GSR Recording Settings Activity
- * Configure recording parameters, device settings, and data collection options with
- * comprehensive runtime permission handling for Shimmer GSR integration
- */
+
 class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     companion object {
         private const val TAG = "GSRSettingsActivity"
@@ -75,9 +71,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         )
     }
 
-    /**
-     * Setup comprehensive runtime permission handling for Shimmer GSR integration
-     */
+
     private fun setupPermissionHandling() {
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -115,9 +109,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             }
     }
 
-    /**
-     * Show dialog explaining why permissions are needed and how to grant them
-     */
+
     private fun showPermissionDialog(missingPermissions: List<String>) {
         val permissionDescriptions =
             missingPermissions.map { permission ->
@@ -140,9 +132,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             .show()
     }
 
-    /**
-     * Show dialog when permissions are denied but can still be requested
-     */
+
     private fun showPermissionDeniedDialog(deniedPermissions: List<String>) {
         val permissionDescriptions =
             deniedPermissions.map { permission ->
@@ -164,9 +154,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             .show()
     }
 
-    /**
-     * Show dialog when permissions are permanently denied
-     */
+
     private fun showPermissionPermanentlyDeniedDialog(deniedPermissions: List<String>) {
         val permissionDescriptions =
             deniedPermissions.map { permission ->
@@ -188,9 +176,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             .show()
     }
 
-    /**
-     * Open app settings so user can manually grant permissions
-     */
+
     private fun openAppSettings() {
         try {
             val intent =
@@ -204,9 +190,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         }
     }
 
-    /**
-     * Request missing permissions from user
-     */
+
     private fun requestMissingPermissions() {
         val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
 
@@ -221,9 +205,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         permissionLauncher.launch(missingPermissions.toTypedArray())
     }
 
-    /**
-     * Check and request permissions with user guidance
-     */
+
     private fun checkAndRequestPermissions(onPermissionsGranted: (() -> Unit)? = null) {
         val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
 
@@ -242,9 +224,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         showPermissionDialog(missingPermissions)
     }
 
-    /**
-     * Enable or disable device management UI based on permission status
-     */
+
     private fun enableDeviceManagement(enabled: Boolean) {
         binding.scanDevicesButton.isEnabled = enabled
         binding.connectDeviceButton.isEnabled = enabled
@@ -255,9 +235,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         }
     }
 
-    /**
-     * Update permission status display
-     */
+
     private fun updatePermissionStatus(
         status: String,
         color: Int,
@@ -440,9 +418,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         }
     }
 
-    /**
-     * Initialize GSR sensor recorder only when permissions are available
-     */
+
     private fun initializeGSRSensorRecorder() {
         lifecycleScope.launch {
             try {

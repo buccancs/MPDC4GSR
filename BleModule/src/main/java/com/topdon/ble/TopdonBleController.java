@@ -27,35 +27,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Topdon BLE Controller for enhanced Topdon BLE device management.
- * 
- * This controller provides comprehensive support for all Topdon BLE-enabled devices
- * including thermal cameras, environmental sensors, and multi-sensor platforms.
- * 
- * Supported Topdon Devices:
- * - TC001 Thermal Camera with BLE interface
- * - Topdon Environmental Sensors (temperature, humidity, pressure)
- * - Topdon Multi-Sensor Platforms
- * - Future Topdon BLE-enabled devices
- * 
- * Features:
- * - Nordic BLE library integration for enhanced reliability
- * - Automatic Topdon device type detection and classification  
- * - Real-time thermal data streaming and environmental monitoring
- * - Advanced connection management with auto-reconnection
- * - Cross-device synchronization for multi-modal sensing
- * - Comprehensive error handling and recovery
- * 
- * Technical Specifications:
- * - Supports thermal frame streaming at various resolutions
- * - Environmental sensor data with high precision
- * - Real-time temperature calibration and radiometric data
- * - Device-specific command protocols
- * - Multi-device coordination support
- * 
- * @author IRCamera Topdon Integration Team
- */
+
 public class TopdonBleController {
     private static final String TAG = "TopdonBleController";
     
@@ -100,18 +72,14 @@ public class TopdonBleController {
     // Connected devices tracking
     private final List<TopdonDevice> connectedTopdonDevices = new ArrayList<>();
     
-    /**
-     * Topdon scan listener interface
-     */
+
     public interface TopdonScanListener {
         void onTopdonDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord);
         void onScanError(int errorCode, String message);
         void onScanComplete();
     }
     
-    /**
-     * Constructor
-     */
+
     public TopdonBleController(@NonNull Context context, @NonNull UnifiedBleManager unifiedManager) {
         this.context = context;
         this.unifiedManager = unifiedManager;
@@ -120,9 +88,7 @@ public class TopdonBleController {
         this.mainHandler = new Handler(Looper.getMainLooper());
     }
     
-    /**
-     * Initialize Topdon BLE controller
-     */
+
     public boolean initialize() {
         try {
             if (bluetoothAdapter == null || leScanner == null) {
@@ -144,9 +110,7 @@ public class TopdonBleController {
         }
     }
     
-    /**
-     * Start Topdon device discovery
-     */
+
     public boolean startDeviceDiscovery(@NonNull TopdonScanListener listener) {
         if (isScanning.get()) {
             Log.w(TAG, "Topdon scan already in progress");
@@ -200,9 +164,7 @@ public class TopdonBleController {
         }
     }
     
-    /**
-     * Stop Topdon device discovery
-     */
+
     public void stopDeviceDiscovery() {
         if (!isScanning.get()) {
             return;
@@ -231,9 +193,7 @@ public class TopdonBleController {
         }
     }
     
-    /**
-     * Connect to Topdon device
-     */
+
     public UnifiedDevice connectDevice(@NonNull BluetoothDevice device,
                                      @NonNull TopdonDeviceConfig config,
                                      @NonNull UnifiedBleManager.UnifiedConnectionListener listener) {
@@ -254,16 +214,12 @@ public class TopdonBleController {
         }
     }
     
-    /**
-     * Get connected Topdon devices
-     */
+
     public List<TopdonDevice> getConnectedDevices() {
         return new ArrayList<>(connectedTopdonDevices);
     }
     
-    /**
-     * Cleanup resources
-     */
+
     public void cleanup() {
         try {
             stopDeviceDiscovery();
@@ -281,9 +237,7 @@ public class TopdonBleController {
         }
     }
     
-    /**
-     * Scan callback for Topdon device discovery
-     */
+
     private final ScanCallback topdonScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -328,9 +282,7 @@ public class TopdonBleController {
         }
     };
     
-    /**
-     * Check if device is a Topdon device
-     */
+
     private boolean isTopdonDevice(String deviceName) {
         if (deviceName == null) return false;
         
@@ -342,9 +294,7 @@ public class TopdonBleController {
         return false;
     }
     
-    /**
-     * Determine specific Topdon device type
-     */
+
     private UnifiedBleManager.DeviceType determineTopdonDeviceType(String deviceName, @Nullable android.bluetooth.le.ScanRecord scanRecord) {
         String name = deviceName.toLowerCase();
         

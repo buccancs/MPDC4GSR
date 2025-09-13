@@ -4,10 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 
-/**
- * G s y video player utility class for thermal imaging operations.
- * Provides helper functions and common functionality.
- */
+
 open class GSYVideoPlayer
     @JvmOverloads
     constructor(

@@ -14,10 +14,7 @@ import com.csl.irCamera.databinding.ActivityResearchTemplateBinding
 import com.topdon.gsr.model.ResearchTemplate
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-/**
- * Research Template Selection Activity
- * Allows users to choose from predefined research templates or create custom configurations
- */
+
 class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBinding>() {
     private lateinit var templateAdapter: TemplateAdapter
 
@@ -204,9 +201,7 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
     }
 }
 
-/**
- * RecyclerView Adapter for Research Templates
- */
+
 class TemplateAdapter(
     private val context: Context,
     private val templates: List<ResearchTemplate>,

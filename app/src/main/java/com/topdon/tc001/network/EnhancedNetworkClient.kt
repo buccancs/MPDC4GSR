@@ -11,22 +11,7 @@ import java.io.*
 import java.net.*
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * Enhanced network client for Hub-Spoke communication with PC Controller.
- *
- * This client implements the full communication protocol for the Multi-Modal
- * Physiological Sensing Platform, enabling coordinated recording sessions
- * between the Android Sensor Node (Spoke) and PC Controller (Hub).
- *
- * Key Features:
- * - Integration with RecordingController for coordinated sessions
- * - Time synchronization with PC Controller
- * - Real-time status reporting and error handling
- * - File transfer management for recorded data
- * - Network discovery and automatic reconnection
- *
- * @author IRCamera Android Sensor Node (Spoke)
- */
+
 class EnhancedNetworkClient(
     private val context: Context,
     private val recordingController: RecordingController,
@@ -73,9 +58,7 @@ class EnhancedNetworkClient(
     private var statusReportJob: Job? = null
     private var messageListenerJob: Job? = null
 
-    /**
-     * Connect to PC Controller with enhanced integration
-     */
+
     suspend fun connectToController(
         ipAddress: String,
         port: Int = PC_CONTROLLER_PORT,
@@ -140,9 +123,7 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Disconnect from PC Controller
-     */
+
     suspend fun disconnect() {
         withContext(Dispatchers.IO) {
             try {
@@ -184,9 +165,7 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Start recording session coordinated with PC Controller
-     */
+
     suspend fun startCoordinatedSession(sessionDirectory: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -241,9 +220,7 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Stop coordinated recording session
-     */
+
     suspend fun stopCoordinatedSession(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -287,9 +264,7 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Distribute sync marker across all devices
-     */
+
     suspend fun distributeSyncMarker(
         markerType: String,
         metadata: Map<String, String> = emptyMap(),
@@ -569,29 +544,21 @@ class EnhancedNetworkClient(
         }
     }
 
-    /**
-     * Clean up network client resources
-     */
+
     suspend fun cleanup() {
         disconnect()
         networkScope.cancel()
         Log.i(TAG, "Enhanced network client cleaned up")
     }
 
-    /**
-     * Get current connection state
-     */
+
     fun isConnected(): Boolean = isConnected.get()
 
-    /**
-     * Get connected controller information
-     */
+
     fun getConnectedController(): NetworkClient.ControllerInfo? = connectedControllerInfo
 }
 
-/**
- * Connection states for the enhanced network client
- */
+
 enum class ConnectionState {
     DISCONNECTED,
     CONNECTING,
@@ -600,9 +567,7 @@ enum class ConnectionState {
     ERROR,
 }
 
-/**
- * Network message wrapper for flow emissions
- */
+
 data class NetworkMessage(
     val messageType: String,
     val deviceId: String,

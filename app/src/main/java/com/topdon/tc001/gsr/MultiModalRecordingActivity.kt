@@ -33,10 +33,7 @@ import com.topdon.ble.UnifiedDevice
 
 // Note: EnhancedRecordingService is referenced with full package name since it's in a different module
 
-/**
- * Full multi-modal recording interface with GSR and thermal coordination
- * Navigation: Use NavigationManager.getInstance().build(RouterConfig.GSR_MULTI_MODAL).navigation(context)
- */
+
 class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecordingBinding>() {
     companion object {
         private const val TAG = "MultiModalActivity"

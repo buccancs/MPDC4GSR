@@ -7,24 +7,13 @@ import com.topdon.lib.core.R
 import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.TempPointType
 
-/**
- * observation模式-menu5-high/low temperature点 menuAdapter used for，按旧逻辑存在全部未选择的state。
- *
- * - 高温点、低温点 互相独立，可多选
- * - {高温点、低温点} 与 删除 互斥
- *
- * Created by LCG on 2024/11/28.
- */
+
 @SuppressLint("NotifyDataSetChanged")
 internal class TempPointAdapter : BaseMenuAdapter() {
-    /**
-     * Observation mode - Menu 5 - High/Low temperature points click event listener.
-     */
+
     var onTempPointListener: ((type: TempPointType, isSelected: Boolean) -> Unit)? = null
 
-    /**
-     * settings 高温点 或 低稳点 的selectedstate。
-     */
+
     fun setSelected(
         tempPointType: TempPointType,
         isSelected: Boolean,
@@ -38,10 +27,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
         }
     }
 
-    /**
-     * clear所有menu的selectedstate。
-     * Maintain original logic here, consider whether to directly delete selected items later。
-     */
+
     fun clearAllSelect() {
         for (data in dataArray) {
             data.isSelected = false
@@ -93,10 +79,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
 
     override fun getItemCount(): Int = dataArray.size
 
-/**
- * Custom Data view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

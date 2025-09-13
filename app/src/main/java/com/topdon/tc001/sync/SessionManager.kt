@@ -9,19 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 
-/**
- * Advanced Session Management - Phase 2 Implementation
- *
- * Manages persistent session state across network interruptions and provides
- * multi-device coordination for synchronized recording operations.
- *
- * Features:
- * - Persistent session state across reconnections
- * - Multi-device coordination for synchronized operations
- * - Session recovery and state restoration
- * - Cross-device session synchronization
- * - Advanced session monitoring
- */
+
 class SessionManager(
     private val context: Context,
     private val logger: StructuredLogger,
@@ -93,9 +81,7 @@ class SessionManager(
         UNSTABLE, // Connection issues
     }
 
-    /**
-     * Start session management service
-     */
+
     fun start(
         onSessionStateChanged: (SessionState) -> Unit,
         onDeviceJoined: (DeviceInfo) -> Unit,
@@ -146,9 +132,7 @@ class SessionManager(
         Log.i(TAG, "Session management service started")
     }
 
-    /**
-     * Stop session management service
-     */
+
     fun stop() {
         if (!isRunning.get()) return
 
@@ -166,9 +150,7 @@ class SessionManager(
         Log.i(TAG, "Session management service stopped")
     }
 
-    /**
-     * Create new session
-     */
+
     fun createSession(metadata: Map<String, Any> = emptyMap()): String {
         val id = generateSessionId()
         val startTime = System.currentTimeMillis()
@@ -202,9 +184,7 @@ class SessionManager(
         return id
     }
 
-    /**
-     * Join device to current session
-     */
+
     fun joinDevice(
         deviceId: String,
         deviceType: String,
@@ -251,9 +231,7 @@ class SessionManager(
         return true
     }
 
-    /**
-     * Remove device from session
-     */
+
     fun removeDevice(
         deviceId: String,
         reason: String = "Unknown",
@@ -276,9 +254,7 @@ class SessionManager(
         }
     }
 
-    /**
-     * Start synchronized recording across all devices
-     */
+
     fun startSyncRecording(): Boolean {
         val session = currentSession.get() ?: return false
         val devices = connectedDevices.values.toList()
@@ -327,9 +303,7 @@ class SessionManager(
         return true
     }
 
-    /**
-     * Stop synchronized recording
-     */
+
     fun stopSyncRecording() {
         val session = currentSession.get() ?: return
 
@@ -353,9 +327,7 @@ class SessionManager(
         )
     }
 
-    /**
-     * End current session
-     */
+
     fun endSession(
         sessionId: String,
         reason: String = "User requested",
@@ -400,9 +372,7 @@ class SessionManager(
         )
     }
 
-    /**
-     * Update device heartbeat
-     */
+
     fun updateDeviceHeartbeat(
         deviceId: String,
         syncOffset: Long,
@@ -419,24 +389,16 @@ class SessionManager(
         }
     }
 
-    /**
-     * Get current session information
-     */
+
     fun getCurrentSession(): SessionInfo? = currentSession.get()
 
-    /**
-     * Get connected devices
-     */
+
     fun getConnectedDevices(): List<DeviceInfo> = connectedDevices.values.toList()
 
-    /**
-     * Get session history
-     */
+
     fun getSessionHistory(): List<SessionInfo> = sessionHistory.values.toList()
 
-    /**
-     * Get session diagnostics
-     */
+
     fun getDiagnostics(): JSONObject {
         val session = currentSession.get()
         return JSONObject().apply {

@@ -18,32 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Unified BLE Manager that merges all Shimmer Nordic BLE and Topdon BLE functionalities.
- * 
- * This comprehensive manager provides unified access to:
- * - Shimmer Nordic BLE devices (GSR sensors, physiological monitoring)
- * - Topdon BLE devices (thermal cameras, environmental sensors)
- * - Cross-device coordination and synchronization
- * - Unified device discovery and connection management
- * - Enterprise-grade reliability and security
- * 
- * Features:
- * - Unified device discovery supporting both Shimmer and Topdon protocols
- * - Cross-device synchronization for multi-modal sensing
- * - Enhanced connection reliability using Nordic BLE backend
- * - Comprehensive error handling and recovery
- * - Real-time device status monitoring
- * - Unified security layer with device authentication
- * 
- * Usage:
- * UnifiedBleManager manager = UnifiedBleManager.getInstance(context);
- * manager.startUnifiedDeviceDiscovery(listener);
- * manager.connectToShimmerDevice(device, gsrConfig);
- * manager.connectToTopdonDevice(device, thermalConfig);
- * 
- * @author IRCamera Unified BLE Integration Team
- */
+
 public class UnifiedBleManager {
     private static final String TAG = "UnifiedBleManager";
     
@@ -91,9 +66,7 @@ public class UnifiedBleManager {
         UNKNOWN             // Unknown or generic BLE device
     }
     
-    /**
-     * Device discovery listener for unified scanning
-     */
+
     public interface UnifiedScanListener {
         void onShimmerDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord);
         void onTopdonDeviceFound(BluetoothDevice device, DeviceType type, int rssi, byte[] scanRecord);
@@ -102,9 +75,7 @@ public class UnifiedBleManager {
         void onScanComplete();
     }
     
-    /**
-     * Unified connection listener
-     */
+
     public interface UnifiedConnectionListener {
         void onDeviceConnected(UnifiedDevice device);
         void onDeviceDisconnected(UnifiedDevice device, int reason);
@@ -113,9 +84,7 @@ public class UnifiedBleManager {
         void onDeviceReady(UnifiedDevice device);
     }
     
-    /**
-     * Connection metrics for monitoring BLE device performance (consolidated from EnhancedBleManager)
-     */
+
     public static class ConnectionMetrics {
         public final AtomicLong connectAttempts = new AtomicLong(0);
         public final AtomicLong successfulConnections = new AtomicLong(0);
@@ -129,9 +98,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * System BLE status information (consolidated from EnhancedBleManager)
-     */
+
     public static class SystemBleStatus {
         public final int activeConnections;
         public final boolean multiDeviceMode;
@@ -147,9 +114,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Private constructor for singleton pattern
-     */
+
     private UnifiedBleManager(@NonNull Context context) {
         this.context = context.getApplicationContext();
         this.bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -164,9 +129,7 @@ public class UnifiedBleManager {
         Log.i(TAG, "UnifiedBleManager initialized with comprehensive BLE support and cross-modal coordination");
     }
     
-    /**
-     * Get singleton instance
-     */
+
     public static UnifiedBleManager getInstance(@NonNull Context context) {
         if (instance == null) {
             synchronized (UnifiedBleManager.class) {
@@ -178,9 +141,7 @@ public class UnifiedBleManager {
         return instance;
     }
     
-    /**
-     * Initialize the unified BLE manager with cross-modal sync integration
-     */
+
     public boolean initialize() {
         if (isInitialized.get()) {
             return true;
@@ -222,9 +183,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Start unified device discovery for both Shimmer and Topdon devices
-     */
+
     public boolean startUnifiedDeviceDiscovery(@NonNull UnifiedScanListener listener) {
         if (!isInitialized.get()) {
             Log.e(TAG, "Manager not initialized");
@@ -255,9 +214,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Stop unified device discovery
-     */
+
     public void stopUnifiedDeviceDiscovery() {
         if (!isScanning.get()) {
             return;
@@ -275,9 +232,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Connect to Shimmer device with unified configuration
-     */
+
     public UnifiedDevice connectToShimmerDevice(@NonNull BluetoothDevice device, 
                                                @NonNull ShimmerDeviceConfig config,
                                                @NonNull UnifiedConnectionListener listener) {
@@ -299,9 +254,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Connect to Topdon device with unified configuration
-     */
+
     public UnifiedDevice connectToTopdonDevice(@NonNull BluetoothDevice device,
                                              @NonNull TopdonDeviceConfig config,
                                              @NonNull UnifiedConnectionListener listener) {
@@ -323,16 +276,12 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Get all connected devices
-     */
+
     public List<UnifiedDevice> getConnectedDevices() {
         return new ArrayList<>(connectedDevices.values());
     }
     
-    /**
-     * Get connected devices by type
-     */
+
     public List<UnifiedDevice> getConnectedDevicesByType(DeviceType type) {
         List<UnifiedDevice> devices = new ArrayList<>();
         for (UnifiedDevice device : connectedDevices.values()) {
@@ -343,9 +292,7 @@ public class UnifiedBleManager {
         return devices;
     }
     
-    /**
-     * Disconnect device
-     */
+
     public void disconnectDevice(@NonNull String address) {
         UnifiedDevice device = connectedDevices.get(address);
         if (device != null) {
@@ -355,9 +302,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Disconnect all devices
-     */
+
     public void disconnectAllDevices() {
         for (UnifiedDevice device : connectedDevices.values()) {
             device.disconnect();
@@ -366,9 +311,7 @@ public class UnifiedBleManager {
         Log.i(TAG, "Disconnected all devices");
     }
     
-    /**
-     * Cleanup and release resources
-     */
+
     public void cleanup() {
         try {
             stopUnifiedDeviceDiscovery();
@@ -434,9 +377,7 @@ public class UnifiedBleManager {
     
     // Consolidated methods from EnhancedBleManager to eliminate duplication
     
-    /**
-     * Initialize the unified BLE manager with multi-device support
-     */
+
     public boolean initialize(@NonNull Context context, boolean enableMultiDevice) {
         if (isInitialized.get()) {
             return true;
@@ -446,17 +387,13 @@ public class UnifiedBleManager {
         return initialize();
     }
     
-    /**
-     * Enable multi-device mode
-     */
+
     public void enableMultiDeviceMode(boolean enabled) {
         this.multiDeviceMode.set(enabled);
         Log.i(TAG, "Multi-device mode " + (enabled ? "enabled" : "disabled"));
     }
     
-    /**
-     * Get system BLE status
-     */
+
     public SystemBleStatus getSystemStatus() {
         return new SystemBleStatus(
             activeConnections.get(),
@@ -466,35 +403,27 @@ public class UnifiedBleManager {
         );
     }
     
-    /**
-     * Mark device as GSR sensor for enhanced handling
-     */
+
     public void markAsGsrSensor(@NonNull String deviceAddress) {
         gsrDevices.put(deviceAddress, true);
         Log.i(TAG, "Device " + deviceAddress + " marked as GSR sensor");
     }
     
-    /**
-     * Get all connected Shimmer devices
-     */
+
     @NonNull
     public List<UnifiedDevice> getConnectedShimmerDevices() {
         // Placeholder implementation - would be implemented by ShimmerBleController
         return new ArrayList<>();
     }
     
-    /**
-     * Get all connected Topdon devices
-     */
+
     @NonNull
     public List<UnifiedDevice> getConnectedTopdonDevices() {
         // Placeholder implementation - would be implemented by TopdonBleController
         return new ArrayList<>();
     }
     
-    /**
-     * Get system BLE status
-     */
+
     @NonNull
     public SystemBleStatus getSystemBleStatus() {
         return new SystemBleStatus(
@@ -505,9 +434,7 @@ public class UnifiedBleManager {
         );
     }
     
-    /**
-     * Enhanced device connection with monitoring and metrics
-     */
+
     @Nullable
     public Connection connectWithEnhancements(@NonNull String deviceAddress) {
         Log.i(TAG, "Enhanced connection attempt for device: " + deviceAddress);
@@ -534,9 +461,7 @@ public class UnifiedBleManager {
     
     // ========== Cross-Modal Synchronization Integration ==========
     
-    /**
-     * Register BLE devices with cross-modal synchronization system
-     */
+
     public boolean registerDevicesForCrossModalSync() {
         try {
             CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
@@ -591,9 +516,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Start synchronized recording across all BLE devices
-     */
+
     public boolean startCrossModalRecording() {
         try {
             // Register devices first
@@ -609,9 +532,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Stop synchronized recording
-     */
+
     public boolean stopCrossModalRecording() {
         try {
             CrossModalSyncManager syncManager = CrossModalSyncManager.getInstance(context);
@@ -623,9 +544,7 @@ public class UnifiedBleManager {
         }
     }
     
-    /**
-     * Get cross-modal sync manager instance for advanced operations
-     */
+
     @NonNull
     public CrossModalSyncManager getCrossModalSyncManager() {
         return CrossModalSyncManager.getInstance(context);

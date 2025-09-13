@@ -9,10 +9,7 @@ import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * Real-time data streaming service for sending sensor data to PC Controller
- * Handles buffering, batching, and reliable delivery of sensor measurements
- */
+
 class DataStreamingService(
     private val context: Context,
     private val networkClient: NetworkClient,
@@ -80,9 +77,7 @@ class DataStreamingService(
         eventListener = listener
     }
 
-    /**
-     * Start real-time data streaming for a session
-     */
+
     suspend fun startStreaming(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isStreaming.get()) {
@@ -123,9 +118,7 @@ class DataStreamingService(
             }
         }
 
-    /**
-     * Stop real-time data streaming
-     */
+
     suspend fun stopStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isStreaming.get()) {
@@ -161,9 +154,7 @@ class DataStreamingService(
             }
         }
 
-    /**
-     * Queue GSR sample for streaming
-     */
+
     fun queueGSRSample(sample: GSRSample) {
         if (!isStreaming.get()) return
 
@@ -178,9 +169,7 @@ class DataStreamingService(
         gsrQueue.offer(sample)
     }
 
-    /**
-     * Queue thermal sample for streaming
-     */
+
     fun queueThermalSample(sample: ThermalSample) {
         if (!isStreaming.get()) return
 
@@ -194,9 +183,7 @@ class DataStreamingService(
         thermalQueue.offer(sample)
     }
 
-    /**
-     * Queue video metadata for streaming
-     */
+
     fun queueVideoMetadata(metadata: VideoMetadata) {
         if (!isStreaming.get()) return
 
@@ -404,9 +391,7 @@ class DataStreamingService(
         videoMetadataQueue.clear()
     }
 
-    /**
-     * Get current queue sizes for monitoring
-     */
+
     fun getQueueSizes(): Map<String, Int> {
         return mapOf(
             "gsr" to gsrQueue.size,
@@ -415,14 +400,10 @@ class DataStreamingService(
         )
     }
 
-    /**
-     * Check if streaming is active
-     */
+
     fun isStreamingActive(): Boolean = isStreaming.get()
 
-    /**
-     * Clean up resources
-     */
+
     suspend fun cleanup() {
         // Stop streaming before cancelling jobs to ensure proper data flush
         stopStreaming()

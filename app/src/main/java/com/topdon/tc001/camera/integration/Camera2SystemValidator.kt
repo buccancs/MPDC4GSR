@@ -5,23 +5,13 @@ import android.util.Log
 import com.topdon.tc001.camera.core.ModeManager
 import kotlinx.coroutines.*
 
-/**
- * End-to-end validation for the Clean Camera2-only Architecture
- *
- * Validates that the implementation meets all technical requirements from the comment:
- * - One camera client only (no CameraX+Camera2 conflicts)
- * - Two exclusive modes: RAW mode (50MP DNG stream) OR Video mode (4K60/4K30)
- * - Fast switching without closing CameraDevice
- * - Deterministic state machine. No races. No silent failures
- */
+
 class Camera2SystemValidator(private val context: Context) {
     companion object {
         private const val TAG = "Camera2SystemValidator"
     }
 
-    /**
-     * Run comprehensive validation of the Camera2 system
-     */
+
     suspend fun validateSystem(): ValidationResult {
         val results = mutableListOf<String>()
         var allPassed = true
@@ -105,9 +95,7 @@ class Camera2SystemValidator(private val context: Context) {
         }
     }
 
-    /**
-     * Validate fast session switching capability
-     */
+
     private fun validateFastSessionSwitching(): Boolean {
         return try {
             // Validate that the session switching logic preserves camera device
@@ -127,9 +115,7 @@ class Camera2SystemValidator(private val context: Context) {
         }
     }
 
-    /**
-     * Validate Samsung S22 specific optimizations
-     */
+
     private fun validateSamsungCompatibility(): Boolean {
         return try {
             val deviceCapsClass = Class.forName("com.topdon.tc001.camera.core.DeviceCaps")
@@ -147,9 +133,7 @@ class Camera2SystemValidator(private val context: Context) {
         }
     }
 
-    /**
-     * Result of system validation
-     */
+
     data class ValidationResult(
         val allTestsPassed: Boolean,
         val results: List<String>,

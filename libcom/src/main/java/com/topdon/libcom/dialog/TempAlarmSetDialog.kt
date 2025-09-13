@@ -30,14 +30,10 @@ class TempAlarmSetDialog(
             field = value.copy()
         }
 
-    /**
-     * 保存点击事件监听.
-     */
+
     var onSaveListener: ((alarmBean: AlarmBean) -> Unit)? = null
 
-    /**
-     * 用于播放报警铃声.
-     */
+
     private var mediaPlayer: MediaPlayer? = null
 
     public var hideAlarmMark = false
@@ -311,9 +307,7 @@ class TempAlarmSetDialog(
         }
     }
 
-    /**
-     * 设置当前选中的铃声，null 表示关闭.
-     */
+
     private fun selectRingtone(position: Int?) {
         try {
             if (mediaPlayer != null) {

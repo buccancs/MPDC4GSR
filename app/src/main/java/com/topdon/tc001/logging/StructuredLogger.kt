@@ -11,10 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-/**
- * Structured JSON logging system for PC-to-phone communication
- * Phase 0 implementation - JSON logs with fields [ts, level, comp, device_id, conn_id, msg_id, event]
- */
+
 class StructuredLogger private constructor(private val context: Context) {
     companion object {
         private const val TAG = "StructuredLogger"
@@ -162,9 +159,7 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Log a structured message
-     */
+
     fun log(
         level: LogLevel,
         component: String,
@@ -209,9 +204,7 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Log connection event with automatic connection ID tracking
-     */
+
     fun logConnection(
         event: String,
         connectionId: String,
@@ -220,9 +213,7 @@ class StructuredLogger private constructor(private val context: Context) {
         log(LogLevel.INFO, "NetworkConnection", event, details, connectionId)
     }
 
-    /**
-     * Log protocol message with automatic message ID
-     */
+
     fun logProtocolMessage(
         event: String,
         messageId: String,
@@ -232,9 +223,7 @@ class StructuredLogger private constructor(private val context: Context) {
         log(LogLevel.INFO, "ProtocolHandler", event, details, connectionId, messageId)
     }
 
-    /**
-     * Log server socket events
-     */
+
     fun logServerEvent(
         event: String,
         details: Map<String, Any> = emptyMap(),
@@ -242,9 +231,7 @@ class StructuredLogger private constructor(private val context: Context) {
         log(LogLevel.INFO, "ServerSocket", event, details)
     }
 
-    /**
-     * Log sensor events
-     */
+
     fun logSensorEvent(
         event: String,
         sensorType: String,
@@ -255,9 +242,7 @@ class StructuredLogger private constructor(private val context: Context) {
         log(LogLevel.INFO, "SensorRecorder", event, sensorDetails)
     }
 
-    /**
-     * Log recording session events
-     */
+
     fun logSessionEvent(
         event: String,
         sessionId: String,
@@ -347,16 +332,12 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Get current log file path for debugging
-     */
+
     fun getCurrentLogFile(): String? {
         return currentLogFile?.absolutePath
     }
 
-    /**
-     * Get log directory contents for debugging
-     */
+
     fun getLogFiles(): List<String> {
         return try {
             val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
@@ -367,9 +348,7 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Export recent logs as string for debugging
-     */
+
     fun exportRecentLogs(maxLines: Int = 100): String {
         return try {
             val logFile = currentLogFile ?: return "No log file available"
@@ -389,9 +368,7 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-    /**
-     * Cleanup and shutdown logging
-     */
+
     fun cleanup() {
         try {
             logScope.cancel()

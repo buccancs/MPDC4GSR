@@ -13,10 +13,7 @@ import com.topdon.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
-/**
- * Monitor activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
- */
+
 class MonitorActivity : BaseActivity(), View.OnClickListener {
     companion object {
         const val STATS_START = 101
@@ -100,7 +97,7 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         motionBtn.visibility = View.GONE
     }
 
-\1秒
+//秒
     fun updateTime(time: Long) {
         val ss = time % 60
         val mm = time / 60 % 60

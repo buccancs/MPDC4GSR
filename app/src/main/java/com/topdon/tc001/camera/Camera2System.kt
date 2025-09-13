@@ -9,22 +9,7 @@ import com.topdon.tc001.camera.core.*
 import kotlinx.coroutines.*
 import java.io.File
 
-/**
- * Clean Camera2-only system for Samsung S22 dual-mode camera
- *
- * Implements the architecture requested in the comment:
- * - CameraController: opens/closes CameraDevice, owns HandlerThread, constructs/swaps CameraCaptureSession
- * - VideoEngine: wraps MediaRecorder (prepare/start/stop/release)
- * - RawEngine: wraps RAW ImageReader, DngCreator, and file I/O
- * - ModeManager: state machine and switching
- * - UiBridge: pushes preview Surface, exposes errors and progress
- *
- * Goals:
- * - One camera client. No CameraX+Camera2 conflicts.
- * - Two exclusive modes: RAW mode (50 MP DNG stream) OR Video mode (4K60 if exposed, else 4K30)
- * - Fast switch without closing CameraDevice
- * - Deterministic state machine. No races. No silent failures.
- */
+
 class Camera2System(
     private val context: Context,
     private val textureView: TextureView,
@@ -57,9 +42,7 @@ class Camera2System(
         setupCallbacks()
     }
 
-    /**
-     * Initialize the camera system
-     */
+    
     suspend fun initialize(cameraId: String = "0"): Boolean =
         withContext(Dispatchers.Main) {
             try {
@@ -82,9 +65,7 @@ class Camera2System(
             }
         }
 
-    /**
-     * Switch camera mode (RAW_50MP, VIDEO_4K, PREVIEW_ONLY)
-     */
+    
     suspend fun switchMode(mode: ModeManager.CameraMode): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -124,9 +105,7 @@ class Camera2System(
             }
         }
 
-    /**
-     * Start recording in current mode
-     */
+    
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording) {
@@ -163,9 +142,7 @@ class Camera2System(
             }
         }
 
-    /**
-     * Stop recording
-     */
+    
     suspend fun stopRecording(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isRecording) {
@@ -193,29 +170,19 @@ class Camera2System(
             }
         }
 
-    /**
-     * Get current mode
-     */
+    
     fun getCurrentMode(): ModeManager.CameraMode = modeManager.getCurrentMode()
 
-    /**
-     * Get available modes for this device
-     */
+    
     fun getAvailableModes(): List<ModeManager.CameraMode> = modeManager.getAvailableModes()
 
-    /**
-     * Check if recording
-     */
+    
     fun isRecording(): Boolean = isRecording
 
-    /**
-     * Get device capabilities
-     */
+    
     fun getDeviceCaps(): DeviceCaps? = cameraController.getDeviceCaps()
 
-    /**
-     * Cleanup and release resources
-     */
+    
     fun release() {
         if (isRecording) {
             runBlocking { stopRecording() }

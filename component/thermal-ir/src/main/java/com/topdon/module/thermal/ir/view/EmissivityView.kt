@@ -10,41 +10,24 @@ import android.util.AttributeSet
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
-/**
-\1常用材料emissivity 页面所用，一行常用材料emissivity.
- *
- * Created by LCG on 2024/10/14.
- */
-/**
- * Custom Emissivity view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
 class EmissivityView : View {
     companion object {
-        /**
-\1默认outline尺寸，单位 dp.
-         */
+
         private const val DEFAULT_STROKE_WIDTH: Float = 0.5f
     }
 
-    /**
-\1是否顶部对齐
-     */
+
     var isAlignTop = false
 
-    /**
-\1是否需要drawing顶部横线
-     */
+
     var drawTopLine = false
 
-    /**
-\1要display的文字列表.
-     */
+
     private val textList: ArrayList<CharSequence> = ArrayList(3)
 
-    /**
-\1执行drawing的 Layout 列表.
-     */
+
     private val layoutList: ArrayList<StaticLayout> = ArrayList(3)
 
     private val strokeWidth = SizeUtils.dp2px(DEFAULT_STROKE_WIDTH).coerceAtLeast(1).toFloat()
@@ -87,7 +70,7 @@ class EmissivityView : View {
         val elseWidth: Int = (widthSize - firstWidth) / 2
         val contentWidth: Int = firstWidth + elseWidth * 2
 
-\1initialize layoutList
+//initialize layoutList
         layoutList.clear()
         for (i in textList.indices) {
             val textWidth: Int =
@@ -103,7 +86,7 @@ class EmissivityView : View {
             )
         }
 
-\1calculation最大高度
+//calculation最大高度
         var maxHeight = 0
         for (layout in layoutList) {
             maxHeight = maxHeight.coerceAtLeast(layout.height)
@@ -113,7 +96,7 @@ class EmissivityView : View {
         }
         maxHeight += SizeUtils.dp2px(12f) // 上下各 6dp padding
 
-\1宽度为 UNSPECIFIED 的情况目前不存在，不考虑
+//宽度为 UNSPECIFIED 的情况目前不存在，不考虑
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }
 

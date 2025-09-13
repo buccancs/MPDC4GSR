@@ -12,18 +12,7 @@ import com.topdon.tc001.camera.core.ModeManager
 import kotlinx.coroutines.*
 import java.io.File
 
-/**
- * Clean RGB Camera Recorder using Camera2System
- *
- * Implements the clean architecture requested:
- * - One camera client only (no CameraX conflicts)
- * - Two exclusive modes: RAW mode (50MP DNG stream) OR Video mode (4K60 if exposed, else 4K30)
- * - Fast switching without closing CameraDevice
- * - Deterministic state machine. No races. No silent failures.
- *
- * This is a wrapper around the new Camera2System that provides backward compatibility
- * with the existing API while using the clean architecture underneath.
- */
+
 class RGBCameraRecorder(
     private val context: Context,
     private val textureView: TextureView,
@@ -100,9 +89,7 @@ class RGBCameraRecorder(
         camera2System.onRecordingStopped = { /* Handle stopped */ }
     }
 
-    /**
-     * Initialize the camera system with permission handling
-     */
+
     suspend fun initializeCamera(cameraId: String = "0"): Boolean =
         withContext(Dispatchers.Main) {
             try {
@@ -120,9 +107,7 @@ class RGBCameraRecorder(
             }
         }
 
-    /**
-     * Switch camera mode (RAW_50MP, VIDEO_4K, PREVIEW_ONLY)
-     */
+
     suspend fun switchMode(mode: CameraMode): Boolean {
         val systemMode =
             when (mode) {
@@ -133,9 +118,7 @@ class RGBCameraRecorder(
         return camera2System.switchMode(systemMode)
     }
 
-    /**
-     * Start recording in current mode
-     */
+
     suspend fun startRecording(
         outputDir: File,
         sessionId: String,
@@ -146,23 +129,17 @@ class RGBCameraRecorder(
         return camera2System.startRecording(sessionId)
     }
 
-    /**
-     * Stop recording
-     */
+
     suspend fun stopRecording(): Boolean {
         return camera2System.stopRecording()
     }
 
-    /**
-     * Check camera permission and request if needed
-     */
+
     private fun checkCameraPermission(): Boolean {
         return XXPermissions.isGranted(context, Permission.CAMERA)
     }
 
-    /**
-     * Request camera permission
-     */
+
     fun requestCameraPermission(callback: (Boolean) -> Unit) {
         if (activity == null) {
             Log.e(TAG, "Activity context required for permission request")
@@ -192,9 +169,7 @@ class RGBCameraRecorder(
             )
     }
 
-    /**
-     * Switch camera (front/back)
-     */
+
     suspend fun switchCamera(facing: CameraFacing): Boolean {
         val cameraId = getFirstCameraIdForFacing(facing) ?: return false
         currentCameraFacing = facing
@@ -205,9 +180,7 @@ class RGBCameraRecorder(
         return success
     }
 
-    /**
-     * Switch to specific camera ID
-     */
+
     suspend fun switchCamera(cameraId: String): Boolean {
         val success = camera2System.initialize(cameraId)
         if (success) {
@@ -219,17 +192,13 @@ class RGBCameraRecorder(
         return success
     }
 
-    /**
-     * Get available cameras with capability information
-     */
+
     fun getAvailableCameras(): List<CameraInfo> {
         // Delegate to camera2System for camera enumeration
         return emptyList() // Simplified for now
     }
 
-    /**
-     * Get current camera mode
-     */
+
     fun getCurrentMode(): CameraMode {
         val systemMode = camera2System.getCurrentMode()
         return when (systemMode) {
@@ -239,41 +208,27 @@ class RGBCameraRecorder(
         }
     }
 
-    /**
-     * Check if recording is active
-     */
+
     fun isRecording(): Boolean = camera2System.isRecording()
 
-    /**
-     * Get device capabilities
-     */
+
     fun getDeviceCaps(): DeviceCaps? = camera2System.getDeviceCaps()
 
-    /**
-     * Get current camera facing
-     */
+
     fun getCurrentCameraFacing(): CameraFacing = currentCameraFacing
 
-    /**
-     * Get current session ID
-     */
+
     fun getCurrentSessionId(): String = sessionId
 
-    /**
-     * Update recording settings
-     */
+
     fun updateRecordingSettings(settings: RecordingSettings) {
         recordingSettings = settings
     }
 
-    /**
-     * Get current recording settings
-     */
+
     fun getRecordingSettings(): RecordingSettings = recordingSettings
 
-    /**
-     * Release resources
-     */
+
     suspend fun release() {
         camera2System.release()
     }

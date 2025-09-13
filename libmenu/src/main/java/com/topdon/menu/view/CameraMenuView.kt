@@ -17,64 +17,36 @@ import com.bumptech.glide.request.RequestOptions
 import com.topdon.menu.R as MenuR
 import com.topdon.menu.databinding.ViewCameraMenuBinding
 
-/**
- * Menu 1 - Photo and video capture related functionality.
- *
- * Central photo/video button states:
- * - Photo mode - Normal
- * - Photo mode - Capturing - Instant capture
- * - Photo mode - Capturing - Delayed capture
- * - Video mode - Normal
- * - Video mode - Recording
- *
- * Created by LCG on 2024/11/8.
- */
 
-/**
- * Custom Camera menu view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * CameraMenuView implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
+
 class CameraMenuView : FrameLayout, View.OnClickListener {
     companion object {
-        /** onCameraClickListener event code: photo/video capture */
+        //
         const val CODE_ACTION = 0
 
-        /** onCameraClickListener event code: gallery */
+        //
         const val CODE_GALLERY = 1
 
-        /** onCameraClickListener event code: more menu */
+        //
         const val CODE_MORE = 2
 
-        /** onCameraClickListener event code: switch to photo */
+        //
         const val CODE_TO_PHOTO = 3
 
-        /** onCameraClickListener event code: switch to video */
+        //
         const val CODE_TO_VIDEO = 4
     }
 
-    /**
-     * Whether currently in video mode.
-     *
-     * true-video mode false-photo mode
-     */
+
     var isVideoMode: Boolean
         get() = binding.viewPager2.currentItem == 1
         set(value) {
             binding.viewPager2.currentItem = if (value) 1 else 0
         }
 
-    /**
-     * Controls whether photo capture/video recording text is visible and switchable. 
-     * Switching is not allowed during photo capture or video recording.
-     *
-     * true - visible and switchable, false - not visible and not switchable
-     */
+
     var canSwitchMode: Boolean
         get() = binding.viewPager2.isUserInputEnabled
         set(value) {
@@ -83,15 +55,10 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
             binding.tvVideo.isVisible = value
         }
 
-    /**
-     * Click event listener for various operations.
-     * actionCode: 0-photo capture/video recording 1-gallery 2-more menu 3-switch to photo 4-switch to video
-     */
+
     var onCameraClickListener: ((actionCode: Int) -> Unit)? = null
 
-    /**
-     * Sets the central photo capture/video recording button to normal state (not capturing/not recording)
-     */
+
     fun setToNormal() {
         if (isVideoMode) {
             binding.ivAction.setImageResource(MenuR.drawable.svg_camera_video_normal)
@@ -100,10 +67,7 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         }
     }
 
-    /**
-     * Sets the central photo capture/video recording button to recording state: photo capturing (instant/delayed) or video recording
-     * @param isDelay true-delayed capture false-instant capture (irrelevant for video recording)
-     */
+
     fun setToRecord(isDelay: Boolean) {
         if (isVideoMode) {
             binding.ivAction.setImageResource(MenuR.drawable.svg_camera_video_record)
@@ -116,9 +80,7 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         }
     }
 
-    /**
-     * Refreshes the gallery cover using the specified local absolute path.
-     */
+
     fun refreshGallery(path: String) {
         try {
             Glide.with(this)
@@ -168,10 +130,7 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         return super.dispatchTouchEvent(ev)
     }
 
-    /**
-     * Considering the time required for photo capture and video recording, need to prevent users from rapid clicking.
-     * Saves click timestamp to avoid duplicate operations.
-     */
+
     private var lastClickTime: Long = 0
 
     override fun onClick(v: View?) {
@@ -224,20 +183,10 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         }
     }
 
-    /**
-     * Adapter used by ViewPager2.
-     */
+
     
-/**
- * Custom Menu camera view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * MenuCameraAdapter provides data binding between data source and UI components.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
     class MenuCameraAdapter : RecyclerView.Adapter<MenuCameraAdapter.ViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -256,19 +205,9 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
 
         override fun getItemCount(): Int = 2
 
-        /**
-         * ViewHolder(rootView: class
-         */
-/**
- * Custom View holder view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
-/**
- * ViewHolder implements custom user interface component functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
+
         class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
     }
 }

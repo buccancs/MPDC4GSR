@@ -53,13 +53,7 @@ public class AppUtil {
     }
 
 
-    /**
-     * 应用安装
-     *
-     * @param context
-     * @param
-     * @param apkPath
-     */
+
     public static void installApp(Context context, File apkPath) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -75,12 +69,7 @@ public class AppUtil {
         context.startActivity(intent);
     }
 
-    /**
-     * 方法描述：判断某一Service是否正在运行     *
-     * * @param context     上下文
-     * * @param serviceName Service的全路径： 包名 + service的类名
-     * * @return true 表示正在运行，false 表示没有运行
-     */
+
     public static boolean isProcessRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> runningServiceInfos = am.getRunningServices(200);
@@ -96,12 +85,7 @@ public class AppUtil {
         return false;
     }
 
-    /**
-     * 方法描述：判断某一Service是否正在运行     *
-     * * @param context     上下文
-     * * @param serviceName Service的全路径： 包名 + service的类名
-     * * @return true 表示正在运行，false 表示没有运行
-     */
+
     public static boolean isServiceRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> runningServiceInfos = am.getRunningServices(200);

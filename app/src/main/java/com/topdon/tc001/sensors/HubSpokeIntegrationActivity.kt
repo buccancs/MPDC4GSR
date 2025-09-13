@@ -31,25 +31,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Hub-Spoke Integration Activity demonstrating the complete Multi-Modal Physiological Sensing Platform.
- * 
- * This activity provides a comprehensive interface for:
- * - PC Controller discovery and connection
- * - Multi-modal sensor recording coordination
- * - Real-time status monitoring and error handling
- * - Time synchronization visualization
- * - Background service management
- * 
- * Features:
- * - Complete Hub-Spoke system demonstration
- * - Real-time sensor status display
- * - Network connectivity and sync quality monitoring
- * - Coordinated recording session management
- * - Error recovery and status reporting
- * 
- * @author IRCamera Android Sensor Node (Spoke)
- */
+
 class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrationBinding>() {
 
     companion object {
@@ -147,9 +129,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         networkServer = NetworkServer(this, 8080)
     }
     
-    /**
-     * Initialize advanced BLE coordination for systematic multi-device management
-     */
+
     private fun initializeAdvancedBleCoordination() {
         lifecycleScope.launch {
             try {
@@ -172,9 +152,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
     
-    /**
-     * Setup BLE device monitoring with system-wide status tracking
-     */
+
     private fun setupBleDeviceMonitoring() {
         lifecycleScope.launch {
             try {
@@ -204,9 +182,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
     
-    /**
-     * Discover and setup GSR sensors for hub-spoke physiological sensing
-     */
+
     private fun discoverGsrSensorsForHubSpoke() {
         lifecycleScope.launch {
             try {
@@ -260,9 +236,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
     
-    /**
-     * Update BLE status in the UI with enhanced system information
-     */
+
     private fun updateBleStatusUI(systemStatus: com.topdon.ble.UnifiedBleManager.SystemBleStatus?) {
         runOnUiThread {
             try {
@@ -289,9 +263,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
     
-    /**
-     * Update discovered devices UI with real-time device information
-     */
+
     private fun updateDiscoveredDevicesUI(device: Device, rssi: Int) {
         try {
             // Add device to the connected devices list
@@ -615,10 +587,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         updateBLEDeviceStatus()
     }
     
-    /**
-     * Update BLE device connection status in the UI
-     * Part of systematic harmonization for enhanced BLE monitoring
-     */
+
     private fun updateBLEDeviceStatus() {
         if (::enhancedBLE.isInitialized) {
             val bleDeviceCount = connectedBLEDevices.size
@@ -635,9 +604,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
     
-    /**
-     * Get the local IP address of this device
-     */
+
     private fun getLocalIPAddress(): String {
         try {
             val interfaces = java.net.NetworkInterface.getNetworkInterfaces()

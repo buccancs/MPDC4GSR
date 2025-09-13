@@ -14,16 +14,7 @@ import com.topdon.tc001.camera.RGBCameraRecorder
 import com.topdon.tc001.camera.ui.CameraModeSelector
 import kotlinx.coroutines.launch
 
-/**
- * Demo Activity for Dual-Mode Camera System Integration
- *
- * Demonstrates the enhanced RGBCameraRecorder with:
- * - RAW 50MP capture mode
- * - 4K video recording mode
- * - Fast session switching
- * - Samsung S22 optimizations
- * - CameraModeSelector UI integration
- */
+
 class DualModeCameraActivity : AppCompatActivity() {
     private lateinit var textureView: TextureView
     private lateinit var cameraModeSelector: CameraModeSelector

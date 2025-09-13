@@ -60,9 +60,7 @@ class GuideInterface {
         )
     }
 
-    /**
-     * 读取数据
-     */
+
     private fun startUsbBufferWriteThread() {
         mWriteThreadFlag = true
         mUsbBufferWriteThread =
@@ -88,9 +86,7 @@ class GuideInterface {
 
     var startTime = 0L
 
-    /**
-     * 分析数据,并回调响应
-     */
+
     private fun startUsbBufferReadThread() {
         mReadThreadFlag = true
         mUsbBufferReadThread =
@@ -256,9 +252,7 @@ class GuideInterface {
         return getParam(PARAM_INDEX_DISTANCE * 2, 1, 0) * 1.0f / 10
     }
 
-    /**
-     * 设置亮度
-     */
+
     fun setBright(bright: Int) {
         if (mGuideUsbManager == null) {
             return
@@ -277,9 +271,7 @@ class GuideInterface {
         return getParam(PARAM_INDEX_BRIGHT * 2, 1, 0).toInt()
     }
 
-    /**
-     * 设置对比度
-     */
+
     fun setContrast(contrast: Int) {
         if (mGuideUsbManager == null) {
             return

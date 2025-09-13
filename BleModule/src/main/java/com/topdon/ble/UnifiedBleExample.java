@@ -10,19 +10,7 @@ import com.topdon.ble.util.BluetoothPermissionUtils;
 
 import java.util.List;
 
-/**
- * Comprehensive example showing how to use the UnifiedBleManager for both
- * Shimmer Nordic and Topdon BLE device integration.
- * 
- * This example demonstrates:
- * - Device discovery for both Shimmer and Topdon devices
- * - Connection management with configuration
- * - Data streaming and device coordination
- * - Error handling and recovery
- * - Cross-device synchronization
- * 
- * @author IRCamera Unified BLE Integration Team
- */
+
 public class UnifiedBleExample {
     private static final String TAG = "UnifiedBleExample";
     
@@ -37,9 +25,7 @@ public class UnifiedBleExample {
         this.context = context;
     }
     
-    /**
-     * Initialize and start comprehensive BLE operations
-     */
+
     public void startComprehensiveExample() {
         Log.i(TAG, "Starting comprehensive Shimmer Nordic and Topdon BLE example");
         
@@ -54,9 +40,7 @@ public class UnifiedBleExample {
         startDeviceDiscovery();
     }
     
-    /**
-     * Start unified device discovery for both Shimmer and Topdon devices
-     */
+
     private void startDeviceDiscovery() {
         Log.i(TAG, "Starting unified device discovery");
         
@@ -107,9 +91,7 @@ public class UnifiedBleExample {
         });
     }
     
-    /**
-     * Connect to Shimmer GSR device with optimal configuration
-     */
+
     private void connectToShimmerGSRDevice(BluetoothDevice device) {
         Log.i(TAG, "Connecting to Shimmer GSR device: " + device.getAddress());
         
@@ -127,9 +109,7 @@ public class UnifiedBleExample {
         }
     }
     
-    /**
-     * Connect to Topdon thermal device with optimal configuration
-     */
+
     private void connectToTopdonThermalDevice(BluetoothDevice device) {
         Log.i(TAG, "Connecting to Topdon thermal device: " + device.getAddress());
         
@@ -147,9 +127,7 @@ public class UnifiedBleExample {
         }
     }
     
-    /**
-     * Check if all required devices are ready for synchronized operation
-     */
+
     private void checkDeviceReadiness() {
         List<UnifiedDevice> connectedDevices = unifiedBleManager.getConnectedDevices();
         Log.i(TAG, "Connected devices: " + connectedDevices.size());
@@ -178,9 +156,7 @@ public class UnifiedBleExample {
         }
     }
     
-    /**
-     * Start synchronized data recording from all connected devices
-     */
+
     private void startSynchronizedRecording() {
         Log.i(TAG, "Starting synchronized multi-modal recording");
         
@@ -199,9 +175,7 @@ public class UnifiedBleExample {
         Log.i(TAG, "Synchronized multi-modal recording active");
     }
     
-    /**
-     * Stop all recording and disconnect devices
-     */
+
     public void stopAndCleanup() {
         Log.i(TAG, "Stopping recording and cleaning up");
         
@@ -223,9 +197,7 @@ public class UnifiedBleExample {
         Log.i(TAG, "Cleanup completed");
     }
     
-    /**
-     * Unified connection listener for handling all device events
-     */
+
     private class UnifiedConnectionListener implements UnifiedBleManager.UnifiedConnectionListener {
         @Override
         public void onDeviceConnected(UnifiedDevice device) {
@@ -264,9 +236,7 @@ public class UnifiedBleExample {
         }
     }
     
-    /**
-     * Handle GSR data from Shimmer device
-     */
+
     private void handleGSRData(UnifiedDevice device, byte[] data) {
         // Process GSR data with 12-bit ADC resolution (0-4095 range)
         // Convert to microsiemens and log for research analysis
@@ -276,9 +246,7 @@ public class UnifiedBleExample {
         // This is where real GSR values would be calculated and stored
     }
     
-    /**
-     * Handle thermal data from Topdon device
-     */
+
     private void handleThermalData(UnifiedDevice device, byte[] data) {
         // Process thermal frame data and temperature matrices
         Log.d(TAG, "Thermal data received: " + data.length + " bytes from " + device.getAddress());

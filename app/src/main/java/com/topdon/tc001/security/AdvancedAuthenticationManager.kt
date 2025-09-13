@@ -15,17 +15,7 @@ import javax.crypto.KeyGenerator
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-/**
- * Advanced Authentication Manager for Phase 4 Security Enhancement
- *
- * Features:
- * - Multi-tier authentication (Basic -> Certificate -> Token-based -> Biometric)
- * - Certificate-based device authentication with automatic rotation
- * - Role-based access control (RBAC) for different device types
- * - Session management with secure token handling
- * - Hardware-backed key storage using Android Keystore
- * - Security monitoring and anomaly detection
- */
+
 class AdvancedAuthenticationManager(private val context: Context) {
     companion object {
         private const val TAG = "AdvancedAuth"
@@ -126,9 +116,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
 
     private var authListener: AuthenticationListener? = null
 
-    /**
-     * Initialize the advanced authentication system
-     */
+
     fun initialize(): Boolean {
         return try {
             Log.i(TAG, "Initializing advanced authentication system")
@@ -182,16 +170,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Set authentication event listener
-     */
+
     fun setAuthenticationListener(listener: AuthenticationListener) {
         this.authListener = listener
     }
 
-    /**
-     * Perform multi-tier authentication
-     */
+
     suspend fun authenticate(
         deviceId: String,
         authLevel: Int,
@@ -235,9 +219,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Basic authentication (admin/admin)
-     */
+
     private suspend fun authenticateBasic(
         deviceId: String,
         credentials: Map<String, Any>,
@@ -259,9 +241,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         return AuthenticationResult.INVALID_CREDENTIALS
     }
 
-    /**
-     * Certificate-based authentication
-     */
+
     private suspend fun authenticateCertificate(
         deviceId: String,
         credentials: Map<String, Any>,
@@ -278,9 +258,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             ?: AuthenticationResult.HARDWARE_UNAVAILABLE
     }
 
-    /**
-     * Token-based authentication with HMAC
-     */
+
     private suspend fun authenticateToken(
         deviceId: String,
         credentials: Map<String, Any>,
@@ -306,9 +284,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         return AuthenticationResult.SUCCESS
     }
 
-    /**
-     * Biometric authentication with hardware keys
-     */
+
     private suspend fun authenticateBiometric(
         deviceId: String,
         credentials: Map<String, Any>,
@@ -330,9 +306,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Handle successful authentication
-     */
+
     private suspend fun onAuthenticationSuccess(
         deviceId: String,
         authLevel: Int,
@@ -387,9 +361,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         startSessionMonitoring(deviceId, sessionExpiry)
     }
 
-    /**
-     * Handle authentication failure
-     */
+
     private suspend fun onAuthenticationFailure(
         deviceId: String,
         result: AuthenticationResult,
@@ -431,9 +403,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         authListener?.onAuthenticationFailure(result, attemptsRemaining)
     }
 
-    /**
-     * Check if device is currently locked out
-     */
+
     private fun isDeviceLocked(deviceId: String): Boolean {
         val lockoutTime = lockoutExpiry[deviceId] ?: return false
         if (System.currentTimeMillis() < lockoutTime) {
@@ -446,9 +416,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Determine device role based on authentication context
-     */
+
     private fun determineDeviceRole(
         deviceId: String,
         authLevel: Int,
@@ -472,9 +440,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Generate secure session token
-     */
+
     private fun generateSessionToken(
         deviceId: String,
         role: DeviceRole,
@@ -492,9 +458,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         )
     }
 
-    /**
-     * Verify HMAC signature
-     */
+
     private fun verifyHmac(
         deviceId: String,
         token: String,
@@ -516,9 +480,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Verify hardware-backed key
-     */
+
     private fun verifyHardwareKey(
         deviceId: String,
         hardwareKey: ByteArray,
@@ -545,9 +507,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Get enhanced basic credentials (beyond admin/admin)
-     */
+
     private fun getEnhancedBasicCredentials(): Map<String, String> {
         return mapOf(
             "researcher" to "research2024!",
@@ -556,9 +516,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         )
     }
 
-    /**
-     * Get HMAC key for device
-     */
+
     private fun getHmacKey(deviceId: String): ByteArray {
         return try {
             val keyStore = KeyStore.getInstance("AndroidKeyStore")
@@ -576,9 +534,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Initialize Android Keystore
-     */
+
     private fun initializeKeystore() {
         try {
             generateDeviceKey()
@@ -591,9 +547,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Generate device authentication key
-     */
+
     private fun generateDeviceKey() {
         val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
         val keyGenParameterSpec =
@@ -610,9 +564,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         keyGenerator.generateKey()
     }
 
-    /**
-     * Generate session encryption key
-     */
+
     private fun generateSessionKey() {
         val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
         val keyGenParameterSpec =
@@ -629,9 +581,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         keyGenerator.generateKey()
     }
 
-    /**
-     * Generate HMAC key
-     */
+
     private fun generateHmacKey() {
         val keyGenerator = KeyGenerator.getInstance("HmacSHA256", "AndroidKeyStore")
         val keyGenParameterSpec =
@@ -646,9 +596,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         keyGenerator.generateKey()
     }
 
-    /**
-     * Start session monitoring
-     */
+
     private fun startSessionMonitoring(
         deviceId: String,
         expiryTime: Long,
@@ -669,9 +617,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Logout and clear session
-     */
+
     fun logout() {
         currentAuthLevel.set(false)
         authenticatedDeviceId = null
@@ -682,14 +628,10 @@ class AdvancedAuthenticationManager(private val context: Context) {
         logger.log(StructuredLogger.LogLevel.INFO, TAG, "logout", emptyMap())
     }
 
-    /**
-     * Check if currently authenticated
-     */
+
     fun isAuthenticated(): Boolean = currentAuthLevel.get() && System.currentTimeMillis() < sessionExpiry
 
-    /**
-     * Get current authentication context
-     */
+
     fun getCurrentContext(): AuthenticationContext? {
         if (!isAuthenticated()) return null
 
@@ -710,9 +652,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         )
     }
 
-    /**
-     * Check if current session has specific permission
-     */
+
     fun hasPermission(permission: String): Boolean {
         if (!isAuthenticated()) return false
 
@@ -720,9 +660,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             authenticatedRole.permissions.contains(permission)
     }
 
-    /**
-     * Get comprehensive security diagnostics
-     */
+
     fun getSecurityDiagnostics(): JSONObject {
         return JSONObject().apply {
             put("authentication_enabled", true)
@@ -737,9 +675,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         }
     }
 
-    /**
-     * Shutdown and cleanup
-     */
+
     fun shutdown() {
         scope.cancel()
         securityMonitor?.stopMonitoring()

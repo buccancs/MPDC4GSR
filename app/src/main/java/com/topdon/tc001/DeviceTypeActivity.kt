@@ -16,15 +16,9 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.DeviceTools
 
-/**
- * 设备类型选择.
- *
- * Created by LCG on 2024/4/22.
- */
+
 class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
-    /**
-     * 当前点击的设备类型.
-     */
+
     private var clientType: IRDeviceType? = null
 
     override fun initContentLayoutId() = R.layout.activity_device_type
@@ -240,9 +234,7 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
         }
     }
 
-    /**
-     * 支持的设备类型 (热成像设备和GSR传感器).
-     */
+
     enum class IRDeviceType {
         TC001 {
             override fun isLine(): Boolean = true

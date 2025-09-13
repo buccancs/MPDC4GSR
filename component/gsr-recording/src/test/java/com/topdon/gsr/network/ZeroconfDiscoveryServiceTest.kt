@@ -13,9 +13,7 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowNsdManager
 
-/**
- * Context-based tests for ZeroconfDiscoveryService using Robolectric
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 class ZeroconfDiscoveryServiceTest {

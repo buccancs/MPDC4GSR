@@ -8,9 +8,7 @@ import android.media.ExifInterface
 import com.guide.zm04c.matrix.Logger
 import java.io.*
 
-/**
- * created by liuhongwei gd02527 on 2018年08月29日
- */
+
 class FileUtils {
     companion object {
         private val TAG = "RealTimeImpl"
@@ -24,11 +22,7 @@ class FileUtils {
             return file.exists() && file.isFile
         }
 
-        /**
-         * 删除文件夹以及目录下的文件
-         * @param filePath 被删除目录的文件路径
-         * @return 目录删除成功返回true，否则返回false
-         */
+
         fun deleteDirectory(filePath: String): Boolean {
             var filePath = filePath
             var flag = false
@@ -133,13 +127,7 @@ class FileUtils {
             saveFile(BaseDataTypeConvertUtils.convertShortArr2LittleEndianByteArr(data), filePath, isAppend)
         }
 
-        /**
-         * 保存Bitmap为JPG文件
-         *
-         * @param bmp
-         * @param filePath
-         * @return
-         */
+
         fun saveBitmap2JpegFile(
             bmp: Bitmap,
             filePath: String,
@@ -172,13 +160,7 @@ class FileUtils {
             return false
         }
 
-        /**
-         * 旋转Bitmap
-         *
-         * @param srcBitmap    源Bitmap
-         * @param rotateDegree 旋转角度
-         * @return
-         */
+
         fun rotateBitmap(
             srcBitmap: Bitmap,
             rotateDegree: Float,

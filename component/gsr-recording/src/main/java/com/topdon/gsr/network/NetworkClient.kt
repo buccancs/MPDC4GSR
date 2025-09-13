@@ -16,10 +16,7 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentHashMap
 import javax.net.ssl.*
 
-/**
- * Network client for communicating with PC Controller
- * Implements device pairing, discovery, and remote measurement initiation
- */
+
 class NetworkClient(private val context: Context) {
     companion object {
         private const val TAG = "NetworkClient"
@@ -185,9 +182,7 @@ class NetworkClient(private val context: Context) {
         )
     }
 
-    /**
-     * Discover PC Controllers on the same network
-     */
+
     suspend fun discoverControllers(): List<ControllerInfo> =
         withContext(Dispatchers.IO) {
             val controllers = mutableListOf<ControllerInfo>()
@@ -243,9 +238,7 @@ class NetworkClient(private val context: Context) {
             controllers
         }
 
-    /**
-     * Connect to a specific PC Controller with TLS encryption
-     */
+
     suspend fun connectToController(
         ipAddress: String,
         port: Int = PC_CONTROLLER_PORT,
@@ -328,9 +321,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Disconnect from PC Controller
-     */
+
     fun disconnect() {
         isConnected = false
         heartbeatJob.cancel()
@@ -356,9 +347,7 @@ class NetworkClient(private val context: Context) {
         Log.i(TAG, "Disconnected from PC Controller")
     }
 
-    /**
-     * Send measurement data to PC Controller
-     */
+
     suspend fun sendMeasurementData(
         sessionId: String,
         data: JSONObject,
@@ -386,9 +375,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Report device status to PC Controller
-     */
+
     suspend fun reportStatus(
         status: String,
         batteryLevel: Int? = null,
@@ -539,9 +526,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Send message (public method for external components)
-     */
+
     suspend fun sendMessage(message: JSONObject) =
         withContext(Dispatchers.IO) {
             val output = outputStream ?: throw IOException("Not connected")
@@ -580,9 +565,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Perform NTP-like time synchronization with PC Controller
-     */
+
     private suspend fun performTimeSync(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -637,16 +620,12 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Get synchronized timestamp using the calculated clock offset
-     */
+
     fun getSynchronizedTimestamp(): Long {
         return System.nanoTime() + clockOffset
     }
 
-    /**
-     * Create a trust-all TLS manager for development (should be replaced with proper certificate validation in production)
-     */
+
     private fun createTrustAllManager(): X509TrustManager {
         return object : X509TrustManager {
             override fun checkClientTrusted(
@@ -663,9 +642,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Start continuous data streaming to PC Controller
-     */
+
     suspend fun startDataStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isConnected) return@withContext false
@@ -688,9 +665,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Stop continuous data streaming
-     */
+
     suspend fun stopDataStreaming(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isConnected) return@withContext false
@@ -804,9 +779,7 @@ class NetworkClient(private val context: Context) {
 
     fun getDiscoveredControllers(): List<ControllerInfo> = discoveredControllers.values.toList()
 
-    /**
-     * Enable/disable TLS encryption (for development/testing)
-     */
+
     fun setTLSEnabled(enabled: Boolean) {
         if (isConnected) {
             Log.w(TAG, "Cannot change TLS setting while connected")
@@ -816,14 +789,10 @@ class NetworkClient(private val context: Context) {
         Log.i(TAG, "TLS encryption ${if (enabled) "enabled" else "disabled"}")
     }
 
-    /**
-     * Get error recovery manager for advanced configuration
-     */
+
     fun getErrorRecoveryManager(): NetworkErrorRecoveryManager = errorRecoveryManager
 
-    /**
-     * Clean up all resources
-     */
+
     fun cleanup() {
         disconnect()
         errorRecoveryManager.cleanup()
@@ -831,9 +800,7 @@ class NetworkClient(private val context: Context) {
         eventListener = null
     }
 
-    /**
-     * Send binary data (for file transfers and frame data)
-     */
+
     suspend fun sendBinaryData(data: ByteArray) =
         withContext(Dispatchers.IO) {
             val output = outputStream ?: throw IOException("Not connected")
@@ -842,9 +809,7 @@ class NetworkClient(private val context: Context) {
             output.flush()
         }
 
-    /**
-     * Wait for a specific response type with timeout
-     */
+
     suspend fun waitForResponse(
         messageType: String,
         timeoutMs: Long,
@@ -862,9 +827,7 @@ class NetworkClient(private val context: Context) {
         throw IOException("Timeout waiting for response: $messageType")
     }
 
-    /**
-     * Broadcast message to all discovered controllers
-     */
+
     suspend fun broadcastMessage(message: JSONObject) =
         withContext(Dispatchers.IO) {
             discoveredControllers.values.forEach { controller ->
@@ -876,9 +839,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Set message handler for specific message types
-     */
+
     fun setMessageHandler(
         messageType: String,
         handler: (JSONObject) -> Unit,
@@ -886,14 +847,10 @@ class NetworkClient(private val context: Context) {
         messageHandlers[messageType] = handler
     }
 
-    /**
-     * Get current clock offset for time synchronization
-     */
+
     fun getClockOffset(): Long = clockOffset
 
-    /**
-     * Start device discovery with callback
-     */
+
     fun startDiscovery(callback: (Boolean) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -906,9 +863,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Connect to controller with callback
-     */
+
     fun connectToController(
         ipAddress: String,
         port: Int,
@@ -925,9 +880,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Get network latency in milliseconds
-     */
+
     fun getLatencyMs(): Int {
         return if (isConnected) {
             // Simplified latency calculation - in production this would measure actual round-trip time
@@ -937,9 +890,7 @@ class NetworkClient(private val context: Context) {
         }
     }
 
-    /**
-     * Get network throughput in KB/s
-     */
+
     fun getThroughputKBps(): Double {
         return if (isConnected) {
             // Simplified throughput calculation - in production this would measure actual data transfer
@@ -951,23 +902,17 @@ class NetworkClient(private val context: Context) {
 
     // Authentication methods
 
-    /**
-     * Generate and get pairing PIN for device discovery
-     */
+
     fun generatePairingPin(): String {
         return authManager.generatePairingPin()
     }
 
-    /**
-     * Get current pairing PIN
-     */
+
     fun getCurrentPairingPin(): String? {
         return authManager.getCurrentPairingPin()
     }
 
-    /**
-     * Initiate pairing with PC Controller
-     */
+
     suspend fun initiatePairing(controllerInfo: ControllerInfo): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -992,51 +937,37 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Process pairing response from PC Controller
-     */
+
     fun processPairingResponse(response: JSONObject): Boolean {
         return authManager.processPairingResponse(response)
     }
 
-    /**
-     * Get authentication token for controller
-     */
+
     fun getAuthToken(controllerId: String): DeviceAuthenticationManager.AuthToken? {
         return authManager.getAuthToken(controllerId)
     }
 
-    /**
-     * Check if device is paired with controller
-     */
+
     fun isPairedWith(controllerId: String): Boolean {
         return authManager.isPairedWith(controllerId)
     }
 
-    /**
-     * Get list of paired controllers
-     */
+
     fun getPairedControllers(): Set<String> {
         return authManager.getPairedControllers()
     }
 
-    /**
-     * Unpair from specific controller
-     */
+
     fun unpairController(controllerId: String) {
         authManager.unpairController(controllerId)
     }
 
-    /**
-     * Clear all pairing data
-     */
+
     fun clearAllPairings() {
         authManager.clearAllPairings()
     }
 
-    /**
-     * Send authenticated message to PC Controller
-     */
+
     suspend fun sendAuthenticatedMessage(
         messageType: String,
         data: JSONObject,
@@ -1053,9 +984,7 @@ class NetworkClient(private val context: Context) {
             }
         }
 
-    /**
-     * Validate incoming message authentication
-     */
+
     fun validateMessageAuthentication(
         message: JSONObject,
         controllerId: String,

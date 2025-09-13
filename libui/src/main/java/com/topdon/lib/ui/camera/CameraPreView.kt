@@ -34,13 +34,8 @@ import com.topdon.lib.core.listener.BitmapViewListener
 import com.topdon.lib.ui.databinding.CameraLayBinding
 import java.util.Collections
 
-/**
- * 相机预览
- */
-/**
- * Custom Camera pre view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
+
 class CameraPreView :
     LinearLayout,
     ScaleGestureDetector.OnScaleGestureListener,
@@ -150,9 +145,7 @@ class CameraPreView :
         return lis.onTouchEvent(event)
     }
 
-    /**
-     * saved图片
-     */
+
     public fun getBitmap(): Bitmap? {
         return binding.cameraTexture.bitmap
     }
@@ -195,40 +188,40 @@ class CameraPreView :
 
 // ////////////////
 
-    /**相机权限请求标识 */
+    //
     private val REQUEST_CAMERA_CODE = 0x100
 
-    /**图片 */
+    //
     private var mImageView: ImageView? = null
 
-    /**照相机ID，标识前置后置 */
+    //
     private lateinit var mCameraId: String
 
-    /**相机尺寸 */
+    //
     private var mCaptureSize: Size? = null
 
-    /**图像读取者 */
+    //
     private var mImageReader: ImageReader? = null
 
-    /**图像主线程Handler */
+    //
     private var mCameraHandler: Handler? = null
 
-    /**相机设备 */
+    //
     private var mCameraDevice: CameraDevice? = null
 
-    /**预览大小 */
+    //
     private var mPreviewSize: Size? = null
 
-    /**相机请求 */
+    //
     private lateinit var mCaptureBuilder: CaptureRequest.Builder
 
-    /**相机capture捕获会话 */
+    //
     private var mCameraCaptureSession: CameraCaptureSession? = null
 
-    /**相机管理者 */
+    //
     private var mCameraManager: CameraManager? = null
 
-    /**相机设备state回调 */
+    //
     private val mStateCallback: CameraDevice.StateCallback =
         object : CameraDevice.StateCallback() {
             override fun onOpened(
@@ -275,10 +268,7 @@ class CameraPreView :
         }
     }
 
-    /**
-     * 预览
-     * click开启相机后触发
-     */
+
     private fun takePreview() {
 //        mTextureView.rotation = 270f
 //        mTextureView.rotation = 0f
@@ -370,11 +360,7 @@ class CameraPreView :
         super.onAttachedToWindow()
     }
 
-    /**
-     * settings相机参数
-     * @param width 宽度
-     * @param height 高度
-     */
+
     private fun setUpCamera(
         width: Int,
         height: Int,
@@ -423,13 +409,7 @@ class CameraPreView :
         }
     }
 
-    /**
-     * 选择SizeMap中大于并且最接近width和height的size
-     * @param sizeMap 可选的尺寸
-     * @param width 宽
-     * @param height 高
-     * @return 最接近width和height的size
-     */
+
     private fun getOptimalSize(
         sizeMap: Array<Size>,
         width: Int,
@@ -460,9 +440,7 @@ class CameraPreView :
         }
     }
 
-    /**
-     * 打开相机
-     */
+
     @SuppressLint("MissingPermission")
     fun openCamera() {
         isPreviewing = true
@@ -476,9 +454,7 @@ class CameraPreView :
         }
     }
 
-    /**
-     * close相机
-     */
+
     @SuppressLint("MissingPermission")
     fun closeCamera() {
         isPreviewing = false

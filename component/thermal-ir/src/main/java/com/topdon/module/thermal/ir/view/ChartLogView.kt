@@ -28,10 +28,7 @@ import com.topdon.lib.core.R as LibR
 import com.topdon.lib.core.R as LibcoreR
 import com.topdon.module.thermal.R as ThermalR
 
-/**
- * Custom Chart log view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class ChartLogView : LineChart {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
 
@@ -85,7 +82,7 @@ class ChartLogView : LineChart {
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
             l.isEnabled = false // 隐藏曲线标签
-\1x轴
+//x轴
             val xAxis = this.xAxis
             xAxis.textColor = textColor
             xAxis.setDrawGridLines(false) // 竖向格线
@@ -97,7 +94,7 @@ class ChartLogView : LineChart {
             xAxis.granularity = 1f
             xAxis.isGranularityEnabled = true // 重复值不显示
             xAxis.textSize = 8f
-\1y轴
+//y轴
             val leftAxis = this.axisLeft
             leftAxis.textColor = textColor // y轴文本颜色
             leftAxis.axisLineColor = 0x00000000 // y轴颜色
@@ -254,9 +251,7 @@ class ChartLogView : LineChart {
             LibR.color.chart_point_center,
         )
 
-    /**
-\1曲线样式
-     */
+
     private fun createSet(
         index: Int,
         label: String,

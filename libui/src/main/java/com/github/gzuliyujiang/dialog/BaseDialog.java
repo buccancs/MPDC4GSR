@@ -43,12 +43,7 @@ import androidx.annotation.StyleRes;
 
 import com.topdon.lib.ui.R;
 
-/**
- * 屏幕底部弹出对话框
- *
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2017/4/12
- */
+
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class BaseDialog extends Dialog implements DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
     public static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -96,9 +91,7 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         }
     }
 
-    /**
-     * @deprecated 使用 {@link #onInit(Bundle)} 代替
-     */
+
     @Deprecated
     @CallSuper
     protected void onInit(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
@@ -131,9 +124,7 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
     @NonNull
     protected abstract View createContentView();
 
-    /**
-     * @deprecated 使用 {@link #initView()}  代替
-     */
+
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     @CallSuper
@@ -302,18 +293,14 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         DialogLog.print("dialog detached from window");
     }
 
-    /**
-     * @see #onAttachedToWindow()
-     */
+
     @CallSuper
     @Override
     public void onShow(DialogInterface dialog) {
         DialogLog.print("dialog onShow");
     }
 
-    /**
-     * @see #onDetachedFromWindow()
-     */
+
     @CallSuper
     @Override
     public void onDismiss(DialogInterface dialog) {

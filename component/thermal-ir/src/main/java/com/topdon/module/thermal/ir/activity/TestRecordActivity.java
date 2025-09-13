@@ -36,10 +36,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author: CaiSongL
- * @date: 2023/5/18 14:44
- */
+
 public class TestRecordActivity extends Activity{
 
     private final static String CLASS_LABEL = "RecordActivity";

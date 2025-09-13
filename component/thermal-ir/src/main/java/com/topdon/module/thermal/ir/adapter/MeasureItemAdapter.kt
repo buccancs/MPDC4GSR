@@ -12,10 +12,7 @@ import com.topdon.lib.core.bean.ObserveBean
 import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.module.thermal.ir.R
 
-/**
- * Custom Measure item view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
- */
+
 class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0

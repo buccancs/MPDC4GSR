@@ -30,9 +30,7 @@
 //
 //import java.util.ArrayList;
 //
-///**
-// *
-// */
+//
 //public class TemperatureViewOld extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
 //
 //    private final String TAG = "TemperatureView";
@@ -627,9 +625,7 @@
 //        Log.w(TAG, "surfaceDestroyed");
 //    }
 //
-//    /**
-//     * 温度测量选区
-//     */
+//
 //    @Override
 //    public boolean onTouch(View v, MotionEvent event) {
 //        if (!canTouch){
@@ -1203,9 +1199,7 @@
 //        }
 //    }
 //
-//    /**
-//     * 输入一个坐标,找出是否已经存在的直线,没有返回一条初始直线
-//     */
+//
 //    public Line getLine(Point point) {
 //        Line line = new Line();
 //        for (int index = 0; index < lines.size(); index++) {

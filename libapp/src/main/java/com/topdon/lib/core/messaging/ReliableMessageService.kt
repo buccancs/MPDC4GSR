@@ -8,16 +8,8 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Reliable message delivery service with acknowledgments, retry logic, and ordered delivery.
- * Ensures critical messages are delivered even in unreliable network conditions.
- */
-/**
- * ReliableMessageService provides background service functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
 class ReliableMessageService(private val context: Context? = null) {
     companion object {
         private const val TAG = "ReliableMessage"
@@ -55,12 +47,7 @@ class ReliableMessageService(private val context: Context? = null) {
         val callback: MessageCallback?,
     )
 
-/**
- * MessagePriority manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
     enum class MessagePriority {
         LOW, // Non-critical messages (status updates)
         NORMAL, // Regular messages (data transfer)
@@ -68,54 +55,31 @@ class ReliableMessageService(private val context: Context? = null) {
         CRITICAL, // Critical messages (emergency stop, sync)
     }
 
-/**
- * MessageCallback manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
     interface MessageCallback {
-    /**
-     * Callback method triggered when acknowledged occurs.
-     */
+
         fun onAcknowledged(messageId: String)
 
-    /**
-     * Callback method triggered when failed occurs.
-     */
+
         fun onFailed(
             messageId: String,
             error: String,
         )
 
-    /**
-     * Callback method triggered when retrying occurs.
-     */
+
         fun onRetrying(
             messageId: String,
             attempt: Int,
         )
     }
 
-/**
- * MessageHandler manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
     interface MessageHandler {
-    /**
-     * Handles message events and responses.
-     */
+
         fun handleMessage(message: JSONObject): JSONObject? // Return response or null
     }
 
-/**
- * MessageTransport manages camera operations and image capture functionality.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
     interface MessageTransport {
         suspend fun sendMessage(
             host: String,
@@ -130,9 +94,7 @@ class ReliableMessageService(private val context: Context? = null) {
         this.transport = transport
     }
 
-    /**
-     * Initialize the reliable messaging service
-     */
+
     fun initialize() {
         // Start cleanup job for expired messages
         cleanupJob =
@@ -146,9 +108,7 @@ class ReliableMessageService(private val context: Context? = null) {
         Log.i(TAG, "Reliable messaging service initialized")
     }
 
-    /**
-     * Send a reliable message with automatic retry and acknowledgment
-     */
+
     suspend fun sendMessage(
         targetHost: String,
         targetPort: Int,
@@ -199,9 +159,7 @@ class ReliableMessageService(private val context: Context? = null) {
         return messageId
     }
 
-    /**
-     * Send a message without requiring acknowledgment (fire-and-forget)
-     */
+
     suspend fun sendUnreliableMessage(
         targetHost: String,
         targetPort: Int,
@@ -225,9 +183,7 @@ class ReliableMessageService(private val context: Context? = null) {
         return transport?.sendMessage(targetHost, targetPort, message) ?: false
     }
 
-    /**
-     * Process incoming message and generate acknowledgment if needed
-     */
+
     suspend fun processIncomingMessage(message: JSONObject): JSONObject? {
         try {
             val messageId = message.optString("message_id")
@@ -282,9 +238,7 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    /**
-     * Register a message handler for a specific message type
-     */
+
     fun registerMessageHandler(
         messageType: String,
         handler: MessageHandler,
@@ -293,17 +247,13 @@ class ReliableMessageService(private val context: Context? = null) {
         Log.d(TAG, "Registered handler for message type: $messageType")
     }
 
-    /**
-     * Unregister a message handler
-     */
+
     fun unregisterMessageHandler(messageType: String) {
         messageHandlers.remove(messageType)
         Log.d(TAG, "Unregistered handler for message type: $messageType")
     }
 
-    /**
-     * Cancel a pending message
-     */
+
     fun cancelMessage(messageId: String): Boolean {
         val removed = pendingMessages.remove(messageId)
         if (removed != null) {
@@ -313,16 +263,12 @@ class ReliableMessageService(private val context: Context? = null) {
         return false
     }
 
-    /**
-     * Get status of all pending messages
-     */
+
     fun getPendingMessages(): List<PendingMessage> {
         return pendingMessages.values.toList()
     }
 
-    /**
-     * Get count of pending messages by priority
-     */
+
     fun getPendingMessageCount(priority: MessagePriority? = null): Int {
         return if (priority == null) {
             pendingMessages.size
@@ -398,9 +344,7 @@ class ReliableMessageService(private val context: Context? = null) {
         return false 
     }
 
-    /**
-     * Handles acknowledgment events and responses.
-     */
+
     private fun handleAcknowledgment(messageId: String) {
         val pendingMessage = pendingMessages.remove(messageId)
         if (pendingMessage != null) {
@@ -409,9 +353,7 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    /**
-     * Handles negativeacknowledgment events and responses.
-     */
+
     private fun handleNegativeAcknowledgment(
         messageId: String,
         errorReason: String,
@@ -423,9 +365,7 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    /**
-     * Creates and configures a new acknowledgment instance.
-     */
+
     private fun createAcknowledgment(
         messageId: String,
         senderId: String,
@@ -442,9 +382,7 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    /**
-     * Creates and configures a new negativeacknowledgment instance.
-     */
+
     private fun createNegativeAcknowledgment(
         messageId: String,
         senderId: String,
@@ -459,9 +397,7 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    /**
-     * Executes cleanupexpiredmessages functionality.
-     */
+
     private fun cleanupExpiredMessages() {
         val currentTime = System.currentTimeMillis()
         val expiredMessages =
@@ -480,9 +416,7 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    /**
-     * Executes generatemessageid functionality.
-     */
+
     private fun generateMessageId(): String {
         return UUID.randomUUID().toString()
     }
@@ -502,9 +436,7 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
-    /**
-     * Shutdown the service and cleanup resources
-     */
+
     fun shutdown() {
         cleanupJob?.cancel()
         messageScope.cancel()

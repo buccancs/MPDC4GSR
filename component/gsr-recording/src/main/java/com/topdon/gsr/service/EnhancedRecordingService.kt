@@ -17,10 +17,7 @@ import com.topdon.gsr.network.NetworkClient
 import com.topdon.gsr.network.ZeroconfDiscoveryService
 import kotlinx.coroutines.*
 
-/**
- * Enhanced background recording service with networking capabilities
- * Provides uninterrupted data capture with real-time streaming to PC Controller
- */
+
 class EnhancedRecordingService : Service() {
     companion object {
         private const val TAG = "EnhancedRecordingService"

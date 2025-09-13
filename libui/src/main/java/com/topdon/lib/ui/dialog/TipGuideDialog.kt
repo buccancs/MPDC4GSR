@@ -22,16 +22,8 @@ import com.topdon.lib.ui.databinding.DialogTipGuideBinding
 import com.topdon.lib.ui.widget.IndicateView
 import kotlin.collections.ArrayList
 
-/**
- * Tip guide fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
-/**
- * TipGuideDialog displays modal dialog interface for user interaction.
- *
- * @author IRCamera Development Team
- * @since 1.0
- */
+
+
 class TipGuideDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private lateinit var imgList: ArrayList<Int>
@@ -112,9 +104,7 @@ class TipGuideDialog : DialogFragment() {
         )
     }
 
-    /**
-     * Updates the index with new data.
-     */
+
     fun updateIndex(position: Int) {
         if (index == position) {
             return
@@ -170,9 +160,7 @@ class TipGuideDialog : DialogFragment() {
     }
 
     companion object {
-    /**
-     * Executes newinstance functionality.
-     */
+
         fun newInstance(): TipGuideDialog {
             return TipGuideDialog()
         }

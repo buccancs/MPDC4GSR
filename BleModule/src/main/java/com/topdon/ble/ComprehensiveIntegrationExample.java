@@ -4,24 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import androidx.annotation.NonNull;
 
-/**
- * Comprehensive Integration Example demonstrating the complete unified BLE system.
- * 
- * This example shows how to use the enhanced system integration manager for:
- * - Multi-modal device coordination (Shimmer GSR + Topdon thermal + RGB cameras)
- * - Cross-modal synchronization with sub-5ms accuracy
- * - Enterprise-grade reliability and monitoring
- * - Research-ready data collection with comprehensive quality assurance
- * 
- * Features Demonstrated:
- * - Unified device discovery across BLE and non-BLE systems
- * - Advanced cross-modal synchronization
- * - Real-time system health monitoring
- * - Enterprise-grade error handling and recovery
- * - Research-quality temporal precision
- * 
- * @author IRCamera Enhanced Integration Team
- */
+
 public class ComprehensiveIntegrationExample {
     private static final String TAG = "ComprehensiveIntegrationExample";
     
@@ -30,9 +13,7 @@ public class ComprehensiveIntegrationExample {
     private final UnifiedBleManager unifiedBleManager;
     private final CrossModalSyncManager syncManager;
     
-    /**
-     * Initialize comprehensive integration example
-     */
+    
     public ComprehensiveIntegrationExample(@NonNull Context context) {
         this.context = context;
         this.integrationManager = EnhancedSystemIntegrationManager.getInstance(context);
@@ -42,9 +23,7 @@ public class ComprehensiveIntegrationExample {
         Log.i(TAG, "Comprehensive Integration Example initialized");
     }
     
-    /**
-     * Demonstrate complete system integration workflow
-     */
+    
     public void demonstrateComprehensiveIntegration() {
         Log.i(TAG, "=== Starting Comprehensive System Integration Demonstration ===");
         
@@ -71,9 +50,7 @@ public class ComprehensiveIntegrationExample {
         Log.i(TAG, "=== Comprehensive System Integration Demonstration Complete ===");
     }
     
-    /**
-     * Setup comprehensive system integration listeners
-     */
+    
     private void setupSystemIntegrationListeners() {
         integrationManager.addListener(new EnhancedSystemIntegrationManager.SystemIntegrationListener() {
             @Override
@@ -109,9 +86,7 @@ public class ComprehensiveIntegrationExample {
         });
     }
     
-    /**
-     * Handle discovered device with type-specific configuration
-     */
+    
     private void handleDiscoveredDevice(@NonNull UnifiedDevice device) {
         switch (device.getDeviceType()) {
             case SHIMMER_GSR:
@@ -132,9 +107,7 @@ public class ComprehensiveIntegrationExample {
         }
     }
     
-    /**
-     * Configure Shimmer GSR device for research-grade data collection
-     */
+    
     private void configureShimmerGSRDevice(@NonNull UnifiedDevice device) {
         Log.d(TAG, "Applying research-grade GSR configuration:");
         Log.d(TAG, "  - Sampling Rate: 128Hz for high-frequency analysis");
@@ -143,9 +116,7 @@ public class ComprehensiveIntegrationExample {
         Log.d(TAG, "  - Synchronization: Sub-5ms accuracy with global timestamp");
     }
     
-    /**
-     * Configure Topdon thermal device for precision measurement
-     */
+    
     private void configureTopdonThermalDevice(@NonNull UnifiedDevice device) {
         Log.d(TAG, "Applying precision thermal configuration:");
         Log.d(TAG, "  - Resolution: 256x192 thermal matrix");
@@ -154,9 +125,7 @@ public class ComprehensiveIntegrationExample {
         Log.d(TAG, "  - Frame Rate: Synchronized with other sensors");
     }
     
-    /**
-     * Start synchronized recording across all devices
-     */
+    
     private void startSynchronizedRecording() {
         Log.i(TAG, "🎬 Starting Synchronized Multi-Modal Recording:");
         Log.i(TAG, "  - Shimmer GSR: Continuous physiological monitoring");
@@ -168,9 +137,7 @@ public class ComprehensiveIntegrationExample {
         insertSyncValidationMark();
     }
     
-    /**
-     * Insert synchronization validation mark for temporal alignment verification
-     */
+    
     private void insertSyncValidationMark() {
         Log.d(TAG, "📍 Inserting Sync Validation Mark:");
         Log.d(TAG, "  - All devices will flash/beep simultaneously");
@@ -178,9 +145,7 @@ public class ComprehensiveIntegrationExample {
         Log.d(TAG, "  - Validates <5ms synchronization accuracy requirement");
     }
     
-    /**
-     * Monitor system health and performance in real-time
-     */
+    
     private void monitorSystemHealth() {
         // Get current system metrics
         EnhancedSystemIntegrationManager.SystemHealthMetrics metrics = 
@@ -197,9 +162,7 @@ public class ComprehensiveIntegrationExample {
         assessResearchReadiness(metrics);
     }
     
-    /**
-     * Assess if system meets research-grade requirements
-     */
+    
     private void assessResearchReadiness(@NonNull EnhancedSystemIntegrationManager.SystemHealthMetrics metrics) {
         Log.i(TAG, "🔬 Research-Grade Readiness Assessment:");
         
@@ -221,9 +184,7 @@ public class ComprehensiveIntegrationExample {
         }
     }
     
-    /**
-     * Demonstrate cleanup and resource management
-     */
+    
     public void cleanup() {
         Log.i(TAG, "🧹 Cleaning up Comprehensive Integration Example");
         

@@ -13,21 +13,7 @@ import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * Central coordinator for all sensor recording in the Multi-Modal Physiological Sensing Platform.
- * 
- * This controller manages the complete sensor recording pipeline:
- * - Initialization and cleanup of all sensor recorders
- * - Synchronized start/stop across all sensors
- * - Real-time monitoring and error handling
- * - Temporal synchronization and sync marker distribution
- * - Performance monitoring and quality assurance
- * 
- * The RecordingController implements the core logic for the Android Sensor Node (Spoke)
- * in the Hub-and-Spoke architecture, coordinating multi-modal data collection.
- * 
- * @author IRCamera Android Sensor Node (Spoke)
- */
+
 class RecordingController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
@@ -67,9 +53,7 @@ class RecordingController(
     private val _syncEventFlow = MutableSharedFlow<SyncEvent>()
     val syncEventFlow: SharedFlow<SyncEvent> = _syncEventFlow.asSharedFlow()
 
-    /**
-     * Initialize all sensor recorders with enhanced error handling
-     */
+
     suspend fun initializeSensors(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -155,9 +139,7 @@ class RecordingController(
         }
     }
 
-    /**
-     * Start recording on all available sensors
-     */
+
     suspend fun startRecording(sessionDirectory: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -260,9 +242,7 @@ class RecordingController(
         }
     }
 
-    /**
-     * Stop recording on all sensors
-     */
+
     suspend fun stopRecording(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -332,9 +312,7 @@ class RecordingController(
         }
     }
 
-    /**
-     * Add synchronization marker to all sensors
-     */
+
     suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String> = emptyMap()) {
         controllerScope.launch {
             try {
@@ -375,10 +353,7 @@ class RecordingController(
         }
     }
 
-    /**
-     * Test individual sensors to check their current state
-     * Useful for diagnostics and pre-recording validation
-     */
+
     suspend fun testSensorConnections(): Map<String, Boolean> {
         return withContext(Dispatchers.IO) {
             val testResults = mutableMapOf<String, Boolean>()
@@ -406,10 +381,7 @@ class RecordingController(
         }
     }
 
-    /**
-     * Get a simple text report of current sensor status
-     * Useful for logging, debugging, or simple UI display
-     */
+
     fun getStatusReport(): String {
         val summary = getSensorStatusSummary()
         return buildString {
@@ -438,9 +410,7 @@ class RecordingController(
         }
     }
 
-    /**
-     * Get recording statistics for all sensors
-     */
+
     fun getRecordingStatistics(): RecordingStatistics {
         val sensorStats = sensorRecorders.values.map { it.getRecordingStats() }
         val totalSamples = sensorStats.sumOf { it.totalSamplesRecorded }
@@ -462,9 +432,7 @@ class RecordingController(
         )
     }
 
-    /**
-     * Get list of available sensors and their status
-     */
+
     fun getAvailableSensors(): List<SensorInfo> {
         return sensorRecorders.values.map { sensor ->
             SensorInfo(
@@ -476,10 +444,7 @@ class RecordingController(
         }
     }
 
-    /**
-<<<<<<< HEAD
-     * Get detailed status of all sensors including initialization and recording state
-     */
+
     fun getSensorStatusSummary(): SensorStatusSummary {
         val sensors = sensorRecorders.values.map { sensor ->
             DetailedSensorStatus(
@@ -505,16 +470,12 @@ class RecordingController(
         )
     }
 
-    /**
-     * Get count of currently active (recording) sensors
-     */
+
     fun getActiveSensorCount(): Int {
         return sensorRecorders.values.count { it.isRecording }
     }
 
-    /**
-     * Clean up all resources
-     */
+
     suspend fun cleanup() {
         withContext(Dispatchers.IO) {
             try {
@@ -653,9 +614,7 @@ class RecordingController(
         }
     }
 
-    /**
-     * Attempt to restart a specific failed sensor during an active session
-     */
+
     suspend fun attemptSensorRestart(sensorId: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -711,9 +670,7 @@ class RecordingController(
     }
 }
 
-/**
- * Recording states for the controller
- */
+
 enum class RecordingState {
     STOPPED,
     STARTING,
@@ -722,9 +679,7 @@ enum class RecordingState {
     ERROR
 }
 
-/**
- * Error information from the recording controller
- */
+
 data class RecordingControllerError(
     val errorType: String,
     val message: String,
@@ -734,9 +689,7 @@ data class RecordingControllerError(
     val originalError: SensorError? = null
 )
 
-/**
- * Synchronization event information
- */
+
 data class SyncEvent(
     val markerType: String,
     val timestampNs: Long,
@@ -745,9 +698,7 @@ data class SyncEvent(
     val totalSensors: Int
 )
 
-/**
- * Overall recording statistics
- */
+
 data class RecordingStatistics(
     val isRecording: Boolean,
     val sessionDurationSeconds: Double,
@@ -758,9 +709,7 @@ data class RecordingStatistics(
     val sensorStatistics: List<RecordingStats>
 )
 
-/**
- * Sensor information for UI display
- */
+
 data class SensorInfo(
     val sensorId: String,
     val sensorType: String,
@@ -768,9 +717,7 @@ data class SensorInfo(
     val samplingRate: Double
 )
 
-/**
- * Detailed sensor status for comprehensive monitoring
- */
+
 data class DetailedSensorStatus(
     val sensorId: String,
     val sensorType: String,
@@ -780,9 +727,7 @@ data class DetailedSensorStatus(
     val lastError: String?
 )
 
-/**
- * Summary of all sensor statuses for UI display and monitoring
- */
+
 data class SensorStatusSummary(
     val totalSensorsConfigured: Int,
     val totalSensorsInitialized: Int,

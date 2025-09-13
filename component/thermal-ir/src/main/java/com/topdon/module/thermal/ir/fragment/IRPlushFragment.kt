@@ -9,15 +9,8 @@ import com.infisense.usbir.view.TemperatureView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.BaseIRPlushFragment
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/9/3 11:43
- **/
-/**
- * I r plush fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
- */
+
+
 class IRPlushFragment : BaseIRPlushFragment() {
     // findViewById declarations using proper view reference in onViewCreated
     private lateinit var dualTextureViewNativeCamera: SurfaceView

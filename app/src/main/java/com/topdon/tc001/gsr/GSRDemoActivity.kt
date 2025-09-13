@@ -17,10 +17,7 @@ import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 
-/**
- * Simple GSR demonstration activity showing basic functionality
- * Navigation: Use NavigationManager.getInstance().build(RouterConfig.GSR_DEMO).navigation(context)
- */
+
 class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     companion object {
         private const val TAG = "GSRDemoActivity"

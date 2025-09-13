@@ -15,9 +15,7 @@ import com.topdon.module.user.model.FaqRepository
 import com.topdon.module.user.model.QuestionData
 import java.util.ArrayList
 
-/**
- * FAQ
- */
+
 // Legacy ARouter route annotation - now using NavigationManager
 class QuestionActivity : BaseActivity() {
     // View references - migrated from synthetic views

@@ -33,27 +33,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
- * Thermal Camera recorder using real IR Camera integration.
- * 
- * Implementation uses REAL IR Camera SDK for hardware integration.
- * No stubs or simulation - full vendor SDK integration as required.
- * 
- * Technical Specifications:
- * - Real IR Camera SDK for hardware interface
- * - Raw thermal frame data parsing and CSV export
- * - Nanosecond timestamp precision for synchronization
- * - Temperature calibration and radiometric data
- * - USB IR camera interface with vendor-specific protocols
- * 
- * Hardware Details:
- * - Uses existing IRUVCTC implementation for real hardware
- * - Parses IR camera-specific thermal data formats
- * - Outputs temperature matrices as CSV rows with timestamps
- * - Handles real thermal calibration and environmental compensation
- * 
- * @author IRCamera Android Sensor Node (Spoke)
- */
+
 class ThermalCameraRecorder(
     private val context: Context,
     override val sensorId: String = "thermal_camera_1",
@@ -890,9 +870,7 @@ class ThermalCameraRecorder(
         }
     }
 
-    /**
-     * Handle USB device connection events from EventBus (via existing DeviceBroadcastReceiver)
-     */
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onDeviceConnectEvent(event: DeviceConnectEvent) {
         try {
@@ -955,9 +933,7 @@ class ThermalCameraRecorder(
         }
     }
 
-    /**
-     * Handle USB permission events from EventBus (via existing DeviceBroadcastReceiver)
-     */
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onDevicePermissionEvent(event: DevicePermissionEvent) {
         try {
@@ -1059,9 +1035,7 @@ class ThermalCameraRecorder(
         _errorFlow.emit(error)
     }
 
-    /**
-     * Update thermal calibration parameters
-     */
+
     fun updateCalibration(
         ambientTemp: Double,
         emissivity: Double,

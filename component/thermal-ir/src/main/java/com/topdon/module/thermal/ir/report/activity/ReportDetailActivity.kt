@@ -26,10 +26,10 @@ import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
 /**
-\1报告详情interface.
+report详情interface.
  *
-\1需要传递
-\1- 一份报告所有信息 [ExtraKeyConfig.REPORT_BEAN]
+需要传递
+- 一份report所有info [ExtraKeyConfig.REPORT_BEAN]
  */
 // Legacy ARouter route annotation - now using NavigationManager
 /**
@@ -45,12 +45,12 @@ class ReportDetailActivity : BaseActivity() {
     private lateinit var watermarkView: WatermarkView
 
     /**
-\1从上一interface传递过来的，报告所有信息.
+从上一interface传递过来的，report所有info.
      */
     private var reportBean: ReportBean? = null
 
     /**
-\1当前预览页面已生成的 PDF 文件绝对路径
+当前预览页area已生成的 PDF file绝对path
      */
     private var pdfFilePath: String? = null
 
@@ -141,8 +141,8 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     /**
-\1get需要转为 PDF 的所有 View 列表.
-\1注意：watermark View 不在列表内，需要自行processing.
+get需要转为 PDF 的所有 View 列表.
+注意：watermark View 不在列表内，需要自行processing.
      */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()

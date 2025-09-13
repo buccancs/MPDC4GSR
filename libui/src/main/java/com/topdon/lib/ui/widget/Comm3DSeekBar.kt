@@ -37,7 +37,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
     private var mMinHeight = 24
     var level = 0
 
-    // 进度文字位置信息
+    // 进度text位置info
     private val mProgressTextRect: Rect = Rect()
 
     // 滑块button宽度
@@ -228,7 +228,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
     }
 
     /**
-     * 通过级别分层进行粘性处理
+     * 通过级别分层进行粘性processing
      */
     fun stopTrackTouchLevel() {
         if (level > 0) {

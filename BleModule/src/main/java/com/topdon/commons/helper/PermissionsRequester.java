@@ -47,7 +47,7 @@ public class PermissionsRequester {
     }
 
     /**
-     * 开始检查并申请权限
+     * start检查并申请权限
      * @param permissions 需要申请的权限
      */
     public void checkAndRequest(@NonNull List<String> permissions) {

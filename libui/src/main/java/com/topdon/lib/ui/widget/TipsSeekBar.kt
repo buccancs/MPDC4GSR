@@ -39,7 +39,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         }
 
     /**
-     * 指示 View current显示的文字.
+     * 指示 View current显示的text.
      */
     var valueText: String
         get() {
@@ -60,7 +60,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     var onStopTrackingTouch: ((progress: Int) -> Unit)? = null
 
     /**
-     * 根据进度格式化指示 View 文字.
+     * 根据进度format化指示 View text.
      */
     var valueFormatListener: ((progress: Int) -> CharSequence?)? = null
         set(value) {

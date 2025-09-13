@@ -28,7 +28,7 @@ public abstract class AbstractTimer {
     public abstract void onTick();
 
     /**
-     * 开始
+     * start
      */
     public synchronized final void start(long delay, long period) {
         if (timer == null) {

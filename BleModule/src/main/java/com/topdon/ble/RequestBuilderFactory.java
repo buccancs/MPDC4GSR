@@ -21,9 +21,9 @@ import java.util.UUID;
  */
 public class RequestBuilderFactory {
     /**
-     * 获取修改最大传输单元请求构建器
+     * 获取modify最大传输单元请求构建器
      *
-     * @param mtu 要修改成的值
+     * @param mtu 要modify成的值
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public RequestBuilder<MtuChangeCallback> getChangeMtuBuilder(@IntRange(from = 23, to = 517) int mtu) {
@@ -38,9 +38,9 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取读取蓝牙设备的特征请求构建器
+     * 获取读取bluetoothdevice的特征请求构建器
      *
-     * @param service        服务UUID
+     * @param service        serviceUUID
      * @param characteristic 特征UUID
      */
     public RequestBuilder<ReadCharacteristicCallback> getReadCharacteristicBuilder(UUID service, UUID characteristic) {
@@ -51,9 +51,9 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取开关数据通知请求构建器
+     * 获取开关datanotification请求构建器
      *
-     * @param service        服务UUID
+     * @param service        serviceUUID
      * @param characteristic 特征UUID
      * @param enable         开启或关闭
      */
@@ -69,7 +69,7 @@ public class RequestBuilderFactory {
     /**
      * 获取开关Indication请求构建器
      *
-     * @param service        服务UUID
+     * @param service        serviceUUID
      * @param characteristic 特征UUID
      * @param enable         开启或关闭
      */
@@ -85,7 +85,7 @@ public class RequestBuilderFactory {
     /**
      * 获取读取描述符的值请求构建器
      *
-     * @param service        服务UUID
+     * @param service        serviceUUID
      * @param characteristic 特征UUID
      * @param descriptor     描述符UUID
      */
@@ -101,7 +101,7 @@ public class RequestBuilderFactory {
     /**
      * 获取向特征写入请求构建器
      *
-     * @param service        服务UUID
+     * @param service        serviceUUID
      * @param characteristic 特征UUID
      * @param value          要写入特征的值
      */
@@ -116,7 +116,7 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取读取已连接的蓝牙设备的信号强度请求构建器
+     * 获取读取已connection的bluetoothdevice的信号强度请求构建器
      */
     public RequestBuilder<ReadRssiCallback> getReadRssiBuilder() {
         return new RequestBuilder<>(RequestType.READ_RSSI);
@@ -131,11 +131,11 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取设置物理层发送器和接收器偏好请求构建器
+     * 获取settings物理层发送器和接收器偏好请求构建器
      *
      * @param txPhy      物理层发送器偏好。{@link BluetoothDevice#PHY_LE_1M_MASK}等
      * @param rxPhy      物理层接收器偏好。{@link BluetoothDevice#PHY_LE_1M_MASK}等
-     * @param phyOptions 物理层BLE首选传输编码。{@link BluetoothDevice#PHY_OPTION_NO_PREFERRED}等
+     * @param phyOptions 物理层BLE首选传输encoding。{@link BluetoothDevice#PHY_OPTION_NO_PREFERRED}等
      */
     @RequiresApi(Build.VERSION_CODES.O)
     public RequestBuilder<PhyChangeCallback> getSetPreferredPhyBuilder(int txPhy, int rxPhy, int phyOptions) {

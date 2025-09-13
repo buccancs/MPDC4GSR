@@ -12,13 +12,13 @@ class VersionViewModel : BaseViewModel() {
 
     /**
      * forcedUpgradeFlag: 1 强制update    0 非强制update
-     * descType: 包含3时,显示给用户(descType获取升级描述信息)
+     * descType: 包含3时,显示给用户(descType获取升级描述info)
      */
     fun checkVersion() {
 //        viewModelScope.launch(Dispatchers.IO) {
 //            try {
 //                if (TimeUtils.isToday(SharedManager.getVersionCheckDate())) {
-//                    Log.w("123", "今天已有版本update提示")
+//                    Log.w("123", "今天已有versionupdatetip")
 //                    return@launch
 //                }
 //                val result: CheckVersionJson = LmsRepository.getVersionInfo() ?: return@launch
@@ -33,7 +33,7 @@ class VersionViewModel : BaseViewModel() {
 //                    return@launch
 //                }
 //            } catch (e: Exception) {
-//                XLog.e("检测异常: ${e.message}")
+//                XLog.e("检测exception: ${e.message}")
 //            }
 //        }
     }
@@ -44,7 +44,7 @@ class VersionViewModel : BaseViewModel() {
         val downPageUrl = result.downloadPageUrl
         val sizeStr = "${result.notUnZipSize}MB"
 
-        XLog.i("有版本升级,升级信息: $description, 是否强制升级: $isForcedUpgrade")
+        XLog.i("有version升级,升级info: $description, 是否强制升级: $isForcedUpgrade")
 
         val versionUpData =
             VersionUpData(
@@ -58,7 +58,7 @@ class VersionViewModel : BaseViewModel() {
     }
 
     /**
-     * 获取升级信息
+     * 获取升级info
      */
     private fun getDescription(list: List<SoftConfigOtherTypeVO>?): String {
         list?.forEach {

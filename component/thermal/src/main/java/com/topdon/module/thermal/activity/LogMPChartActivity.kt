@@ -60,8 +60,8 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     index: Int,
                     time: Int,
                 ) {
-\1切换类型
-                    chart.highlightValue(null) // 关闭高亮点Marker
+switchtype
+                    chart.highlightValue(null) // 关闭高亮pointMarker
                     selectType = index + 1
                     queryLog()
                 }
@@ -71,8 +71,8 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
             try {
                 initEntry(it.dataList)
             } catch (e: Exception) {
-                XLog.e("刷新图表异常:${e.message}")
-                ToastTools.showShort("图表异常，请重新加载")
+                XLog.e("refresh图表exception:${e.message}")
+                ToastTools.showShort("图表exception，请重新load")
             }
         }
         clearEntity(true)
@@ -120,19 +120,19 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
             0f,
             SizeUtils.dp2px(8f).toFloat(),
             SizeUtils.dp2px(4f).toFloat(),
-        ) // 图表区域偏移
+        ) // 图表region偏移
         chart.setNoDataText(getString(R.string.lms_http_code998))
         chart.setNoDataTextColor(textColor)
         val mv = MyMarkerView(this, R.layout.marker_lay)
         mv.chartView = chart
-        chart.marker = mv // 设置点击坐标显示提示框
+        chart.marker = mv // settingsclick坐标显示tip框
         val data = LineData()
         data.setValueTextColor(textColor)
         chart.data = data
         val l = chart.legend
         l.form = Legend.LegendForm.CIRCLE
         l.textColor = textColor
-        l.isEnabled = false // 隐藏曲线标签
+        l.isEnabled = false // 隐藏曲linetag
         val xAxis = chart.xAxis
         xAxis.textColor = textColor
         xAxis.setDrawGridLines(true)
@@ -168,7 +168,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     private val textColor by lazy { ContextCompat.getColor(this, com.topdon.lib.core.R.color.chart_text) }
 
     /**
-\1曲线样式
+曲line样式
      */
     private fun createSet(
         index: Int,
@@ -178,20 +178,20 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 //        set.mode = LineDataSet.Mode.CUBIC_BEZIER
         set.mode = LineDataSet.Mode.LINEAR
         set.setDrawFilled(false)
-        set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index]) // 设置填充颜色渐变
+        set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index]) // settings填充颜色渐变
         set.axisDependency = YAxis.AxisDependency.LEFT
-        set.color = ContextCompat.getColor(this, lineChartColors[index]) // 曲线颜色
+        set.color = ContextCompat.getColor(this, lineChartColors[index]) // 曲line颜色
         set.setCircleColor(ContextCompat.getColor(this, com.topdon.lib.core.R.color.white)) // 坐标颜色
 //        set.fillColor = ContextCompat.getColor(this, R.color.purple_500)
 //        set.highLightColor = ContextCompat.getColor(this, R.color.white)
         set.valueTextColor = Color.WHITE
         set.lineWidth = 2f
-        set.circleRadius = 1f // 不显示坐标点
-        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(隐藏处理)
-\1set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(hideprocessing)
+        set.circleRadius = 1f // 不显示坐标point
+        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(隐藏processing)
+set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(hideprocessing)
         set.fillAlpha = 200
         set.valueTextSize = 10f
-        set.setDrawValues(false) // 设置是否显示坐标值文本
+        set.setDrawValues(false) // settings是否显示坐标值文本
         return set
     }
 
@@ -210,14 +210,14 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                         "时间区间:${(data.last().createTime - data.first().createTime) / 1000}",
                     )
                     val startTime = data[0].createTime
-                    Log.w("123", "设置初始时间startTime:$startTime")
+                    Log.w("123", "settings初始时间startTime:$startTime")
                     chart.xAxis.valueFormatter =
                         MyValueFormatter(startTime = startTime, type = selectType)
                     XLog.w("chart init startTime:$startTime")
                     data[0].type = "default"
                     when (data[0].type) {
                         "point" -> {
-                            var set = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var set = lineData.getDataSetByIndex(0) // 读取x为0的坐标point
                             if (set == null) {
                                 set = createSet(2, "temp")
                                 lineData.addDataSet(set)
@@ -231,18 +231,18 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                             XLog.w("DataSet:${set.entryCount}")
                         }
                         "line" -> {
-                            var maxDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var maxDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标point
                             if (maxDataSet == null) {
                                 maxDataSet = createSet(0, "line maxTemp")
                                 lineData.addDataSet(maxDataSet)
                             }
 
-                            var minDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
+                            var minDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标point
                             if (minDataSet == null) {
                                 minDataSet = createSet(1, "line minTemp")
                                 lineData.addDataSet(minDataSet)
                             }
-                            Log.w("123", "两条曲线")
+                            Log.w("123", "两条曲line")
                             data.forEach {
                                 val x = (it.createTime - startTime).toFloat()
                                 // max
@@ -258,13 +258,13 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                         }
                         else -> {
                             // max
-                            var maxTempDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var maxTempDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标point
                             if (maxTempDataSet == null) {
                                 maxTempDataSet = createSet(0, "fence maxTemp")
                                 lineData.addDataSet(maxTempDataSet)
                             }
                             // center
-                            var centerTempDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
+                            var centerTempDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标point
                             if (centerTempDataSet == null) {
                                 centerTempDataSet = createSet(1, "fence minTemp")
                                 lineData.addDataSet(centerTempDataSet)
@@ -285,8 +285,8 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     }
                     lineData.notifyDataChanged()
                     chart.notifyDataSetChanged()
-                    chart.setVisibleXRangeMinimum(getMinimum()) // 设置显示X轴区间大小
-                    chart.setVisibleXRangeMaximum(getMaximum()) // 设置显示X轴区间大小
+                    chart.setVisibleXRangeMinimum(getMinimum()) // settings显示X轴区间大小
+                    chart.setVisibleXRangeMaximum(getMaximum()) // settings显示X轴区间大小
                     chart.xAxis.setLabelCount(5, false) // true保证有刻度数量不变
                     chart.moveViewToX(chart.xChartMax) // 移动到最右端
                     chart.zoom(1f, 1f, chart.xChartMax, 0f) // 默认无缩放，全部显示
@@ -306,7 +306,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     }
 
     /**
-\1x轴display多少个刻度
+x轴display多少个刻度
      */
     private fun getLabCount(count: Int): Int {
         return when (count) {
@@ -318,7 +318,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         }
     }
 
-\1getdisplay最小区间
+getdisplay最小区间
     private fun getMinimum(): Float {
         val min =
             when (selectType) {
@@ -331,7 +331,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         return min
     }
 
-\1getdisplay最大区间，以最小区间的50倍
+getdisplay最大区间，以最小区间的50倍
     private fun getMaximum(): Float {
         return getMinimum() * 50f
     }

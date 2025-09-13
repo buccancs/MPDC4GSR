@@ -20,7 +20,7 @@ object CalibrationTools {
         singlePointTemp: Int,
     ): Boolean {
         var success = false
-\1calibration前需要重置temperature measurement parameters,否则temperaturecalibration inaccuracy
+calibration前需要resettemperature measurement parameters,否则temperaturecalibration inaccuracy
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
             irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD)
             val result = irCmd.setTPDKtBtRecalPoint(CommonParams.TPDKtBtRecalPointType.RECAL_1_POINT, singlePointTemp)
@@ -44,47 +44,47 @@ object CalibrationTools {
         pointTemp: Int,
     ): Boolean {
         var success = false
-\1calibration前需要重置temperature measurement parameters,否则temperaturecalibration inaccuracy
+calibration前需要resettemperature measurement parameters,否则temperaturecalibration inaccuracy
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
             val result = irCmd.setTPDKtBtRecalPoint(CommonParams.TPDKtBtRecalPointType.RECAL_2_POINT_FIRST, pointTemp + 273)
             if (result == 0) {
                 success = true
             } else {
-                XLog.w("低温标定失败")
+                XLog.w("低温calibrationfailed")
             }
         } else {
-            XLog.w("低温标定失败")
+            XLog.w("低温calibrationfailed")
         }
         return success
     }
 
     /**
-\1temperaturecalibration
-\1high temperature(20 ~ 100)
+temperaturecalibration
+high temperature(20 ~ 100)
      *
-\1提交完low temperature之后才能提交high temperature
+提交完low temperature之后才能提交high temperature
      */
     fun pointEnd(
         irCmd: IRCMD,
         pointTemp: Int,
     ): Boolean {
         var success = false
-\1calibration前需要重置temperature measurement parameters,否则temperaturecalibration inaccuracy
+calibration前需要resettemperature measurement parameters,否则temperaturecalibration inaccuracy
         if (irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD) == 0) {
             val result = irCmd.setTPDKtBtRecalPoint(CommonParams.TPDKtBtRecalPointType.RECAL_2_POINT_END, pointTemp + 273)
             if (result == 0) {
                 success = true
             } else {
-                Log.w("123", "失败")
+                Log.w("123", "failed")
             }
         } else {
-            Log.w("123", "失败")
+            Log.w("123", "failed")
         }
         return success
     }
 
     /**
-\1锅盖calibration - 步骤一准备
+锅盖calibration - 步骤一准备
      *
      */
     fun potReady(irCmd: IRCMD): Boolean {
@@ -92,9 +92,9 @@ object CalibrationTools {
     }
 
     /**
-\1锅盖calibration - 步骤二开始
+锅盖calibration - 步骤二start
      *
-\1@param gainType 默认GAIN_1
+@param gainType 默认GAIN_1
      * CommonParams.RMCoverAutoCalcType.GAIN_1
      * CommonParams.RMCoverAutoCalcType.GAIN_2
      * CommonParams.RMCoverAutoCalcType.GAIN_4
@@ -110,27 +110,27 @@ object CalibrationTools {
                 4 -> CommonParams.RMCoverAutoCalcType.GAIN_4
                 else -> CommonParams.RMCoverAutoCalcType.GAIN_1
             }
-        irCmd.rmCoverAutoCalc(gainType) // 发送锅盖标定
+        irCmd.rmCoverAutoCalc(gainType) // 发送锅盖calibration
         irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_EN) // 打开锅盖校正
     }
 
     /**
-\1取消calibration
+取消calibration
      */
     fun cancelCalibration(irCmd: IRCMD) {
         irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD)
     }
 
     /**
-\1恢复出厂calibration
+恢复出厂calibration
      */
     fun reset(irCmd: IRCMD) {
         irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_ALL)
     }
 
     /**
-\1查询gain模式
-\1@return true: 高gain    false: 低gain
+查询gainmode
+@return true: 高gain    false: 低gain
      */
     fun queryGain(irCmd: IRCMD): Boolean {
         val value = IntArray(1)
@@ -139,8 +139,8 @@ object CalibrationTools {
     }
 
     /**
-\1setgain模式
-\1@param type 1: 打开    0: disabled
+setgainmode
+@param type 1: 打开    0: disabled
      *
      */
     fun setGain(
@@ -158,7 +158,7 @@ object CalibrationTools {
     }
 
     /**
-\1查询Tpd
+查询Tpd
      */
     fun queryTpd(
         irCmd: IRCMD,
@@ -170,7 +170,7 @@ object CalibrationTools {
     }
 
     /**
-\1打快门
+打快门
      */
     fun shutter(
         irCmd: IRCMD?,
@@ -179,13 +179,13 @@ object CalibrationTools {
         if (syncImage.type == 1) {
             irCmd?.tc1bShutterManual()
         } else {
-\1执行这段
+执行这段
             irCmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
         }
     }
 
     /**
-\1控制锅盖calibration开关
+控制锅盖calibration开关
      */
     fun stsSwitch(
         irCmd: IRCMD?,
@@ -199,9 +199,9 @@ object CalibrationTools {
     }
 
     /**
-\1锅盖calibration - 步骤二开始
+锅盖calibration - 步骤二start
      *
-\1@param gainType 默认GAIN_1
+@param gainType 默认GAIN_1
      * CommonParams.RMCoverAutoCalcType.GAIN_1
      * CommonParams.RMCoverAutoCalcType.GAIN_2
      * CommonParams.RMCoverAutoCalcType.GAIN_4
@@ -217,11 +217,11 @@ object CalibrationTools {
                 4 -> CommonParams.RMCoverAutoCalcType.GAIN_4
                 else -> CommonParams.RMCoverAutoCalcType.GAIN_1
             }
-        irCmd.rmCoverAutoCalc(gainType) // 发送锅盖标定
+        irCmd.rmCoverAutoCalc(gainType) // 发送锅盖calibration
     }
 
     /**
-\1自动快门
+自动快门
      */
     fun autoShutter(
         irCmd: IRCMD?,
@@ -232,8 +232,8 @@ object CalibrationTools {
     }
 
     /**
-\1TPD_PROP_DISTANCE不给set
-\1set距离 unit:cnt(128cnt=1m)
+TPD_PROP_DISTANCE不给set
+set距离 unit:cnt(128cnt=1m)
      * @param value 0 ~ 25600
      */
     fun setTpdDis(
@@ -245,7 +245,7 @@ object CalibrationTools {
     }
 
     /**
-\1setemissivity unit:cnt(128cnt=1)
+setemissivity unit:cnt(128cnt=1)
      * @param value 1 ~ 128
      */
     fun setTpdEms(
@@ -257,7 +257,7 @@ object CalibrationTools {
     }
 
     /**
-\1setTpd
+setTpd
      */
     private fun setTpdParams(
         irCmd: IRCMD?,
@@ -267,7 +267,7 @@ object CalibrationTools {
         return try {
             irCmd?.setPropTPDParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("设置参数异常[${params.name}]: ${e.message}")
+            XLog.w("settingsparameterexception[${params.name}]: ${e.message}")
             0
         }
     }

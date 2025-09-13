@@ -94,7 +94,7 @@ import java.io.OutputStream
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     private val versionViewModel: VersionViewModel by viewModels()
 
-    private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
+    private var checkPermissionType: Int = -1 // 0 initDatadata 1 图库  2 connectmethod
     
     // PC-to-phone control networking - Phase 1 WebSocket implementation
     private var webSocketClient: WebSocketClient? = null
@@ -172,7 +172,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         private const val TAG = "MainActivity"
     }
 
-    // 记录设备信息
+    // 记录deviceinfo
     private fun logInfo() {
         try {
             val str = StringBuilder()
@@ -261,7 +261,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
 
         if (!SharedManager.hasTcLine && !SharedManager.hasTS004 && !SharedManager.hasTC007) {
-            // 仅当设备列表为空时，才执行自动跳转
+            // 仅当device列表为空时，才执行自动跳转
             if (DeviceTools.isConnect()) {
                 if (!WebSocketProxy.getInstance().isConnected()) {
                     NavigationManager.build(RouterConfig.IR_MAIN)
@@ -294,7 +294,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     override fun onStart() {
         super.onStart()
 
-        // 版本下载
+        // version下载
         versionViewModel.updateLiveData.observe(this) {
             FirmwareUpDialog(this).apply {
                 titleStr = getString(com.topdon.lib.core.R.string.update_new_version)
@@ -305,7 +305,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     updateApk(it.downPageUrl)
                 }
                 onCancelClickListener = {
-                    SharedManager.setVersionCheckDate(System.currentTimeMillis()) // 刷新版本提示时间
+                    SharedManager.setVersionCheckDate(System.currentTimeMillis()) // refreshversiontip时间
                 }
             }.show()
         }
@@ -313,7 +313,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun updateApk(url: String) {
         if (applicationInfo.targetSdkVersion < Build.VERSION_CODES.P) {
-            // 目标版本27默认跳到官网下载
+            // 目标version27默认跳到官网下载
             val intent = Intent()
             intent.action = "android.intent.action.VIEW"
             intent.data = Uri.parse(url)
@@ -456,8 +456,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     /**
-     * 刷新 3 个 tab 的选中状态
-     * @param index 当前选中哪个 tab，`[0, 2]`
+     * refresh 3 个 tab 的selectedstate
+     * @param index 当前selected哪个 tab，`[0, 2]`
      */
     private fun refreshTabSelect(index: Int) {
         binding.ivIconGallery.isSelected = false
@@ -494,7 +494,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (WebSocketProxy.getInstance().isTS004Connect()) {
             NavigationManager.build(RouterConfig.IR_MONOCULAR).navigation(this)
         }
-        // 无连接OTG提示
+        // 无connectionOTGtip
         if (tipOtgDialog != null && tipOtgDialog!!.isShowing) {
             return
         }
@@ -549,8 +549,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     /**
      * 权限检测
-     * 因申请权限前需要弹窗提示用户，所以修改成key value形式
-     * @return key：权限种类 value：具体权限
+     * 因申请权限前需要弹窗tip用户，所以modify成key value形式
+     * @return key：权限种class value：具体权限
      */
     private fun getNeedPermissionList(): SparseArray<List<String>> {
         val sparseArray = SparseArray<List<String>>()

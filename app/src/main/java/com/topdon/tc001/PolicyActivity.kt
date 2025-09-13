@@ -116,7 +116,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     private fun initWeb(url: String) {
         binding.policyWeb.visibility = android.view.View.INVISIBLE
         val webSettings: android.webkit.WebSettings = binding.policyWeb.settings
-        webSettings.javaScriptEnabled = true // 设置支持javascript
+        webSettings.javaScriptEnabled = true // settings支持javascript
 
         binding.policyWeb.webViewClient =
             object : android.webkit.WebViewClient() {
@@ -167,11 +167,11 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     }
 
     /**
-     * 处理富文本
+     * processing富文本
      *
      * @param bodyHTML body
      * @param fontColor 需要改变的字体颜色
-     * @param backgroundColor 修改字体颜色
+     * @param backgroundColor modify字体颜色
      * @return String
      */
     fun getHtmlData(
@@ -190,7 +190,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         text: String,
         requestUrl: String,
     ) {
-        XLog.w("声明接口异常,打开默认链接")
+        XLog.w("声明interfaceexception,打开默认链接")
         loadHttp(binding.policyWeb)
         delayShowWebView()
     }
@@ -199,7 +199,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         reloadCount--
         when (themeType) {
             1 -> {
-                // 用户服务协议
+                // 用户serviceprotocol
                 view.loadUrl(
                     "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=21",
                 )
@@ -213,14 +213,14 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
             }
 
             3 -> {
-                // 第三方组件
+                // 第三方component
                 view.loadUrl("file:///android_asset/web/third_statement.html")
             }
         }
     }
 
     /**
-     * 加载默认协议网址(英文版)
+     * load默认protocol网址(英文版)
      */
     fun loadHttp(view: android.webkit.WebView) {
         reloadCount--
@@ -229,7 +229,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
                 if (BaseApplication.instance.isDomestic()) {
                     view.loadUrl("file:///android_asset/web/services_agreement_default_inside_china.html")
                 } else {
-                    // 用户服务协议
+                    // 用户serviceprotocol
                     view.loadUrl("file:///android_asset/web/services_agreement_default.html")
                 }
             }
@@ -244,7 +244,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
             }
 
             3 -> {
-                // 第三方组件
+                // 第三方component
                 view.loadUrl("file:///android_asset/web/third_statement.html")
             }
         }

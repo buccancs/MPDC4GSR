@@ -7,7 +7,7 @@ object HttpUtils {
     /**
      * settingspseudo color样式
      * @param mode              pseudo color样式
-     * @param iResponseCallback 回调函数
+     * @param iResponseCallback 回调function
      * @ void
      */
     fun setPseudoColor(
@@ -33,9 +33,9 @@ object HttpUtils {
     }
 
     /**
-     * settings屏幕亮度
-     * @param mode              屏幕亮度值:range0-100
-     * @param iResponseCallback 回调函数
+     * settings屏幕brightness
+     * @param mode              屏幕brightness值:range0-100
+     * @param iResponseCallback 回调function
      * @ void
      */
     fun setBrightness(
@@ -50,7 +50,7 @@ object HttpUtils {
     }
 
     /**
-     * 获取屏幕亮度
+     * 获取屏幕brightness
      */
     fun getBrightness(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
@@ -61,7 +61,7 @@ object HttpUtils {
 
     /**
      * settingspicture-in-picture
-     * @param iResponseCallback 回调函数
+     * @param iResponseCallback 回调function
      * @ void
      */
     fun setPip(
@@ -88,7 +88,7 @@ object HttpUtils {
     /**
      * settings放大倍数
      * @param factor            放大倍数:1,2,4,8
-     * @param iResponseCallback 回调函数
+     * @param iResponseCallback 回调function
      * @ void
      */
     fun setZoom(
@@ -115,7 +115,7 @@ object HttpUtils {
 
     /**
      * settingscapture
-     * @param iResponseCallback 回调函数
+     * @param iResponseCallback 回调function
      * @void
      */
     fun setCamera(iResponseCallback: Callback.CommonCallback<String>?) {
@@ -127,8 +127,8 @@ object HttpUtils {
 
     /**
      * settingsrecording
-     * @param enable 录制开关
-     * @param iResponseCallback 回调函数
+     * @param enable recording开关
+     * @param iResponseCallback 回调function
      * @void
      */
     fun setVideo(
@@ -144,7 +144,7 @@ object HttpUtils {
 
     /**
      * 获取recordingstate
-     * @param iResponseCallback 回调函数
+     * @param iResponseCallback 回调function
      * @void
      */
     fun getVideoStatus(iResponseCallback: Callback.CommonCallback<String>?) {
@@ -155,7 +155,7 @@ object HttpUtils {
     }
 
     /**
-     * 获取版本信息
+     * 获取versioninfo
      */
     fun getVersion(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
@@ -165,7 +165,7 @@ object HttpUtils {
     }
 
     /**
-     * 获取设备信息
+     * 获取deviceinfo
      */
     fun getDeviceDetails(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
@@ -175,7 +175,7 @@ object HttpUtils {
     }
 
     /**
-     * 获取存储分区信息
+     * 获取storage分区info
      */
     fun getFreeSpace(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()

@@ -43,7 +43,7 @@ class CountDownView : View {
     private lateinit var mPaint: Paint
     private lateinit var mTextPaint: Paint
 
-    // 圆环的矩形区域
+    // 圆环的矩形region
     private var mRectF: RectF? = null
 
     //
@@ -170,7 +170,7 @@ class CountDownView : View {
         mTextPaint.textSize = mRingProgressTextSize.toFloat()
         mTextPaint.color = mProgressTextColor
 
-        // 文字居中显示
+        // text居中显示
         val fontMetrics = mTextPaint.fontMetricsInt
         val baseline =
             ((mRectF!!.bottom + mRectF!!.top - fontMetrics.bottom - fontMetrics.top) / 2).toInt()
@@ -178,7 +178,7 @@ class CountDownView : View {
     }
 
     /**
-     * 开始倒计时
+     * start倒计时
      */
     fun startCountDown() {
         valueAnimator = getValueAnimator((mCountdownTime * 1000).toLong())
@@ -192,7 +192,7 @@ class CountDownView : View {
             object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     super.onAnimationEnd(animation)
-                    // 倒计时结束回调
+                    // 倒计时end回调
                     if (mListener != null) {
                         mListener!!.countDownFinished()
                     }
@@ -202,7 +202,7 @@ class CountDownView : View {
     }
 
     /**
-     * 停止倒计时
+     * stop倒计时
      */
     fun stopCountDown() {
         if (valueAnimator!!.isRunning) {

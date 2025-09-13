@@ -198,7 +198,7 @@ class CommSeekBar : AppCompatSeekBar {
     }
 
     /**
-     * 通过级别分层进行粘性处理
+     * 通过级别分层进行粘性processing
      */
     fun stopTrackTouchLevel() {
         if (level > 0) {

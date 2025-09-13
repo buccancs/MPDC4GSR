@@ -3,7 +3,7 @@ package com.topdon.ble;
 import android.bluetooth.BluetoothGattCharacteristic;
 
 /**
- * 写特征的配置
+ * 写特征的configuration
  * 
  * date: 2019/8/9 18:06
  * author: bichuanfeng
@@ -26,7 +26,7 @@ public class WriteOptions {
     }
 
     /**
-     * 两次写数据到特征的时间间隔
+     * 两次写data到特征的时间间隔
      */
     public int getPackageWriteDelayMillis() {
         return packageWriteDelayMillis;
@@ -48,14 +48,14 @@ public class WriteOptions {
     }
 
     /**
-     * 是否等待写入结果回调再写下一包数据
+     * 是否等待写入结果回调再写下一包data
      */
     public boolean isWaitWriteResult() {
         return isWaitWriteResult;
     }
 
     /**
-     * 写入模式
+     * 写入mode
      */
     public int getWriteType() {
         return writeType;
@@ -70,7 +70,7 @@ public class WriteOptions {
         private boolean useMtuAsPackageSize = false;
 
         /**
-         * 两次写数据到特征的时间间隔
+         * 两次写data到特征的时间间隔
          */
         public Builder setPackageWriteDelayMillis(int packageWriteDelayMillis) {
             this.packageWriteDelayMillis = packageWriteDelayMillis;
@@ -97,7 +97,7 @@ public class WriteOptions {
         }
 
         /**
-         * 是否等待写入结果回调再写下一包数据
+         * 是否等待写入结果回调再写下一包data
          */
         public Builder setWaitWriteResult(boolean waitWriteResult) {
             isWaitWriteResult = waitWriteResult;
@@ -105,7 +105,7 @@ public class WriteOptions {
         }
 
         /**
-         * 设置写入模式
+         * settings写入mode
          *
          * @param writeType {@link BluetoothGattCharacteristic#WRITE_TYPE_DEFAULT}
          *                  <br>{@link BluetoothGattCharacteristic#WRITE_TYPE_NO_RESPONSE}
@@ -121,7 +121,7 @@ public class WriteOptions {
         }
 
         /**
-         * 设置将MTU作为包大小，并且{@link #setPackageSize(int)}设置的值将被忽略。真实数据包大小 = mtu - 3
+         * settings将MTU作为包大小，并且{@link #setPackageSize(int)}settings的值将被忽略。真实data包大小 = mtu - 3
          */
         public Builder setMtuAsPackageSize() {
             useMtuAsPackageSize = true;

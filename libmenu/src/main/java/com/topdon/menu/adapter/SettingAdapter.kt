@@ -11,13 +11,13 @@ import com.topdon.menu.constant.SettingType
 /**
  * settingsmenuAdapter used for，所有选项互相独立，可多选.
  *
- * - 单光：   pseudo color条、对比度、锐度、warning、旋转、font、镜像
- * - dual light：   pseudo color条、对比度、锐度、warning、旋转、font
- * - Lite：  pseudo color条、对比度、warning、旋转、font、镜像
- * - TC007： pseudo color条、对比度、锐度、warning、font、镜像
+ * - 单光：   pseudo color条、contrast、锐度、warning、旋转、font、镜像
+ * - dual light：   pseudo color条、contrast、锐度、warning、旋转、font
+ * - Lite：  pseudo color条、contrast、warning、旋转、font、镜像
+ * - TC007： pseudo color条、contrast、锐度、warning、font、镜像
  * - 2D 编辑：warning、font、watermark
  *
- * - TS001 observation：指南针、旋转、镜像、对比度
+ * - TS001 observation：指南针、旋转、镜像、contrast
  *
  * Created by LCG on 2024/11/28.
  */
@@ -35,7 +35,7 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
      * 对于APP而言，192x256 竖屏尺寸(corerotation angle270)才是rotation angle为 0 的未旋转state。
      * - 对某供应商而言，core里的rotation angle是逆时针rotation angle，而非一般理解的顺时针rotation angle。
      *
-     * 考虑到旧代码兼容，这个属性用来放 **corerotation angle**
+     * 考虑到旧代码兼容，这个property用来放 **corerotation angle**
      */
     var rotateAngle: Int = 270
         set(value) {
@@ -46,7 +46,7 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
         }
 
     /**
-     * settingsspecified option的selectedstate，旋转不要调这个方法，因为旋转有 4 个state
+     * settingsspecified option的selectedstate，旋转不要调这个method，因为旋转有 4 个state
      */
     fun setSelected(
         settingType: SettingType,

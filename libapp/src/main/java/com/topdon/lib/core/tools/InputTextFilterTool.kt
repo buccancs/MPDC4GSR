@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 
 class InputTextFilterTool {
     /**
-     * 设置editText过滤器
+     * settingseditText过滤器
      *
      * @param editText
      */
@@ -19,7 +19,7 @@ class InputTextFilterTool {
         if (oldFiltersLength > 0) {
             System.arraycopy(oldFilters, 0, newFilters, 0, oldFiltersLength)
         }
-        // 添加新的过滤规则
+        // add新的过滤规则
         newFilters[oldFiltersLength] = mInputFilter
         editText.filters = newFilters
     }

@@ -36,7 +36,7 @@ class IRLogMPChartActivity : BaseActivity() {
     private val viewModel: IRMonitorViewModel by viewModels()
 
     /**
-     * 从上一界面传递过来的，当前查看的监控记录开始时间戳.
+     * 从上一界area传递过来的，当前查看的监控记录start时间戳.
      */
     private var startTime = 0L
 
@@ -70,7 +70,7 @@ class IRLogMPChartActivity : BaseActivity() {
             try {
                 log_chart_time_chart.initEntry(it as ArrayList<ThermalEntity>)
             } catch (e: Exception) {
-                XLog.e("刷新图表异常:${e.message}")
+                XLog.e("refresh图表exception:${e.message}")
             }
         }
 

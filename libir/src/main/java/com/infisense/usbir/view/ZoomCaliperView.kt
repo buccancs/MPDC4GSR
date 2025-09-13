@@ -18,7 +18,7 @@ import com.infisense.usbir.utils.TargetUtils
 import com.topdon.lib.core.bean.ObserveBean
 
 /**
- * 缩放view基类 - Optimized findViewById usage
+ * 缩放view基class - Optimized findViewById usage
  */
 class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private var centerX: Float = Float.MAX_VALUE
@@ -27,7 +27,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     private var isReverse: Boolean = false
     private lateinit var mTextureView: View
     private var canScale = false
-    private var def_caliper = 180f // 2米是出厂测量数据标准
+    private var def_caliper = 180f // 2米是出厂measurementdatastandard
     var magnifier: Magnifier? = null
     var textureMagnifier: Magnifier? = null
     var m: Float = 0.0f
@@ -106,7 +106,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         super.onDetachedFromWindow()
     }
 
-    private var startX = 0f // 记录落点到控件的距离
+    private var startX = 0f // 记录落point到控件的距离
     private var startY = 0f
     private var moveX = 0f
     private var moveY = 0f
@@ -117,7 +117,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     private var scaleW = 0f // 单边缩放长度
     private var scaleH = 0f
 
-    // 原始图片
+    // 原始image
     private lateinit var originalBitmap: Bitmap
     private var imageWidth = 0
     private var imageHeight = 0

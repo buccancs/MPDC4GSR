@@ -7,7 +7,7 @@ import com.topdon.lib.core.R
 import com.topdon.menu.R as MenuR
 
 /**
- * observation模式-menu2-high/low temperature源menu Adapter used for，single selection可全不selected.
+ * observationmode-menu2-high/low temperature源menu Adapter used for，single selection可全不selected.
  *
  * dynamic recognition、high temperature source、low temperature source
  *

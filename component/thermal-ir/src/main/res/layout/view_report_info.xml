@@ -15,7 +15,7 @@
         android:layout_marginEnd="20dp"
         android:paddingBottom="32dp">
 
-        <!-- Report名称 -->
+        <!-- Reportname -->
         <TextView
             android:id="@+id/tv_report_name"
             android:layout_width="0dp"
@@ -109,7 +109,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 环境温度 -->
+        <!-- 环境temperature -->
         <TextView
             android:id="@+id/tv_ambient_temperature_title"
             android:layout_width="0dp"

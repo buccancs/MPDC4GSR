@@ -50,7 +50,7 @@ public class AppVersionUtil {
     private DownloadCompleteReceiver completeReceiver; // Declare download completion broadcast receiver
     private DownloadManager dowanloadmanager = null;
     private DotIsShowListener dotIsShowListener = null;
-    private String fileName = "";//文件名称
+    private String fileName = "";//filename
     private Long mDownloadId = 0l;//下载id
 
     public AppVersionUtil(Context context, DotIsShowListener dotIsShow) {
@@ -70,7 +70,7 @@ public class AppVersionUtil {
         LMS.getInstance().checkAppUpdate(commonBean -> {
             if (commonBean.code == SUCCESS) {
                 AppInfoBean appInfoBean = LMS.getInstance().getUpdateAppInfoBean();
-                XLog.w("bcf", "app更新信息:" + GsonUtils.toJson(appInfoBean));
+                XLog.w("bcf", "appupdateinfo:" + GsonUtils.toJson(appInfoBean));
                 if (appInfoBean != null) {
                     if (appInfoBean.getVersionCode() > getDealVersionCode()) {
                         if (isShowDialog) {
@@ -103,7 +103,7 @@ public class AppVersionUtil {
     }
 
     /**
-     * 获取处理过的本地版本code
+     * 获取processing过的本地versioncode
      *
      * @return float
      */
@@ -112,9 +112,9 @@ public class AppVersionUtil {
     }
 
     /**
-     * 弹出新版本信息提示框
+     * 弹出新versioninfotip框
      *
-     * @param bean 版本更新实体类
+     * @param bean versionupdate实体class
      */
     private void showNewVersionDialog(AppInfoBean bean) {
         String information = "";
@@ -126,7 +126,7 @@ public class AppVersionUtil {
             }
         }
         if (Integer.parseInt(bean.forcedUpgradeFlag) == 1) {
-            // 强制更新
+            // 强制update
             new TipDialog.Builder(mContext)
                     .setMessage(information)
                     .setTitleMessage(mContext.getString(R.string.updata_new_version_update))
@@ -164,7 +164,7 @@ public class AppVersionUtil {
                     .setCancelListener(R.string.app_cancel, new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            SharedManager.INSTANCE.setVersionCheckDate(System.currentTimeMillis());//刷新版本提示时间
+                            SharedManager.INSTANCE.setVersionCheckDate(System.currentTimeMillis());//refreshversiontip时间
                             return null;
                         }
                     })
@@ -179,7 +179,7 @@ public class AppVersionUtil {
     }
 
 
-    // 开始下载指定序号的apk文件
+    // start下载指定序号的apkfile
     private void startDownload(String url) {
         completeReceiver = new DownloadCompleteReceiver();
         // 注册接收器，注册之后才能正常接收广播
@@ -192,24 +192,24 @@ public class AppVersionUtil {
         }
 
         Uri uri = Uri.parse(url); // 根据下载地址构建一个Uri对象
-        DownloadManager.Request down = new DownloadManager.Request(uri); // 创建一个下载请求对象，指定从哪里下载文件
-        down.setTitle(mContext.getString(R.string.tips_download_information)); // 设置任务标题
-        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); // 设置任务描述
-        // 设置允许下载的网络类型
+        DownloadManager.Request down = new DownloadManager.Request(uri); // create一个下载请求对象，指定从哪里下载file
+        down.setTitle(mContext.getString(R.string.tips_download_information)); // settingstasktitle
+        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); // settingstask描述
+        // settings允许下载的networktype
         down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-        // 设置通知栏在下载进行时与完成后都可见
+        // settingsnotification栏在下载进行时与complete后都可见
         down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        // 设置下载文件在私有目录的保存路径。从Android10开始，只有保存到公共目录的才会在系统下载页面显示，保存到私有目录的不在系统下载页面显示
+        // settings下载file在私有目录的savepath。从Android10start，只有save到公共目录的才会在系统下载页area显示，save到私有目录的不在系统下载页area显示
         fileName = "topinfrared" + System.currentTimeMillis() + ".zip";
         down.setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS, fileName);
         DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
-        // 设置下载文件在公共目录的保存路径。保存到公共目录需要申请存储卡的读写权限
-        mDownloadId = downloadManager.enqueue(down); // 把下载请求对象加入到下载队列
+        // settings下载file在公共目录的savepath。save到公共目录需要申请storage卡的读写权限
+        mDownloadId = downloadManager.enqueue(down); // 把下载请求对象加入到下载queue
         VersionTools.INSTANCE.setMDownloadId(mDownloadId);
     }
 
 
-    // 定义一个下载完成的广播接收器。用于接收下载完成事件
+    // 定义一个下载complete的广播接收器。用于接收下载complete事件
     private class DownloadCompleteReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -230,7 +230,7 @@ public class AppVersionUtil {
         mContext.unregisterReceiver(completeReceiver);
         try {
             File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地文件
+            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地file
             List<File> files = ZipUtils.unzipFile(file, localFile);
             if (files != null && files.size() != 0) {
                 AppUtil.installApp(mContext, files.get(0));
@@ -269,7 +269,7 @@ public class AppVersionUtil {
             params.addBodyParameter(params2[0], params2[1]);
             params.addBodyParameter(params3[0], params3[1]);
         } catch (Exception e) {
-            XLog.e("bcf", "升级接口解析异常");
+            XLog.e("bcf", "升级interfaceparsingexception");
         }
         fileName = "topinfrared" + System.currentTimeMillis() + ".zip";
         String path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + fileName;
@@ -328,7 +328,7 @@ public class AppVersionUtil {
     public void installApkNew() {
         try {
             File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地文件
+            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地file
             List<File> files = ZipUtils.unzipFile(file, localFile);
             if (files != null && files.size() != 0) {
                 AppUtil.installApp(mContext, files.get(0));

@@ -35,7 +35,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 /**
- * 摄像头属性值设置
+ * 摄像头property值settings
  * @author: CaiSongL
  * @date: 2023/4/3 15:00
  */
@@ -64,7 +64,7 @@ class IRCameraSettingActivity : BaseActivity() {
         productName = intent.getStringExtra(KEY_PRODUCT_TYPE) ?: ""
         if (isTC007())
             {
-                watermarkBean = SharedManager.wifiWatermarkBean // TC007只有水印
+                watermarkBean = SharedManager.wifiWatermarkBean // TC007只有watermark
                 continuousBean = SharedManager.continuousBean
             } else
             {
@@ -206,7 +206,7 @@ class IRCameraSettingActivity : BaseActivity() {
                 }
             },
         )
-        // TC007设备不需要延迟拍照
+        // TC007device不需要延迟拍照
         ly_auto.visibility = if (isTC007()) View.GONE else View.VISIBLE
     }
 
@@ -247,7 +247,7 @@ class IRCameraSettingActivity : BaseActivity() {
 
     var locationListener: LocationListener =
         object : LocationListener {
-            // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
+            // Provider的state在可用、暂时不可用和无service三个state直接switch时触发此function
             override fun onStatusChanged(
                 provider: String,
                 status: Int,
@@ -260,7 +260,7 @@ class IRCameraSettingActivity : BaseActivity() {
                 ).show()
             }
 
-            // Provider被enable时触发此函数，比如GPS被打开
+            // Provider被enable时触发此function，比如GPS被打开
             override fun onProviderEnabled(provider: String) {
                 Toast.makeText(
                     this@IRCameraSettingActivity,
@@ -270,7 +270,7 @@ class IRCameraSettingActivity : BaseActivity() {
                 getLocation()
             }
 
-            // Provider被disable时触发此函数，比如GPS被关闭
+            // Provider被disable时触发此function，比如GPS被关闭
             override fun onProviderDisabled(provider: String) {
                 Toast.makeText(
                     this@IRCameraSettingActivity,
@@ -279,7 +279,7 @@ class IRCameraSettingActivity : BaseActivity() {
                 ).show()
             }
 
-            // 当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
+            // 当坐标改变时触发此function，如果Provider传进相同的坐标，它就不会被触发
             override fun onLocationChanged(location: Location) {
                 if (location != null) {
                     // 如果位置发生变化，重新显示地理位置经纬度
@@ -308,7 +308,7 @@ class IRCameraSettingActivity : BaseActivity() {
         return bestLocation
     }
 
-    // 获取地址信息:城市、街道等信息
+    // 获取地址info:城市、街道等info
     private fun getAddress(location: Location?): String {
         var result: List<Address?>? = null
         try {
@@ -319,7 +319,7 @@ class IRCameraSettingActivity : BaseActivity() {
                         location.latitude,
                         location.longitude, 1,
                     )
-                Log.v("TAG", "获取地址信息：$result")
+                Log.v("TAG", "获取地址info：$result")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -415,7 +415,7 @@ class IRCameraSettingActivity : BaseActivity() {
                         never: Boolean,
                     ) {
                         if (never) {
-                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            // 如果是被永久拒绝就跳转到应用权限系统settings页area
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_location_content))

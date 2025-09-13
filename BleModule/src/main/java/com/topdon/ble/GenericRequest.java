@@ -24,7 +24,7 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
     int priority;
     RequestCallback callback;
     WriteOptions writeOptions;
-    byte[] descriptorTemp;//临时保存描述符的值
+    byte[] descriptorTemp;//临时save描述符的值
     //---------  分包发送相关  ---------
     Queue<byte[]> remainQueue;
     byte[] sendingBytes;
@@ -48,7 +48,7 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
     }
 
     /**
-     * 设备
+     * device
      */
     @NonNull
     public Device getDevice() {
@@ -56,7 +56,7 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
     }
 
     /**
-     * 请求类型
+     * 请求type
      */
     @NonNull
     public RequestType getType() {

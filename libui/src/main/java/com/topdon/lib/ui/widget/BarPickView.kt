@@ -56,7 +56,7 @@ class BarPickView : View {
     var onStopTrackingTouch: ((progress: Int, max: Int) -> Unit)? = null
 
     /**
-     * 根据进度格式化指示 View 文字.
+     * 根据进度format化指示 View text.
      */
     var valueFormatListener: ((progress: Int) -> String) = {
         it.toString()
@@ -108,7 +108,7 @@ class BarPickView : View {
     private val rotate: Int
 
     /**
-     * 标签文字.
+     * tagtext.
      */
     private val labelText: String
 
@@ -173,7 +173,7 @@ class BarPickView : View {
     }
 
     /**
-     * 计算 Thumb 宽度，单位 px.
+     * calculation Thumb 宽度，单位 px.
      */
     private fun computeThumbWidth(): Int {
         val minTextWidth = paint.measureText(valueFormatListener.invoke(min)).toInt()

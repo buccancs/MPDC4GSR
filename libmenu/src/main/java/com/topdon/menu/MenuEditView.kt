@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import com.topdon.menu.databinding.ViewMenuEditBinding
 
 /**
- * 2D编辑页面所用底部menu栏.
+ * 2D编辑页area所用底部menu栏.
  *
  * point/line/area、pseudo color、settings、pseudo color条
  */

@@ -48,7 +48,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 连接成功后延时多久开始执行发现服务
+     * connectionsuccess后延时多久start执行发现service
      */
     public ConnectionConfiguration setDiscoverServicesDelayMillis(int discoverServicesDelayMillis) {
         this.discoverServicesDelayMillis = discoverServicesDelayMillis;
@@ -56,7 +56,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 连接超时时长
+     * connection超时时长
      */
     public ConnectionConfiguration setConnectTimeoutMillis(int connectTimeoutMillis) {
         if (requestTimeoutMillis >= 1000) {
@@ -84,7 +84,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 不经过搜索，直接使用之间的MAC地址连接的次数，重连达到此次数后，恢复搜索到设备再进行连接
+     * 不经过搜索，直接使用之间的MAC地址connection的次数，重连达到此次数后，恢复搜索到device再进行connection
      */
     public ConnectionConfiguration setReconnectImmediatelyMaxTimes(int reconnectImmediatelyMaxTimes) {
         this.reconnectImmediatelyMaxTimes = reconnectImmediatelyMaxTimes;
@@ -100,7 +100,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 双模蓝牙的传输模式
+     * 双模bluetooth的传输mode
      *
      * @param transport {@link BluetoothDevice#TRANSPORT_AUTO}其中之一
      */
@@ -111,7 +111,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 物理层的模式
+     * 物理层的mode
      */
     @RequiresApi(Build.VERSION_CODES.O)
     public ConnectionConfiguration setPhy(int phy) {
@@ -130,11 +130,11 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 设置默认的写特征配置
+     * settings默认的写特征configuration
      *
-     * @param service        特征所在的服务UUID
+     * @param service        特征所在的serviceUUID
      * @param characteristic 特征的UUID
-     * @param options        配置
+     * @param options        configuration
      */
     public ConnectionConfiguration setDefaultWriteOptions(UUID service, UUID characteristic, WriteOptions options) {
         Inspector.requireNonNull(service, "service can't be null");

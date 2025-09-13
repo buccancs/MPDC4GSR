@@ -23,8 +23,8 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
 
     var MONITOR_ACTION = STATS_START
 
-    private var selectType = 1 // 选取点类型(点 线 面)
-    private var selectIndex: ArrayList<Int> = arrayListOf() // 选取点
+    private var selectType = 1 // 选取pointtype(point line area)
+    private var selectIndex: ArrayList<Int> = arrayListOf() // 选取point
 
     override fun initContentView() = R.layout.activity_monitor
 
@@ -53,7 +53,7 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
             }
             motion_btn -> {
                 MonitorSelectDialog.Builder(this)
-                    .setTitle("请选择监控类型")
+                    .setTitle("请selection监控type")
                     .setPositiveListener(
                         object : MonitorSelectDialog.OnClickListener {
                             override fun onClick(select: Int) {

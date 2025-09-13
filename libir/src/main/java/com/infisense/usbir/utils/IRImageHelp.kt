@@ -9,7 +9,7 @@ import org.opencv.imgproc.Imgproc
 import java.io.IOException
 
 /**
- * 热成像图像二次处理的统一入口，为了方便管理
+ * thermal imagingimage二次processing的统一入口，为了方便管理
  * @author: CaiSongL
  * @date: 2024/1/17 9:54
  */
@@ -32,7 +32,7 @@ class IRImageHelp {
     }
 
     /**
-     * settings自定义pseudo color条属性
+     * settings自定义pseudo color条property
      * @author: CaiSongL
      * @date: 2024/1/17 10:07
      */
@@ -65,12 +65,12 @@ class IRImageHelp {
     }
 
     /**
-     * 自定义pseudo color处理，在执行这个方法之前，变更pseudo color属性时先通过 上面setColorList进行属性settings
-     * @param imageDst ByteArray ： 图像数据，argb格式
-     * @param temperatureSrc ByteArray ： 温度数据
+     * 自定义pseudo colorprocessing，在执行这个method之前，变更pseudo colorproperty时先通过 上areasetColorList进行propertysettings
+     * @param imageDst ByteArray ： imagedata，argbformat
+     * @param temperatureSrc ByteArray ： temperaturedata
      * @param imageWidth Int ：
      * @param imageHeight Int
-     * @return ByteArray ： 返回处理后的图像数据，argb格式
+     * @return ByteArray ： 返回processing后的imagedata，argbformat
      */
     fun customPseudoColor(
         imageDst: ByteArray,
@@ -82,10 +82,10 @@ class IRImageHelp {
             if (colorList != null && temperatureSrc != null) {
                 var j = 0
                 val imageDstLength: Int = imageWidth * imageHeight * 4
-                // 遍历像素点，过滤温度阈值
+                // 遍历像素point，过滤temperature阈值
                 var index = 0
                 while (index < imageDstLength) {
-                    // 温度换算公式
+                    // temperature换算公式
                     var temperature0: Float =
                         (
                             (temperatureSrc.get(j).toInt() and 0xff) + (
@@ -138,14 +138,14 @@ class IRImageHelp {
 //                                        Log.w("测试上色耗时-总耗时", System.currentTimeMillis() - startTimeAll + "//");
             }
         } catch (exception: Exception) {
-            Log.e("上色异常", exception.message!!)
+            Log.e("上色exception", exception.message!!)
         } finally {
             return imageDst
         }
     }
 
     /**
-     * 等温尺处理,展示pseudo color的温度range内信息
+     * 等温尺processing,展示pseudo color的temperaturerange内info
      */
     fun setPseudoColorMaxMin(
         imageDst: ByteArray?,
@@ -159,12 +159,12 @@ class IRImageHelp {
             var j = 0
             val imageDstLength: Int = imageWidth * imageHeight * 4
             val biaochiMax: Float = max
-            val biaochiMin: Float = min // 温度阈值设定
+            val biaochiMin: Float = min // temperature阈值设定
             val startTimeAll = System.currentTimeMillis()
-            // 遍历像素点，过滤温度阈值
+            // 遍历像素point，过滤temperature阈值
             var index = 0
             while (index < imageDstLength) {
-                // 温度换算公式
+                // temperature换算公式
                 var temperature0: Float =
                     (
                         (temperatureSrc[j].toInt() and 0xff) + (
@@ -178,7 +178,7 @@ class IRImageHelp {
                     val r: Int = imageDst!![index].toInt() and 0xff
                     val g: Int = imageDst!![index + 1].toInt() and 0xff
                     val b: Int = imageDst!![index + 2].toInt() and 0xff
-                    // 灰度
+                    // grayscale
                     val grey = (r * 0.3f + g * 0.59f + b * 0.11f).toInt()
                     imageDst!![index] = grey.toByte()
                     imageDst!![index + 1] = grey.toByte()

@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 /**
  * 条款 1: 用户条款  2: 隐私条款  3: 第三方
  *
- * 服务返回有错误时,加载默认条款
+ * service返回有error时,load默认条款
  */
 @Route(path = RouterConfig.POLICY)
 /**
@@ -35,7 +35,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
 
     companion object {
         const val KEY_THEME_TYPE = "key_theme_type"
-        const val KEY_USE_TYPE = "key_use_type" // 使用类型 用本地和用网络
+        const val KEY_USE_TYPE = "key_use_type" // 使用type 用本地和用network
     }
 
     private var themeType = 1
@@ -106,7 +106,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
     private fun initWeb(url: String) {
         policy_web.visibility = View.INVISIBLE
         val webSettings: WebSettings = policy_web.settings
-        webSettings.javaScriptEnabled = true // 设置支持javascript
+        webSettings.javaScriptEnabled = true // settings支持javascript
 
         policy_web.webViewClient =
             object : WebViewClient() {
@@ -157,11 +157,11 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
     }
 
     /**
-     * 处理富文本
+     * processing富文本
      *
      * @param bodyHTML body
      * @param fontColor 需要改变的字体颜色
-     * @param backgroundColor 修改字体颜色
+     * @param backgroundColor modify字体颜色
      * @return String
      */
     fun getHtmlData(
@@ -180,7 +180,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         text: String,
         requestUrl: String,
     ) {
-        XLog.w("声明接口异常,打开默认链接")
+        XLog.w("声明interfaceexception,打开默认链接")
         loadHttp(policy_web)
         delayShowWebView()
     }
@@ -192,7 +192,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         reloadCount--
         when (themeType) {
             1 -> {
-                // 用户服务协议
+                // 用户serviceprotocol
                 view.loadUrl(
                     "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=21",
                 )
@@ -206,14 +206,14 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
             }
 
             3 -> {
-                // 第三方组件
+                // 第三方component
                 view.loadUrl("file:///android_asset/web/third_statement.html")
             }
         }
     }
 
     /**
-     * 加载默认协议网址(英文版)
+     * load默认protocol网址(英文版)
      */
     fun loadHttp(view: WebView) {
         reloadCount--
@@ -222,7 +222,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
                 if (BaseApplication.instance.isDomestic()) {
                     view.loadUrl("file:///android_asset/web/services_agreement_default_inside_china.html")
                 } else {
-                    // 用户服务协议
+                    // 用户serviceprotocol
                     view.loadUrl("file:///android_asset/web/services_agreement_default.html")
                 }
             }
@@ -237,7 +237,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
             }
 
             3 -> {
-                // 第三方组件
+                // 第三方component
                 view.loadUrl("file:///android_asset/web/third_statement.html")
             }
         }

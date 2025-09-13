@@ -16,7 +16,7 @@ public class DragViewUtil {
     }
 
     /**
-     * 拖动View方法
+     * 拖动Viewmethod
      *
      * @param v     view
      * @param delay delayed

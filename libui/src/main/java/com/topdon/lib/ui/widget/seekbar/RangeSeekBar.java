@@ -141,19 +141,19 @@ public class RangeSeekBar extends View {
 
     private int progressTop, progressBottom, progressLeft, progressRight;
     private int seekBarMode;
-    //刻度模式：number根据数字实际比例排列；other 均分排列
+    //刻度mode：number根据数字实际比例排列；other 均分排列
     private int tickMarkMode;
     //刻度与进度条间的间距
     //The spacing between the tick mark and the progress bar
     private int tickMarkTextMargin;
-    //刻度文字与提示文字的大小
+    //刻度text与tiptext的大小
     //tick mark text and prompt text size
     private int tickMarkTextSize;
     private int tickMarkGravity;
     private int tickMarkLayoutGravity;
     private int tickMarkTextColor;
     private int tickMarkInRangeTextColor;
-    //刻度上显示的文字
+    //刻度上显示的text
     //The texts displayed on the scale
     private CharSequence[] tickMarkTextArray;
     //进度条圆角
@@ -369,7 +369,7 @@ public class RangeSeekBar extends View {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         /*
-         * onMeasure传入的widthMeasureSpec和heightMeasureSpec不是一般的尺寸数值，而是将模式和尺寸组合在一起的数值
+         * onMeasure传入的widthMeasureSpec和heightMeasureSpec不是一般的尺寸数值，而是将mode和尺寸组合在一起的数值
          * MeasureSpec.EXACTLY 是精确尺寸
          * MeasureSpec.AT_MOST 是最大尺寸
          * MeasureSpec.UNSPECIFIED 是未指定尺寸
@@ -443,7 +443,7 @@ public class RangeSeekBar extends View {
         onDrawTickMark(canvas, paint); //固定刻度
         onDrawProgressBar(canvas, paint); //轴
         onDrawSteps(canvas, paint);
-        onDrawSeekBar(canvas); //滑动标签
+        onDrawSeekBar(canvas); //滑动tag
     }
 
     //绘制刻度，并且根据current位置是否在刻度range内settings不同的color显示
@@ -492,7 +492,7 @@ public class RangeSeekBar extends View {
     // draw the progress bar
     protected void onDrawProgressBar(Canvas canvas, Paint paint) {
 
-        //固定区域背景
+        //固定region背景
         //draw default progress
         paint.setShader(null);
         if (Utils.verifyBitmap(progressDefaultBitmap)) {
@@ -508,10 +508,10 @@ public class RangeSeekBar extends View {
             canvas.drawRoundRect(progressDefaultDstRect, progressRadius, progressRadius, paint);
         }
 
-        //动态区域前景
+        //动态region前景
         //draw progress
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
-//            XLog.w("动态轴区域");
+//            XLog.w("动态轴region");
             progressDstRect.top = getProgressTop();
             progressDstRect.left = leftSB.left + leftSB.getThumbScaleWidth() / 2f + progressWidth * leftSB.currPercent;
             progressDstRect.right = rightSB.left + rightSB.getThumbScaleWidth() / 2f + progressWidth * rightSB.currPercent;
@@ -668,7 +668,7 @@ public class RangeSeekBar extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isEnable) return false;
-//        Log.e("测试焦点：",event.getAction()+"//");
+//        Log.e("测试焦point：",event.getAction()+"//");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touchDownX = getEventX(event);
@@ -838,7 +838,7 @@ public class RangeSeekBar extends View {
 
 
     /**
-     * 临时处理负数
+     * 临时processing负数
      */
     public void setNoNegativeNumber(Boolean noNegativeNumber){
         this.noNegativeNumber = noNegativeNumber;
@@ -939,8 +939,8 @@ public class RangeSeekBar extends View {
      *
      * @param editMin ： 手动settings的最小值
      * @param editMax : 手动settings的最小值
-     * @param realLeftValue : 实际最低温度
-     * @param realRightValue ： 实际最高温度
+     * @param realLeftValue : 实际minimumtemperature
+     * @param realRightValue ： 实际maximumtemperature
      */
     public void setRangeAndPro(float editMin,float editMax,float realLeftValue,float realRightValue){
         if (editMin == Float.MIN_VALUE && editMax == Float.MAX_VALUE){
@@ -987,7 +987,7 @@ public class RangeSeekBar extends View {
 //            throw new IllegalArgumentException("setRange() interval must be less than (max - min) ! #minInterval:" + minInterval + " #max - min:" + (max - min));
 //        }
         if (maxProgress == max && min == minProgress){
-//            Log.w("数据update拦截",max+"//"+min+"");
+//            Log.w("dataupdate拦截",max+"//"+min+"");
             return;
         }
         maxProgress = max;
@@ -1016,7 +1016,7 @@ public class RangeSeekBar extends View {
 //            throw new IllegalArgumentException("setRange() interval must be less than (max - min) ! #minInterval:" + minInterval + " #max - min:" + (max - min));
 //        }
         if (maxProgress == max && min == minProgress){
-//            Log.w("数据update拦截",max+"//"+min+"");
+//            Log.w("dataupdate拦截",max+"//"+min+"");
             return;
         }
         maxProgress = max;

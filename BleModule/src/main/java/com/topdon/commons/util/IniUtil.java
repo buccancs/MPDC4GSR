@@ -52,7 +52,7 @@ public class IniUtil {
     /**
      * 获取车型名字
      *
-     * @param path 车型路径
+     * @param path 车型path
      * @return String
      */
     public static String getVehicleName(String path) {
@@ -66,14 +66,14 @@ public class IniUtil {
 
 
     /**
-     * 读取文件
+     * 读取file
      *
-     * @param path 路径
+     * @param path path
      */
     private static String readFileInfo(String path) {
         String name = "";
         File file = new File(path);
-        //如果path是传递过来的参数，可以做一个非目录的判断
+        //如果path是传递过来的parameter，可以做一个非目录的判断
         if (file.isDirectory()) {
             LLog.d("TestFile", "The File doesn't not exist.");
         } else {
@@ -149,7 +149,7 @@ public class IniUtil {
 
 
     /**
-     * 获取保养类型
+     * 获取保养type
      *
      * @param path
      * @param name
@@ -309,7 +309,7 @@ public class IniUtil {
 
 
     /**
-     * 获取保养类型
+     * 获取保养type
      *
      * @param path
      * @param name

@@ -43,23 +43,23 @@ class ChartTrendView : LineChart {
             0f,
             SizeUtils.dp2px(8f).toFloat(),
             SizeUtils.dp2px(4f).toFloat(),
-        ) // 图表区域偏移
+        ) // 图表region偏移
 
         setNoDataText(context.getString(ThermalR.string.lms_http_code998))
         setNoDataTextColor(ContextCompat.getColor(context, LibR.color.chart_text))
 
         val mv = MyMarkerView(context, R.layout.marker_lay)
         mv.chartView = this
-        marker = mv // 设置点击坐标显示提示框
+        marker = mv // settingsclick坐标显示tip框
 
         legend.form = Legend.LegendForm.CIRCLE
         legend.textColor = textColor
-        legend.isEnabled = false // 隐藏曲线标签
+        legend.isEnabled = false // 隐藏曲linetag
 
-\1x轴
+x轴
         val xAxis = this.xAxis
         xAxis.textColor = textColor
-        xAxis.setDrawGridLines(false) // 竖向格线
+        xAxis.setDrawGridLines(false) // 竖向格line
         xAxis.axisLineColor = 0x00000000 // x轴颜色
         xAxis.setAvoidFirstLastClipping(true)
         xAxis.isEnabled = true
@@ -84,11 +84,11 @@ class ChartTrendView : LineChart {
                 }
             }
 
-\1y轴
+y轴
         val leftAxis = this.axisLeft
         leftAxis.textColor = textColor // y轴文本颜色
         leftAxis.axisLineColor = 0x00000000 // y轴颜色
-        leftAxis.setDrawGridLines(true) // 横向格线
+        leftAxis.setDrawGridLines(true) // 横向格line
         leftAxis.gridColor = axisChartColors // y轴网格颜色
         leftAxis.gridLineWidth = 1.5f
         leftAxis.setLabelCount(6, true)
@@ -113,8 +113,8 @@ class ChartTrendView : LineChart {
     }
 
     /**
-\1根据指定的data刷新折线图data
-\1@param tempList temperature值列表，单位摄氏度
+根据指定的datarefresh折line图data
+@param tempList temperature值列表，单位摄氏度
      */
     fun refresh(tempList: List<Float>) {
         if (tempList.isEmpty()) {
@@ -158,15 +158,15 @@ class ChartTrendView : LineChart {
 
         val lineDataSet = LineDataSet(entryList, "point temp")
         lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
-        lineDataSet.color = 0xffffffff.toInt() // 曲线颜色
+        lineDataSet.color = 0xffffffff.toInt() // 曲line颜色
         lineDataSet.circleHoleColor = 0xffffffff.toInt() // 坐标圆心颜色
         lineDataSet.setCircleColor(0xffffffff.toInt()) // 坐标颜色
         lineDataSet.valueTextColor = Color.WHITE
         lineDataSet.lineWidth = 2f
-        lineDataSet.circleRadius = 1f // 坐标点半径
+        lineDataSet.circleRadius = 1f // 坐标point半径
         lineDataSet.fillAlpha = 200
         lineDataSet.valueTextSize = 10f
-        lineDataSet.setDrawValues(false) // 设置是否显示坐标值文本
+        lineDataSet.setDrawValues(false) // settings是否显示坐标值文本
 
         data = LineData(lineDataSet)
         invalidate()

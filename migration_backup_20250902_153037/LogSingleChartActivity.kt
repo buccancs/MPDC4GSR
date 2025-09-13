@@ -89,7 +89,7 @@
 //            .backgroundColor("#3598E8")
 //            .yAxisTitle("")
 //            .axesTextColor("#FFFFFF")
-//            .dataLabelsEnabled(false)//坐标点是否显示值
+//            .dataLabelsEnabled(false)//坐标point是否显示值
 //            .tooltipEnabled(true)
 //            .markerRadius(0f)
 // //            .gradientColorEnable(true)
@@ -103,7 +103,7 @@
 //                        .name("vol")
 //                        .lineWidth(2f)
 //                        .data(arrayOf(0))
-//                        .color("#FFFFFF")//曲线颜色
+//                        .color("#FFFFFF")//曲line颜色
 //                )
 //            )
 //    }
@@ -122,7 +122,7 @@
 //        val series = initSeries()
 //        val chart = AAChart()
 //            .scrollablePlotArea(AAScrollablePlotArea().minWidth(20)).backgroundColor("#383d45")
-//            .type(AAChartType.Area)//曲线类型
+//            .type(AAChartType.Area)//曲linetype
 //
 //        val xAxis = AAXAxis()
 //            .lineWidth(1f)
@@ -130,28 +130,28 @@
 //            .gridLineColor("#717a8f")
 //            .lineColor("#717a8f")
 //            .tickColor("#717a8f")//刻度颜色
-//            .minRange(9)//设置滚动时，最小宽度
+//            .minRange(9)//settings滚动时，最小宽度
 //            .minorTickColor("#000000")
-//            .labels(AALabels().style(AAStyle.style("#717a8f")))//标尺文字
+//            .labels(AALabels().style(AAStyle.style("#717a8f")))//标尺text
 //
 //        val yAxis = AAYAxis()
 //            .lineWidth(1f)
 //            .gridLineWidth(1f)
 //            .gridLineColor("#454b56")
 //            .lineColor("#383d45")
-// //            .max(100f)//设置最大y值
-//            .min(0f)//设置最小y值
+// //            .max(100f)//settings最大y值
+//            .min(0f)//settings最小y值
 //            .labels(AALabels().style(AAStyle.style("#717a8f")))
 //            .title(AATitle().text("").style(AAStyle().color("#FFFFFF")))//不显示
 //
 //        //初始图表样式
 //        options.series(series).chart(chart).xAxis(xAxis).yAxis(yAxis)
-//        //初始数据
+//        //初始data
 //        aa_chart_view.aa_drawChartWithChartOptions(options)
 //    }
 //
 //    /**
-//     * 初始化曲线三种类型曲线
+//     * initialization曲line三种type曲line
 //     */
 //    private fun initSeries(): Array<AASeriesElement> {
 //        val maxTempListData = Array<Any>(dataList.size) { dataList[it].thermalMax }

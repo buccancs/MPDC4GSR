@@ -91,14 +91,14 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
             dragDirection = getDirection(v, (int) event.getX(),
                     (int) event.getY());
         }
-        // 处理拖动事件
+        // processing拖动事件
         delDrag(v, event, action);
         invalidate();
         return false;
     }
 
     /**
-     * 处理拖动事件
+     * processing拖动事件
      *
      * @param v
      * @param event
@@ -122,7 +122,7 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
                     case TOP: // 上边缘
                         top(v, dy);
                         break;
-                    case CENTER: // click中心-->>移动
+                    case CENTER: // clickcenter-->>移动
                         center(v, dx, dy);
                         break;
                     case LEFT_BOTTOM: // 左下
@@ -155,7 +155,7 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 触摸点为中心->>移动
+     * 触摸point为center->>移动
      *
      * @param v
      * @param dx
@@ -186,7 +186,7 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 触摸点为上边缘
+     * 触摸point为上边缘
      *
      * @param v
      * @param dy
@@ -202,7 +202,7 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 触摸点为下边缘
+     * 触摸point为下边缘
      *
      * @param v
      * @param dy
@@ -218,7 +218,7 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 触摸点为右边缘
+     * 触摸point为右边缘
      *
      * @param v
      * @param dx
@@ -234,7 +234,7 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 触摸点为左边缘
+     * 触摸point为左边缘
      *
      * @param v
      * @param dx
@@ -250,7 +250,7 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     }
 
     /**
-     * 获取触摸点flag
+     * 获取触摸pointflag
      *
      * @param v
      * @param x

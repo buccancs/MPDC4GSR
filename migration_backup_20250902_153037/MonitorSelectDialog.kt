@@ -9,7 +9,7 @@ import com.topdon.lib.ui.R
 import kotlinx.android.synthetic.main.dialog_monitor_select.view.*
 
 /**
- * 提示窗
+ * tip窗
  * create by fylder on 2018/6/15
  **/
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
@@ -20,7 +20,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         private var isFirstStep = true
 
         /**
-         * 当前选中的监控类型 1-点 2-线 3-面.
+         * 当前selected的监控type 1-point 2-line 3-area.
          */
         private var monitorType = 0
 
@@ -39,12 +39,12 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             dialog.setContentView(view)
 
             val lp = dialog.window!!.attributes
-            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // settings宽度
             dialog.window!!.attributes = lp
 
             view.btn_confirm_or_back.setOnClickListener {
                 if (isFirstStep) { // 步骤1->步骤2 逻辑为“确认”
-                    if (monitorType == 0) { // 还没选取类型不允许点确认
+                    if (monitorType == 0) { // 还没选取type不允许point确认
                         return@setOnClickListener
                     }
                     isFirstStep = false

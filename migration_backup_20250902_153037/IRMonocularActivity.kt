@@ -220,7 +220,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     override fun connected() {
-        // 由于 BlankDevActivity 监听 USB 设备插拔的逻辑，该弹框会一闪而过，最终决定先不弹这个弹框
+        // 由于 BlankDevActivity 监听 USB device插拔的逻辑，该弹框会一闪而过，最终决定先不弹这个弹框
         /*TipDialog.Builder(this)
             .setMessage(getString(R.string.tc_has_line_device) + " " + getString(R.string.device_switch_tips))
             .setPositiveListener(R.string.app_yes) {
@@ -266,7 +266,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     /**
-     * 显示和隐藏状态栏
+     * 显示和隐藏state栏
      * @param show
      */
     private fun setStatusBarVisible(show: Boolean) {
@@ -285,7 +285,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     private fun setSetting(code: Int) {
         when (code) {
             MonocularHelp.TYPE_SET_BLACK -> {
-                // 伪彩样式
+                // pseudo color样式
                 setPseudoColor()
             }
 
@@ -295,7 +295,7 @@ class IRMonocularActivity : BaseWifiActivity() {
             }
 
             MonocularHelp.TYPE_SET_LIGHT -> {
-                // 亮度
+                // brightness
                 setBrightness()
             }
 
@@ -459,7 +459,7 @@ class IRMonocularActivity : BaseWifiActivity() {
         super.finish()
     }
 
-    // 底部拍照中间按钮
+    // 底部拍照中间button
     @SuppressLint("CheckResult")
     private fun centerCamera() {
         XXPermissions.with(this)
@@ -474,7 +474,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                     ) {
                         if (allGranted) {
                             if (isVideo) {
-                                // 录制视频
+                                // recordingvideo
                                 isVideoRecording =
                                     if (isVideoRecording) {
                                         camera_img.setImageResource(R.drawable.ic_menu_bottom_video_svg)
@@ -544,15 +544,15 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     /**
-     * 更新最新图库照片或视频
-     * @param fileType 0-图片 1-录像 2-所有
+     * update最新图库photo或video
+     * @param fileType 0-image 1-录像 2-所有
      */
     private fun refreshImg(fileType: Int) {
         lifecycleScope.launch {
             val fileList: List<FileBean>? = TS004Repository.getNewestFile(fileType)
             try {
-                if (fileList != null) { // 请求成功
-                    if (fileList.isEmpty()) { // 请求成功但是当前没有对应图片或视频
+                if (fileList != null) { // 请求success
+                    if (fileList.isEmpty()) { // 请求success但是当前没有对应image或video
                         camera_gallery_img.setImageResource(R.mipmap.ic_menu_photo_default)
                         updateDefaultPhotoWH(true)
                     } else {
@@ -565,7 +565,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                     }
                 }
             } catch (e: Exception) {
-                Log.e("刷新图标状态异常", e.message.toString())
+                Log.e("refresh图标stateexception", e.message.toString())
             }
         }
     }
@@ -578,7 +578,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
         when (SocketCmdUtil.getCmdResponse(event.text)) {
-            WsCmdConstants.AR_COMMAND_PSEUDO_COLOR_GET -> { // 伪彩样式
+            WsCmdConstants.AR_COMMAND_PSEUDO_COLOR_GET -> { // pseudo color样式
                 val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
                 val pseudoColor: WsPseudoColor? = WsUtil.getWsResponse(event.text)
                 if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {
@@ -596,7 +596,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                 }
             }
 
-            WsCmdConstants.AR_COMMAND_PANEL_PARAM_GET -> { // 亮度
+            WsCmdConstants.AR_COMMAND_PANEL_PARAM_GET -> { // brightness
                 val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
                 val wsBrightness: WsLight? = WsUtil.getWsResponse(event.text)
                 if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {
@@ -627,11 +627,11 @@ class IRMonocularActivity : BaseWifiActivity() {
                 refreshImg(0)
             }
 
-            WsCmdConstants.AR_COMMAND_VRECORD -> { // 开始或结束录像事件
+            WsCmdConstants.AR_COMMAND_VRECORD -> { // start或end录像事件
                 try {
                     val data: JSONObject = JSONObject(event.text).getJSONObject("data")
                     val enable: Boolean = data.getBoolean("enable")
-                    if (!enable) { // 结束才同步
+                    if (!enable) { // end才同步
                         refreshImg(1)
                     }
                     updateCamera(enable)

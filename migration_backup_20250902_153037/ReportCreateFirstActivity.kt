@@ -48,18 +48,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * 生成报告第1步（共2步）.
+ * 生成report第1步（共2步）.
  *
  * 需要传递
- * - 是否 TC007: [ExtraKeyConfig.IS_TC007] （环境温度、发射率等不同）
- * - 当前编辑的图片绝对路径: [ExtraKeyConfig.FILE_ABSOLUTE_PATH] （本界面不使用，透传）
- * - 当前编辑的图片点线面全图温度数据: [ExtraKeyConfig.IMAGE_TEMP_BEAN] （本界面不使用，透传）
+ * - 是否 TC007: [ExtraKeyConfig.IS_TC007] （环境temperature、发射率等不同）
+ * - 当前编辑的image绝对path: [ExtraKeyConfig.FILE_ABSOLUTE_PATH] （本界area不使用，透传）
+ * - 当前编辑的imagepointlinearea全图temperaturedata: [ExtraKeyConfig.IMAGE_TEMP_BEAN] （本界area不使用，透传）
  */
 @Route(path = RouterConfig.REPORT_CREATE_FIRST)
 class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
+     * 从上一界area传递过来的，当前是否为 TC007 devicetype.
+     * true-TC007 false-其他插件式device
      */
     private var isTC007 = false
     private var locationManager: LocationManager? = null
@@ -140,7 +140,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun readConfig() {
-        var environment = 30f // 环境温度
+        var environment = 30f // 环境temperature
         var distance = 0.25f // 测试距离
         var radiation = 0.95f // 发射率
         val config = ConfigRepository.readConfig(isTC007)
@@ -162,7 +162,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_report_date -> { // 报告日期
+            tv_report_date -> { // report日期
                 selectTime()
             }
             tv_preview -> { // 预览
@@ -222,7 +222,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             }
     }
 
-    // 获取地址信息:城市、街道等信息
+    // 获取地址info:城市、街道等info
     private fun getAddress(location: Location?): String {
         var result: List<Address?>? = null
         try {
@@ -233,7 +233,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         location.latitude,
                         location.longitude, 1,
                     )
-                Log.v("TAG", "获取地址信息：$result")
+                Log.v("TAG", "获取地址info：$result")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -303,7 +303,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 当前设置的报告日期时间戳.
+     * 当前settings的report日期时间戳.
      */
     private var startTime = 0L
 
@@ -327,10 +327,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
         val endTimeEntity = DatimeEntity.yearOnFuture(10)
         if (startTime == 0L) {
-            // 设置当前时间
+            // settings当前时间
             picker.wheelLayout.setRange(startTimeEntity, endTimeEntity, DatimeEntity.now())
         } else {
-            // 设置上一次选中时间
+            // settings上一次selected时间
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = startTime
             val year = calendar.get(Calendar.YEAR)
@@ -408,7 +408,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         never: Boolean,
                     ) {
                         if (never) {
-                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            // 如果是被永久拒绝就跳转到应用权限系统settings页area
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_location_content))

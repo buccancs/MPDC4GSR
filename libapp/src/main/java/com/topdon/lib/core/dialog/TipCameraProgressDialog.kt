@@ -10,7 +10,7 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 
 /**
- * 提示窗
+ * tip窗
  * create by fylder on 2018/6/15
  **/
 class TipCameraProgressDialog : Dialog {
@@ -57,7 +57,7 @@ class TipCameraProgressDialog : Dialog {
                     // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // settings宽度
             dialog!!.window!!.attributes = lp
             dialog!!.setCanceledOnTouchOutside(canceleable)
             dialog!!.setCancelable(canceleable)

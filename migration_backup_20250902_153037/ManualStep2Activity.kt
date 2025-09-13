@@ -64,10 +64,10 @@ class ManualStep2Activity :
      */
     private val mIrPid = 0x5830
     private val mIrFps = 25
-    private var mIrCameraWidth = 0 // 传感器的原始宽度
-    private var mIrCameraHeight = 0 // 传感器的原始高度
-    private var mImageWidth = 0 // 经过旋转后的图像宽度
-    private var mImageHeight = 0 // 经过旋转后的图像高度
+    private var mIrCameraWidth = 0 // sensor的原始宽度
+    private var mIrCameraHeight = 0 // sensor的原始高度
+    private var mImageWidth = 0 // 经过旋转后的image宽度
+    private var mImageHeight = 0 // 经过旋转后的image高度
 
     /**
      * vl camera
@@ -80,7 +80,7 @@ class ManualStep2Activity :
     private val mVlCameraHeight = 720
 
     /**
-     * 融合分辨率
+     * fusion分辨率
      */
     private val mDualWidth = 480
     private val mDualHeight = 640
@@ -89,7 +89,7 @@ class ManualStep2Activity :
     private var sId: String = ""
 
     /**
-     * 手动配准的初始化参数
+     * 手动registration的initializationparameter
      */
     private val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
     private var alignScaleX = 0f // 图和屏幕缩放比
@@ -107,7 +107,7 @@ class ManualStep2Activity :
                     hideLoadingDialog()
                 } else if (msg.what == HANDLE_CONNECT) {
                     initDualCamera()
-                    // 加载配准参数
+                    // loadregistrationparameter
                     initDefIntegralArgsDISP_VALUE(DualCameraParams.TypeLoadParameters.ROTATE_270)
                 } else if (msg.what == HIDE_LOADING_FINISH) {
                     hideLoadingDialog()
@@ -181,7 +181,7 @@ class ManualStep2Activity :
         seek_bar?.max = 2000
         seek_bar?.setEnabled(false)
         moveImageView?.setEnabled(false)
-        // 初始化相机类
+        // initializationcameraclass
         initDataFlowMode(mDefaultDataFlowMode)
         initData()
         USBMonitorDualManager.getInstance()
@@ -207,10 +207,10 @@ class ManualStep2Activity :
     private fun initDataFlowMode(dataFlowMode: CommonParams.DataFlowMode) {
         if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
             /**
-             * 图像+温度
+             * image+temperature
              */
-            mIrCameraWidth = Const.SENSOR_WIDTH // 传感器的原始宽度
-            mIrCameraHeight = Const.SENSOR_HEIGHT // 传感器的原始高度
+            mIrCameraWidth = Const.SENSOR_WIDTH // sensor的原始宽度
+            mIrCameraHeight = Const.SENSOR_HEIGHT // sensor的原始高度
             mImageWidth = mIrCameraHeight / 2
             mImageHeight = mIrCameraWidth
         }
@@ -220,7 +220,7 @@ class ManualStep2Activity :
      *
      */
     public override fun initData() {
-        // 计算画面的宽高，避免被拉伸变形
+        // calculation画area的宽高，避免被拉伸变形
 //        var width = 0
 //        var height = 0
 //        val screenWidth = ScreenUtils.getScreenWidth(this)
@@ -244,7 +244,7 @@ class ManualStep2Activity :
     }
 
     private fun initDualCamera() {
-        // 初始化双光预览相关的类
+        // initializationdual light预览相关的class
         mDualView =
             DualViewWithManualAlignExternalCamera(
                 mImageWidth, mImageHeight,
@@ -253,10 +253,10 @@ class ManualStep2Activity :
                 mDefaultDataFlowMode,
             )
 
-        // 初始化伪彩
+        // initializationpseudo color
         initPsedocolor()
 
-        // 设置初始化融合模式,一般选择LPYFusion
+        // settingsinitializationfusionmode,一般selectionLPYFusion
         mDualView!!.dualUVCCamera.setFusion(DualCameraParams.FusionType.LPYFusion)
 
         // 打开自动快门逻辑
@@ -268,13 +268,13 @@ class ManualStep2Activity :
     }
 
     /**
-     * 加载伪彩，设置镜头方向，伪彩，融合模式等等
+     * loadpseudo color，settingslens方向，pseudo color，fusionmode等等
      */
     private fun initPsedocolor() {
         val am = assets
         var `is`: InputStream
         try {
-            // 加载伪彩
+            // loadpseudo color
             mPseudoColors = arrayOfNulls(11)
             `is` = am.open("pseudocolor/White_Hot.bin")
             var lenth = `is`.available()
@@ -321,7 +321,7 @@ class ManualStep2Activity :
                 mPseudoColors[3],
             )
 
-            // 这里可以设置初始化伪彩
+            // 这里可以settingsinitializationpseudo color
             mDualView!!.dualUVCCamera.setPseudocolor(CommonParams.PseudoColorUsbDualType.IRONBOW_MODE)
             `is`.close()
         } catch (e: IOException) {
@@ -330,18 +330,18 @@ class ManualStep2Activity :
     }
 
     /**
-     * 一体式结构，双光配准的数据，可从手机固定位置读取，如可从NV分区读写
-     * 目前使用的是人工配准的方式，提供配准后的数据文件放在asset目录下
+     * 一体式结构，dual lightregistration的data，可从手机固定位置读取，如可从NV分区读写
+     * 目前使用的是人工registration的方式，提供registration后的datafile放在asset目录下
      */
     open fun initDefIntegralArgsDISP_VALUE(typeLoadParameters: DualCameraParams.TypeLoadParameters) {
         lifecycleScope.launch {
             val parameters = IRCmdTool.getDualBytes(USBMonitorDualManager.getInstance().ircmd)
             val data = mDualView!!.dualUVCCamera.loadParameters(parameters, typeLoadParameters)
             dualDisp = IRCmdTool.dispNumber
-            // 初始化默认值
+            // initialization默认值
             mDualView?.dualUVCCamera?.setDisp(dualDisp)
             mDualView?.startPreview()
-            Log.e("机芯数据加载成功", "初始化完成:")
+            Log.e("coredataloadsuccess", "initializationcomplete:")
         }
     }
 
@@ -440,7 +440,7 @@ class ManualStep2Activity :
     var userStop = false
 
     /**
-     * 停止预览
+     * stop预览
      */
     private fun dualStop() {
         userStop = true
@@ -467,7 +467,7 @@ class ManualStep2Activity :
             dualStopWithAlign()
             return
         }
-        // 停止预览
+        // stop预览
         dualStop()
     }
 
@@ -506,7 +506,7 @@ class ManualStep2Activity :
     }
 
     /**
-     * 处理移动数据
+     * processing移动data
      */
     private fun handleMove(
         preX: Float,
@@ -532,7 +532,7 @@ class ManualStep2Activity :
     }
 
     /**
-     * 处理角度数据
+     * processing角度data
      */
     private fun handleAngle(angle: Float) {
         if (!canOperate) {
@@ -549,7 +549,7 @@ class ManualStep2Activity :
     }
 
     /**
-     * 停止校准
+     * stopcalibration
      */
     private fun finishAlign(isSavePara: Boolean) {
         if (!canOperate) {
@@ -560,7 +560,7 @@ class ManualStep2Activity :
     fun updateSaveButton() {
         if (ivTakePhoto!!.visibility == View.INVISIBLE) {
             ivTakePhoto!!.visibility = View.VISIBLE
-            ivTakePhoto!!.setOnClickListener { // 保存图片
+            ivTakePhoto!!.setOnClickListener { // saveimage
                 val message = Message.obtain()
                 message.what = SHOW_LOADING
                 message.obj = ""

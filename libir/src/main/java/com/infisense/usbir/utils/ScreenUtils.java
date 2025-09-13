@@ -95,7 +95,7 @@ public class ScreenUtils {
     }
 
     /**
-     * 得到设备的dpi
+     * 得到device的dpi
      */
     public static int getScreenDensityDpi(Context context) {
         return context.getResources().getDisplayMetrics().densityDpi;
@@ -180,9 +180,9 @@ public class ScreenUtils {
     /**
      * @param info
      * @setIcon settings对话框图标
-     * @setTitle settings对话框标题
-     * @setMessage settings对话框消息提示
-     * setXXX方法返回Dialog对象，因此可以链式settings属性
+     * @setTitle settings对话框title
+     * @setMessage settings对话框messagetip
+     * setXXXmethod返回Dialog对象，因此可以链式settingsproperty
      */
     public static Dialog showNormalDialog(Context context, String info, PopupWindow.OnDismissListener dismissListener) {
         final AlertDialog.Builder normalDialog =

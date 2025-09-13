@@ -12,7 +12,7 @@ import com.topdon.lib.core.bean.WatermarkBean
 import com.topdon.lib.core.dialog.CarDetectDialog
 
 /**
- * current类封装不受“savedsettings开关”影响的configuration项，
+ * currentclass封装不受“savedsettings开关”影响的configuration项，
  *
  * [SaveSettingUtil] saved受“savedsettings开关”影响的configuration项.
  *
@@ -27,14 +27,14 @@ object SharedManager {
         set(value) = SPUtils.getInstance().put("hasClickWinter", value)
 
     /**
-     * 是否需要显示热成像-趋势图提示.
+     * 是否需要显示thermal imaging-趋势图tip.
      */
     var isNeedShowTrendTips: Boolean
         get() = SPUtils.getInstance().getBoolean("isNeedShowTrendTips", true)
         set(value) = SPUtils.getInstance().put("isNeedShowTrendTips", value)
 
     /**
-     * 房屋检测 - 建筑面积单位 0-英亩 1-平方米 2-公顷
+     * 房屋检测 - 建筑area积单位 0-英亩 1-平方米 2-公顷
      */
     var houseSpaceUnit: Int
         get() = SPUtils.getInstance().getInt("houseSpaceUnit", 0)
@@ -52,7 +52,7 @@ object SharedManager {
         }
 
     /**
-     * 设备list中是否有 TC 有线设备，默认 false.
+     * devicelist中是否有 TC 有linedevice，默认 false.
      */
     var hasTcLine: Boolean
         get() = SPUtils.getInstance().getBoolean("hasConnectTcLine", false)
@@ -61,7 +61,7 @@ object SharedManager {
         }
 
     /**
-     * 设备list中是否有 TS004 设备，默认 false.
+     * devicelist中是否有 TS004 device，默认 false.
      */
     var hasTS004: Boolean
         get() = SPUtils.getInstance().getBoolean("hasConnectTS004", false)
@@ -70,7 +70,7 @@ object SharedManager {
         }
 
     /**
-     * 设备list中是否有 TC007 设备，默认 false.
+     * devicelist中是否有 TC007 device，默认 false.
      */
     var hasTC007: Boolean
         get() = SPUtils.getInstance().getBoolean("hasConnectTC007", false)
@@ -79,7 +79,7 @@ object SharedManager {
         }
 
     /**
-     * TC007 的温度修正参数，JSON 形式.
+     * TC007 的temperature修正parameter，JSON 形式.
      */
     var irConfigJsonTC007: String
         get() = SPUtils.getInstance().getString("irConfigJsonTC007")
@@ -100,14 +100,14 @@ object SharedManager {
         }
 
     /**
-     * 温度修正操作指引要显示的步骤 1-第1步 2-第2步 0-不显示
+     * temperature修正操作指引要显示的步骤 1-第1步 2-第2步 0-不显示
      */
     var configGuideStep: Int
         get() = SPUtils.getInstance().getInt("configGuideStep", 1)
         set(value) = SPUtils.getInstance().put("configGuideStep", value)
 
     /**
-     * 是否显示过发射率提示
+     * 是否显示过发射率tip
      */
     var isHideEmissivityTips: Boolean
         get() = SPUtils.getInstance().getBoolean("isHideEmissivityTips", false)
@@ -116,7 +116,7 @@ object SharedManager {
         }
 
     /**
-     * tc007是否显示过发射率提示
+     * tc007是否显示过发射率tip
      */
     var is07HideEmissivityTips: Boolean
         get() = SPUtils.getInstance().getBoolean("is07HideEmissivityTips", false)
@@ -143,7 +143,7 @@ object SharedManager {
         }
 
     /**
-     * dual light校正rotation angle，取值range [0, 2000]，对应 SeekBar 取值.id对应设备的sid作为唯一标识区分
+     * dual light校正rotation angle，取值range [0, 2000]，对应 SeekBar 取值.id对应device的sid作为唯一标识区分
      */
     fun getManualAngle(sId: String): Int {
         return SPUtils.getInstance().getInt("manualAngle_$sId", 1000)
@@ -157,7 +157,7 @@ object SharedManager {
     }
 
     /**
-     * dual light校正的实际数据，长度必定为 24.
+     * dual light校正的实际data，长度必定为 24.
      */
     fun getManualData(sId: String): ByteArray {
         val strValue = SPUtils.getInstance().getString("manualData_$sId")
@@ -205,7 +205,7 @@ object SharedManager {
     }
 
     /**
-     * 连接设备后是否自动开启画面.
+     * connectiondevice后是否自动开启画area.
      */
     var isConnectAutoOpen: Boolean
         get() = SPUtils.getInstance().getBoolean("isConnectAutoOpen", false)
@@ -214,7 +214,7 @@ object SharedManager {
         }
 
     /**
-     * 连接 TC007 后是否自动开启画面.
+     * connection TC007 后是否自动开启画area.
      */
     var isConnect07AutoOpen: Boolean
         get() = SPUtils.getInstance().getBoolean("isConnect07AutoOpen", false)
@@ -223,8 +223,8 @@ object SharedManager {
         }
 
     /**
-     * 设备断开时，是否需要弹出 OTG 提示弹框.
-     * true-弹出提示弹框 false-用户点过不再提示，不需要再弹出
+     * devicedisconnect时，是否需要弹出 OTG tip弹框.
+     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
      */
     var isTipOTG: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipOTG", true)
@@ -233,8 +233,8 @@ object SharedManager {
         }
 
     /**
-     * click热成像-自动快门时，是否需要弹出提示弹框.
-     * true-弹出提示弹框 false-用户点过不再提示，不需要再弹出
+     * clickthermal imaging-自动快门时，是否需要弹出tip弹框.
+     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
      */
     var isTipShutter: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipShutter", true)
@@ -243,8 +243,8 @@ object SharedManager {
         }
 
     /**
-     * click温度-高温档时，是否需要弹出提示弹框.
-     * true-弹出提示弹框 false-用户点过不再提示，不需要再弹出
+     * clicktemperature-高温档时，是否需要弹出tip弹框.
+     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
      */
     var isTipHighTemp: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipHighTemp", true)
@@ -253,8 +253,8 @@ object SharedManager {
         }
 
     /**
-     * click热成像-picture-in-picture（也就是dual light）时，是否需要弹出提示弹框.
-     * true-弹出提示弹框 false-用户点过不再提示，不需要再弹出
+     * clickthermal imaging-picture-in-picture（也就是dual light）时，是否需要弹出tip弹框.
+     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
      */
     var isTipPinP: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipPinP", true)
@@ -263,8 +263,8 @@ object SharedManager {
         }
 
     /**
-     * click热成像-observation时，是否需要弹出提示弹框.
-     * true-弹出提示弹框 false-用户点过不再提示，不需要再弹出
+     * clickthermal imaging-observation时，是否需要弹出tip弹框.
+     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
      */
     var isTipCoordinate: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipCoordinate", true)
@@ -273,8 +273,8 @@ object SharedManager {
         }
 
     /**
-     * click热成像-AI追踪时，是否需要弹出提示弹框.
-     * true-弹出提示弹框 false-用户点过不再提示，不需要再弹出
+     * clickthermal imaging-AI追踪时，是否需要弹出tip弹框.
+     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
      */
     var isTipAIRecognition: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipAIRecognition", true)
@@ -283,8 +283,8 @@ object SharedManager {
         }
 
     /**
-     * click热成像-observation模式-capture踪时，是否需要弹出提示弹框.
-     * true-弹出提示弹框 false-用户点过不再提示，不需要再弹出
+     * clickthermal imaging-observationmode-capture踪时，是否需要弹出tip弹框.
+     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
      */
     var isTipObservePhoto: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipObservePhoto", true)
@@ -312,7 +312,7 @@ object SharedManager {
         }
 
     /**
-     * wifi类产品
+     * wificlass产品
      * watermark相关configuration想，不受savedsettings开关影响.
      */
     var wifiWatermarkBean: WatermarkBean
@@ -351,8 +351,8 @@ object SharedManager {
         }
 
     /**
-     * clickTS004-是否switch设备，是否需要弹出提示弹框.
-     * true-弹出提示弹框 false-用户点过不再提示，不需要再弹出
+     * clickTS004-是否switchdevice，是否需要弹出tip弹框.
+     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
      */
     var isTipChangeDevice: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipChangeDevice", true)
@@ -361,7 +361,7 @@ object SharedManager {
         }
 
     /**
-     * 设备连接成功，是否switch.
+     * deviceconnectionsuccess，是否switch.
      * true-switch false-不switch
      */
     var isChangeDevice: Boolean
@@ -380,13 +380,13 @@ object SharedManager {
     private const val LANGUAGE = "language" // 语言settings
 
     private const val HAS_SHOW_CLAUSE = "hasShowClause" // 是否显示过条款
-    private const val TEMPERATURE_UNIT = "temperature" // 温度单位
-    private const val VERSION_CHECK_DATE = "version_check_date" // 版本检测的日期
+    private const val TEMPERATURE_UNIT = "temperature" // temperature单位
+    private const val VERSION_CHECK_DATE = "version_check_date" // version检测的日期
 
-    private const val DEVICE_SN = "deviceSn" // 设备SN
-    private const val DEVICE_VERSION = "deviceVersion" // 设备版本
+    private const val DEVICE_SN = "deviceSn" // deviceSN
+    private const val DEVICE_VERSION = "deviceVersion" // deviceversion
 
-    private const val IR_CONFIG = "ir_config" // 温度修正参数(json)
+    private const val IR_CONFIG = "ir_config" // temperature修正parameter(json)
     private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo" // 自定义pseudo color条
     private const val SP_TARGET_POP = "sp_target_pop" // target弹框
 
@@ -527,7 +527,7 @@ object SharedManager {
     }
 
     /**
-     * target页面是否自动弹框
+     * target页area是否自动弹框
      */
     fun getTargetPop(): Boolean {
         return SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)
@@ -577,7 +577,7 @@ object SharedManager {
     /************************TS004************************************/
 
     /**
-     * TS004主页面-black hot
+     * TS004主页area-black hot
      */
     fun getHotMode(): Int {
         return SPUtils.getInstance().getInt(SP_HOT_MODE, 1)
@@ -588,7 +588,7 @@ object SharedManager {
     }
 
     /**
-     * TS004和TS001相互switch device 0:都无连接  1:TS001连接  2:TS004连接
+     * TS004和TS001相互switch device 0:都无connection  1:TS001connection  2:TS004connection
      */
     fun getChangeDevice(): Int {
         return SPUtils.getInstance().getInt(SP_CHANGE_DEVICE, 0)

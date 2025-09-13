@@ -68,9 +68,9 @@ data class CameraItemBean(
         const val DELAY_TIME_3 = 3 // delayed3秒
         const val DELAY_TIME_6 = 6 // delayed6秒
 
-        // 温度模式
-        const val TYPE_TMP_ZD = -1 // 自动识别模式
-        const val TYPE_TMP_C = 1 // normal temperature模式
-        const val TYPE_TMP_H = 0 // 高温模式
+        // temperaturemode
+        const val TYPE_TMP_ZD = -1 // 自动识别mode
+        const val TYPE_TMP_C = 1 // normal temperaturemode
+        const val TYPE_TMP_H = 0 // 高温mode
     }
 }

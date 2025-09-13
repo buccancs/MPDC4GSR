@@ -17,12 +17,12 @@ public object AnimaUtils {
     /**
      * 获取一个旋转动画
      *
-     * @param fromDegrees       开始角度
-     * @param toDegrees         结束角度
-     * @param pivotXType        旋转中心点X轴坐标相对类型
-     * @param pivotXValue       旋转中心点X轴坐标
-     * @param pivotYType        旋转中心点Y轴坐标相对类型
-     * @param pivotYValue       旋转中心点Y轴坐标
+     * @param fromDegrees       start角度
+     * @param toDegrees         end角度
+     * @param pivotXType        旋转centerpointX轴坐标相对type
+     * @param pivotXValue       旋转centerpointX轴坐标
+     * @param pivotYType        旋转centerpointY轴坐标相对type
+     * @param pivotYValue       旋转centerpointY轴坐标
      * @param durationMillis    持续时间
      * @param animationListener 动画监听器
      * @return 一个旋转动画
@@ -54,11 +54,11 @@ public object AnimaUtils {
     }
 
     /**
-     * 获取一个根据视图自身中心点旋转的动画
+     * 获取一个根据视图自身centerpoint旋转的动画
      *
      * @param durationMillis    动画持续时间
      * @param animationListener 动画监听器
-     * @return 一个根据中心点旋转的动画
+     * @return 一个根据centerpoint旋转的动画
      */
     fun getRotateAnimationByCenter(
         durationMillis: Long,
@@ -77,20 +77,20 @@ public object AnimaUtils {
     }
 
     /**
-     * 获取一个根据中心点旋转的动画
+     * 获取一个根据centerpoint旋转的动画
      *
      * @param duration 动画持续时间
-     * @return 一个根据中心点旋转的动画
+     * @return 一个根据centerpoint旋转的动画
      */
     fun getRotateAnimationByCenter(duration: Long): RotateAnimation {
         return getRotateAnimationByCenter(duration, null)
     }
 
     /**
-     * 获取一个根据视图自身中心点旋转的动画
+     * 获取一个根据视图自身centerpoint旋转的动画
      *
      * @param animationListener 动画监听器
-     * @return 一个根据中心点旋转的动画
+     * @return 一个根据centerpoint旋转的动画
      */
     fun getRotateAnimationByCenter(animationListener: Animation.AnimationListener?): RotateAnimation {
         return getRotateAnimationByCenter(
@@ -100,9 +100,9 @@ public object AnimaUtils {
     }
 
     /**
-     * 获取一个根据中心点旋转的动画
+     * 获取一个根据centerpoint旋转的动画
      *
-     * @return 一个根据中心点旋转的动画，默认持续时间为DEFAULT_ANIMATION_DURATION
+     * @return 一个根据centerpoint旋转的动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     val rotateAnimationByCenter: RotateAnimation
         get() = getRotateAnimationByCenter(DEFAULT_ANIMATION_DURATION, null)
@@ -110,8 +110,8 @@ public object AnimaUtils {
     /**
      * 获取一个透明度渐变动画
      *
-     * @param fromAlpha         开始时的透明度
-     * @param toAlpha           结束时的透明度都
+     * @param fromAlpha         start时的透明度
+     * @param toAlpha           end时的透明度都
      * @param durationMillis    持续时间
      * @param animationListener 动画监听器
      * @return 一个透明度渐变动画
@@ -133,8 +133,8 @@ public object AnimaUtils {
     /**
      * 获取一个透明度渐变动画
      *
-     * @param fromAlpha      开始时的透明度
-     * @param toAlpha        结束时的透明度都
+     * @param fromAlpha      start时的透明度
+     * @param toAlpha        end时的透明度都
      * @param durationMillis 持续时间
      * @return 一个透明度渐变动画
      */
@@ -149,8 +149,8 @@ public object AnimaUtils {
     /**
      * 获取一个透明度渐变动画
      *
-     * @param fromAlpha         开始时的透明度
-     * @param toAlpha           结束时的透明度都
+     * @param fromAlpha         start时的透明度
+     * @param toAlpha           end时的透明度都
      * @param animationListener 动画监听器
      * @return 一个透明度渐变动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
@@ -170,8 +170,8 @@ public object AnimaUtils {
     /**
      * 获取一个透明度渐变动画
      *
-     * @param fromAlpha 开始时的透明度
-     * @param toAlpha   结束时的透明度都
+     * @param fromAlpha start时的透明度
+     * @param toAlpha   end时的透明度都
      * @return 一个透明度渐变动画，默认持续时间为DEFAULT_ANIMATION_DURATION
      */
     fun getAlphaAnimation(

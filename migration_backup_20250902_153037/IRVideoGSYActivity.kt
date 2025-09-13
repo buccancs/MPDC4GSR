@@ -45,7 +45,7 @@ class IRVideoGSYActivity : BaseActivity() {
         isRemote = intent.getBooleanExtra("isRemote", false)
         data = intent.getParcelableExtra("data") ?: throw NullPointerException("传递 data")
 
-        cl_bottom.isVisible = isRemote // 查看远端时底部才有3个按钮
+        cl_bottom.isVisible = isRemote // 查看远端时底部才有3个button
 
         if (!isRemote) {
             title_view.setRightDrawable(R.drawable.ic_toolbar_info_svg)
@@ -95,7 +95,7 @@ class IRVideoGSYActivity : BaseActivity() {
         GSYVideoOptionBuilder()
             .setUrl(url)
             .build(gsy_play)
-        // 界面设置
+        // 界areasettings
         gsy_play.isNeedShowWifiTip = false // 不显示消耗流量弹框
         gsy_play.titleTextView.visibility = View.GONE
         gsy_play.backButton.visibility = View.GONE

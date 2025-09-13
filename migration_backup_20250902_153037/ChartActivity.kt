@@ -24,11 +24,11 @@
 //
 //    override fun initView() {
 //        setTitleText("图表")
-//        //初始数据
+//        //初始data
 //        aa_chart_view.aa_drawChartWithChartOptions(
 //            configureSpecialStyleMarkerOfSingleDataElementChart().aa_toAAOptions()
 //        )
-//        //动态更新
+//        //动态update
 //        lifecycleScope.launch {
 //            flow {
 //                repeat(40) {
@@ -74,7 +74,7 @@
 //            .backgroundColor("#3598E8")
 //            .yAxisTitle("")
 //            .axesTextColor("#FFFFFF")
-//            .dataLabelsEnabled(false)//坐标点是否显示值
+//            .dataLabelsEnabled(false)//坐标point是否显示值
 //            .tooltipEnabled(true)
 //            .markerRadius(0f)
 //            .scrollablePlotArea(AAScrollablePlotArea().minWidth(10).minHeight(10))

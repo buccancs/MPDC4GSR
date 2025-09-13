@@ -27,7 +27,7 @@ import com.github.gzuliyujiang.wheelview.contract.WheelFormatter;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 
 /**
- * 数字选择器
+ * 数字selection器
  *
  * @author 李玉江[QQ:1032694760]
  * @since 2015/10/24

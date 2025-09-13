@@ -29,8 +29,8 @@ import kotlinx.android.synthetic.main.fragment_thermal_ir.*
 
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
     /**
-     * 从上一界面传递过来的，当前是否为 TC007 设备类型.
-     * true-TC007 false-其他插件式设备
+     * 从上一界area传递过来的，当前是否为 TC007 devicetype.
+     * true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
@@ -60,7 +60,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+                    // 要是当前已connection TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     } else
@@ -112,14 +112,14 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     }
 
     /**
-     * 主动检测连接设备
+     * 主动检测connectiondevice
      */
     private fun checkConnect() {
         if (DeviceTools.isConnect(isAutoRequest = false)) {
             connected()
         } else {
             disConnected()
-            if (DeviceTools.findUsbDevice() != null) { // 找到设备,但不能连接
+            if (DeviceTools.findUsbDevice() != null) { // 找到device,但不能connection
                 showConnectTip()
             }
         }
@@ -145,7 +145,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
             tv_main_enter -> {
                 if (!DeviceTools.isConnect()) {
-                    // 没有接入设备不需要提示，有系统授权提示框
+                    // 没有接入device不需要tip，有系统授权tip框
                     if (DeviceTools.findUsbDevice() == null) {
                         activity?.let {
                             TipDialog.Builder(it)
@@ -196,12 +196,12 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
             }
-            cl_07_connect_tips -> { // TC007 连接提示
+            cl_07_connect_tips -> { // TC007 connectiontip
                 ARouter.getInstance().build(RouterConfig.IR_CONNECT_TIPS)
                     .withBoolean(ExtraKeyConfig.IS_TC007, true)
                     .navigation(requireContext())
             }
-            tv_07_connect -> { // TC007 连接设备
+            tv_07_connect -> { // TC007 connectiondevice
                 ARouter.getInstance()
                     .build(RouterConfig.IR_DEVICE_ADD)
                     .withBoolean("isTS004", false)
@@ -214,7 +214,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
 
     private var isCancelUpdateVersion = false
 
-    // 针对android10 usb连接问题,提供android 27版本
+    // 针对android10 usbconnection问题,提供android 27version
     private fun showConnectTip() {
         // targetSdk高于27且android os为10
         if (requireContext().applicationInfo.targetSdkVersion >= Build.VERSION_CODES.P &&

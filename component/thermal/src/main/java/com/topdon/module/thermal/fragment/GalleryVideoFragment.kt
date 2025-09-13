@@ -12,7 +12,7 @@ import com.topdon.module.thermal.adapter.GalleryAdapter
 import com.topdon.module.thermal.viewmodel.GalleryViewModel
 
 /**
-\1图片
+image
  */
 /**
  * Gallery video fragment for thermal imaging components.
@@ -47,7 +47,7 @@ class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
                     index: Int,
                     path: String,
                 ) {
-                    TipDialog.Builder(requireContext()).setMessage("导出图片")
+                    TipDialog.Builder(requireContext()).setMessage("exportimage")
                         .setPositiveListener("分享") {
 //                            share(path)
                         }

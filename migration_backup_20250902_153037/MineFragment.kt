@@ -59,7 +59,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * 公共设置页，即公共 “我的”
+ * 公共settings页，即公共 “我的”
  * [MoreActivity] - TS004 “我的”
  * [MoreFragment] - 插件式 “我的”
  *
@@ -67,7 +67,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class MineFragment : BaseFragment(), View.OnClickListener {
     /**
-     * onResume() 阶段是否需要刷新登录状态相关 UI.
+     * onResume() 阶段是否需要refresh登录state相关 UI.
      */
     private var isNeedRefreshLogin = false
 
@@ -84,19 +84,19 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         setting_electronic_manual.setOnClickListener(this)
         setting_faq.setOnClickListener(this)
         setting_feedback.setOnClickListener(this)
-        setting_item_unit.setOnClickListener(this) // 温度单温
+        setting_item_unit.setOnClickListener(this) // temperature单温
         drag_customer_view.setOnClickListener(this)
 
         view_winter_point.isVisible = !SharedManager.hasClickWinter
 
-        if (BaseApplication.instance.isDomestic()) { // 国内版不给切换语言
+        if (BaseApplication.instance.isDomestic()) { // 国内版不给switch语言
             setting_item_language.visibility = View.GONE
         }
 
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+                    // 要是当前已connection TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(false)
                     }
@@ -169,7 +169,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     loginAction()
                 }
             }
-            setting_electronic_manual -> { // 电子说明书
+            setting_electronic_manual -> { // 电子description书
                 ARouter.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
                 ).withInt(Constants.SETTING_TYPE, Constants.SETTING_BOOK).navigation(requireContext())
@@ -196,16 +196,16 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     loginAction()
                 }
             }
-            setting_item_unit -> { // 温度单位
+            setting_item_unit -> { // temperature单位
                 ARouter.getInstance().build(RouterConfig.UNIT).navigation(requireContext())
             }
-            setting_item_version -> { // 版本
+            setting_item_version -> { // version
                 ARouter.getInstance().build(RouterConfig.VERSION).navigation(requireContext())
             }
             setting_item_language -> { // 语言
                 languagePickResult.launch(Intent(requireContext(), LanguageActivity::class.java))
             }
-            setting_item_clear -> { // 清除缓存，实际已隐藏
+            setting_item_clear -> { // 清除cache，实际已隐藏
                 clearCache()
             }
             drag_customer_view -> { // 客服
@@ -229,7 +229,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
     private fun checkLoginResult() {
         if (LMS.getInstance().isLogin) {
-            // 登录成功
+            // 登录success
             LMS.getInstance().getUserInfo { userinfo: CommonBean ->
                 try {
                     val json = userinfo.data
@@ -243,15 +243,15 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                         headUrl = infoData.avatar,
                     )
 
-                    // 更新ui
+                    // updateui
                     changeLoginStyle()
                 } catch (e: Exception) {
-                    XLog.e(" 登录异常: ${e.message}")
+                    XLog.e(" 登录exception: ${e.message}")
                 }
             }
         } else {
-            // 登录失败
-            XLog.e(" 登录失败")
+            // 登录failed
+            XLog.e(" 登录failed")
             changeLoginStyle()
             setting_user_img_night.setImageResource(R.mipmap.ic_default_user_head) // 恢复默认头像
         }
@@ -311,7 +311,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
     }
 
     /**
-     * 清除缓存
+     * 清除cache
      */
     private fun clearCache() {
         lifecycleScope.launch {
@@ -321,7 +321,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     AppDatabase.getInstance().thermalDao().deleteByUserId(SharedManager.getUserId())
                     CleanUtils.cleanExternalCache()
                 } catch (e: Exception) {
-                    XLog.w("清除缓存异常: ${e.message}")
+                    XLog.w("清除cacheexception: ${e.message}")
                 }
                 delay(1000)
             }

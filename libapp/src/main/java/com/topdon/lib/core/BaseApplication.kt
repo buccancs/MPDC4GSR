@@ -52,17 +52,17 @@ abstract class BaseApplication : Application() {
     var tau_data_L: ByteArray? = null
 
     var activitys = arrayListOf<Activity>()
-    var hasOtgShow = false // otg提示只出现一次
+    var hasOtgShow = false // otgtip只出现一次
 
     /**
-     * 获取软件encoding.
+     * 获取softwareencoding.
      */
     abstract fun getSoftWareCode(): String
 
     /**
      * 是否国内渠道。
      *
-     * 国内渠道一些逻辑不同，如国内渠道可以应用内升级，权限申请前有提示弹窗等。
+     * 国内渠道一些逻辑不同，如国内渠道可以应用内升级，权限申请前有tip弹窗等。
      * 根据 2024/8/27 邮件结论，“热视界和电小搭其实没有形成销售，可以不用维护。”
      * @return true-国内渠道 false-非国内渠道
      */
@@ -83,7 +83,7 @@ abstract class BaseApplication : Application() {
 
     open fun initWebSocket() {
         connectWebSocket()
-        // 注册网络变更广播 - using modern network callback for Android 10+
+        // 注册network变更广播 - using modern network callback for Android 10+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkRequest =
@@ -123,7 +123,7 @@ abstract class BaseApplication : Application() {
 
     private fun connectWebSocket() {
         val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return
-        Log.i("WebSocket", "current连接 Wifi SSID: $ssid")
+        Log.i("WebSocket", "currentconnection Wifi SSID: $ssid")
         if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
             SharedManager.hasTS004 = true
             WebSocketProxy.getInstance().startWebSocket(ssid)
@@ -141,7 +141,7 @@ abstract class BaseApplication : Application() {
     }
 
     /**
-     * 解析socket消息
+     * parsingsocketmessage
      * @param msgJson
      */
     private fun parserSocketMessage(msgJson: String) {
@@ -154,11 +154,11 @@ abstract class BaseApplication : Application() {
                     autoSaveNewest(false)
                 }
 
-                WsCmdConstants.AR_COMMAND_VRECORD -> { // 开始或结束recording事件
+                WsCmdConstants.AR_COMMAND_VRECORD -> { // start或endrecording事件
                     try {
                         val data: JSONObject = JSONObject(msgJson).getJSONObject("data")
                         val enable: Boolean = data.getBoolean("enable")
-                        if (!enable) { // 结束才同步
+                        if (!enable) { // end才同步
                             autoSaveNewest(true)
                         }
                     } catch (_: Exception) {
@@ -214,13 +214,13 @@ abstract class BaseApplication : Application() {
     }
 
     /**
-     * settingswebview的android9以上系统的多进程兼容性处理
+     * settingswebview的android9以上系统的多process兼容性processing
      */
     @RequiresApi(api = 28)
     open fun webviewSetPath(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val processName = getProcessName(context)
-            if (!applicationContext.packageName.equals(processName)) { // 判断不等于默认进程名称
+            if (!applicationContext.packageName.equals(processName)) { // 判断不等于默认processname
                 WebView.setDataDirectorySuffix(processName!!)
             }
         }
@@ -237,7 +237,7 @@ abstract class BaseApplication : Application() {
         return null
     }
 
-    // clear无用数据
+    // clear无用data
     fun clearDb() {
         GlobalScope.launch(Dispatchers.Default) {
             try {

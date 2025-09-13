@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 消息发布者、被观察者
+ * message发布者、被观察者
  * <p>
  * date: 2019/8/3 13:14
  * author: chuanfeng.bi
@@ -27,8 +27,8 @@ public final class Observable {
     private final ObserverMethodHelper helper;
 
     /**
-     * @param posterDispatcher            方法分发者
-     * @param isObserveAnnotationRequired 是否强制使用{@link Observe}注解才会收到被观察者的消息。强制使用的话，性能会好一些
+     * @param posterDispatcher            method分发者
+     * @param isObserveAnnotationRequired 是否强制使用{@link Observe}注解才会收到被观察者的message。强制使用的话，性能会好一些
      */
     public Observable(@NonNull PosterDispatcher posterDispatcher, boolean isObserveAnnotationRequired) {
         this.posterDispatcher = posterDispatcher;
@@ -36,14 +36,14 @@ public final class Observable {
     }
 
     /**
-     * 方法分发者
+     * method分发者
      */
     public PosterDispatcher getPosterDispatcher() {
         return posterDispatcher;
     }
 
     /**
-     * 将观察者添加到注册集合里
+     * 将观察者add到注册集合里
      *
      * @param observer 需要注册的观察者
      */
@@ -126,19 +126,19 @@ public final class Observable {
     }
 
     /**
-     * 通知所有观察者事件变化
+     * notification所有观察者事件变化
      *
-     * @param methodName 要调用观察者的方法名
-     * @param parameters 方法参数信息对
+     * @param methodName 要调用观察者的method名
+     * @param parameters methodparameterinfo对
      */
     public void notifyObservers(@NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         notifyObservers(new MethodInfo(methodName, parameters));
     }
 
     /**
-     * 通知所有观察者事件变化
+     * notification所有观察者事件变化
      *
-     * @param info 方法信息实例
+     * @param info methodinfo实例
      */
     public void notifyObservers(@NonNull MethodInfo info) {
         List<ObserverInfo> infos = getObserverInfos();

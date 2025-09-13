@@ -125,7 +125,7 @@ class GuideUsbManager {
             } else {
                 for (int i = 0; i < count; i++) {
                     UsbInterface usbInterface = mUsbDevice.getInterface(i);
-                    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
+                    // 根据手上的device做一些判断，其实这些info都可以在enum到device时打印出来
                     if (usbInterface.getEndpointCount() == 2 && usbInterface.getAlternateSetting() == 1) {
                         mUsbInterface = usbInterface;
                         mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE;
@@ -152,7 +152,7 @@ class GuideUsbManager {
             } else {
                 for (int i = 0; i < count; i++) {
                     UsbInterface usbInterface = mUsbDevice.getInterface(i);
-                    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
+                    // 根据手上的device做一些判断，其实这些info都可以在enum到device时打印出来
                     if (usbInterface.getEndpointCount() == 2 && usbInterface.getAlternateSetting() == 1) {
                         mUsbInterface = usbInterface;
                         mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE;
@@ -176,7 +176,7 @@ class GuideUsbManager {
             } else {
                 for (i in 0 until count) {
                     val usbInterface = mUsbDevice!!.getInterface(i)
-                    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
+                    // 根据手上的device做一些判断，其实这些info都可以在enum到device时打印出来
                     if (usbInterface.endpointCount == 3 && usbInterface.alternateSetting == 0) {
                         mUsbInterface = usbInterface
                         mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE
@@ -287,7 +287,7 @@ class GuideUsbManager {
             return false
         }
 
-        // 发送升级数据
+        // 发送升级data
         if (data.size <= PAGE_SIZE) {
             if (!send(data)) {
                 return false

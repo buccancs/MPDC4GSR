@@ -27,7 +27,7 @@ public class ZoomableDraggableView extends View {
     private float focusX, focusY;
     private float lastX, lastY;
 
-    //原始图片
+    //原始image
     private Bitmap originalBitmap;
     private int imageWidth;
     private int imageHeight;

@@ -8,13 +8,13 @@ import com.topdon.menu.R as MenuR
 import com.topdon.menu.constant.TargetType
 
 /**
- * observation模式-menu4-target menuAdapter used for.
+ * observationmode-menu4-target menuAdapter used for.
  *
- * measurement mode(MODE)、target(STYLE)、targetcolor(COLOR)、删除(DELETE)、帮助(HELP)
+ * measurement mode(MODE)、target(STYLE)、targetcolor(COLOR)、delete(DELETE)、帮助(HELP)
  *
- * - measurement mode(MODE)、target(STYLE) 捆绑，要么都selected，要么都不selected，与 删除(DELETE) 互斥
- * - 删除(DELETE) 与 {measurement mode(MODE)、target(STYLE)、targetcolor(COLOR)} 互斥
- * - targetcolor(COLOR) effective且未处于删除亮，color为默认绿色或处于删除不亮，丢给上层维护这个state
+ * - measurement mode(MODE)、target(STYLE) 捆绑，要么都selected，要么都不selected，与 delete(DELETE) 互斥
+ * - delete(DELETE) 与 {measurement mode(MODE)、target(STYLE)、targetcolor(COLOR)} 互斥
+ * - targetcolor(COLOR) effective且未处于delete亮，color为默认绿色或处于delete不亮，丢给上层维护这个state
  * - 帮助(HELP) 显示弹框亮，close弹框不亮，丢给上层维护这个state
  *
  * Created by LCG on 2024/11/28.

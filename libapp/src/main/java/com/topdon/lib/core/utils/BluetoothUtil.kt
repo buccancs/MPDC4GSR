@@ -20,7 +20,7 @@ import com.topdon.lib.core.tools.PermissionTool
 
 object BluetoothUtil {
     /**
-     * 在给定 activity 生命周期内添加 蓝牙 开关state监听.
+     * 在给定 activity 生命周期内add bluetooth 开关state监听.
      */
     fun addBtStateListener(
         activity: ComponentActivity,
@@ -57,7 +57,7 @@ object BluetoothUtil {
     private val scanCallback = MyScanCallback()
 
     /**
-     * settings低功耗蓝牙搜索回调.
+     * settings低功耗bluetooth搜索回调.
      */
     fun setLeScanListener(
         isTS004: Boolean,
@@ -68,22 +68,22 @@ object BluetoothUtil {
     }
 
     /**
-     * 开启低功耗蓝牙搜索，调用前需确保拥有相应权限且开启蓝牙.
-     * @return true-调用成功 false-缺少权限或蓝牙未开启
+     * 开启低功耗bluetooth搜索，调用前需确保拥有相应权限且开启bluetooth.
+     * @return true-调用success false-缺少权限或bluetooth未开启
      */
     @SuppressLint("MissingPermission")
     fun startLeScan(context: Context): Boolean {
         XLog.i("startLeScan()")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.e("开始蓝牙扫描-没有相应定位或蓝牙权限!")
+            XLog.e("startbluetooth扫描-没有相应定位或bluetooth权限!")
             return false
         }
 
         val btAdapter: BluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
-            XLog.e("开始蓝牙扫描-蓝牙未开启")
+            XLog.e("startbluetooth扫描-bluetooth未开启")
             return false
         }
 
@@ -98,22 +98,22 @@ object BluetoothUtil {
     }
 
     /**
-     * 停止低功耗蓝牙搜索，调用前需确保拥有相应权限且开启蓝牙.
-     * @return true-调用成功 false-缺少权限或蓝牙未开启
+     * stop低功耗bluetooth搜索，调用前需确保拥有相应权限且开启bluetooth.
+     * @return true-调用success false-缺少权限或bluetooth未开启
      */
     @SuppressLint("MissingPermission")
     fun stopLeScan(context: Context): Boolean {
         XLog.i("stopBtScan()")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.w("停止蓝牙扫描-没有相应定位或蓝牙权限!")
+            XLog.w("stopbluetooth扫描-没有相应定位或bluetooth权限!")
             return false
         }
 
         val btAdapter: BluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
-            XLog.w("停止蓝牙扫描-蓝牙未开启")
+            XLog.w("stopbluetooth扫描-bluetooth未开启")
             return false
         }
 
@@ -132,13 +132,13 @@ object BluetoothUtil {
         ) {
             val name: String = result?.device?.name ?: return
             if (name.startsWith(if (isTS004) DeviceConfig.TS004_NAME_START else DeviceConfig.TC007_NAME_START)) {
-                XLog.v("蓝牙扫描出一个目标设备：$name")
+                XLog.v("bluetooth扫描出一个目标device：$name")
                 listener?.invoke(name)
             }
         }
 
         override fun onScanFailed(errorCode: Int) {
-            XLog.e("蓝牙扫描失败！$errorCode")
+            XLog.e("bluetooth扫描failed！$errorCode")
         }
     }
 }

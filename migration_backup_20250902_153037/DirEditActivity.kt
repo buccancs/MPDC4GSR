@@ -105,7 +105,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             iv_exit -> showExitTipsDialog()
-            iv_save -> { // 保存
+            iv_save -> { // save
                 val houseDetect: HouseDetect = viewModel.detectLD.value ?: return
                 showLoadingDialog()
                 lifecycleScope.launch(Dispatchers.IO) {
@@ -122,11 +122,11 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
             view_select_all -> { // 全选、取消全选
                 adapter.isSelectAll = !adapter.isSelectAll
             }
-            view_copy -> { // 复制
+            view_copy -> { // copy
                 adapter.copySelect()
                 TToast.shortToast(this@DirEditActivity, R.string.ts004_copy_success)
             }
-            view_del -> { // 删除
+            view_del -> { // delete
                 TipDialog.Builder(this)
                     .setTitleMessage(getString(R.string.tips_del_item_title))
                     .setMessage(R.string.tips_del_item_content)
@@ -158,7 +158,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示退出不保存提示弹框
+     * 显示退出不savetip弹框
      */
     private fun showExitTipsDialog() {
         TipDialog.Builder(this)
@@ -215,7 +215,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
         var dataList: ArrayList<DirDetect> = ArrayList(0)
 
         /**
-         * 当前已选中的数量.
+         * 当前已selected的数量.
          */
         private var selectCount = 0
 
@@ -241,7 +241,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
             }
 
         /**
-         * 一个 item 选中或取消选中事件监听.
+         * 一个 item selected或取消selected事件监听.
          */
         var onSelectChangeListener: ((selectSize: Int) -> Unit)? = null
 
@@ -251,7 +251,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
         }
 
         /**
-         * 删除选中的目录.
+         * deleteselected的目录.
          */
         fun delSelect() {
             selectCount = 0
@@ -270,7 +270,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
         }
 
         /**
-         * 复制选中的目录.
+         * copyselected的目录.
          */
         fun copySelect() {
             selectCount *= 2

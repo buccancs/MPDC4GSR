@@ -17,16 +17,16 @@ import com.topdon.lib.core.utils.ScreenUtil
 import kotlinx.android.synthetic.main.item_menu_3d.view.*
 
 /**
- * 二级菜单 RecyclerView 所用 Adapter.
+ * 二级menu RecyclerView 所用 Adapter.
  */
 class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
     /**
-     * 当前选中 item index，用于实现选中效果.
+     * 当前selected item index，用于implementationselected效果.
      */
     private var selectIndex = 0
 
     /**
-     * item 点击事件监听.
+     * item click事件监听.
      */
     var onItemClickListener: ((position: Int) -> Unit)? = null
 
@@ -120,7 +120,7 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
             holder.itemView.iv_pseudo.visibility = if (position == selectIndex) View.VISIBLE else View.GONE
         }
 
-        // 单独设置删除文本颜色
+        // 单独settingsdelete文本颜色
         if (type == Type.MARK && position == MARK_ARRAY.size - 1) {
             holder.itemView.tv_menu.setTextColor(0x66ffffff)
         }
@@ -204,17 +204,17 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
         VISUAL,
 
         /**
-         * 标定.
+         * calibration.
          */
         MARK,
 
         /**
-         * 伪彩.
+         * pseudo color.
          */
         PSEUDO,
 
         /**
-         * 模式.
+         * mode.
          */
         MODE,
     }

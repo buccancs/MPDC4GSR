@@ -98,7 +98,7 @@ public class ExcelUtil {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("导出",UriUtils.uri2File(uri).getAbsolutePath());
+                    Log.w("export",UriUtils.uri2File(uri).getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
                 }else {
                     return null;
@@ -120,17 +120,17 @@ public class ExcelUtil {
     public static String exportExcel(ArrayList<ThermalEntity> listData,boolean isPoint) {
         boolean isShowC = SharedManager.INSTANCE.getTemperature() == 1;
         try {
-            // 创建excel xlsx格式
+            // createexcel xlsxformat
             Workbook wb = new XSSFWorkbook();
-            // 创建工作表
+            // create工作表
             Sheet sheet = wb.createSheet();
             String[] title = {Utils.getApp().getString(R.string.detail_date), Utils.getApp().getString(R.string.chart_temperature_low), Utils.getApp().getString(R.string.chart_temperature_high)};
             if (isPoint){
                 title = new String[]{Utils.getApp().getString(R.string.detail_date), Utils.getApp().getString(R.string.chart_temperature)};
             }
-            //创建行对象
+            //create行对象
             Row row = sheet.createRow(0);
-            // 设置有效数据的行数和列数
+            // settings有效data的行数和列数
             int colNum = title.length;
             CellStyle titleStyle = wb.createCellStyle();
             titleStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
@@ -151,12 +151,12 @@ public class ExcelUtil {
                 //第一行
                 cell1.setCellValue(title[i]);
             }
-            // 导入数据
+            // importdata
             for (int rowNum = 0; rowNum < listData.size(); rowNum++) {
 
-                // 之所以rowNum + 1 是因为要设置第二行单元格
+                // 之所以rowNum + 1 是因为要settings第二行单元格
                 row = sheet.createRow(rowNum + 1);
-                // 设置单元格显示宽度
+                // settings单元格显示宽度
                 row.setHeightInPoints(28f);
 
                 ThermalEntity bean = listData.get(rowNum);
@@ -171,7 +171,7 @@ public class ExcelUtil {
                                 cell.setCellValue(bean.getTime());
                                 break;
                             case 1:
-                                //温度
+                                //temperature
                                 cell.setCellStyle(contentStyle);
                                 cell.setCellValue(UnitTools.showC(bean.getMinTemp()));
                                 break;
@@ -183,12 +183,12 @@ public class ExcelUtil {
                                 cell.setCellValue(bean.getTime());
                                 break;
                             case 1:
-                                //最低温
+                                //minimum温
                                 cell.setCellStyle(contentStyle);
                                 cell.setCellValue(UnitTools.showC(bean.getMinTemp()));
                                 break;
                             case 2:
-                                //最高温
+                                //maximum温
                                 cell.setCellStyle(contentStyle);
                                 cell.setCellValue(UnitTools.showC(bean.getMaxTemp(),isShowC));
                                 break;
@@ -221,7 +221,7 @@ public class ExcelUtil {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("导出",UriUtils.uri2File(uri).getAbsolutePath());
+                    Log.w("export",UriUtils.uri2File(uri).getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
                 }else {
                     return null;

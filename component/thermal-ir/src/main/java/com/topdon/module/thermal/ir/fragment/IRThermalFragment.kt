@@ -32,8 +32,8 @@ import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
  */
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
     /**
-\1从上一interface传递过来的，当前是否为 TC007 device类型.
-\1true-TC007 false-其他插件式device
+从上一interface传递过来的，当前是否为 TC007 devicetype.
+true-TC007 false-其他插件式device
      */
     private var isTC007 = false
 
@@ -83,7 +83,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-\1要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+要是当前已connection TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     } else
@@ -135,14 +135,14 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     }
 
     /**
-\1主动检测连接device
+主动检测connectiondevice
      */
     private fun checkConnect() {
         if (DeviceTools.isConnect(isAutoRequest = false)) {
             connected()
         } else {
             disConnected()
-            if (DeviceTools.findUsbDevice() != null) { // 找到设备,但不能连接
+            if (DeviceTools.findUsbDevice() != null) { // 找到device,但不能connection
                 showConnectTip()
             }
         }
@@ -168,7 +168,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
             tvMainEnter -> {
                 if (!DeviceTools.isConnect()) {
-\1没有接入device不需要提示，有系统授权提示框
+没有接入device不需要tip，有系统授权tip框
                     if (DeviceTools.findUsbDevice() == null) {
                         activity?.let {
                             TipDialog.Builder(it)
@@ -199,7 +199,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                                         doNotAskAgain: Boolean,
                                     ) {
                                         if (doNotAskAgain) {
-\1拒绝授权并且不再提醒
+拒绝授权并且不再提醒
                                             context?.let {
                                                 TipDialog.Builder(it)
                                                     .setTitleMessage(getString(R.string.app_tip))
@@ -219,12 +219,12 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
             }
-            cl07ConnectTips -> { // TC007 连接提示
+            cl07ConnectTips -> { // TC007 connectiontip
                 NavigationManager.getInstance().build(RouterConfig.IR_CONNECT_TIPS)
                     .withBoolean(ExtraKeyConfig.IS_TC007, true)
                     .navigation(requireContext())
             }
-            tv07Connect -> { // TC007 连接设备
+            tv07Connect -> { // TC007 connectiondevice
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_DEVICE_ADD)
                     .withBoolean("isTS004", false)
@@ -237,9 +237,9 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
 
     private var isCancelUpdateVersion = false
 
-\1针对android10 usb连接问题,提供android 27版本
+针对android10 usbconnection问题,提供android 27version
     private fun showConnectTip() {
-\1targetSdk高于27且android os为10
+targetSdk高于27且android os为10
         if (requireContext().applicationInfo.targetSdkVersion >= Build.VERSION_CODES.P &&
             Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
         ) {
@@ -305,7 +305,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     }
 
     /**
-\1动态申请权限
+动态申请权限
      */
     private fun initStoragePermission(permissionList: List<String>) {
     }

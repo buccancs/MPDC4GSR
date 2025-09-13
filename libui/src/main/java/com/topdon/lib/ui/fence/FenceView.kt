@@ -23,7 +23,7 @@ class FenceView : View {
 
     private val mPaint by lazy { Paint() }
     private val rect: Rect = Rect(0, 0, 0, 0) // 手动绘制矩形
-    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } // 线宽度
+    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } // line宽度
 
     constructor (context: Context) : super(context)
 

@@ -135,7 +135,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             iv_exit -> showExitTipsDialog()
-            iv_save -> { // 保存
+            iv_save -> { // save
                 val dirDetect: DirDetect = viewModel.dirLD.value ?: return
                 showLoadingDialog()
                 lifecycleScope.launch(Dispatchers.IO) {
@@ -149,9 +149,9 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
-            cl_dir -> { // 展开收起切换
+            cl_dir -> { // 展开收起switch
                 adapter.isExpand = !adapter.isExpand
-                if (adapter.isExpand) { // 切换到展开
+                if (adapter.isExpand) { // switch到展开
                     iv_triangle.setImageResource(R.drawable.svg_house_triangle_up)
                     cl_dir.setBackgroundResource(R.drawable.bg_corners10_top_solid_23202e)
                 } else {
@@ -162,11 +162,11 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             view_select_all -> { // 全选、取消全选
                 adapter.isSelectAll = !adapter.isSelectAll
             }
-            view_copy -> { // 复制
+            view_copy -> { // copy
                 adapter.copySelect()
                 TToast.shortToast(this@ItemEditActivity, R.string.ts004_copy_success)
             }
-            view_del -> { // 删除
+            view_del -> { // delete
                 TipDialog.Builder(this)
                     .setTitleMessage(getString(R.string.tips_del_item_title))
                     .setMessage(R.string.tips_del_item_content)
@@ -185,7 +185,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示退出不保存提示弹框
+     * 显示退出不savetip弹框
      */
     private fun showExitTipsDialog() {
         TipDialog.Builder(this)
@@ -219,7 +219,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             val fromPosition = viewHolder.bindingAdapterPosition
             val toPosition = target.bindingAdapterPosition
 
-            // 刷新 lastItem
+            // refresh lastItem
             if (fromPosition == dataList.size - 1 || toPosition == dataList.size - 1) {
                 if (viewHolder is MyAdapter.ViewHolder) {
                     viewHolder.refreshIsLast(toPosition == dataList.size - 1)
@@ -261,7 +261,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             }
 
         /**
-         * 当前已选中的数量.
+         * 当前已selected的数量.
          */
         private var selectCount = 0
 
@@ -287,12 +287,12 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             }
 
         /**
-         * 一个 item 选中或取消选中事件监听.
+         * 一个 item selected或取消selected事件监听.
          */
         var onSelectChangeListener: ((selectSize: Int) -> Unit)? = null
 
         /**
-         * 一个 item 状态变更事件监听.
+         * 一个 item state变更事件监听.
          */
         var onStateChangeListener: ((oldState: Int, newState: Int) -> Unit)? = null
 
@@ -302,7 +302,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
         }
 
         /**
-         * 删除选中的目录.
+         * deleteselected的目录.
          */
         fun delSelect() {
             selectCount = 0
@@ -318,7 +318,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                         onStateChangeListener?.invoke(itemDetect.state, 0)
                     }
                 }
-                if (isDelLast) { // 最后一个被删除时，旧最后一个需要刷新
+                if (isDelLast) { // 最后一个被delete时，旧最后一个需要refresh
                     notifyItemChanged(dataList.size - 1)
                 }
             }
@@ -326,7 +326,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
         }
 
         /**
-         * 复制选中的目录.
+         * copyselected的目录.
          */
         fun copySelect() {
             selectCount *= 2
@@ -346,7 +346,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     onStateChangeListener?.invoke(0, oldItem.state)
                 }
             }
-            if (isCopyLast) { // 复制的内容包含最后一个时，旧的最后一个需要刷新
+            if (isCopyLast) { // copy的内容包含最后一个时，旧的最后一个需要refresh
                 notifyItemChanged(dataList.size - 2)
             }
             onSelectChangeListener?.invoke(selectCount)

@@ -41,14 +41,14 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 /**
-\1temperature实时监控
+temperature实时监控
  */
 // Legacy ARouter route annotation - now using NavigationManager
 class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     private lateinit var binding: ActivityIrMonitorChartLiteBinding
 
     /**
-\1从上一interface传递过来的，当前选中的 点/线/面 信息.
+从上一interface传递过来的，当前selected的 point/line/area info.
      */
     private var selectBean: SelectPositionBean = SelectPositionBean()
 
@@ -80,7 +80,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
             irMonitorLiteFragment?.arguments = args
             supportFragmentManager.beginTransaction().add(R.id.thermal_lay, irMonitorLiteFragment!!).commit()
             delay(1000)
-            recordThermal() // 开始记录
+            recordThermal() // start记录
         }
     }
 
@@ -130,9 +130,9 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                             if (isFirstRead) {
                                 if (result.maxTemperature > 200f || result.minTemperature < -200f) {
                                     errorReadCount++
-                                    XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
+                                    XLog.w("第 $errorReadCount 次读取到exceptiondata，max = ${result.maxTemperature} min = ${result.minTemperature}")
                                     if (errorReadCount > 10) {
-                                        XLog.i("连续10次获取到异常数据，认为温度区域稳定")
+                                        XLog.i("连续10次获取到exceptiondata，认为temperatureregion稳定")
                                         isFirstRead = false
                                     }
                                     continue
@@ -150,7 +150,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                                 bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                                 bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                                 bean.createTime = System.currentTimeMillis()
-                                canUpdate = true // 可以开始更新记录
+                                canUpdate = true // 可以startupdate记录
                             }
                         }
                 }
@@ -164,7 +164,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        binding.mpChartView.highlightValue(null) // 关闭高亮点Marker
+        binding.mpChartView.highlightValue(null) // 关闭高亮pointMarker
     }
 
     override fun onPause() {
@@ -189,7 +189,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     private var recordJob: Job? = null
 
     /**
-\1开始每隔1秒记录一个temperaturedata到data库.
+start每隔1秒记录一个temperaturedata到data库.
      */
     private fun recordThermal() {
         recordJob =
@@ -228,7 +228,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                         binding.tvTime.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
-                XLog.w("停止记录, 数据量:$time")
+                XLog.w("stop记录, data量:$time")
             }
     }
 
@@ -236,11 +236,11 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     fun cameraEvent(event: DeviceCameraEvent) {
         when (event.action) {
             100 -> {
-\1准备image
+准备image
                 showCameraLoading()
             }
             101 -> {
-\1displayimage
+displayimage
                 dismissCameraLoading()
             }
         }
@@ -266,7 +266,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                     return temp!!
                 }
 
-\1getgain状态 PASS
+getgainstate PASS
             if (System.currentTimeMillis() - basicGainGetTime > 5000L)
                 {
                     try {
@@ -274,7 +274,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                 ?.basicGainGet(basicGainGetValue)
                     } catch (e: Exception) {
-                        XLog.e("增益获取失败")
+                        XLog.e("gain获取failed")
                     }
                     basicGainGetTime = System.currentTimeMillis()
                 }
@@ -307,7 +307,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                     "distance = " + params_array[4] + " hum = " + params_array[5],
             )
         } catch (e: Exception) {
-            XLog.e("$TAG--温度修正异常：${e.message}")
+            XLog.e("$TAG--temperature修正exception：${e.message}")
         } finally {
             return tempNew ?: 0f
         }

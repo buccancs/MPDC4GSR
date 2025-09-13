@@ -13,7 +13,7 @@ import androidx.annotation.RequiresApi;
 import java.util.List;
 
 /**
- * 搜索配置
+ * 搜索configuration
  * 
  * date: 2021/8/12 15:31
  * author: bichuanfeng
@@ -64,7 +64,7 @@ public class ScanConfiguration {
     }
 
     /**
-     * 是否将通过系统蓝牙配对连接的设备添加到搜索结果中（有些手机无法获取到系统已连接的蓝牙设备）
+     * 是否将通过系统bluetooth配对connection的deviceadd到搜索结果中（有些手机无法获取到系统已connection的bluetoothdevice）
      */
     public ScanConfiguration setAcceptSysConnectedDevice(boolean acceptSysConnectedDevice) {
         this.acceptSysConnectedDevice = acceptSysConnectedDevice;
@@ -72,7 +72,7 @@ public class ScanConfiguration {
     }
 
     /**
-     * {@link BluetoothLeScanner}的搜索设置
+     * {@link BluetoothLeScanner}的搜索settings
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public ScanConfiguration setScanSettings(ScanSettings scanSettings) {
@@ -82,7 +82,7 @@ public class ScanConfiguration {
     }
 
     /**
-     * 是否过滤非ble设备
+     * 是否过滤非bledevice
      */
     public ScanConfiguration setOnlyAcceptBleDevice(boolean onlyAcceptBleDevice) {
         this.onlyAcceptBleDevice = onlyAcceptBleDevice;

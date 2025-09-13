@@ -45,7 +45,7 @@ class RoundImageView : AppCompatImageView {
 
     private var radius = 0 // 圆角半径，单位 px
     private val path = Path() // 绘制range
-    private var density = 0f // 屏幕缩放等级，用于dp与px转换
+    private var density = 0f // 屏幕缩放等级，用于dp与pxconversion
 
     constructor(context: Context) : this(context, null)
 

@@ -25,8 +25,8 @@ import java.io.File
 /**
  * 使用 DataBinding 的基础 Activity.
  *
- * 由于 BaseActivity 子类实在太多没法一下子全改完，
- * 所以 BaseActivity 里的逻辑改一个搬一个吧，等全部改完再来优化继承.
+ * 由于 BaseActivity 子class实在太多没法一下子全改完，
+ * 所以 BaseActivity 里的逻辑改一个搬一个吧，等全部改完再来优化inheritance.
  *
  * Created by LCG on 2024/10/14.
  */
@@ -34,7 +34,7 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
     protected lateinit var binding: B
 
     /**
-     * 子类实现该方法，返回使用 DataBinding 的 layout 资源 Id.
+     * 子classimplementation该method，返回使用 DataBinding 的 layout 资源 Id.
      */
     @LayoutRes
     protected abstract fun initContentLayoutId(): Int
@@ -88,12 +88,12 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
     }
 
     /**
-     * 新版 LMS 风格的加载中弹框.
+     * 新版 LMS 风格的load中弹框.
      */
     private var loadingDialog: LoadingDialog? = null
 
     /**
-     * 显示加载中弹框.
+     * 显示load中弹框.
      */
     fun showLoadingDialog(
         @StringRes resId: Int = R.string.tip_loading,
@@ -102,7 +102,7 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
     }
 
     /**
-     * 显示加载中弹框.
+     * 显示load中弹框.
      */
     fun showLoadingDialog(text: CharSequence?) {
         if (loadingDialog == null) {
@@ -113,7 +113,7 @@ abstract class BaseBindingActivity<B : ViewDataBinding> : AppCompatActivity() {
     }
 
     /**
-     * 关闭加载中弹框.
+     * 关闭load中弹框.
      */
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()

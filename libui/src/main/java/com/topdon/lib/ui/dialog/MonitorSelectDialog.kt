@@ -9,7 +9,7 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
 
 /**
- * 提示窗
+ * tip窗
  * create by fylder on 2018/6/15
  **/
 /**
@@ -34,7 +34,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         private var isFirstStep = true
 
         /**
-         * currentselected的监控类型 1-点 2-线 3-面.
+         * currentselected的监控type 1-point 2-line 3-area.
          */
         private var monitorType = 0
 
@@ -58,7 +58,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
             binding.btnConfirmOrBack.setOnClickListener {
                 if (isFirstStep) { // 步骤1->步骤2 逻辑为“确认”
-                    if (monitorType == 0) { // 还没选取类型不允许点确认
+                    if (monitorType == 0) { // 还没选取type不允许point确认
                         return@setOnClickListener
                     }
                     isFirstStep = false

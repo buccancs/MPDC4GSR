@@ -30,7 +30,7 @@ import com.topdon.lib.core.utils.ScreenUtil
 import java.util.*
 
 /**
- * 2D-编辑 水印
+ * 2D-编辑 watermark
  */
 class TipWaterMarkDialog : Dialog {
     constructor(context: Context) : super(context)
@@ -115,7 +115,7 @@ class TipWaterMarkDialog : Dialog {
                     // 横屏
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context) * wRatio).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context) * wRatio).toInt() // settings宽度
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)
@@ -193,7 +193,7 @@ class TipWaterMarkDialog : Dialog {
                             never: Boolean,
                         ) {
                             if (never) {
-                                // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                                // 如果是被永久拒绝就跳转到应用权限系统settings页area
                                 if (BaseApplication.instance.isDomestic()) {
                                     ToastUtils.showShort(R.string.app_location_content)
                                     return
@@ -263,7 +263,7 @@ class TipWaterMarkDialog : Dialog {
             }
         }
 
-        // 获取地址信息:城市、街道等信息
+        // 获取地址info:城市、街道等info
         private fun getAddress(location: Location?): String {
             var result: List<Address?>? = null
             try {
@@ -275,7 +275,7 @@ class TipWaterMarkDialog : Dialog {
                             location.latitude,
                             location.longitude, 1,
                         )
-                    Log.v("TAG", "获取地址信息：$result")
+                    Log.v("TAG", "获取地址info：$result")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

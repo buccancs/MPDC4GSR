@@ -82,7 +82,7 @@ class ColorPickDialog(
                             rightValue: Float,
                             isFromUser: Boolean,
                         ) {
-                            var text = "标准"
+                            var text = "standard"
                             text =
                                 if (leftValue <= 0)
                                     {
@@ -151,7 +151,7 @@ class ColorPickDialog(
         when (v) {
             rootView.findViewById<View>(R.id.rl_close) -> dismiss()
 
-            rootView.findViewById<View>(R.id.tv_save) -> { // 保存
+            rootView.findViewById<View>(R.id.tv_save) -> { // save
                 dismiss()
                 onPickListener?.invoke(color, textSize)
             }
@@ -196,7 +196,7 @@ class ColorPickDialog(
     }
 
     /**
-     * 将 6 个固定的颜色按钮重置为未选中状态.
+     * 将 6 个固定的颜色buttonreset为未selectedstate.
      */
     private fun unSelect6Color() {
         rootView.findViewById<View>(R.id.view_color1).isSelected = false

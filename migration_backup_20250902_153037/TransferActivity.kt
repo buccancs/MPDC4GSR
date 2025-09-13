@@ -48,7 +48,7 @@ class TransferActivity : BaseActivity() {
     }
 
     /**
-     * 请求文件或图片读取权限.
+     * 请求file或image读取权限.
      */
     private fun requestPermission() {
         XXPermissions.with(this)
@@ -88,7 +88,7 @@ class TransferActivity : BaseActivity() {
     }
 
     /**
-     * 开始执行迁移流程.
+     * start执行迁移流程.
      */
     private fun startTransfer() {
         val oldGalleryList: Array<File>? = File(FileConfig.oldTc001GalleryDir).listFiles()
@@ -110,7 +110,7 @@ class TransferActivity : BaseActivity() {
     }
 
     /**
-     * 从 Intent 中获取 Uri 并解压缩迁移的 ir 文件.
+     * 从 Intent 中获取 Uri 并解compression迁移的 ir file.
      */
     private suspend fun transferIrFiles() {
         withContext(Dispatchers.IO) {
@@ -151,7 +151,7 @@ class TransferActivity : BaseActivity() {
     }
 
     /**
-     * 迁移旧图库图片到新图库.
+     * 迁移旧图库image到新图库.
      */
     private suspend fun transferImgFile() {
         withContext(Dispatchers.IO) {

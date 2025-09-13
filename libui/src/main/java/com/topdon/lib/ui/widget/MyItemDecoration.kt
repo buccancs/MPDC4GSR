@@ -111,7 +111,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
     /**
      * 当 RecyclerView 为纵向且只有 1 列时，settings间距.
-     * @param itemCount 数据总条数
+     * @param itemCount data总条数
      */
     private fun setVerticalOne(
         outRect: Rect,
@@ -127,7 +127,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
     /**
      * 当 RecyclerView 为横向且只有 1 行时，settings间距.
-     * @param itemCount 数据总条数
+     * @param itemCount data总条数
      */
     private fun setHorizontalOne(
         outRect: Rect,
@@ -143,7 +143,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
     /**
      * 当 RecyclerView 为纵向且有多列时，settings间距.
-     * @param itemCount 数据总条数
+     * @param itemCount data总条数
      * @param spanCount 总列数(共有多少列)
      */
     private fun setVerticalMulti(
@@ -165,9 +165,9 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
     /**
      * 当 RecyclerView 为纵向且为瀑布流布局时，settings间距.
-     * @param itemCount 数据总条数
+     * @param itemCount data总条数
      * @param spanCount 总列数(共有多少列)
-     * @param spanIndex current数据在列数中的index[0, spanCount)，即第几列
+     * @param spanIndex currentdata在列数中的index[0, spanCount)，即第几列
      */
     private fun setVerticalMultiStaggered(
         outRect: Rect,
@@ -188,7 +188,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
     /**
      * 当 RecyclerView 为横向且有多行时，settings间距.
-     * @param itemCount 数据总条数
+     * @param itemCount data总条数
      * @param spanCount 总行数(共有多少行)
      */
     private fun setHorizontalMulti(

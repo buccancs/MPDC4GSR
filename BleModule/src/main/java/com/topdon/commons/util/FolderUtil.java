@@ -7,7 +7,7 @@ import com.topdon.lms.sdk.LMS;
 import java.io.File;
 
 /**
- * @Desc 在APPlication 调用setFileName方法 传入文件名路径 区分APP
+ * @Desc 在APPlication 调用setFileNamemethod 传入file名path 区分APP
  * @ClassName FolderUtil
  * @Email 616862466@qq.com
  * @Author 子墨
@@ -17,11 +17,11 @@ import java.io.File;
 public class FolderUtil {
     public static String mPath = "/data/user/0/com.topdon.diag.artidiag/files";
     public static String mUserId;
-    public static String fileName; //在APPlication 传入文件名路径 区分APP
+    public static String fileName; //在APPlication 传入file名path 区分APP
     public static String tdartsSn;
 
     /**
-     * 获取文件名
+     * 获取file名
      *
      * @return String
      */
@@ -30,9 +30,9 @@ public class FolderUtil {
     }
 
     /**
-     * 区分应用文件名称
+     * 区分应用filename
      *
-     * @param mfileName 名称("/TopDon/AD200/")
+     * @param mfileName name("/TopDon/AD200/")
      */
     public static void setFileName(String mfileName) {
         fileName = mfileName;
@@ -66,15 +66,15 @@ public class FolderUtil {
     }
 
     /**
-     * 出事下载车型软件
+     * 出事下载车型software
      */
     public static void initFilePath() {
         String basePath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
         String downPath = basePath + "Download/";
-        Log.e("bcf", fileName + "--下载路径初始化--" + downPath);
+        Log.e("bcf", fileName + "--下载pathinitialization--" + downPath);
         File file = new File(downPath);
         if (!file.exists()) {
-            Log.e("bcf", fileName + "---下载路径初始化创建 ");
+            Log.e("bcf", fileName + "---下载pathinitializationcreate ");
             file.mkdirs();
         }
     }
@@ -235,7 +235,7 @@ public class FolderUtil {
                 feedbackLog.mkdirs();
             }
 
-            //autovin临时路径
+            //autovin临时path
             File autovinLog = new File(mPath + fileName + mUserId + "/autovinLog/");
             if (!autovinLog.exists()) {
                 autovinLog.mkdirs();
@@ -254,7 +254,7 @@ public class FolderUtil {
     }
 
     /**
-     * 获取Tdarts根目录路径
+     * 获取Tdarts根目录path
      *
      * @return str
      */
@@ -275,7 +275,7 @@ public class FolderUtil {
     }
 
     /**
-     * 获取Tdarts sn下车型软件包路径
+     * 获取Tdarts sn下车型software包path
      *
      * @return str
      */
@@ -370,7 +370,7 @@ public class FolderUtil {
     }
 
     /**
-     * 获取反馈日志路径
+     * 获取反馈日志path
      *
      * @return string
      */
@@ -395,7 +395,7 @@ public class FolderUtil {
     }
 
     /**
-     * 获取软件下载路径
+     * 获取software下载path
      *
      * @return str
      */

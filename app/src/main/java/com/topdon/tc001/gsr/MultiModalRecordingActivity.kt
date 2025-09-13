@@ -561,6 +561,78 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                         Log.i(TAG, "Enhanced recording service started")
                     } catch (e: Exception) {
                         Log.w(TAG, "Failed to start enhanced recording service", e)
+                    }
+
+                    runOnUiThread {
+                        binding.startButton.text = "Stop Recording"
+                        binding.startButton.isEnabled = true
+                        updateUI()
+                    }
+                } else {
+                    // Recording failed, reset state
+                    isStartingRecording = false
+                    runOnUiThread {
+                        binding.startButton.isEnabled = true
+                        binding.startButton.text = "Start Recording"
+                        binding.statusText.text = "Failed to start GSR recording"
+                        Toast.makeText(this@MultiModalRecordingActivity, "Failed to start GSR recording", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error starting recording", e)
+                isStartingRecording = false
+                runOnUiThread {
+                    binding.startButton.isEnabled = true
+                    binding.startButton.text = "Start Recording"
+                    binding.statusText.text = "Error starting recording: ${e.message}"
+                    Toast.makeText(this@MultiModalRecordingActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+                    enableRawCapture = binding.enableRawCaptureSwitch.isChecked,
+                    rawCaptureFrameRate = rawFrameRate,
+                )
+
+            rgbCameraRecorder?.updateSettings(cameraSettings)
+
+            val cameraStarted = rgbCameraRecorder?.startRecording(sessionId) ?: false
+            if (!cameraStarted) {
+                // Reset guard flags on failure
+                isStartingRecording = false
+                binding.startButton.isEnabled = true
+                binding.startButton.text = "Start Recording"
+                binding.statusText.text = "Failed to start camera recording"
+                Toast.makeText(this, "Failed to start RGB camera recording", Toast.LENGTH_LONG).show()
+                return
+            }
+        }
+
+        // Start GSR recording asynchronously
+        lifecycleScope.launch {
+            try {
+                val success = gsrRecorder.startRecording(sessionId, participantId, null)
+
+                if (success) {
+                    // Reset counters
+                    sampleCount = 0
+                    syncMarkCount = 0
+
+                    // Atomic state update
+                    isRecording = true
+                    isStartingRecording = false
+
+                    // Start enhanced recording service for background operation
+                    try {
+                        com.topdon.gsr.service.EnhancedRecordingService.startRecording(
+                            this@MultiModalRecordingActivity,
+                            sessionId,
+                            participantId,
+                            null,
+                        )
+                        Log.i(TAG, "Enhanced recording service started")
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to start enhanced recording service", e)
                         // Continue without service - not critical
                     }
 

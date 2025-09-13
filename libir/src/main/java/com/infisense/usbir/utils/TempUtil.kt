@@ -24,20 +24,20 @@ object TempUtil {
         } else {
             val k = (point1.y - point2.y).toFloat() / (point1.x - point2.x).toFloat()
             val b = point1.y - k * point1.x
-            if (abs(k) <= 1) { // x轴正整数point较多
+            if (abs(k) <= 1) { 
                 val startX = point1.x.coerceAtMost(point2.x)
                 val endX = point1.x.coerceAtLeast(point2.x)
                 for (i in startX..endX) {
                     pointList.add(Point(i, (k * i + b).toInt()))
                 }
-            } else { // y轴正整数point较多
-                if (k >= 0) { // 左上到右下
+            } else { 
+                if (k >= 0) { 
                     val startY = point1.y.coerceAtMost(point2.y)
                     val endY = point1.y.coerceAtLeast(point2.y)
                     for (y in startY..endY) {
                         pointList.add(Point(((y - b) / k).toInt(), y))
                     }
-                } else { // 左下到右上
+                } else { 
                     val startY = point1.y.coerceAtLeast(point2.y)
                     val endY = point1.y.coerceAtMost(point2.y)
                     for (y in startY downTo endY) {

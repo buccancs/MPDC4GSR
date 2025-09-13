@@ -156,16 +156,16 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         temperatureView.setTemperature(temperature)
         temperatureView.isEnabled = false
         setViewLay()
-        // 某些特定客户的特殊device需要使用该命令关闭sensor
+        // 某些特定客户的特殊device需要使用该CommandClosesensor
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) // 打开5V
-            Log.w("123", "打开5V")
+            Usbcontorl.usb3803_mode_setting(1) // Open5V
+            Log.w("123", "Open5V")
         }
         // 初始全局temperature measurement
         temperatureView.post {
             if (!temperaturerun) {
                 temperaturerun = true
-                // 需等待渲染complete再显示
+                // 需等待渲染complete再Show/Display
                 temperatureView.visibility = View.VISIBLE
             }
         }
@@ -190,9 +190,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         }
     }
 
-    /**
-     *
-     */
+    
     private fun startUSB(isRestart: Boolean) {
         iruvc =
             IRUVCTC(
@@ -261,9 +259,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         iruvc!!.registerUSB()
     }
 
-    /**
-     *
-     */
+    
     private fun restartusbcamera() {
         if (iruvc != null) {
             iruvc!!.stopPreview()
@@ -289,7 +285,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             temperatureView.start()
             cameraView!!.start()
             isrun = true
-            // 恢复configuration
+            // Restoreconfiguration
             configParam()
         }
     }
@@ -316,9 +312,9 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         } catch (e: InterruptedException) {
             Log.e(TAG, "imageThread.join(): catch an interrupted exception")
         }
-        // 某些特定客户的特殊device需要使用该命令关闭sensor
+        // 某些特定客户的特殊device需要使用该CommandClosesensor
 //        if (Usbcontorl.isload) {
-//            Usbcontorl.usb3803_mode_setting(0) //关闭5V
+//            Usbcontorl.usb3803_mode_setting(0) //Close5V
 //        }
 //        if (tempinfo != 0L) {
 //            Libircmd.temp_correction_release(tempinfo)
@@ -351,7 +347,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             }
     }
 
-    // 获取选取point
+    // Get/Retrieve选取point
     private fun updateTemp(type: Int) {
         var result: SelectPositionBean? = null
         val contentRectF = RectF(0f, 0f, 192f, 256f)
@@ -431,7 +427,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
                 showLoadingDialog()
             }
             101 -> {
-                // 显示image
+                // Show/Displayimage
                 lifecycleScope.launch {
                     delay(500)
                     isConfigWait = false
@@ -473,7 +469,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             // 自动快门
             delay(timeMillis)
             iruvc?.let {
-                // 部分机型在关闭自动快门，初始会花屏
+                // 部分机型在Close自动快门，初始会花屏
                 withContext(Dispatchers.IO) {
                     if (SaveSettingUtil.isAutoShutter) {
                         ircmd?.setPropAutoShutterParameter(

@@ -12,19 +12,21 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
 /**
- * FenceLineView class
- */
-/**
  * Custom Fence line view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * FenceLineView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class FenceLineView : View {
     var listener: CallBack? = null
 
     private val mPaint by lazy { Paint() }
-    private val rect: Rect = Rect(0, 0, 0, 0) // 手动绘制矩形
-    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } // line宽度
-
+    private val rect: Rect = Rect(0, 0, 0, 0) 
+    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } 
     constructor (context: Context) : super(context)
 
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -136,6 +138,9 @@ class FenceLineView : View {
         return true
     }
 
+    /**
+     * Executes result functionality.
+     */
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         val point2 = intArrayOf(endPoint[0], endPoint[1])
@@ -145,6 +150,9 @@ class FenceLineView : View {
         }
     }
 
+    /**
+     * Clears data and resets internal state.
+     */
     fun clear() {
         startPoint = intArrayOf(0, 0)
         endPoint = intArrayOf(0, 0)
@@ -152,12 +160,16 @@ class FenceLineView : View {
         invalidate()
     }
 
-    /**
-     * CallBack class
-     */
+    
 /**
  * Custom Call back view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * CallBack manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
     interface CallBack {
         /**

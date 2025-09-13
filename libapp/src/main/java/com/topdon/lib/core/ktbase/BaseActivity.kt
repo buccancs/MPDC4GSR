@@ -93,7 +93,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     /**
-     * 监听 USB connectionstate
+     * Listener USB connectionstate
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getConnectState(event: DeviceConnectEvent) {
@@ -111,6 +111,9 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Callback method triggered when socketconnectstate occurs.
+     */
     fun onSocketConnectState(event: SocketStateEvent) {
         Log.d("onSocketConnectState", "${event.isConnect}")
         if (event.isConnect) {
@@ -140,6 +143,9 @@ abstract class BaseActivity : AppCompatActivity() {
         showLoadingDialog(getString(resId))
     }
 
+    /**
+     * Executes showloadingdialog functionality.
+     */
     fun showLoadingDialog(text: CharSequence?) {
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog(this)
@@ -157,6 +163,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private var cameraDialog: TipCameraProgressDialog? = null
 
+    /**
+     * Executes showcameraloading functionality.
+     */
     fun showCameraLoading() {
         if (cameraDialog != null && cameraDialog!!.isShowing) {
             return
@@ -172,18 +181,21 @@ abstract class BaseActivity : AppCompatActivity() {
                 cameraDialog?.show()
             }
         } catch (e: Exception) {
-            // 临时捕获方案，后area需求complete后再追踪优化
+            // 临时捕获方案，后area需求complete后再追踪Optimize
             Log.e("临时processing方案", e.message.toString())
         }
     }
 
+    /**
+     * Executes dismisscameraloading functionality.
+     */
     fun dismissCameraLoading() {
         if (cameraDialog != null && cameraDialog!!.isShowing) {
             cameraDialog?.dismiss()
         }
     }
 
-    // 同步登录info
+    
     private fun synLogin() {
         if (this::class.java.simpleName == "MainActivity") {
             LMS.getInstance().syncUserInfo()
@@ -206,7 +218,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         } else {
             if (UserInfoManager.getInstance().isLogin()) {
-                // 账号已退出,本地登录state,需退出操作
+                // 账号已Exit,本地Loginstate,需Exit操作
                 UserInfoManager.getInstance().logout()
             }
         }

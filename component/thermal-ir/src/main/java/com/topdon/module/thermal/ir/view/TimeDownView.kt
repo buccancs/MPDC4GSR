@@ -117,7 +117,7 @@ start计时
     }
 
     /**
-取消
+Cancel
      */
     fun cancel() {
         animationSet?.cancel()
@@ -154,19 +154,19 @@ interface DownTimeWatcher {
     }
 
     /**
-每个倒计时事件监听.
+每个倒计时EventListener.
      */
     var onTimeListener: ((time: Int) -> Unit)? = null
 
     /**
-倒计时end事件监听.
+倒计时endEventListener.
      */
     var onFinishListener: (() -> Unit)? = null
 
     var downTimeWatcher: DownTimeWatcher? = null
 
     /**
-监听倒计时的变化
+Listener倒计时的变化
      * @param downTimeWatcher
      */
     fun setOnTimeDownListener(downTimeWatcher: DownTimeWatcher?) {
@@ -183,7 +183,7 @@ interface DownTimeWatcher {
                     downTimeWatcher!!.onTime(downCount)
                 }
                 onTimeListener?.invoke(downCount)
-Log.e("测试","//handleMessage"+downCount+"//"+lastDown);
+Log.e("Test","//handleMessage"+downCount+"//"+lastDown);
                 if (downCount >= lastDown - 1) {
                     drawTextFlag = DRAW_TEXT_YES // 默认绘制
 未到end时

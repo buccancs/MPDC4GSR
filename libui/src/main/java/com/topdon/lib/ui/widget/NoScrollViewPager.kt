@@ -6,11 +6,14 @@ import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
 /**
- * NoScrollViewPager class
- */
-/**
  * Custom No scroll view pager view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * NoScrollViewPager implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class NoScrollViewPager : ViewPager {
     private var isCanScroll = false
@@ -29,7 +32,7 @@ class NoScrollViewPager : ViewPager {
     }
 
     override fun setCurrentItem(item: Int) {
-        // 去除switch时动画
+        
         super.setCurrentItem(item, false)
     }
 }

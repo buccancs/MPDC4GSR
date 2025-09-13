@@ -34,7 +34,7 @@ def fix_parameter_syntax(file_path: Path):
             param_type = match.group(2).strip()
 
             # Check if this is actually a parameter (not a function definition)
-            if param_name in ["def", "return", "if", "for", "while", "class"]:
+            if param_name in ["de", "return", "i", "for", "while", "class"]:
                 return match.group(0)
 
             return f"{param_name}: {param_type},"

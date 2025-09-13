@@ -29,11 +29,11 @@ class ChartTrendView : LineChart {
         val axisChartColors: Int = ContextCompat.getColor(context, LibR.color.chart_axis)
 
         this.isDragEnabled = false
-        this.isScaleYEnabled = false // 禁止Y轴缩放
-        this.isScaleXEnabled = false // 禁止X轴缩放
-        this.isDoubleTapToZoomEnabled = false // 双击不可缩放
-        this.setScaleEnabled(false) // 缩放
-        this.setPinchZoom(false) // 禁用后，可以分别在x轴和y轴上进行缩放
+        this.isScaleYEnabled = false // 禁止Y轴Scale
+        this.isScaleXEnabled = false // 禁止X轴Scale
+        this.isDoubleTapToZoomEnabled = false // 双击不可Scale
+        this.setScaleEnabled(false) // Scale
+        this.setPinchZoom(false) // Disable后，可以分别在x轴和y轴上进行Scale
         this.setTouchEnabled(true)
         this.setDrawGridBackground(false)
         this.description = null // 图标描述文本
@@ -50,11 +50,11 @@ class ChartTrendView : LineChart {
 
         val mv = MyMarkerView(context, R.layout.marker_lay)
         mv.chartView = this
-        marker = mv // settingsclick坐标显示tip框
+        marker = mv // settingsclick坐标Show/Displaytip框
 
         legend.form = Legend.LegendForm.CIRCLE
         legend.textColor = textColor
-        legend.isEnabled = false // 隐藏曲linetag
+        legend.isEnabled = false // Hide曲linetag
 
 x轴
         val xAxis = this.xAxis
@@ -65,7 +65,7 @@ x轴
         xAxis.isEnabled = true
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.granularity = 1f
-        xAxis.isGranularityEnabled = true // 重复值不显示
+        xAxis.isGranularityEnabled = true // 重复值不Show/Display
         xAxis.textSize = 11f
         xAxis.isJumpFirstLabel = false
         xAxis.axisMinimum = 0f
@@ -166,7 +166,7 @@ y轴
         lineDataSet.circleRadius = 1f // 坐标point半径
         lineDataSet.fillAlpha = 200
         lineDataSet.valueTextSize = 10f
-        lineDataSet.setDrawValues(false) // settings是否显示坐标值文本
+        lineDataSet.setDrawValues(false) // settings是否Show/Display坐标值文本
 
         data = LineData(lineDataSet)
         invalidate()

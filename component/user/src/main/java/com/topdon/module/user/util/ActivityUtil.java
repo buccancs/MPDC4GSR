@@ -14,7 +14,7 @@ public class ActivityUtil {
 @param mContext 上下文
      */
     public static void goSystemCustomer(Context mContext) {
-        Log.w("bcf", "客服click事件");
+        Log.w("bcf", "客服clickEvent");
         String url = "https://www.topdon.cc/tc-chat";
         goSystemBrowser(mContext, url);
     }

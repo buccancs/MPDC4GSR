@@ -38,7 +38,7 @@ class OptionPickPopup(
     }
 
     /**
-     * 一个选项被selected事件监听.
+     * 一个选项被selectedEventListener.
      */
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
 
@@ -86,7 +86,7 @@ class OptionPickPopup(
 
     private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
         /**
-         * item click事件监听.
+         * item clickEventListener.
          */
         var onItemClickListener: ((position: Int) -> Unit)? = null
 

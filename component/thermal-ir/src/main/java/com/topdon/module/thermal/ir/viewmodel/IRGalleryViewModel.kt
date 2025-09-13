@@ -21,7 +21,7 @@ import java.io.File
 class IRGalleryViewModel : BaseViewModel() {
     companion object {
         /**
-分页load时 1 页data的条数
+Paginationload时 1 页data的条数
          */
         const val PAGE_COUNT = 20
     }
@@ -60,7 +60,7 @@ add了日期title的用于display的列表.
     }
 
     /**
-分页load时已successfulload的页数
+Paginationload时已successfulload的页数
      */
     var hasLoadPage = 0
 

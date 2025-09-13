@@ -17,7 +17,7 @@ import com.github.gzuliyujiang.wheelview.annotation.ScrollState;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 
 /**
- * 滚轮滑动interface
+ * 滚轮Swipeinterface
  *
  * @author Florent Champigny
  * @author 贵州山野羡民（1032694760@qq.com）

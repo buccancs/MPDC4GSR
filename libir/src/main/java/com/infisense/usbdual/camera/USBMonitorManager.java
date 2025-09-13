@@ -210,7 +210,7 @@ public class USBMonitorManager {
                 .setUVCType(UVCType.USB_UVC)
                 .build();
         /**
-         * 调整带宽
+         * Adjust带宽
          * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要configuration对应的带宽
          */
         mUvcCamera.setDefaultBandwidth(1f);
@@ -243,9 +243,9 @@ public class USBMonitorManager {
 
     public void handleUSBConnect(USBMonitor.UsbControlBlock ctrlBlock) {
         openUVCCamera(ctrlBlock);
-        // 获取device的分辨率list
+        // Get/Retrievedevice的分辨率list
         List<CameraSize> previewList = getAllSupportedSize();
-        // 可以根据获取到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
+        // 可以根据Get/Retrieve到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
         initIRCMD(previewList);
         // 根据device的分辨率list，这里可以动态的settingsmodule的宽高(这里作为示例，用的是从外部传入的方式)
         if (mDefaultDataFlowMode == CommonParams.DataFlowMode.TNR_OUTPUT) {
@@ -268,7 +268,7 @@ public class USBMonitorManager {
     }
 
     /**
-     * 获取支持的分辨率list
+     * Get/Retrieve支持的分辨率list
      *
      * @return
      */
@@ -286,7 +286,7 @@ public class USBMonitorManager {
 
     /**
      * init IRCMD
-     * 可以根据获取到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
+     * 可以根据Get/Retrieve到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
      *
      * @param previewList
      */
@@ -315,7 +315,7 @@ public class USBMonitorManager {
      */
     private int setPreviewSize(int cameraWidth, int cameraHeight) {
         int result = -1;
-        //有时候可能上电后不稳定或者module没插稳，setUSBPreviewSize会settingsfailed，这里可以捕获exception，tip用户重新插拔module，重启app
+        //有时候可能上电后不稳定或者module没插稳，setUSBPreviewSize会settingsfailed，这里可以捕获exception，tipUser重新插拔module，重启app
         try {
             if (mUvcCamera != null) {
                 result = mUvcCamera.setUSBPreviewSize(cameraWidth, cameraHeight);
@@ -328,9 +328,7 @@ public class USBMonitorManager {
         return result;
     }
 
-    /**
-     *
-     */
+    
     private void startPreview() {
         Log.d(TAG, "startPreview");
 

@@ -14,7 +14,7 @@
 package com.github.gzuliyujiang.wheelview.contract;
 
 /**
- * 提供显示的文本
+ * 提供Show/Display的文本
  *
  * @author 贵州山野羡民（1032694760@qq.com）
  * @since 2019/5/14 20:01
@@ -22,9 +22,9 @@ package com.github.gzuliyujiang.wheelview.contract;
 public interface TextProvider {
 
     /**
-     * 提供显示的文本
+     * 提供Show/Display的文本
      *
-     * @return 显示的文本
+     * @return Show/Display的文本
      */
     String provideText();
 

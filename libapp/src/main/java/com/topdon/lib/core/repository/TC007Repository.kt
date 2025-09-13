@@ -25,6 +25,9 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 object TC007Repository {
+    /**
+     * Executes any functionality.
+     */
     private fun Any.toBody(): RequestBody = Gson().toJson(this).toRequestBody()
 
     var netWork: Network? = null
@@ -33,7 +36,7 @@ object TC007Repository {
     private fun getOKHttpClient(timeout: Long): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
-                .retryOnConnectionFailure(false) // 不重试
+                .retryOnConnectionFailure(false) 
                 .connectTimeout(timeout, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定interface统一超时15秒
                 .readTimeout(timeout, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定interface统一超时15秒
                 .writeTimeout(timeout, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定interface统一超时15秒
@@ -55,7 +58,7 @@ object TC007Repository {
             .create(TC007Service::class.java)
 
     /**
-     * 获取产品info
+     * Get/Retrieve产品info
      */
     suspend fun getProductInfo(): ProductBean? =
         withContext(Dispatchers.IO) {
@@ -67,7 +70,7 @@ object TC007Repository {
         }
 
     /**
-     * 获取device电池info
+     * Get/Retrievedevice电池info
      */
     suspend fun getBatteryInfo(): BatteryInfo? =
         withContext(Dispatchers.IO) {
@@ -79,7 +82,7 @@ object TC007Repository {
         }
 
     /**
-     * 同步时间.
+     * Synchronize时间.
      */
     suspend fun syncTime(): Boolean =
         withContext(Dispatchers.IO) {
@@ -99,7 +102,7 @@ object TC007Repository {
         }
 
     /**
-     * 执行firmware升级.
+     * 执行firmwareUpgrade.
      */
     suspend fun updateFirmware(file: File): Boolean =
         withContext(Dispatchers.IO) {
@@ -110,7 +113,7 @@ object TC007Repository {
                 }
 
                 var status = getTC007Service().getUpgradeStatus().Data?.Status
-                while (status == 0 || status == 1 || status == 2) { // document跟实际值对不上
+                while (status == 0 || status == 1 || status == 2) { 
                     delay(1000)
                     status = getTC007Service().getUpgradeStatus().Data?.Status
                 }
@@ -123,7 +126,7 @@ object TC007Repository {
 
     private suspend fun sendUpgradeFile(file: File): Boolean =
         withContext(Dispatchers.IO) {
-            val pageSize = 1024 * 1024 * 10 // 10M每包
+            val pageSize = 1024 * 1024 * 10 
             var fileInputStream: FileInputStream? = null
             try {
                 fileInputStream = FileInputStream(file)
@@ -131,7 +134,7 @@ object TC007Repository {
                 var result = true
                 var packNum = 0
                 var hasReadCount = 0
-                var byteArray = ByteArray(pageSize) // 10M每包
+                var byteArray = ByteArray(pageSize) 
                 val totalPackNum = (file.length() / (pageSize) + (if (file.length() % (pageSize) > 0) 1 else 0)).toInt()
                 val md5 = EncryptUtils.encryptMD5File2String(file).lowercase(Locale.ROOT)
 
@@ -143,14 +146,14 @@ object TC007Repository {
                         val body = byteArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
                         val part = MultipartBody.Part.createFormData("zipFile", "zipFile", body)
                         val code = getTC007Service(30).sendUpgradeFile(file.name, packNum, totalPackNum, md5, part).Code
-                        if (code == 400805) { // 已在升级中
+                        if (code == 400805) { 
                             return@withContext true
                         }
-                        if (code != 200) { // 200是success
+                        if (code != 200) { 
                             result = false
                         }
                         hasReadCount = 0
-                        byteArray = ByteArray(pageSize) // 10M每包
+                        byteArray = ByteArray(pageSize) 
                     }
                     readCount = fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
                 }
@@ -162,10 +165,10 @@ object TC007Repository {
                     val body = lastArray.toRequestBody("application/octet-stream".toMediaTypeOrNull())
                     val part = MultipartBody.Part.createFormData("zipFile", "zipFile", body)
                     val code = getTC007Service(30).sendUpgradeFile(file.name, packNum, totalPackNum, md5, part).Code
-                    if (code == 400805) { // 已在升级中
+                    if (code == 400805) { 
                         return@withContext true
                     }
-                    if (code != 200) { // 200是success
+                    if (code != 200) { 
                         result = false
                     }
                 }
@@ -179,7 +182,7 @@ object TC007Repository {
         }
 
     /**
-     * 恢复出厂settings
+     * Restore出厂settings
      */
     suspend fun resetToFactory(): Boolean =
         withContext(Dispatchers.IO) {
@@ -203,7 +206,7 @@ object TC007Repository {
         }
 
     /**
-     * 获取temperature measurementpropertyparameter
+     * Get/Retrievetemperature measurementpropertyparameter
      */
     suspend fun getEnvAttr(): EnvAttr? =
         withContext(Dispatchers.IO) {
@@ -263,7 +266,7 @@ object TC007Repository {
         }
 
     /**
-     * 清除所有point、line、area.
+     * Clear所有point、line、area.
      */
     suspend fun clearAllTemp(): Boolean =
         withContext(Dispatchers.IO) {
@@ -295,7 +298,7 @@ object TC007Repository {
         }
 
     /**
-     * settings全局temperature measurement开启或关闭.
+     * settings全局temperature measurement开启或Close.
      */
     suspend fun setTempFrame(boolean: Boolean): Boolean =
         withContext(Dispatchers.IO) {

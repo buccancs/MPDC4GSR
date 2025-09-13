@@ -12,12 +12,16 @@ import com.topdon.menu.databinding.ViewMenuEditBinding
  *
  * point/line/area、pseudo color、settings、pseudo color条
  */
-/**
- * MenuEditView class
- */
+
 /**
  * Custom Menu edit view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * MenuEditView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class MenuEditView : FrameLayout, View.OnClickListener {
     /**

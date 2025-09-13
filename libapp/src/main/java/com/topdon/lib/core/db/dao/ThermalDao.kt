@@ -17,7 +17,7 @@ interface ThermalDao {
     @Query("DELETE FROM thermal where start_time = :startTime")
     fun delDetail(startTime: Long)
 
-    // delete用户data
+    // deleteUserdata
     @Query("delete from thermal where user_id = :userId")
     fun deleteByUserId(userId: String)
 

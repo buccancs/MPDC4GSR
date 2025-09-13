@@ -279,7 +279,7 @@ class IRThermal07Activity : BaseWifiActivity() {
             }
         }
         lifecycleScope.launch {
-            // 获取初始parameter
+            // Get/Retrieve初始parameter
             val tmpR = TC007Repository.getRegistration(false)?.Data
             tmpR?.let {
                 thermal_steering_view.moveX = it.X!!
@@ -506,7 +506,7 @@ class IRThermal07Activity : BaseWifiActivity() {
         view_car_detect.findViewById<LinearLayout>(com.topdon.module.thermal.ir.R.id.ll_car_detect_info).setOnClickListener {
             LongTextDialog(this, SharedManager.getCarDetectInfo()?.item, SharedManager.getCarDetectInfo()?.description).show()
         }
-        thermal_recycler_night.isVideoMode = WifiSaveSettingUtil.isVideoMode // 恢复拍照/录像state
+        thermal_recycler_night.isVideoMode = WifiSaveSettingUtil.isVideoMode // Restore拍照/录像state
         thermal_recycler_night.onCameraClickListener = {
             setCamera(it)
         }
@@ -539,7 +539,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         index == 0 ||
                         index == size
                     ) {
-                        // 由于艾睿的black hot和white hot不支持等温尺，所以用户在white hot、black hotmode下modify等温尺后，interface调用failed，
+                        // 由于艾睿的black hot和white hot不支持等温尺，所以User在white hot、black hotmode下modify等温尺后，interface调用failed，
                         // 所以在此时的等温尺parameterTC007device还无法生效，所以switch其他pseudo color的时候如果要等温尺生效，则需要重发一次等温尺parameter
                         setPColor(index, it, true) {
                             val max = ((editMaxValue + 273.15f) * 10).toInt()
@@ -1077,13 +1077,13 @@ class IRThermal07Activity : BaseWifiActivity() {
             // pseudo color条
             cl_seek_bar.isVisible = saveSetBean.isOpenPseudoBar
             thermal_recycler_night.setSettingSelected(SettingType.PSEUDO_BAR, saveSetBean.isOpenPseudoBar)
-            // 电池info获取
+            // 电池infoGet/Retrieve
             batteryInfo = TC007Repository.getBatteryInfo()
             // 读取configurationsettings 环境temperature、temperature measurement距离、发射率
             val config = ConfigRepository.readConfig(true)
             TC007Repository.setIRConfig(config.environment, config.distance, config.radiation)
             // settingstemperature单位
-            // 清除point、line、area
+            // Clearpoint、line、area
             TC007Repository.clearAllTemp()
             val tempFrame = TC007Repository.getTempFrame()
             if (tempFrame) {
@@ -1500,7 +1500,7 @@ class IRThermal07Activity : BaseWifiActivity() {
             }
             IrParam.ParamAlarm -> {
                 // 预警
-                alarmBean.isMarkOpen = false // TC007统一关闭预警轮廓
+                alarmBean.isMarkOpen = false // TC007统一Close预警轮廓
                 WifiSaveSettingUtil.alarmBean = alarmBean
                 AlarmHelp.getInstance(this@IRThermal07Activity).updateData(
                     if (alarmBean.isLowOpen) alarmBean.lowTemp else null,
@@ -1515,7 +1515,7 @@ class IRThermal07Activity : BaseWifiActivity() {
     }
 
     /**
-     * 显示temperature报警settings弹框.
+     * Show/Displaytemperature报警settings弹框.
      */
     private fun showTempAlarmSetDialog() {
         if (tempAlarmSetDialog == null) {
@@ -1532,7 +1532,7 @@ class IRThermal07Activity : BaseWifiActivity() {
     }
 
     /**
-     * 显示contrastsettings PopupWindow
+     * Show/Displaycontrastsettings PopupWindow
      */
     private fun showContrastPopup() {
         thermal_recycler_night.setSettingSelected(SettingType.CONTRAST, true)
@@ -1556,7 +1556,7 @@ class IRThermal07Activity : BaseWifiActivity() {
     }
 
     /**
-     * 显示细节(锐度) settings PopupWindow
+     * Show/Display细节(锐度) settings PopupWindow
      */
     private fun showSharpnessPopup() {
         thermal_recycler_night.setSettingSelected(SettingType.DETAIL, true)
@@ -1684,7 +1684,7 @@ class IRThermal07Activity : BaseWifiActivity() {
     }
 
     /**
-     * 第 1 个menu-拍照录像 各个操作的click事件监听.
+     * 第 1 个menu-拍照录像 各个操作的clickEventListener.
      * @param actionCode: 0-拍照/录像  1-图库  2-更多menu  3-switch到拍照  4-switch到录像
      */
     private fun setCamera(actionCode: Int) {
@@ -1738,7 +1738,7 @@ class IRThermal07Activity : BaseWifiActivity() {
     }
 
     /**
-     * 延时拍照延时秒数，0表示关闭.
+     * 延时拍照延时秒数，0表示Close.
      */
     private var cameraDelaySecond: Int = WifiSaveSettingUtil.delayCaptureSecond
     private var cameraItemAdapter: CameraItemAdapter? = null
@@ -1932,7 +1932,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+                            // 拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic()) {
                                 ToastUtils.showShort(getString(R.string.app_storage_content))
                                 return
@@ -2014,7 +2014,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         false,
                     )
                 }
-                // 获取展示imageinfo的图层data
+                // Get/Retrieve展示imageinfo的图层data
                 var cameraViewBitmap: Bitmap? =
                     Bitmap.createScaledBitmap(
                         bitmap,
@@ -2022,7 +2022,7 @@ class IRThermal07Activity : BaseWifiActivity() {
                         thermal_lay.measuredHeight,
                         true,
                     )
-                // 合并pseudo color条
+                // Mergepseudo color条
                 val isShowPseudoBar = cl_seek_bar.visibility == View.VISIBLE
                 if (isShowPseudoBar) {
                     val seekBarBitmap = cl_seek_bar.drawToBitmap()
@@ -2815,7 +2815,7 @@ class IRThermal07Activity : BaseWifiActivity() {
         enhancedThermalRecorder?.cleanup()
         enhancedThermalRecorder = null
 
-        // 退出时把pointlinearea清掉
+        // Exit时把pointlinearea清掉
         CoroutineScope(Dispatchers.IO).launch {
             TC007Repository.clearAllTemp()
         }

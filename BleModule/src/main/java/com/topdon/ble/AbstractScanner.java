@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -30,7 +29,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 
 /**
  * date: 2019/10/1 14:44
@@ -81,10 +79,10 @@ abstract class AbstractScanner implements Scanner {
         }
     }
 
-    //检查是否有定位权限
+    //Check是否有定位Permission
     private boolean noLocationPermission(Context context) {
         int sdkVersion = context.getApplicationInfo().targetSdkVersion;
-        if (sdkVersion >= 29) {//target sdkversion在29以上的需要精确定位权限才能搜索到bluetoothdevice
+        if (sdkVersion >= 29) {//target sdkversion在29以上的需要精确定位Permission才能Search到bluetoothdevice
             return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
         } else {
             return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -92,33 +90,33 @@ abstract class AbstractScanner implements Scanner {
         }
     }
 
-    //检查是否有bluetooth权限
+    //Check是否有bluetoothPermission
     private boolean noBluetoothPermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // API 31+ 需要新的bluetooth权限
+            // API 31+ 需要新的bluetoothPermission
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ||
                    ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED;
         } else {
-            // API 30及以下使用旧的bluetooth权限
+            // API 30及以下使用旧的bluetoothPermission
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
                    ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED;
         }
     }
 
-    //检查是否有bluetoothconnection权限 - 用于访问deviceproperty
+    //Check是否有bluetoothconnectionPermission - 用于访问deviceproperty
     private boolean hasBluetoothConnectPermission(Context context) {
         if (context == null) return false;
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // API 31+ 需要 BLUETOOTH_CONNECT 权限来访问deviceproperty
+            // API 31+ 需要 BLUETOOTH_CONNECT Permission来访问deviceproperty
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
         } else {
-            // API 30及以下使用旧的bluetooth权限
+            // API 30及以下使用旧的bluetoothPermission
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED;
         }
     }
 
-    //processing搜索回调
+    //processingSearchCallback
     void handleScanCallback(final boolean start, final Device device, final boolean isConnectedBySys,
                             final int errorCode, final String errorMsg) {
         mainHandler.post(() -> {
@@ -136,7 +134,7 @@ abstract class AbstractScanner implements Scanner {
         });
     }
 
-    //如果系统已配对connection，那么是无法搜索到的，所以尝试获取已connection的device
+    //如果系统已配对connection，那么是无法Search到的，所以尝试Get/Retrieve已connection的device
     @SuppressWarnings("all")
     private void getSystemConnectedDevices(Context context) {
         try {
@@ -156,7 +154,7 @@ abstract class AbstractScanner implements Scanner {
             }
         } catch (Exception ignore) {
         }
-        //遍历支持的，获取所有connection的
+        //遍历支持的，Get/Retrieve所有connection的
         for (int i = 1; i <= 21; i++) {
             try {
                 getSystemConnectedDevices(context, i);
@@ -234,7 +232,7 @@ abstract class AbstractScanner implements Scanner {
         }
         String name = deviceName == null ? "" : deviceName;
         if (configuration.rssiLowLimit <= rssi) {
-            //通过构建器实例化Device
+            //通过Build器实例化Device
             Device dev = deviceCreator.create(device, result);
             if (dev != null) {
                 dev.name = TextUtils.isEmpty(dev.getName()) ? name : dev.getName();
@@ -362,17 +360,17 @@ abstract class AbstractScanner implements Scanner {
     }
 
     /**
-     * 是否可搜索
+     * 是否可Search
      */
     protected abstract boolean isReady();
     
     /**
-     * 执行搜索
+     * 执行Search
      */
     protected abstract void performStartScan();
 
     /**
-     * 执行stop搜索
+     * 执行stopSearch
      */
     protected abstract void performStopScan();
 }

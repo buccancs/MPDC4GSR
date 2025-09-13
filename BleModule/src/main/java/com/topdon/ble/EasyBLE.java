@@ -36,7 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 
-
 /**
  * Enhanced EasyBLE with unified Shimmer Nordic and Topdon BLE integration.
  * 
@@ -104,7 +103,7 @@ public class EasyBLE {
     }
 
     /**
-     * 获取实例。单例的
+     * Get/Retrieve实例。Singleton的
      */
     public static EasyBLE getInstance() {
         if (instance == null) {
@@ -214,11 +213,11 @@ public class EasyBLE {
                 switch (action) {
                     case BluetoothAdapter.ACTION_STATE_CHANGED: //bluetooth开关state变化 
                         if (bluetoothAdapter != null) {
-                            //notification观察者bluetoothstate
+                            //notificationObserverbluetoothstate
                             observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
-                            if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) { //bluetooth关闭
-                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "bluetooth关闭了");
-                                //notification搜索器
+                            if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) { //bluetoothClose
+                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "bluetoothClose了");
+                                //notificationSearch器
                                 if (scanner != null) {
                                     scanner.onBluetoothOff();
                                 }
@@ -262,11 +261,11 @@ public class EasyBLE {
             }
             if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) { //bluetooth开关state变化 
                 if (bluetoothAdapter != null) {
-                    //notification观察者bluetoothstate
+                    //notificationObserverbluetoothstate
                     observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
-                    if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) { //bluetooth关闭
-                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "bluetooth关闭了");
-                        //notification搜索器
+                    if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) { //bluetoothClose
+                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "bluetoothClose了");
+                        //notificationSearch器
                         if (scanner != null) {
                             scanner.onBluetoothOff();
                         }
@@ -292,17 +291,17 @@ public class EasyBLE {
         }
         Inspector.requireNonNull(application, "application can't be");
         this.application = application;
-        //检查是否支持BLE
+        //Check是否支持BLE
         if (!application.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             return;
         }
-        //获取bluetoothconfiguration器
+        //Get/Retrievebluetoothconfiguration器
         BluetoothManager bluetoothManager = (BluetoothManager) application.getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager == null || bluetoothManager.getAdapter() == null) {
             return;
         }
         bluetoothAdapter = bluetoothManager.getAdapter();
-        //注册bluetooth开关state广播接收者
+        //Registerbluetooth开关state广播Receive者
         if (broadcastReceiver == null) {
             broadcastReceiver = new InnerBroadcastReceiver();
             IntentFilter filter = new IntentFilter();
@@ -338,14 +337,14 @@ public class EasyBLE {
     }
 
     /**
-     * 日志输出控制
+     * Log输出控制
      */
     public void setLogEnabled(boolean isEnabled) {
         logger.setEnabled(isEnabled);
     }
 
     /**
-     * 关闭所有connection并release资源
+     * Close所有connection并release资源
      */
     public synchronized void release() {
         if (broadcastReceiver != null) {
@@ -364,7 +363,7 @@ public class EasyBLE {
     }
 
     /**
-     * destroy，可重新构建
+     * destroy，可重新Build
      */
     public void destroy() {
         release();
@@ -374,7 +373,7 @@ public class EasyBLE {
     }
 
     /**
-     * 注册connectionstate及data接收观察者
+     * Registerconnectionstate及dataReceiveObserver
      */
     public void registerObserver(EventObserver observer) {
         if (checkStatus()) {
@@ -383,21 +382,21 @@ public class EasyBLE {
     }
 
     /**
-     * 查询观察者是否注册
+     * 查询Observer是否Register
      */
     public boolean isObserverRegistered(EventObserver observer) {
         return observable.isRegistered(observer);
     }
 
     /**
-     * 取消注册connectionstate及data接收观察者
+     * CancelRegisterconnectionstate及dataReceiveObserver
      */
     public void unregisterObserver(EventObserver observer) {
         observable.unregisterObserver(observer);
     }
 
     /**
-     * notification所有观察者事件变化，通常只用在
+     * notification所有ObserverEvent变化，通常只用在
      *
      * @param info methodinfo实例
      */
@@ -407,7 +406,7 @@ public class EasyBLE {
         }
     }
     
-    //检查并实例化搜索器
+    //Check并实例化Search器
     private void checkAndInstanceScanner() {
         if (scanner == null) {
             synchronized (this) {
@@ -431,7 +430,7 @@ public class EasyBLE {
     }
     
     /**
-     * add搜索监听器
+     * addSearchListener器
      */
     public void addScanListener(ScanListener listener) {
         checkAndInstanceScanner();
@@ -441,7 +440,7 @@ public class EasyBLE {
     }
 
     /**
-     * 移除搜索监听器
+     * 移除SearchListener器
      */
     public void removeScanListener(ScanListener listener) {
         if (scanner != null) {
@@ -450,14 +449,14 @@ public class EasyBLE {
     }
 
     /**
-     * 是否正在搜索
+     * 是否正在Search
      */
     public boolean isScanning() {
         return scanner != null && scanner.isScanning();
     }
 
     /**
-     * 搜索BLEdevice
+     * SearchBLEdevice
      */
     public void startScan() {
         checkAndInstanceScanner();
@@ -467,7 +466,7 @@ public class EasyBLE {
     }
 
     /**
-     * stop搜索
+     * stopSearch
      */
     public void stopScan() {
         if (checkStatus() && scanner != null) {
@@ -476,7 +475,7 @@ public class EasyBLE {
     }
 
     /**
-     * stop搜索，不触发回调
+     * stopSearch，不触发Callback
      */
     public void stopScanQuietly() {
         if (checkStatus() && scanner != null) {
@@ -488,7 +487,7 @@ public class EasyBLE {
      * createconnection
      *
      * @param address bluetooth地址
-     * @return 返回create的connection实例，createfailed则返回null
+     * @return Returncreate的connection实例，createfailed则Returnnull
      */
     @Nullable
     public Connection connect(String address) {
@@ -500,7 +499,7 @@ public class EasyBLE {
      *
      * @param address       bluetooth地址
      * @param configuration connectionconfiguration
-     * @return 返回create的connection实例，createfailed则返回null
+     * @return Returncreate的connection实例，createfailed则Returnnull
      */
     @Nullable
     public Connection connect(String address, ConnectionConfiguration configuration) {
@@ -511,8 +510,8 @@ public class EasyBLE {
      * createconnection
      *
      * @param address  bluetooth地址
-     * @param observer 伴生观察者
-     * @return 返回create的connection实例，createfailed则返回null
+     * @param observer 伴生Observer
+     * @return Returncreate的connection实例，createfailed则Returnnull
      */
     @Nullable
     public Connection connect(String address, EventObserver observer) {
@@ -524,8 +523,8 @@ public class EasyBLE {
      *
      * @param address       bluetooth地址
      * @param configuration connectionconfiguration
-     * @param observer      伴生观察者
-     * @return 返回create的connection实例，createfailed则返回null
+     * @param observer      伴生Observer
+     * @return Returncreate的connection实例，createfailed则Returnnull
      */
     @Nullable
     public Connection connect(String address, ConnectionConfiguration configuration,
@@ -544,7 +543,7 @@ public class EasyBLE {
      * createconnection
      *
      * @param device bluetoothdevice实例
-     * @return 返回create的connection实例，createfailed则返回null
+     * @return Returncreate的connection实例，createfailed则Returnnull
      */
     @Nullable
     public Connection connect(Device device) {
@@ -556,7 +555,7 @@ public class EasyBLE {
      *
      * @param device        bluetoothdevice实例
      * @param configuration connectionconfiguration
-     * @return 返回create的connection实例，createfailed则返回null
+     * @return Returncreate的connection实例，createfailed则Returnnull
      */
     @Nullable
     public Connection connect(Device device, ConnectionConfiguration configuration) {
@@ -567,8 +566,8 @@ public class EasyBLE {
      * createconnection
      *
      * @param device   bluetoothdevice实例
-     * @param observer 伴生观察者
-     * @return 返回create的connection实例，createfailed则返回null
+     * @param observer 伴生Observer
+     * @return Returncreate的connection实例，createfailed则Returnnull
      */
     @Nullable
     public Connection connect(Device device, EventObserver observer) {
@@ -580,8 +579,8 @@ public class EasyBLE {
      *
      * @param device        bluetoothdevice实例
      * @param configuration connectionconfiguration
-     * @param observer      伴生观察者
-     * @return 返回create的connection实例，createfailed则返回null
+     * @param observer      伴生Observer
+     * @return Returncreate的connection实例，createfailed则Returnnull
      */
     @Nullable
     public synchronized Connection connect(final Device device, ConnectionConfiguration configuration,
@@ -639,7 +638,7 @@ public class EasyBLE {
     }
 
     /**
-     * 获取所有connection，无序的
+     * Get/Retrieve所有connection，无序的
      */
     @NonNull
     public Collection<Connection> getConnections() {
@@ -647,7 +646,7 @@ public class EasyBLE {
     }
 
     /**
-     * 获取所有connection，有序的
+     * Get/Retrieve所有connection，有序的
      */
     @NonNull
     public List<Connection> getOrderedConnections() {
@@ -662,7 +661,7 @@ public class EasyBLE {
     }
 
     /**
-     * 获取第一个connection
+     * Get/Retrieve第一个connection
      */
     @Nullable
     public Connection getFirstConnection() {
@@ -670,7 +669,7 @@ public class EasyBLE {
     }
 
     /**
-     * 获取最后一个connection
+     * Get/Retrieve最后一个connection
      */
     @Nullable
     public Connection getLastConnection() {
@@ -787,7 +786,7 @@ public class EasyBLE {
     }
 
     /**
-     * 根据MAC地址获取device的配对state
+     * 根据MAC地址Get/Retrievedevice的配对state
      *
      * @return {@link BluetoothDevice#BOND_NONE}，{@link BluetoothDevice#BOND_BONDED}，{@link BluetoothDevice#BOND_BONDING}
      */
@@ -836,7 +835,7 @@ public class EasyBLE {
     }
 
     /**
-     * 根据过滤器，清除配对
+     * 根据Filter器，Clear配对
      */
     @SuppressWarnings("all")
     public void clearBondDevices(RemoveBondFilter filter) {

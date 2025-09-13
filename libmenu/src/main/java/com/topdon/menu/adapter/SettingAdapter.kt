@@ -70,7 +70,7 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
             dataList.add(Data(R.string.mirror, MenuR.drawable.selector_menu2_setting_5, SettingType.MIRROR))
             dataList.add(Data(R.string.thermal_contrast, MenuR.drawable.selector_menu2_setting_2, SettingType.CONTRAST))
         } else {
-            if (menuType == MenuType.GALLERY_EDIT) { // 2D编辑
+            if (menuType == MenuType.GALLERY_EDIT) { 
                 dataList.add(Data(R.string.temp_alarm_alarm, MenuR.drawable.selector_menu2_setting_6, SettingType.ALARM))
                 dataList.add(Data(R.string.menu_thermal_font, MenuR.drawable.selector_menu2_setting_7, SettingType.FONT))
                 dataList.add(Data(R.string.app_watemarking, MenuR.drawable.selector_menu2_setting_9, SettingType.WATERMARK))

@@ -90,7 +90,7 @@ object IRCmdTool {
 先从buffer中查找是否有save的对齐data，没有用initializedata
                 val alignByte = SharedManager.getManualData(snStr)
                 System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
-                XLog.w("core没存在校正data，请联系厂商确认")
+                XLog.w("core没存在校正data，请联系厂商Confirm")
             } catch (e: IOException) {
                 e.printStackTrace()
             } finally {

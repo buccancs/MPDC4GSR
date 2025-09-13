@@ -63,7 +63,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class MineFragment : BaseFragment(), View.OnClickListener {
     /**
-onResume() 阶段是否需要refresh登录state相关 UI.
+onResume() 阶段是否需要refreshLoginstate相关 UI.
      */
     private var isNeedRefreshLogin = false
 
@@ -119,7 +119,7 @@ onResume() 阶段是否需要refresh登录state相关 UI.
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-要是当前已connection TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(false)
                     }
@@ -217,7 +217,7 @@ onResume() 阶段是否需要refresh登录state相关 UI.
             settingItemVersion -> { // version
                 NavigationManager.getInstance().build(RouterConfig.VERSION).navigation(requireContext())
             }
-            settingItemClear -> { // 清除cache，实际已隐藏
+            settingItemClear -> { // Clearcache，实际已Hide
                 clearCache()
             }
             dragCustomerView -> { // 客服
@@ -235,14 +235,14 @@ onResume() 阶段是否需要refresh登录state相关 UI.
 
     private fun loginAction() {
         isNeedRefreshLogin = true
-activityLogin()回调不可靠，但必然触发onResume()
+activityLogin()Callback不可靠，但必然触发onResume()
         val bgBitmap = BitmapFactory.decodeResource(resources, LibAppR.mipmap.ic_default_user_head) // Use available resource from libapp
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
 
     private fun checkLoginResult() {
         if (LMS.getInstance().isLogin) {
-登录successful
+Loginsuccessful
             LMS.getInstance().getUserInfo { userinfo: CommonBean ->
                 try {
                     val json = userinfo.data
@@ -259,14 +259,14 @@ activityLogin()回调不可靠，但必然触发onResume()
 updateui
                     changeLoginStyle()
                 } catch (e: Exception) {
-                    XLog.e(" 登录exception: ${e.message}")
+                    XLog.e(" Loginexception: ${e.message}")
                 }
             }
         } else {
-登录failed
-            XLog.e(" 登录failed")
+Loginfailed
+            XLog.e(" Loginfailed")
             changeLoginStyle()
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // 恢复默认头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // Restore默认头像
         }
     }
 
@@ -320,12 +320,12 @@ updateui
             settingUserLay.visibility = View.GONE
             val tvEmail = requireView().findViewById<TextView>(R.id.tv_email)
             tvEmail.text = ""
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // 恢复默认头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // Restore默认头像
         }
     }
 
     /**
-清除buffer
+Clearbuffer
      */
     private fun clearCache() {
         lifecycleScope.launch {
@@ -335,7 +335,7 @@ updateui
                     AppDatabase.getInstance().thermalDao().deleteByUserId(SharedManager.getUserId())
                     CleanUtils.cleanExternalCache()
                 } catch (e: Exception) {
-                    XLog.w("清除cacheexception: ${e.message}")
+                    XLog.w("Clearcacheexception: ${e.message}")
                 }
                 delay(1000)
             }

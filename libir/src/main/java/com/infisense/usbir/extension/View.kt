@@ -13,16 +13,22 @@ fun View.gone()  {
     this.visibility = View.GONE
 }
 
+    /**
+     * Executes view functionality.
+     */
 fun View.visible()  {
     this.visibility = View.VISIBLE
 }
 
+    /**
+     * Executes view functionality.
+     */
 fun View.invisible()  {
     this.visibility = View.INVISIBLE
 }
 
 /**
- * 隐藏view，带有渐隐动画效果。
+ * Hideview，带有渐隐动画效果。
  * @param duration 毫秒，动画持续时长，默认500毫秒。
  */
 fun View?.goneAlphaAnimation(duration: Long = 500L) {
@@ -36,7 +42,7 @@ fun View?.goneAlphaAnimation(duration: Long = 500L) {
 }
 
 /**
- * 占位隐藏view，带有渐隐动画效果。
+ * 占位Hideview，带有渐隐动画效果。
  * @param duration 毫秒，动画持续时长，默认500毫秒。
  */
 fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
@@ -50,7 +56,7 @@ fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
 }
 
 /**
- * 显示view，带有渐显动画效果。
+ * Show/Displayview，带有渐显动画效果。
  *
  * @param duration 毫秒，动画持续时长，默认500毫秒。
  */
@@ -64,6 +70,9 @@ fun View?.visibleAlphaAnimation(duration: Long = 500L) {
     )
 }
 
+    /**
+     * Executes viewpager2 functionality.
+     */
 fun ViewPager2.reduceDragSensitivity() {
     val recyclerViewField = ViewPager2::class.java.getDeclaredField("mRecyclerView")
     recyclerViewField.isAccessible = true

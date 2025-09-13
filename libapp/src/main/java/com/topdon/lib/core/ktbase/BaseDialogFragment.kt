@@ -35,7 +35,7 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
     protected val binding: B get() = _binding!!
 
     /**
-     * 子classimplementation该method，返回使用 DataBinding 的 layout 资源 Id.
+     * 子classimplementation该method，Return使用 DataBinding 的 layout 资源 Id.
      */
     @LayoutRes
     protected abstract fun initContentLayoutId(): Int
@@ -61,7 +61,7 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
     }
 
     /**
-     * 子class可override该method，返回 Dialog 要使用的 themeResId.
+     * 子class可override该method，Return Dialog 要使用的 themeResId.
      */
     @StyleRes
     protected open fun getDialogThemeResId(): Int = R.style.base_dialog
@@ -100,6 +100,9 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
         _binding = null
     }
 
+    /**
+     * Executes show functionality.
+     */
     fun show(context: Context) {
         if (isAdded) {
             return

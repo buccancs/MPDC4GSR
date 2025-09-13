@@ -25,6 +25,7 @@ from ircamera_pc.core.gsr_analytics import (
     StressLevel,
 )
 from ircamera_pc.core.gsr_receiver import GSRReceiver
+from typing import Any
 
 
 class TestGSRAnalytics(unittest.TestCase):
@@ -148,7 +149,8 @@ class TestGSRAnalytics(unittest.TestCase):
         self.assertLessEqual(features.confidence, 100)
 
         print(
-            f"✓ Basic feature extraction: stress={features.stress_score:.1f}, level={features.stress_level.value}"
+            f"✓ Basic feature extraction: stress={features.stress_score:.1f}, "
+            f"level={features.stress_level.value}"
         )
 
     def test_stress_detection(self) -> Any:
@@ -179,7 +181,8 @@ class TestGSRAnalytics(unittest.TestCase):
             if features:
                 expected_stress_levels[pattern] = features.stress_score
                 print(
-                    f"✓ {pattern.title()} pattern: stress={features.stress_score:.1f}, level={features.stress_level.value}"
+                    f"✓ {pattern.title()} pattern: stress={features.stress_score:.1f},
+                        level={features.stress_level.value}"
                 )
 
         # Verify stress pattern detection
@@ -263,7 +266,9 @@ class TestGSRAnalytics(unittest.TestCase):
         self.assertGreater(len(report.features), 0)
 
         print(
-            f"✓ Session report: {len(report.features)} features, avg_stress={report.average_stress_score:.1f}, trend={report.stress_trend}"
+            f"✓ Session report: {len(report.features)} features,
+                avg_stress={report.average_stress_score:.1f},
+                trend={report.stress_trend}"
         )
 
     def test_feature_export(self) -> Any:
@@ -338,7 +343,8 @@ class TestGSRAnalytics(unittest.TestCase):
         self.assertGreaterEqual(features.confidence, 0)
 
         print(
-            f"✓ Artifact handling: stress={features.stress_score:.1f}, confidence={features.confidence:.1f}"
+            f"✓ Artifact handling: stress={features.stress_score:.1f},
+                confidence={features.confidence:.1f}"
         )
 
     def test_multiple_devices(self) -> Any:

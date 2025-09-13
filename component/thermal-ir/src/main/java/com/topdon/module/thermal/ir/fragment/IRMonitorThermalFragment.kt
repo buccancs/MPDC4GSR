@@ -171,10 +171,10 @@ area
         temperatureView.setTemperature(temperature)
         temperatureView.isEnabled = false
         setViewLay()
-某些特定客户的特殊device需要使用该命令disabledsensor
+某些特定客户的特殊device需要使用该Commanddisabledsensor
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) // 打开5V
-            Log.w("123", "打开5V")
+            Usbcontorl.usb3803_mode_setting(1) // Open5V
+            Log.w("123", "Open5V")
         }
 初始全局temperature measurement
         temperatureView.post {
@@ -205,9 +205,7 @@ image信号processing
         }
     }
 
-    /**
-     *
-     */
+    
     private fun startUSB(isRestart: Boolean) {
         iruvc =
             IRUVCTC(
@@ -276,9 +274,7 @@ reset镜像为非镜像
         iruvc!!.registerUSB()
     }
 
-    /**
-     *
-     */
+    
     private fun restartusbcamera() {
         if (iruvc != null) {
             iruvc!!.stopPreview()
@@ -304,7 +300,7 @@ reset镜像为非镜像
             temperatureView.start()
             cameraView!!.start()
             isrun = true
-恢复configuration
+Restoreconfiguration
             configParam()
         }
     }
@@ -331,7 +327,7 @@ reset镜像为非镜像
         } catch (e: InterruptedException) {
             Log.e(TAG, "imageThread.join(): catch an interrupted exception")
         }
-某些特定客户的特殊device需要使用该命令disabledsensor
+某些特定客户的特殊device需要使用该Commanddisabledsensor
 //        if (Usbcontorl.isload) {
 Usbcontorl.usb3803_mode_setting(0) //disabled5V
 //        }

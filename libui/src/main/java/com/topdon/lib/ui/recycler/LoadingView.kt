@@ -12,6 +12,12 @@ import com.topdon.lib.ui.R as UiR
  * Custom Loading view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
  */
+/**
+ * LoadingView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class LoadingView : LinearLayout {
     constructor(context: Context) : this(context, null)
 

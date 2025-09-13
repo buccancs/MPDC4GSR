@@ -24,9 +24,8 @@ import java.util.List;
 
 public class UnitUtils {
 
-
     /**
-     * 根据type获取单位data
+     * 根据typeGet/Retrieve单位data
      *
      * @param unitType 0公制  1 英制
      */
@@ -51,9 +50,8 @@ public class UnitUtils {
         }
     }
 
-
     /**
-     * 根据type获取单位data
+     * 根据typeGet/Retrieve单位data
      */
     public static HashMap<String, UnitDBBean> getUnitDBBeanHashMap() {
         String unit = (String) SPUtils.getInstance(Topdon.getApp()).get("unit", "0");
@@ -62,7 +60,7 @@ public class UnitUtils {
     }
 
     /**
-     * 根据type获取单位data
+     * 根据typeGet/Retrieve单位data
      *
      * @param unitType 0公制  1 英制
      */
@@ -79,7 +77,6 @@ public class UnitUtils {
         return hashMap;
     }
 
-
     /**
      * calculation结果
      *
@@ -92,7 +89,6 @@ public class UnitUtils {
         int unitType = "0".equals(unit) ? 0 : 1;
         return getCalcResult(unitType, hashMap, preUnit, numericalValue);
     }
-
 
     /**
      * calculation结果

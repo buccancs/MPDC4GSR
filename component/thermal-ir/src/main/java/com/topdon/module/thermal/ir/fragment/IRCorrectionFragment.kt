@@ -117,10 +117,10 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         temperatureView.setTemperature(temperature)
         temperatureView.isEnabled = false
         setViewLay()
-某些特定客户的特殊device需要使用该命令disabledsensor
+某些特定客户的特殊device需要使用该Commanddisabledsensor
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) // 打开5V
-            Log.w("123", "打开5V")
+            Usbcontorl.usb3803_mode_setting(1) // Open5V
+            Log.w("123", "Open5V")
         }
         temperatureView.clear()
         temperatureView.temperatureRegionMode = REGION_MODE_CLEAN
@@ -145,9 +145,7 @@ image信号processing
         }
     }
 
-    /**
-     *
-     */
+    
     private fun startUSB(isRestart: Boolean) {
         context?.let {
             iruvc =
@@ -195,9 +193,7 @@ image信号processing
         }
     }
 
-    /**
-     *
-     */
+    
     private fun restartUsbCamera() {
         if (iruvc != null) {
             iruvc!!.stopPreview()
@@ -218,7 +214,7 @@ image信号processing
                 temperatureView.start()
                 cameraView?.start()
                 isrun = true
-恢复configuration
+Restoreconfiguration
                 configParam()
             }, 1500)
         }
@@ -389,37 +385,37 @@ ToastUtils.showShort("taskstart")
             CalibrationTools.autoShutter(irCmd = ircmd, false)
             XLog.w("锅盖矫正：" + "锅盖calibrationstart")
 常温
-3 手动打快门命令
+3 手动打快门Command
 //            CalibrationTools.shutter(irCmd = ircmd, syncImage = syncimage)
-XLog.w("锅盖矫正："+"手动打快门命令")
+XLog.w("锅盖矫正："+"手动打快门Command")
 4 disabled锅盖校正
             delay(2000)
-            XLog.w("锅盖矫正：" + "关闭锅盖校正")
+            XLog.w("锅盖矫正：" + "Close锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
-5 发送锅盖标
+5 Send锅盖标
             CalibrationTools.pot(irCmd = ircmd!!, 1)
-            XLog.w("锅盖矫正：" + "发送锅盖标")
-6 打开锅盖校正
+            XLog.w("锅盖矫正：" + "Send锅盖标")
+6 Open锅盖校正
             delay(5000)
-            XLog.w("锅盖矫正：" + "打开锅盖校正")
+            XLog.w("锅盖矫正：" + "Open锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
             delay(20000)
             XLog.w("锅盖矫正：" + "20000")
 high temperature
-11 手动打快门命令
+11 手动打快门Command
 //            CalibrationTools.shutter(irCmd = ircmd, syncImage = syncimage)
-XLog.w("锅盖矫正："+"手动打快门命令")
+XLog.w("锅盖矫正："+"手动打快门Command")
 12 disabled锅盖校正
             delay(2000)
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
-            XLog.w("锅盖矫正：" + "关闭锅盖校正")
-13 发送锅盖标
+            XLog.w("锅盖矫正：" + "Close锅盖校正")
+13 Send锅盖标
             CalibrationTools.pot(irCmd = ircmd!!, 1)
-14 打开锅盖校正
+14 Open锅盖校正
             delay(5000)
-            XLog.w("锅盖矫正：" + "打开锅盖校正")
+            XLog.w("锅盖矫正：" + "Open锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
-17 打开自动快门
+17 Open自动快门
             CalibrationTools.autoShutter(irCmd = ircmd, true)
 锅盖end
             XLog.w("锅盖矫正：" + "锅盖end")

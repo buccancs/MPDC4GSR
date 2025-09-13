@@ -78,7 +78,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
                 data.isSelected = !data.isSelected
                 holder.binding.ivIcon.isSelected = data.isSelected
                 holder.binding.tvText.isSelected = data.isSelected
-                if (data.isSelected) { // selected高温point、低温point时要把“delete”设为未selected；取消selected时不耦合delete
+                if (data.isSelected) { // selected高温point、低温point时要把“delete”设为未selected；Cancelselected时不耦合delete
                     for (i in dataArray.indices) {
                         if (dataArray[i].tempPointType == TempPointType.DELETE && dataArray[i].isSelected) {
                             dataArray[i].isSelected = false

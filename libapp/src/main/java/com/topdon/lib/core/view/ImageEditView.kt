@@ -254,7 +254,7 @@ class ImageEditView : View {
                     canvas?.drawPath(path, paint)
                 } else {
                     // 有两条直line：
-                    // y = k1 * x + b1 是用户绘制的直line，称为直line1
+                    // y = k1 * x + b1 是User绘制的直line，称为直line1
                     // y = k2 * x + b2 是垂直于直line1且过三角形交point的直line，称为直line2
                     val k1: Float = (downY - currentY).toFloat() / (downX - currentX).toFloat()
                     val b1: Float = downY - k1 * downX

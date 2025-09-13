@@ -152,7 +152,7 @@ object PDFUtil {
                     )
                     tabItemView.layout(0, 0, tabItemView.measuredWidth, tabItemView.measuredHeight)
 
-                    if (hasUseHeight + margin + titleText.height + tabTitleView.measuredHeight + tabItemView.measuredHeight > pageHeight) { // 1行item都显示不了，另起一页
+                    if (hasUseHeight + margin + titleText.height + tabTitleView.measuredHeight + tabItemView.measuredHeight > pageHeight) { // 1行item都Show/Display不了，另起一页
                         pdfDocument.finishPage(page)
                         page = pdfDocument.startPage(pageInfo)
                         canvas = page.canvas
@@ -183,7 +183,7 @@ object PDFUtil {
                         )
                         tabItemView.layout(0, 0, tabItemView.measuredWidth, tabItemView.measuredHeight)
 
-                        if (hasUseHeight + tabItemView.height > pageHeight) { // 1行item都显示不了，另起一页
+                        if (hasUseHeight + tabItemView.height > pageHeight) { // 1行item都Show/Display不了，另起一页
                             pdfDocument.finishPage(page)
                             page = pdfDocument.startPage(pageInfo)
                             canvas = page.canvas
@@ -245,7 +245,7 @@ object PDFUtil {
                     imgLineView.layout(0, 0, imgLineView.measuredWidth, imgLineView.measuredHeight)
 
                     if (hasAnyItem) { // title已在 itemShowView 绘制
-                        if (hasUseHeight + photoText.height + imgLineView.height > pageHeight) { // 1行item都显示不了，另起一页
+                        if (hasUseHeight + photoText.height + imgLineView.height > pageHeight) { // 1行item都Show/Display不了，另起一页
                             pdfDocument.finishPage(page)
                             page = pdfDocument.startPage(pageInfo)
                             canvas = page.canvas
@@ -256,7 +256,7 @@ object PDFUtil {
                         canvas.translate(0f, photoText.height.toFloat())
                         hasUseHeight += photoText.height
                     } else { // 没有 item，title要在这里绘制
-                        if (hasUseHeight + margin + titleText.height + photoText.height + imgLineView.height > pageHeight) { // 1行item都显示不了，另起一页
+                        if (hasUseHeight + margin + titleText.height + photoText.height + imgLineView.height > pageHeight) { // 1行item都Show/Display不了，另起一页
                             pdfDocument.finishPage(page)
                             page = pdfDocument.startPage(pageInfo)
                             canvas = page.canvas
@@ -311,7 +311,7 @@ object PDFUtil {
                             }
                         }
 
-                        if (hasUseHeight + imgLineView.height > pageHeight) { // 1行item都显示不了，另起一页
+                        if (hasUseHeight + imgLineView.height > pageHeight) { // 1行item都Show/Display不了，另起一页
                             pdfDocument.finishPage(page)
                             page = pdfDocument.startPage(pageInfo)
                             canvas = page.canvas
@@ -363,7 +363,7 @@ object PDFUtil {
                         if (outputStream != null) {
                             pdfDocument.writeTo(outputStream)
 
-                            // 部分机型 resolver.insert() 返回的 Uri 用 id 拼的，导致分享时显示的file名有问题，这里查询一遍
+                            // 部分机型 resolver.insert() Return的 Uri 用 id 拼的，导致分享时Show/Display的file名有问题，这里查询一遍
                             val selection = "${MediaStore.MediaColumns.RELATIVE_PATH} = ? AND ${MediaStore.MediaColumns.DISPLAY_NAME} = ?"
                             val selectionArgs: Array<String> = arrayOf(FileConfig.documentsDir, houseReport.getPdfFileName())
                             val cursor: Cursor? =

@@ -10,7 +10,7 @@ import java.io.File
 
 object FileConfig {
     /**
-     * 获取房屋检测cache目录下指定file.
+     * Get/Retrieve房屋检测cache目录下指定file.
      * 注意，不执行子filecreate逻辑，若有需要需自行create.
      */
     fun getDetectImageDir(
@@ -30,7 +30,7 @@ object FileConfig {
     }
 
     /**
-     * 获取房屋检测-签名imagecache目录.
+     * Get/Retrieve房屋检测-签名imagecache目录.
      * 注意，不执行子filecreate逻辑，若有需要需自行create.
      */
     fun getSignImageDir(
@@ -50,7 +50,7 @@ object FileConfig {
     }
 
     /**
-     * firmware升级包安装目录.
+     * firmwareUpgrade包Install目录.
      */
     fun getFirmwareFile(filename: String): File = File(Utils.getApp().getExternalFilesDir("firmware"), filename)
 
@@ -106,7 +106,7 @@ object FileConfig {
         }
 
     /**
-     * 老 APP TC001 图库目录，仅用于相册迁移
+     * 老 APP TC001 图库目录，仅用于相册Migration
      */
     @JvmStatic
     val oldTc001GalleryDir: String

@@ -197,7 +197,8 @@ class FileTransferManager:
                 resume_offset=0,
                 retry_count=0,
                 error_message=None,
-                device_connection=device_conn,  # Store device connection for real file transfer
+                device_connection=device_conn,
+                     # Store device connection for real file transfer
             )
 
             # Check for partial file to resume
@@ -456,7 +457,8 @@ class FileTransferManager:
                         return chunk_data
                     else:
                         raise Exception(
-                            f"Chunk read failed: {response.get('error', 'Unknown error')}"
+                            f"Chunk read failed: {response.get('error',
+                                'Unknown error')}"
                         )
                 else:
                     raise Exception("Invalid or timeout response from device")

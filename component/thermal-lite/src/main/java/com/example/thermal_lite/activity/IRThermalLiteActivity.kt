@@ -373,7 +373,7 @@ IOS 搞成pointdelete后再次drawing趋势图才自动弹出折line图，还得
             }
         }
 
-        binding.thermalRecyclerNight.isVideoMode = SaveSettingUtil.isVideoMode // 恢复拍照/录像state
+        binding.thermalRecyclerNight.isVideoMode = SaveSettingUtil.isVideoMode // Restore拍照/录像state
         binding.thermalRecyclerNight.fenceSelectType = FenceType.FULL // 初始selected全图
         binding.thermalRecyclerNight.isUnitF = SharedManager.getTemperature() == 0 // temperature档位单位
         binding.thermalRecyclerNight.setTempLevel(temperatureMode) // selected当前的temperature档位
@@ -799,7 +799,7 @@ maximum最low temperature复原
                 cameraPreviewConfig(true)
             }
             TwoLightType.BLEND_EXTENT -> { // fusion度
-                if (!isOpenPreview && isSelected) { // 未打开画中画时自动打开画中画
+                if (!isOpenPreview && isSelected) { // 未Open画中画时自动Open画中画
                     cameraPreviewConfig(false)
                 }
                 if (isSelected) {
@@ -1011,7 +1011,7 @@ disabledcamera
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-拒绝授权并且不再提醒
+拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(com.topdon.module.thermal.ir.R.string.app_camera_content))
@@ -1280,7 +1280,7 @@ displaycontrastset PopupWindow
     }
 
     private fun updateRotateAngle(rotateAngle: Int) {
-清除limitset
+Clearlimitset
         CameraPreviewManager.getInstance().setLimit(
             editMaxValue,
             editMinValue,
@@ -1354,7 +1354,7 @@ firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
                 }
                 binding.temperatureView.visibility = View.VISIBLE
                 binding.temperatureView.temperatureRegionMode = REGION_NODE_TREND
-                if (!spaceChart.isVisible) { // 当前趋势图如果已显示着的话，则不去更改
+                if (!spaceChart.isVisible) { // 当前趋势图如果已Show/Display着的话，则不去更改
                     spaceChart.isVisible = true
                     binding.clTrendOpen.isVisible = false
                     binding.llTrendClose.isVisible = true
@@ -1378,7 +1378,7 @@ firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
     private var cameraDelaySecond: Int = SaveSettingUtil.delayCaptureSecond
 
     /**
-第 1 个menu-拍照录像 各个操作的click事件监听.
+第 1 个menu-拍照录像 各个操作的clickEventListener.
 @param actionCode: 0-拍照/录像  1-图库  2-更多menu  3-switch到拍照  4-switch到录像
      */
     private fun setCamera(actionCode: Int) {
@@ -1556,9 +1556,7 @@ firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
         }
     }
 
-    /**
-     *
-     */
+    
     fun updateVideoDelayView()  {
         try {
             if (binding.timeDownView.isRunning) {
@@ -1633,7 +1631,7 @@ firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-拒绝授权并且不再提醒
+拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(com.topdon.module.thermal.ir.R.string.app_microphone_content))
@@ -1728,7 +1726,7 @@ recordingvideo
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-拒绝授权并且不再提醒
+拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_storage_content))
@@ -1793,7 +1791,7 @@ gettemperature图层的data，包括pointline框，temperature值等，重新合
                         cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, binding.temperatureView.regionAndValueBitmap, 0, 0)
                     }
 
-合并pseudo-color bar
+Mergepseudo-color bar
                     val isShowPseudoBar = binding.clSeekBar.visibility == VISIBLE
                     if (isShowPseudoBar) {
                         val seekBarBitmap = binding.clSeekBar.drawToBitmap()
@@ -2026,7 +2024,7 @@ gainmodeinitialize
 自动快门
                 delay(30 * 1000)
                 IRTool.setAutoShutter(isAutoShutter)
-                XLog.i("moduleconfiguration恢复success")
+                XLog.i("moduleconfigurationRestoresuccess")
             }
     }
 
@@ -2224,7 +2222,7 @@ getgainstate PASS
                             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                 ?.basicGainGet(basicGainGetValue)
                     } catch (e: Exception) {
-                        XLog.e("gain获取failed")
+                        XLog.e("gainGet/Retrievefailed")
                     }
                     basicGainGetTime = System.currentTimeMillis()
                 }

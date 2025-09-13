@@ -336,7 +336,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     /**
-     * temperature显示
+     * temperatureShow/Display
      */
     fun onTempBtnClick() {
         if (mGuideInterface == null) {
@@ -457,7 +457,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 addLimit()
             }
             2006 -> {
-                // 清除还原
+                // Clear还原
                 clearFence()
             }
             in 3000..3010 -> {
@@ -470,11 +470,11 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 clearFence()
             }
             4002 -> {
-                // image增强
+                // imageEnhance
                 enhance()
             }
             4003 -> {
-                // image增强
+                // imageEnhance
                 camera()
             }
             in 5000..5010 -> {
@@ -538,7 +538,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         showFence(3)
     }
 
-    // 显示pointlinearea布局
+    // Show/Displaypointlinearea布局
     private fun showFence(index: Int) {
         if (fenceFlag.getIndex(index) == 0) {
             fenceFlag = 1.shl(4 * (index - 1)) // settings001 or 010 or 100
@@ -562,7 +562,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     startPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-                    // 获取point
+                    // Get/Retrievepoint
                     selectType = 1
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType).getPointIndex(startPoint)
@@ -575,7 +575,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-                    // 获取line
+                    // Get/Retrieveline
                     selectType = 2
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
@@ -589,7 +589,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-                    // 获取area
+                    // Get/Retrievearea
                     selectType = 3
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
@@ -622,7 +622,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         ToastTools.showShort("旋转:${ThermalTool.getRotate(rotateType)}度")
     }
 
-    // image增强
+    // imageEnhance
     private fun enhance() {
         mIrSurfaceView!!.setOpenLut()
         val saturation = mIrSurfaceView?.getSaturationValue() ?: 0
@@ -633,7 +633,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 mIrSurfaceView?.setSaturationValue(it) // settingscontrast
             }
             .setListener {
-                // 实时监听
+                // 实时Listener
 //                mIrSurfaceView?.setSaturationValue(it)//settingscontrast
             }.create().show()
     }
@@ -663,11 +663,11 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         RxPermissions(this).request(Manifest.permission.CAMERA)
             .subscribe {
                 if (isRunCamera) {
-                    // 关闭
+                    // Close
                     temp_camera_layout.visibility = View.GONE
                     isRunCamera = false
                 } else {
-                    // 打开
+                    // Open
                     temp_camera_layout.visibility = View.VISIBLE
                     temp_camera_view.post {
                         temp_camera_view.openCamera()

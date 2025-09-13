@@ -24,7 +24,7 @@ import java.math.RoundingMode
  * - [ExtraKeyConfig.IS_TC007] - 是否settings TC007 的自定义渲染
  * - [ExtraKeyConfig.CUSTOM_PSEUDO_BEAN] - 自定义渲染相关settings项.（可选，不传则从 SharedPreferences 中读取configuration.）
  *
- * 返回 result
+ * Return result
  * - [ExtraKeyConfig.CUSTOM_PSEUDO_BEAN] - 自定义渲染相关settings项.
  */
 class PseudoSetActivity : BaseActivity(), View.OnClickListener {
@@ -249,7 +249,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
                 setResult(RESULT_OK, resultIntent)
                 finish()
             }
-            tv_cancel -> { // 取消
+            tv_cancel -> { // Cancel
                 setResult(RESULT_CANCELED)
                 finish()
             }

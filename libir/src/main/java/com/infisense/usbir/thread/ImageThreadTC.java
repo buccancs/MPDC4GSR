@@ -36,7 +36,6 @@ import java.util.LinkedHashMap;
  */
 public class ImageThreadTC extends Thread {
 
-
     public static final int TYPE_AI_C = -1;//不开启
     public static final int TYPE_AI_D = 0;//动态检测
     public static final int TYPE_AI_H = 1;//high temperature source检测
@@ -57,7 +56,7 @@ public class ImageThreadTC extends Thread {
     private byte[] imageYUV422;
     private byte[] imageARGB;
     private byte[] imageDst;
-    public byte[] imageTemp;//艾睿需要的测试data，processing完可以delete
+    public byte[] imageTemp;//艾睿需要的Testdata，processing完可以delete
 
     private byte[] imageY8;
     private float max = Float.MAX_VALUE;
@@ -69,7 +68,6 @@ public class ImageThreadTC extends Thread {
     private int pseudocolorMode = 3;
     private AlarmBean alarmBean;
 
-
     private byte[] firstFrame = null;
     private byte[] firstTemp = null;
     private int typeAi = TYPE_AI_C;
@@ -79,11 +77,9 @@ public class ImageThreadTC extends Thread {
     private final byte[] amplifyRotateArray;
     public static final int MULTIPLE = 2;
 
-
     public void setOpenAmplify(boolean openAmplify) {
         isOpenAmplify = openAmplify;
     }
-
 
     public int getTypeAi() {
         return typeAi;
@@ -100,10 +96,6 @@ public class ImageThreadTC extends Thread {
     public void setAlarmBean(AlarmBean alarmBean) {
         this.alarmBean = alarmBean;
     }
-
-
-
-
 
     public void setSyncImage(SynchronizedBitmap syncimage) {
         this.syncimage = syncimage;
@@ -312,8 +304,6 @@ public class ImageThreadTC extends Thread {
         baseBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
         return baseBitmap;
     }
-
-
 
     private ColorRGB getColorRGBByMap(LinkedHashMap<Integer, ColorRGB> map, Integer key) {
         return map.get(key);

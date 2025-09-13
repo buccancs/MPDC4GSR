@@ -47,22 +47,22 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
         }
 
     /**
-延时秒数click事件监听，返回值为是否响应该次click事件
+延时秒数clickEventListener，Return值为是否响应该次clickEvent
      */
     var onDelayClickListener: (() -> Boolean)? = null
 
     /**
-自动快门enableddisabled事件监听.
+自动快门enableddisabledEventListener.
      */
     var onAutoCLickListener: ((isOpen: Boolean) -> Unit)? = null
 
     /**
-手动快门click事件监听.
+手动快门clickEventListener.
      */
     var onShutterClickListener: (() -> Unit)? = null
 
     /**
-录音enableddisabled事件监听.
+录音enableddisabledEventListener.
      */
     var onAudioCLickListener: (() -> Unit)? = null
 

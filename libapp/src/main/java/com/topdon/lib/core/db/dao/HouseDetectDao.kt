@@ -132,7 +132,7 @@ abstract class HouseDetectDao {
     }
 
     /**
-     * copy一个检测，注意由于在列表中触发，列表不需要目录及项目，故而返回值中的目录及项目未load
+     * copy一个检测，注意由于在列表中触发，列表不需要目录及项目，故而Return值中的目录及项目未load
      */
     @Transaction
     open fun copyDetect(oldDetect: HouseDetect): HouseDetect {

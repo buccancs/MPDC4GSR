@@ -11,7 +11,7 @@ import com.topdon.module.user.R
 import com.topdon.lib.core.R as LibAppR
 
 /**
-firmware安装中tip弹窗.
+firmwareInstall中tip弹窗.
  * Created by LCG on 2024/3/4.
  */
 class FirmwareInstallDialog(context: Context) : Dialog(context, LibAppR.style.TransparentDialog) {

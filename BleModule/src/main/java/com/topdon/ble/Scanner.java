@@ -4,9 +4,8 @@ import android.content.Context;
 
 import com.topdon.ble.callback.ScanListener;
 
-
 /**
- * bluetoothdevice搜索器
+ * bluetoothdeviceSearch器
  * 
  * date: 2019/10/1 14:41
  * author: bichuanfeng

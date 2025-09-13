@@ -10,6 +10,7 @@ from loguru import logger
 from PyQt6.QtCore import QObject, pyqtSignal
 
 from ..core.config import config
+from typing import Any
 
 
 class LogHandler(QObject):

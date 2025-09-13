@@ -220,7 +220,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     override fun connected() {
-        // 由于 BlankDevActivity 监听 USB device插拔的逻辑，该弹框会一闪而过，最终决定先不弹这个弹框
+        // 由于 BlankDevActivity Listener USB device插拔的逻辑，该弹框会一闪而过，最终决定先不弹这个弹框
         /*TipDialog.Builder(this)
             .setMessage(getString(R.string.tc_has_line_device) + " " + getString(R.string.device_switch_tips))
             .setPositiveListener(R.string.app_yes) {
@@ -266,7 +266,7 @@ class IRMonocularActivity : BaseWifiActivity() {
     }
 
     /**
-     * 显示和隐藏state栏
+     * Show/Display和Hidestate栏
      * @param show
      */
     private fun setStatusBarVisible(show: Boolean) {
@@ -497,7 +497,7 @@ class IRMonocularActivity : BaseWifiActivity() {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+                            // 拒绝Authorization并且不再提醒
                             TipDialog.Builder(this@IRMonocularActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(R.string.app_storage_content)
@@ -623,15 +623,15 @@ class IRMonocularActivity : BaseWifiActivity() {
                 }
             }
 
-            WsCmdConstants.AR_COMMAND_SNAPSHOT -> { // 拍照事件
+            WsCmdConstants.AR_COMMAND_SNAPSHOT -> { // 拍照Event
                 refreshImg(0)
             }
 
-            WsCmdConstants.AR_COMMAND_VRECORD -> { // start或end录像事件
+            WsCmdConstants.AR_COMMAND_VRECORD -> { // start或end录像Event
                 try {
                     val data: JSONObject = JSONObject(event.text).getJSONObject("data")
                     val enable: Boolean = data.getBoolean("enable")
-                    if (!enable) { // end才同步
+                    if (!enable) { // end才Synchronize
                         refreshImg(1)
                     }
                     updateCamera(enable)

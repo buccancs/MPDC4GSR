@@ -5,8 +5,12 @@ package com.topdon.menu.constant
  *
  * Created by LCG on 2024/11/20.
  */
+
 /**
- * class class
+ * Type definition for twolight classification.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 enum class TwoLightType {
     /** Dual light 1 */

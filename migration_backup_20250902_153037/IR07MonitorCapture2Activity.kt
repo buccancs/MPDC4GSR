@@ -68,7 +68,7 @@ class IR07MonitorCapture2Activity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        mp_chart_view.highlightValue(null) // 关闭高亮pointMarker
+        mp_chart_view.highlightValue(null) // Close高亮pointMarker
     }
 
     override fun onPause() {
@@ -78,7 +78,7 @@ class IR07MonitorCapture2Activity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // 退出时把pointlinearea清掉
+        // Exit时把pointlinearea清掉
         CoroutineScope(Dispatchers.IO).launch {
             TC007Repository.clearAllTemp()
         }

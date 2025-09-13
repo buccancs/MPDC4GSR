@@ -2,9 +2,9 @@ package com.topdon.lib.core.socket
 
 /**
  * TC007 Socket 一帧data.
- * @param isMaxShow maximum温point是否显示
- * @param isMinShow minimum温point是否显示
- * @param isCenterShow centerpoint是否显示
+ * @param isMaxShow maximum温point是否Show/Display
+ * @param isMinShow minimum温point是否Show/Display
+ * @param isCenterShow centerpoint是否Show/Display
  * @param maxX maximum温point X 轴坐标
  * @param maxY maximum温point Y 轴坐标
  * @param maxValue maximum温pointtemperature值，单位摄氏度*10
@@ -18,7 +18,7 @@ package com.topdon.lib.core.socket
  * @param isMinWarn 整帧低温point报警是否开启
  * @param isCenterWarn 整帧centerpoint报警是否开启
  *
- * @param isP1Show point1是否显示
+ * @param isP1Show point1是否Show/Display
  * @param p1X point1 X 轴坐标
  * @param p1Y point1 Y 轴坐标
  * @param p1Value point1temperature值，单位摄氏度*10
@@ -26,7 +26,7 @@ package com.topdon.lib.core.socket
  * @param isP1MinWarn point1低温point报警是否开启
  * @param isP1CenterWarn point1centerpoint报警是否开启
  *
- * @param isL1Show line1是否显示
+ * @param isL1Show line1是否Show/Display
  * @param l1StartX line1起始point X 轴坐标
  * @param l1StartY line1起始point Y 轴坐标
  * @param l1EndX line1终止point X 轴坐标
@@ -304,7 +304,7 @@ data class SocketFrameBean(
     )
 
     companion object {
-        private fun Boolean.openText(): String = if (this) "开启" else "关闭"
+        private fun Boolean.openText(): String = if (this) "开启" else "Close"
 
         private fun Int.toCStr(): String = "${this / 10}${if (this % 10 == 0) "" else ".${this % 10}"}°C"
     }

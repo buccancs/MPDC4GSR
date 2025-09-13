@@ -203,7 +203,7 @@ public class IRUVCDual {
             }
         });
         /**
-         * 同时打开防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
+         * 同时Open防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
          */
         // 自动gainswitchparameterauto gain switch parameter
         gain_switch_param.above_pixel_prop = 0.1f;    //用于high -> low gain,device像素总area积的百分比
@@ -524,9 +524,7 @@ public class IRUVCDual {
         return ircmd;
     }
 
-    /**
-     *
-     */
+    
     public void registerUSB() {
         Log.i(TAG, "registerUSB");
         if (mUSBMonitor != null) {
@@ -534,9 +532,7 @@ public class IRUVCDual {
         }
     }
 
-    /**
-     *
-     */
+    
     public void unregisterUSB() {
         Log.i(TAG, "unregisterUSB");
         if (mUSBMonitor != null) {
@@ -593,9 +589,7 @@ public class IRUVCDual {
         uvcCamera.openUVCCamera(ctrlBlock);
     }
 
-    /**
-     *
-     */
+    
     public void startPreview() {
         Log.w(TAG, "startPreview mPid = " + mPid + " isUseIRISP = " + isUseIRISP);
         uvcCamera.setOpenStatus(true);
@@ -616,7 +610,7 @@ public class IRUVCDual {
     }
 
     /**
-     * 获取支持的分辨率list
+     * Get/Retrieve支持的分辨率list
      *
      * @return
      */
@@ -633,7 +627,7 @@ public class IRUVCDual {
 
     /**
      * init IRCMD
-     * 可以根据获取到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
+     * 可以根据Get/Retrieve到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
      *
      * @param previewList
      */
@@ -686,7 +680,6 @@ public class IRUVCDual {
         }
     }
 
-
     public void setConnectCallback(ConnectCallback mConnectCallback) {
         Log.d(TAG, "setConnectCallback");
         this.mConnectCallback = mConnectCallback;
@@ -698,16 +691,16 @@ public class IRUVCDual {
     private void handleUSBConnect(USBMonitor.UsbControlBlock ctrlBlock) {
         Log.d(TAG, "handleUSBConnect mPid = " + mPid);
         openUVCCamera(ctrlBlock);
-        // 获取device的分辨率list
+        // Get/Retrievedevice的分辨率list
         List<CameraSize> previewList = getAllSupportedSize();
-        // 可以根据获取到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
+        // 可以根据Get/Retrieve到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
         if (mPid == 0x5830 || mPid == 0x5840) {
             initIRCMD(previewList);
             /**
-             * 调整带宽
+             * Adjust带宽
              * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要configuration对应的带宽
              */
-            uvcCamera.setDefaultBandwidth(1.0f);       //调整带宽
+            uvcCamera.setDefaultBandwidth(1.0f);       //Adjust带宽
             uvcCamera.setDefaultPreviewMinFps(1);
             uvcCamera.setDefaultPreviewMaxFps(mFps);
         } else {
@@ -719,10 +712,10 @@ public class IRUVCDual {
              */
             uvcCamera.setDefaultPreviewMode(CommonParams.FRAMEFORMATType.FRAME_FORMAT_MJPEG);
             /**
-             * 调整带宽
+             * Adjust带宽
              * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要configuration对应的带宽
              */
-            uvcCamera.setDefaultBandwidth(0.6f);       //调整带宽
+            uvcCamera.setDefaultBandwidth(0.6f);       //Adjust带宽
             uvcCamera.setDefaultPreviewMinFps(1);
             uvcCamera.setDefaultPreviewMaxFps(mFps);
         }
@@ -739,6 +732,5 @@ public class IRUVCDual {
         }
 
     }
-
 
 }

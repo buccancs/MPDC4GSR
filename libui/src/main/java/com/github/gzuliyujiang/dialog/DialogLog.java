@@ -18,7 +18,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 /**
- * 调试日志工具class
+ * DebugLog工具class
  *
  * @author 贵州山魈羡民 (1032694760@qq.com)
  * @since 2021/3/26 21:34
@@ -32,16 +32,16 @@ public final class DialogLog {
     }
 
     /**
-     * 启用调试日志
+     * EnableDebugLog
      */
     public static void enable() {
         enable = true;
     }
 
     /**
-     * 打印调试日志
+     * 打印DebugLog
      *
-     * @param log 日志info
+     * @param log Loginfo
      */
     public static void print(@NonNull Object log) {
         if (!enable) {

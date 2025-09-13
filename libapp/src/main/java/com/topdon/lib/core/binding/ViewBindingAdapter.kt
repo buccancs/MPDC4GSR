@@ -213,17 +213,20 @@ object ViewBindingAdapter {
     }
 
     /**
-     * 从指定 view 的 background 中获取 GradientDrawable.
+     * 从指定 view 的 background 中Get/Retrieve GradientDrawable.
      *
-     * 若指定 view 的 background 为 GradientDrawable，则直接返回；
+     * 若指定 view 的 background 为 GradientDrawable，则直接Return；
      *
-     * 若指定 view 的 background 为 ColorDrawable，返回新的相应color的 GradientDrawable；
+     * 若指定 view 的 background 为 ColorDrawable，Return新的相应color的 GradientDrawable；
      *
      * 若指定 view 的 background 为 LayerDrawable，则查找 background id 的 GradientDrawable；
      *
-     * 其他情况新建 GradientDrawable 并返回。
+     * 其他情况新建 GradientDrawable 并Return。
      */
     @JvmStatic
+    /**
+     * Executes buildgradientdrawable functionality.
+     */
     private fun buildGradientDrawable(view: View): GradientDrawable {
         val oldDrawable: Drawable? = view.background
         if (oldDrawable is GradientDrawable) {
@@ -244,10 +247,13 @@ object ViewBindingAdapter {
     }
 
     /**
-     * 如果 view 此前的 background 已settings bgEffect，则使用 bgDrawable 构建包含 bgEffect 的 LayerDrawable；
-     * 否则直接返回 bgDrawable
+     * 如果 view 此前的 background 已settings bgEffect，则使用 bgDrawable Build包含 bgEffect 的 LayerDrawable；
+     * 否则直接Return bgDrawable
      */
     @JvmStatic
+    /**
+     * Executes buildeffectdrawable functionality.
+     */
     private fun buildEffectDrawable(
         view: View,
         bgDrawable: GradientDrawable,

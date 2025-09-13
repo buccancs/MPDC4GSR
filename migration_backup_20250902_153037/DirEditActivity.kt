@@ -119,7 +119,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
-            view_select_all -> { // 全选、取消全选
+            view_select_all -> { // 全选、Cancel全选
                 adapter.isSelectAll = !adapter.isSelectAll
             }
             view_copy -> { // copy
@@ -158,7 +158,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示退出不savetip弹框
+     * Show/DisplayExit不savetip弹框
      */
     private fun showExitTipsDialog() {
         TipDialog.Builder(this)
@@ -230,7 +230,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
                     for (dir in dataList) {
                         dir.hasSelect = true
                     }
-                } else { // 全选->取消全选
+                } else { // 全选->Cancel全选
                     selectCount = 0
                     for (dir in dataList) {
                         dir.hasSelect = false
@@ -241,7 +241,7 @@ class DirEditActivity : BaseActivity(), View.OnClickListener {
             }
 
         /**
-         * 一个 item selected或取消selected事件监听.
+         * 一个 item selected或CancelselectedEventListener.
          */
         var onSelectChangeListener: ((selectSize: Int) -> Unit)? = null
 

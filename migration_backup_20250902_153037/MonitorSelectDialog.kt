@@ -43,8 +43,8 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             dialog.window!!.attributes = lp
 
             view.btn_confirm_or_back.setOnClickListener {
-                if (isFirstStep) { // 步骤1->步骤2 逻辑为“确认”
-                    if (monitorType == 0) { // 还没选取type不允许point确认
+                if (isFirstStep) { // 步骤1->步骤2 逻辑为“Confirm”
+                    if (monitorType == 0) { // 还没选取type不允许pointConfirm
                         return@setOnClickListener
                     }
                     isFirstStep = false
@@ -53,7 +53,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
                     view.cl_second_step.visibility = View.VISIBLE
                     view.tv_title.text = context.getString(R.string.select_monitor_type_step2)
                     view.btn_confirm_or_back.text = context.getString(R.string.select_monitor_return)
-                } else { // 步骤2->步骤1 逻辑为“返回”
+                } else { // 步骤2->步骤1 逻辑为“Return”
                     isFirstStep = true
                     view.btn_cancel.visibility = View.GONE
                     view.cl_first_step.visibility = View.VISIBLE

@@ -4,12 +4,12 @@ import android.graphics.Point
 import android.graphics.Rect
 import java.lang.NumberFormatException
 
-// 这个file用来放 TC007 interface返回 JSON 的封装
+// 这个file用来放 TC007 interfaceReturn JSON 的封装
 
 /**
- * TC007 所有interface请求返回的format内容.
+ * TC007 所有interface请求Return的format内容.
  * @param Detail 当出错时，详细errorinfo
- * @param Data 实际返回的data，视不同的interface而定
+ * @param Data 实际Return的data，视不同的interface而定
  */
 data class TC007Response<T>(
     val Code: Int,
@@ -25,11 +25,11 @@ data class TC007Response<T>(
 }
 
 /**
- * TC007 interface请求返回：产品info
+ * TC007 interface请求Return：产品info
  * @param ProductName 产品name
  * @param ProductPN PN
  * @param ProductSN SN
- * @param Code 激活码
+ * @param Code Activate码
  */
 data class ProductBean(
     val ProductName: String,
@@ -48,7 +48,7 @@ data class Version07Bean(
 )
 
 /**
- * TC007 interface请求返回：电池电量info
+ * TC007 interface请求Return：电池电量info
  * @param Status Charging-充电中 Discharging-未充电
  * @param Remaining 剩余电量百分比
  */
@@ -56,6 +56,9 @@ data class BatteryInfo(
     val Status: String?,
     val Remaining: String?,
 ) {
+    /**
+     * Executes ischarging functionality.
+     */
     fun isCharging(): Boolean = Status == "Charging"
 
     fun getBattery(): Int? =
@@ -67,10 +70,10 @@ data class BatteryInfo(
 }
 
 /**
- * TC007 interface请求返回：firmware升级state
- * @param Status 当前升级state 1-start升级 2-升级中 3-升级failed 4-升级success
- * @param Percent 当前升级进度百分比
- * @param Code 升级error码
+ * TC007 interface请求Return：firmwareUpgradestate
+ * @param Status 当前Upgradestate 1-startUpgrade 2-Upgrade中 3-Upgradefailed 4-Upgradesuccess
+ * @param Percent 当前Upgrade进度百分比
+ * @param Code Upgradeerror码
  */
 data class TC07UpgradeStatus(
     val Status: Int,
@@ -79,7 +82,7 @@ data class TC07UpgradeStatus(
 )
 
 /**
- * TC007 interface返回：temperature measurementpropertyparameter
+ * TC007 interfaceReturn：temperature measurementpropertyparameter
  * @param Fps temperature measurement帧率[0,采集帧率]，默认12，maximum支持12
  * @param Level temperature measurement档位 0-高gain 1-低gain 3-自动switch
  * @param OsdMode temperature measurementinfo叠加方式 0-videoencoding前叠加 1-码流info叠加(encoding后预览时叠加) 2-无叠加

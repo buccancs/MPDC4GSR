@@ -14,21 +14,27 @@ import retrofit2.http.Query
  *
  * Created by LCG on 2024/4/28.
  */
+/**
+ * TC007Service provides background service functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 interface TC007Service {
     /**
-     * 获取产品info
+     * Get/Retrieve产品info
      */
     @GET("/v1/system/product/info/dj")
     suspend fun getProductInfo(): TC007Response<ProductBean>
 
     /**
-     * 获取device电池info
+     * Get/Retrievedevice电池info
      */
     @GET("/v1/system/local/battery")
     suspend fun getBatteryInfo(): TC007Response<BatteryInfo>
 
     /**
-     * 同步时间.
+     * Synchronize时间.
      */
     @PUT("/v1/system/local/time")
     suspend fun syncTime(
@@ -36,7 +42,7 @@ interface TC007Service {
     ): TC007Response<Any?>
 
     /**
-     * firmware升级-上传firmware升级包
+     * firmwareUpgrade-UploadfirmwareUpgrade包
      */
     @Multipart
     @POST("/v1/system/upgrade/package?reset=true")
@@ -49,13 +55,13 @@ interface TC007Service {
     ): TC007Response<Any?>
 
     /**
-     * 查询firmware升级state.
+     * 查询firmwareUpgradestate.
      */
     @GET("/v1/system/upgrade/status")
     suspend fun getUpgradeStatus(): TC007Response<TC07UpgradeStatus>
 
     /**
-     * 恢复出厂settings
+     * Restore出厂settings
      */
     @PUT("/v1/system/magic/factory")
     suspend fun resetToFactory(): TC007Response<Boolean>
@@ -67,7 +73,7 @@ interface TC007Service {
     suspend fun correction(): TC007Response<Any?>
 
     /**
-     * 获取temperature measurementpropertyparameter
+     * Get/Retrievetemperature measurementpropertyparameter
      */
     @GET("/v1/thermal/env/attribute?default=false")
     suspend fun getEnvAttr(): TC007Response<EnvAttr>
@@ -131,7 +137,7 @@ interface TC007Service {
 
     /**
      * settingsimagemode
-     * 0：infrared；1：visible light；2：画中画；3：dual lightfusion；4：细节增强
+     * 0：infrared；1：visible light；2：画中画；3：dual lightfusion；4：细节Enhance
      */
     @PUT("/v1/camera/videoin/mode")
     suspend fun setMode(
@@ -171,7 +177,7 @@ interface TC007Service {
     ): TC007Response<Any?>
 
     /**
-     * 获取temperature measurementpropertyparameter
+     * Get/Retrievetemperature measurementpropertyparameter
      * chn
      * integer
      * video通道

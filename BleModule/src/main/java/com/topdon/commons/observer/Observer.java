@@ -1,7 +1,7 @@
 package com.topdon.commons.observer;
 
 /**
- * 观察者
+ * Observer
  * <p>
  * date: 2019/8/3 13:15
  * author: chuanfeng.bi

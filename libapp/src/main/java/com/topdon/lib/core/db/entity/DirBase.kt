@@ -117,7 +117,7 @@ class DirDetect() : DirBase() {
     var itemList: ArrayList<ItemDetect> = ArrayList()
 
     /**
-     * 返回一个 id 为 0，nameadd (1)，position + 1，itemList copy，其余property完全一致的新对象.
+     * Return一个 id 为 0，nameadd (1)，position + 1，itemList copy，其余property完全一致的新对象.
      */
     fun copyOne(): DirDetect {
         val newDirDetect = DirDetect()
@@ -164,7 +164,7 @@ class DirDetect() : DirBase() {
 
     companion object {
         /**
-         * 构建默认的检测目录列表.
+         * Build默认的检测目录列表.
          */
         fun buildDefaultDirList(parentId: Long): ArrayList<DirDetect> =
             arrayListOf(

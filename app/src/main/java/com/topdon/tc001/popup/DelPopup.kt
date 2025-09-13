@@ -13,7 +13,7 @@ import com.csl.irCamera.R
 import com.kylecorry.andromeda.core.ui.setCompoundDrawables
 
 /**
- * 首页-device列表-deletedevice确认 PopupWindow.
+ * 首页-device列表-deletedeviceConfirm PopupWindow.
  *
  * Created by LCG on 2024/4/24.
  */

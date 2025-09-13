@@ -149,7 +149,7 @@ setX轴刻度
         chart: LineChart,
         type: Int,
     ) {
-true保证有刻度数量不变,滑动要false
+true保证有刻度数量不变,Swipe要false
         val xLen = chart.xChartMax - chart.xChartMin
 //        Log.w("chart", "xLen: $xLen")
 //        chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), getLabCount(xLen.toInt()) < 3)

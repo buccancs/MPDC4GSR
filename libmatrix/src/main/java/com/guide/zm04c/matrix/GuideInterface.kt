@@ -89,7 +89,7 @@ class GuideInterface {
     var startTime = 0L
 
     /**
-     * analysisdata,并回调响应
+     * analysisdata,并Callback响应
      */
     private fun startUsbBufferReadThread() {
         mReadThreadFlag = true
@@ -130,7 +130,7 @@ class GuideInterface {
 //                        )
 //                    }
                         if (mIrDataCallback != null) {
-                            mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat) // 回调imageinfo和temperature矩阵
+                            mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat) // Callbackimageinfo和temperature矩阵
                         }
                     } else {
 //                        Logger.d(TAG, "read Frame failed");

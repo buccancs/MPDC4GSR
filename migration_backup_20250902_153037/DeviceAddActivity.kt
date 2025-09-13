@@ -63,13 +63,13 @@ class DeviceAddActivity : BaseActivity() {
     private var isTS004 = true
 
     /**
-     * 根据产品需求，初次进来需要按流程弹相应弹框申请相关权限及开启开关；
+     * 根据产品需求，初次进来需要按流程弹相应弹框申请相关Permission及开启开关；
      * 但若该初次流程未success走完，后续触发相应流程时不再弹框，用该variable进行区分。
      */
     private var isFirstRequest = true
 
     /**
-     * 申请权限、开启bluetooth、开启 WIFI 时顶部tiptext，太多太乱，抽取封装到这里统一processing
+     * 申请Permission、开启bluetooth、开启 WIFI 时顶部tiptext，太多太乱，抽取封装到这里统一processing
      */
     private lateinit var topTipHolder: TopTipHolder
     private lateinit var locationManager: LocationManager
@@ -110,8 +110,8 @@ class DeviceAddActivity : BaseActivity() {
         requestPermission(2)
 
         LocationUtil.addBtStateListener(this) {
-            // 进入界area时不会收到开启或关闭位置info广播，要发生实际变化时才有广播
-            XLog.i("【adddevice】 位置info开关state：${if (it) "已开启" else "已关闭"}")
+            // 进入界area时不会收到开启或Close位置info广播，要发生实际变化时才有广播
+            XLog.i("【adddevice】 位置info开关state：${if (it) "已开启" else "已Close"}")
             refreshStateAndTips()
             if (it) {
                 if (isFirstRequest) {
@@ -134,8 +134,8 @@ class DeviceAddActivity : BaseActivity() {
             adapter.addOne(it)
         }
         BluetoothUtil.addBtStateListener(this) {
-            // 进入界area时不会收到开启或关闭bluetooth广播，要发生实际变化时才有广播
-            XLog.i("【adddevice】 bluetooth开关state：${if (it) "已开启" else "已关闭"}")
+            // 进入界area时不会收到开启或Closebluetooth广播，要发生实际变化时才有广播
+            XLog.i("【adddevice】 bluetooth开关state：${if (it) "已开启" else "已Close"}")
             refreshStateAndTips()
             if (it) {
                 if (isFirstRequest) {
@@ -155,8 +155,8 @@ class DeviceAddActivity : BaseActivity() {
         }
 
         WifiUtil.addWifiStateListener(this) {
-            // 进入界area时会收到一次开启或关闭 WIFI 广播，无论 WIFI state有无变化
-            XLog.i("【adddevice】 WIFI 开关state：${if (it) "已开启" else "已关闭或未知"}")
+            // 进入界area时会收到一次开启或Close WIFI 广播，无论 WIFI state有无变化
+            XLog.i("【adddevice】 WIFI 开关state：${if (it) "已开启" else "已Close或未知"}")
             refreshStateAndTips()
             if (it) {
                 if (isFirstRequest) {
@@ -241,7 +241,7 @@ class DeviceAddActivity : BaseActivity() {
     private var openLocationDialog: TipDialog? = null
 
     /**
-     * 显示开启位置info开关tip弹框.
+     * Show/Display开启位置info开关tip弹框.
      */
     private fun showOpenLocationDialog() {
         if (openLocationDialog?.isShowing == true) {
@@ -279,7 +279,7 @@ class DeviceAddActivity : BaseActivity() {
     private var openBtDialog: TipDialog? = null
 
     /**
-     * 显示开启 WIFI 开关tip弹框，该method只在权限申请通过后调用，故而理论上已拥有相应权限.
+     * Show/Display开启 WIFI 开关tip弹框，该method只在Permission申请通过后调用，故而理论上已拥有相应Permission.
      */
     private fun showOpenBtDialog() {
         if (openBtDialog?.isShowing == true) {
@@ -317,7 +317,7 @@ class DeviceAddActivity : BaseActivity() {
     private var openWifiDialog: TipDialog? = null
 
     /**
-     * 显示开启 WIFI 开关tip弹框.
+     * Show/Display开启 WIFI 开关tip弹框.
      */
     private fun showOpenWifiDialog() {
         if (openWifiDialog?.isShowing == true) {
@@ -337,7 +337,7 @@ class DeviceAddActivity : BaseActivity() {
                         } else {
                             var wifiIntent = Intent(Settings.Panel.ACTION_WIFI)
                             if (wifiIntent.resolveActivity(packageManager) == null) {
-                                XLog.e("【adddevice】 浮窗开启 WIFI Intent 没有对应 Activity! 尝试打开 WIFI settings Intent")
+                                XLog.e("【adddevice】 浮窗开启 WIFI Intent 没有对应 Activity! 尝试Open WIFI settings Intent")
                                 wifiIntent = Intent(Settings.ACTION_WIFI_SETTINGS)
                                 if (wifiIntent.resolveActivity(packageManager) == null) {
                                     XLog.e("【adddevice】 不可能！WIFI settings Intent 没有对应 Activity! 尝试跳转系统settings首页")
@@ -361,13 +361,13 @@ class DeviceAddActivity : BaseActivity() {
     }
 
     /**
-     * 权限申请可能同时触发多次，用该variable进行控制。
+     * Permission申请可能同时触发多次，用该variable进行控制。
      */
     private var isRequesting = false
 
     /**
-     * 请求相应权限如定位、bluetooth权限.
-     * @param actionType 所有权限授予后要执行的processing 0-不做任何processing 1-仅检测并弹出bluetooth开关弹框 2-检测并弹出所有需要的开关弹框
+     * 请求相应Permission如定位、bluetoothPermission.
+     * @param actionType 所有Permission授予后要执行的processing 0-不做任何processing 1-仅检测并弹出bluetooth开关弹框 2-检测并弹出所有需要的开关弹框
      */
     private fun requestPermission(actionType: Int) {
         if (isRequesting) {
@@ -443,10 +443,10 @@ class DeviceAddActivity : BaseActivity() {
     private var timeoutEmptyJob: Job? = null
 
     /**
-     * startbluetooth搜索，若缺少相应权限或开关未开启，则直接 return.
+     * startbluetoothSearch，若缺少相应Permission或开关未开启，则直接 return.
      */
     private fun startBtScan() {
-        if (!PermissionTool.hasBtPermission(this)) { // 没有权限
+        if (!PermissionTool.hasBtPermission(this)) { // 没有Permission
             return
         }
         if (Build.VERSION.SDK_INT >= 28 && !locationManager.isLocationEnabled) { // 位置info未开启
@@ -489,7 +489,7 @@ class DeviceAddActivity : BaseActivity() {
     }
 
     /**
-     * stopbluetooth搜索，pause扫描动画.
+     * stopbluetoothSearch，pause扫描动画.
      */
     private fun stopBtScan() {
         iv_scan_gif.pauseAnimation()
@@ -516,8 +516,8 @@ class DeviceAddActivity : BaseActivity() {
 
         XLog.i("当前connection ${WifiUtil.getCurrentWifiSSID(this)} 准备connection $wifiName")
         showCameraLoading()
-        // 部分device部分情况下即没有 onAvailable 也没有 onUnavailable 回调，15秒后把 Loading 弹框 dismiss，避免流程卡死
-        // 没有回调是 connectWifi method中的 listener 未refresh，修复那个问题后，理论上不存在没回调情况了，这个逻辑先comment掉
+        // 部分device部分情况下即没有 onAvailable 也没有 onUnavailable Callback，15秒后把 Loading 弹框 dismiss，避免流程卡死
+        // 没有Callback是 connectWifi method中的 listener 未refresh，Fix/Repair那个问题后，理论上不存在没Callback情况了，这个逻辑先comment掉
         job =
             lifecycleScope.launch {
                 examineConnect()
@@ -550,7 +550,7 @@ class DeviceAddActivity : BaseActivity() {
     }
 
     /**
-     * 递归检查是否链接
+     * 递归Check是否链接
      */
     suspend fun examineConnect()  {
         delay(10 * 1000)
@@ -578,7 +578,7 @@ class DeviceAddActivity : BaseActivity() {
     }
 
     /**
-     * 申请权限、开启位置info、开启bluetooth、开启 WIFI 时顶部tiptext，太多太乱，抽取封装到这里统一processing
+     * 申请Permission、开启位置info、开启bluetooth、开启 WIFI 时顶部tiptext，太多太乱，抽取封装到这里统一processing
      */
     private class TopTipHolder(val textView: TextView) {
         var state = State.NONE
@@ -597,12 +597,12 @@ class DeviceAddActivity : BaseActivity() {
             }
 
         enum class State {
-            NONE, // 不显示
-            LOCATION_PERMISSION, // 显示精确定位权限申请tiptext
-            LOCATION_INFO, // 显示开启位置infotiptext
-            BLUETOOTH_PERMISSION, // 显示bluetooth权限申请text
-            BLUETOOTH_SWITCH, // 显示开启bluetooth开关tiptext
-            WIFI_SWITCH, // 显示开启WIFItiptext
+            NONE, // 不Show/Display
+            LOCATION_PERMISSION, // Show/Display精确定位Permission申请tiptext
+            LOCATION_INFO, // Show/Display开启位置infotiptext
+            BLUETOOTH_PERMISSION, // Show/DisplaybluetoothPermission申请text
+            BLUETOOTH_SWITCH, // Show/Display开启bluetooth开关tiptext
+            WIFI_SWITCH, // Show/Display开启WIFItiptext
         }
     }
 
@@ -615,7 +615,7 @@ class DeviceAddActivity : BaseActivity() {
         val dataList: ArrayList<String> = ArrayList()
 
         /**
-         * “connection”click事件监听.
+         * “connection”clickEventListener.
          * ssid - 不带双引号的 SSID
          */
         var onConnectClickListener: ((ssid: String) -> Unit)? = null

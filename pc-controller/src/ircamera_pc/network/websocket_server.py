@@ -185,7 +185,7 @@ class WebSocketServer:
             # Start heartbeat monitoring
             self.heartbeat_task = asyncio.create_task(self._heartbeat_monitor())
 
-            logger.info(f"WebSocket Secure server started successfully")
+            logger.info("WebSocket Secure server started successfully")
             logger.info(f"Service advertised as '_irhub._tcp' on port {self.port}")
 
         except Exception as e:

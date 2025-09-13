@@ -3,7 +3,6 @@ package com.topdon.ble;
 import android.bluetooth.BluetoothDevice;
 import android.os.Build;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -84,7 +83,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 不经过搜索，直接使用之间的MAC地址connection的次数，重连达到此次数后，恢复搜索到device再进行connection
+     * 不经过Search，直接使用之间的MAC地址connection的次数，重连达到此次数后，RestoreSearch到device再进行connection
      */
     public ConnectionConfiguration setReconnectImmediatelyMaxTimes(int reconnectImmediatelyMaxTimes) {
         this.reconnectImmediatelyMaxTimes = reconnectImmediatelyMaxTimes;
@@ -120,7 +119,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 自动重连时，搜索次数与间隔的对应关系，first：已尝试次数，second：间隔，单位为毫秒。如搜索了1次，间隔2秒，搜索了5次，间隔30秒等
+     * 自动重连时，Search次数与间隔的对应关系，first：已尝试次数，second：间隔，单位为毫秒。如Search了1次，间隔2秒，Search了5次，间隔30秒等
      */
     public ConnectionConfiguration setScanIntervalPairsInAutoReconnection(List<Pair<Integer, Integer>> parameters) {
         Inspector.requireNonNull(parameters, "parameters can't be null");

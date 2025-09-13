@@ -149,7 +149,7 @@ class ReportAddActivity : BaseActivity(), View.OnClickListener {
     private var editItemDetect = ItemDetect()
 
     /**
-     * initialization view_house_detect 的相关事件监听.
+     * initialization view_house_detect 的相关EventListener.
      */
     private fun initDetectViewListener() {
         view_house_detect.onDirCopyListener = { // 目录copy
@@ -168,7 +168,7 @@ class ReportAddActivity : BaseActivity(), View.OnClickListener {
             editItemDetect = item
             ThreePickPopup(this, arrayListOf(R.string.person_headshot_phone, R.string.light_camera_take_photo, R.string.ir_camera_take_photo)) {
                 when (it) {
-                    0 -> { // 从相册获取
+                    0 -> { // 从相册Get/Retrieve
                         PermissionTool.requestImageRead(this) {
                             galleryPickResult.launch("image/*")
                         }

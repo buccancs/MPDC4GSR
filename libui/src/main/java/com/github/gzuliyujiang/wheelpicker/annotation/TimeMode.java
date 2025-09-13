@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface TimeMode {
     /**
-     * 不显示
+     * 不Show/Display
      */
     int NONE = -1;
     /**

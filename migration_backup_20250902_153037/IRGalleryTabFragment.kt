@@ -20,7 +20,7 @@ import org.greenrobot.eventbus.EventBus
  * 图库 Tab 页，下分image和video.
  *
  * 需要传递parameter：
- * - [ExtraKeyConfig.HAS_BACK_ICON] - 图库是否有返回箭头，默认 false
+ * - [ExtraKeyConfig.HAS_BACK_ICON] - 图库是否有Return箭头，默认 false
  * - [ExtraKeyConfig.CAN_SWITCH_DIR] - 图库是否可switch 有linedevice、TS004、TC007 目录，默认 true
  * - [ExtraKeyConfig.DIR_TYPE] - 进入图库时初始的目录type 具体取值由 [DirType] 定义
  *
@@ -28,7 +28,7 @@ import org.greenrobot.eventbus.EventBus
  */
 class IRGalleryTabFragment : BaseFragment() {
     /**
-     * 从上一界area传递过来的，图库是否有返回箭头
+     * 从上一界area传递过来的，图库是否有Return箭头
      */
     private var hasBackIcon = false
 
@@ -84,9 +84,9 @@ class IRGalleryTabFragment : BaseFragment() {
         title_view.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))
         title_view.setLeftDrawable(if (hasBackIcon) R.drawable.ic_back_white_svg else 0)
         title_view.setLeftClickListener {
-            if (viewModel.isEditModeLD.value == true) { // 当前为编辑state，退出编辑
+            if (viewModel.isEditModeLD.value == true) { // 当前为编辑state，Exit编辑
                 viewModel.isEditModeLD.value = false
-            } else { // 当前为非编辑state，退出页area
+            } else { // 当前为非编辑state，Exit页area
                 if (hasBackIcon) {
                     requireActivity().finish()
                 }

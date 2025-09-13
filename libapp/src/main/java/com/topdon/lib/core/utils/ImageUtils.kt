@@ -31,7 +31,7 @@ object ImageUtils {
         bitmap: Bitmap,
         isTC007: Boolean = false,
     ): String {
-        // storage目录，用户可以自定义
+        // storage目录，User可以自定义
         val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
         val saveFile = ImageUtils.save2Album(bitmap, dicName, Bitmap.CompressFormat.JPEG)
@@ -52,7 +52,7 @@ object ImageUtils {
         return saveFile.absolutePath
     }
 
-    // savedlitemodule的原始file
+    
     fun saveLiteFrame(
         bs: ByteArray,
         capital: ByteArray,
@@ -71,7 +71,7 @@ object ImageUtils {
         }
     }
 
-    // saved原始file
+    
     fun saveFrame(
         bs: ByteArray,
         capital: ByteArray,

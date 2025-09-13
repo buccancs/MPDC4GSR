@@ -14,6 +14,12 @@ import com.topdon.lib.core.utils.ScreenUtil
  *
  * Created by LCG on 2024/10/26.
  */
+/**
+ * NotTipsSelectDialog displays modal dialog interface for user interaction.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     @StringRes
     private var tipsResId: Int = 0
@@ -29,7 +35,7 @@ class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
     }
 
     /**
-     * click “我知道了” 事件监听.
+     * click “我知道了” EventListener.
      */
     fun setOnConfirmListener(l: ((isSelect: Boolean) -> Unit)?): NotTipsSelectDialog {
         onConfirmListener = l

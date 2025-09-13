@@ -22,7 +22,7 @@ public class UnitDBBean implements Serializable {
 
     private static final long serialVersionUID = -1L;
     public Long dbid;
-    String LoginName;//登录账号
+    String LoginName;//Login账号
     int unitType;//0 公制type  1 英制type
     String conversionRelation;//conversion关系
     String preUnit;//conversion前单位
@@ -31,7 +31,6 @@ public class UnitDBBean implements Serializable {
     String afterName;//conversion后中文name
     String conversionFormula;//conversion公式
     String calcFactor;//calculation因子
-
 
     public Long getDbid() {
         return dbid;
@@ -112,6 +111,5 @@ public class UnitDBBean implements Serializable {
     public void setCalcFactor(String calcFactor) {
         this.calcFactor = calcFactor;
     }
-
 
 }

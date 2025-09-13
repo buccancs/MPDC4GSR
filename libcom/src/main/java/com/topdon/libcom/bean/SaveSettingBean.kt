@@ -13,7 +13,7 @@ import com.topdon.lib.core.utils.CommUtils
 /**
  * savesettings开关开启时倒还好，读写都可以用 SharedPreferences save；
  *
- * 但若savesettings开关关闭时，那一堆的configuration每个都需要一个variable来save当前的更改，
+ * 但若savesettings开关Close时，那一堆的configuration每个都需要一个variable来save当前的更改，
  * 结果就是 Activity 里一大堆的variable。
  *
  * 这个class的想法就是把savesettings开关相关的variable都扔进里area，从这里读写。
@@ -22,12 +22,12 @@ import com.topdon.lib.core.utils.CommUtils
  */
 class SaveSettingBean(private val isWifi: Boolean = false) {
     /**
-     * 获取 SPUtil 单例.
+     * Get/Retrieve SPUtil Singleton.
      */
     private fun getSPUtils(): SPUtils = SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtil" else "SaveSettingUtil")
 
     /**
-     * 是否开启savesettings开关，默认关闭.
+     * 是否开启savesettings开关，默认Close.
      */
     var isSaveSetting: Boolean = getSPUtils().getBoolean("isSaveSetting", true)
         set(value) {
@@ -69,7 +69,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging是否打开自动快门，默认打开 true-打开 false-关闭
+     * thermal imaging是否Open自动快门，默认Open true-Open false-Close
      */
     var isAutoShutter: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isAutoShutter", true) else true
         set(value) {
@@ -80,7 +80,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging录像是否同时使用麦克风recording音频，默认关闭 true-开启 false-关闭
+     * thermal imaging录像是否同时使用麦克风recording音频，默认Close true-开启 false-Close
      */
     var isRecordAudio: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isRecordAudio", false) else false
         set(value) {
@@ -118,7 +118,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging-temperature measurementmode-是否开启dual light，默认关闭 true-开启 false-关闭
+     * thermal imaging-temperature measurementmode-是否开启dual light，默认Close true-开启 false-Close
      */
     var isOpenTwoLight: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenTwoLight", false) else false
         set(value) {
@@ -151,7 +151,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging-temperature measurementmode-是否开启pseudo color条，默认开启 true-开启 false-关闭
+     * thermal imaging-temperature measurementmode-是否开启pseudo color条，默认开启 true-开启 false-Close
      */
     var isOpenPseudoBar: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenPseudoBar", true) else true
         set(value) {
@@ -173,7 +173,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging-temperature measurementmode-锐度(细节增强等级)，取值range`[0,4]`，默认为 2
+     * thermal imaging-temperature measurementmode-锐度(细节Enhance等级)，取值range`[0,4]`，默认为 2
      */
     var ddeConfig: Int = if (isSaveSetting) getSPUtils().getInt("ddeConfig", 2) else 2
         set(value) {
@@ -225,7 +225,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
     fun isRotatePortrait(): Boolean = rotateAngle == 90 || rotateAngle == 270
 
     /**
-     * thermal imaging是否开启镜像，默认关闭即不镜像 true-镜像 false-不镜像
+     * thermal imaging是否开启镜像，默认Close即不镜像 true-镜像 false-不镜像
      */
     var isOpenMirror: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenMirror", false) else false
         set(value) {
@@ -236,7 +236,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging-观测mode-是否开启指南针，默认关闭 true-开启 false-关闭
+     * thermal imaging-观测mode-是否开启指南针，默认Close true-开启 false-Close
      */
     var isOpenCompass: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenCompass", false) else false
         set(value) {
@@ -299,7 +299,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging-观测mode-是否开启高温point，默认关闭 true-开启 false-关闭
+     * thermal imaging-观测mode-是否开启高温point，默认Close true-开启 false-Close
      */
     var isOpenHighPoint: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenHighPoint", false) else false
         set(value) {
@@ -310,7 +310,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging-观测mode-是否开启低温point，默认关闭 true-开启 false-关闭
+     * thermal imaging-观测mode-是否开启低温point，默认Close true-开启 false-Close
      */
     var isOpenLowPoint: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenLowPoint", false) else false
         set(value) {
@@ -340,7 +340,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         }
 
     /**
-     * thermal imaging-观测mode-标靶-是否开启标靶，默认关闭 true-开启 false-关闭
+     * thermal imaging-观测mode-标靶-是否开启标靶，默认Close true-开启 false-Close
      */
     var isOpenTarget: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenTarget", false) else false
         set(value) {

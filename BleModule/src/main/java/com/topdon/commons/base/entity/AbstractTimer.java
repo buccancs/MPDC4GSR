@@ -23,7 +23,7 @@ public abstract class AbstractTimer {
     }
 
     /**
-     * 回调
+     * Callback
      */
     public abstract void onTick();
 

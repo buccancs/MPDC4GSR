@@ -9,10 +9,9 @@ import java.io.Reader;
 
 public class UTF8StringUtils {
 
-
     /**
      * @param @return parameter
-     * @return String    返回type
+     * @return String    Returntype
      * @throws
      * @Title readByUtf8WithBom
      * @Description 普通方式读取 txtfile，如果用记事本save会存在bomformat
@@ -46,7 +45,7 @@ public class UTF8StringUtils {
 
     /**
      * @param @return parameter
-     * @return String    返回type
+     * @return String    Returntype
      * @throws
      * @Title readByUtf8WithOutBom
      * @Description 读取 txtfile，如果存在bomformat 则去掉
@@ -75,6 +74,5 @@ public class UTF8StringUtils {
         }
         return "";
     }
-
 
 }

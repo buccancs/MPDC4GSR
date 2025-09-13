@@ -33,7 +33,7 @@ public class WriteOptions {
     }
 
     /**
-     * 两次写请求的时间间隔，和{@link #getPackageWriteDelayMillis()}不同的是，一次写请求可能会分包发送。
+     * 两次写请求的时间间隔，和{@link #getPackageWriteDelayMillis()}不同的是，一次写请求可能会分包Send。
      * 一个是请求与请求的间隔，一个是包与包的间隔
      */
     public int getRequestWriteDelayMillis() {
@@ -48,7 +48,7 @@ public class WriteOptions {
     }
 
     /**
-     * 是否等待写入结果回调再写下一包data
+     * 是否等待写入结果Callback再写下一包data
      */
     public boolean isWaitWriteResult() {
         return isWaitWriteResult;
@@ -78,7 +78,7 @@ public class WriteOptions {
         }
 
         /**
-         * 两次写请求的时间间隔，和{@link #packageWriteDelayMillis}不同的是，一次写请求可能会分包发送。
+         * 两次写请求的时间间隔，和{@link #packageWriteDelayMillis}不同的是，一次写请求可能会分包Send。
          * 一个是请求与请求的间隔，一个是包与包的间隔
          */
         public Builder setRequestWriteDelayMillis(int requestWriteDelayMillis) {
@@ -97,7 +97,7 @@ public class WriteOptions {
         }
 
         /**
-         * 是否等待写入结果回调再写下一包data
+         * 是否等待写入结果Callback再写下一包data
          */
         public Builder setWaitWriteResult(boolean waitWriteResult) {
             isWaitWriteResult = waitWriteResult;

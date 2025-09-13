@@ -15,7 +15,7 @@ interface Poster {
     void enqueue(@NonNull Runnable runnable);
 
     /**
-     * 清除queuetask
+     * Clearqueuetask
      */
     void clear();
 }

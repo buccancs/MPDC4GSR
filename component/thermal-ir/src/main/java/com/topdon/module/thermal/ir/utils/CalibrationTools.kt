@@ -88,7 +88,7 @@ calibration前需要resettemperature measurement parameters,否则temperaturecal
      *
      */
     fun potReady(irCmd: IRCMD): Boolean {
-        return irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS) == 0 // 关闭锅盖校正
+        return irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS) == 0 // Close锅盖校正
     }
 
     /**
@@ -110,19 +110,19 @@ calibration前需要resettemperature measurement parameters,否则temperaturecal
                 4 -> CommonParams.RMCoverAutoCalcType.GAIN_4
                 else -> CommonParams.RMCoverAutoCalcType.GAIN_1
             }
-        irCmd.rmCoverAutoCalc(gainType) // 发送锅盖calibration
-        irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_EN) // 打开锅盖校正
+        irCmd.rmCoverAutoCalc(gainType) // Send锅盖calibration
+        irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_EN) // Open锅盖校正
     }
 
     /**
-取消calibration
+Cancelcalibration
      */
     fun cancelCalibration(irCmd: IRCMD) {
         irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_TPD)
     }
 
     /**
-恢复出厂calibration
+Restore出厂calibration
      */
     fun reset(irCmd: IRCMD) {
         irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_ALL)
@@ -140,7 +140,7 @@ calibration前需要resettemperature measurement parameters,否则temperaturecal
 
     /**
 setgainmode
-@param type 1: 打开    0: disabled
+@param type 1: Open    0: disabled
      *
      */
     fun setGain(
@@ -217,7 +217,7 @@ setgainmode
                 4 -> CommonParams.RMCoverAutoCalcType.GAIN_4
                 else -> CommonParams.RMCoverAutoCalcType.GAIN_1
             }
-        irCmd.rmCoverAutoCalc(gainType) // 发送锅盖calibration
+        irCmd.rmCoverAutoCalc(gainType) // Send锅盖calibration
     }
 
     /**

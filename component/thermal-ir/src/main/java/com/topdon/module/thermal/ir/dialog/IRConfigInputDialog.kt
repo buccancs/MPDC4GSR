@@ -37,7 +37,7 @@ set输入框默认值
     }
 
     /**
-set确认click事件监听.
+setConfirmclickEventListener.
      */
     fun setConfirmListener(l: (value: Float) -> Unit): IRConfigInputDialog {
         this.onConfirmListener = l

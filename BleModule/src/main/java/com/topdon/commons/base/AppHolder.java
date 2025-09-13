@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class AppHolder implements Application.ActivityLifecycleCallbacks {
     //正在运行的Activity
     private final List<RunningActivity> runningActivities = new CopyOnWriteArrayList<>();
-    //是否完全退出
+    //是否完全Exit
     private boolean isCompleteExit = false;
     private Application application;
     private Looper mainLooper;
@@ -33,7 +33,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
 
     private AppHolder() {
         mainLooper = Looper.getMainLooper();
-        //尝试获取application
+        //尝试Get/Retrieveapplication
         application = tryGetApplication();
         if (application != null) {
             application.registerActivityLifecycleCallbacks(this);
@@ -143,7 +143,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
     
     public static void initialize(@NonNull Application application) {
         Objects.requireNonNull(application, "application is null");
-        //如果自动获取的和传入的不是同一个Application，重新注册生命周期监听
+        //如果自动Get/Retrieve的和传入的不是同一个Application，重新Register生命周期Listener
         if (Holder.INSTANCE.application != null && Holder.INSTANCE.application != application) {
             Holder.INSTANCE.application.unregisterActivityLifecycleCallbacks(Holder.INSTANCE);
             application.registerActivityLifecycleCallbacks(Holder.INSTANCE);

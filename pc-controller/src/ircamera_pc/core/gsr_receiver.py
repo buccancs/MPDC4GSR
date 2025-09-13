@@ -147,7 +147,8 @@ class GSRReceiver:
 
                 # Create indexes for performance
                 conn.execute(
-                    "CREATE INDEX IF NOT EXISTS idx_samples_device_session ON gsr_samples(device_id, session_id)"
+                    "CREATE INDEX IF NOT EXISTS idx_samples_device_session ON gsr_samples(device_id,
+                        session_id)"
                 )
                 conn.execute(
                     "CREATE INDEX IF NOT EXISTS idx_samples_timestamp ON gsr_samples(timestamp)"
@@ -450,7 +451,8 @@ class GSRReceiver:
                 conn.execute(
                     """
                     UPDATE device_sessions 
-                    SET end_time = ?, sample_count = ?, avg_quality = ?, status = 'completed'
+                    SET end_time = ?, sample_count = ?, avg_quality = ?,
+                        status = 'completed'
                     WHERE device_id = ? AND session_id = ?
                 """,
                     (
@@ -580,7 +582,8 @@ class GSRReceiver:
                 conn.executemany(
                     """
                     INSERT INTO gsr_samples 
-                    (device_id, session_id, timestamp, gsr_value, raw_value, quality, received_time)
+                    (device_id, session_id, timestamp, gsr_value, raw_value, quality,
+                        received_time)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                     [
@@ -615,7 +618,8 @@ class GSRReceiver:
                 conn.executemany(
                     """
                     INSERT INTO gsr_samples 
-                    (device_id, session_id, timestamp, gsr_value, raw_value, quality, received_time)
+                    (device_id, session_id, timestamp, gsr_value, raw_value, quality,
+                        received_time)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                     [

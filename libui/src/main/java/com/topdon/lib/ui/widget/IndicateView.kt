@@ -18,6 +18,12 @@ import com.topdon.lib.ui.R as UiR
  * Custom Indicate view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
  */
+/**
+ * IndicateView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class IndicateView : View {
     var itemCount: Int = 0
         set(value) {

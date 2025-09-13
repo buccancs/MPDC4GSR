@@ -27,7 +27,7 @@ class FileUtils {
         /**
          * deletefile夹以及目录下的file
          * @param filePath 被delete目录的filepath
-         * @return 目录deletesuccess返回true，否则返回false
+         * @return 目录deletesuccessReturntrue，否则Returnfalse
          */
         fun deleteDirectory(filePath: String): Boolean {
             var filePath = filePath
@@ -87,7 +87,7 @@ class FileUtils {
             data: ByteArray,
             filePath: String,
         ) {
-            // 打开一个随机访问file流，按读写方式
+            // Open一个随机访问file流，按读写方式
             var randomFile = RandomAccessFile(filePath, "rw")
             // file长度，字节数
             var fileLength = randomFile.length()
@@ -247,7 +247,7 @@ class FileUtils {
                         if (imagePath.contains(".jpg")) {
                             var rotate = 0
                             val exif = ExifInterface(imagePath)
-                            // 获取方向info
+                            // Get/Retrieve方向info
                             val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
 
                             when (orientation) {

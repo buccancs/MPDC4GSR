@@ -27,11 +27,14 @@ import java.util.Timer
 import kotlin.collections.ArrayList
 
 /**
- * TipPreviewDialog class
- */
-/**
  * Tip preview fragment for thermal imaging components.
  * Handles specific UI sections and user interactions.
+ */
+/**
+ * TipPreviewDialog displays modal dialog interface for user interaction.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class TipPreviewDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
@@ -120,6 +123,9 @@ class TipPreviewDialog : DialogFragment() {
         )
     }
 
+    /**
+     * Updates the index with new data.
+     */
     fun updateIndex(position: Int) {
         if (index == position) {
             return
@@ -165,6 +171,9 @@ class TipPreviewDialog : DialogFragment() {
     }
 
     companion object {
+    /**
+     * Executes newinstance functionality.
+     */
         fun newInstance(): TipPreviewDialog {
             return TipPreviewDialog()
         }

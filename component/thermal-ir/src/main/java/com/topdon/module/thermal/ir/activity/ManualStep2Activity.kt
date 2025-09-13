@@ -95,8 +95,8 @@ fusion分辨率
 手动registration的initializeparameter
      */
     private val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
-    private var alignScaleX = 0f // 图和屏幕缩放比
-    private var alignScaleY = 0f // 图和屏幕缩放比
+    private var alignScaleX = 0f // 图和屏幕Scale比
+    private var alignScaleY = 0f // 图和屏幕Scale比
     private var canOperate = false // 是否可以操作
     private val mIrDualHandler: Handler =
         object : Handler(Looper.myLooper()!!) {
@@ -225,9 +225,7 @@ image+temperature
         }
     }
 
-    /**
-     *
-     */
+    
     public override fun initData() {
 calculation画area的宽高，避免被拉伸变形
 //        var width = 0
@@ -268,7 +266,7 @@ initializepseudo-color
 setinitializefusionmode,一般selectionLPYFusion
         mDualView!!.dualUVCCamera.setFusion(DualCameraParams.FusionType.LPYFusion)
 
-打开自动快门逻辑
+Open自动快门逻辑
         USBMonitorDualManager.getInstance().ircmd.setPropAutoShutterParameter(
             CommonParams.PropAutoShutterParameter.SHUTTER_PROP_SWITCH,
             CommonParams.PropAutoShutterParameterValue.StatusSwith.ON,
@@ -375,9 +373,7 @@ initialize默认值
         dualStart()
     }
 
-    /**
-     *
-     */
+    
     private fun dualStart() {
         userStop = false
         USBMonitorDualManager.getInstance().registerUSB()

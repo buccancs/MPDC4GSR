@@ -65,7 +65,7 @@ setTitleText("图表")
 //    private fun configureSpecialStyleMarkerOfSingleDataElementChart(): AAChartModel {
 //        return AAChartModel()
 //            .chartType(AAChartType.Spline)
-.title("监测记录")
+.title("监测Record")
 //            .subtitle("2021-10-20")
 //            .titleStyle(AAStyle.Companion.style("#FFFFFF"))
 //            .subtitleStyle(AAStyle.Companion.style(color = "#FFFFFF", fontSize = 12f))

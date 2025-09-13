@@ -34,6 +34,12 @@ import kotlinx.coroutines.launch
  * Handles advanced menu operations and user interactions.
  */
 @SuppressLint("NotifyDataSetChanged")
+/**
+ * MenuSecondView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class MenuSecondView : FrameLayout {
     /**
      * Menu type configuration to handle differences between device variations
@@ -338,6 +344,9 @@ class MenuSecondView : FrameLayout {
         binding.cameraMenuView.setToNormal()
     }
 
+    /**
+     * Executes refreshimg functionality.
+     */
     fun refreshImg(type: GalleryRepository.DirType = GalleryRepository.DirType.LINE) {
         updateCameraModel() // Restore state
         CoroutineScope(Dispatchers.IO).launch {

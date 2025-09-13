@@ -18,11 +18,10 @@ import java.util.Locale;
  */
 
 public class FileSizeUtil {
-    public static final int SIZETYPE_B = 1;//获取file大小单位为B的double值
-    public static final int SIZETYPE_KB = 2;//获取file大小单位为KB的double值
-    public static final int SIZETYPE_MB = 3;//获取file大小单位为MB的double值
-    public static final int SIZETYPE_GB = 4;//获取file大小单位为GB的double值
-
+    public static final int SIZETYPE_B = 1;//Get/Retrievefile大小单位为B的double值
+    public static final int SIZETYPE_KB = 2;//Get/Retrievefile大小单位为KB的double值
+    public static final int SIZETYPE_MB = 3;//Get/Retrievefile大小单位为MB的double值
+    public static final int SIZETYPE_GB = 4;//Get/Retrievefile大小单位为GB的double值
 
     public static double getFileOrFilesSize(String filePath, int sizeType) {
         File file = new File(filePath);
@@ -35,13 +34,13 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取file大小", "getFileOrFilesSize-1-获取failed!");
+            Log.e("bcfGet/Retrievefile大小", "getFileOrFilesSize-1-Get/Retrievefailed!");
         }
         return FormetFileSize(blockSize, sizeType);
     }
 
     /**
-     * 返回内容type
+     * Return内容type
      *
      * @param sizeType memorytype
      * @return String
@@ -77,8 +76,8 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("bcf获取file大小--getFilesSize-2-获取failed!");
-//            Log.e("获取file大小", "getFilesSize-2-获取failed!");
+            System.out.println("bcfGet/Retrievefile大小--getFilesSize-2-Get/Retrievefailed!");
+//            Log.e("Get/Retrievefile大小", "getFilesSize-2-Get/Retrievefailed!");
         }
         return blockSize;
     }
@@ -100,11 +99,10 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取file大小", "getAutoFileOrFilesSize-3-获取failed!");
+            Log.e("bcfGet/Retrievefile大小", "getAutoFileOrFilesSize-3-Get/Retrievefailed!");
         }
         return FormetFileSize(blockSize, sizeType) + getUnit(sizeType);
     }
-
 
     /**
      * 调用此method自动calculation指定file或指定file夹的大小
@@ -123,13 +121,13 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取file大小", "getAutoFileOrFilesSize-4-获取failed!");
+            Log.e("bcfGet/Retrievefile大小", "getAutoFileOrFilesSize-4-Get/Retrievefailed!");
         }
         return FormetFileSize(blockSize);
     }
 
     /**
-     * 获取指定file大小
+     * Get/Retrieve指定file大小
      *
      * @return
      * @throws Exception
@@ -145,8 +143,8 @@ public class FileSizeUtil {
                 }
             }
         } catch (Exception e) {
-            System.out.println("bcf获取file大小--getFilesSize-5-获取failed!");
-//            Log.e("获取file大小", "getFileSize-5-获取failed!");
+            System.out.println("bcfGet/Retrievefile大小--getFilesSize-5-Get/Retrievefailed!");
+//            Log.e("Get/Retrievefile大小", "getFileSize-5-Get/Retrievefailed!");
             e.printStackTrace();
         } finally {
             if (fc != null) {
@@ -157,7 +155,7 @@ public class FileSizeUtil {
     }
 
     /**
-     * 获取指定file夹
+     * Get/Retrieve指定file夹
      *
      * @param f
      * @return
@@ -232,10 +230,9 @@ public class FileSizeUtil {
         return fileSizeLong;
     }
 
-
     /**
-     * 获取file大小
-     * 写入日志读取
+     * Get/Retrievefile大小
+     * 写入Log读取
      *
      * @param filename file名
      * @return long
@@ -250,7 +247,7 @@ public class FileSizeUtil {
             return file.length();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("bcf--getFileSize获取file大小--getFilesSize-5-获取failed!");
+            System.out.println("bcf--getFileSizeGet/Retrievefile大小--getFilesSize-5-Get/Retrievefailed!");
         }
         return 0;
     }

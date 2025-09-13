@@ -25,12 +25,12 @@ import org.greenrobot.eventbus.ThreadMode
  * 生成report第2步（共2步）.
  *
  * 需要传递
- * - 必选：是否 TC007: [ExtraKeyConfig.IS_TC007] 透传，再次拾取image时进入目录不同，上传reportparameter不同
+ * - 必选：是否 TC007: [ExtraKeyConfig.IS_TC007] 透传，再次拾取image时进入目录不同，Uploadreportparameter不同
  * - 必选：当前编辑的image绝对path [ExtraKeyConfig.FILE_ABSOLUTE_PATH]
  * - 必选：当前编辑的imagepointlinearea全图temperaturedata [ExtraKeyConfig.IMAGE_TEMP_BEAN]
  * - 必选：reportinfo [ExtraKeyConfig.REPORT_INFO]
  * - 可选：检测条件 [ExtraKeyConfig.REPORT_CONDITION]
- * - 可选：当前已确认的imageinfo列表 [ExtraKeyConfig.REPORT_IR_LIST]
+ * - 可选：当前已Confirm的imageinfo列表 [ExtraKeyConfig.REPORT_IR_LIST]
  */
 @Route(path = RouterConfig.REPORT_CREATE_SECOND)
 class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
@@ -209,7 +209,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 构建reportpointlineareadata列表.
+     * Buildreportpointlineareadata列表.
      * @param type 1-point 2-line 3-area
      */
     private fun buildReportTempBeanList(type: Int): ArrayList<ReportTempBean> {

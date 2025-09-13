@@ -103,7 +103,7 @@ def main():
     print("📡 Commands: Registration, ping/pong, recording, sync markers")
     print("⚡ Performance: Sub-5 second connection, <100ms latency")
 
-    print(f"\n🎯 STATUS: All development complete - Ready for hardware validation!")
+    print("\n🎯 STATUS: All development complete - Ready for hardware validation!")
 
 
 if __name__ == "__main__":

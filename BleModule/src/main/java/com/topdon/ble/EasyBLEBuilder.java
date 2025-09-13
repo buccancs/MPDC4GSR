@@ -7,7 +7,6 @@ import com.topdon.commons.poster.ThreadMode;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 /**
  * date: 2021/8/12 12:02
  * author: bichuanfeng
@@ -48,7 +47,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * device实例构建器
+     * device实例Build器
      */
     public EasyBLEBuilder setDeviceCreator(DeviceCreator deviceCreator) {
         Inspector.requireNonNull(deviceCreator, "deviceCreator can't be null");
@@ -66,7 +65,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 观察者或者回调的method在没有使用注解指定调用line程时，默认被调用的line程
+     * Observer或者Callback的method在没有使用注解指定调用line程时，默认被调用的line程
      */
     public EasyBLEBuilder setMethodDefaultThreadMode(ThreadMode mode) {
         Inspector.requireNonNull(mode, "mode can't be null");
@@ -75,7 +74,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 搜索configuration
+     * Searchconfiguration
      */
     public EasyBLEBuilder setScanConfiguration(ScanConfiguration scanConfiguration) {
         Inspector.requireNonNull(scanConfiguration, "scanConfiguration can't be null");
@@ -84,7 +83,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 日志打印
+     * Log打印
      */
     public EasyBLEBuilder setLogger(Logger logger) {
         Inspector.requireNonNull(logger, "logger can't be null");
@@ -93,8 +92,8 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 被观察者，message发布者。
-     * <br>如果观察者被settings，{@link #setMethodDefaultThreadMode(ThreadMode)}、
+     * 被Observer，messageRelease者。
+     * <br>如果Observer被settings，{@link #setMethodDefaultThreadMode(ThreadMode)}、
      * {@link #setObserveAnnotationRequired(boolean)}、{@link #setExecutorService(ExecutorService)}将不起作用
      */
     public EasyBLEBuilder setObservable(Observable observable) {
@@ -104,7 +103,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 是否强制使用{@link Observe}注解才会收到被观察者的message
+     * 是否强制使用{@link Observe}注解才会收到被Observer的message
      * 
      * @param observeAnnotationRequired true：只有method上加{@link Observe}注解的才会收到message。false：加不加注解都会收到message
      */
@@ -126,7 +125,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 根据当前configuration构建EasyBLE实例
+     * 根据当前configurationBuildEasyBLE实例
      */
     public EasyBLE build() {
         synchronized (EasyBLE.class) {

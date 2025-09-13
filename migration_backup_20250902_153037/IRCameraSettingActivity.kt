@@ -216,10 +216,10 @@ class IRCameraSettingActivity : BaseActivity() {
 
     @SuppressLint("MissingPermission")
     private fun getLocation(): String? {
-        // 1.获取位置管理器
+        // 1.Get/Retrieve位置管理器
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
-        // 2.获取位置提供器，GPS或是NetWork
+        // 2.Get/Retrieve位置提供器，GPS或是NetWork
         val providers = locationManager?.getProviders(true)
         locationProvider =
             if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
@@ -260,21 +260,21 @@ class IRCameraSettingActivity : BaseActivity() {
                 ).show()
             }
 
-            // Provider被enable时触发此function，比如GPS被打开
+            // Provider被enable时触发此function，比如GPS被Open
             override fun onProviderEnabled(provider: String) {
                 Toast.makeText(
                     this@IRCameraSettingActivity,
-                    "GPS打开",
+                    "GPSOpen",
                     Toast.LENGTH_SHORT,
                 ).show()
                 getLocation()
             }
 
-            // Provider被disable时触发此function，比如GPS被关闭
+            // Provider被disable时触发此function，比如GPS被Close
             override fun onProviderDisabled(provider: String) {
                 Toast.makeText(
                     this@IRCameraSettingActivity,
-                    "GPS关闭",
+                    "GPSClose",
                     Toast.LENGTH_SHORT,
                 ).show()
             }
@@ -282,7 +282,7 @@ class IRCameraSettingActivity : BaseActivity() {
             // 当坐标改变时触发此function，如果Provider传进相同的坐标，它就不会被触发
             override fun onLocationChanged(location: Location) {
                 if (location != null) {
-                    // 如果位置发生变化，重新显示地理位置经纬度
+                    // 如果位置发生变化，重新Show/Display地理位置经纬度
                     Toast.makeText(
                         this@IRCameraSettingActivity,
                         location.longitude.toString() + " " +
@@ -308,7 +308,7 @@ class IRCameraSettingActivity : BaseActivity() {
         return bestLocation
     }
 
-    // 获取地址info:城市、街道等info
+    // Get/Retrieve地址info:城市、街道等info
     private fun getAddress(location: Location?): String {
         var result: List<Address?>? = null
         try {
@@ -319,7 +319,7 @@ class IRCameraSettingActivity : BaseActivity() {
                         location.latitude,
                         location.longitude, 1,
                     )
-                Log.v("TAG", "获取地址info：$result")
+                Log.v("TAG", "Get/Retrieve地址info：$result")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -415,7 +415,7 @@ class IRCameraSettingActivity : BaseActivity() {
                         never: Boolean,
                     ) {
                         if (never) {
-                            // 如果是被永久拒绝就跳转到应用权限系统settings页area
+                            // 如果是被永久拒绝就跳转到应用Permission系统settings页area
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_location_content))

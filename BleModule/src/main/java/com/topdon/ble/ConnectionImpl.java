@@ -17,7 +17,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -69,17 +68,17 @@ class ConnectionImpl implements Connection, ScanListener {
     private BluetoothGatt bluetoothGatt;
     private final List<GenericRequest> requestQueue = new ArrayList<>();//请求queue
     private GenericRequest currentRequest;//当前的请求
-    private final EventObserver observer;//伴生观察者
+    private final EventObserver observer;//伴生Observer
     private boolean isReleased;//connection是否已release
     private final Handler connHandler;//用于操作connection的Handler，运行在主line程
     private long connStartTime; //用于connection超时计时
     private int refreshCount;//refresh（清cache）计数，在发现service后清零
     private int tryReconnectCount;//尝试重连计数
     private ConnectionState lastConnectionState;//上次connectionstate
-    private int reconnectImmediatelyCount = 0; //不搜索直接重连计数
+    private int reconnectImmediatelyCount = 0; //不Search直接重连计数
     private boolean refreshing;//是否正在执行清理cache
     private boolean isActiveDisconnect;//是否主动disconnectconnection
-    private long lastScanStopTime;//上次搜索stop时间
+    private long lastScanStopTime;//上次Searchstop时间
     private final Logger logger;
     private final Observable observable;
     private final PosterDispatcher posterDispatcher;
@@ -397,7 +396,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-
     private void doDiscoverServices() {
         if (bluetoothGatt != null) {
             Context context = easyBle.getContext();
@@ -472,7 +470,7 @@ class ConnectionImpl implements Connection, ScanListener {
         @Override
         public void run() {
             if (!isReleased && hasBluetoothPermission()) {
-                //connection之前必须先stop搜索
+                //connection之前必须先stopSearch
                 easyBle.stopScan();
                 
                 try {
@@ -594,7 +592,7 @@ class ConnectionImpl implements Connection, ScanListener {
         if (!isReleased) {
             connStartTime = System.currentTimeMillis();
             easyBle.stopScan();
-            //搜索device，搜索到才执行connection
+            //Searchdevice，Search到才执行connection
             device.connectionState = ConnectionState.SCANNING_FOR_RECONNECTION;
             logD(Logger.TYPE_CONNECTION_STATE, "scanning for reconnection [name: %s, addr: %s]", device.name, device.address);
             easyBle.startScan();
@@ -620,10 +618,10 @@ class ConnectionImpl implements Connection, ScanListener {
     private boolean hasBluetoothPermission() {
         Context context = easyBle.getContext();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // API 31+ 需要新的bluetooth权限
+            // API 31+ 需要新的bluetoothPermission
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
         } else {
-            // API 30及以下使用旧的bluetooth权限
+            // API 30及以下使用旧的bluetoothPermission
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED;
         }
     }
@@ -818,7 +816,7 @@ class ConnectionImpl implements Connection, ScanListener {
                 if (currentRequest == null) {
                     executeRequest(request);
                 } else {
-                    //根据优化级将请求插入queue中
+                    //根据Optimize级将请求插入queue中
                     int index = -1;
                     for (int i = 0; i < requestQueue.size(); i++) {
                         GenericRequest req = requestQueue.get(i);
@@ -984,7 +982,7 @@ class ConnectionImpl implements Connection, ScanListener {
             }
             if (value.length > options.packageSize) {
                 List<byte[]> list = MathUtils.splitPackage(value, options.packageSize);
-                if (!options.isWaitWriteResult) { //不等待写入回调，直接写入下一包data
+                if (!options.isWaitWriteResult) { //不等待写入Callback，直接写入下一包data
                     int delay = options.packageWriteDelayMillis;
                     for (int i = 0; i < list.size(); i++) {
                         byte[] bytes = list.get(i);
@@ -1004,7 +1002,7 @@ class ConnectionImpl implements Connection, ScanListener {
                         }
                     }
                     printWriteLog(request, list.size(), list.size(), list.get(list.size() - 1));
-                } else { //发送第一包，剩下的加入queue
+                } else { //Send第一包，剩下的加入queue
                     request.remainQueue = new ConcurrentLinkedQueue<>();
                     request.remainQueue.addAll(list);
                     request.sendingBytes = request.remainQueue.remove();
@@ -1101,11 +1099,11 @@ class ConnectionImpl implements Connection, ScanListener {
 
     private void handleCallbacks(RequestCallback callback, MethodInfo info) {
         if (observer != null) {
-            posterDispatcher.post(observer, info);//notification伴生观察者
+            posterDispatcher.post(observer, info);//notification伴生Observer
         }
-        if (callback != null) {//回调方式
+        if (callback != null) {//Callback方式
             posterDispatcher.post(callback, info);
-        } else {//观察者mode
+        } else {//Observermode
             observable.notifyObservers(info);
         }
     }
@@ -1307,7 +1305,7 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     /**
-     * clear请求queue并触发notification事件
+     * clear请求queue并触发notificationEvent
      */
     private void clearRequestQueueAndNotify() {
         synchronized (this) {
@@ -1363,7 +1361,7 @@ class ConnectionImpl implements Connection, ScanListener {
         return null;
     }
 
-    //检查uuid是否存在，存在则将请求加入queue，不存在则failed回调或notification观察者
+    //Checkuuid是否存在，存在则将请求加入queue，不存在则failedCallback或notificationObserver
     private void checkUuidExistsAndEnqueue(GenericRequest request, int uuidNum) {
         boolean exists = false;
         if (uuidNum > 2) {
@@ -1378,7 +1376,7 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-    //检查service是否存在
+    //Checkservice是否存在
     private boolean checkServiceExists(GenericRequest request, UUID uuid) {
         if (getService(uuid) == null) {
             handleFailedCallback(request, REQUEST_FAIL_TYPE_SERVICE_NOT_EXIST, false);
@@ -1387,7 +1385,7 @@ class ConnectionImpl implements Connection, ScanListener {
         return true;
     }
 
-    //检查特征是否存在
+    //Check特征是否存在
     private boolean checkCharacteristicExists(GenericRequest request, UUID service, UUID characteristic) {
         if (checkServiceExists(request, service)) {
             if (getCharacteristic(service, characteristic) == null) {
@@ -1399,7 +1397,7 @@ class ConnectionImpl implements Connection, ScanListener {
         return false;
     }
 
-    //检查Descriptor是否存在
+    //CheckDescriptor是否存在
     private boolean checkDescriptorExists(GenericRequest request, UUID service, UUID characteristic, UUID descriptor) {
         if (checkServiceExists(request, service) && checkCharacteristicExists(request, service, characteristic)) {
             if (getDescriptor(service, characteristic, descriptor) == null) {
@@ -1410,7 +1408,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
         return false;
     }
-
 
     @Override
     public void execute(Request request) {

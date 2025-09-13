@@ -8,7 +8,6 @@ import json
 import os
 import socket
 import sys
-import threading
 import time
 import unittest
 from typing import Any, Dict, Optional

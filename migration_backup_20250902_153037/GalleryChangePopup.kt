@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.popup_gallery_change.view.*
  */
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
     /**
-     * 一个选项被selected事件监听.
+     * 一个选项被selectedEventListener.
      */
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
 

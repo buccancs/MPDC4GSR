@@ -96,7 +96,7 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
 
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
 //        init {
-//            val canSeeCount = itemCount.toFloat() //一屏可见的 item 数量，目前都是全都显示完
+//            val canSeeCount = itemCount.toFloat() //一屏Visible的 item 数量，目前都是全都Show/Display完
 //            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
 //            itemView.layoutParams = ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)
 //            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()

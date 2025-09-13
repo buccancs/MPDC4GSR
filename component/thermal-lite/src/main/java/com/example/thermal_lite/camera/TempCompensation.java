@@ -112,7 +112,7 @@ getnuc-tdata
 读取FlashData
      *
      * @param sdFilePath    CommonParams.SdFilePath.DEFAULT_DATA_NUC_T_HIGH
-@param localFilePath 本地path--加密
+@param localFilePath 本地path--Encrypt
      */
     private void readFlashData(CommonParams.SdFilePath sdFilePath, String localFilePath,
                                IFileHandleCallback iFileHandleCallback) {
@@ -183,7 +183,7 @@ getNUC-T
                                     .advDeviceRealtimeStatusGet(CommonParams.RealtimeStatusType.ADV_IR_SENSOR_VTEMP,
                                             nativeAdvDeviceRealtimeStatusGetValue);
                             Log.d(TAG, "advDeviceRealtimeStatusGetResult=" + advDeviceRealtimeStatusGetResult);
-第一次(1s时)打完快门记录Vtemp_start
+第一次(1s时)打完快门RecordVtemp_start
                             vTempStart = nativeAdvDeviceRealtimeStatusGetValue[0];
                             Log.d(TAG, "Vtemp_start=" + vTempStart);
 令NUC_new=0为初始值;
@@ -199,7 +199,7 @@ start补偿
                             IrcmdError advManualFFCUpdateResult = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                     .advManualFFCUpdate(CommonParams.FFCShutterBehaviorMode.ONLY_B_UPDATE);
                             Log.d(TAG, "advManualFFCUpdateResult=" + advManualFFCUpdateResult);
-打快门后记录NUC_neW=ΔNUC
+打快门后RecordNUC_neW=ΔNUC
                             nucNew = (int) (param1 * deltaVTemp * deltaVTemp + param2 * deltaVTemp - param3);
                             Log.d(TAG, "NUC_new=" + nucNew);
 
@@ -303,7 +303,6 @@ get新temperature值
         return newTempFloat;
     }
 
-
     /**
 get新temperature值
      *
@@ -351,7 +350,7 @@ stoptemperature补偿
             return;
         }
         if (autoStop && isStart && DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null) {
-stop补偿，恢复自动快门
+stop补偿，Restore自动快门
             IrcmdError basicAutoFFCStatusSet = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                     .basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_ENABLE);
             Log.d(TAG, "basicAutoFFCStatusSet=" + basicAutoFFCStatusSet);

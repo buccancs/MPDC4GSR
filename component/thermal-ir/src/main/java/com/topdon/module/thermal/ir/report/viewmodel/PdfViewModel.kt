@@ -82,7 +82,7 @@ getreport列表
                     result?.msg = p0?.message
                     result?.code = -1
                     downLatch.countDown()
-                    TLog.e("bcf", "获取report列表failed：" + p0?.message)
+                    TLog.e("bcf", "Get/Retrievereport列表failed：" + p0?.message)
                 }
 
                 override fun onFail(

@@ -123,7 +123,7 @@ class WebSocketProxy {
     }
 
     /**
-     * TC007 Socket 一帧data回调，由于没有同时监听多个回调的需求，这里只搞一个就行了。
+     * TC007 Socket 一帧dataCallback，由于没有同时Listener多个Callback的需求，这里只搞一个就行了。
      */
     private var onFrameListener: ((frame: SocketFrameBean) -> Unit)? = null
 
@@ -157,7 +157,7 @@ class WebSocketProxy {
             }
             this.network = network
         } else {
-            XLog.tag("WebSocket").d("device由 $currentSSID switch到 $ssid，关闭旧connection")
+            XLog.tag("WebSocket").d("device由 $currentSSID switch到 $ssid，Close旧connection")
             if (reconnectHandler.isReconnecting) {
                 EventBus.getDefault().post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
             }
@@ -234,7 +234,7 @@ class WebSocketProxy {
     ) : WsManager.IWebSocketListener() {
         /**
          * onFailure 时是否需要重连。
-         * 使用该variable是因为，恢复出厂、format化storage等操作后，由于需要重启会主动disconnect与device的connection。
+         * 使用该variable是因为，Restore出厂、format化storage等操作后，由于需要重启会主动disconnect与device的connection。
          * 而主动disconnect操作触发 onFailure 又触发重连从而导致逻辑存在问题。
          * 使用该variable进行区分，当主动disconnectconnection触发 onFailure 时，需不需要执行重连。
          */
@@ -289,7 +289,7 @@ class WebSocketProxy {
             code: Int,
             reason: String,
         ) {
-            XLog.tag("WebSocket").d("$ssid connection关闭中，原因：$reason")
+            XLog.tag("WebSocket").d("$ssid connectionClose中，原因：$reason")
         }
 
         override fun onClosed(
@@ -298,9 +298,9 @@ class WebSocketProxy {
             reason: String,
         ) {
             if (handler.isReconnecting) {
-                XLog.tag("WebSocket").d("$ssid 重连过程中，旧connection已关闭，原因：$reason")
+                XLog.tag("WebSocket").d("$ssid 重连过程中，旧connection已Close，原因：$reason")
             } else {
-                XLog.tag("WebSocket").d("$ssid connection已关闭，原因：$reason")
+                XLog.tag("WebSocket").d("$ssid connection已Close，原因：$reason")
                 handler.reset()
                 EventBus.getDefault().post(SocketStateEvent(false, ssid.startsWith(DeviceConfig.TS004_NAME_START)))
             }
@@ -312,8 +312,8 @@ class WebSocketProxy {
             t: Throwable,
             response: Response?,
         ) {
-            XLog.tag("WebSocket").d("$ssid 发送或接收failed，response: ${response?.message}")
-            XLog.tag("WebSocket").d("$ssid 发送或接收failed，exception原因: ${t.message}")
+            XLog.tag("WebSocket").d("$ssid Send或Receivefailed，response: ${response?.message}")
+            XLog.tag("WebSocket").d("$ssid Send或Receivefailed，exception原因: ${t.message}")
             if (checkNeedReconnect()) {
                 handler.handleFail(ssid)
                 if (!handler.isReconnecting) {
@@ -397,7 +397,7 @@ class WebSocketProxy {
                         getInstance().startWebSocket(currentSSID)
                     }
                 } else {
-                    XLog.tag("WebSocket").w("最后一次重连failed，发送 connection已disconnect 事件")
+                    XLog.tag("WebSocket").w("最后一次重连failed，Send connection已disconnect Event")
                     reconnectCount = 0
                     isReconnecting = false
                     removeCallbacksAndMessages(null)

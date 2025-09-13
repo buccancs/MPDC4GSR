@@ -40,7 +40,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     private fun init() {
         mHolder = holder // 获得SurfaceHolder对象
-        mHolder?.addCallback(this) // 为SurfaceViewaddstate监听
+        mHolder?.addCallback(this) // 为SurfaceViewaddstateListener
         mHolder?.setFormat(PixelFormat.TRANSPARENT)
         p.alpha = 0xff
         mMatrix.setScale(1.0f, 1.0f)
@@ -118,7 +118,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                     mColorMatrixEnhance.setSaturation(saturation * 0.01f * 2.5f + 1f) // contrast
                     p.colorFilter = ColorMatrixColorFilter(mColorMatrixEnhance) // modify色彩矩阵
                 } else {
-                    p.colorFilter = ColorMatrixColorFilter(mColorMatrix) // 恢复色彩矩阵
+                    p.colorFilter = ColorMatrixColorFilter(mColorMatrix) // Restore色彩矩阵
                 }
                 mCanvas?.drawBitmap(bitmap, mMatrix, p)
             } catch (e: Exception) {
@@ -127,7 +127,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 val surface = mHolder!!.surface
                 if (mCanvas != null && mHolder != null && surface != null && surface.isValid) {
                     try {
-                        mHolder?.unlockCanvasAndPost(mCanvas) // complete画画，把画布显示在屏幕上
+                        mHolder?.unlockCanvasAndPost(mCanvas) // complete画画，把画布Show/Display在屏幕上
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

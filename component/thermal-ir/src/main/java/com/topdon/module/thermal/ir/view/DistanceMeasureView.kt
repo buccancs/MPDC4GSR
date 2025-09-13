@@ -86,7 +86,7 @@ drawing两条水平line
                     newY = height.toFloat()
                 }
 
-根据触摸位置updateline的位置
+根据Touch位置updateline的位置
                 if (Math.abs(newY - line1Y) < Math.abs(newY - line2Y)) {
                     val abs = line1Y - newY
                     line1Y = newY

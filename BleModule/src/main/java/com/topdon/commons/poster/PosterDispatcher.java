@@ -29,21 +29,21 @@ public class PosterDispatcher {
     }
 
     /**
-     * 获取默认运行line程
+     * Get/Retrieve默认运行line程
      */
     public ThreadMode getDefaultMode() {
         return defaultMode;
     }
 
     /**
-     * 获取line程池
+     * Get/Retrieveline程池
      */
     public ExecutorService getExecutorService() {
         return executorService;
     }
 
     /**
-     * 清除所有queue中task，存在执行的无法stop
+     * Clear所有queue中task，存在执行的无法stop
      */
     public void clearTasks() {
         backgroundPoster.clear();

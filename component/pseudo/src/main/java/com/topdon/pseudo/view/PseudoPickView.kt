@@ -94,7 +94,7 @@ drawing渐变条下area圆形color block所用的 Pint.
     private val selectNotDrawable: Drawable
 
     /**
-selectedcolor block变更事件监听.
+selectedcolor block变更EventListener.
      */
     var onSelectChangeListener: ((selectIndex: Int) -> Unit)? = null
 
@@ -105,7 +105,7 @@ selectedcolor block变更事件监听.
 
     /**
 // 由于需求为完全重叠的多个圆形color block，只生效最上方的圆形color block，该arraysave原始的颜色array.
-// 按 place 排序，若 place 相同则 zAltitude 越大的越靠后.
+// 按 place Sort，若 place 相同则 zAltitude 越大的越靠后.
 size 与 [actualColors]、[zAltitudes]、[places] 一致。
      */
     var sourceColors: IntArray = intArrayOf(0xff0000ff.toInt(), 0xffff0000.toInt(), 0xffffff00.toInt())
@@ -368,17 +368,17 @@ delete当前selected圆形color block.
     }
 
     /**
-Touch Down 时 x 轴坐标，用于calculation滑动距离，从而判断是否触发滑动。
+Touch Down 时 x 轴坐标，用于calculationSwipe距离，从而判断是否触发Swipe。
      */
     private var downX = 0
 
     /**
-// 是否需要接手 Touch 事件.
+// 是否需要接手 Touch Event.
      */
     private var handleTouch = false
 
     /**
-// 当前selected的滑块是否可拖动，唯一的最左或最右不可滑动。
+// 当前selected的滑块是否可拖动，唯一的最左或最右不可Swipe。
      */
     private var canDrag = false
 

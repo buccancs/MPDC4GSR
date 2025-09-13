@@ -258,7 +258,7 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 尝试获取位置info并反向地址infoencoding为 省市区.
+     * 尝试Get/Retrieve位置info并反向地址infoencoding为 省市区.
      */
     @SuppressLint("MissingPermission")
     private fun getLocation() {
@@ -307,7 +307,7 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
         }
 
     /**
-     * 显示退出不savetip弹框
+     * Show/DisplayExit不savetip弹框
      */
     private fun showExitTipsDialog() {
         TipDialog.Builder(this)
@@ -320,7 +320,7 @@ class DetectAddActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示检测时间拾取弹窗
+     * Show/Display检测时间拾取弹窗
      */
     private fun showDetectTimeDialog() {
         val picker = DatimePicker(this)

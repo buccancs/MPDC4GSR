@@ -29,7 +29,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static CrashHandler crashHandler = new CrashHandler();
 
     private Context mContext;
-    /** error日志file */
+    /** errorLogfile */
     private File logFile ;
 
     private CrashHandler() {
@@ -70,7 +70,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 e.printStackTrace();
             }
             try {
-                // 上传error日志到service器
+                // UploaderrorLog到service器
                 upLoadErrorFileToServer(logFile);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -97,7 +97,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             return false;
         }
 
-        // 使用Toast来显示exceptioninfo
+        // 使用Toast来Show/Displayexceptioninfo
         new Thread() {
             @Override
             public void run() {
@@ -126,7 +126,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * 上传error日志到service器
+     * UploaderrorLog到service器
      */
     private void upLoadErrorFileToServer(File errorFile) {
 
@@ -152,7 +152,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         pw.print("versionName : ");
         pw.println(pi.versionName);
         try {
-            /** 暴力反射获取data */
+            /** 暴力反射Get/Retrievedata */
             Field[] Fields = Build.class.getDeclaredFields();
             for (Field field : Fields) {
                 field.setAccessible(true);

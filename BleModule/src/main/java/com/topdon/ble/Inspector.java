@@ -8,7 +8,7 @@ final class Inspector {
     /**
      * 对象为空时抛EasyBLEException
      *
-     * @param obj     要检查的对象
+     * @param obj     要Check的对象
      * @param message exception概要message
      */
     static <T> T requireNonNull(T obj, String message) {

@@ -29,14 +29,14 @@ public interface LinkageProvider {
     /**
      * 是否展示第一级
      *
-     * @return 返回true表示展示第一级
+     * @return Returntrue表示展示第一级
      */
     boolean firstLevelVisible();
 
     /**
      * 是否展示第三级
      *
-     * @return 返回true表示展示第三级
+     * @return Returntrue表示展示第三级
      */
     boolean thirdLevelVisible();
 

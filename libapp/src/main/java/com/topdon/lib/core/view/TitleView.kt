@@ -23,10 +23,10 @@ import com.topdon.lib.core.R
  * - 从右往左数 View 1 [tvRight1]
  * - 从右往左数 View 2 [tvRight2]，目前都是image
  * - 从右往左数 View 3 [tvRight3]，目前都是image
- * - titletext [tvTitle]，大部分页area居左，少部分页area居中
+ * - titletext [tvTitle]，大部Paginationarea居左，少部Paginationarea居中
  *
  * text均为 16sp， #ffffff，titletext padding 0dp，其他 padding 12dp；
- * image高度均为 24dp，宽度等比缩放；
+ * image高度均为 24dp，宽度等比Scale；
  *
  * 最小高度 ?attr/actionBarSize.
  *
@@ -148,7 +148,7 @@ open class TitleView : ViewGroup {
     }
 
     /**
-     * 构建一个 TextView 并add到当前 View 中.
+     * Build一个 TextView 并add到当前 View 中.
      */
     fun addTextView(
         context: Context,
@@ -286,7 +286,7 @@ open class TitleView : ViewGroup {
     }
 
     /**
-     * settings左侧 View 是否可见.
+     * settings左侧 View 是否Visible.
      * 注意其他method里如果不settingstext又不settingsimage的话会被视为 Gone，这里则不做这个限制。
      */
     var isLeftVisible: Boolean
@@ -330,14 +330,14 @@ open class TitleView : ViewGroup {
     }
 
     /**
-     * settings左侧 View click事件监听.
+     * settings左侧 View clickEventListener.
      */
     fun setLeftClickListener(leftClickListener: OnClickListener?) {
         tvLeft?.setOnClickListener(leftClickListener)
     }
 
     /**
-     * settings右侧 View 是否可见.
+     * settings右侧 View 是否Visible.
      * 注意其他method里如果不settingstext又不settingsimage的话会被视为 Gone，这里则不做这个限制。
      */
     var isRightVisible: Boolean
@@ -381,7 +381,7 @@ open class TitleView : ViewGroup {
     }
 
     /**
-     * settings右侧 View click事件监听.
+     * settings右侧 View clickEventListener.
      */
     fun setRightClickListener(rightClickListener: OnClickListener?) {
         tvRight1?.setOnClickListener(rightClickListener)
@@ -399,7 +399,7 @@ open class TitleView : ViewGroup {
     }
 
     /**
-     * settings右侧 View 2 click事件监听.
+     * settings右侧 View 2 clickEventListener.
      */
     fun setRight2ClickListener(right2ClickListener: OnClickListener?) {
         tvRight2?.setOnClickListener(right2ClickListener)
@@ -417,7 +417,7 @@ open class TitleView : ViewGroup {
     }
 
     /**
-     * settings右侧 View 3 click事件监听.
+     * settings右侧 View 3 clickEventListener.
      */
     fun setRight3ClickListener(right3ClickListener: OnClickListener?) {
         tvRight3?.setOnClickListener(right3ClickListener)

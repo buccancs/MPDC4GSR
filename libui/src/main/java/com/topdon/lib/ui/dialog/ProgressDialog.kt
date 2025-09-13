@@ -19,6 +19,12 @@ import com.topdon.lib.ui.databinding.DialogProgressBinding
  * Progress dialog for thermal imaging user interaction.
  * Provides specialized input and configuration interfaces.
  */
+/**
+ * ProgressDialog displays modal dialog interface for user interaction.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     private val binding: DialogProgressBinding = DialogProgressBinding.inflate(LayoutInflater.from(context))
 

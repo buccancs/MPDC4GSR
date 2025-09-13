@@ -136,7 +136,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
                     twoLightType = data.twoLightType
                     onTwoLightListener?.invoke(data.twoLightType, true)
                 }
-            } else { // 多选
+            } else { 
                 data.isSelected = !data.isSelected
                 holder.binding.ivIcon.isSelected = data.isSelected
                 holder.binding.tvText.isSelected = data.isSelected

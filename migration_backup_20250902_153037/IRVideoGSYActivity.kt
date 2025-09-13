@@ -96,14 +96,14 @@ class IRVideoGSYActivity : BaseActivity() {
             .setUrl(url)
             .build(gsy_play)
         // 界areasettings
-        gsy_play.isNeedShowWifiTip = false // 不显示消耗流量弹框
+        gsy_play.isNeedShowWifiTip = false // 不Show/Display消耗流量弹框
         gsy_play.titleTextView.visibility = View.GONE
         gsy_play.backButton.visibility = View.GONE
         gsy_play.fullscreenButton.visibility = View.GONE
     }
 
     private fun actionDownload(isToShare: Boolean) {
-        if (data.hasDownload) { // 已下载
+        if (data.hasDownload) { // 已Download
             if (isToShare) {
                 actionShare()
             }

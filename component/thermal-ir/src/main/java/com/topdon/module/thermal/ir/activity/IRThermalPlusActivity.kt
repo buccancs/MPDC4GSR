@@ -334,7 +334,7 @@ initializevideo采集component
             startUSB(false, false)
             startISP()
             isrun = true
-恢复configuration
+Restoreconfiguration
             configParam()
             thermalRecyclerNight.updateCameraModel()
             initIRConfig()

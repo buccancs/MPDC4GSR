@@ -71,7 +71,7 @@ abstract class BaseIRPlushFragment :
     val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
 
     /**
-使用 DualUVCCamera 进行画area预览、get回调data的关键工具class.
+使用 DualUVCCamera 进行画area预览、getCallbackdata的关键工具class.
      *
 注意：这个命名有问题，虽然叫 View，但却不是 View!
      */
@@ -159,12 +159,12 @@ camera camera相关
     private var vlUVCCamera: IRUVCDual? = null
 
     /**
-子classimplementation该method，返回用于rendering画area的 SurfaceView
+子classimplementation该method，Return用于rendering画area的 SurfaceView
      */
     abstract fun getSurfaceView(): SurfaceView
 
     /**
-子classimplementation该method，返回用于displaytemperature图层的 TemperatureDualView
+子classimplementation该method，Return用于displaytemperature图层的 TemperatureDualView
      */
     abstract fun getTemperatureDualView(): TemperatureView
 
@@ -375,11 +375,11 @@ initialize默认值
             "dualStart",
         )
         /**
-打开infraredmodule
-需要确认好module的pid和分辨率
+Openinfraredmodule
+需要Confirm好module的pid和分辨率
          */
         USBMonitorManager.getInstance().registerUSB()
-在USBMonitorManager onConnect回调中打开visible lightmodule
+在USBMonitorManager onConnectCallback中Openvisible lightmodule
         //
 //        getTemperatureDualView().setTemperatureRegionMode(View.FOCUSABLES_TOUCH_MODE)
         getTemperatureDualView().setUseIRISP(isUseIRISP)
@@ -392,9 +392,7 @@ initialize默认值
         getTemperatureDualView().start()
     }
 
-    /**
-     *
-     */
+    
     var mIrHandler: Handler =
         object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
@@ -421,7 +419,7 @@ initialize默认值
 避免冲突，需要延时
                     /**
 开visible lightcamera
-需要确认好module的pid和分辨率
+需要Confirm好module的pid和分辨率
                      */
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
@@ -568,7 +566,7 @@ visible lightmodule
         super.onStart()
         if (!isrun) {
             isrun = true
-恢复configuration
+Restoreconfiguration
             configParam()
         }
     }
@@ -606,7 +604,7 @@ emissivity
                 delay(timeMillis)
                 XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 if (isFirst && isrun) {
-恢复镜像
+Restore镜像
                     ircmd?.setMirror(false)
 自动快门
                     delay(timeMillis)
@@ -703,7 +701,7 @@ resetcontrast
     ) {
         Log.d(
             TAG,
-            "USBMonitorManager onConnect测试",
+            "USBMonitorManager onConnectTest",
         )
         mIrHandler.sendEmptyMessage(Const.HANDLE_CONNECT)
     }

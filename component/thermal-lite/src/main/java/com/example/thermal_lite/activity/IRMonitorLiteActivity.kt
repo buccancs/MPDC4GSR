@@ -43,7 +43,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 /**
-选取region监听
+选取regionListener
  */
 // Legacy ARouter route annotation - now using NavigationManager
 open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTempListener {
@@ -116,7 +116,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                     errorReadCount++
                                     XLog.w("第 $errorReadCount 次读取到exceptiondata，max = ${result.maxTemperature} min = ${result.minTemperature}")
                                     if (errorReadCount > 10) {
-                                        XLog.i("连续10次获取到exceptiondata，认为temperatureregion稳定")
+                                        XLog.i("连续10次Get/Retrieve到exceptiondata，认为temperatureregion稳定")
                                         isFirstRead = false
                                     }
                                     continue
@@ -134,7 +134,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                 bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                                 bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                                 bean.createTime = System.currentTimeMillis()
-                                canUpdate = true // 可以startupdate记录
+                                canUpdate = true // 可以startupdateRecord
                             }
                         }
                 }
@@ -143,7 +143,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
         binding.monitorCurrentVol.text = getString(if (selectIndex!!.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
         binding.monitorRealVol.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
         binding.monitorRealImg.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
-        recordThermal() // start记录
+        recordThermal() // startRecord
     }
 
     private var showTask: Job? = null
@@ -155,7 +155,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
     private var recordJob: Job? = null
 
     /**
-start每隔1秒记录一个temperaturedata到data库.
+start每隔1秒Record一个temperaturedata到data库.
      */
     private fun recordThermal() {
         recordJob =
@@ -194,7 +194,7 @@ start每隔1秒记录一个temperaturedata到data库.
                         binding.tvTime.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
-                XLog.w("stop记录, data量:$time")
+                XLog.w("stopRecord, data量:$time")
             }
     }
 
@@ -234,7 +234,7 @@ start每隔1秒记录一个temperaturedata到data库.
                                 object :
                                     ViewTreeObserver.OnGlobalLayoutListener {
                                     override fun onGlobalLayout() {
-移除监听器以避免重复调用
+移除Listener器以避免重复调用
                                         binding.thermalFragment.getViewTreeObserver().removeOnGlobalLayoutListener(this)
                                         irMonitorLiteFragment?.restTempView()
                                         irMonitorLiteFragment?.addTempLine(selectIndex!!)
@@ -298,7 +298,7 @@ getgainstate PASS
                             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                 ?.basicGainGet(basicGainGetValue)
                     } catch (e: Exception) {
-                        XLog.e("gain获取failed")
+                        XLog.e("gainGet/Retrievefailed")
                     }
                     basicGainGetTime = System.currentTimeMillis()
                 }

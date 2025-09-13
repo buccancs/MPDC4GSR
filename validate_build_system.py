@@ -4,7 +4,6 @@ Quick validation of build system readiness for hardware testing.
 This script verifies that the APK can be built successfully.
 """
 
-import os
 import subprocess
 import sys
 from pathlib import Path

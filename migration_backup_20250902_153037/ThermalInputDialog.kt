@@ -215,7 +215,7 @@ class ThermalInputDialog : Dialog {
             recycler = view.color_picker_recycler
             view.color_picker_view_lay.visibility = View.GONE
             view.dialog_input_lay.visibility = View.VISIBLE
-            // 隐藏颜色
+            // Hide颜色
             if (isIconEdit)
                 {
                     view.dialog_up_color.visibility = View.GONE
@@ -261,7 +261,7 @@ class ThermalInputDialog : Dialog {
             dialog!!.setCanceledOnTouchOutside(canceled)
             successBtn.setOnClickListener {
                 if (view.color_picker_view_lay.isVisible) {
-                    // 选取颜色,返回上一步
+                    // 选取颜色,Return上一步
                     view.color_picker_view_lay.visibility = View.GONE
                     view.dialog_input_lay.visibility = View.VISIBLE
                     messageText.text = message
@@ -344,7 +344,7 @@ class ThermalInputDialog : Dialog {
             }
             cancelBtn.setOnClickListener {
                 if (view.color_picker_view_lay.isVisible) {
-                    // 返回上一步
+                    // Return上一步
                     view.color_picker_view_lay.visibility = View.GONE
                     view.dialog_input_lay.visibility = View.VISIBLE
                     messageText.text = message

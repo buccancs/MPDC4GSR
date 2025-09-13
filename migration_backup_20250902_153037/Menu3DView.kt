@@ -14,22 +14,22 @@ import kotlinx.android.synthetic.main.view_menu_3d.view.*
  */
 class Menu3DView : ConstraintLayout, View.OnClickListener {
     /**
-     * 视觉(0-3D、1-俯视、2-左视、3-右视、4-正视) 二级menuswitch事件监听.
+     * 视觉(0-3D、1-俯视、2-左视、3-右视、4-正视) 二级menuswitchEventListener.
      */
     var onVisualClickListener: ((position: Int) -> Unit)? = null
 
     /**
-     * calibration(0-自定义、1-高温、2-低温、3-等温、4-delete) 二级menuswitch事件监听.
+     * calibration(0-自定义、1-高温、2-低温、3-等温、4-delete) 二级menuswitchEventListener.
      */
     var onMarkClickListener: ((position: Int) -> Unit)? = null
 
     /**
-     * pseudo color(0-iron red、1-黑红、2-自然、3-岩浆、4-辉金) 二级menuswitch事件监听.
+     * pseudo color(0-iron red、1-黑红、2-自然、3-岩浆、4-辉金) 二级menuswitchEventListener.
      */
     var onPseudoClickListener: ((position: Int) -> Unit)? = null
 
     /**
-     * mode(0-point、1-line、2-area) 二级menuswitch事件监听.
+     * mode(0-point、1-line、2-area) 二级menuswitchEventListener.
      */
     var onModeClickListener: ((position: Int) -> Unit)? = null
 

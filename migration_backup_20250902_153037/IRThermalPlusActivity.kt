@@ -109,7 +109,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
 //            SharedManager.setIrDualDisp(dualDisp)
             if (result == 0)
                 {
-                    // 关闭控件
+                    // Close控件
                     if (thermal_steering_view.isVisible) {
                         thermal_steering_view.visibility = View.GONE
                         thermal_recycler_night.setTwoLightSelected(TwoLightType.CORRECT, false)
@@ -327,7 +327,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
             startUSB(false, false)
             startISP()
             isrun = true
-            // 恢复configuration
+            // Restoreconfiguration
             configParam()
             thermal_recycler_night.updateCameraModel()
             initIRConfig()

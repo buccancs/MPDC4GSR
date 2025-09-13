@@ -61,7 +61,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     time: Int,
                 ) {
 switchtype
-                    chart.highlightValue(null) // 关闭高亮pointMarker
+                    chart.highlightValue(null) // Close高亮pointMarker
                     selectType = index + 1
                     queryLog()
                 }
@@ -111,10 +111,10 @@ switchtype
         chart.setDrawGridBackground(false)
         chart.description = null // 图标描述文本
         chart.setBackgroundResource(com.topdon.lib.core.R.color.chart_bg)
-        chart.setScaleEnabled(true) // 缩放
-        chart.setPinchZoom(false) // 禁用后，可以分别在x轴和y轴上进行缩放
-        chart.isDoubleTapToZoomEnabled = false // 双击不可缩放
-        chart.isScaleYEnabled = false // 禁止Y轴缩放
+        chart.setScaleEnabled(true) // Scale
+        chart.setPinchZoom(false) // Disable后，可以分别在x轴和y轴上进行Scale
+        chart.isDoubleTapToZoomEnabled = false // 双击不可Scale
+        chart.isScaleYEnabled = false // 禁止Y轴Scale
         chart.setExtraOffsets(
             0f,
             0f,
@@ -125,14 +125,14 @@ switchtype
         chart.setNoDataTextColor(textColor)
         val mv = MyMarkerView(this, R.layout.marker_lay)
         mv.chartView = chart
-        chart.marker = mv // settingsclick坐标显示tip框
+        chart.marker = mv // settingsclick坐标Show/Displaytip框
         val data = LineData()
         data.setValueTextColor(textColor)
         chart.data = data
         val l = chart.legend
         l.form = Legend.LegendForm.CIRCLE
         l.textColor = textColor
-        l.isEnabled = false // 隐藏曲linetag
+        l.isEnabled = false // Hide曲linetag
         val xAxis = chart.xAxis
         xAxis.textColor = textColor
         xAxis.setDrawGridLines(true)
@@ -141,7 +141,7 @@ switchtype
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.axisLineColor = textColor
         xAxis.granularity = 1f
-        xAxis.isGranularityEnabled = true // 重复值不显示
+        xAxis.isGranularityEnabled = true // 重复值不Show/Display
         xAxis.textSize = 9f
         val leftAxis = chart.axisLeft
         leftAxis.textSize = 9f
@@ -186,12 +186,12 @@ switchtype
 //        set.highLightColor = ContextCompat.getColor(this, R.color.white)
         set.valueTextColor = Color.WHITE
         set.lineWidth = 2f
-        set.circleRadius = 1f // 不显示坐标point
-        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(隐藏processing)
+        set.circleRadius = 1f // 不Show/Display坐标point
+        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(Hideprocessing)
 set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(hideprocessing)
         set.fillAlpha = 200
         set.valueTextSize = 10f
-        set.setDrawValues(false) // settings是否显示坐标值文本
+        set.setDrawValues(false) // settings是否Show/Display坐标值文本
         return set
     }
 
@@ -285,11 +285,11 @@ set.setCircleColor(ContextCompat.getColor(this, R.color.white))//坐标颜色(hi
                     }
                     lineData.notifyDataChanged()
                     chart.notifyDataSetChanged()
-                    chart.setVisibleXRangeMinimum(getMinimum()) // settings显示X轴区间大小
-                    chart.setVisibleXRangeMaximum(getMaximum()) // settings显示X轴区间大小
+                    chart.setVisibleXRangeMinimum(getMinimum()) // settingsShow/DisplayX轴区间大小
+                    chart.setVisibleXRangeMaximum(getMaximum()) // settingsShow/DisplayX轴区间大小
                     chart.xAxis.setLabelCount(5, false) // true保证有刻度数量不变
                     chart.moveViewToX(chart.xChartMax) // 移动到最右端
-                    chart.zoom(1f, 1f, chart.xChartMax, 0f) // 默认无缩放，全部显示
+                    chart.zoom(1f, 1f, chart.xChartMax, 0f) // 默认无Scale，全部Show/Display
                 }
                 Log.w("chart", "update chart finish")
             }

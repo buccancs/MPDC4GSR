@@ -43,7 +43,7 @@ public class PreUtil {
     }
 
     /**
-     * 得到单例mode的PreferencesManager对象
+     * 得到Singletonmode的PreferencesManager对象
      *
      * @param context 上下文
      * @return
@@ -53,7 +53,7 @@ public class PreUtil {
     }
 
     /**
-     * 得到单例mode的PreferencesManager对象
+     * 得到Singletonmode的PreferencesManager对象
      *
      * @param context   上下文
      * @param shareName filename
@@ -258,7 +258,7 @@ public class PreUtil {
     }
 
     /**
-     * 获取整个对象，跟put(T t)对应使用， 利用反射得到对象的property，然后从preferences获取
+     * Get/Retrieve整个对象，跟put(T t)对应使用， 利用反射得到对象的property，然后从preferencesGet/Retrieve
      *
      * @param cls
      * @return

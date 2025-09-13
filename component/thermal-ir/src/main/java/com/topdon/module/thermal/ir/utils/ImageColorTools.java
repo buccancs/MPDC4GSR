@@ -79,7 +79,7 @@ public class ImageColorTools {
         long startTimeAll = System.currentTimeMillis();
         int j = 0;
         int imageDstLength = imageDst.length;
-遍历pixel point，过滤temperature threshold
+遍历pixel point，Filtertemperature threshold
         for (int index = 0; index < imageDstLength; ) {
 temperatureconversion formula
             float temperature0 = (temperature[j] & 0xff) + (temperature[j + 1] & 0xff) * 256;
@@ -321,12 +321,6 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
         return outputBitmap;
     }
 
-
-
-
-
-
-
     public static int[] getOneColorByTempEx(float customMaxTemp, float customMinTemp, float nowTemp, int[] colorList) {
         if (colorList == null){
             return null;
@@ -372,7 +366,6 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
         result[2] = b;
         return result;
     }
-
 
     private static int interpolateR(int startColor, int endColor, double ratio) {
         int startR = (startColor >> 16) & 0xFF;

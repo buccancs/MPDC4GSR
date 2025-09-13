@@ -50,7 +50,7 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         binding = ActivityImagePickIrPlushBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 默认selected画圆
+        
         binding.ivEditCircle.isSelected = true
         binding.imageEditView.type = ImageEditView.Type.CIRCLE
         binding.viewColor.setBackgroundColor(binding.imageEditView.color)
@@ -83,6 +83,9 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         resize()
     }
 
+    /**
+     * Executes resize functionality.
+     */
     private fun resize() {
         val widthPixels = resources.displayMetrics.widthPixels
         val heightPixels = resources.displayMetrics.heightPixels
@@ -96,7 +99,7 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         val bottomHeight = ivPickHeight.coerceAtLeast(menuHeight)
         val canUseHeight = heightPixels - binding.titleView.measuredHeight - bottomHeight
         val wantHeight = (widthPixels * 256f / 192).toInt()
-        if (wantHeight <= canUseHeight) { // 够用
+        if (wantHeight <= canUseHeight) { 
             binding.fragmentContainerView.layoutParams =
                 binding.fragmentContainerView.layoutParams.apply {
                     this.width = widthPixels
@@ -189,8 +192,8 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示退出不savetip弹框
-     * @param listener click弹框上退出事件监听
+     * Show/DisplayExit不savetip弹框
+     * @param listener click弹框上ExitEventListener
      */
     private fun showExitTipsDialog(listener: (() -> Unit)) {
         TipDialog.Builder(this)

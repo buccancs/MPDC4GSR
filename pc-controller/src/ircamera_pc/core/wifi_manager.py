@@ -13,7 +13,7 @@ import subprocess
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 try:
     from loguru import logger
@@ -314,7 +314,7 @@ class WiFiScanWorker(BaseThread):
                     [
                         nmcli_path,
                         "-t",
-                        "-f",
+                        "-",
                         "SSID,BSSID,CHAN,FREQ,SIGNAL,SECURITY",
                         "dev",
                         "wifi",
@@ -1084,7 +1084,7 @@ class WiFiManager(BaseManager):
         auth_type = "WPA2PSK" if security == NetworkSecurityType.WPA2 else "WPAPSK"
         encryption = "AES" if security == NetworkSecurityType.WPA2 else "TKIP"
 
-        return f"""<?xml version="1.0"?>
+        return """<?xml version="1.0"?>
 <WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">
     <name>{ssid}</name>
     <SSIDConfig>

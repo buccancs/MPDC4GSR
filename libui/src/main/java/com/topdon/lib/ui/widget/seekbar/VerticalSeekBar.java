@@ -13,7 +13,6 @@ import android.util.Log;
 
 import com.topdon.lib.ui.R;
 
-
 /**
  * //                       _ooOoo_
  * //                      o8888888o

@@ -43,7 +43,7 @@ public class IRUVCTC {
     private IRCMD ircmd;
     //
     private final USBMonitor mUSBMonitor;
-    private final ConnectCallback mConnectCallback; // usbconnection回调
+    private final ConnectCallback mConnectCallback; // usbconnectionCallback
     private byte[] imageSrc;
     private byte[] temperatureSrc;
     private final int imageOrTempDataLength = 256 * 192 * 2; // infrared或temperature的data长度
@@ -93,7 +93,7 @@ public class IRUVCTC {
      * @param cameraWidth     cameraWidth:256,cameraHeight:384,image+temperature
      *                        cameraWidth:256,cameraHeight:192,image
      *                        cameraWidth:256,cameraHeight:192,(调用startY16ModePreview，传入Y16_MODE_TEMPERATURE)temperature
-     * @param connectCallback settingsusbdeviceconnection回调
+     * @param connectCallback settingsusbdeviceconnectionCallback
      */
     public IRUVCTC(int cameraWidth, int cameraHeight, Context context, SynchronizedBitmap syncimage,
                    CommonParams.DataFlowMode dataFlowMode,
@@ -105,7 +105,7 @@ public class IRUVCTC {
 
         //
         initUVCCamera();
-        // 注意：USBMonitor的所有回调function都是运行在line程中的
+        // 注意：USBMonitor的所有Callbackfunction都是运行在line程中的
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
             // called by checking usb device
@@ -138,13 +138,13 @@ public class IRUVCTC {
                     if (createNew) {
                         openUVCCamera(ctrlBlock);
 
-                        // 获取device的分辨率list
+                        // Get/Retrievedevice的分辨率list
                         List<CameraSize> previewList = getAllSupportedSize();
                         for (CameraSize size : previewList) {
                             Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
                         }
 
-                        // 可以根据获取到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
+                        // 可以根据Get/Retrieve到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
                         initIRCMD();
 
                         if (ircmd != null) {
@@ -204,7 +204,7 @@ public class IRUVCTC {
             }
         });
         /*
-         * 同时打开防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
+         * 同时Open防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
          */
         // 自动gainswitchparameterauto gain switch parameter
         gain_switch_param.above_pixel_prop = 0.1f;    //用于high -> low gain,device像素总area积的百分比
@@ -220,13 +220,12 @@ public class IRUVCTC {
         int switch_frame_cnt = 7 * 15;//continuous满足触发条件超过该阈值会触发防灼烧(假设出图速度为15帧每秒，则7 * 15大概为7秒)
         int close_frame_cnt = 10 * 15;//触发防灼烧之后，经过该阈值的帧数之后会解除防灼烧(假设出图速度为15帧每秒，则10 * 15大概为10秒)
 
-
         LibIRProcess.ImageRes_t imageRes = new LibIRProcess.ImageRes_t();
         imageRes.height = (char) (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT ? cameraHeight / 2
                 : cameraHeight);
         imageRes.width = (char) cameraWidth;
 
-        // device出图回调
+        // device出图Callback
         iFrameCallback = new IFrameCallback() {
             @Override
             public void onFrame(byte[] frame) {
@@ -272,7 +271,7 @@ public class IRUVCTC {
                         System.arraycopy(frame, 0, imageSrc, 0, imageOrTempDataLength);
                         /*
                          * processingtemperaturedata
-                         * 在部分的出图中，如果不需要temperaturedata，则不返回，需要区分对待
+                         * 在部分的出图中，如果不需要temperaturedata，则不Return，需要区分对待
                          */
                         if (length >= imageOrTempDataLength * 2) {
 
@@ -388,7 +387,7 @@ public class IRUVCTC {
                 .setUVCType(UVCType.USB_UVC)
                 .build();
         /**
-         * 调整带宽
+         * Adjust带宽
          * 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要configuration对应的带宽
          */
         uvcCamera.setDefaultBandwidth(0.5F);
@@ -396,7 +395,7 @@ public class IRUVCTC {
 
     /**
      * init IRCMD
-     * 可以根据获取到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
+     * 可以根据Get/Retrieve到的分辨率list，来区分不同的module，从而改变不同的cmdparameter来调用不同的SDK
      */
     private void initIRCMD() {
         if (uvcCamera != null) {
@@ -405,7 +404,7 @@ public class IRUVCTC {
                     .setIdCamera(uvcCamera.getNativePtr())
                     .build();
             //这里可根据是否得到ircmd的对象，判断是否initializesuccess，initializefailed，可做相应的failederrortip
-            //errorinfo可以通过setCreateResultCallback的回调查看
+            //errorinfo可以通过setCreateResultCallback的Callback查看
             if (ircmd == null) {
                 EventBus.getDefault().post(new PreviewComplete());
                 return;
@@ -416,18 +415,14 @@ public class IRUVCTC {
         }
     }
 
-    /**
-     *
-     */
+    
     public void registerUSB() {
         if (mUSBMonitor != null) {
             mUSBMonitor.register();
         }
     }
 
-    /**
-     *
-     */
+    
     public void unregisterUSB() {
         if (mUSBMonitor != null) {
             mUSBMonitor.unregister();
@@ -454,7 +449,7 @@ public class IRUVCTC {
     }
 
     /**
-     * 获取支持的分辨率list
+     * Get/Retrieve支持的分辨率list
      */
     private List<CameraSize> getAllSupportedSize() {
         List<CameraSize> previewList = new ArrayList<>();
@@ -504,10 +499,10 @@ public class IRUVCTC {
             // YUV出图流程
             setFrameReady(false);
             if (isRestart) {
-                // 1.停图（全部停图，不是退出y16mode的停图）
+                // 1.停图（全部停图，不是Exity16mode的停图）
                 if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
                     Log.i(TAG, "stopPreview complete");
-                    // 2. 发出图命令，settings分辨率为256*384
+                    // 2. 发出图Command，settings分辨率为256*384
                     if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                             CommonParams.StartPreviewSource.SOURCE_SENSOR,
                             ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
@@ -538,7 +533,7 @@ public class IRUVCTC {
                         Log.i(TAG, "startPreview complete 中间出图 restart");
                         try {
                             /*
-                             * 对于部分device，如5840芯片的module，两个命令之间需要延时以防止中间出图命令失效导致的black hotwhite hot翻转情况
+                             * 对于部分device，如5840芯片的module，两个Command之间需要延时以防止中间出图CommandDeactivate导致的black hotwhite hot翻转情况
                              * 需要根据自己module的实际情况判断是否add该延时
                              */
                             Thread.sleep(1500);
@@ -569,14 +564,14 @@ public class IRUVCTC {
                     /*
                      * 支持 infrared+TNR 方式出图
                      */
-                    // 对于P2module来说，直接发送startY16ModePreview命令可以直接出图
+                    // 对于P2module来说，直接SendstartY16ModePreviewCommand可以直接出图
 //                    if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
 //                            FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
 //                        handleStartPreviewComplete();
 //                    } else {
 //                        Log.e(TAG, "startY16ModePreview error");
 //                    }
-                    // 对于M2module来说，需要先发送startPreview出图命令，再发送startY16ModePreview命令才可以重新出图
+                    // 对于M2module来说，需要先SendstartPreview出图Command，再SendstartY16ModePreviewCommand才可以重新出图
                     if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
                         Log.i(TAG, "stopPreview complete infrared+TNR");
                         if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
@@ -587,7 +582,7 @@ public class IRUVCTC {
                             Log.i(TAG, "startPreview complete infrared+TNR");
                             try {
                                 /*
-                                 * 对于部分device，如5840芯片的module，两个命令之间需要延时以防止中间出图命令失效导致的black hotwhite hot翻转情况
+                                 * 对于部分device，如5840芯片的module，两个Command之间需要延时以防止中间出图CommandDeactivate导致的black hotwhite hot翻转情况
                                  * 需要根据自己module的实际情况判断是否add该延时
                                  */
                                 Thread.sleep(1500);
@@ -622,7 +617,7 @@ public class IRUVCTC {
                             Log.i(TAG, "startPreview complete 单TNR");
                             try {
                                 /*
-                                 * 对于部分device，如5840芯片的module，两个命令之间需要延时以防止中间出图命令失效导致的black hotwhite hot翻转情况
+                                 * 对于部分device，如5840芯片的module，两个Command之间需要延时以防止中间出图CommandDeactivate导致的black hotwhite hot翻转情况
                                  * 需要根据自己module的实际情况判断是否add该延时
                                  */
                                 Thread.sleep(1500);
@@ -646,9 +641,7 @@ public class IRUVCTC {
         }
     }
 
-    /**
-     *
-     */
+    
     public void stopPreview() {
         Log.i(TAG, "stopPreview");
         if (uvcCamera != null) {
@@ -673,11 +666,9 @@ public class IRUVCTC {
         }
     }
 
-    /**
-     *
-     */
+    
     private void handleStartPreviewComplete() {
-        // 出图之后再去获取kt,bt,nuc_t等parameter来settingstemperaturedata，避免耗时操作导致这里的停图和出图受影响
+        // 出图之后再去Get/Retrievekt,bt,nuc_t等parameter来settingstemperaturedata，避免耗时操作导致这里的停图和出图受影响
         new Thread(() -> EventBus.getDefault().post(new PreviewComplete())).start();
     }
 

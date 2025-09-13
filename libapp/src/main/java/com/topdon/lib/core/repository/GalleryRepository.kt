@@ -18,6 +18,12 @@ import java.io.InputStream
 import java.io.OutputStream
 
 object GalleryRepository {
+/**
+ * Type definition for dir classification.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
     enum class DirType {
         LINE,
         TC007,
@@ -25,6 +31,9 @@ object GalleryRepository {
         TS004_REMOTE,
     }
 
+    /**
+     * Executes copysourdir functionality.
+     */
     private fun copySourDir(
         sourceDir: File,
         targetDir: File,
@@ -43,7 +52,7 @@ object GalleryRepository {
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }
-            // 遍历要copy该目录下的全部file
+            
             fileList?.forEach {
                 val path = sourceDir.absolutePath + File.separator + it.name
                 copyPictureFile(path, targetDir.absolutePath + File.separator + it.name)
@@ -54,6 +63,9 @@ object GalleryRepository {
         }
     }
 
+    /**
+     * Executes copypicturefile functionality.
+     */
     private fun copyPictureFile(
         oldPath: String,
         newPath: String,
@@ -84,7 +96,7 @@ object GalleryRepository {
             val dirFile = File(path)
             if (dirFile.isDirectory) {
                 val files = dirFile.listFiles()!!
-                // 按时间倒序
+                
                 files.sortByDescending {
                     it.lastModified()
                 }
@@ -101,7 +113,7 @@ object GalleryRepository {
     }
 
     /**
-     * 分页load
+     * Paginationload
      * @param pageNum 页码，从1start
      * @param pageCount 每页data条数
      */
@@ -199,7 +211,7 @@ object GalleryRepository {
                 resultList.add(it)
             }
         }
-        // 按时间倒序
+        
         resultList.sortByDescending {
             it.lastModified()
         }
@@ -211,7 +223,7 @@ object GalleryRepository {
      */
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
         val tc001Files: MutableList<File> = ArrayList()
-        // 定义查询的列
+        
         val projection =
             arrayOf(
                 MediaStore.Images.Media.DATA,
@@ -225,9 +237,9 @@ object GalleryRepository {
                 else -> "%DCIM/TS004%"
             }
         val selectionArgs = arrayOf(path)
-        // 获取MediaStore ContentResolver
+        // Get/RetrieveMediaStore ContentResolver
         val contentResolver: ContentResolver = Utils.getApp().contentResolver
-        // 查询媒体库
+        
         val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cursor =
             contentResolver.query(

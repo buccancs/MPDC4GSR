@@ -7,7 +7,6 @@ package com.topdon.commons.util;
  */
 public class SPKeyUtils {
 
-
     /**
      * 首次进入
      */
@@ -23,7 +22,6 @@ public class SPKeyUtils {
      */
     public static final String TS_VCI_DIALOG = "ts_vci_dialog";
 
-
     /**
      * service器时间
      */
@@ -34,7 +32,6 @@ public class SPKeyUtils {
      */
     public static final String APP_RUNNING_TIME = "app_running_time";
 
-
     /**
      * 最后一次的connection的SN号
      */
@@ -44,7 +41,6 @@ public class SPKeyUtils {
      * 最后一次firmwareversion号
      */
     public static final String LAST_MFWVERSION = "last_mFwVersion";
-
 
     /**
      * 引导弹框
@@ -71,7 +67,6 @@ public class SPKeyUtils {
      */
     public static final String LAST_AUTOVIN_VERSION = "last_autovin_version";
 
-
     /**
      * 百公里加速
      */
@@ -96,7 +91,6 @@ public class SPKeyUtils {
      * loadusb copy
      */
     public static final String LOAD_USB_COPY = "load_usb_copy";//
-
 
     /**
      * ad900

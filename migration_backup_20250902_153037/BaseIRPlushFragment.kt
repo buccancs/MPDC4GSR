@@ -64,7 +64,7 @@ abstract class BaseIRPlushFragment :
     val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
 
     /**
-     * 使用 DualUVCCamera 进行画area预览、获取回调data的关键工具class.
+     * 使用 DualUVCCamera 进行画area预览、Get/RetrieveCallbackdata的关键工具class.
      *
      * 注意：这个命名有问题，虽然叫 View，但却不是 View!
      */
@@ -152,12 +152,12 @@ abstract class BaseIRPlushFragment :
     private var vlUVCCamera: IRUVCDual? = null
 
     /**
-     * 子classimplementation该method，返回用于渲染画area的 SurfaceView
+     * 子classimplementation该method，Return用于渲染画area的 SurfaceView
      */
     abstract fun getSurfaceView(): SurfaceView
 
     /**
-     * 子classimplementation该method，返回用于显示temperature图层的 TemperatureDualView
+     * 子classimplementation该method，Return用于Show/Displaytemperature图层的 TemperatureDualView
      */
     abstract fun getTemperatureDualView(): TemperatureView
 
@@ -368,11 +368,11 @@ abstract class BaseIRPlushFragment :
             "dualStart",
         )
         /**
-         * 打开infraredmodule
-         * 需要确认好module的pid和分辨率
+         * Openinfraredmodule
+         * 需要Confirm好module的pid和分辨率
          */
         USBMonitorManager.getInstance().registerUSB()
-        // 在USBMonitorManager onConnect回调中打开visible lightmodule
+        // 在USBMonitorManager onConnectCallback中Openvisible lightmodule
         //
 //        getTemperatureDualView().setTemperatureRegionMode(View.FOCUSABLES_TOUCH_MODE)
         getTemperatureDualView().setUseIRISP(isUseIRISP)
@@ -385,9 +385,7 @@ abstract class BaseIRPlushFragment :
         getTemperatureDualView().start()
     }
 
-    /**
-     *
-     */
+    
     var mIrHandler: Handler =
         object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
@@ -414,7 +412,7 @@ abstract class BaseIRPlushFragment :
                     // 避免冲突，需要延时
                     /**
                      * 开visible lightcamera
-                     * 需要确认好module的pid和分辨率
+                     * 需要Confirm好module的pid和分辨率
                      */
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
@@ -561,7 +559,7 @@ abstract class BaseIRPlushFragment :
         super.onStart()
         if (!isrun) {
             isrun = true
-            // 恢复configuration
+            // Restoreconfiguration
             configParam()
         }
     }
@@ -599,12 +597,12 @@ abstract class BaseIRPlushFragment :
                 delay(timeMillis)
                 XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 if (isFirst && isrun) {
-                    // 恢复镜像
+                    // Restore镜像
                     ircmd?.setMirror(false)
                     // 自动快门
                     delay(timeMillis)
                     withContext(Dispatchers.IO) {
-                        // 部分机型在关闭自动快门，初始会花屏
+                        // 部分机型在Close自动快门，初始会花屏
                         ircmd?.setAutoShutter(true)
                         isFirst = false
                     }
@@ -696,7 +694,7 @@ abstract class BaseIRPlushFragment :
     ) {
         Log.d(
             TAG,
-            "USBMonitorManager onConnect测试",
+            "USBMonitorManager onConnectTest",
         )
         mIrHandler.sendEmptyMessage(Const.HANDLE_CONNECT)
     }

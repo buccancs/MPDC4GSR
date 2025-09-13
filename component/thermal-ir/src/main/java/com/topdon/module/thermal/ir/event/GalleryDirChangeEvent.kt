@@ -3,7 +3,7 @@ package com.topdon.module.thermal.ir.event
 import com.topdon.lib.core.repository.GalleryRepository.DirType
 
 /**
-图库目录switch事件.
+图库目录switchEvent.
  */
 /**
  * Gallery dir change event for thermal imaging system communication.

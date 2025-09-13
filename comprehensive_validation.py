@@ -5,23 +5,15 @@ Final validation to confirm 100% functionality
 """
 
 import asyncio
-from typing import Any
 import json
-from typing import Any
 import logging
-from typing import Any
 import socket
-from typing import Any
 import ssl
-from typing import Any
 import subprocess
-from typing import Any
 import sys
-from typing import Any
 import time
-from typing import Any
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 # Configure logging
 logging.basicConfig(
@@ -81,7 +73,7 @@ class ComprehensiveValidation:
                 }
 
         success_rate = (passed / total) * 100
-        logger.info(f"\n📊 FINAL VALIDATION RESULTS")
+        logger.info("\n📊 FINAL VALIDATION RESULTS")
         logger.info(f"Tests Passed: {passed}/{total}")
         logger.info(f"Success Rate: {success_rate:.1f}%")
 
@@ -103,11 +95,9 @@ class ComprehensiveValidation:
                 "-c",
                 """
 import sys
-from typing import Any
 sys.path.append('pc-controller/src')
 from ircamera_pc.gui import main
 import signal
-from typing import Any
 def handler(sig, frame) -> Any:
     exit(0)
 signal.signal(signal.SIGALRM, handler)
@@ -464,7 +454,7 @@ async def main() -> Any:
     total_tests = len(results)
     final_score = (passed_tests / total_tests) * 100
 
-    print(f"\n" + "=" * 60)
+    print("\n" + "=" * 60)
     print(f"🏆 FINAL VALIDATION SCORE: {final_score:.1f}%")
     print(f"📊 Tests Passed: {passed_tests}/{total_tests}")
 

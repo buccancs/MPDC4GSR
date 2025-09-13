@@ -70,7 +70,7 @@ open class HouseBase {
     var costUnit: Int = 0
 
     /**
-     * 该检测或report由用户selection的“检测时间”时间戳，单位毫秒
+     * 该检测或report由Userselection的“检测时间”时间戳，单位毫秒
      */
     @ColumnInfo
     var detectTime: Long = 0
@@ -92,7 +92,7 @@ open class HouseBase {
     override fun hashCode(): Int = id.toInt()
 
     /**
-     * 获取房屋area积单位.
+     * Get/Retrieve房屋area积单位.
      */
     fun getSpaceUnitStr(): String =
         when (houseSpaceUnit) {
@@ -102,7 +102,7 @@ open class HouseBase {
         }
 
     /**
-     * 获取检测费用货币单位.
+     * Get/Retrieve检测费用货币单位.
      */
     fun getCostUnitStr(): String =
         when (costUnit) {
@@ -118,7 +118,7 @@ open class HouseBase {
         }
 
     /**
-     * 获取该report对应的 PDF filename
+     * Get/Retrieve该report对应的 PDF filename
      */
     fun getPdfFileName(): String = "TC_${TimeUtils.millis2String(createTime, "yyyyMMdd_HHmmss")}.pdf"
 }
@@ -135,7 +135,7 @@ class HouseDetect : HouseBase() {
     var dirList: ArrayList<DirDetect> = ArrayList()
 
     /**
-     * 返回一个 id 为 0，nameadd (1)，其余property完全一致的新对象.
+     * Return一个 id 为 0，nameadd (1)，其余property完全一致的新对象.
      */
     fun copyOne(): HouseDetect {
         val newDetect = HouseDetect()

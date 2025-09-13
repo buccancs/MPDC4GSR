@@ -29,6 +29,9 @@ object NetWorkUtils {
         BaseApplication.instance.getSystemService(Context.WIFI_SERVICE) as WifiManager
     }
 
+    /**
+     * Executes iswifinamevalid functionality.
+     */
     fun isWifiNameValid(
         context: Context,
         prefixes: List<String>,
@@ -37,7 +40,7 @@ object NetWorkUtils {
 
         @Suppress("DEPRECATION")
         val wifiInfo = wifiManager.connectionInfo
-        val ssid = wifiInfo.ssid.replace("\"", "") // 移除双引号
+        val ssid = wifiInfo.ssid.replace("\"", "") 
         for (prefix in prefixes) {
             if (ssid.startsWith(prefix)) {
                 return true
@@ -46,6 +49,9 @@ object NetWorkUtils {
         return false
     }
 
+    /**
+     * Establishes connection to external resource.
+     */
     fun connectWifi(
         ssid: String,
         password: String,
@@ -61,7 +67,7 @@ object NetWorkUtils {
             val callback =
                 object : ConnectivityManager.NetworkCallback() {
                     override fun onAvailable(network: Network) {
-                        XLog.e("测试", "onAvailable")
+                        XLog.e("Test", "onAvailable")
                         if (WifiUtil.getCurrentWifiSSID(BaseApplication.instance) == ssid) {
                             connectivityManager.unregisterNetworkCallback(this)
                             listener?.invoke(network)
@@ -69,7 +75,7 @@ object NetWorkUtils {
                     }
 
                     override fun onUnavailable() {
-                        XLog.e("测试", "onUnavailable")
+                        XLog.e("Test", "onUnavailable")
                         connectivityManager.unregisterNetworkCallback(this)
                         listener?.invoke(null)
                     }
@@ -78,7 +84,7 @@ object NetWorkUtils {
                         network: Network,
                         networkCapabilities: NetworkCapabilities,
                     ) {
-                        XLog.e("测试", "onCapabilitiesChanged")
+                        XLog.e("Test", "onCapabilitiesChanged")
                         super.onCapabilitiesChanged(network, networkCapabilities)
                     }
 
@@ -87,7 +93,7 @@ object NetWorkUtils {
                         blocked: Boolean,
                     ) {
                         super.onBlockedStatusChanged(network, blocked)
-                        XLog.e("测试", "onBlockedStatusChanged")
+                        XLog.e("Test", "onBlockedStatusChanged")
                     }
 
                     override fun onLinkPropertiesChanged(
@@ -95,7 +101,7 @@ object NetWorkUtils {
                         linkProperties: LinkProperties,
                     ) {
                         super.onLinkPropertiesChanged(network, linkProperties)
-                        XLog.e("测试", "onLinkPropertiesChanged")
+                        XLog.e("Test", "onLinkPropertiesChanged")
                     }
 
                     override fun onLosing(
@@ -103,7 +109,7 @@ object NetWorkUtils {
                         maxMsToLive: Int,
                     ) {
                         super.onLosing(network, maxMsToLive)
-                        XLog.e("测试", "onLosing")
+                        XLog.e("Test", "onLosing")
                     }
                 }
             connectivityManager.registerNetworkCallback(request, callback)
@@ -165,6 +171,9 @@ object NetWorkUtils {
         }
     }
 
+    /**
+     * Executes switchnetwork functionality.
+     */
     fun switchNetwork(
         isWifi: Boolean,
         listener: ((network: Network?) -> Unit)? = null,

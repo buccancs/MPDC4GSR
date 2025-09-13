@@ -96,42 +96,42 @@ class HouseDetectView : FrameLayout {
     }
 
     /**
-     * 指定 position 位置的目录copy事件监听.
+     * 指定 position 位置的目录copyEventListener.
      */
     var onDirCopyListener: ((pair: Pair<Int, DirDetect>) -> Unit)? = null
 
     /**
-     * 指定 position 位置的项目copy事件监听.
+     * 指定 position 位置的项目copyEventListener.
      */
     var onItemCopyListener: ((pair: Pair<Int, ItemDetect>) -> Unit)? = null
 
     /**
-     * 指定 position 位置的项目delete事件监听.
+     * 指定 position 位置的项目deleteEventListener.
      */
     var onItemDelListener: ((pair: Pair<Int, ItemDetect>) -> Unit)? = null
 
     /**
-     * 某个 item 的addimagebuttonclick事件监听.
+     * 某个 item 的addimagebuttonclickEventListener.
      */
     var onImageAddListener: ((layoutIndex: Int, v: View, item: ItemDetect) -> Unit)? = null
 
     /**
-     * 某个 item 的输入textbuttonclick事件监听.
+     * 某个 item 的输入textbuttonclickEventListener.
      */
     var onTextInputListener: ((pair: Pair<Int, ItemDetect>) -> Unit)? = null
 
     /**
-     * 一个目录发生变更事件(3种state数量变更)监听.
+     * 一个目录发生变更Event(3种state数量变更)Listener.
      */
     var onDirChangeListener: ((dirDetect: DirDetect) -> Unit)? = null
 
     /**
-     * 一个目录展开或收起变更事件监听.
+     * 一个目录展开或收起变更EventListener.
      */
     var onDirExpandListener: ((isExpand: Boolean) -> Unit)? = null
 
     /**
-     * 一个项目发生变更(3种state变更、imagedelete)事件监听.
+     * 一个项目发生变更(3种state变更、imagedelete)EventListener.
      */
     var onItemChangeListener: ((itemDetect: ItemDetect) -> Unit)? = null
 
@@ -259,9 +259,9 @@ class HouseDetectView : FrameLayout {
         fun switchExpand(position: Int) {
             val dirDetect: DirDetect = dataList[position] as DirDetect
             dirDetect.isExpand = !dirDetect.isExpand
-            if (dirDetect.isExpand) { // 关闭->展开
+            if (dirDetect.isExpand) { // Close->展开
                 dataList.addAll(position + 1, dirDetect.itemList)
-            } else { // 展开->关闭
+            } else { // 展开->Close
                 dataList.removeAll(dirDetect.itemList.toSet())
             }
             notifyDataSetChanged()
@@ -572,7 +572,7 @@ class HouseDetectView : FrameLayout {
                     titleView.translationY = 0f
                     adapter.refreshDir(titleView, dataList[currentPosition] as DirDetect)
                 } else {
-                    if (dataList[seeFirstPosition + 1] is DirDetect) { // 第1个可见的item为尾部
+                    if (dataList[seeFirstPosition + 1] is DirDetect) { // 第1个Visible的item为尾部
                         currentPosition = findDirPosition(seeFirstPosition)
                         titleView.translationY = 0f
                         adapter.refreshDir(titleView, dataList[currentPosition] as DirDetect)
@@ -595,7 +595,7 @@ class HouseDetectView : FrameLayout {
             }
 
             // refresh titleView 位置
-            if (dataList[seeFirstPosition + 1] is DirDetect) { // 第1个可见的item为尾部
+            if (dataList[seeFirstPosition + 1] is DirDetect) { // 第1个Visible的item为尾部
                 val nextView: View? = layoutManager.findViewByPosition(seeFirstPosition + 1)
                 if (nextView != null) {
                     if (nextView.top <= titleView.height) {

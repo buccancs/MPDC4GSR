@@ -15,6 +15,12 @@ import com.topdon.lib.ui.databinding.UiWifiSteeringWheelViewBinding
  * Custom Wifi steering wheel view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
  */
+/**
+ * WifiSteeringWheelView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class WifiSteeringWheelView : LinearLayout, OnClickListener {
     private val binding: UiWifiSteeringWheelViewBinding
 
@@ -58,6 +64,9 @@ class WifiSteeringWheelView : LinearLayout, OnClickListener {
         initView()
     }
 
+    /**
+     * Initializes the component with default configuration.
+     */
     private fun initView() {
         // Views are already inflated via binding in constructor
         steeringWheelStartBtn.setOnClickListener(this)

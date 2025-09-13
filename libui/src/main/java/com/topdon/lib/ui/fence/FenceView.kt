@@ -12,19 +12,21 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
 /**
- * FenceView class
- */
-/**
  * Custom Fence view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * FenceView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class FenceView : View {
     var listener: CallBack? = null
 
     private val mPaint by lazy { Paint() }
-    private val rect: Rect = Rect(0, 0, 0, 0) // 手动绘制矩形
-    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } // line宽度
-
+    private val rect: Rect = Rect(0, 0, 0, 0) 
+    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } 
     constructor (context: Context) : super(context)
 
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -45,10 +47,10 @@ class FenceView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-//        //settings无锯齿
+//        
 //        canvas.drawARGB(50, 255, 227, 0)
 //        mPaint.color = Color.GREEN
-//        // 绘制绿色实心矩形
+//        
 //        canvas.drawRect(100f, 200f, 400f, 200f + 400, mPaint)
 //        mPaint.color = Color.RED
         canvas.drawRect(rect, mPaint)
@@ -124,10 +126,13 @@ class FenceView : View {
         return true
     }
 
+    /**
+     * Executes result functionality.
+     */
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         val point2 = intArrayOf(endPoint[0], endPoint[1])
-        // 调整位置
+        
         for (i in 0..1) {
             if (startPoint[i] > endPoint[i]) {
                 point1[i] = endPoint[i]
@@ -144,6 +149,9 @@ class FenceView : View {
         }
     }
 
+    /**
+     * Clears data and resets internal state.
+     */
     fun clear() {
         startPoint = intArrayOf(0, 0)
         endPoint = intArrayOf(0, 0)
@@ -155,12 +163,16 @@ class FenceView : View {
         invalidate()
     }
 
-    /**
-     * CallBack class
-     */
+    
 /**
  * Custom Call back view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * CallBack manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
     interface CallBack {
         /**

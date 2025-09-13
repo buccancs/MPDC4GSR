@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_ir_monitor.*
 import org.greenrobot.eventbus.EventBus
 
 /**
- * 选取region监听
+ * 选取regionListener
  */
 @Route(path = RouterConfig.IR_THERMAL_MONITOR)
 /**
@@ -60,7 +60,7 @@ class IRMonitorActivity : BaseActivity(), View.OnClickListener {
                         .create().show()
                     return
                 }
-                // starttemperature监听
+                // starttemperatureListener
                 ARouter.getInstance().build(RouterConfig.IR_MONITOR_CHART)
                     .withParcelable("select", selectIndex)
                     .navigation(this)

@@ -21,7 +21,7 @@ public class FolderUtil {
     public static String tdartsSn;
 
     /**
-     * 获取file名
+     * Get/Retrievefile名
      *
      * @return String
      */
@@ -41,7 +41,6 @@ public class FolderUtil {
     public static void setUserId(String userId) {
         mUserId = userId;
     }
-
 
     public static void init() {
         mUserId = PreUtil.getInstance(Topdon.getApp()).get("VCI_" + LMS.getInstance().getLoginName());
@@ -66,15 +65,15 @@ public class FolderUtil {
     }
 
     /**
-     * 出事下载车型software
+     * 出事Download车型software
      */
     public static void initFilePath() {
         String basePath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
         String downPath = basePath + "Download/";
-        Log.e("bcf", fileName + "--下载pathinitialization--" + downPath);
+        Log.e("bcf", fileName + "--Downloadpathinitialization--" + downPath);
         File file = new File(downPath);
         if (!file.exists()) {
-            Log.e("bcf", fileName + "---下载pathinitializationcreate ");
+            Log.e("bcf", fileName + "---Downloadpathinitializationcreate ");
             file.mkdirs();
         }
     }
@@ -162,7 +161,6 @@ public class FolderUtil {
                 firmwareFile.mkdirs();
             }
 
-
             File tdartsFile = new File(mPath + fileName + "T-darts/");
             if (!tdartsFile.exists()) {
                 tdartsFile.mkdirs();
@@ -229,7 +227,7 @@ public class FolderUtil {
 //                log9File.mkdirs();
             }
 
-            //上传反馈日志
+            //Upload反馈Log
             File feedbackLog = new File(mPath + fileName + mUserId + "/FeedbackLog/");
             if (!feedbackLog.exists()) {
                 feedbackLog.mkdirs();
@@ -248,13 +246,12 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + "/s/";
     }
 
-
     public static String getDataBasePath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
     }
 
     /**
-     * 获取Tdarts根目录path
+     * Get/RetrieveTdarts根目录path
      *
      * @return str
      */
@@ -275,7 +272,7 @@ public class FolderUtil {
     }
 
     /**
-     * 获取Tdarts sn下车型software包path
+     * Get/RetrieveTdarts sn下车型software包path
      *
      * @return str
      */
@@ -306,7 +303,6 @@ public class FolderUtil {
     public static String getVehicleTopScanPublicPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
     }
-
 
     public static String getShotPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/Shot/";
@@ -364,13 +360,12 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/DataLog/DIAG/";
     }
 
-
     public static String getImmoDataLogPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/DataLog/IMMO/";
     }
 
     /**
-     * 获取反馈日志path
+     * Get/Retrieve反馈Logpath
      *
      * @return string
      */
@@ -395,7 +390,7 @@ public class FolderUtil {
     }
 
     /**
-     * 获取software下载path
+     * Get/RetrievesoftwareDownloadpath
      *
      * @return str
      */

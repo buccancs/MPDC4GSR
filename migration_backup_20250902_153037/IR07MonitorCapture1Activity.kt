@@ -91,7 +91,7 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
             TC007Repository.setIRConfig(config.environment, config.distance, config.radiation)
             // settingstemperature单位
             TC007Repository.setEnvAttr(SharedManager.getTemperature() == 1, 0)
-            // 清除point、line、area、全图
+            // Clearpoint、line、area、全图
             TC007Repository.clearAllTemp()
             TC007Repository.setTempFrame(false)
         }
@@ -121,12 +121,12 @@ class IR07MonitorCapture1Activity : BaseActivity(), View.OnClickListener {
             motion_btn -> { // 生成监控图
                 showMonitorSelectDialog()
             }
-            motion_start_btn -> { // start记录
+            motion_start_btn -> { // startRecord
                 if (selectInfo == null) {
                     showMonitorSelectDialog()
                     return
                 }
-                // starttemperature监听
+                // starttemperatureListener
                 val intent = Intent(this, IR07MonitorCapture2Activity::class.java)
                 intent.putExtra("select", selectInfo)
                 startActivity(intent)

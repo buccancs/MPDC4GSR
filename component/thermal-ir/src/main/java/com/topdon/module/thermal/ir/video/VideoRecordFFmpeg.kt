@@ -226,7 +226,7 @@ memory检测
 avcodec.AV_CODEC_ID_MPEG4 playback正常
 avcodec.AV_CODEC_ID_H264 不能拖拽进度条
      *
-个别机型使用H264encoding无法打开video,优先使用AV_CODEC_ID_MPEG4
+个别机型使用H264encoding无法Openvideo,优先使用AV_CODEC_ID_MPEG4
      */
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {

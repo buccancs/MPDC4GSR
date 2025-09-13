@@ -39,7 +39,7 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val selectList: ArrayList<Int> = ArrayList()
 
     /**
-是否为 TS004 远端mode，处于该mode会有下载图标.
+是否为 TS004 远端mode，处于该mode会有Download图标.
      */
     var isTS004Remote = false
         set(value) {
@@ -65,18 +65,18 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
 
     /**
-非编辑mode下 item 长按进入编辑mode事件监听.
+非编辑mode下 item 长按进入编辑modeEventListener.
      */
     var onLongEditListener: (() -> Unit)? = null
 
     /**
-selected数量变更回调.
+selected数量变更Callback.
 data 当前selected的 item position 列表
      */
     var selectCallback: ((data: ArrayList<Int>) -> Unit)? = null
 
     /**
-非编辑mode时，item click事件监听.
+非编辑mode时，item clickEventListener.
      */
     var itemClickCallback: ((position: Int) -> Unit)? = null
 

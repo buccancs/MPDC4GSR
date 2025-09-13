@@ -18,7 +18,7 @@ object ResultCode {
     // deviceconnectionsuccess
     val SUCC_FIND_ENDPOINT = 5
 
-    // USBport命令发送success
+    // USBportCommandSendsuccess
     val SUCC_USB_SEND_CMD = 6
 
     // 找到USBdevice，model不匹配
@@ -30,7 +30,7 @@ object ResultCode {
     // 未找到deviceport
     val ERROR_NOT_FIND_INTERFACE = -102
 
-    // 打开devicefailed
+    // Opendevicefailed
     val ERROR_OPEN_DEVICE_FAILD = -103
 
     // connectiondevicefailed
@@ -39,12 +39,12 @@ object ResultCode {
     // 未找到device输入输出port号
     val ERROR_FIND_ENDPOINT_FAILD = -105
 
-    // 用户不同意开启USB权限
+    // User不同意开启USBPermission
     val ERROR_USE_NOT_AGRREN_PERMISSIONS = -106
 
     // usbisvalid
     val ERROR_USE_USB_ISVALID = -107
 
-    // USBport命令发送failed
+    // USBportCommandSendfailed
     val ERROE_USB_SEND_CMD_FAILD = -108
 }

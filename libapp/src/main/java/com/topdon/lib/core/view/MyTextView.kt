@@ -10,7 +10,7 @@ import com.topdon.lib.core.R
 /**
  * 魔改 TextView.
  *
- * 原生 TextView 附加的 drawable 尺寸不可settings，这个 TextView 可以settings高度，宽度等比缩放.
+ * 原生 TextView 附加的 drawable 尺寸不可settings，这个 TextView 可以settings高度，宽度等比Scale.
  *
  * 其中 wrap_content 使用原生逻辑，不settings则使用 textSize（默认），指定值>0则使用指定值.
  *
@@ -171,7 +171,7 @@ class MyTextView : AppCompatTextView {
     }
 
     /**
-     * 为指定 drawable settings指定高度，宽度等比缩放 bounds.
+     * 为指定 drawable settings指定高度，宽度等比Scale bounds.
      */
     private fun setDrawableBounds(
         drawable: Drawable?,

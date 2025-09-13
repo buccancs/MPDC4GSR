@@ -119,7 +119,7 @@ class ReportDetailActivity : BaseActivity() {
     }
 
     /**
-     * 获取需要转为 PDF 的所有 View 列表.
+     * Get/Retrieve需要转为 PDF 的所有 View 列表.
      * 注意：watermark View 不在列表内，需要自行processing.
      */
     private fun getPrintViewList(): ArrayList<View> {

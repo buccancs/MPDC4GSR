@@ -13,6 +13,12 @@ import retrofit2.http.Url
  *
  * Created by LCG on 2024/2/27.
  */
+/**
+ * TS004Service provides background service functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 interface TS004Service {
     /**
      * settingspseudo color样式
@@ -23,7 +29,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 获取pseudo color样式
+     * Get/Retrievepseudo color样式
      */
     @POST("/api/v1/system/getPseudoColor")
     suspend fun getPseudoColor(): TS004Response<PseudoColorBean>
@@ -37,7 +43,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 获取测距
+     * Get/Retrieve测距
      */
     @POST("/api/v1/system/getRangeFind")
     suspend fun getRangeFind(): TS004Response<RangeBean>
@@ -51,7 +57,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 获取屏幕brightness
+     * Get/Retrieve屏幕brightness
      */
     @POST("/api/v1/system/getPanelParam")
     suspend fun getPanelParam(): TS004Response<BrightnessBean>
@@ -65,7 +71,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 获取画中画state
+     * Get/Retrieve画中画state
      */
     @POST("/api/v1/system/getPip")
     suspend fun getPip(): TS004Response<PipBean>
@@ -79,7 +85,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 获取放大倍数
+     * Get/Retrieve放大倍数
      */
     @POST("/api/v1/system/getZoom")
     suspend fun getZoom(): TS004Response<ZoomBean>
@@ -99,13 +105,13 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 获取录像state
+     * Get/Retrieve录像state
      */
     @POST("/api/v1/system/getRecordStatus")
     suspend fun getVRecord(): TS004Response<RecordStatusBean>
 
     /**
-     * 下载file.
+     * Downloadfile.
      */
     @GET
     @Streaming
@@ -114,7 +120,7 @@ interface TS004Service {
     ): ResponseBody
 
     /**
-     * 同步时间.
+     * Synchronize时间.
      */
     @POST("/api/v1/system/setDateTime")
     suspend fun syncTime(
@@ -122,7 +128,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 同步时区.
+     * Synchronize时区.
      */
     @POST("/api/v1/system/setTimeZone")
     suspend fun syncTimeZone(
@@ -130,19 +136,19 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 获取versioninfo
+     * Get/Retrieveversioninfo
      */
     @POST("/api/v1/system/getVersion")
     suspend fun getVersion(): TS004Response<VersionBean>
 
     /**
-     * 获取deviceinfo
+     * Get/Retrievedeviceinfo
      */
     @POST("/api/v1/system/getDeviceInfo")
     suspend fun getDeviceInfo(): TS004Response<DeviceInfo>
 
     /**
-     * 获取file数量
+     * Get/Retrievefile数量
      */
     @POST("/api/v1/system/getFileCount")
     suspend fun getFileCount(
@@ -150,7 +156,7 @@ interface TS004Service {
     ): TS004Response<FileCountBean>
 
     /**
-     * 获取file列表
+     * Get/Retrievefile列表
      */
     @POST("/api/v1/system/getFileList")
     suspend fun getFileList(
@@ -166,13 +172,13 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 触发firmware升级
+     * 触发firmwareUpgrade
      */
     @POST("/api/v1/system/remoteUpgrade")
     suspend fun firmwareUpdateStart(): TS004Response<Boolean>
 
     /**
-     * firmware升级-start
+     * firmwareUpgrade-start
      */
     @POST("/api/v1/system/sendUpgradeFileStart")
     suspend fun sendUpgradeFileStart(
@@ -180,7 +186,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * firmware升级-上传firmware升级包
+     * firmwareUpgrade-UploadfirmwareUpgrade包
      */
     @Headers("Content-type: application/octet-stream")
     @POST("/api/v1/system/sendUpgradeFileData")
@@ -189,7 +195,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * firmware升级-end
+     * firmwareUpgrade-end
      */
     @POST("/api/v1/system/sendUpgradeFileEnd")
     suspend fun sendUpgradeFileEnd(
@@ -197,13 +203,13 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 查询firmware升级state.
+     * 查询firmwareUpgradestate.
      */
     @POST("/api/v1/system/getUpgradeStatus")
     suspend fun getUpgradeStatus(): TS004Response<UpgradeStatus>
 
     /**
-     * 获取storage分区info
+     * Get/Retrievestorage分区info
      */
     @POST("/api/v1/system/getFreeSpace")
     suspend fun freeSpace(): TS004Response<FreeSpaceBean>
@@ -215,7 +221,7 @@ interface TS004Service {
     suspend fun formatStorage(): TS004Response<Boolean>
 
     /**
-     * 恢复出厂settings
+     * Restore出厂settings
      */
     @POST("/api/v1/system/resetAll")
     suspend fun resetAll(): TS004Response<Boolean>
@@ -229,7 +235,7 @@ interface TS004Service {
     ): TS004Response<Boolean>
 
     /**
-     * 获取超分
+     * Get/Retrieve超分
      */
     @POST("/api/v1/system/getTISR")
     suspend fun getTISR(): TS004Response<TISRBean>

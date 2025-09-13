@@ -130,7 +130,7 @@ public class EasyWifi {
     public boolean connectByOld(String str, String str2, WifiCapability wifiCapability) {
         int addNetwork = this.wifiManager.addNetwork(createWifiConfig(str, str2, wifiCapability));
         if (addNetwork == -1) {
-            Log.e(this.TAG, "操作failed,需要您到手机wifilist中取消对deviceconnection的saved");
+            Log.e(this.TAG, "操作failed,需要您到手机wifilist中Cancel对deviceconnection的saved");
         }
         boolean enableNetwork = this.wifiManager.enableNetwork(addNetwork, true);
         Log.d(this.TAG, "connectByOld: " + (enableNetwork ? "success" : "failed"));

@@ -27,7 +27,7 @@ import com.topdon.lib.ui.R as UiR
 object IRImageUtil {
     /**
 伽马contrast
-@param contrast      contrast 1: 复位  0: 增强   2: 减弱变灰
+@param contrast      contrast 1: 复位  0: Enhance   2: 减弱变灰
 @param brightness    brightness
      */
     fun showContrast(

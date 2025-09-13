@@ -5,8 +5,12 @@ package com.topdon.menu.constant
  *
  * Created by LCG on 2024/11/28.
  */
+
 /**
- * class class
+ * Type definition for setting classification.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 enum class SettingType {
     /** Pseudo color bar */

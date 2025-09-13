@@ -11,9 +11,15 @@ import kotlin.math.min
 
 /**
  * TC007、2D编辑、插件的 point/line/areatemperature图层有 View、SurfaceView 两种implementation，
- * 先用这个工具class抽取相同 draw 逻辑，后续考虑优化。
+ * 先用这个工具class抽取相同 draw 逻辑，后续考虑Optimize。
  *
  * Created by LCG on 2024/12/6.
+ */
+/**
+ * TempDrawHelper manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class TempDrawHelper {
     companion object {
@@ -49,7 +55,7 @@ class TempDrawHelper {
                 .coerceAtMost(max - CIRCLE_RADIUS)
 
         /**
-         * 获取可保证实心圆不会超出 View 界外的 Rect.
+         * Get/Retrieve可保证实心圆不会超出 View 界外的 Rect.
          */
         fun getRect(
             width: Int,
@@ -127,8 +133,8 @@ class TempDrawHelper {
         val top: Float = y - POINT_SIZE / 2f
         val right: Float = x + POINT_SIZE / 2f
         val bottom: Float = y + POINT_SIZE / 2f
-        canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint) // 画横line
-        canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) // 画竖line
+        canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint) 
+        canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) 
     }
 
     /**
@@ -267,10 +273,10 @@ class TempDrawHelper {
         var textX = x - textWidth / 2
         var textY = y + POINT_SIZE / 2 + textHeight
 
-        if (textX < 0) { // x超出左边界
+        if (textX < 0) { 
             textX = 0f
         }
-        if (textX + textWidth > width) { // x超出右边界
+        if (textX + textWidth > width) { 
             textX = width - textWidth
         }
         if (textY > height) { // 若名字放point下area要超出range时，放point上area
@@ -305,16 +311,16 @@ class TempDrawHelper {
         var textX: Float = centerX - textWidth / 2
         var textY: Float = centerY + offset
 
-        if (textX < 0) { // x超出左边界
+        if (textX < 0) { 
             textX = 0f
         }
-        if (textX + textWidth > width) { // x超出右边界
+        if (textX + textWidth > width) { 
             textX = width - textWidth
         }
-        if (textY < textHeight) { // y超出上边界
+        if (textY < textHeight) { 
             textY = textHeight
         }
-        if (textY > height) { // y超出下边界
+        if (textY > height) { 
             textY = height.toFloat()
         }
         canvas.drawText(name, textX, textY, textPaint)

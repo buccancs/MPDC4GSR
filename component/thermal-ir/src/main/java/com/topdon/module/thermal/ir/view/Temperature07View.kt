@@ -48,7 +48,7 @@ class Temperature07View : TemperatureBaseView {
     // **************************************** Touch ****************************************
 
     /**
-当前是否处于触摸state，TC007 触摸时才进行drawing.
+当前是否处于Touchstate，TC007 Touch时才进行drawing.
      */
     private var isTouching = false
 

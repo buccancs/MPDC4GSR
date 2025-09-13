@@ -252,7 +252,8 @@ class TestGSRHubSpokeIntegration(unittest.TestCase):
         with sqlite3.connect(self.gsr_receiver.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT status, sample_count FROM device_sessions WHERE device_id = ? AND session_id = ?",
+                "SELECT status,
+                    sample_count FROM device_sessions WHERE device_id = ? AND session_id = ?",
                 (self.test_device_id, self.test_session_id),
             )
             record = cursor.fetchone()

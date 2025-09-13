@@ -22,6 +22,9 @@ open class BitmapConstraintLayout : ConstraintLayout {
     @Volatile
     var viewBitmap: Bitmap? = null
 
+    /**
+     * Updates the bitmap with new data.
+     */
     fun updateBitmap() {
         if (!isShown) {
             return

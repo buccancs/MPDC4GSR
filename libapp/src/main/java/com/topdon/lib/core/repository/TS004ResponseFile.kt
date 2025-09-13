@@ -1,11 +1,11 @@
 package com.topdon.lib.core.repository
 
-// 这个file用来放 TS004 interface返回 JSON 的封装
+// 这个file用来放 TS004 interfaceReturn JSON 的封装
 
 /**
- * TS004 所有interface请求返回的format内容.
+ * TS004 所有interface请求Return的format内容.
  * @param command 不知道什么东西，艾睿的document也没说
- * @param data 实际返回的data，视不同的interface而定
+ * @param data 实际Return的data，视不同的interface而定
  * @param detail 请求结果描述，如 "ok"、"error: request process error"
  * @param status state码 0-success 其他详见document
  * @param transmit_cast 该请求耗时毫秒数
@@ -24,7 +24,7 @@ data class TS004Response<T>(
 }
 
 /**
- * TS004 interface请求返回：获取pseudo color样式
+ * TS004 interface请求Return：Get/Retrievepseudo color样式
  * @param enable
  * @param mode 当前pseudo color样式
  */
@@ -34,23 +34,23 @@ data class PseudoColorBean(
 )
 
 /**
- * TS004 interface请求返回：获取测距
- * @param state 0-关闭，1-开启
+ * TS004 interface请求Return：Get/Retrieve测距
+ * @param state 0-Close，1-开启
  */
 data class RangeBean(
     val state: Int?,
 )
 
 /**
- * TS004 interface请求返回：获取画中画
- * @param enable true 打开，false 关闭
+ * TS004 interface请求Return：Get/Retrieve画中画
+ * @param enable true Open，false Close
  */
 data class PipBean(
     val enable: Boolean?,
 )
 
 /**
- * TS004 interface请求返回：获取屏幕brightness
+ * TS004 interface请求Return：Get/Retrieve屏幕brightness
  * brightness: Int
  */
 data class BrightnessBean(
@@ -58,23 +58,23 @@ data class BrightnessBean(
 )
 
 /**
- * TS004 interface请求返回：获取放大倍数
- * @param factor 缩放比例
+ * TS004 interface请求Return：Get/Retrieve放大倍数
+ * @param factor Scale比例
  */
 data class ZoomBean(
     val factor: Int?,
 )
 
 /**
- * TS004 interface请求返回：获取超分state
- * @param enable 0-关闭 1-开启
+ * TS004 interface请求Return：Get/Retrieve超分state
+ * @param enable 0-Close 1-开启
  */
 data class TISRBean(
     val enable: Int?,
 )
 
 /**
- * TS004 interface请求返回：versioninfo
+ * TS004 interface请求Return：versioninfo
  * @param firmware firmwareversion，如1.0
  */
 data class VersionBean(
@@ -82,8 +82,8 @@ data class VersionBean(
 )
 
 /**
- * TS004 interface请求返回：deviceinfo
- * @param code 激活码（又叫注册码）
+ * TS004 interface请求Return：deviceinfo
+ * @param code Activate码（又叫Register码）
  * @param model 应该是devicetypename，如 TS004
  * @param sn sn
  * @param uuid 不知道啥
@@ -96,7 +96,7 @@ data class DeviceInfo(
 )
 
 /**
- * TS004 interface请求返回：file数量
+ * TS004 interface请求Return：file数量
  * @param fileCount file数量
  */
 data class FileCountBean(
@@ -105,9 +105,9 @@ data class FileCountBean(
 
 /**
  * 一页fileinfo
- * @param current 当前分页数
+ * @param current 当前Pagination数
  * @param total 总页数
- * @param filelist 当前分页fileinfo列表
+ * @param filelist 当前Paginationfileinfo列表
  */
 data class FilePageBean(
     val current: Int,
@@ -116,7 +116,7 @@ data class FilePageBean(
 )
 
 /**
- * TS004 interface请求返回：fileinfo
+ * TS004 interface请求Return：fileinfo
  * @param type 0-photo 1-录像
  * @param duration 录像时长，单位秒
  * @param size file大小，单位 byte
@@ -137,9 +137,9 @@ data class FileBean(
 )
 
 /**
- * TS004 interface请求返回：firmware升级state
- * @param status 当前升级state 1-start 2-running 3-failed 4-success
- * @param percent 当前升级进度百分比
+ * TS004 interface请求Return：firmwareUpgradestate
+ * @param status 当前Upgradestate 1-start 2-running 3-failed 4-success
+ * @param percent 当前Upgrade进度百分比
  */
 data class UpgradeStatus(
     val status: Int,
@@ -147,7 +147,7 @@ data class UpgradeStatus(
 )
 
 /**
- * TS004 interface请求返回：fileinfo
+ * TS004 interface请求Return：fileinfo
  * @param total 总storage大小，单位 byte
  * @param free 剩余可用storage大小，单位 byte
  * @param system 系统占用大小，单位 byte
@@ -161,11 +161,14 @@ data class FreeSpaceBean(
     val image_size: Long,
     val video_size: Long,
 ) {
+    /**
+     * Executes hasusesize functionality.
+     */
     fun hasUseSize(): Long = system + image_size + video_size
 }
 
 /**
- * TS004 interface请求返回：获取录像state
+ * TS004 interface请求Return：Get/Retrieve录像state
  * @param errCode recording的error代码， 0:无error，1: initializationerror，2: 电池电量低
  * @param path 当前recording的videofile名
  * @param pts 当前recording的时间

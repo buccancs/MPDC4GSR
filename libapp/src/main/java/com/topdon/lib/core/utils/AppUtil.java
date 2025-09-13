@@ -20,7 +20,7 @@ import java.util.List;
 public class AppUtil {
     public static boolean isAppInstalled(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
-        //获取系统中安装的应用包的info
+        //Get/Retrieve系统中Install的应用包的info
         List<PackageInfo> listPackageInfo = packageManager.getInstalledPackages(0);
         for (int i = 0; i < listPackageInfo.size(); i++) {
             if (listPackageInfo.get(i).packageName.equalsIgnoreCase(packageName)) {
@@ -52,9 +52,8 @@ public class AppUtil {
         }
     }
 
-
     /**
-     * 应用安装
+     * 应用Install
      *
      * @param context
      * @param

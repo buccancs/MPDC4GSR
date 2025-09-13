@@ -32,7 +32,7 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
     }
 
     /**
-     * settings确认click事件监听.
+     * settingsConfirmclickEventListener.
      */
     fun setConfirmListener(l: (value: Float) -> Unit): IRConfigInputDialog {
         this.onConfirmListener = l

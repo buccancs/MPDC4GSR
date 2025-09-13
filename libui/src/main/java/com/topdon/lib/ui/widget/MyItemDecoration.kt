@@ -20,6 +20,12 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  * Custom My item decoration view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
  */
+/**
+ * MyItemDecoration manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     /**
      * 整个 RecyclerView 左侧间距，单位 dp.
@@ -66,7 +72,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     var itemBottom: Float? = null
 
     /**
-     * 屏幕缩放倍率，用于 dp 与 px
+     * 屏幕Scale倍率，用于 dp 与 px
      */
     private val density: Float = context.resources.displayMetrics.density
 
@@ -152,7 +158,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         itemCount: Int,
         spanCount: Int,
     ) {
-        val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 // 总行数
+        val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 
         val rowPosition = position / spanCount // current position 在第几行[0, totalRow)
         val columnPosition = position % spanCount // current position 在第几列[0, spanCount)
 
@@ -176,7 +182,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         spanCount: Int,
         spanIndex: Int,
     ) {
-        val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 // 总行数
+        val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 
         val rowPosition = position / spanCount // currentposition在第几行[0, totalRow)
 
         val left: Int = dp2px(if (spanIndex == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
@@ -200,5 +206,8 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         // Note: Implementation to be added when specific requirements are defined
     }
 
+    /**
+     * Executes dp2px functionality.
+     */
     private fun dp2px(dpValue: Float): Int = (dpValue * density + 0.5f).toInt()
 }

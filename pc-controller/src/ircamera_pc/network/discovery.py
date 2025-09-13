@@ -10,7 +10,7 @@ import socket
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Any
 
 try:
     from zeroconf import ServiceInfo, Zeroconf

@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_text_input.*
  * - [ExtraKeyConfig.ITEM_NAME] - String type item name.
  * - [ExtraKeyConfig.RESULT_INPUT_TEXT] - String type 当前输入内容.
  *
- * 返回：[ExtraKeyConfig.RESULT_INPUT_TEXT] - String type 输入内容.
+ * Return：[ExtraKeyConfig.RESULT_INPUT_TEXT] - String type 输入内容.
  *
  * Created by LCG on 2024/8/27.
  */

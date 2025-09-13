@@ -1,7 +1,7 @@
 package com.example.open3d
 
 /**
- * 统一的c++调试
+ * 统一的c++Debug
  * @author: CaiSongL
  * @date: 2023/10/23 17:57
  */

@@ -11,7 +11,7 @@ class PolicyViewModel : BaseViewModel() {
     val htmlViewData = SingleLiveEvent<HtmlBean>()
 
     /**
-     * @param type 1: 用户serviceprotocol 2: 隐私政策 3: 第三方component
+     * @param type 1: Userserviceprotocol 2: 隐私政策 3: 第三方component
      */
     fun getUrl(type: Int) {
         viewModelScope.launch(Dispatchers.IO) {

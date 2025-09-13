@@ -103,7 +103,7 @@ class Phase4SecurityValidator:
         total = len(self.test_results)
         success_rate = (passed / total) * 100 if total > 0 else 0
 
-        print(f"\n📊 Phase 4 Test Results Summary:")
+        print("\n📊 Phase 4 Test Results Summary:")
         print(f"   Tests Passed: {passed}/{total} ({success_rate:.1f}%)")
 
         if success_rate >= 80:
@@ -385,7 +385,7 @@ async def main():
     validator = Phase4SecurityValidator()
     success = await validator.run_all_tests()
 
-    print(f"\n🎯 Phase 4 Implementation Status:")
+    print("\n🎯 Phase 4 Implementation Status:")
     if success:
         print("✅ Advanced Authentication & Security system is PRODUCTION READY")
         print("🔐 Multi-tier authentication implemented")

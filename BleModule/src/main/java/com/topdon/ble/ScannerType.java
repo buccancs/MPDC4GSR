@@ -17,7 +17,7 @@ public enum ScannerType {
      */
     LEGACY,
     /**
-     * 使用{@link BluetoothAdapter#startDiscovery()}，没有广播data，不支持搜索settings
+     * 使用{@link BluetoothAdapter#startDiscovery()}，没有广播data，不支持Searchsettings
      */
     CLASSIC
 }

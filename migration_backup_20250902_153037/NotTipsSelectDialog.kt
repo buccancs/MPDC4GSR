@@ -27,7 +27,7 @@ class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
     }
 
     /**
-     * click “我知道了” 事件监听.
+     * click “我知道了” EventListener.
      */
     fun setOnConfirmListener(l: ((isSelect: Boolean) -> Unit)?): NotTipsSelectDialog {
         onConfirmListener = l

@@ -230,7 +230,7 @@ drawing一个矩形、高low temperature实心圆、高low temperaturetemperatur
     ): LibIRTemp.TemperatureSampleResult? {
         drawRect(canvas, rect)
 
-rect 里的data在 touch 事件已processing过了，left < right, top < bottom
+rect 里的data在 touch Event已processing过了，left < right, top < bottom
         val left = (rect.left / xScale).toInt()
         val top = (rect.top / yScale).toInt()
         val right = (rect.right / xScale).toInt()

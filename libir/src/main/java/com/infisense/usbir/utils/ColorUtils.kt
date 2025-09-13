@@ -19,6 +19,9 @@ object ColorUtils {
         return color and 0xFF
     }
 
+    /**
+     * Executes to01 functionality.
+     */
     fun to01(float: Float): String {
         return String.format(Locale.ENGLISH, "%.1f", float)
     }

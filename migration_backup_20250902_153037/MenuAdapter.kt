@@ -26,7 +26,7 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
     private var selectIndex = 0
 
     /**
-     * item click事件监听.
+     * item clickEventListener.
      */
     var onItemClickListener: ((position: Int) -> Unit)? = null
 
@@ -164,7 +164,7 @@ class MenuAdapter(val context: Context, val type: Type) : RecyclerView.Adapter<M
     @SuppressLint("NotifyDataSetChanged")
     inner class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
         init {
-            val canSeeCount = itemCount.toFloat() // 一屏可见的 item 数量，目前都是全都显示完
+            val canSeeCount = itemCount.toFloat() // 一屏Visible的 item 数量，目前都是全都Show/Display完
             if (ScreenUtil.isPortrait(context)) {
                 val with = (ScreenUtil.getScreenWidth(context) / canSeeCount).toInt()
                 rootView.layoutParams = ViewGroup.LayoutParams(with, ViewGroup.LayoutParams.WRAP_CONTENT)

@@ -67,7 +67,7 @@ true-TC007 false-其他插件式device
     private var reportAdapter = PDFAdapter(R.layout.item_pdf)
 
     /**
-LMS 登录及退出登录广播.
+LMS Login及ExitLogin广播.
      */
     private val loginBroadcastReceiver = LoginBroadcastReceiver()
 

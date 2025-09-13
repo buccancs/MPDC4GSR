@@ -64,7 +64,7 @@
 //    private String RectMinTemp, RectMaxTemp;
 //
 //    //private float scale = 0;
-//    private float xscale = 0;//image缩放比例
+//    private float xscale = 0;//imageScale比例
 //    private float yscale = 0;
 //    private int viewWidth = 0;//控件宽度
 //    private int viewHeight = 0;//控件高度
@@ -297,7 +297,7 @@
 //                        }
 //                        regionAndValueCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 //                        regionAndValueCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
-//                        // 获取全图maximum温和minimum温的data
+//                        // Get/Retrieve全图maximum温和minimum温的data
 //                        if(tempRect == null){
 //                            tempRect = new Rect(0, 0, imageWidth - 1, imageHeight - 1);
 //                        }else{
@@ -500,7 +500,7 @@
 //                        //pointtemperature
 //                        for (int index = 0; index < points.size(); index++) {
 //                            Point tempPoint = points.get(index);
-//                            int x = (int) (tempPoint.x / xscale);//精度丢失,processing方式:在onTouch绘制的十字标做同样丢失,保证显示point校对
+//                            int x = (int) (tempPoint.x / xscale);//精度丢失,processing方式:在onTouch绘制的十字标做同样丢失,保证Show/Displaypoint校对
 //                            int y = (int) (tempPoint.y / yscale);
 //                            if (x < imageWidth && x > 0 && y < imageHeight && y > 0) {
 //                                temperatureSampleResult = irtemp.getTemperatureOfPoint(new Point(x, y));
@@ -1204,7 +1204,7 @@
 //    }
 //
 //    /**
-//     * 输入一个坐标,找出是否已经存在的直line,没有返回一条初始直line
+//     * 输入一个坐标,找出是否已经存在的直line,没有Return一条初始直line
 //     */
 //    public Line getLine(Point point) {
 //        Line line = new Line();
@@ -1273,7 +1273,7 @@
 //
 //    private void drawPoint(Canvas canvas, Paint paint, float x1, float y1) {
 //        //Point的单位是int,从floatconversion,导致绘制圆point时已经精度丢失 2022-04-12
-//        float x = (int) (x1 / xscale) * xscale;//模拟drawDot入参x1conversion方式
+//        float x = (int) (x1 / xscale) * xscale;//Mock/SimulatedrawDot入参x1conversion方式
 //        float y = (int) (y1 / yscale) * yscale;
 //        //空心十字
 //        float[] points = new float[]{

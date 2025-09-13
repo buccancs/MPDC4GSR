@@ -29,7 +29,7 @@ class ColorPickDialog(
     var textSizeIsDP: Boolean = false,
 ) : Dialog(context, com.topdon.lib.core.R.style.InfoDialog), View.OnClickListener {
     /**
-     * 颜色值拾取事件监听.
+     * 颜色值拾取EventListener.
      */
     var onPickListener: ((color: Int, textSize: Int) -> Unit)? = null
 

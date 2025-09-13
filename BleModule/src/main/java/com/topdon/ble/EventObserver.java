@@ -7,9 +7,8 @@ import com.topdon.commons.observer.Observer;
 
 import java.util.UUID;
 
-
 /**
- * 各种事件。bluetoothstate，connectionstate，读取到特征值，写入结果回调等等
+ * 各种Event。bluetoothstate，connectionstate，读取到特征值，写入结果Callback等等
  * <p>
  * date: 2021/8/12 13:15
  * author: bichuanfeng
@@ -75,7 +74,7 @@ public interface EventObserver extends Observer {
      * notification开关变化 / Indication开关变化
      *
      * @param request   请求
-     * @param isEnabled 开启或关闭
+     * @param isEnabled 开启或Close
      */
     default void onNotificationChanged(Request request, boolean isEnabled) {
     }
@@ -91,8 +90,8 @@ public interface EventObserver extends Observer {
 
     /**
      * @param request 请求
-     * @param txPhy   物理层发送器偏好。{@link BluetoothDevice#PHY_LE_1M_MASK}等
-     * @param rxPhy   物理层接收器偏好。{@link BluetoothDevice#PHY_LE_1M_MASK}等
+     * @param txPhy   物理层Send器偏好。{@link BluetoothDevice#PHY_LE_1M_MASK}等
+     * @param rxPhy   物理层Receive器偏好。{@link BluetoothDevice#PHY_LE_1M_MASK}等
      */
     default void onPhyChange(Request request, int txPhy, int rxPhy) {
     }

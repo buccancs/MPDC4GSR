@@ -21,6 +21,12 @@ import com.topdon.menu.R as MenuR
  * Provides specialized rendering and interaction capabilities.
  */
 @Deprecated("旧的targetmenu，已重构过了")
+/**
+ * MenuTargetAdapter provides data binding between data source and UI components.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
 
@@ -178,7 +184,7 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
 
         init {
-//            val canSeeCount = 4.5 //一屏占4个
+//            val canSeeCount = 4.5 
 //            val with = (ScreenUtils.getScreenWidth() / canSeeCount).toInt()
             itemView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 //            val imageSize = (ScreenUtils.getScreenWidth() * 62 / 375f).toInt()

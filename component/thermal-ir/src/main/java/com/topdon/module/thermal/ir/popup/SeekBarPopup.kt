@@ -34,14 +34,14 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
         }
 
     /**
-是否在滑动过程中实时触发回调.
+是否在Swipe过程中实时触发Callback.
      *
-true-实时触发  false-滑动stop(stop)时才触发
+true-实时触发  false-Swipestop(stop)时才触发
      */
     var isRealTimeTrigger = false
 
     /**
-进度值拾取事件监听.
+进度值拾取EventListener.
      */
     var onValuePickListener: ((progress: Int) -> Unit)? = null
 

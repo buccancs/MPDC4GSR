@@ -12,8 +12,8 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class ReportIRBean(
-    var picture_id: String, // 上传service器后interface返回的imageId
-    var picture_url: String, // 上传service器后interface返回的imageURL
+    var picture_id: String, // Uploadservice器后interfaceReturn的imageId
+    var picture_url: String, // Uploadservice器后interfaceReturn的imageURL
     val full_graph_data: ReportTempBean?, // 全图data
     val point_data: List<ReportTempBean>, // pointdata
     val line_data: List<ReportTempBean>, // linedata

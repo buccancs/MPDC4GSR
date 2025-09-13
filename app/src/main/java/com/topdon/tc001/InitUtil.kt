@@ -26,7 +26,7 @@ import com.topdon.lms.sdk.utils.LanguageUtil
 import java.util.Date
 
 /**
- * 国内权限申请后才能initialization
+ * 国内Permission申请后才能initialization
  */
 object InitUtil {
     fun initLog() {
@@ -35,7 +35,7 @@ object InitUtil {
         val tag = "MPDC4GSR_LOG"
         val pattern = "{d}, {L}, {t}, {m}"
         val backupStrategy = FileSizeBackupStrategy2(5 * 1024 * 1024L, 10) // 一份file的大小
-        val cleanStrategy = FileLastModifiedCleanStrategy(30 * 24 * 60 * 60) // settings自动清除时间
+        val cleanStrategy = FileLastModifiedCleanStrategy(30 * 24 * 60 * 60) // settings自动Clear时间
 
         val config =
             LogConfiguration.Builder()
@@ -44,11 +44,11 @@ object InitUtil {
                 .build()
         val androidPrinter = AndroidPrinter(true)
         val filePrinter =
-            FilePrinter.Builder(fileDir) // 指定save日志file的path
-                .fileNameGenerator(ChangelessFileNameGenerator(fileName)) // 指定日志file名生成器
-                .backupStrategy(backupStrategy) // 指定日志file备份策略
-                .cleanStrategy(cleanStrategy) // 指定日志file清除策略
-                .flattener(PatternFlattener(pattern)) // 自定义日志format
+            FilePrinter.Builder(fileDir) // 指定saveLogfile的path
+                .fileNameGenerator(ChangelessFileNameGenerator(fileName)) // 指定Logfile名生成器
+                .backupStrategy(backupStrategy) // 指定LogfileBackupStrategy
+                .cleanStrategy(cleanStrategy) // 指定LogfileClearStrategy
+                .flattener(PatternFlattener(pattern)) // 自定义Logformat
                 .build()
         if (BuildConfig.DEBUG) {
             XLog.init(config, androidPrinter, filePrinter)
@@ -64,7 +64,7 @@ object InitUtil {
             "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?" +
                 "softCode=${BaseApplication.instance.getSoftWareCode()}&" +
                 "language=${LanguageUtil.getLanguageId(Utils.getApp())}&type=22"
-        // 用户protocol地址
+        // Userprotocol地址
         val servicesAgreementUrl =
             "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?" +
                 "softCode=${BaseApplication.instance.getSoftWareCode()}&" +
@@ -129,13 +129,13 @@ object InitUtil {
             BaseApplication.instance.unregisterReceiver(BaseApplication.usbObserver)
         } catch (e: Exception) {
         }
-        // 必须动态注册,否则部分机型无法收到usbstate
+        // 必须动态Register,否则部分机型无法收到usbstate
         val filter = IntentFilter()
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED)
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
-        filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION) // 申请USB权限
+        filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION) // 申请USBPermission
         if (Build.VERSION.SDK_INT < 33) {
             BaseApplication.instance.registerReceiver(BaseApplication.usbObserver, filter)
         } else {

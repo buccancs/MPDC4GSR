@@ -43,31 +43,31 @@ open class ItemBase {
     var state: Int = 0
 
     /**
-     * 用户输入字符，""表示未输入
+     * User输入字符，""表示未输入
      */
     @ColumnInfo
     var inputText: String = ""
 
     /**
-     * 用户上传的image1在本地绝对path
+     * UserUpload的image1在本地绝对path
      */
     @ColumnInfo
     var image1: String = ""
 
     /**
-     * 用户上传的image2在本地绝对path
+     * UserUpload的image2在本地绝对path
      */
     @ColumnInfo
     var image2: String = ""
 
     /**
-     * 用户上传的image3在本地绝对path
+     * UserUpload的image3在本地绝对path
      */
     @ColumnInfo
     var image3: String = ""
 
     /**
-     * 用户上传的image4在本地绝对path
+     * UserUpload的image4在本地绝对path
      */
     @ColumnInfo
     var image4: String = ""
@@ -77,7 +77,7 @@ open class ItemBase {
     override fun hashCode(): Int = id.toInt()
 
     /**
-     * 获取 state 对应的text描述.
+     * Get/Retrieve state 对应的text描述.
      */
     fun getStateStr(context: Context): String =
         when (state) {
@@ -234,7 +234,7 @@ class ItemDetect() : ItemBase() {
     fun copyName(): String = "$itemName(1)"
 
     /**
-     * 返回一个 id 为 0，parentId、position、itemName 为指定值，其余property完全一致的新对象.
+     * Return一个 id 为 0，parentId、position、itemName 为指定值，其余property完全一致的新对象.
      */
     fun copyOne(
         parentId: Long = this.parentId,
@@ -277,7 +277,7 @@ class ItemDetect() : ItemBase() {
 
     companion object {
         /**
-         * 根据指定的默认目录位置，获取对应的默认项目列表.
+         * 根据指定的默认目录位置，Get/Retrieve对应的默认项目列表.
          */
         fun buildDefaultItemList(
             parentId: Long,

@@ -22,12 +22,16 @@ import com.topdon.menu.R as MenuR
  *
  * Created by LCG on 2024/11/12.
  */
-/**
- * ColorView class
- */
+
 /**
  * Custom Color view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * ColorView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class ColorView : View {
     /**
@@ -136,6 +140,9 @@ class ColorView : View {
         invalidate()
     }
 
+    /**
+     * Executes refreshshader functionality.
+     */
     private fun refreshShader() {
         val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // Border width 2dp
         val barHeight: Int = (measuredWidth * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73

@@ -11,7 +11,6 @@ import android.view.TextureView;
 
 import com.energy.iruvc.utils.SynchronizedBitmap;
 
-
 public class CameraJpegView extends TextureView {
 
     private String TAG = "CameraView";

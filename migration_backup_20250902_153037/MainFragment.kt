@@ -145,7 +145,7 @@ class MainFragment : BaseFragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已connection TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+                    // 要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     }

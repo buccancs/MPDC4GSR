@@ -15,9 +15,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
-/**
- *
- */
 public class IniUtil {
     private static String NAME = "Link";
     private static final String LINK = "link";
@@ -50,7 +47,7 @@ public class IniUtil {
     }
 
     /**
-     * 获取车型名字
+     * Get/Retrieve车型名字
      *
      * @param path 车型path
      * @return String
@@ -63,7 +60,6 @@ public class IniUtil {
 //        return UTF8StringUtils.readByUtf8WithOutBom(path + "/Diag.ini");
         return readFileInfo(path + "/Diag.ini");
     }
-
 
     /**
      * 读取file
@@ -99,7 +95,6 @@ public class IniUtil {
         }
         return name;
     }
-
 
     public static String getVersion(String path, String name) {
         File file = new File(path + "/Diag.ini");
@@ -147,9 +142,8 @@ public class IniUtil {
         return "";
     }
 
-
     /**
-     * 获取保养type
+     * Get/Retrieve保养type
      *
      * @param path
      * @param name
@@ -307,9 +301,8 @@ public class IniUtil {
         }
     }
 
-
     /**
-     * 获取保养type
+     * Get/Retrieve保养type
      *
      * @param path
      * @param name

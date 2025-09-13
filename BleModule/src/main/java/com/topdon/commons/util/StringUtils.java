@@ -70,7 +70,7 @@ public class StringUtils {
     /**
      * byte数组conversion成16进制字符串
      *
-     * @return 如果bytes为null则返回null，如果bytes长度为0返回""，其他返回正常conversion的字符串
+     * @return 如果bytes为null则Returnnull，如果bytes长度为0Return""，其他Return正常conversion的字符串
      */
     public static String toHex(byte[] bytes) {
         return toHex(bytes, " ");
@@ -80,7 +80,7 @@ public class StringUtils {
      * byte数组conversion成16进制字符串
      *
      * @param separator 用来分隔的字符串
-     * @return 如果bytes为null则返回null，如果bytes长度为0返回""，其他返回正常conversion的字符串
+     * @return 如果bytes为null则Returnnull，如果bytes长度为0Return""，其他Return正常conversion的字符串
      */
     public static String toHex(byte[] bytes, String separator) {
         if (bytes == null) {
@@ -110,7 +110,7 @@ public class StringUtils {
     /**
      * byte数组conversion成2进制字符串
      *
-     * @return 如果bytes为null则返回null，如果bytes长度为0返回""，其他返回正常conversion的字符串
+     * @return 如果bytes为null则Returnnull，如果bytes长度为0Return""，其他Return正常conversion的字符串
      */
     public static String toBinary(byte[] bytes) {
         return toBinary(bytes, " ");
@@ -120,7 +120,7 @@ public class StringUtils {
      * byte数组conversion成2进制字符串
      *
      * @param separator 用来分隔的字符串
-     * @return 如果bytes为null则返回null，如果bytes长度为0返回""，其他返回正常conversion的字符串
+     * @return 如果bytes为null则Returnnull，如果bytes长度为0Return""，其他Return正常conversion的字符串
      */
     public static String toBinary(byte[] bytes, String separator) {
         if (bytes == null) {

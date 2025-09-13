@@ -120,15 +120,15 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     /**
      * data流mode。
      *
-     * 对用户来说，只要看到最终的画area就行，SDK 返回的data流是怎样的根本无所谓，
+     * 对User来说，只要看到最终的画area就行，SDK Return的data流是怎样的根本无所谓，
      * 且也没有switchdata流mode的需求和必要，故而此处写死为 image+temperature 复合datamode。
      */
     protected val defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
 
     /**
      * 目前对core进行一些configuration如发射率、temperature measurement距离、自动快门reset，是在 start 调用后，另起一个协程，
-     * 不断循环判断 ircmd 是否initialization完毕，直到 ircmd 的initialization回调中settings为 false 后，
-     * 才执行configurationinitialization操作，这个variable就是干这个活，后续有空了要优化流程，不用这么绕。
+     * 不断循环判断 ircmd 是否initialization完毕，直到 ircmd 的initializationCallback中settings为 false 后，
+     * 才执行configurationinitialization操作，这个variable就是干这个活，后续有空了要Optimize流程，不用这么绕。
      */
     protected var isConfigWait = true
 
@@ -140,7 +140,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     /**
      * 与core进行交互的class.
      *
-     * 在各子class的connectionsuccess回调中initialization。
+     * 在各子class的connectionsuccessCallback中initialization。
      */
     protected var ircmd: IRCMD? = null
 
@@ -201,7 +201,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var curTargetStyle = 1
 
     /**
-     * 是否switchtemperature measurement-高温、低温，并且需要在高低温switch中判断dialog的显示和隐藏
+     * 是否switchtemperature measurement-高温、低温，并且需要在高低温switch中判断dialog的Show/Display和Hide
      */
     @Volatile
     private var isTempShowDialog = false
@@ -445,7 +445,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             view_chart_trend.setToEmpty()
         }
 
-        thermal_recycler_night.isVideoMode = SaveSettingUtil.isVideoMode // 恢复拍照/录像state
+        thermal_recycler_night.isVideoMode = SaveSettingUtil.isVideoMode // Restore拍照/录像state
         thermal_recycler_night.fenceSelectType = FenceType.FULL // 初始selected全图
         thermal_recycler_night.isUnitF = SharedManager.getTemperature() == 0 // temperature档位单位
         thermal_recycler_night.setSettingRotate(saveSetBean.rotateAngle) // selected当前的旋转角度
@@ -502,7 +502,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         tv_title_observe.isSelected = !isToTemp
         SaveSettingUtil.isMeasureTempMode = isToTemp
 
-        // 关闭settingsmenu的 PopupWindow
+        // Closesettingsmenu的 PopupWindow
         ViewStubUtils.showViewStub(view_stub_camera, false, null)
         popupWindow?.dismiss()
 
@@ -525,17 +525,17 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         updateTemperatureSeekBar(false) // 加锁
 
         if (isToTemp) { // 观测->temperature measurement
-            // 恢复visible light
+            // Restorevisible light
             if (SaveSettingUtil.isOpenTwoLight && XXPermissions.isGranted(this, Permission.CAMERA)) {
                 cameraPreviewConfig(false)
             }
 
-            // 关闭 AI algorithm(动态识别、高温源、低温源)
+            // Close AI algorithm(动态识别、高温源、低温源)
             aiConfig = ObserveBean.TYPE_NONE
             imageThread?.typeAi = aiConfig
             thermal_recycler_night.setTempSource(aiConfig)
 
-            // 关闭标靶
+            // Close标靶
             thermal_recycler_night.setTargetSelected(TargetType.MODE, false)
             thermal_recycler_night.setTargetSelected(TargetType.STYLE, false)
             thermal_recycler_night.setTargetSelected(TargetType.COLOR, false)
@@ -546,7 +546,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             targetColorType = ObserveBean.TYPE_TARGET_COLOR_GREEN
             zoomView.hideView()
 
-            // 关闭指南针
+            // Close指南针
             saveSetBean.isOpenCompass = false
             thermal_recycler_night.setSettingSelected(SettingType.COMPASS, saveSetBean.isOpenCompass)
             compassView.visibility = View.GONE
@@ -554,13 +554,13 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             stopCompass()
             zoomView.del(true)
 
-            // refreshpseudo color条显示state
+            // refreshpseudo color条Show/Displaystate
             saveSetBean.isOpenPseudoBar = SaveSettingUtil.isOpenPseudoBar
             cl_seek_bar.isVisible = saveSetBean.isOpenPseudoBar
             thermal_recycler_night.setSettingSelected(SettingType.PSEUDO_BAR, saveSetBean.isOpenPseudoBar)
             temperature_seekbar?.setPseudocode(pseudoColorMode)
 
-            // 清除高温point、低温point
+            // Clear高温point、低温point
             temperatureView.clear()
             temperatureView.isUserHighTemp = false
             temperatureView.isUserLowTemp = false
@@ -570,7 +570,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             thermal_recycler_night.clearTempPointSelect()
             thermal_recycler_night.fenceSelectType = FenceType.FULL // selected全图
 
-            // 警示是否打开
+            // 警示是否Open
             alarmBean = SaveSettingUtil.alarmBean
             imageThread?.alarmBean = alarmBean
             if (alarmBean.isHighOpen || alarmBean.isLowOpen) {
@@ -581,7 +581,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 AlarmHelp.getInstance(this).updateData(null, null, null)
             }
         } else { // temperature measurement->观测
-            // 关闭画中画
+            // Close画中画
             if (isOpenPreview) {
                 isOpenPreview = false
                 cameraPreview.closeCamera()
@@ -589,7 +589,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 cameraPreview.visibility = View.INVISIBLE
             }
 
-            // 清除point、line、area、全图、趋势图
+            // Clearpoint、line、area、全图、趋势图
             temperatureView.clear()
             temperatureView.visibility = View.INVISIBLE
             temperatureView.temperatureRegionMode = REGION_MODE_CLEAN
@@ -607,11 +607,11 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             imageThread?.typeAi = aiConfig
             thermal_recycler_night.setTempSource(aiConfig)
 
-            // 指南针是否打开
+            // 指南针是否Open
             saveSetBean.isOpenCompass = SaveSettingUtil.isOpenCompass
             thermal_recycler_night.setSettingSelected(SettingType.COMPASS, saveSetBean.isOpenCompass)
 
-            // 高低温显示
+            // 高低温Show/Display
             if (SaveSettingUtil.isOpenHighPoint || SaveSettingUtil.isOpenLowPoint)
                 {
                     temperatureView.temperatureRegionMode = REGION_MODE_RESET
@@ -622,14 +622,14 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             thermal_recycler_night.setTempPointSelect(TempPointType.HIGH, SaveSettingUtil.isOpenHighPoint)
             thermal_recycler_night.setTempPointSelect(TempPointType.LOW, SaveSettingUtil.isOpenLowPoint)
 
-            // 标靶是否打开
+            // 标靶是否Open
             targetMeasureMode = SaveSettingUtil.targetMeasureMode
             targetStyle = SaveSettingUtil.targetType
             targetColorType = SaveSettingUtil.targetColorType
             thermal_recycler_night.setTargetMode(targetMeasureMode)
             thermal_recycler_night.setTargetSelected(TargetType.COLOR, targetColorType != ObserveBean.TYPE_TARGET_COLOR_GREEN)
 
-            // 关闭pseudo color条
+            // Closepseudo color条
             cl_seek_bar.visibility = View.GONE
 
             // 弹出观测modedescriptiontip框
@@ -643,13 +643,13 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                     .create().show()
             }
 
-            // 关闭temperature报警
+            // Closetemperature报警
             alarmBean = AlarmBean()
             imageThread?.alarmBean = alarmBean
             AlarmHelp.getInstance(this).updateData(null, null, null)
         }
 
-        // 关闭自定义渲染
+        // Close自定义渲染
         customPseudoBean.isUseCustomPseudo = false
         customPseudoBean.saveToShared()
         updateImageAndSeekbarColorList(customPseudoBean)
@@ -703,7 +703,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             temperatureView.setLinePaintColor(saveSetBean.tempTextColor)
             temperatureView.setTextSize(saveSetBean.tempTextSize)
 
-            // reset标靶-缩放
+            // reset标靶-Scale
             zoomConfig = 1
 
             // reset镜像
@@ -717,7 +717,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         thermal_recycler_night.selectPosition(if (isToTemp) 0 else 10)
         view_menu_first.isObserveMode = !isToTemp
 
-        // 指南针显示state改变
+        // 指南针Show/Displaystate改变
         updateCompass()
 
         /**
@@ -966,7 +966,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     }
 
     private fun updateRotateAngle(rotateAngle: Int) {
-        // 清除limitsettings
+        // Clearlimitsettings
         imageThread?.setLimit(
             editMaxValue,
             editMinValue,
@@ -1049,7 +1049,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             temperatureView.start()
             cameraView?.start()
             isrun = true
-//            //恢复configuration
+//            //Restoreconfiguration
             configParam()
             thermal_recycler_night.updateCameraModel()
             initIRConfig()
@@ -1094,7 +1094,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             } else {
                 2
             }
-        Log.w("测试自动旋转: ", "mOrientation: $mOrientation")
+        Log.w("Test自动旋转: ", "mOrientation: $mOrientation")
     }
 
     private fun initRecycler() {
@@ -1301,12 +1301,12 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     }
 
     /**
-     * 延时拍照延时秒数，0表示关闭.
+     * 延时拍照延时秒数，0表示Close.
      */
     private var cameraDelaySecond: Int = SaveSettingUtil.delayCaptureSecond
 
     /**
-     * 第 1 个menu-拍照录像 各个操作的click事件监听.
+     * 第 1 个menu-拍照录像 各个操作的clickEventListener.
      * @param actionCode: 0-拍照/录像  1-图库  2-更多menu  3-switch到拍照  4-switch到录像
      */
     private fun setCamera(actionCode: Int) {
@@ -1446,7 +1446,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 }
                 temperatureView.visibility = View.VISIBLE
                 temperatureView.temperatureRegionMode = REGION_NODE_TREND
-                if (!space_chart.isVisible) { // 当前趋势图如果已显示着的话，则不去更改
+                if (!space_chart.isVisible) { // 当前趋势图如果已Show/Display着的话，则不去更改
                     space_chart.isVisible = true
                     cl_trend_open.isVisible = false
                     ll_trend_close.isVisible = true
@@ -1488,7 +1488,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var tempAlarmSetDialog: TempAlarmSetDialog? = null
 
     /**
-     * 显示temperature报警settings弹框.
+     * Show/Displaytemperature报警settings弹框.
      */
     private fun showTempAlarmSetDialog() {
         if (tempAlarmSetDialog == null) {
@@ -1519,7 +1519,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 cameraPreviewConfig(true)
             }
             TwoLightType.BLEND_EXTENT -> { // fusion度
-                if (!isOpenPreview && isSelected) { // 未打开画中画时自动打开画中画
+                if (!isOpenPreview && isSelected) { // 未Open画中画时自动Open画中画
                     cameraPreviewConfig(false)
                 }
                 if (isSelected) {
@@ -1673,7 +1673,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var targetColorType: Int = SaveSettingUtil.targetColorType
 
     /**
-     * 显示标靶measurementmode（人、羊、狗、鸟） PopupWindow.
+     * Show/Display标靶measurementmode（人、羊、狗、鸟） PopupWindow.
      */
     private fun showTargetModePopup() {
         zoomView.visibility = View.VISIBLE
@@ -1716,13 +1716,13 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 //        popupWindow?.setOnDismissListener {
 //            thermal_recycler_night.modeStats = 620
 //        }
-        // 在控件上方显示
+        // 在控件上方Show/Display
         popupWindow?.showAsDropDown(thermal_lay, 0, getPopupWindowY(contentHeight), Gravity.NO_GRAVITY)
         curTargetStyle = 1
     }
 
     /**
-     * 显示标靶风格selection PopupWindow
+     * Show/Display标靶风格selection PopupWindow
      */
     private fun showTargetStylePopup() {
         zoomView.visibility = View.VISIBLE
@@ -1760,7 +1760,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 //        popupWindow?.setOnDismissListener {
 //            thermal_recycler_night.targetStats = 600
 //        }
-        // 在控件上方显示
+        // 在控件上方Show/Display
         popupWindow?.showAsDropDown(
             thermal_lay,
             0,
@@ -1797,7 +1797,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var cameraAlpha = SaveSettingUtil.twoLightAlpha
 
     /**
-     * 显示fusion度settings弹框
+     * Show/Displayfusion度settings弹框
      */
     private fun showBlendExtentPopup() {
         val seekBarPopup = SeekBarPopup(this, true)
@@ -1875,7 +1875,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         temperatureView.post {
             if (!temperaturerun) {
                 temperaturerun = true
-                // 需等待渲染complete再显示
+                // 需等待渲染complete再Show/Display
                 temperatureView.visibility = View.VISIBLE
                 if (!isTS001 || SaveSettingUtil.isMeasureTempMode) {
                     temperatureView.postDelayed({
@@ -2030,7 +2030,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                     isOnRestart = false
                 }
             }
-            // 使用Toast来显示exceptioninfo
+            // 使用Toast来Show/Displayexceptioninfo
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     setTsBin()
@@ -2161,7 +2161,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
      * IRmodeconfigurationinitialization
      */
     protected fun initIRConfig() {
-        // pseudo color条显示
+        // pseudo color条Show/Display
         cl_seek_bar.isVisible = curChooseTabPos == 1 && saveSetBean.isOpenPseudoBar
         thermal_recycler_night.setSettingSelected(SettingType.PSEUDO_BAR, saveSetBean.isOpenPseudoBar)
         temperature_seekbar?.setPseudocode(pseudoColorMode)
@@ -2229,14 +2229,14 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             Log.e(TAG, "imageThread.join(): catch an interrupted exception")
         }
 
-        // 某些特定客户的特殊device需要使用该命令关闭sensor
+        // 某些特定客户的特殊device需要使用该CommandClosesensor
 //        if (Usbcontorl.isload) {
-//            Usbcontorl.usb3803_mode_setting(0) //关闭5V
+//            Usbcontorl.usb3803_mode_setting(0) //Close5V
 //        }
     }
 
     /**
-     * 关闭自定义渲染，使用当前pseudo colortype的动态渲染.
+     * Close自定义渲染，使用当前pseudo colortype的动态渲染.
      */
     private fun closeCustomPseudo() {
         setCustomPseudoColorList(null, null, true, 0f, 0f)
@@ -2487,7 +2487,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             }
             try {
                 synchronized(syncimage.dataLock) {
-                    // 获取展示imageinfo的图层data
+                    // Get/Retrieve展示imageinfo的图层data
                     var cameraViewBitmap: Bitmap? =
                         if (isOpenAmplify) {
                             OpencvTools.supImageFourExToBitmap(getCameraViewBitmap())
@@ -2503,13 +2503,13 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         }
                     }
 
-//                    // 获取temperature图层的data，包括pointline框，temperature值等，重新合成bitmap
+//                    // Get/Retrievetemperature图层的data，包括pointline框，temperature值等，重新合成bitmap
 //                    if ((curChooseTabPos == 1 && temperatureView.temperatureRegionMode != REGION_MODE_CLEAN) ||
 //                        (curChooseTabPos == 2 && temperatureView.isUserHighTemp && temperatureView.isUserLowTemp)) {
 //                        cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionAndValueBitmap, 0, 0)
 //                    }
 
-                    // 合并pseudo color条
+                    // Mergepseudo color条
                     val isShowPseudoBar = cl_seek_bar.visibility == VISIBLE
                     if (isShowPseudoBar) {
                         val seekBarBitmap = cl_seek_bar.drawToBitmap()
@@ -2523,7 +2523,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         seekBarBitmap.recycle()
                     }
 
-                    // 合并指南针
+                    // Merge指南针
                     val compassBitmap: Bitmap? =
                         if (compassView.visibility == VISIBLE) {
                             compassView.drawToBitmap()
@@ -2541,7 +2541,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         compassBitmap.recycle()
                     }
 
-                    // 产品在 2023/11/24 测试用例评审上确定拍照不需要savetemperature报警闪烁效果
+                    // 产品在 2023/11/24 Test用例评审上确定拍照不需要savetemperature报警闪烁效果
                     /*if (temp_bg.isVisible) {
                         if (alphaPaint == null) {
                             alphaPaint = Paint()
@@ -2550,7 +2550,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         cameraViewBitmap = BitmapUtils.mergeBitmapAlpha(cameraViewBitmap, temp_bg.drawToBitmap(), alphaPaint, 0, 0)
                     }*/
 
-                    // 获取temperature图层的data，包括pointline框，temperature值等，重新合成bitmap
+                    // Get/Retrievetemperature图层的data，包括pointline框，temperature值等，重新合成bitmap
                     if ((curChooseTabPos == 1 && temperatureView.temperatureRegionMode != REGION_MODE_CLEAN) ||
                         (curChooseTabPos == 2 && temperatureView.isUserHighTemp() && temperatureView.isUserLowTemp())
                     ) {
@@ -2746,7 +2746,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var zoomConfig = 1
 
     /**
-     * 显示contrastsettings PopupWindow
+     * Show/Displaycontrastsettings PopupWindow
      */
     private fun showContrastPopup() {
         thermal_recycler_night.setSettingSelected(SettingType.CONTRAST, true)
@@ -2782,7 +2782,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var nowZoomLevel = 1
 
     /**
-     * 显示细节(锐度) settings PopupWindow
+     * Show/Display细节(锐度) settings PopupWindow
      */
     private fun showSharpnessPopup() {
         thermal_recycler_night.setSettingSelected(SettingType.DETAIL, true)
@@ -2870,13 +2870,13 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 delay(timeMillis)
                 XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 if (isFirst && isrun) {
-                    // 恢复镜像
+                    // Restore镜像
                     thermal_recycler_night.setSettingSelected(SettingType.MIRROR, saveSetBean.isOpenMirror)
                     ircmd?.setMirror(saveSetBean.isOpenMirror)
                     // 自动快门
                     delay(timeMillis)
                     withContext(Dispatchers.IO) {
-                        // 部分机型在关闭自动快门，初始会花屏
+                        // 部分机型在Close自动快门，初始会花屏
                         ircmd?.setAutoShutter(true)
                         delay(2500)
                         ircmd?.setAutoShutter(isAutoShutter)
@@ -2957,12 +2957,12 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var isOpenPreview = false
 
     /**
-     * switch 画中画 开启或关闭 state
+     * switch 画中画 开启或Close state
      */
     private fun cameraPreviewConfig(needShowTip: Boolean) {
         if (!CheckDoubleClick.isFastDoubleClick()) {
             if (isOpenPreview) {
-                // 关闭camera
+                // Closecamera
                 isOpenPreview = false
                 cameraPreview.closeCamera()
                 thermal_recycler_night.setTwoLightSelected(TwoLightType.P_IN_P, false)
@@ -3002,7 +3002,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             }
 
             101 -> {
-                // 显示image
+                // Show/Displayimage
                 lifecycleScope.launch {
                     delay(500)
                     isConfigWait = false
@@ -3014,7 +3014,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     }
 
     /**
-     * 记录deviceinfo
+     * Recorddeviceinfo
      */
     private fun printSN() {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -3038,9 +3038,9 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         infoBuilder.toString(),
                         HtmlCompat.FROM_HTML_MODE_LEGACY,
                     )
-                XLog.i("获取deviceinfo: $str")
+                XLog.i("Get/Retrievedeviceinfo: $str")
             } catch (e: Exception) {
-                XLog.e("获取SNfailed: ${e.message}")
+                XLog.e("Get/RetrieveSNfailed: ${e.message}")
             }
         }
     }
@@ -3064,7 +3064,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     }
 
     /**
-     * 方位改变监听
+     * 方位改变Listener
      */
     private fun onCompassUpdate(): Boolean {
         val azimuthTxt = formatDegrees(compass.bearing.value, replace360 = true)
@@ -3148,7 +3148,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+                            // 拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_camera_content))
@@ -3233,7 +3233,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+                            // 拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_microphone_content))
@@ -3309,7 +3309,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+                            // 拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_storage_content))

@@ -461,7 +461,7 @@ addtemperature
                 addLimit()
             }
             2006 -> {
-清除还原
+Clear还原
                 clearFence()
             }
             in 3000..3010 -> {
@@ -474,11 +474,11 @@ rotation
                 clearFence()
             }
             4002 -> {
-image增强
+imageEnhance
                 enhance()
             }
             4003 -> {
-image增强
+imageEnhance
                 camera()
             }
             in 5000..5010 -> {
@@ -629,7 +629,7 @@ rotation
         ToastTools.showShort("旋转:${ThermalTool.getRotate(rotateType)}度")
     }
 
-image增强
+imageEnhance
     private fun enhance() {
         mIrSurfaceView!!.setOpenLut()
         val saturation = mIrSurfaceView?.getSaturationValue() ?: 0
@@ -642,7 +642,7 @@ image增强
                 mIrSurfaceView?.setSaturationValue(value)//settingscontrast
             }
             .setListener { value: Int ->
-实时监听
+实时Listener
 mIrSurfaceView?.setSaturationValue(value)//setcontrast
             }.create().show()
          */
@@ -681,7 +681,7 @@ disabled
             requireView().findViewById<FrameLayout>(R.id.temp_camera_layout).visibility = View.GONE
             isRunCamera = false
         } else {
-打开
+Open
             requireView().findViewById<FrameLayout>(R.id.temp_camera_layout).visibility = View.VISIBLE
             val tempCameraView = requireView().findViewById<com.topdon.lib.ui.camera.CameraView>(R.id.temp_camera_view)
             tempCameraView.post {

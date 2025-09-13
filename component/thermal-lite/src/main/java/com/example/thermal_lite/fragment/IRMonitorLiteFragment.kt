@@ -570,7 +570,7 @@ getgainstate PASS
                             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                 ?.basicGainGet(basicGainGetValue)
                     } catch (e: Exception) {
-                        XLog.e("gain获取failed")
+                        XLog.e("gainGet/Retrievefailed")
                     }
                     basicGainGetTime = System.currentTimeMillis()
                 }

@@ -43,8 +43,8 @@ public class RequestBuilder<T extends RequestCallback> {
     }
 
     /**
-     * 如果settings了回调，则观察者不会收到此次请求的message；不settings则使用观察者接收请求结果。
-     * <br>回调method使用{@link RunOn}注解指定执行line程，观察者method使用{@link Observe}注解指定执行line程
+     * 如果settings了Callback，则Observer不会收到此次请求的message；不settings则使用ObserverReceive请求结果。
+     * <br>Callbackmethod使用{@link RunOn}注解指定执行line程，Observermethod使用{@link Observe}注解指定执行line程
      */
     public RequestBuilder<T> setCallback(T callback) {
         this.callback = callback;

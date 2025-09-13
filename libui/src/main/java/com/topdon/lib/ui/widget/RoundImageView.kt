@@ -8,11 +8,14 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.topdon.lib.ui.R as UiR
 
 /**
- * RoundImageView class
- */
-/**
  * Custom Round image view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * RoundImageView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class RoundImageView : AppCompatImageView {
     companion object {
@@ -35,7 +38,7 @@ class RoundImageView : AppCompatImageView {
         private const val DEFAULT_POSITION = 15
     }
 
-    var position = 0 // 需圆角的位置
+    var position = 0 
         set(value) {
             if (field != value) {
                 field = value
@@ -44,8 +47,8 @@ class RoundImageView : AppCompatImageView {
         }
 
     private var radius = 0 // 圆角半径，单位 px
-    private val path = Path() // 绘制range
-    private var density = 0f // 屏幕缩放等级，用于dp与pxconversion
+    private val path = Path() 
+    private var density = 0f // 屏幕Scale等级，用于dp与pxconversion
 
     constructor(context: Context) : this(context, null)
 
@@ -109,6 +112,9 @@ class RoundImageView : AppCompatImageView {
         }
     }
 
+    /**
+     * Executes dp2px functionality.
+     */
     private fun dp2px(dpValue: Float): Int {
         return (dpValue * density + 0.5f).toInt()
     }

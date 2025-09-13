@@ -127,16 +127,16 @@ object Logger {
         }
     }
 
-    private val MYLOG_PATH_SDCARD_DIR = "/sdcard/Guide/log" // 日志file在sdcard中的path
+    private val MYLOG_PATH_SDCARD_DIR = "/sdcard/Guide/log" // Logfile在sdcard中的path
 
-    private val MYLOGFILEName = "Log.txt" // 本class输出的日志filename
+    private val MYLOGFILEName = "Log.txt" // 本class输出的Logfilename
 
-    private val myLogSdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss") // 日志的输出format
+    private val myLogSdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss") // Log的输出format
 
-    private val logfile = SimpleDateFormat("yyyy-MM-dd") // 日志fileformat
+    private val logfile = SimpleDateFormat("yyyy-MM-dd") // Logfileformat
 
     /**
-     * 打开日志file并写入日志
+     * OpenLogfile并写入Log
      * @param mylogtype
      * @param tag
      * @param text
@@ -144,7 +144,7 @@ object Logger {
     fun f(
         tag: String,
         text: String,
-    ) { // 新建或打开日志file
+    ) { // 新建或OpenLogfile
         val nowtime = Date()
         val needWriteFiel = logfile.format(nowtime)
         val needWriteMessage = myLogSdf.format(nowtime) + "    " + "    " + tag + "    " + text

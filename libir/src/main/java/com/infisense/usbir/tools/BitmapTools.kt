@@ -10,6 +10,9 @@ import com.topdon.lib.core.utils.ByteUtils.descBytes
  * @date: 2023/4/13 9:33
  */
 object BitmapTools {
+    /**
+     * Executes readtempvalue functionality.
+     */
     private fun readTempValue(bytes: ByteArray): Float {
         val data: ByteArray = bytes.descBytes()
         val scale = 16
@@ -17,6 +20,9 @@ object BitmapTools {
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
 
+    /**
+     * Executes replacebitmapcolor functionality.
+     */
     fun replaceBitmapColor(
         imageBytes: ByteArray,
         tempBytes: ByteArray,
@@ -45,12 +51,12 @@ object BitmapTools {
                         r = imageBytes[i * 4].toInt() and 0xff
                         g = imageBytes[i * 4 + 1].toInt() and 0xff
                         b = imageBytes[i * 4 + 2].toInt() and 0xff
-                        // grayscale
+                        
                         grey = (r * 0.3f).toInt() + (g * 0.59f).toInt() + (b * 0.11f).toInt()
                         imageBytes[i * 4] = grey.toByte()
                         imageBytes[i * 4 + 1] = grey.toByte()
                         imageBytes[i * 4 + 2] = grey.toByte()
-//                        Log.e("测试","grayscale化"+value)
+//                        Log.e("Test","grayscale化"+value)
                     }
                 }
             } else {
@@ -70,10 +76,10 @@ object BitmapTools {
                     value = readTempValue(data)
                     if (value > max) {
                         // max color
-                        imageBytes[i * 4] = maxR // r
-                        imageBytes[i * 4 + 1] = maxG // g
-                        imageBytes[i * 4 + 2] = maxB // b
-                        imageBytes[i * 4 + 3] = maxA // a
+                        imageBytes[i * 4] = maxR 
+                        imageBytes[i * 4 + 1] = maxG 
+                        imageBytes[i * 4 + 2] = maxB 
+                        imageBytes[i * 4 + 3] = maxA 
                     }
                     if (value < min) {
                         // min color

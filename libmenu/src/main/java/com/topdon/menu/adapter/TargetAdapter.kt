@@ -15,7 +15,7 @@ import com.topdon.menu.constant.TargetType
  * - measurement mode(MODE)、target(STYLE) 捆绑，要么都selected，要么都不selected，与 delete(DELETE) 互斥
  * - delete(DELETE) 与 {measurement mode(MODE)、target(STYLE)、targetcolor(COLOR)} 互斥
  * - targetcolor(COLOR) effective且未处于delete亮，color为默认绿色或处于delete不亮，丢给上层维护这个state
- * - 帮助(HELP) 显示弹框亮，close弹框不亮，丢给上层维护这个state
+ * - 帮助(HELP) Show/Display弹框亮，close弹框不亮，丢给上层维护这个state
  *
  * Created by LCG on 2024/11/28.
  */
@@ -28,7 +28,7 @@ internal class TargetAdapter : BaseMenuAdapter() {
 
     /**
      * settingsspecified option的selectedstate.
-     * 对于一些互斥的selected取消selected操作，由于legacy现在先不改动，丢给上层去维护这个互斥state.
+     * 对于一些互斥的selectedCancelselected操作，由于legacy现在先不改动，丢给上层去维护这个互斥state.
      */
     fun setSelected(
         targetType: TargetType,

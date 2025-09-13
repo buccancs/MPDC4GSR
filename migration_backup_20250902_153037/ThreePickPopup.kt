@@ -59,7 +59,7 @@ internal class ThreePickPopup(
     }
 
     /**
-     * 显示
+     * Show/Display
      * @param isLeft true-左对齐 false-右对齐
      */
     fun show(

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
 
-
 import com.energy.iruvc.utils.CommonParams;
 
 import java.lang.reflect.Method;
@@ -75,7 +74,7 @@ public class ScreenUtils {
     }
 
     /**
-     * 获取current屏幕截图，包含state栏
+     * Get/Retrievecurrent屏幕截图，包含state栏
      *
      * @param activity
      * @return
@@ -102,7 +101,7 @@ public class ScreenUtils {
     }
 
     /**
-     * 获取current屏幕截图，不包含state栏
+     * Get/Retrievecurrent屏幕截图，不包含state栏
      *
      * @param activity
      * @return
@@ -127,7 +126,7 @@ public class ScreenUtils {
     }
 
     /**
-     * 获取 虚拟按键的高度
+     * Get/Retrieve 虚拟按键的高度
      *
      * @param context
      * @return
@@ -140,7 +139,7 @@ public class ScreenUtils {
         return totalHeight - contentHeight;
     }
 
-    //获取屏幕原始尺寸高度，包括虚拟功能键高度
+    //Get/Retrieve屏幕原始尺寸高度，包括虚拟功能键高度
     public static int getDpi(Context context) {
         int dpi = 0;
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -182,7 +181,7 @@ public class ScreenUtils {
      * @setIcon settings对话框图标
      * @setTitle settings对话框title
      * @setMessage settings对话框messagetip
-     * setXXXmethod返回Dialog对象，因此可以链式settingsproperty
+     * setXXXmethodReturnDialog对象，因此可以链式settingsproperty
      */
     public static Dialog showNormalDialog(Context context, String info, PopupWindow.OnDismissListener dismissListener) {
         final AlertDialog.Builder normalDialog =
@@ -198,12 +197,12 @@ public class ScreenUtils {
                         dismissListener.onDismiss();
                     }
                 });
-        // 显示
+        // Show/Display
         return normalDialog.show();
     }
 
     /**
-     * 获取出图的帧率
+     * Get/Retrieve出图的帧率
      *
      * @return
      */

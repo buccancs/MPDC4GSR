@@ -119,7 +119,7 @@ class IRVideoGSYActivity : BaseActivity() {
             .setUrl(url)
             .build(gsyPlay)
 interfaceset
-        gsyPlay.isNeedShowWifiTip = false //不显示消耗流量弹框
+        gsyPlay.isNeedShowWifiTip = false //不Show/Display消耗流量弹框
         gsyPlay.titleTextView.visibility = View.GONE
         gsyPlay.backButton.visibility = View.GONE
         gsyPlay.fullscreenButton.visibility = View.GONE
@@ -130,7 +130,7 @@ interfaceset
     }
 
     private fun actionDownload(isToShare: Boolean) {
-        if (data.hasDownload) { // 已下载
+        if (data.hasDownload) { // 已Download
             if (isToShare) {
                 actionShare()
             }

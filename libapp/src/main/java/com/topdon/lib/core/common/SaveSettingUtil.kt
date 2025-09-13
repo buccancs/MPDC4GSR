@@ -35,8 +35,7 @@ object SaveSettingUtil {
     /**
      * 单infrared
      */
-    const val FusionTypeIROnly = 1 // 单独infrared
-
+    const val FusionTypeIROnly = 1 
     /**
      * 单visible light
      */
@@ -75,7 +74,7 @@ object SaveSettingUtil {
         temperatureMode = CameraItemBean.TYPE_TMP_C
         alarmBean = AlarmBean()
 
-        // observationmode独有
+        
         isOpenCompass = false
         isOpenHighPoint = false
         isOpenLowPoint = false
@@ -139,7 +138,7 @@ object SaveSettingUtil {
         }
 
     /**
-     * thermal imaging是否打开自动快门，默认打开 true-打开 false-close
+     * thermal imaging是否Open自动快门，默认Open true-Open false-close
      */
     var isAutoShutter: Boolean
         get() =
@@ -263,7 +262,7 @@ object SaveSettingUtil {
         }
 
     /**
-     * thermal imaging-temperature measurementmode-锐度(细节增强等级)，取值range`[0,4]`，默认为 2
+     * thermal imaging-temperature measurementmode-锐度(细节Enhance等级)，取值range`[0,4]`，默认为 2
      */
     var ddeConfig: Int
         get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("ddeConfig", 2) else 2

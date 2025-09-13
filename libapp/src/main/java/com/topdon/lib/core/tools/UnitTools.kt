@@ -5,7 +5,7 @@ import java.util.*
 
 object UnitTools {
     /**
-     * temperature显示
+     * temperatureShow/Display
      *
      * @param float temperature
      */
@@ -23,7 +23,7 @@ object UnitTools {
     }
 
     /**
-     * temperature显示
+     * temperatureShow/Display
      *
      * @param float temperature
      */
@@ -86,7 +86,7 @@ object UnitTools {
     }
 
     /**
-     * temperature显示单位
+     * temperatureShow/Display单位
      *
      * @param float temperature
      */
@@ -104,7 +104,7 @@ object UnitTools {
     }
 
     /**
-     * temperature显示单位
+     * temperatureShow/Display单位
      *
      * @param float temperature
      */
@@ -122,7 +122,7 @@ object UnitTools {
     }
 
     /**
-     * temperature显示单位
+     * temperatureShow/Display单位
      *
      * @param float temperature
      */
@@ -200,7 +200,7 @@ object UnitTools {
     }
 
     /**
-     * 输入摄氏度，返回保留1位小数不带单位字符的 String.
+     * 输入摄氏度，Return保留1位小数不带单位字符的 String.
      *
      * @param float temperature值，单位摄氏度
      */
@@ -216,7 +216,7 @@ object UnitTools {
     }
 
     /**
-     * 输入摄氏度，返回保留1位小数带单位字符的 String.
+     * 输入摄氏度，Return保留1位小数带单位字符的 String.
      *
      * @param float temperature值，单位摄氏度
      */

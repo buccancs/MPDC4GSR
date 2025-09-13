@@ -108,7 +108,7 @@ calculation最大高度
         for (layout in layoutList) {
             maxHeight = maxHeight.coerceAtLeast(layout.height)
         }
-        if (maxHeight == 0) { // 没有settings要显示的字符时，给个占位的高度好了
+        if (maxHeight == 0) { // 没有settings要Show/Display的字符时，给个占位的高度好了
             maxHeight = textPaint.fontMetricsInt.bottom - textPaint.fontMetricsInt.top
         }
         maxHeight += SizeUtils.dp2px(12f) // 上下各 6dp padding

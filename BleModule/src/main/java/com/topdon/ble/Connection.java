@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -40,11 +39,11 @@ public interface Connection {
     //----------connection超时type---------
     int TIMEOUT_TYPE_CANNOT_DISCOVER_DEVICE = 0;
     /**
-     * 搜索到device，但是无法connectionsuccess
+     * Search到device，但是无法connectionsuccess
      */
     int TIMEOUT_TYPE_CANNOT_CONNECT = 1;
     /**
-     * connectionsuccess，但是无法发现bluetoothservice，即[BluetoothGattCallback.onServicesDiscovered]不回调
+     * connectionsuccess，但是无法发现bluetoothservice，即[BluetoothGattCallback.onServicesDiscovered]不Callback
      */
     int TIMEOUT_TYPE_CANNOT_DISCOVER_SERVICES = 2;
 
@@ -58,7 +57,7 @@ public interface Connection {
      */
     int CONNECT_FAIL_TYPE_CONNECTION_IS_UNSUPPORTED = 2;
     /**
-     * 缺少bluetooth权限
+     * 缺少bluetoothPermission
      */
     int CONNECT_FAIL_TYPE_NO_PERMISSION = 3;
 
@@ -66,7 +65,7 @@ public interface Connection {
     Device getDevice();
 
     /**
-     * 获取当前settings的最大传输单元
+     * Get/Retrieve当前settings的最大传输单元
      */
     int getMtu();
 
@@ -91,12 +90,12 @@ public interface Connection {
     void release();
 
     /**
-     * destroyconnection，不notification观察者
+     * destroyconnection，不notificationObserver
      */
     void releaseNoEvent();
 
     /**
-     * 获取connectionstate
+     * Get/Retrieveconnectionstate
      */
     @NonNull
     ConnectionState getConnectionState();
@@ -110,12 +109,12 @@ public interface Connection {
     BluetoothGatt getGatt();
 
     /**
-     * 清除请求queue，不触发事件
+     * Clear请求queue，不触发Event
      */
     void clearRequestQueue();
 
     /**
-     * 将指定的请求type从queue中移除，如果传null，则清除请求queue，不触发事件
+     * 将指定的请求type从queue中移除，如果传null，则Clear请求queue，不触发Event
      */
     void clearRequestQueueByType(RequestType type);
 
@@ -147,7 +146,7 @@ public interface Connection {
     boolean isNotificationOrIndicationEnabled(UUID service, UUID characteristic);
 
     /**
-     * settings原生回调
+     * settings原生Callback
      */
     void setBluetoothGattCallback(BluetoothGattCallback callback);
 

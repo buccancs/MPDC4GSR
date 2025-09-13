@@ -91,7 +91,7 @@ class ColorSelectView : View {
         }
 
     /**
-     * 颜色拾取事件监听.
+     * 颜色拾取EventListener.
      */
     var onSelectListener: ((color: Int) -> Unit)? = null
 
@@ -113,7 +113,7 @@ class ColorSelectView : View {
     private var currentColumn: Int = -1 // 当前selected列
 
     private val widthPixels: Int // 屏幕宽度
-    private val density: Float // 屏幕缩放等级，用于dp与pxconversion
+    private val density: Float // 屏幕Scale等级，用于dp与pxconversion
     private val strokeWidth: Int // 描边宽度，单位px
 
     private val path = Path()

@@ -6,14 +6,10 @@ Addresses the MethodHandle API level compatibility and other build issues
 mentioned in the previous discussion.
 """
 
-import os
-from typing import Any
 import re
-from typing import Any
 import shutil
-from typing import Any
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 
 def fix_api_compatibility_issues() -> Any:
@@ -181,11 +177,8 @@ def create_compatibility_test() -> Any:
     test_content = """package com.topdon.tc001
 
 import org.junit.Test
-from typing import Any
 import org.junit.Assert.*
-from typing import Any
 import kotlin.test.assertTrue
-from typing import Any
 
 /**
  * Test API compatibility and core functionality

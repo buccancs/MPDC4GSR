@@ -16,7 +16,7 @@ public enum ConnectionState {
      */
     CONNECTING,
     /**
-     * 正在搜索重连
+     * 正在Search重连
      */
     SCANNING_FOR_RECONNECTION,
     /**

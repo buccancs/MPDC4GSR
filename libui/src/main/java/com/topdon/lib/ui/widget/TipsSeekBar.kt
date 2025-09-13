@@ -12,11 +12,14 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
 
 /**
- * TipsSeekBar class
- */
-/**
  * Custom Tips seek bar view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * TipsSeekBar manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
@@ -39,7 +42,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         }
 
     /**
-     * 指示 View current显示的text.
+     * 指示 View currentShow/Display的text.
      */
     var valueText: String
         get() {

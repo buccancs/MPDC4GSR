@@ -33,37 +33,43 @@ import java.util.TimeZone
 import java.util.concurrent.CountDownLatch
 
 /**
- * firmware升级包
+ * firmwareUpgrade包
+ */
+/**
+ * FirmwareViewModel implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         /**
-         * TS004 firmware升级包 softwareencoding.
+         * TS004 firmwareUpgrade包 softwareencoding.
          */
         private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
 
         /**
-         * TC007 firmware升级包 softwareencoding.
+         * TC007 firmwareUpgrade包 softwareencoding.
          */
         private const val TC007_SOFT_CODE = "TC007_FirmwareSW_Wireless"
 
         /**
-         * TS004 apk 内置firmware升级包version.
+         * TS004 apk 内置firmwareUpgrade包version.
          */
         private const val TS004_FIRMWARE_VERSION = "V1.70"
 
         /**
-         * TS004 apk 内置firmware升级包file名.
+         * TS004 apk 内置firmwareUpgrade包file名.
          */
         private const val TS004_FIRMWARE_NAME = "TS004V1.70.zip"
 
         /**
-         * TC007 apk 内置firmware升级包version.
+         * TC007 apk 内置firmwareUpgrade包version.
          */
         private const val TC007_FIRMWARE_VERSION = "V4.06"
 
         /**
-         * TC007 apk 内置firmware升级包file名.
+         * TC007 apk 内置firmwareUpgrade包file名.
          */
         private const val TC007_FIRMWARE_NAME = "TC007V4.06.zip"
 
@@ -81,23 +87,23 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     private var isRequest = false
 
     /**
-     * 查询firmware升级包success LiveData.
-     * null表示查询success但没有配firmware升级包
+     * 查询firmwareUpgrade包success LiveData.
+     * null表示查询success但没有配firmwareUpgrade包
      */
     val firmwareDataLD: MutableLiveData<FirmwareData?> = MutableLiveData()
 
     /**
-     * 查询firmware升级包failed LiveData.
-     * true-device已被其他用户绑定error false-普通error
+     * 查询firmwareUpgrade包failed LiveData.
+     * true-device已被其他User绑定error false-普通error
      */
     val failLD: MutableLiveData<Boolean> = MutableLiveData()
 
     /**
-     * 一个firmware升级包info.
-     * @param version 该firmware升级包version，V1.00format
-     * @param updateStr 升级文案info
-     * @param downUrl firmware升级包 URL
-     * @param size firmware升级包大小，单位 byte
+     * 一个firmwareUpgrade包info.
+     * @param version 该firmwareUpgrade包version，V1.00format
+     * @param updateStr Upgrade文案info
+     * @param downUrl firmwareUpgrade包 URL
+     * @param size firmwareUpgrade包大小，单位 byte
      */
     data class FirmwareData(
         val version: String,
@@ -107,7 +113,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     )
 
     /**
-     * 执行一次firmware升级包查询，结果发送往：
+     * 执行一次firmwareUpgrade包查询，结果Send往：
      * - [firmwareDataLD] (success)
      * - [failLD] (failed)
      * @param isTS004 true-TS004 false-TC007
@@ -119,21 +125,21 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         isRequest = true
 
         viewModelScope.launch(Dispatchers.IO) {
-            // 由于双通道方案存在问题，V3.30临时使用 apk 内置firmware升级包，以下使用network的代码先comment
+            // 由于双通道方案存在问题，V3.30临时使用 apk 内置firmwareUpgrade包，以下使用network的代码先comment
             /*if (isTS004) {
-                //从 TS004 中获取 SN、激活码
+                //从 TS004 中Get/Retrieve SN、Activate码
                 val deviceInfo: DeviceInfo? = TS004Repository.getDeviceInfo()?.data
                 if (deviceInfo == null) {
-                    XLog.w("TS004 firmware升级 - 从device查询 SN、激活码 failed!")
+                    XLog.w("TS004 firmwareUpgrade - 从device查询 SN、Activate码 failed!")
                     failLD.postValue(false)
                     isRequest = false
                     return@launch
                 }
 
-                //从 TS004 中获取firmwareversion
+                //从 TS004 中Get/Retrievefirmwareversion
                 val firmware: String? = TS004Repository.getVersion()?.data?.firmware
                 if (firmware == null) {
-                    XLog.w("TS004 firmware升级 - 从device查询 firmwareversion failed!")
+                    XLog.w("TS004 firmwareUpgrade - 从device查询 firmwareversion failed!")
                     failLD.postValue(false)
                     isRequest = false
                     return@launch
@@ -143,10 +149,10 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 val randomNum: String = if (USE_DEBUG_SN) TS004_DEBUG_RANDOM_NUM else deviceInfo.code
                 getInfoFromNetwork(true, sn, randomNum, firmware)
             } else {
-                //从 TC007 中获取 SN、激活码
+                //从 TC007 中Get/Retrieve SN、Activate码
                 val productInfo: ProductBean? = TC007Repository.getProductInfo()
                 if (productInfo == null) {
-                    XLog.w("TC007 firmware升级 - 从device查询 SN、激活码 failed!")
+                    XLog.w("TC007 firmwareUpgrade - 从device查询 SN、Activate码 failed!")
                     failLD.postValue(false)
                     isRequest = false
                     return@launch
@@ -158,12 +164,12 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 getInfoFromNetwork(false, sn, randomNum, firmware)
             }*/
 
-            // 由于双通道方案存在问题，V3.30临时使用 apk 内置firmware升级包，以下为临时方案逻辑
+            // 由于双通道方案存在问题，V3.30临时使用 apk 内置firmwareUpgrade包，以下为临时方案逻辑
             if (isTS004) {
-                // 从 TS004 中获取firmwareversion
+                // 从 TS004 中Get/Retrievefirmwareversion
                 val firmware: String? = TS004Repository.getVersion()?.data?.firmware
                 if (firmware == null) {
-                    XLog.w("TS004 firmware升级 - 从device查询 firmwareversion failed!")
+                    XLog.w("TS004 firmwareUpgrade - 从device查询 firmwareversion failed!")
                     failLD.postValue(false)
                     isRequest = false
                     return@launch
@@ -171,10 +177,10 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
                 getInfoFromAssets(true, firmware)
             } else {
-                // 从 TC007 中获取firmwareversion
+                // 从 TC007 中Get/Retrievefirmwareversion
                 val productInfo: ProductBean? = TC007Repository.getProductInfo()
                 if (productInfo == null) {
-                    XLog.w("TC007 firmware升级 - 从device查询 SN、激活码 failed!")
+                    XLog.w("TC007 firmwareUpgrade - 从device查询 SN、Activate码 failed!")
                     failLD.postValue(false)
                     isRequest = false
                     return@launch
@@ -186,7 +192,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * 将 assets 中的firmware升级包export，并将相关info post 到对应 LiveData
+     * 将 assets 中的firmwareUpgrade包export，并将相关info post 到对应 LiveData
      */
     private fun getInfoFromAssets(
         isTS004: Boolean,
@@ -197,8 +203,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val newVersion: Double = getVersionFromStr(apkVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} firmware升级 - currentversion：$currentVersion apk内置version：$newVersion")
-        if (newVersion <= currentVersion) { // currentfirmware升级包已是最新
+        XLog.d("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - currentversion：$currentVersion apk内置version：$newVersion")
+        if (newVersion <= currentVersion) { 
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -217,7 +223,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             inputStream.close()
             outputStream.close()
         } catch (e: IOException) {
-            XLog.e("${if (isTS004) "TS004" else "TC007"} firmware升级 - export内置firmware升级包failed! ${e.message}")
+            XLog.e("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - export内置firmwareUpgrade包failed! ${e.message}")
             FileUtils.delete(firmwareFile)
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -232,7 +238,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * 调interface走完整的获取firmware升级包info流程.
+     * 调interface走完整的Get/RetrievefirmwareUpgrade包info流程.
      */
     private suspend fun getInfoFromNetwork(
         isTS004: Boolean,
@@ -240,19 +246,19 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         randomNum: String,
         firmware: String,
     ) {
-        // 绑定device
+        
         val bindCode = bindDevice(sn, randomNum)
         if (bindCode != LMS.SUCCESS && bindCode != 15109) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} firmware升级 - 绑定devicefailed! sn: $sn")
+            XLog.w("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - 绑定devicefailed! sn: $sn")
             failLD.postValue(bindCode == 15162)
             isRequest = false
             return
         }
 
-        // 获取firmware升级包list
+        // Get/RetrievefirmwareUpgrade包list
         val packageData: PackageData? = querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
         if (packageData == null) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} firmware升级 - 获取firmware升级包infofailed!")
+            XLog.w("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - Get/RetrievefirmwareUpgrade包infofailed!")
             failLD.postValue(false)
             isRequest = false
             return
@@ -260,8 +266,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val record: PackageData.Record? = packageData.getFirstRecord()
         val newVersionStr: String? = record?.maxUpdateVersion
-        if (record == null || newVersionStr == null) { // 没有firmware升级包，即currentfirmware已是最新
-            XLog.d("${if (isTS004) "TS004" else "TC007"} firmware升级 - 没有firmware升级包，即currentfirmware已是最新")
+        if (record == null || newVersionStr == null) { // 没有firmwareUpgrade包，即currentfirmware已是最新
+            XLog.d("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - 没有firmwareUpgrade包，即currentfirmware已是最新")
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -269,14 +275,14 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val newVersion: Double = getVersionFromStr(newVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} firmware升级 - currentversion：$currentVersion service器version：$newVersion")
-        if (newVersion <= currentVersion) { // currentfirmware升级包已是最新
+        XLog.d("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - currentversion：$currentVersion service器version：$newVersion")
+        if (newVersion <= currentVersion) { 
             firmwareDataLD.postValue(null)
             isRequest = false
             return
         }
 
-        // 获取firmware升级包下载地址
+        // Get/RetrievefirmwareUpgrade包Download地址
         val downloadData = queryDownloadUrl(sn, record.maxUpdateVersionSoftId)
         if (downloadData?.responseCode == LMS.SUCCESS) {
             firmwareDataLD.postValue(
@@ -288,14 +294,14 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 ),
             )
         } else {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} firmware升级 - 获取firmware包下载地址failed!")
+            XLog.w("${if (isTS004) "TS004" else "TC007"} firmwareUpgrade - Get/Retrievefirmware包Download地址failed!")
             failLD.postValue(downloadData?.responseCode == 60312)
         }
         isRequest = false
     }
 
     /**
-     * 将device SN、注册码与current账号绑定.
+     * 将device SN、Register码与current账号绑定.
      */
     private suspend fun bindDevice(
         sn: String,
@@ -314,7 +320,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * 查询指定 SN 的firmware升级包list
+     * 查询指定 SN 的firmwareUpgrade包list
      */
     private suspend fun querySoftPackage(
         sn: String,
@@ -358,7 +364,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
 
     /**
-     * 查询指定 SN 指定firmware升级包的下载info.
+     * 查询指定 SN 指定firmwareUpgrade包的Downloadinfo.
      */
     private suspend fun queryDownloadUrl(
         sn: String,
@@ -413,7 +419,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
 
     /**
-     * 用来parsing 获取firmware升级包list interface返回的data.
+     * 用来parsing Get/RetrievefirmwareUpgrade包list interfaceReturn的data.
      */
     private class PackageData {
         var records: List<Record>? = null
@@ -422,7 +428,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         data class Record(
             var maxUpdateVersion: String?, // version名，如"V1.32"
-            var maxUpdateVersionSoftId: Int, // 仅用来请求对应URL
+            var maxUpdateVersionSoftId: Int, 
             var maxVersionDetailResVO: MaxVersionDetailResVO?,
         ) {
             fun getUpdateStr(): String {
@@ -449,7 +455,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     }
 
     /**
-     * 用来parsing 获取firmware升级包对应下载info interface返回data.
+     * 用来parsing Get/RetrievefirmwareUpgrade包对应Downloadinfo interfaceReturndata.
      */
     private data class DownloadData(
         val downUrl: String?,

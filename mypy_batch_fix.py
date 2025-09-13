@@ -240,7 +240,7 @@ def run_mypy_check() -> bool:
             print("✅ MyPy validation passed!")
             return True
         else:
-            print(f"⚠️  MyPy found remaining issues:")
+            print("⚠️  MyPy found remaining issues:")
             print(result.stdout[:1000])  # Show first 1000 chars
             return False
 
@@ -257,7 +257,7 @@ def main():
     fixer = MyPyFixer()
     results = fixer.process_repository()
 
-    print(f"\n📊 Results:")
+    print("\n📊 Results:")
     print(f"   Files processed: {results['files_processed']}")
     print(f"   Total fixes applied: {results['total_fixes']}")
     print(f"   Files with fixes: {results['successful_files']}")

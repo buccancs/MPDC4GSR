@@ -22,9 +22,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * 条款 1: 用户条款  2: 隐私条款  3: 第三方
+ * 条款 1: User条款  2: 隐私条款  3: 第三方
  *
- * service返回有error时,load默认条款
+ * serviceReturn有error时,load默认条款
  */
 @Route(path = RouterConfig.POLICY)
 /**
@@ -84,7 +84,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
     }
 
     /**
-     * 为解决闪缩白屏问题，延时打开webView
+     * Delayed WebView display to resolve white screen flashing issue
      */
     private fun delayShowWebView() {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -180,7 +180,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         text: String,
         requestUrl: String,
     ) {
-        XLog.w("声明interfaceexception,打开默认链接")
+        XLog.w("声明interfaceexception,Open默认链接")
         loadHttp(policy_web)
         delayShowWebView()
     }
@@ -192,7 +192,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
         reloadCount--
         when (themeType) {
             1 -> {
-                // 用户serviceprotocol
+                // Userserviceprotocol
                 view.loadUrl(
                     "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=21",
                 )
@@ -222,7 +222,7 @@ class PolicyActivity : BaseViewModelActivity<PolicyViewModel>() {
                 if (BaseApplication.instance.isDomestic()) {
                     view.loadUrl("file:///android_asset/web/services_agreement_default_inside_china.html")
                 } else {
-                    // 用户serviceprotocol
+                    // Userserviceprotocol
                     view.loadUrl("file:///android_asset/web/services_agreement_default.html")
                 }
             }

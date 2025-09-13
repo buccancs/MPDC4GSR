@@ -44,7 +44,7 @@ optiontext顶部或底部 padding，单位 ***dp***
     }
 
     /**
-一个option被selected事件监听.
+一个option被selectedEventListener.
      */
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
 
@@ -89,7 +89,7 @@ optiontext顶部或底部 padding，单位 ***dp***
 
     private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
         /**
-item click事件监听.
+item clickEventListener.
          */
         var onItemClickListener: ((position: Int) -> Unit)? = null
 

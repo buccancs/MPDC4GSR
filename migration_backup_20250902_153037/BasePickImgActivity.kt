@@ -182,8 +182,8 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示退出不savetip弹框
-     * @param listener click弹框上退出事件监听
+     * Show/DisplayExit不savetip弹框
+     * @param listener click弹框上ExitEventListener
      */
     private fun showExitTipsDialog(listener: (() -> Unit)) {
         TipDialog.Builder(this)

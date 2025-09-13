@@ -24,6 +24,9 @@ object PermissionUtils {
             ) == PERMISSION_GRANTED
     }
 
+    /**
+     * Executes hascamerapermission functionality.
+     */
     fun hasCameraPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             BaseApplication.instance,

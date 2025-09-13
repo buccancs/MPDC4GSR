@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.dialog_download_pro.view.*
 import java.text.DecimalFormat
 
 /**
- * 下载进度tip弹框.
+ * Download进度tip弹框.
  * Created by LCG on 2024/3/5.
  */
 class DownloadProDialog(context: Context) : Dialog(context, R.style.InfoDialog) {

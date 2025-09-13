@@ -177,7 +177,7 @@ public class FileUtil {
     }
 
     /**
-     * 根据data流获取Y16type
+     * 根据data流Get/RetrieveY16type
      *
      * @param dataFlowMode
      * @return
@@ -573,7 +573,7 @@ public class FileUtil {
     }
 
     /**
-     * 根据gainstate获取对应的ISPalgorithm的configurationfile
+     * 根据gainstateGet/Retrieve对应的ISPalgorithm的configurationfile
      *
      * @param gainStatus
      * @return
@@ -599,7 +599,6 @@ public class FileUtil {
         }
     }
 
-
     static String INFISENSE_SAVE_DIR(){
        return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
@@ -621,7 +620,7 @@ public class FileUtil {
     }
 
     /**
-     * 获取versioninfo
+     * Get/Retrieveversioninfo
      *
      * @param context
      * @return

@@ -26,7 +26,7 @@ object VersionTool {
     }
 
     /**
-     * 检查是否需要update最新version
+     * Check是否需要update最新version
      */
     fun checkNewVersion(
         serverVersionStr: String,

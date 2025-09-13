@@ -172,7 +172,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         private const val TAG = "MainActivity"
     }
 
-    // 记录deviceinfo
+    // Recorddeviceinfo
     private fun logInfo() {
         try {
             val str = StringBuilder()
@@ -294,7 +294,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     override fun onStart() {
         super.onStart()
 
-        // version下载
+        // versionDownload
         versionViewModel.updateLiveData.observe(this) {
             FirmwareUpDialog(this).apply {
                 titleStr = getString(com.topdon.lib.core.R.string.update_new_version)
@@ -313,7 +313,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun updateApk(url: String) {
         if (applicationInfo.targetSdkVersion < Build.VERSION_CODES.P) {
-            // 目标version27默认跳到官网下载
+            // 目标version27默认跳到官网Download
             val intent = Intent()
             intent.action = "android.intent.action.VIEW"
             intent.data = Uri.parse(url)
@@ -548,9 +548,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     /**
-     * 权限检测
-     * 因申请权限前需要弹窗tip用户，所以modify成key value形式
-     * @return key：权限种class value：具体权限
+     * Permission检测
+     * 因申请Permission前需要弹窗tipUser，所以modify成key value形式
+     * @return key：Permission种class value：具体Permission
      */
     private fun getNeedPermissionList(): SparseArray<List<String>> {
         val sparseArray = SparseArray<List<String>>()
@@ -586,7 +586,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         ) {
             if (BaseApplication.instance.isDomestic()) {
                 if (SharedManager.getMainPermissionsState()) {
-                    // 国内版拒绝授权之后就别再授权了华为上架不通过
+                    // 国内版拒绝Authorization之后就别再Authorization了华为上架不通过
                     return
                 }
                 TipDialog.Builder(this)
@@ -605,7 +605,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     /**
-     * 动态申请权限
+     * 动态申请Permission
      */
     private fun initCameraPermission() {
         XXPermissions.with(this)
@@ -629,7 +629,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             SharedManager.setMainPermissionsState(true)
                         }
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+                            // 拒绝Authorization并且不再提醒
                             TipDialog.Builder(this@MainActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(
@@ -671,7 +671,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     /**
-     * 动态申请权限
+     * 动态申请Permission
      */
     private fun initStoragePermission() {
         if (PermissionUtils.isVisualUser()) {
@@ -698,7 +698,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+                            // 拒绝Authorization并且不再提醒
                             TipDialog.Builder(this@MainActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(getString(R.string.app_album_content))

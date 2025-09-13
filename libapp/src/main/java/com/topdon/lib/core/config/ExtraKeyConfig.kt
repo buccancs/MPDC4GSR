@@ -16,7 +16,7 @@ object ExtraKeyConfig {
     const val IS_VIDEO = "IS_VIDEO"
 
     /**
-     * boolean type - 图库是否有返回箭头
+     * boolean type - 图库是否有Return箭头
      */
     const val HAS_BACK_ICON = "HAS_BACK_ICON"
 
@@ -84,7 +84,7 @@ object ExtraKeyConfig {
     const val ITEM_NAME = "ITEM_NAME"
 
     /**
-     * String type - 返回输入的text内容.
+     * String type - Return输入的text内容.
      */
     const val RESULT_INPUT_TEXT = "RESULT_INPUT_TEXT"
 
@@ -144,7 +144,7 @@ object ExtraKeyConfig {
     const val TIME_MILLIS = "TIME_MILLIS"
 
     /**
-     * String type - 监控记录type.
+     * String type - 监控Recordtype.
      * 由于历史原因，此处使用 String表示：
      * point-point line-line fence-area
      */

@@ -13,7 +13,7 @@ import com.topdon.lib.core.R as LibAppR
 import com.topdon.lib.core.R as RCore
 
 /**
-下载进度tip弹框.
+Download进度tip弹框.
  * Created by LCG on 2024/3/5.
  */
 class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDialog) {

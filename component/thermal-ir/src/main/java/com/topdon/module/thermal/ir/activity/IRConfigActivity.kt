@@ -217,22 +217,22 @@ interfacerefresh需要时间，所以需要等待100毫秒再去refresh背景
         private val dataList: ArrayList<DataBean> = ArrayList()
 
         /**
-item（一项自定义configuration）selected事件监听.
+item（一项自定义configuration）selectedEventListener.
          */
         var onSelectListener: ((id: Int) -> Unit)? = null
 
         /**
-item（一项自定义configuration）delete件监听.
+item（一项自定义configuration）delete件Listener.
          */
         var onDeleteListener: ((bean: DataBean) -> Unit)? = null
 
         /**
-item（一项自定义configuration）变更事件监听.
+item（一项自定义configuration）变更EventListener.
          */
         var onUpdateListener: ((bean: DataBean) -> Unit)? = null
 
         /**
-add事件监听.
+addEventListener.
          */
         var onAddListener: View.OnClickListener? = null
 

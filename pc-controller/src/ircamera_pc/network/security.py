@@ -12,7 +12,7 @@ import ssl
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization

@@ -36,11 +36,11 @@ public enum RequestType {
      */
     CHANGE_MTU,
     /**
-     * 读物物理层发送器和接收器
+     * 读物物理层Send器和Receive器
      */
     READ_PHY,
     /**
-     * settings物理层发送器和接收器偏好
+     * settings物理层Send器和Receive器偏好
      */
     SET_PREFERRED_PHY
 }

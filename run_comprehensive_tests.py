@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Comprehensive Test Runner for Hub-and-Spoke Multi-Modal Physiological Sensing Platform
-Executes unit tests, integration tests, and performance tests across both Android and PC Controller
+Executes unit tests, integration tests,
+    and performance tests across both Android and PC Controller
 """
 
 import argparse
@@ -49,7 +50,8 @@ class ComprehensiveTestRunner:
             # Android Unit Tests
             TestSuite(
                 name="android_unit_tests",
-                description="Android Unit Tests (RecordingController, TimeManager, NetworkClient, GSRSensorRecorder)",
+                description="Android Unit Tests (RecordingController, TimeManager,
+                    NetworkClient, GSRSensorRecorder)",
                 command="./gradlew test --info",
                 working_dir=str(self.project_root),
                 timeout=600,
@@ -57,7 +59,8 @@ class ComprehensiveTestRunner:
             # Android Integration Tests
             TestSuite(
                 name="android_integration_tests",
-                description="Android Integration Tests (Hub-Spoke Communication, Multi-Modal Coordination)",
+                description="Android Integration Tests (Hub-Spoke Communication,
+                    Multi-Modal Coordination)",
                 command="./gradlew connectedAndroidTest --info",
                 working_dir=str(self.project_root),
                 timeout=900,
@@ -65,7 +68,8 @@ class ComprehensiveTestRunner:
             # Android Performance Tests
             TestSuite(
                 name="android_performance_tests",
-                description="Android Performance Tests (Throughput, Latency, Resource Usage)",
+                description="Android Performance Tests (Throughput, Latency,
+                    Resource Usage)",
                 command="./gradlew connectedBenchmarkAndroidTest --info",
                 working_dir=str(self.project_root),
                 timeout=1200,
@@ -73,7 +77,8 @@ class ComprehensiveTestRunner:
             # PC Controller Unit Tests
             TestSuite(
                 name="pc_unit_tests",
-                description="PC Controller Unit Tests (Network Server, Data Aggregation, Protocol)",
+                description="PC Controller Unit Tests (Network Server, Data Aggregation,
+                    Protocol)",
                 command="python -m pytest src/ircamera_pc/tests/test_network.py src/ircamera_pc/tests/test_data_aggregation.py -v --cov=ircamera_pc --cov-report=html",
                 working_dir=str(self.project_root / "pc-controller"),
                 timeout=300,
@@ -97,7 +102,8 @@ class ComprehensiveTestRunner:
             # Vendor SDK Integration Validation
             TestSuite(
                 name="vendor_sdk_validation",
-                description="Vendor SDK Integration Validation (Shimmer, IR Camera, Real Hardware)",
+                description="Vendor SDK Integration Validation (Shimmer, IR Camera,
+                    Real Hardware)",
                 command="./gradlew testDebugUnitTest --tests '*GSRSensorRecorderTest*' --info",
                 working_dir=str(self.project_root),
                 timeout=300,
@@ -105,7 +111,8 @@ class ComprehensiveTestRunner:
             # System Validation Tests
             TestSuite(
                 name="system_validation",
-                description="System Validation (Component Verification, Build Validation)",
+                description="System Validation (Component Verification,
+                    Build Validation)",
                 command="python test_components.py",
                 working_dir=str(self.project_root / "pc-controller"),
                 timeout=120,
@@ -162,7 +169,7 @@ class ComprehensiveTestRunner:
         # Generate comprehensive report
         self._generate_report(total_time)
 
-        print(f"\n🏁 Test Execution Complete!")
+        print("\n🏁 Test Execution Complete!")
         print(f"   Total Time: {total_time:.2f} seconds")
         print(f"   Results: {passed_count}/{len(suites_to_run)} test suites passed")
 
@@ -290,7 +297,7 @@ class ComprehensiveTestRunner:
         with open(html_file, "w") as f:
             f.write(html_report)
 
-        print(f"\n📊 Reports Generated:")
+        print("\n📊 Reports Generated:")
         print(f"   JSON: {json_file}")
         print(f"   HTML: {html_file}")
 
@@ -301,7 +308,7 @@ class ComprehensiveTestRunner:
 
     def _generate_html_report(self, json_report: Dict) -> str:
         """Generate HTML test report"""
-        html = f"""
+        html = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -352,7 +359,7 @@ class ComprehensiveTestRunner:
             status_class = "passed" if result["passed"] else "failed"
             status_icon = "✅" if result["passed"] else "❌"
 
-            html += f"""
+            html += """
     <div class="test-result {status_class}">
         <h3>{status_icon} {result['name']} ({result['duration']:.2f}s)</h3>
         {f"<p>Coverage: {result['coverage']:.1f}%</p>" if result['coverage'] else ""}

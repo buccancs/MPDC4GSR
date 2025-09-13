@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference
 import java.nio.ShortBuffer
 
 /**
-音频采集并且与video合并一起
+音频采集并且与videoMerge一起
  * @author: CaiSongL
  * @date: 2023/3/28
  */

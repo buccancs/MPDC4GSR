@@ -25,7 +25,7 @@
 // import kotlinx.coroutines.launch
 //
 // /**
-// * 针对单个thermalId显示(用不到)
+// * 针对单个thermalIdShow/Display(用不到)
 // */
 // @Route(path = RouterConfig.THERMAL_LOG_SINGLE_CHART)
 // class LogSingleChartActivity : BaseActivity() {
@@ -89,7 +89,7 @@
 //            .backgroundColor("#3598E8")
 //            .yAxisTitle("")
 //            .axesTextColor("#FFFFFF")
-//            .dataLabelsEnabled(false)//坐标point是否显示值
+//            .dataLabelsEnabled(false)//坐标point是否Show/Display值
 //            .tooltipEnabled(true)
 //            .markerRadius(0f)
 // //            .gradientColorEnable(true)
@@ -108,7 +108,7 @@
 //            )
 //    }
 //
-//    val defaultCount = 20//默认显示10个数
+//    val defaultCount = 20//默认Show/Display10个数
 //    val startIndex = 0f
 //    var pointIndex = startIndex - defaultCount
 //
@@ -142,7 +142,7 @@
 // //            .max(100f)//settings最大y值
 //            .min(0f)//settings最小y值
 //            .labels(AALabels().style(AAStyle.style("#717a8f")))
-//            .title(AATitle().text("").style(AAStyle().color("#FFFFFF")))//不显示
+//            .title(AATitle().text("").style(AAStyle().color("#FFFFFF")))//不Show/Display
 //
 //        //初始图表样式
 //        options.series(series).chart(chart).xAxis(xAxis).yAxis(yAxis)

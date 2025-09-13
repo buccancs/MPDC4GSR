@@ -112,7 +112,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
         lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已connection TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+                    // 要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
                     }
@@ -203,7 +203,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(), 
     }
 
     /**
-     * 获取需要转为 PDF 的所有 View 列表.
+     * Get/Retrieve需要转为 PDF 的所有 View 列表.
      * 注意：watermark View 不在列表内，需要自行processing.
      */
     private fun getPrintViewList(): ArrayList<View> {

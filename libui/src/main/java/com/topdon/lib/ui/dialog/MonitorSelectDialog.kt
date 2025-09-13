@@ -19,6 +19,12 @@ import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
  * Monitor select dialog for thermal imaging user interaction.
  * Provides specialized input and configuration interfaces.
  */
+/**
+ * MonitorSelectDialog displays modal dialog interface for user interaction.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     /**
      * Builder(private class
@@ -26,6 +32,12 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 /**
  * Builder dialog for thermal imaging user interaction.
  * Provides specialized input and configuration interfaces.
+ */
+/**
+ * Builder manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
     class Builder(private val context: Context) {
         /**
@@ -45,6 +57,9 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             return this
         }
 
+    /**
+     * Creates and configures a new  instance.
+     */
         fun create(): MonitorSelectDialog {
             val dialog = MonitorSelectDialog(context)
             dialog.setCanceledOnTouchOutside(false)
@@ -53,12 +68,12 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             dialog.setContentView(binding.root)
 
             val lp = dialog.window!!.attributes
-            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // settings宽度
+            lp.width = (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() 
             dialog.window!!.attributes = lp
 
             binding.btnConfirmOrBack.setOnClickListener {
-                if (isFirstStep) { // 步骤1->步骤2 逻辑为“确认”
-                    if (monitorType == 0) { // 还没选取type不允许point确认
+                if (isFirstStep) { // 步骤1->步骤2 逻辑为“Confirm”
+                    if (monitorType == 0) { 
                         return@setOnClickListener
                     }
                     isFirstStep = false
@@ -67,7 +82,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
                     binding.clSecondStep.visibility = View.VISIBLE
                     binding.tvTitle.text = context.getString(R.string.select_monitor_type_step2)
                     binding.btnConfirmOrBack.text = context.getString(R.string.select_monitor_return)
-                } else { // 步骤2->步骤1 逻辑为“返回”
+                } else { // 步骤2->步骤1 逻辑为“Return”
                     isFirstStep = true
                     binding.btnCancel.visibility = View.GONE
                     binding.clFirstStep.visibility = View.VISIBLE
@@ -98,6 +113,9 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
             return dialog
         }
 
+    /**
+     * Updates the ui with new data.
+     */
         private fun updateUI(
             binding: DialogMonitorSelectBinding,
             index: Int,

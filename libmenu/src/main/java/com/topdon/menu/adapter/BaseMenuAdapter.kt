@@ -31,13 +31,13 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
         val binding = ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val widthPixels: Int = parent.context.resources.displayMetrics.widthPixels
 
-        // calculation及settings图标尺寸
+        
         val iconSize: Int = (widthPixels * 62 / 375f).toInt() // 62、375 是按 UI 图比例
         val iconParams: ViewGroup.LayoutParams = binding.ivIcon.layoutParams
         iconParams.width = iconSize
         iconParams.height = iconSize
 
-        // calculation及settings整体尺寸
+        
         if (itemCount <= 4) {
             binding.root.layoutParams.width = (widthPixels / itemCount.toFloat()).toInt()
         } else {
@@ -58,6 +58,12 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
 /**
  * Custom View holder view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * ViewHolder implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
     class ViewHolder(val binding: ItemMenuBinding) : RecyclerView.ViewHolder(binding.root)
 }

@@ -129,8 +129,8 @@ Setp2：reset锅盖calibrationdata，确保calibration准确性
 Setp3：disabled自动快门
 Setp4：打快门
 Setp5：进行自动锅盖calibration
-Setp6：恢复自动快门
-Setp7：如果calibration有误，或者需要取消自动calibration结果，可调用指令
+Setp6：Restore自动快门
+Setp7：如果calibration有误，或者需要Cancel自动calibration结果，可调用指令
      * mIrcmdEngine.advRmcoverCaliCancel();
 如果观察calibration没有问题，即可save锅盖calibrationdata，可调用指令
      * mIrcmdEngine.basicSaveData(CommonParams.DeviceDataSaveType.BASIC_SAVE_RMCOVER_DATA);

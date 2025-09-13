@@ -155,7 +155,8 @@ class MultiModalDataExporter:
             device_group.attrs["sensor_count"] = len(sensors)
 
             print(
-                f"  📱 Device {device_id}: {len(sensors)} sensors, offset: {clock_offsets.get(device_id, 0)/1e6:.2f}ms"
+                f"  📱 Device {device_id}: {len(sensors)} sensors,
+                    offset: {clock_offsets.get(device_id, 0)/1e6:.2f}ms"
             )
 
     async def _store_aligned_sensor_data(
@@ -445,7 +446,8 @@ class MultiModalDataExporter:
         analysis_group.attrs["created_by"] = "IRCamera Multi-Modal Platform"
 
         print(
-            f"  📈 Analysis metadata: {stats['device_count']} devices, {stats['total_sensors']} sensors"
+            f"  📈 Analysis metadata: {stats['device_count']} devices,
+                {stats['total_sensors']} sensors"
         )
 
     def _get_unit_for_column(self, column: str) -> str:
@@ -537,7 +539,7 @@ async def test_data_export_pipeline():
             session_id, device_data, clock_offsets, session_metadata
         )
 
-        print(f"\n✅ Export completed successfully!")
+        print("\n✅ Export completed successfully!")
         print(f"📁 Output file: {output_file}")
 
         # Validate the exported file

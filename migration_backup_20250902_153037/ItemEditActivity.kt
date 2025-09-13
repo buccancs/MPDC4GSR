@@ -159,7 +159,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     cl_dir.setBackgroundResource(R.drawable.bg_corners10_solid_23202e)
                 }
             }
-            view_select_all -> { // 全选、取消全选
+            view_select_all -> { // 全选、Cancel全选
                 adapter.isSelectAll = !adapter.isSelectAll
             }
             view_copy -> { // copy
@@ -185,7 +185,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示退出不savetip弹框
+     * Show/DisplayExit不savetip弹框
      */
     private fun showExitTipsDialog() {
         TipDialog.Builder(this)
@@ -276,7 +276,7 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
                     for (item in dataList) {
                         item.hasSelect = true
                     }
-                } else { // 全选->取消全选
+                } else { // 全选->Cancel全选
                     selectCount = 0
                     for (item in dataList) {
                         item.hasSelect = false
@@ -287,12 +287,12 @@ class ItemEditActivity : BaseActivity(), View.OnClickListener {
             }
 
         /**
-         * 一个 item selected或取消selected事件监听.
+         * 一个 item selected或CancelselectedEventListener.
          */
         var onSelectChangeListener: ((selectSize: Int) -> Unit)? = null
 
         /**
-         * 一个 item state变更事件监听.
+         * 一个 item state变更EventListener.
          */
         var onStateChangeListener: ((oldState: Int, newState: Int) -> Unit)? = null
 

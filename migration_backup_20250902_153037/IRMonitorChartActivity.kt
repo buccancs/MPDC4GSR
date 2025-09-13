@@ -126,7 +126,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                             errorReadCount++
                             XLog.w("第 $errorReadCount 次读取到exceptiondata，max = ${result.maxTemperature} min = ${result.minTemperature}")
                             if (errorReadCount > 10) {
-                                XLog.i("连续10次获取到exceptiondata，认为temperatureregion稳定")
+                                XLog.i("连续10次Get/Retrieve到exceptiondata，认为temperatureregion稳定")
                                 isFirstRead = false
                             }
                             continue
@@ -144,7 +144,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                         bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                         bean.createTime = System.currentTimeMillis()
-                        canUpdate = true // 可以startupdate记录
+                        canUpdate = true // 可以startupdateRecord
                     }
                 }
             }
@@ -168,11 +168,11 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                             isrun = true
                             if (!isRecord)
                                 {
-                                    recordThermal() // start记录
+                                    recordThermal() // startRecord
                                 }
                         }
                 } catch (e: Exception) {
-                    Log.e("测试", "//" + e.message)
+                    Log.e("Test", "//" + e.message)
                 }
             }, 1500)
         }
@@ -181,7 +181,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        mp_chart_view.highlightValue(null) // 关闭高亮pointMarker
+        mp_chart_view.highlightValue(null) // Close高亮pointMarker
     }
 
     override fun onPause() {
@@ -227,7 +227,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
     private var recordJob: Job? = null
 
     /**
-     * start每隔1秒记录一个temperaturedata到data库.
+     * start每隔1秒Record一个temperaturedata到data库.
      */
     private fun recordThermal() {
         recordJob =
@@ -269,12 +269,12 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                             }
                         }
                 }
-                XLog.w("stop记录, data量:$time")
+                XLog.w("stopRecord, data量:$time")
             }
     }
 
     private var imageThread: ImageThreadTC? = null
-    private var bitmap: Bitmap? = null // 不需要显示image，可去掉
+    private var bitmap: Bitmap? = null // 不需要Show/Displayimage，可去掉
     private var iruvc: IRUVCTC? = null
     private val cameraWidth = 256
     private val cameraHeight = 384
@@ -320,10 +320,10 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         temperatureView.setSyncimage(syncimage)
         temperatureView.setTemperature(temperatureBytes)
         setViewLay()
-        // 某些特定客户的特殊device需要使用该命令关闭sensor
+        // 某些特定客户的特殊device需要使用该CommandClosesensor
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) // 打开5V
-            Log.w("123", "打开5V")
+            Usbcontorl.usb3803_mode_setting(1) // Open5V
+            Log.w("123", "Open5V")
         }
     }
 
@@ -425,9 +425,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         iruvc!!.registerUSB()
     }
 
-    /**
-     *
-     */
+    
     private fun restartUsbCamera() {
         if (iruvc != null) {
             iruvc!!.stopPreview()
@@ -484,7 +482,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                 CommonParams.ZoomScaleStep.ZOOM_STEP2,
             )
             iruvc?.let {
-                // 部分机型在关闭自动快门，初始会花屏
+                // 部分机型在Close自动快门，初始会花屏
                 withContext(Dispatchers.IO) {
                     if (SaveSettingUtil.isAutoShutter) {
                         ircmd!!.setPropAutoShutterParameter(
@@ -641,7 +639,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                 showCameraLoading()
             }
             101 -> {
-                // 显示image
+                // Show/Displayimage
                 dismissCameraLoading()
                 addTempLine()
             }

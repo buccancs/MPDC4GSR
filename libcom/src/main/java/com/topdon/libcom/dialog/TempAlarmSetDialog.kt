@@ -31,7 +31,7 @@ class TempAlarmSetDialog(
         }
 
     /**
-     * saveclick事件监听.
+     * saveclickEventListener.
      */
     var onSaveListener: ((alarmBean: AlarmBean) -> Unit)? = null
 
@@ -312,7 +312,7 @@ class TempAlarmSetDialog(
     }
 
     /**
-     * settings当前selected的铃声，null 表示关闭.
+     * settings当前selected的铃声，null 表示Close.
      */
     private fun selectRingtone(position: Int?) {
         try {

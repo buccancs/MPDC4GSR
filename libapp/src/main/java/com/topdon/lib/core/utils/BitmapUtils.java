@@ -123,13 +123,13 @@ public class BitmapUtils {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
         byte[] b = baos.toByteArray();
         Bitmap newBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-        // 获取bitmap大小 是允许最大大小的多少倍
+        // Get/Retrievebitmap大小 是允许最大大小的多少倍
         return scaleWithWH(newBitmap, width,
                 width * newBitmap.getHeight() / newBitmap.getWidth());
     }
 
     /***
-     * image缩放
+     * imageScale
      *@param bitmap 位图
      * @param w 新的宽度
      * @param h 新的高度
@@ -219,7 +219,6 @@ public class BitmapUtils {
         return bitmap;
     }
 
-
     public static Bitmap mergeBitmapByView(Bitmap backBitmap, Bitmap frontBitmap, BitmapViewListener view) {
         if (backBitmap == null || backBitmap.isRecycled()
                 || frontBitmap == null || frontBitmap.isRecycled()) {
@@ -275,8 +274,6 @@ public class BitmapUtils {
         canvas.drawBitmap(frontBitmap, view.getViewX(),view.getViewY(), paint);
     }
 
-
-
     /**
      * 把两个位图覆盖合成为一个位图，以底层位图的长宽为基准
      * @param bytes  在底部的位图
@@ -330,7 +327,7 @@ public class BitmapUtils {
             canvas.drawText(time, (int)beginX, (int)beginY, paint);
             beginY -= SizeUtils.dp2px(6);
         }
-        int lineWidth = bmp.getWidth() - SizeUtils.dp2px(20) - seekBarWidth;//一行的可显示内容宽度
+        int lineWidth = bmp.getWidth() - SizeUtils.dp2px(20) - seekBarWidth;//一行的可Show/Display内容宽度
         if (!TextUtils.isEmpty(address)){
             int textHeight = (rectText.bottom - rectText.top);
             paint.getTextBounds(address, 0,address.length(), rectText);

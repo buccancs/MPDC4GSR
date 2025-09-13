@@ -70,7 +70,6 @@ public class CarPlatePicker extends LinkagePicker {
         }
     }
 
-
     public void setOnCarPlatePickedListener(OnCarPlatePickedListener onCarPlatePickedListener) {
         this.onCarPlatePickedListener = onCarPlatePickedListener;
     }

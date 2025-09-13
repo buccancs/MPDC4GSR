@@ -2,7 +2,6 @@ package com.infisense.usbdual;
 
 import android.os.Environment;
 
-
 import com.energy.iruvc.utils.CommonParams;
 import com.energy.iruvc.utils.DeviceType;
 import com.energy.iruvc.utils.DualCameraParams;
@@ -11,13 +10,12 @@ import java.io.File;
 
 /**
  * Created by fengjibo on 2022/7/6.
- * 动态调整parameterclass
+ * 动态Adjustparameterclass
  */
 public class Const {
 
     public static final int TYPE_IR = 0;//单光
     public static final int TYPE_IR_DUAL = 1;//dual light
-
 
     public static int RESTART_USB = 1000;
     public static int HANDLE_CONNECT = 10001;
@@ -26,7 +24,6 @@ public class Const {
     public static int HIDE_LOADING = 1004;
     public static int SHOW_RESTART_MESSAGE = 1005;
     public static int HIDE_LOADING_FINISH = 1006;
-
 
     //是否读取flash内容
     public static boolean isReadFlashData = false;

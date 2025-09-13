@@ -1,6 +1,5 @@
 package com.topdon.commons.util;
 
-
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class MathUtils {
      * 将字节数组转数值
      *
      * @param bigEndian true表示高位在前，false表示低位在前
-     * @param cls       返回的datatype
+     * @param cls       Return的datatype
      * @param src       待转字节数组
      */
     @SuppressWarnings("unchecked")

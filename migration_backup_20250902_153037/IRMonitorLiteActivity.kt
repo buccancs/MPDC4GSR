@@ -45,7 +45,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 /**
- * 选取region监听
+ * 选取regionListener
  */
 @Route(path = RouterConfig.IR_THERMAL_MONITOR_LITE)
 open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTempListener {
@@ -114,7 +114,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                     errorReadCount++
                                     XLog.w("第 $errorReadCount 次读取到exceptiondata，max = ${result.maxTemperature} min = ${result.minTemperature}")
                                     if (errorReadCount > 10) {
-                                        XLog.i("连续10次获取到exceptiondata，认为temperatureregion稳定")
+                                        XLog.i("连续10次Get/Retrieve到exceptiondata，认为temperatureregion稳定")
                                         isFirstRead = false
                                     }
                                     continue
@@ -132,7 +132,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                 bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                                 bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                                 bean.createTime = System.currentTimeMillis()
-                                canUpdate = true // 可以startupdate记录
+                                canUpdate = true // 可以startupdateRecord
                             }
                         }
                 }
@@ -141,7 +141,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
         monitor_current_vol.text = getString(if (selectIndex!!.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
         monitor_real_vol.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
         monitor_real_img.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
-        recordThermal() // start记录
+        recordThermal() // startRecord
     }
 
     private var showTask: Job? = null
@@ -153,7 +153,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
     private var recordJob: Job? = null
 
     /**
-     * start每隔1秒记录一个temperaturedata到data库.
+     * start每隔1秒Record一个temperaturedata到data库.
      */
     private fun recordThermal() {
         recordJob =
@@ -192,7 +192,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                         tv_time.text = TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
-                XLog.w("stop记录, data量:$time")
+                XLog.w("stopRecord, data量:$time")
             }
     }
 
@@ -232,7 +232,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                 object :
                                     ViewTreeObserver.OnGlobalLayoutListener {
                                     override fun onGlobalLayout() {
-                                        // 移除监听器以避免重复调用
+                                        // 移除Listener器以避免重复调用
                                         thermal_fragment.getViewTreeObserver().removeOnGlobalLayoutListener(this)
                                         irMonitorLiteFragment?.restTempView()
                                         irMonitorLiteFragment?.addTempLine(selectIndex!!)
@@ -288,7 +288,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                     return temp!!
                 }
 
-            // 获取gainstate PASS
+            // Get/Retrievegainstate PASS
             if (System.currentTimeMillis() - basicGainGetTime > 5000L)
                 {
                     try {
@@ -296,7 +296,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                 ?.basicGainGet(basicGainGetValue)
                     } catch (e: Exception) {
-                        XLog.e("gain获取failed")
+                        XLog.e("gainGet/Retrievefailed")
                     }
                     basicGainGetTime = System.currentTimeMillis()
                 }

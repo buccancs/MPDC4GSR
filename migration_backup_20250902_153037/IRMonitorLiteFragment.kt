@@ -235,7 +235,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
         showTask?.cancel()
     }
 
-    // 获取选取point
+    // Get/Retrieve选取point
     private fun updateTemp(type: Int) {
         var result: SelectPositionBean? = null
         val contentRectF = RectF(0f, 0f, 192f, 256f)
@@ -414,7 +414,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             lifecycleScope.launch {
                 if (!temperaturerun) {
                     temperaturerun = true
-                    // 需等待渲染complete再显示
+                    // 需等待渲染complete再Show/Display
                     temperatureView.visibility = View.VISIBLE
                     delay(1000)
                     temperatureView.setImageSize(mPreviewHeight, mPreviewWidth, this@IRMonitorLiteFragment)
@@ -560,7 +560,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                     return temp!!
                 }
 
-            // 获取gainstate PASS
+            // Get/Retrievegainstate PASS
             if (System.currentTimeMillis() - basicGainGetTime > 5000L)
                 {
                     try {
@@ -568,7 +568,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                 ?.basicGainGet(basicGainGetValue)
                     } catch (e: Exception) {
-                        XLog.e("gain获取failed")
+                        XLog.e("gainGet/Retrievefailed")
                     }
                     basicGainGetTime = System.currentTimeMillis()
                 }

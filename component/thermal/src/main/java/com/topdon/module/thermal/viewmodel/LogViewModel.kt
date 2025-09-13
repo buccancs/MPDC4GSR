@@ -92,9 +92,9 @@ class LogViewModel : BaseViewModel() {
     }
 
     /**
-第一项实时图表的历史记录查询
-查询历史电压data(等待bluetooth传输历史记录end后触发)
-时间区间: 现在时间 => 倒退到start事件
+第一项实时图表的历史Record查询
+查询历史电压data(等待bluetooth传输历史Recordend后触发)
+时间区间: 现在时间 => 倒退到startEvent
      */
     suspend fun queryLogThermals(
         selectTimeType: Int,
@@ -104,10 +104,10 @@ class LogViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val userId = SharedManager.getUserId()
             val bean = ChartList()
-查询之前先同步data
+查询之前先Synchronizedata
             val job = async { syncVol(selectTimeType) }
             job.await()
-            syncRun = false // 同步end
+            syncRun = false // Synchronizeend
             val startLogTime =
                 when (selectTimeType) {
                     /**
@@ -272,9 +272,9 @@ class LogViewModel : BaseViewModel() {
     }
 
     /**
-第二项历史记录查询
-查询历史电压data(等待bluetooth传输历史记录end后触发)
-时间区间: 初始时间 => 推进到end事件
+第二项历史Record查询
+查询历史电压data(等待bluetooth传输历史Recordend后触发)
+时间区间: 初始时间 => 推进到endEvent
      */
     suspend fun queryLogVolsByStartTime(
         type: Int = 3,
@@ -291,10 +291,10 @@ class LogViewModel : BaseViewModel() {
                         else -> "fence"
                     }
                 val bean = ChartList()
-查询之前先同步data
+查询之前先Synchronizedata
                 val job = async { syncVol(selectTimeType) }
                 job.await()
-                syncRun = false // 同步end
+                syncRun = false // Synchronizeend
                 val startLogTime =
                     when (selectTimeType) {
                         /**
@@ -550,10 +550,10 @@ tempVol:0f    startIndex:2    endIndex:1 会出现vol:NaN
     private var syncRun = false
 
     /**
-同步data
+Synchronizedata
 最早时间: 1609430400000 (2021-1-1 00:00:00)
      *
-1. 查询save记录的最新时间
+1. 查询saveRecord的最新时间
 2. get要update的时间段data[最新data ~ 最新一个时间区间的起始point]
 3. 秒data转分data的average值
 4. add到分data库
@@ -572,11 +572,11 @@ tempVol:0f    startIndex:2    endIndex:1 会出现vol:NaN
         }
         syncRun = true
         val userId = SharedManager.getUserId()
-查询save记录的最新时间
+查询saveRecord的最新时间
         when (selectTimeType) {
             2 -> {
                 val minuteTime = TimeTool.timeToMinute(System.currentTimeMillis(), 2)
-检查最新时间段有没有data同步
+Check最新时间段有没有dataSynchronize
                 val minuteVolLatestList =
                     AppDatabase.getInstance().thermalMinDao()
                         .queryByTime(
@@ -585,7 +585,7 @@ tempVol:0f    startIndex:2    endIndex:1 会出现vol:NaN
                             endTime = System.currentTimeMillis(),
                         )
                 if (minuteVolLatestList.isNotEmpty()) {
-                    Log.w("chart", "最新时间段已经有记录，不需要同步update")
+                    Log.w("chart", "最新时间段已经有Record，不需要Synchronizeupdate")
                     return
                 }
                 val maxTime =
@@ -620,7 +620,7 @@ add到分data库
                         bean.thermalMin = it.thermalMin
                         bean.info = it.info
                         bean.type = it.type
-                        bean.createTime = TimeTool.timeToMinute(it.createTime, 2) // 调整精确到分
+                        bean.createTime = TimeTool.timeToMinute(it.createTime, 2) // Adjust精确到分
                         bean.updateTime = System.currentTimeMillis()
                         AppDatabase.getInstance().thermalMinDao().insert(bean)
                     } catch (e: Exception) {
@@ -633,7 +633,7 @@ add到分data库
                     bean.thermal = 0f
                     bean.thermalMax = 0f
                     bean.thermalMin = 0f
-                    bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 2) // 调整精确到分
+                    bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 2) // Adjust精确到分
                     bean.updateTime = System.currentTimeMillis()
                     AppDatabase.getInstance().thermalMinDao().insert(bean)
                 } catch (e: Exception) {
@@ -645,7 +645,7 @@ delete多余的data
             }
             3 -> {
                 val hourTime = TimeTool.timeToMinute(System.currentTimeMillis(), 3)
-检查最新时间段有没有data同步
+Check最新时间段有没有dataSynchronize
                 val hourVolLatestList =
                     AppDatabase.getInstance().thermalHourDao()
                         .queryByTime(
@@ -654,7 +654,7 @@ delete多余的data
                             endTime = System.currentTimeMillis(),
                         )
                 if (hourVolLatestList.isNotEmpty()) {
-                    Log.w("chart", "最新时间段已经有记录，不需要同步update")
+                    Log.w("chart", "最新时间段已经有Record，不需要Synchronizeupdate")
                     return
                 }
                 val maxTime =
@@ -687,7 +687,7 @@ add到分data库
                     bean.thermalMin = it.thermalMin
                     bean.info = it.info
                     bean.type = it.type
-                    bean.createTime = TimeTool.timeToMinute(it.createTime, 3) // 调整精确到分
+                    bean.createTime = TimeTool.timeToMinute(it.createTime, 3) // Adjust精确到分
                     bean.updateTime = System.currentTimeMillis()
                     AppDatabase.getInstance().thermalHourDao().insert(bean)
                 }
@@ -696,7 +696,7 @@ add到分data库
                 bean.thermal = 0f
                 bean.thermalMax = 0f
                 bean.thermalMin = 0f
-                bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 3) // 调整精确到分
+                bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 3) // Adjust精确到分
                 bean.updateTime = System.currentTimeMillis()
                 AppDatabase.getInstance().thermalHourDao().insert(bean)
 delete多余的data
@@ -705,7 +705,7 @@ delete多余的data
             4 -> {
                 val todayStartTime =
                     TimeTool.timeToMinute(System.currentTimeMillis(), 4) // 天只update到今天凌晨的data
-检查今天有没有data同步
+Check今天有没有dataSynchronize
                 val todayVolLatestList =
                     AppDatabase.getInstance().thermalDayDao()
                         .queryByTime(
@@ -714,8 +714,8 @@ delete多余的data
                             endTime = System.currentTimeMillis(),
                         )
                 if (todayVolLatestList.isNotEmpty()) {
-今天已经有记录，description已经同步到今天，不需要同步update
-                    Log.w("chart", "今天已经有记录，不需要同步update")
+今天已经有Record，description已经Synchronize到今天，不需要Synchronizeupdate
+                    Log.w("chart", "今天已经有Record，不需要Synchronizeupdate")
                     return
                 }
                 val maxTime =
@@ -748,18 +748,18 @@ add到分data库
                     bean.thermalMin = it.thermalMin
                     bean.info = it.info
                     bean.type = it.type
-                    bean.createTime = TimeTool.timeToMinute(it.createTime, 4) // 调整精确到分
+                    bean.createTime = TimeTool.timeToMinute(it.createTime, 4) // Adjust精确到分
                     bean.updateTime = System.currentTimeMillis()
                     AppDatabase.getInstance().thermalDayDao().insert(bean)
 此处只update到今天凌晨
                 }
-今天的电压值还没检查end，不能出average值结果，并值add一个无效data(0f)，用updateTime来判断已同步到最新的时间节point
+今天的电压值还没Checkend，不能出average值结果，并值add一个无效data(0f)，用updateTime来判断已Synchronize到最新的时间节point
                 val bean = ThermalDayEntity()
                 bean.userId = userId
                 bean.thermal = 0f
                 bean.thermalMax = 0f
                 bean.thermalMin = 0f
-                bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 4) // 调整精确到分
+                bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 4) // Adjust精确到分
                 bean.updateTime = System.currentTimeMillis()
                 AppDatabase.getInstance().thermalDayDao().insert(bean)
 delete多余的data

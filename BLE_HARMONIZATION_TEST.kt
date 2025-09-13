@@ -32,6 +32,12 @@ import org.junit.runner.RunWith
 /**
  * EnhancedBLEHarmonizationTest class for thermal imaging functionality.
  */
+/**
+ * EnhancedBLEHarmonizationTest manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class EnhancedBLEHarmonizationTest {
     private lateinit var context: Context
     private lateinit var enhancedBLE: EasyBLE

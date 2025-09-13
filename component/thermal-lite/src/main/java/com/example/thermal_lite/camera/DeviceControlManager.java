@@ -48,7 +48,7 @@ initialize
     }
 
     /**
-注册devicestate回调，可在activity或fragment中注册，用于UI的改变
+RegisterdevicestateCallback，可在activity或fragment中Register，用于UI的改变
 @param key 唯一标识
      * @param iDeviceConnectListener
      */
@@ -59,7 +59,7 @@ initialize
     }
 
     /**
-取消注册devicestate回调
+CancelRegisterdevicestateCallback
      * @param key
      */
     public void removeDeviceConnectListener(String key) {
@@ -114,7 +114,7 @@ dual lightdata流pause
     }
 
     /**
-dual lightdata流恢复
+dual lightdata流Restore
      */
     public void handleResumeDualPreview() {
         if (mDeviceControlWorker != null) {
@@ -125,7 +125,7 @@ dual lightdata流恢复
 
     @Override
     public void onPrepareConnect() {
-StartPreview前回调
+StartPreview前Callback
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onPrepareConnect();
         }
@@ -133,7 +133,7 @@ StartPreview前回调
 
     @Override
     public void onConnected() {
-StartPreviewsuccessful前后回调，注意是子line程
+StartPreviewsuccessful前后Callback，注意是子line程
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onConnected();
         }
@@ -141,7 +141,7 @@ StartPreviewsuccessful前后回调，注意是子line程
 
     @Override
     public void onDisconnected() {
-StopPreviewsuccessful前后回调，注意是子line程
+StopPreviewsuccessful前后Callback，注意是子line程
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onDisconnected();
         }

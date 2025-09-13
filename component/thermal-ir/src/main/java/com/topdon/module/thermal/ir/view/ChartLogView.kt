@@ -62,11 +62,11 @@ class ChartLogView : LineChart {
             this.setDrawGridBackground(false)
             this.description = null // 图标描述文本
             this.setBackgroundResource(LibcoreR.color.chart_bg)
-            this.setScaleEnabled(false) // 缩放
-            this.setPinchZoom(false) // 禁用后，可以分别在x轴和y轴上进行缩放
-            this.isDoubleTapToZoomEnabled = false // 双击不可缩放
-            this.isScaleYEnabled = false // 禁止Y轴缩放
-            this.isScaleXEnabled = true // 禁止X轴缩放
+            this.setScaleEnabled(false) // Scale
+            this.setPinchZoom(false) // Disable后，可以分别在x轴和y轴上进行Scale
+            this.isDoubleTapToZoomEnabled = false // 双击不可Scale
+            this.isScaleYEnabled = false // 禁止Y轴Scale
+            this.isScaleXEnabled = true // 禁止X轴Scale
             this.setExtraOffsets(
                 0f,
                 0f,
@@ -77,14 +77,14 @@ class ChartLogView : LineChart {
             setNoDataTextColor(ContextCompat.getColor(context, LibcoreR.color.chart_text))
             val mv = MyMarkerView(context, R.layout.marker_lay)
             mv.chartView = this
-            marker = mv // settingsclick坐标显示tip框
+            marker = mv // settingsclick坐标Show/Displaytip框
             val data = LineData()
             data.setValueTextColor(textColor)
             this.data = data
             val l = this.legend
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
-            l.isEnabled = false // 隐藏曲linetag
+            l.isEnabled = false // Hide曲linetag
 x轴
             val xAxis = this.xAxis
             xAxis.textColor = textColor
@@ -95,7 +95,7 @@ x轴
             xAxis.isEnabled = true
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.granularity = 1f
-            xAxis.isGranularityEnabled = true // 重复值不显示
+            xAxis.isGranularityEnabled = true // 重复值不Show/Display
             xAxis.textSize = 8f
 y轴
             val leftAxis = this.axisLeft
@@ -223,9 +223,9 @@ y轴
                     lineData.notifyDataChanged()
                     notifyDataSetChanged()
                     moveViewToX(xChartMin)
-                    setVisibleXRangeMinimum(ChartTools.getMinimum(type = type) / 2) // settings显示X轴区间大小
-                    setVisibleXRangeMaximum(ChartTools.getMaximum(type = type)) // settings显示X轴区间大小
-                    zoom(1f, 1f, xChartMin, 0f) // 默认无缩放，全部显示
+                    setVisibleXRangeMinimum(ChartTools.getMinimum(type = type) / 2) // settingsShow/DisplayX轴区间大小
+                    setVisibleXRangeMaximum(ChartTools.getMaximum(type = type)) // settingsShow/DisplayX轴区间大小
+                    zoom(1f, 1f, xChartMin, 0f) // 默认无Scale，全部Show/Display
                     ChartTools.setX(this@ChartLogView, type)
 //                    ChartTools.setY(this@ChartTempView)
                 }
@@ -274,14 +274,14 @@ y轴
         set.circleRadius = 1f // 坐标point半径
         set.fillAlpha = 200
         set.valueTextSize = 10f
-        set.setDrawValues(false) // settings是否显示坐标值文本
+        set.setDrawValues(false) // settings是否Show/Display坐标值文本
         return set
     }
 
     private fun clearEntity(isEmpty: Boolean) {
         initChart()
         if (isEmpty) {
-            clear() // 无data显示
+            clear() // 无dataShow/Display
         } else {
             clearValues()
         }

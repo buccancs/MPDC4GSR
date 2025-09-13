@@ -22,7 +22,7 @@ package com.github.gzuliyujiang.wheelpicker.contract;
 public interface OnLinkageSelectedListener {
 
     /**
-     * 联动selection回调
+     * 联动selectionCallback
      *
      * @param first  selected项的第一级条目内容
      * @param second selected项的第二级条目内容

@@ -109,7 +109,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         recycler_view.adapter = ConcatAdapter(adapter, ConfigEmAdapter(this))
 
         viewModel.configLiveData.observe(this) {
-            // 先只refresh默认的configuration，等操作指引显示完再refresh自定义configuration
+            // 先只refresh默认的configuration，等操作指引Show/Display完再refresh自定义configuration
             tv_default_temp_value.text = NumberTools.to02(UnitTools.showUnitValue(it.defaultModel.environment))
             tv_default_dis_value.text = NumberTools.to02(it.defaultModel.distance)
             tv_default_em_value.text = NumberTools.to02(it.defaultModel.radiation)
@@ -131,7 +131,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示操作指引弹框.
+     * Show/Display操作指引弹框.
      */
     private fun showGuideDialog(modelBean: ModelBean) {
         if (SharedManager.configGuideStep == 0) { // 已看过或不再tip
@@ -196,22 +196,22 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         private val dataList: ArrayList<DataBean> = ArrayList()
 
         /**
-         * item（一项自定义configuration）selected事件监听.
+         * item（一项自定义configuration）selectedEventListener.
          */
         var onSelectListener: ((id: Int) -> Unit)? = null
 
         /**
-         * item（一项自定义configuration）delete件监听.
+         * item（一项自定义configuration）delete件Listener.
          */
         var onDeleteListener: ((bean: DataBean) -> Unit)? = null
 
         /**
-         * item（一项自定义configuration）变更事件监听.
+         * item（一项自定义configuration）变更EventListener.
          */
         var onUpdateListener: ((bean: DataBean) -> Unit)? = null
 
         /**
-         * add事件监听.
+         * addEventListener.
          */
         var onAddListener: View.OnClickListener? = null
 

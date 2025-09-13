@@ -55,7 +55,7 @@
 //    private LibIRProcess.GainSwitchParam_t gain_switch_param = new LibIRProcess.GainSwitchParam_t();
 //    private int count = 0;
 //    private int rotate = 0;
-//    long timeLog = 0L;//记录时间
+//    long timeLog = 0L;//Record时间
 //
 //    private byte[] imageTemp = null;
 //    private byte[] temperatureTemp = null;
@@ -81,7 +81,7 @@
 //        init(cameraHeight, cameraWidth, context);
 //
 //
-//        // 注意：USBMonitor的所有回调function都是运行在line程中的
+//        // 注意：USBMonitor的所有Callbackfunction都是运行在line程中的
 //        mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 //
 //            // called by checking usb device
@@ -136,7 +136,7 @@
 //
 //            @Override
 //            public void onCancel(UsbDevice device) {
-//                //在usb permission获取无效时触发
+//                //在usb permissionGet/Retrieve无效时触发
 //                XLog.tag(TAG).w("onCancel");
 //
 //            }
@@ -153,11 +153,11 @@
 //        int high_gain_over_temp_data = (int) ((100 + 273.15) * 16 * 4);
 //        float pixel_above_prop = 0.02f;         //0-1
 //
-//        // 监听读取deviceinfrareddata
+//        // Listener读取deviceinfrareddata
 //        iFrameCallback = frame -> {
 //            Log.d(TAG, "frame: " + "refresh："+(System.currentTimeMillis()-updateTime));
 //            updateTime = System.currentTimeMillis();
-//            // 测试帧率，可以根据实际需要决定是否保留
+//            // Test帧率，可以根据实际需要决定是否保留
 //            if (count++ >= 25) {
 //                count = 1;
 //                Log.d(TAG, "frame: " + frame.length);
@@ -187,10 +187,10 @@
 //                imageRes.height = (char) (cameraHeight / 2);
 //                imageRes.width = (char) cameraWidth;
 ////                Libirprocess.rotate_right_90(frame, imageRes, Libirprocess.IRPROC_SRC_FMT_Y14, imageEditTemp);
-////                //获取原始temperaturedata
+////                //Get/Retrieve原始temperaturedata
 ////                System.arraycopy(frame, length / 2, temperatureSrc, 0, length / 2);
 //
-////                //saved测试data
+////                //savedTestdata
 ////                countTemp++;
 ////                if (countTemp == 100) {
 ////                    imageTemp = new byte[length / 2];
@@ -354,7 +354,7 @@
 //        try {
 //            XLog.tag(TAG).w("start");
 //            uvcCamera.setOpenStatus(true);
-//            uvcCamera.setFrameCallback(iFrameCallback); //注册监听事件
+//            uvcCamera.setFrameCallback(iFrameCallback); //RegisterListenerEvent
 //            //uvcCamera.setgetframemode(uvcCamera.GET_FRAME_ASYNC);
 //            //default sync mode for some devices  Lost-Packet
 //            //uvcCamera.DEFAULT_BANDWIDTH=0.3f;//hub
@@ -415,8 +415,8 @@
 //////                        if (timeLog != 0 && System.currentTimeMillis() - timeLog > 1000) {
 //////                            //notification超时
 //////                            EventBus.getDefault().post(new DeviceConnectEvent(false, null));
-//////                            XLog.w("超过1s没data采集,退出界area");
-////////                ToastTools.INSTANCE.showShort("超过1s没data采集,退出界area");
+//////                            XLog.w("超过1s没data采集,Exit界area");
+////////                ToastTools.INSTANCE.showShort("超过1s没data采集,Exit界area");
 //////                        }
 //////                        timeLog = System.currentTimeMillis();
 //////                    }

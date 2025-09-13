@@ -81,6 +81,9 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
         }
     }
 
+    /**
+     * Executes intrange functionality.
+     */
     private fun IntRange.getTempStr(isUnitF: Boolean): String =
         if (isUnitF) {
             "${c2f(start)}\n~\n${c2f(endInclusive)}°F"

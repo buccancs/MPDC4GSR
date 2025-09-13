@@ -141,7 +141,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     @SuppressLint("SetTextI18n")
     private fun readConfig() {
         var environment = 30f // 环境temperature
-        var distance = 0.25f // 测试距离
+        var distance = 0.25f // Test距离
         var radiation = 0.95f // 发射率
         val config = ConfigRepository.readConfig(isTC007)
         distance = config.distance
@@ -193,10 +193,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
     @SuppressLint("MissingPermission")
     private fun getLocation(): String? {
-        // 1.获取位置管理器
+        // 1.Get/Retrieve位置管理器
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
-        // 2.获取位置提供器，GPS或是NetWork
+        // 2.Get/Retrieve位置提供器，GPS或是NetWork
         val providers = locationManager?.getProviders(true)
         locationProvider =
             if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
@@ -222,7 +222,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             }
     }
 
-    // 获取地址info:城市、街道等info
+    // Get/Retrieve地址info:城市、街道等info
     private fun getAddress(location: Location?): String {
         var result: List<Address?>? = null
         try {
@@ -233,7 +233,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         location.latitude,
                         location.longitude, 1,
                     )
-                Log.v("TAG", "获取地址info：$result")
+                Log.v("TAG", "Get/Retrieve地址info：$result")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -308,7 +308,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     private var startTime = 0L
 
     /**
-     * 显示时间拾取弹窗
+     * Show/Display时间拾取弹窗
      */
     private fun selectTime() {
         val picker = DatimePicker(this)
@@ -408,7 +408,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         never: Boolean,
                     ) {
                         if (never) {
-                            // 如果是被永久拒绝就跳转到应用权限系统settings页area
+                            // 如果是被永久拒绝就跳转到应用Permission系统settings页area
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_location_content))

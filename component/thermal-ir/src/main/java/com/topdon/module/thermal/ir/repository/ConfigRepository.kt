@@ -15,7 +15,7 @@ object ConfigRepository {
         try {
             Gson().fromJson(if (isTC007) SharedManager.irConfigJsonTC007 else SharedManager.getIRConfig(), ModelBean::class.java)
         } catch (_: Exception) {
-当SP里没data必定抛exception，所以这里返回一个默认的
+当SP里没data必定抛exception，所以这里Return一个默认的
             ModelBean(DataBean(id = 0, use = true))
         }
 

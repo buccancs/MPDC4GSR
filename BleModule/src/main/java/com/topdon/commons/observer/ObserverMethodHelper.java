@@ -74,7 +74,7 @@ class ObserverMethodHelper {
     }
 
     /**
-     * 查找观察者监听的method
+     * 查找ObserverListener的method
      */
     Map<String, Method> findObserverMethod(Observer observer) {
         Map<String, Method> map = METHOD_CACHE.get(observer.getClass());

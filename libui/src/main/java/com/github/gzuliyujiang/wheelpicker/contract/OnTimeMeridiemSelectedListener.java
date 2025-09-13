@@ -22,7 +22,7 @@ package com.github.gzuliyujiang.wheelpicker.contract;
 public interface OnTimeMeridiemSelectedListener {
 
     /**
-     * 时间selection回调
+     * 时间selectionCallback
      *
      * @param hour           时
      * @param minute         分

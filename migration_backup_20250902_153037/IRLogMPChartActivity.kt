@@ -36,7 +36,7 @@ class IRLogMPChartActivity : BaseActivity() {
     private val viewModel: IRMonitorViewModel by viewModels()
 
     /**
-     * 从上一界area传递过来的，当前查看的监控记录start时间戳.
+     * 从上一界area传递过来的，当前查看的监控Recordstart时间戳.
      */
     private var startTime = 0L
 
@@ -123,7 +123,7 @@ class IRLogMPChartActivity : BaseActivity() {
                                         doNotAskAgain: Boolean,
                                     ) {
                                         if (doNotAskAgain) {
-                                            // 拒绝授权并且不再提醒
+                                            // 拒绝Authorization并且不再提醒
                                             if (BaseApplication.instance.isDomestic())
                                                 {
                                                     ToastUtils.showShort(getString(R.string.app_storage_content))

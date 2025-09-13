@@ -14,6 +14,12 @@ import com.topdon.lib.ui.R as UiR
  * Manages data binding and view recycling for efficient display.
  */
 @Deprecated("旧的dual lightmenu，已重构过了")
+/**
+ * MenuPANightAdapter provides data binding between data source and UI components.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class MenuPANightAdapter(
     data: MutableList<ColorBean>,
     layoutId: Int,

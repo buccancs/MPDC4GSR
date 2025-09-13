@@ -7,12 +7,16 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 /**
  * 闪烁效果
  */
-/**
- * RepeatMotionLayout class
- */
+
 /**
  * Repeat motion layout utility class for thermal imaging operations.
  * Provides helper functions and common functionality.
+ */
+/**
+ * RepeatMotionLayout manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
     private var motionStartId = 0

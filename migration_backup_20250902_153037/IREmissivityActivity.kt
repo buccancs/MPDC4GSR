@@ -72,7 +72,7 @@ class IREmissivityActivity : BaseActivity() {
                 tvTitle.text = dataArray[currentPosition].name
                 titleView.translationY = 0f
             } else {
-                // 在可见range内查找当前目录最后一个项目
+                // 在Visiblerange内查找当前目录最后一个项目
                 val seeLastPosition = layoutManager.findLastVisibleItemPosition()
                 var nextTitlePosition = -1
                 for (i in seeFirstPosition..seeLastPosition) {

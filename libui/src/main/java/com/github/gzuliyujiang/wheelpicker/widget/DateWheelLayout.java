@@ -371,7 +371,6 @@ public class DateWheelLayout extends BaseWheelLayout {
         return spaceEndView;
     }
 
-
     public final int getSelectedYear() {
         return yearWheelView.getCurrentItem();
     }
@@ -463,7 +462,7 @@ public class DateWheelLayout extends BaseWheelLayout {
     }
 
     /**
-     * 根据年份及月份获取每月的天数，class似于{@link java.util.Calendar#getActualMaximum(int)}
+     * 根据年份及月份Get/Retrieve每月的天数，class似于{@link java.util.Calendar#getActualMaximum(int)}
      */
     private int getTotalDaysInMonth(int year, int month) {
         switch (month) {

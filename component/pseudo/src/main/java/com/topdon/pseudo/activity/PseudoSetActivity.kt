@@ -31,7 +31,7 @@ import com.topdon.lib.ui.R as RUi // For string resources from libui
 - [ExtraKeyConfig.IS_TC007] - 是否set TC007 的自定义rendering
 - [ExtraKeyConfig.CUSTOM_PSEUDO_BEAN] - 自定义rendering相关set项.（可选，不传则从 SharedPreferences 中读取configuration.）
  *
-// 返回 result
+// Return result
 - [ExtraKeyConfig.CUSTOM_PSEUDO_BEAN] - 自定义rendering相关set项.
  */
 class PseudoSetActivity : BaseActivity(), View.OnClickListener {
@@ -356,7 +356,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
                 setResult(RESULT_OK, resultIntent)
                 finish()
             }
-            tvCancel -> { // 取消
+            tvCancel -> { // Cancel
                 setResult(RESULT_CANCELED)
                 finish()
             }

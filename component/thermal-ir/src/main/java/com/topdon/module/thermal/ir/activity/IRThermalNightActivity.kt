@@ -123,15 +123,15 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     /**
 data流mode。
      *
-对用户来说，只要看到最终的画area就行，SDK 返回的data流是怎样的根本无所谓，
+对User来说，只要看到最终的画area就行，SDK Return的data流是怎样的根本无所谓，
 且也没有switchdata流mode的需求和必要，故而此处写死为 image+temperature 复合datamode。
      */
     protected val defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
 
     /**
 目前对core进行一些configuration如emissivity、temperature measurement距离、自动快门reset，是在 start 调用后，另起一个协程，
-不断循环判断 ircmd 是否initialize完毕，直到 ircmd 的initialize回调中set为 false 后，
-才执行configurationinitialize操作，这个variable就是干这个活，后续有空了要优化流程，不用这么绕。
+不断循环判断 ircmd 是否initialize完毕，直到 ircmd 的initializeCallback中set为 false 后，
+才执行configurationinitialize操作，这个variable就是干这个活，后续有空了要Optimize流程，不用这么绕。
      */
     protected var isConfigWait = true
 
@@ -143,7 +143,7 @@ data流mode。
     /**
 与core进行交互的class.
      *
-在各子class的connectionsuccessful回调中initialize。
+在各子class的connectionsuccessfulCallback中initialize。
      */
     protected var ircmd: IRCMD? = null
 
@@ -630,7 +630,7 @@ reset等温尺
         updateTemperatureSeekBar(false) // 加锁
 
         if (isToTemp) { // 观测->temperature measurement
-恢复visible light
+Restorevisible light
             if (SaveSettingUtil.isOpenTwoLight && XXPermissions.isGranted(this, Permission.CAMERA)) {
                 cameraPreviewConfig(false)
             }
@@ -665,7 +665,7 @@ refreshpseudo-color bardisplaystate
             // thermalRecyclerNight.setSettingSelected - synthetic method removed
             temperatureSeekbar?.setPseudocode(pseudoColorMode)
 
-清除high temperaturepoint、low temperaturepoint
+Clearhigh temperaturepoint、low temperaturepoint
             temperatureView.clear()
             temperatureView.isUserHighTemp = false
             temperatureView.isUserLowTemp = false
@@ -675,7 +675,7 @@ refreshpseudo-color bardisplaystate
             // thermalRecyclerNight.clearTempPointSelect() - synthetic method removed
             // thermalRecyclerNight.fenceSelectType - synthetic property removed
 
-警示是否打开
+警示是否Open
             alarmBean = SaveSettingUtil.alarmBean
             imageThread?.alarmBean = alarmBean
             if (alarmBean.isHighOpen || alarmBean.isLowOpen) {
@@ -694,7 +694,7 @@ disabled画中画
                 cameraPreview.visibility = View.INVISIBLE
             }
 
-清除point、line、area、full image、趋势图
+Clearpoint、line、area、full image、趋势图
             temperatureView.clear()
             temperatureView.visibility = View.INVISIBLE
             temperatureView.temperatureRegionMode = REGION_MODE_CLEAN
@@ -712,7 +712,7 @@ switch到动态识别
             imageThread?.typeAi = aiConfig
             thermalRecyclerNight // setTempSource - synthetic method removed
 
-指南针是否打开
+指南针是否Open
             saveSetBean.isOpenCompass = SaveSettingUtil.isOpenCompass
             // thermalRecyclerNight.setSettingSelected - synthetic method removed
 
@@ -727,7 +727,7 @@ switch到动态识别
             thermalRecyclerNight.setTempPointSelect(TempPointType.HIGH, SaveSettingUtil.isOpenHighPoint)
             thermalRecyclerNight.setTempPointSelect(TempPointType.LOW, SaveSettingUtil.isOpenLowPoint)
 
-标靶是否打开
+标靶是否Open
             targetMeasureMode = SaveSettingUtil.targetMeasureMode
             targetStyle = SaveSettingUtil.targetType
             targetColorType = SaveSettingUtil.targetColorType
@@ -1071,7 +1071,7 @@ maximum最low temperature复原
     }
 
     private fun updateRotateAngle(rotateAngle: Int) {
-清除limitset
+Clearlimitset
         imageThread?.setLimit(
             editMaxValue,
             editMinValue,
@@ -1154,7 +1154,7 @@ maximum最low temperature复原
             temperatureView.start()
             cameraView?.start()
             isrun = true
-//恢复configuration
+//Restoreconfiguration
             configParam()
             thermalRecyclerNight.updateCameraModel()
             initIRConfig()
@@ -1199,7 +1199,7 @@ maximum最low temperature复原
             } else {
                 2
             }
-        Log.w("测试自动旋转: ", "mOrientation: $mOrientation")
+        Log.w("Test自动旋转: ", "mOrientation: $mOrientation")
     }
 
     private fun initRecycler() {
@@ -1411,7 +1411,7 @@ AI-动态识别、high temperature源、low temperature源之间switch
     private var cameraDelaySecond: Int = SaveSettingUtil.delayCaptureSecond
 
     /**
-第 1 个menu-拍照录像 各个操作的click事件监听.
+第 1 个menu-拍照录像 各个操作的clickEventListener.
 @param actionCode: 0-拍照/录像  1-图库  2-更多menu  3-switch到拍照  4-switch到录像
      */
     private fun setCamera(actionCode: Int) {
@@ -1550,7 +1550,7 @@ temperaturemeasurement
                 }
                 temperatureView.visibility = View.VISIBLE
                 temperatureView.temperatureRegionMode = REGION_NODE_TREND
-                if (!spaceChart.isVisible) { // 当前趋势图如果已显示着的话，则不去更改
+                if (!spaceChart.isVisible) { // 当前趋势图如果已Show/Display着的话，则不去更改
                     spaceChart.isVisible = true
                     clTrendOpen.isVisible = false
                     llTrendClose.isVisible = true
@@ -1623,7 +1623,7 @@ displaytemperature报警set弹框.
                 cameraPreviewConfig(true)
             }
             TwoLightType.BLEND_EXTENT -> { // fusion度
-                if (!isOpenPreview && isSelected) { // 未打开画中画时自动打开画中画
+                if (!isOpenPreview && isSelected) { // 未Open画中画时自动Open画中画
                     cameraPreviewConfig(false)
                 }
                 if (isSelected) {
@@ -2335,7 +2335,7 @@ pseudo-color bardisplay
             Log.e(TAG, "imageThread.join(): catch an interrupted exception")
         }
 
-某些特定客户的特殊device需要使用该命令disabledsensor
+某些特定客户的特殊device需要使用该Commanddisabledsensor
 //        if (Usbcontorl.isload) {
 Usbcontorl.usb3803_mode_setting(0) //disabled5V
 //        }
@@ -2617,7 +2617,7 @@ visible light
 //                        cameraViewBitmap = BitmapUtils.mergeBitmap(cameraViewBitmap, temperatureView.regionAndValueBitmap, 0, 0)
 //                    }
 
-合并pseudo-color bar
+Mergepseudo-color bar
                     val isShowPseudoBar = cl_seek_bar.visibility == VISIBLE
                     if (isShowPseudoBar) {
                         val seekBarBitmap = cl_seek_bar.drawToBitmap()
@@ -2631,7 +2631,7 @@ visible light
                         seekBarBitmap.recycle()
                     }
 
-合并指南针
+Merge指南针
                     val compassBitmap: Bitmap? =
                         if (compassView?.visibility == VISIBLE) {
                             compassView?.drawToBitmap()
@@ -2649,7 +2649,7 @@ visible light
                         compassBitmap.recycle()
                     }
 
-产品在 2023/11/24 测试用例评审上确定拍照不需要savetemperature报警闪烁效果
+产品在 2023/11/24 Test用例评审上确定拍照不需要savetemperature报警闪烁效果
                     /*if (temp_bg.isVisible) {
                         if (alphaPaint == null) {
                             alphaPaint = Paint()
@@ -2978,7 +2978,7 @@ sethigh temperature、low temperature
                 delay(timeMillis)
                 XLog.w("settingsTPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 if (isFirst && isrun) {
-恢复镜像
+Restore镜像
                     // thermalRecyclerNight.setSettingSelected - synthetic method removed
                     ircmd?.setMirror(saveSetBean.isOpenMirror)
 自动快门
@@ -3122,7 +3122,7 @@ displayimage
     }
 
     /**
-记录deviceinfo
+Recorddeviceinfo
      */
     private fun printSN() {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -3146,9 +3146,9 @@ displayimage
                         infoBuilder.toString(),
                         HtmlCompat.FROM_HTML_MODE_LEGACY,
                     )
-                XLog.i("获取deviceinfo: $str")
+                XLog.i("Get/Retrievedeviceinfo: $str")
             } catch (e: Exception) {
-                XLog.e("获取SNfailed: ${e.message}")
+                XLog.e("Get/RetrieveSNfailed: ${e.message}")
             }
         }
     }
@@ -3172,7 +3172,7 @@ displayimage
     }
 
     /**
-方位改变监听
+方位改变Listener
      */
     private fun onCompassUpdate(): Boolean {
         val azimuthTxt = formatDegrees(compass.bearing.value, replace360 = true)
@@ -3256,7 +3256,7 @@ displayimage
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-拒绝授权并且不再提醒
+拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_camera_content))
@@ -3341,7 +3341,7 @@ displayimage
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-拒绝授权并且不再提醒
+拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_microphone_content))
@@ -3417,7 +3417,7 @@ recordingvideo
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-拒绝授权并且不再提醒
+拒绝Authorization并且不再提醒
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_storage_content))

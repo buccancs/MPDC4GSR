@@ -39,22 +39,22 @@ internal class HouseAdapter(val context: Context, val isDetect: Boolean) : Recyc
     var selectIndexList: ArrayList<Int> = ArrayList()
 
     /**
-     * 更多被click事件监听.
+     * 更多被clickEventListener.
      */
     var onMoreClickListener: ((position: Int, v: View) -> Unit)? = null
 
     /**
-     * 仅report列表时，分享被click事件监听.
+     * 仅report列表时，分享被clickEventListener.
      */
     var onShareClickListener: ((position: Int) -> Unit)? = null
 
     /**
-     * item click事件监听.
+     * item clickEventListener.
      */
     var onItemClickListener: ((position: Int) -> Unit)? = null
 
     /**
-     * 一个 item selected或取消selected事件监听.
+     * 一个 item selected或CancelselectedEventListener.
      */
     var onSelectChangeListener: ((selectSize: Int) -> Unit)? = null
 
@@ -139,7 +139,7 @@ internal class HouseAdapter(val context: Context, val isDetect: Boolean) : Recyc
             }
             if (!isDetect) {
                 rootView.tv_detect_share.setOnClickListener {
-                    if (!isEditMode) { // 编辑mode不响应分享事件
+                    if (!isEditMode) { // 编辑mode不响应分享Event
                         val position = bindingAdapterPosition
                         if (position != RecyclerView.NO_POSITION) {
                             onShareClickListener?.invoke(position)

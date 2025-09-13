@@ -70,7 +70,7 @@ public class ExcelUtil {
                 cell.setCellStyle(cellStyle);
                 cell.setCellValue(getTemperature(index, norTempData,isShowC));
                 if (index % 100 == 0 && callback != null) {
-                    //每1像素回调1次太频繁且意义不大，故而每100个像素才回调1次
+                    //每1像素Callback1次太频繁且意义不大，故而每100个像素才Callback1次
                     callback.onOneCell(index / 100, width * height / 100);
                 }
             }
@@ -138,14 +138,14 @@ public class ExcelUtil {
             titleStyle.setAlignment(HorizontalAlignment.CENTER); // 居中
             titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
             Font font =  wb.createFont();
-            font.setBold(true);//粗体显示
+            font.setBold(true);//粗体Show/Display
             titleStyle.setFont(font);
             CellStyle contentStyle = wb.createCellStyle();
             contentStyle.setAlignment(HorizontalAlignment.CENTER); // 居中
             contentStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
             for (int i = 0; i < colNum; i++) {
-                sheet.setColumnWidth(i, 20 * 256);  // 显示20个字符的宽度
+                sheet.setColumnWidth(i, 20 * 256);  // Show/Display20个字符的宽度
                 Cell cell1 = row.createCell(i);
                 cell1.setCellStyle(titleStyle);
                 //第一行
@@ -156,7 +156,7 @@ public class ExcelUtil {
 
                 // 之所以rowNum + 1 是因为要settings第二行单元格
                 row = sheet.createRow(rowNum + 1);
-                // settings单元格显示宽度
+                // settings单元格Show/Display宽度
                 row.setHeightInPoints(28f);
 
                 ThermalEntity bean = listData.get(rowNum);

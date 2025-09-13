@@ -20,7 +20,7 @@ import com.topdon.lib.core.tools.PermissionTool
 
 object BluetoothUtil {
     /**
-     * 在给定 activity 生命周期内add bluetooth 开关state监听.
+     * 在给定 activity 生命周期内add bluetooth 开关stateListener.
      */
     fun addBtStateListener(
         activity: ComponentActivity,
@@ -57,7 +57,7 @@ object BluetoothUtil {
     private val scanCallback = MyScanCallback()
 
     /**
-     * settings低功耗bluetooth搜索回调.
+     * settings低功耗bluetoothSearchCallback.
      */
     fun setLeScanListener(
         isTS004: Boolean,
@@ -68,15 +68,18 @@ object BluetoothUtil {
     }
 
     /**
-     * 开启低功耗bluetooth搜索，调用前需确保拥有相应权限且开启bluetooth.
-     * @return true-调用success false-缺少权限或bluetooth未开启
+     * 开启低功耗bluetoothSearch，调用前需确保拥有相应Permission且开启bluetooth.
+     * @return true-调用success false-缺少Permission或bluetooth未开启
      */
     @SuppressLint("MissingPermission")
+    /**
+     * Initiates the operation or service.
+     */
     fun startLeScan(context: Context): Boolean {
         XLog.i("startLeScan()")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.e("startbluetooth扫描-没有相应定位或bluetooth权限!")
+            XLog.e("startbluetooth扫描-没有相应定位或bluetoothPermission!")
             return false
         }
 
@@ -98,15 +101,18 @@ object BluetoothUtil {
     }
 
     /**
-     * stop低功耗bluetooth搜索，调用前需确保拥有相应权限且开启bluetooth.
-     * @return true-调用success false-缺少权限或bluetooth未开启
+     * stop低功耗bluetoothSearch，调用前需确保拥有相应Permission且开启bluetooth.
+     * @return true-调用success false-缺少Permission或bluetooth未开启
      */
     @SuppressLint("MissingPermission")
+    /**
+     * Stops the operation or service.
+     */
     fun stopLeScan(context: Context): Boolean {
         XLog.i("stopBtScan()")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.w("stopbluetooth扫描-没有相应定位或bluetooth权限!")
+            XLog.w("stopbluetooth扫描-没有相应定位或bluetoothPermission!")
             return false
         }
 

@@ -19,7 +19,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 使用 DataBinding 的基础 Fragment.
  *
- * 由于 BaseFragment 子class实在太多没法一下子全改完，等全部改完再来优化inheritance.
+ * 由于 BaseFragment 子class实在太多没法一下子全改完，等全部改完再来Optimizeinheritance.
  *
  * Created by LCG on 2024/11/5.
  */
@@ -38,7 +38,7 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     protected val binding: B get() = _binding!!
 
     /**
-     * 子classimplementation该method，返回使用 DataBinding 的 layout 资源 Id.
+     * 子classimplementation该method，Return使用 DataBinding 的 layout 资源 Id.
      */
     @LayoutRes
     protected abstract fun initContentLayoutId(): Int
@@ -74,6 +74,9 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Callback method triggered when usblinestatechange occurs.
+     */
     fun onUSBLineStateChange(event: DeviceConnectEvent) {
         if (event.isConnect) {
             connected()
@@ -89,6 +92,9 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Callback method triggered when socketconnectstate occurs.
+     */
     fun onSocketConnectState(event: SocketStateEvent) {
         if (event.isConnect) {
             onSocketConnected(event.isTS004)
@@ -109,7 +115,7 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     private var loadingDialog: LoadingDialog? = null
 
     /**
-     * 显示load中弹框.
+     * Show/Displayload中弹框.
      */
     fun showLoadingDialog(
         @StringRes resId: Int,
@@ -118,7 +124,7 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     }
 
     /**
-     * 显示load中弹框.
+     * Show/Displayload中弹框.
      */
     fun showLoadingDialog(text: CharSequence?) {
         if (loadingDialog == null) {
@@ -129,7 +135,7 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
     }
 
     /**
-     * 关闭load中弹框.
+     * Closeload中弹框.
      */
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()

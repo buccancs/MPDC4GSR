@@ -60,7 +60,7 @@ class ElectronicManualActivity : BaseActivity() {
         private val optionList: ArrayList<String> = ArrayList(2)
 
         init {
-            // 由于 TC001 的description书为旧version 样式， 2024-4-9 产品决定先隐藏，只放 TS004 的description书
+            // 由于 TC001 的description书为旧version 样式， 2024-4-9 产品决定先Hide，只放 TS004 的description书
             if (isFAQ) {
                 optionList.add("TS001")
             }

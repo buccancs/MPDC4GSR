@@ -17,6 +17,12 @@ import com.topdon.menu.R as MenuR
  * Provides specialized rendering and interaction capabilities.
  */
 @Deprecated("旧的high/low temperature源menu，已重构过了")
+/**
+ * MenuAIAdapter provides data binding between data source and UI components.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.ItemView>() {
     /**
      * currentselected的选项 code.

@@ -5,15 +5,21 @@ package com.topdon.lib.core.comm
  * author: CaiSongL
  * date: 2024/4/30 10:16
  **/
+/**
+ * IrParam manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 enum class IrParam {
-    ParamLevel, // contrast
-    ParamAlarm, // 预警
-    ParamSharpness, // 锐度
-    ParamTempFont, // temperature值fontsettings
-    ParamRotate, // 旋转
+    ParamLevel, 
+    ParamAlarm, 
+    ParamSharpness, 
+    ParamTempFont, 
+    ParamRotate, 
     ParamColor, // pseudo color
-    ParamMirror, // 镜像
-    ParamCompass, // 指南针
+    ParamMirror, 
+    ParamCompass, 
     ParamPColor, // pseudo color样式
     ParamTemperature, // temperaturemode、高低gain
 }

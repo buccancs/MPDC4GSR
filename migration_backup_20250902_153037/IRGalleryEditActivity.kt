@@ -203,7 +203,7 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
                 struct.customPseudoBean.minTemp = tempCorrect(tempResult.minTemperature)
                 edit_recycler_second.setPseudoColor(pseudocodeMode)
             }
-//        pseudo color条默认处于打开state
+//        pseudo color条默认处于Openstate
 //        color_bar_view.isVisible = struct.isShowPseudoBar
 //        adapter.enPseudoColorBar(struct.isShowPseudoBar)
 
@@ -254,14 +254,14 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
                         view: RangeSeekBar?,
                         isLeft: Boolean,
                     ) {
-                        // 调整start
+                        // Adjuststart
                     }
 
                     override fun onStopTrackingTouch(
                         view: RangeSeekBar?,
                         isLeft: Boolean,
                     ) {
-                        // 调整end
+                        // Adjustend
                     }
                 },
             )
@@ -592,7 +592,7 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
             } else {
                 showLoadingDialog()
                 lifecycleScope.launch(Dispatchers.IO) {
-                    // 获取展示imageinfo的图层data
+                    // Get/Retrieve展示imageinfo的图层data
                     var irBitmap =
                         if (struct.isAmplify)
                             {
@@ -603,10 +603,10 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
                                 ir_image_view.drawToBitmap()
                             }
                     if (temperature_view.mode != Mode.CLEAR) {
-                        // 获取temperature图层的data，包括pointline框，temperature值等，重新合成bitmap
+                        // Get/Retrievetemperature图层的data，包括pointline框，temperature值等，重新合成bitmap
                         irBitmap = BitmapUtils.mergeBitmap(irBitmap, temperature_view.drawToBitmap(), 0, 0)
                     }
-                    // 合并pseudo color条
+                    // Mergepseudo color条
                     if (color_bar_view.visibility == View.VISIBLE) {
                         irBitmap = BitmapUtils.mergeBitmap(irBitmap, color_bar_view.drawToBitmap(), 0, 0)
                     }
@@ -703,7 +703,7 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
 
     private fun updateIconSave() {
         lifecycleScope.launch(Dispatchers.IO) {
-            // 获取展示imageinfo的图层data
+            // Get/Retrieve展示imageinfo的图层data
             var irBitmap =
                 if (struct.isAmplify)
                     {
@@ -714,10 +714,10 @@ class IRGalleryEditActivity : BaseActivity(), View.OnClickListener, ITsTempListe
                         ir_image_view.drawToBitmap()
                     }
             if (temperature_view.mode != Mode.CLEAR) {
-                // 获取temperature图层的data，包括pointline框，temperature值等，重新合成bitmap
+                // Get/Retrievetemperature图层的data，包括pointline框，temperature值等，重新合成bitmap
                 irBitmap = BitmapUtils.mergeBitmap(irBitmap, temperature_view.drawToBitmap(), 0, 0)
             }
-            // 合并pseudo color条
+            // Mergepseudo color条
             if (color_bar_view.visibility == View.VISIBLE) {
                 irBitmap = BitmapUtils.mergeBitmap(irBitmap, color_bar_view.drawToBitmap(), 0, 0)
             }

@@ -164,7 +164,7 @@ true-TC007 false-其他插件式device
     @SuppressLint("SetTextI18n")
     private fun readConfig() {
         var environment = 30f // 环境temperature
-        var distance = 0.25f // 测试距离
+        var distance = 0.25f // Test距离
         var radiation = 0.95f // 发射率
         val config = ConfigRepository.readConfig(isTC007)
         distance = config.distance
@@ -259,7 +259,7 @@ getaddressinfo:城市、街道等info
                         location.latitude,
                         location.longitude, 1,
                     )
-                Log.v("TAG", "获取地址info：$result")
+                Log.v("TAG", "Get/Retrieve地址info：$result")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -434,7 +434,7 @@ set上一次selected时间
                         never: Boolean,
                     ) {
                         if (never) {
-如果是被永久拒绝就跳转到应用权限系统set页area
+如果是被永久拒绝就跳转到应用Permission系统set页area
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(R.string.app_location_content))

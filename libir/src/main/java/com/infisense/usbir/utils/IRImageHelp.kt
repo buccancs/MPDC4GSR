@@ -13,8 +13,14 @@ import java.io.IOException
  * @author: CaiSongL
  * @date: 2024/1/17 9:54
  */
+/**
+ * IRImageHelp manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
+ */
 class IRImageHelp {
-    // 自定义的color值
+    
     @Volatile
     private var colorList: IntArray? = null
 
@@ -70,7 +76,7 @@ class IRImageHelp {
      * @param temperatureSrc ByteArray ： temperaturedata
      * @param imageWidth Int ：
      * @param imageHeight Int
-     * @return ByteArray ： 返回processing后的imagedata，argbformat
+     * @return ByteArray ： Returnprocessing后的imagedata，argbformat
      */
     fun customPseudoColor(
         imageDst: ByteArray,
@@ -82,10 +88,10 @@ class IRImageHelp {
             if (colorList != null && temperatureSrc != null) {
                 var j = 0
                 val imageDstLength: Int = imageWidth * imageHeight * 4
-                // 遍历像素point，过滤temperature阈值
+                // 遍历像素point，Filtertemperature阈值
                 var index = 0
                 while (index < imageDstLength) {
-                    // temperature换算公式
+                    
                     var temperature0: Float =
                         (
                             (temperatureSrc.get(j).toInt() and 0xff) + (
@@ -135,7 +141,7 @@ class IRImageHelp {
                     index += 4
                     j += 2
                 }
-//                                        Log.w("测试上色耗时-总耗时", System.currentTimeMillis() - startTimeAll + "//");
+//                                        Log.w("Test上色耗时-总耗时", System.currentTimeMillis() - startTimeAll + "//");
             }
         } catch (exception: Exception) {
             Log.e("上色exception", exception.message!!)
@@ -159,12 +165,12 @@ class IRImageHelp {
             var j = 0
             val imageDstLength: Int = imageWidth * imageHeight * 4
             val biaochiMax: Float = max
-            val biaochiMin: Float = min // temperature阈值设定
+            val biaochiMin: Float = min 
             val startTimeAll = System.currentTimeMillis()
-            // 遍历像素point，过滤temperature阈值
+            // 遍历像素point，Filtertemperature阈值
             var index = 0
             while (index < imageDstLength) {
-                // temperature换算公式
+                
                 var temperature0: Float =
                     (
                         (temperatureSrc[j].toInt() and 0xff) + (
@@ -178,7 +184,7 @@ class IRImageHelp {
                     val r: Int = imageDst!![index].toInt() and 0xff
                     val g: Int = imageDst!![index + 1].toInt() and 0xff
                     val b: Int = imageDst!![index + 2].toInt() and 0xff
-                    // grayscale
+                    
                     val grey = (r * 0.3f + g * 0.59f + b * 0.11f).toInt()
                     imageDst!![index] = grey.toByte()
                     imageDst!![index + 1] = grey.toByte()

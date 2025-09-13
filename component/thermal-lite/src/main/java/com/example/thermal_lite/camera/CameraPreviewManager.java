@@ -92,7 +92,6 @@ pause输出imagemarker
     private boolean mShowDoubleImage = false;
     private IRImageHelp irImageHelp;
 
-
     private OnTempDataChangeCallback mOnTempDataChangeCallback;
 
     private CameraPreviewManager() {
@@ -136,7 +135,6 @@ temperaturedata长度
     public byte[] frameIrAndTempData = new byte[192 * 256 * 4];
     public byte[] takePhotoIrAndTempData = new byte[192 * 256 * 4];
 
-
     private boolean mIsShowFPS = true;
     private boolean mSaveData = false;
     private boolean mTakePhoto = false;
@@ -159,7 +157,6 @@ temperaturedata长度
     private AutoGainImageRes mAutoGainImageRes = new AutoGainImageRes();
     private AutoGainSwitchInfo mAutoGainSwitchInfo = new AutoGainSwitchInfo();
     private AutoGainSwitchParam mGainSwitchParam = new AutoGainSwitchParam();
-
 
     public int getPreviewWidth() {
         return mPreviewWidth;
@@ -185,7 +182,7 @@ temperaturedata长度
         mSurfaceNativeWindow = new SurfaceNativeWindow();
         mIIrFrameCallback = new IIrFrameCallback() {
             /**
-data流回调
+data流Callback
 根据set的出图formatsetFrameOutputFormat，processingdata流data
 @param frame data源
 YUYV_IMAGE_OUTPUT(0)：image YUYV；分辨率 256*192； 每framedata大小（字节）256*192*2=98304
@@ -213,7 +210,6 @@ getinfrareddata
                     System.arraycopy(frame, 0, mIrData, 0, mIrLength);
 saveinfrareddata到frameIrAndTempData
                     System.arraycopy(mIrData, 0, frameIrAndTempData, 0, mIrLength);
-
 
 info行processing
                     if (!mShowDoubleImage) {
@@ -304,11 +300,10 @@ processingimagerotation角度
                     mFinalImageWidth = 0;
                     mFinalImageHeight = 0;
 
-
                     handleSurfaceDisplay();
 
 自动gainswitch
-内部逻辑，在ac020上, gainswitch长命令调用后, 直接返回success,需要调用basic_long_time_vdcmd_state_get不断的getstate
+内部逻辑，在ac020上, gainswitch长Command调用后, 直接Returnsuccess,需要调用basic_long_time_vdcmd_state_get不断的getstate
                     if (mAutoSwitchGainEnable && FRAME_OUT_PUT_FORMAT == CommonParams.FrameOutputFormat.YUYV_AND_TEMP_OUTPUT) {
                         Log.d(TAG, "onAutoGainSwitchState switch");
                         mIrcamEngine.advAutoGainSwitch(mTempData, mAutoGainImageRes, mAutoGainSwitchInfo, mGainSwitchParam, new AutoGainSwitchCallback() {
@@ -487,11 +482,11 @@ image NV12+info行+temperatureY16+Dummy
     private void handleStartPreview() {
         startPreview();
         if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_WN2640) {
-mimi640 module, 大疆firmwareversion，上电后，需要一段的时间loaddata，此时无法进行命令发送，需等待10s以上
+mimi640 module, 大疆firmwareversion，上电后，需要一段的时间loaddata，此时无法进行CommandSend，需等待10s以上
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-mimi640 module，大疆firmwareversion，需要先发送basicVideoStreamContinue命令，打开data流
+mimi640 module，大疆firmwareversion，需要先SendbasicVideoStreamContinueCommand，Opendata流
                     IrcmdError basicVideoStreamContinueResult = DeviceIrcmdControlManager.getInstance()
                             .getIrcmdEngine().basicVideoStreamContinue();
                     Log.d(TAG, "basicVideoStreamContinueResult=" + basicVideoStreamContinueResult);
@@ -530,7 +525,7 @@ get支持的deviceinfo列表
     }
 
     /**
-initialize命令交互class，出图交互class
+initializeCommand交互class，出图交互class
      */
     private void initHandleEngine(USBMonitor.UsbControlBlock ctrlBlock, boolean isStartPreview) {
         UvcHandleParam uvcHandleParam = new UvcHandleParam();
@@ -541,7 +536,7 @@ setuvccamera出图需要的parameter
 
         int fps = IrConst.DEFAULT_STREAM_FPS;
         /**
-调整frame率，必须device支持才可以，否则会出图failed
+Adjustframe率，必须device支持才可以，否则会出图failed
          */
         uvcHandleParam.setFps(fps);
 
@@ -549,7 +544,7 @@ setuvccamera出图需要的parameter
                 IrConst.KEY_DEFAULT_STREAM_BANDWIDTH, IrConst.DEFAULT_STREAM_BANDWIDTH);
 
         /**
-调整带宽
+Adjust带宽
 部分分辨率或在部分机型上，会出现无法出图，或出图一段时间后卡顿的问题，需要configuration对应的带宽
          */
         uvcHandleParam.setBandwidth(bandwidth);
@@ -625,7 +620,7 @@ pause出图
     }
 
     /**
-恢复出图
+Restore出图
      */
     public void resumePreview() {
         if (mIrcamEngine != null) {
@@ -652,7 +647,7 @@ stop出图
         Log.i(TAG, "stopPreview");
 //        TempCompensation.getInstance().stopTempCompensation();
         if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_WN2640) {
-WN2640firmwareversion，退出之前，需要发stopdata流的命令
+WN2640firmwareversion，Exit之前，需要发stopdata流的Command
             IrcmdError ircmdError = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                     .basicVideoStreamPause();
             Log.d(TAG, "basicVideoStreamPause=" + ircmdError);

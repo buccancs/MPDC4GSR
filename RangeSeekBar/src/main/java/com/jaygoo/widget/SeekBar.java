@@ -28,7 +28,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.text.DecimalFormat;
 
-
 /**
  * ================================================
  * 作    者：JayGoo
@@ -57,7 +56,7 @@ public class SeekBar {
 
     private int indicatorShowMode;
 
-    //进度tip背景的高度，宽度如果是0的话会自适应调整
+    //进度tip背景的高度，宽度如果是0的话会自适应Adjust
     //Progress prompted the background height, width,
     private int indicatorHeight;
     private int indicatorWidth;
@@ -181,7 +180,6 @@ public class SeekBar {
         bottom = y + getThumbHeight() / 2;
     }
 
-
     public void scaleThumb() {
         scaleThumbWidth = (int) getThumbScaleWidth();
         scaleThumbHeight = (int) getThumbScaleHeight();
@@ -230,7 +228,6 @@ public class SeekBar {
         onDrawThumb(canvas);
         canvas.restore();
     }
-
 
     /**
      * 绘制button
@@ -448,7 +445,6 @@ public class SeekBar {
             indicatorBitmap = BitmapFactory.decodeResource(getResources(), indicatorDrawableId);
         }
     }
-
 
     public int getIndicatorArrowSize() {
         return indicatorArrowSize;
@@ -670,7 +666,6 @@ public class SeekBar {
     public void setTypeface(Typeface typeFace) {
         paint.setTypeface(typeFace);
     }
-
 
     /**
      * when you touch or move, the thumb will scale, default not scale

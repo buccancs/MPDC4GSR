@@ -12,7 +12,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Optional, Any
 
 try:
     from PyQt6.QtCore import pyqtSignal

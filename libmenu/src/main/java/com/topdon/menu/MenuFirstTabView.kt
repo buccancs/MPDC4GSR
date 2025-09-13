@@ -14,8 +14,12 @@ import com.topdon.menu.databinding.ViewMenuFirstTabBinding
  * - Temperature measurement mode: photo capture, point/line/area measurement, dual light, pseudo color, settings, high/low temperature range
  * - Observation mode: photo capture, high/low temperature source, pseudo color, target, high/low temperature points, settings
  */
+
 /**
- * MenuFirstTabView class
+ * MenuFirstTabView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class MenuFirstTabView : FrameLayout, View.OnClickListener {
     /**

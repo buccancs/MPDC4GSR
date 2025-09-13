@@ -27,7 +27,7 @@ object SharedManager {
         set(value) = SPUtils.getInstance().put("hasClickWinter", value)
 
     /**
-     * 是否需要显示thermal imaging-趋势图tip.
+     * 是否需要Show/Displaythermal imaging-趋势图tip.
      */
     var isNeedShowTrendTips: Boolean
         get() = SPUtils.getInstance().getBoolean("isNeedShowTrendTips", true)
@@ -88,7 +88,7 @@ object SharedManager {
         }
 
     /**
-     * 首页操作指引要显示的步骤 1-第1步 2-第2步 3-第3步 0-不显示
+     * 首页操作指引要Show/Display的步骤 1-第1步 2-第2步 3-第3步 0-不Show/Display
      */
     var homeGuideStep: Int
         get() {
@@ -100,14 +100,14 @@ object SharedManager {
         }
 
     /**
-     * temperature修正操作指引要显示的步骤 1-第1步 2-第2步 0-不显示
+     * temperature修正操作指引要Show/Display的步骤 1-第1步 2-第2步 0-不Show/Display
      */
     var configGuideStep: Int
         get() = SPUtils.getInstance().getInt("configGuideStep", 1)
         set(value) = SPUtils.getInstance().put("configGuideStep", value)
 
     /**
-     * 是否显示过发射率tip
+     * 是否Show/Display过发射率tip
      */
     var isHideEmissivityTips: Boolean
         get() = SPUtils.getInstance().getBoolean("isHideEmissivityTips", false)
@@ -116,7 +116,7 @@ object SharedManager {
         }
 
     /**
-     * tc007是否显示过发射率tip
+     * tc007是否Show/Display过发射率tip
      */
     var is07HideEmissivityTips: Boolean
         get() = SPUtils.getInstance().getBoolean("is07HideEmissivityTips", false)
@@ -224,7 +224,7 @@ object SharedManager {
 
     /**
      * devicedisconnect时，是否需要弹出 OTG tip弹框.
-     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
+     * true-弹出tip弹框 false-Userpoint过不再tip，不需要再弹出
      */
     var isTipOTG: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipOTG", true)
@@ -234,7 +234,7 @@ object SharedManager {
 
     /**
      * clickthermal imaging-自动快门时，是否需要弹出tip弹框.
-     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
+     * true-弹出tip弹框 false-Userpoint过不再tip，不需要再弹出
      */
     var isTipShutter: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipShutter", true)
@@ -244,7 +244,7 @@ object SharedManager {
 
     /**
      * clicktemperature-高温档时，是否需要弹出tip弹框.
-     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
+     * true-弹出tip弹框 false-Userpoint过不再tip，不需要再弹出
      */
     var isTipHighTemp: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipHighTemp", true)
@@ -254,7 +254,7 @@ object SharedManager {
 
     /**
      * clickthermal imaging-picture-in-picture（也就是dual light）时，是否需要弹出tip弹框.
-     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
+     * true-弹出tip弹框 false-Userpoint过不再tip，不需要再弹出
      */
     var isTipPinP: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipPinP", true)
@@ -264,7 +264,7 @@ object SharedManager {
 
     /**
      * clickthermal imaging-observation时，是否需要弹出tip弹框.
-     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
+     * true-弹出tip弹框 false-Userpoint过不再tip，不需要再弹出
      */
     var isTipCoordinate: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipCoordinate", true)
@@ -274,7 +274,7 @@ object SharedManager {
 
     /**
      * clickthermal imaging-AI追踪时，是否需要弹出tip弹框.
-     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
+     * true-弹出tip弹框 false-Userpoint过不再tip，不需要再弹出
      */
     var isTipAIRecognition: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipAIRecognition", true)
@@ -284,7 +284,7 @@ object SharedManager {
 
     /**
      * clickthermal imaging-observationmode-capture踪时，是否需要弹出tip弹框.
-     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
+     * true-弹出tip弹框 false-Userpoint过不再tip，不需要再弹出
      */
     var isTipObservePhoto: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipObservePhoto", true)
@@ -352,7 +352,7 @@ object SharedManager {
 
     /**
      * clickTS004-是否switchdevice，是否需要弹出tip弹框.
-     * true-弹出tip弹框 false-用户point过不再tip，不需要再弹出
+     * true-弹出tip弹框 false-Userpoint过不再tip，不需要再弹出
      */
     var isTipChangeDevice: Boolean
         get() = SPUtils.getInstance().getBoolean("isTipChangeDevice", true)
@@ -377,29 +377,24 @@ object SharedManager {
     private const val HEAD_ICON: String = "head_icon"
 
     private const val BASE_HOST: String = "base_host"
-    private const val LANGUAGE = "language" // 语言settings
-
-    private const val HAS_SHOW_CLAUSE = "hasShowClause" // 是否显示过条款
-    private const val TEMPERATURE_UNIT = "temperature" // temperature单位
-    private const val VERSION_CHECK_DATE = "version_check_date" // version检测的日期
-
-    private const val DEVICE_SN = "deviceSn" // deviceSN
-    private const val DEVICE_VERSION = "deviceVersion" // deviceversion
-
+    private const val LANGUAGE = "language" 
+    private const val HAS_SHOW_CLAUSE = "hasShowClause" // 是否Show/Display过条款
+    private const val TEMPERATURE_UNIT = "temperature" 
+    private const val VERSION_CHECK_DATE = "version_check_date" 
+    private const val DEVICE_SN = "deviceSn" 
+    private const val DEVICE_VERSION = "deviceVersion" 
     private const val IR_CONFIG = "ir_config" // temperature修正parameter(json)
     private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo" // 自定义pseudo color条
-    private const val SP_TARGET_POP = "sp_target_pop" // target弹框
-
-    private const val SP_SETTING_IS_PUSH = "sp_setting_is_push" // 推送开关
+    private const val SP_TARGET_POP = "sp_target_pop" 
+    private const val SP_SETTING_IS_PUSH = "sp_setting_is_push" 
     private const val SP_SETTING_IS_RECOMMEND = "sp_setting_is_recommend"
 
     /************************TS004************************************/
     private const val SP_HOT_MODE = "sp_hot_mode" // white hot
-    private const val SP_CHANGE_DEVICE = "sp_change_device" // ts001与ts004相互switch
+    private const val SP_CHANGE_DEVICE = "sp_change_device" 
     private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo" // tc007自定义pseudo color条
 
-    private const val SP_CAR_DETECT = "sp_car_detect" // 汽车检测项目
-
+    private const val SP_CAR_DETECT = "sp_car_detect" 
     fun setToken(token: String) {
         SPUtils.getInstance().put(TOKEN, token)
     }
@@ -510,6 +505,9 @@ object SharedManager {
         return SPUtils.getInstance().getString(DEVICE_VERSION, "")
     }
 
+    /**
+     * Persists custompseudo to the data source.
+     */
     fun saveCustomPseudo(json: String) {
         SPUtils.getInstance().put(SP_CUSTOM_PSEUDO, json)
     }
@@ -518,6 +516,9 @@ object SharedManager {
         return SPUtils.getInstance().getString(SP_CUSTOM_PSEUDO, "")
     }
 
+    /**
+     * Persists tc007custompseudo to the data source.
+     */
     fun saveTC007CustomPseudo(json: String) {
         SPUtils.getInstance().put(SP_TC007_CUSTOM_PSEUDO, json)
     }
@@ -533,6 +534,9 @@ object SharedManager {
         return SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)
     }
 
+    /**
+     * Persists targetpop to the data source.
+     */
     fun saveTargetPop(targetPop: Boolean) {
         SPUtils.getInstance().put(SP_TARGET_POP, targetPop)
     }
@@ -540,6 +544,9 @@ object SharedManager {
     private const val IR_DUAL_DISP = "ir_dual_disp" // dual lightregistration-水平
     private const val IR_DUAL_DISP_V = "ir_dual_disp_v" // dual lightregistration-垂直
 
+    /**
+     * Persists settingispush to the data source.
+     */
     fun saveSettingIsPush(isPush: Boolean) {
         SPUtils.getInstance().put(SP_SETTING_IS_PUSH, isPush)
     }
@@ -548,6 +555,9 @@ object SharedManager {
         return SPUtils.getInstance().getBoolean(SP_SETTING_IS_PUSH, true)
     }
 
+    /**
+     * Persists settingisrecommend to the data source.
+     */
     fun saveSettingIsRecommend(isRecommend: Boolean) {
         SPUtils.getInstance().put(SP_SETTING_IS_RECOMMEND, isRecommend)
     }
@@ -557,7 +567,7 @@ object SharedManager {
     }
 
     /**
-     * 国内版是否首页禁止授权了
+     * 国内版是否首页禁止Authorization了
      */
     fun getMainPermissionsState(): Boolean {
         return SPUtils.getInstance().getBoolean("main_permissions_state", false)
@@ -583,6 +593,9 @@ object SharedManager {
         return SPUtils.getInstance().getInt(SP_HOT_MODE, 1)
     }
 
+    /**
+     * Persists hotmode to the data source.
+     */
     fun saveHotMode(hotMode: Int) {
         SPUtils.getInstance().put(SP_HOT_MODE, hotMode)
     }
@@ -594,6 +607,9 @@ object SharedManager {
         return SPUtils.getInstance().getInt(SP_CHANGE_DEVICE, 0)
     }
 
+    /**
+     * Persists changedevice to the data source.
+     */
     fun saveChangeDevice(device: Int) {
         SPUtils.getInstance().put(SP_CHANGE_DEVICE, device)
     }
@@ -609,6 +625,9 @@ object SharedManager {
         return CarDetectDialog.getDetectList()[type].detectChildBeans[pos]
     }
 
+    /**
+     * Persists cardetectinfo to the data source.
+     */
     fun saveCarDetectInfo(bean: CarDetectChildBean) {
         SPUtils.getInstance().put(SP_CAR_DETECT, GsonUtils.toJson(bean))
     }

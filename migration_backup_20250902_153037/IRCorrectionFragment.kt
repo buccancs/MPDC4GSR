@@ -98,10 +98,10 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         temperatureView.setTemperature(temperature)
         temperatureView.isEnabled = false
         setViewLay()
-        // 某些特定客户的特殊device需要使用该命令关闭sensor
+        // 某些特定客户的特殊device需要使用该CommandClosesensor
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) // 打开5V
-            Log.w("123", "打开5V")
+            Usbcontorl.usb3803_mode_setting(1) // Open5V
+            Log.w("123", "Open5V")
         }
         temperatureView.clear()
         temperatureView.temperatureRegionMode = REGION_MODE_CLEAN
@@ -126,9 +126,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         }
     }
 
-    /**
-     *
-     */
+    
     private fun startUSB(isRestart: Boolean) {
         context?.let {
             iruvc =
@@ -176,9 +174,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         }
     }
 
-    /**
-     *
-     */
+    
     private fun restartUsbCamera() {
         if (iruvc != null) {
             iruvc!!.stopPreview()
@@ -199,7 +195,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                 temperatureView.start()
                 cameraView?.start()
                 isrun = true
-                // 恢复configuration
+                // Restoreconfiguration
                 configParam()
             }, 1500)
         }
@@ -267,7 +263,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                 showLoadingDialog()
             }
             101 -> {
-                // 显示image
+                // Show/Displayimage
                 lifecycleScope.launch {
                     delay(500)
                     isConfigWait = false
@@ -326,7 +322,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                 CommonParams.ZoomScaleStep.ZOOM_STEP2,
             )
             iruvc?.let {
-                // 部分机型在关闭自动快门，初始会花屏
+                // 部分机型在Close自动快门，初始会花屏
                 withContext(Dispatchers.IO) {
                     if (SaveSettingUtil.isAutoShutter) {
                         ircmd?.setPropAutoShutterParameter(
@@ -366,41 +362,41 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
             //            ToastUtils.showShort("taskstart")
             // 锅盖start
             // 1 锅盖calibrationstart
-            // 2 关闭自动快门
+            // 2 Close自动快门
             CalibrationTools.autoShutter(irCmd = ircmd, false)
             XLog.w("锅盖矫正：" + "锅盖calibrationstart")
             // 常温
-            // 3 手动打快门命令
+            // 3 手动打快门Command
 //            CalibrationTools.shutter(irCmd = ircmd, syncImage = syncimage)
-//            XLog.w("锅盖矫正："+"手动打快门命令")
-            // 4 关闭锅盖校正
+//            XLog.w("锅盖矫正："+"手动打快门Command")
+            // 4 Close锅盖校正
             delay(2000)
-            XLog.w("锅盖矫正：" + "关闭锅盖校正")
+            XLog.w("锅盖矫正：" + "Close锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
-            // 5 发送锅盖标
+            // 5 Send锅盖标
             CalibrationTools.pot(irCmd = ircmd!!, 1)
-            XLog.w("锅盖矫正：" + "发送锅盖标")
-            // 6 打开锅盖校正
+            XLog.w("锅盖矫正：" + "Send锅盖标")
+            // 6 Open锅盖校正
             delay(5000)
-            XLog.w("锅盖矫正：" + "打开锅盖校正")
+            XLog.w("锅盖矫正：" + "Open锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
             delay(20000)
             XLog.w("锅盖矫正：" + "20000")
             // 高温
-            // 11 手动打快门命令
+            // 11 手动打快门Command
 //            CalibrationTools.shutter(irCmd = ircmd, syncImage = syncimage)
-//            XLog.w("锅盖矫正："+"手动打快门命令")
-            // 12 关闭锅盖校正
+//            XLog.w("锅盖矫正："+"手动打快门Command")
+            // 12 Close锅盖校正
             delay(2000)
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
-            XLog.w("锅盖矫正：" + "关闭锅盖校正")
-            // 13 发送锅盖标
+            XLog.w("锅盖矫正：" + "Close锅盖校正")
+            // 13 Send锅盖标
             CalibrationTools.pot(irCmd = ircmd!!, 1)
-            // 14 打开锅盖校正
+            // 14 Open锅盖校正
             delay(5000)
-            XLog.w("锅盖矫正：" + "打开锅盖校正")
+            XLog.w("锅盖矫正：" + "Open锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
-            // 17 打开自动快门
+            // 17 Open自动快门
             CalibrationTools.autoShutter(irCmd = ircmd, true)
             // 锅盖end
             XLog.w("锅盖矫正：" + "锅盖end")

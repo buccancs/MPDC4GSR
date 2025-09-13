@@ -1,6 +1,5 @@
 package com.infisense.usbir.view;
 
-
 /**
  * 单point矫正temperature,目前TS001和M256产品需要用到
  * @author: CaiSongL

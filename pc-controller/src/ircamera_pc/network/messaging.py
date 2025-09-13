@@ -137,7 +137,8 @@ class ReliableMessageService:
         Set the message transport function.
 
         Args:
-            transport: Async function that takes (host, port, message_dict) and returns bool
+            transport: Async function that takes (host, port,
+                message_dict) and returns bool
         """
         self.transport = transport
 

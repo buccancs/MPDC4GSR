@@ -5,9 +5,7 @@ package com.topdon.lib.ui.config
  * @author: CaiSongL
  * @date: 2023/4/4 9:57
  */
-/**
- * CameraHelp class
- */
+
 /**
  * Camera help utility class for thermal imaging operations.
  * Provides helper functions and common functionality.
@@ -31,8 +29,7 @@ object CameraHelp {
     /**
      * warning
      */
-    val TYPE_SET_ALARM = 12 // 预警
-
+    val TYPE_SET_ALARM = 12 
     /**
      * 旋转
      */
@@ -41,33 +38,28 @@ object CameraHelp {
     /**
      * font
      */
-    val TYPE_SET_COLOR = 13 // color值
-
+    val TYPE_SET_COLOR = 13 
     /**
      * 镜像
      */
-    val TYPE_SET_MIRROR = 14 // 镜像
-
+    val TYPE_SET_MIRROR = 14 
     /**
      * 仅 2D 编辑：watermark
      */
-    val TYPE_SET_WATERMARK = 15 // watermark
-
+    val TYPE_SET_WATERMARK = 15 
     /**
      * 仅 TS001-observation：指南针
      */
-    val TYPE_SET_COMPASS = 23 // 指南针
-
+    val TYPE_SET_COMPASS = 23 
     // TS001 -- calibrationmode
-    val TYPE_SET_HIGHTEMP = 20 // maximum温
-    val TYPE_SET_LOWTEMP = 21 // minimum温
-    val TYPE_SET_DETELE = 22 // delete
-
+    val TYPE_SET_HIGHTEMP = 20 
+    val TYPE_SET_LOWTEMP = 21 
+    val TYPE_SET_DETELE = 22 
     // TS001 -- targetmenu
-    val TYPE_SET_TARGET_MODE = 30 // target
-    val TYPE_SET_TARGET_ZOOM = 31 // 缩放
+    val TYPE_SET_TARGET_MODE = 30 
+    val TYPE_SET_TARGET_ZOOM = 31 
     val TYPE_SET_MEASURE_MODE = 32 // measurement mode
-    val TYPE_SET_TARGET_COLOR = 33 // targetcolor
-    val TYPE_SET_TARGET_DELETE = 34 // delete
-    val TYPE_SET_TARGET_HELP = 35 // 帮助
+    val TYPE_SET_TARGET_COLOR = 33 
+    val TYPE_SET_TARGET_DELETE = 34 
+    val TYPE_SET_TARGET_HELP = 35 
 }

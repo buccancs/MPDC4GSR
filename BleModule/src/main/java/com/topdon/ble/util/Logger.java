@@ -10,7 +10,7 @@ public interface Logger {
      */
     int TYPE_GENERAL = 0;
     /**
-     * 搜索state
+     * Searchstate
      */
     int TYPE_SCAN_STATE = 1;
     /**
@@ -44,31 +44,31 @@ public interface Logger {
     int TYPE_PHY_CHANGE = 12;
 
     /**
-     * 打印日志
+     * 打印Log
      *
-     * @param priority 日志级别。{@link android.util.Log#DEBUG}等
-     * @param type     日志type。{@link #TYPE_CONNECTION_STATE}等
-     * @param msg      日志内容
+     * @param priority Log级别。{@link android.util.Log#DEBUG}等
+     * @param type     Logtype。{@link #TYPE_CONNECTION_STATE}等
+     * @param msg      Log内容
      */
     void log(int priority, int type, String msg);
 
     /**
-     * 打印日志
+     * 打印Log
      *
-     * @param priority 日志级别。{@link android.util.Log#DEBUG}等
-     * @param type     日志type。{@link #TYPE_CONNECTION_STATE}等
-     * @param msg      日志内容
+     * @param priority Log级别。{@link android.util.Log#DEBUG}等
+     * @param type     Logtype。{@link #TYPE_CONNECTION_STATE}等
+     * @param msg      Log内容
      * @param th       exception
      */
     void log(int priority, int type, String msg, Throwable th);
     
     /**
-     * 日志输出控制
+     * Log输出控制
      */
     void setEnabled(boolean isEnabled);
 
     /**
-     * 日志输出是否使能
+     * Log输出是否使能
      */
     boolean isEnabled();
 }

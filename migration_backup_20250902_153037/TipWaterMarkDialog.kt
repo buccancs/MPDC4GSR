@@ -198,7 +198,7 @@ class TipWaterMarkDialog : Dialog {
                             never: Boolean,
                         ) {
                             if (never) {
-                                // 如果是被永久拒绝就跳转到应用权限系统settings页area
+                                // 如果是被永久拒绝就跳转到应用Permission系统settings页area
                                 if (BaseApplication.instance.isDomestic())
                                     {
                                         ToastUtils.showShort(R.string.app_location_content)
@@ -245,10 +245,10 @@ class TipWaterMarkDialog : Dialog {
 
         @SuppressLint("MissingPermission")
         private fun getLocation(): String? {
-            // 1.获取位置管理器
+            // 1.Get/Retrieve位置管理器
             locationManager = context!!.getSystemService(RxAppCompatActivity.LOCATION_SERVICE) as LocationManager
 
-            // 2.获取位置提供器，GPS或是NetWork
+            // 2.Get/Retrieve位置提供器，GPS或是NetWork
             val providers = locationManager?.getProviders(true)
             locationProvider =
                 if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
@@ -274,7 +274,7 @@ class TipWaterMarkDialog : Dialog {
                 }
         }
 
-        // 获取地址info:城市、街道等info
+        // Get/Retrieve地址info:城市、街道等info
         private fun getAddress(location: Location?): String {
             var result: List<Address?>? = null
             try {
@@ -285,7 +285,7 @@ class TipWaterMarkDialog : Dialog {
                             location.latitude,
                             location.longitude, 1,
                         )
-                    Log.v("TAG", "获取地址info：$result")
+                    Log.v("TAG", "Get/Retrieve地址info：$result")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

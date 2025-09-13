@@ -39,12 +39,12 @@ public class BluetoothManager implements EventObserver {
     private static final String TAG = "BluetoothManager";
     
     public static boolean iSReset = false;//是否复位
-    public static boolean isSending = false;//是否正在发送bluetoothdata
+    public static boolean isSending = false;//是否正在Sendbluetoothdata
     public static boolean isClickStopCharging = false;//是否click了stop充电
     private static BluetoothManager instance = null;
     private Device mDevice;
     private Connection connection;
-    public static boolean isReceiveBleData = false;//是否接收bluetoothdata
+    public static boolean isReceiveBleData = false;//是否Receivebluetoothdata
     private BluetoothGattCharacteristic writeCharact = null;
 
     public static BluetoothManager getInstance() {
@@ -92,16 +92,16 @@ public class BluetoothManager implements EventObserver {
             isSending = false;
             //开关notification
             boolean isEnabled = connection.isNotificationOrIndicationEnabled(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.NOTIFY_UUID));
-            LLog.w("bcf_ble", "是否打开了Notifycation: " + isEnabled);
+            LLog.w("bcf_ble", "是否Open了Notifycation: " + isEnabled);
             RequestBuilder<NotificationChangeCallback> builder = new RequestBuilderFactory().getSetNotificationBuilder(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.NOTIFY_UUID), true);
             RequestBuilder<ReadCharacteristicCallback> builder1 = new RequestBuilderFactory().getReadCharacteristicBuilder(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.READ_UUID));
-            //不settings回调，使用观察者mode接收结果
+            //不settingsCallback，使用ObservermodeReceive结果
             builder.build().execute(connection);
             builder1.build().execute(connection);
         }
     }
 
-    //取消监听
+    //CancelListener
     public void setCancelListening() {
         Observable observable = EasyBLE.getInstance().getObservable();
         if (observable != null) {
@@ -116,7 +116,7 @@ public class BluetoothManager implements EventObserver {
         config.setRequestTimeoutMillis(7000);
         config.setAutoReconnect(false);
         config.setReconnectImmediatelyMaxTimes(3);
-        connection = EasyBLE.getInstance().connect(device, config, this);//回调监听connectionstate，settings此回调不影响观察者接收connectionstatemessage
+        connection = EasyBLE.getInstance().connect(device, config, this);//CallbackListenerconnectionstate，settings此Callback不影响ObserverReceiveconnectionstatemessage
         connection.setBluetoothGattCallback(new BluetoothGattCallback() {
             @Override
             public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
@@ -153,7 +153,7 @@ public class BluetoothManager implements EventObserver {
     }
 
     /**
-     * 使用{@link Observe}确定要接收message，{@link RunOn}指定在主line程执行method，settings{@link Tag}防混淆后找不到method
+     * 使用{@link Observe}确定要Receivemessage，{@link RunOn}指定在主line程执行method，settings{@link Tag}防混淆后找不到method
      */
     @Tag("onConnectionStateChanged")
     @Observe
@@ -162,7 +162,7 @@ public class BluetoothManager implements EventObserver {
     public void onConnectionStateChanged(@NonNull Device device) {
         if (device.getConnectionState() != ConnectionState.SERVICE_DISCOVERED || device.getConnectionState() != ConnectionState.DISCONNECTED) {
             EventBus.getDefault().post(device.getConnectionState());
-            Log.e("wangchen", "发送广播--" + device.getConnectionState());
+            Log.e("wangchen", "Send广播--" + device.getConnectionState());
         }
         Log.d("ywq", "MyObserver connectionstate：" + device.getConnectionState() + " 是否已connection： " + device.isConnected() + "-----name：" + device.getName() + "-------mac: " + device.getAddress());
         switch (device.getConnectionState()) {
@@ -200,7 +200,7 @@ public class BluetoothManager implements EventObserver {
     }
 
     /**
-     * 使用{@link Observe}确定要接收message，method在{@link EasyBLEBuilder#setMethodDefaultThreadMode(ThreadMode)}指定的line程执行
+     * 使用{@link Observe}确定要Receivemessage，method在{@link EasyBLEBuilder#setMethodDefaultThreadMode(ThreadMode)}指定的line程执行
      */
     @Observe
     @Override
@@ -212,7 +212,7 @@ public class BluetoothManager implements EventObserver {
         } else {
             typeTag = "Indication";
         }
-        Log.d("bcf_ble", "onNotificationChanged ：" + typeTag + "：" + (isEnabled ? "开启" : "关闭"));
+        Log.d("bcf_ble", "onNotificationChanged ：" + typeTag + "：" + (isEnabled ? "开启" : "Close"));
     }
 
     /**
@@ -233,11 +233,11 @@ public class BluetoothManager implements EventObserver {
         
         try {
             writeCharact = connection.getCharacteristic(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.WRITE_UUID));
-            connection.getGatt().setCharacteristicNotification(writeCharact, true); // settings监听
-            // 当data传递到bluetooth之后 会回调BluetoothGattCallback里area的writemethod
+            connection.getGatt().setCharacteristicNotification(writeCharact, true); // settingsListener
+            // 当data传递到bluetooth之后 会CallbackBluetoothGattCallback里area的writemethod
             writeCharact.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
             writeCharact.setValue(data);
-//            LLog.d("ble_bcf_data", "发送到bluetooth的data为：" + StringUtils.toHex(data));
+//            LLog.d("ble_bcf_data", "Send到bluetooth的data为：" + StringUtils.toHex(data));
             return connection.getGatt().writeCharacteristic(writeCharact);
         } catch (SecurityException e) {
             Log.e(TAG, "SecurityException during GATT write operation: " + e.getMessage());
@@ -254,7 +254,7 @@ public class BluetoothManager implements EventObserver {
     }
 
     /**
-     * 接收bluetoothdevice返回的data
+     * ReceivebluetoothdeviceReturn的data
      *
      * @param device         device
      * @param service        serviceUUID
@@ -264,18 +264,18 @@ public class BluetoothManager implements EventObserver {
     @Observe
     @Override
     public void onCharacteristicChanged(Device device, UUID service, UUID characteristic, byte[] value) {
-        Log.e("ble_bcf_data", "接收bluetoothdata：" + StringUtils.toHex(value));
+        Log.e("ble_bcf_data", "Receivebluetoothdata：" + StringUtils.toHex(value));
         EventBus.getDefault().post(value);
     }
 
     public static void setBleData(String message) {
 //        String savePath = ActivityUtils.getTopActivity().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");// HH:mm:ss
-//        //获取当前时间
+//        //Get/Retrieve当前时间
 //        Date date = new Date(System.currentTimeMillis());
 //
 //        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// HH:mm:ss
-//        //获取当前时间
+//        //Get/Retrieve当前时间
 //        Date date1 = new Date(System.currentTimeMillis());
 //
 //        FileIOUtils.writeFileFromString(savePath + "/log/" + simpleDateFormat.format(date) + ".txt", simpleDateFormat1.format(date1) + ":" + message + "\n", true);

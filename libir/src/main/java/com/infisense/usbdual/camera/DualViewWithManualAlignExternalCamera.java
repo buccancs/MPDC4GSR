@@ -106,9 +106,7 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView{
 
         }
 
-        /**
-         *
-         */
+        
         public void startPreview() {
             dualUVCCamera.setFrameCallback(iFrameCallback);
             dualUVCCamera.onStartPreview();

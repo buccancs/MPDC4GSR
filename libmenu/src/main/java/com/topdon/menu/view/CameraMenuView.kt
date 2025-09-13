@@ -29,12 +29,16 @@ import com.topdon.menu.databinding.ViewCameraMenuBinding
  *
  * Created by LCG on 2024/11/8.
  */
-/**
- * CameraMenuView class
- */
+
 /**
  * Custom Camera menu view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * CameraMenuView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class CameraMenuView : FrameLayout, View.OnClickListener {
     companion object {
@@ -179,7 +183,7 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
                     onCameraClickListener?.invoke(CODE_ACTION)
                 }
             }
-            binding.ivGallery -> { // Gallery
+            binding.ivGallery -> { 
                 onCameraClickListener?.invoke(CODE_GALLERY)
             }
             binding.ivMore -> { // More menu
@@ -223,12 +227,16 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
     /**
      * Adapter used by ViewPager2.
      */
-    /**
-     * MenuCameraAdapter class
-     */
+    
 /**
  * Custom Menu camera view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * MenuCameraAdapter provides data binding between data source and UI components.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
     class MenuCameraAdapter : RecyclerView.Adapter<MenuCameraAdapter.ViewHolder>() {
         override fun onCreateViewHolder(
@@ -254,6 +262,12 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
 /**
  * Custom View holder view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * ViewHolder implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
         class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
     }

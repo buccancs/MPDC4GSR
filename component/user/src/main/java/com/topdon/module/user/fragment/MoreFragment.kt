@@ -54,7 +54,7 @@ true-TC007 false-其他插件式device
     private var isTC007 = false
 
     /**
-TC007 firmware升级 ViewModel.
+TC007 firmwareUpgrade ViewModel.
      */
     private val firmwareViewModel: FirmwareViewModel by viewModels()
 
@@ -93,11 +93,11 @@ TC007 firmware升级 ViewModel.
         settingItemCorrection.setOnClickListener(this) // image校正
         settingItemDual.setOnClickListener(this) // dual light校正
         settingItemUnit.setOnClickListener(this) // temperature单温
-        settingVersion.setOnClickListener(this) // TC007firmware升级
+        settingVersion.setOnClickListener(this) // TC007firmwareUpgrade
         settingDeviceInformation.setOnClickListener(this) // TC007deviceinfo
-        settingReset.setOnClickListener(this) // TC007恢复出厂settings
+        settingReset.setOnClickListener(this) // TC007Restore出厂settings
 
-根据 2024/5/23 评审会结论，TC007没有多少需要恢复出厂的configuration，产品决定砍掉
+根据 2024/5/23 评审会结论，TC007没有多少需要Restore出厂的configuration，产品决定砍掉
         settingReset.isVisible = false
 
         settingVersion.isVisible = isTC007 && Build.VERSION.SDK_INT >= 29
@@ -153,7 +153,7 @@ TC007 firmware升级 ViewModel.
         firmwareViewModel.firmwareDataLD.observe(this) {
             tvUpgradePoint.isVisible = it != null
             dismissLoadingDialog()
-            if (it == null) { // 请求success但没有firmware升级包，即已是最新
+            if (it == null) { // 请求success但没有firmwareUpgrade包，即已是最新
                 ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
             } else {
                 showFirmwareUpDialog(it)
@@ -207,14 +207,14 @@ TC007 firmware升级 ViewModel.
                     RouterConfig.IR_CORRECTION,
                 ).withBoolean(ExtraKeyConfig.IS_TC007, isTC007).navigation(requireContext())
             }
-            settingVersion -> { // TC007firmware升级
-由于双通道方案存在问题，V3.30临时使用 apk 内置firmware升级包，此处comment强制登录逻辑
+            settingVersion -> { // TC007firmwareUpgrade
+由于双通道方案存在问题，V3.30临时使用 apk 内置firmwareUpgrade包，此处comment强制Login逻辑
 //               if (LMS.getInstance().isLogin) {
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TC007 firmware升级 - click查询")
+                    XLog.i("TC007 firmwareUpgrade - click查询")
                     showLoadingDialog()
                     firmwareViewModel.queryFirmware(false)
                 }
@@ -230,7 +230,7 @@ TC007 firmware升级 ViewModel.
                         .navigation(requireContext())
                 }
             }
-            settingReset -> { // TC007恢复出厂settings
+            settingReset -> { // TC007Restore出厂settings
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                     restoreFactory()
                 }
@@ -263,7 +263,7 @@ TC007 firmware升级 ViewModel.
     }
 
     /**
-displayfirmware升级tip弹框.
+displayfirmwareUpgradetip弹框.
      */
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(requireContext())
@@ -272,7 +272,7 @@ displayfirmware升级tip弹框.
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-由于双通道方案存在问题，V3.30临时使用 apk 内置firmware升级包，此处comment下载逻辑
+由于双通道方案存在问题，V3.30临时使用 apk 内置firmwareUpgrade包，此处commentDownload逻辑
             // downloadFirmware(firmwareData)
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
@@ -291,7 +291,7 @@ displayfirmware升级tip弹框.
         }
 
     /**
-下载指定firmware升级包
+Download指定firmwareUpgrade包
      */
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
@@ -314,14 +314,14 @@ displayfirmware升级tip弹框.
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TC007 firmware升级 - start安装firmware升级包")
+            XLog.d("TC007 firmwareUpgrade - startInstallfirmwareUpgrade包")
             val installDialog = FirmwareInstallDialog(requireContext())
             installDialog.show()
 
             val isSuccess = TC007Repository.updateFirmware(file)
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TC007 firmware升级 - firmware升级包发送往 TC007 success，即将disconnectconnection")
+                XLog.d("TC007 firmwareUpgrade - firmwareUpgrade包Send往 TC007 success，即将disconnectconnection")
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 TipDialog.Builder(requireContext())
                     .setTitleMessage(getString(RCore.string.app_tip))
@@ -334,7 +334,7 @@ displayfirmware升级tip弹框.
                     }
                     .create().show()
             } else {
-                XLog.w("TC007 firmware升级 - firmware升级包发送往 TC007 failed!")
+                XLog.w("TC007 firmwareUpgrade - firmwareUpgrade包Send往 TC007 failed!")
                 showReInstallDialog(file)
             }
         }
@@ -382,7 +382,7 @@ displayfirmware升级tip弹框.
         lifecycleScope.launch {
             val isSuccess = TC007Repository.resetToFactory()
             if (isSuccess) {
-                XLog.d("TC007 恢复出厂settingssuccess，即将disconnectconnection")
+                XLog.d("TC007 Restore出厂settingssuccess，即将disconnectconnection")
                 TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 EventBus.getDefault().post(TS004ResetEvent())

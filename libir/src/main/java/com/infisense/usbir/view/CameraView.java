@@ -43,7 +43,6 @@ public class CameraView extends TextureView {
 
     private boolean isOpenAmplify = false;
 
-
     public boolean isOpenAmplify() {
         return isOpenAmplify;
     }
@@ -112,8 +111,8 @@ public class CameraView extends TextureView {
                             paint.setDither(true);    //防抖动
                             paint.setColor(Color.WHITE);  //画笔color
                             /**
-                             * image缩放，这里简单的使用getWidth()作为宽，getHeight()作为高，可能会出现画area拉伸情况，
-                             * 实际使用的时候请参考device的宽高按照device的image尺寸做等比例缩放
+                             * imageScale，这里简单的使用getWidth()作为宽，getHeight()作为高，可能会出现画area拉伸情况，
+                             * 实际使用的时候请参考device的宽高按照device的image尺寸做等比例Scale
                              */
                             Bitmap mScaledBitmap = Bitmap.createScaledBitmap(bitmap, getWidth(), getHeight(), true);
                             canvas.drawBitmap(mScaledBitmap, 0, 0, null);
@@ -175,9 +174,7 @@ public class CameraView extends TextureView {
             return sBitmap;
         }
     }
-    /**
-     *
-     */
+    
     public void start() {
         cameraThread = new Thread(runnable);
         cameraThread.start();
@@ -194,10 +191,7 @@ public class CameraView extends TextureView {
         }
     }
 
-
-    /**
-     *
-     */
+    
     public void stop() {
         try {
             if (cameraThread != null){
@@ -209,7 +203,4 @@ public class CameraView extends TextureView {
         }
     }
 }
-
-
-
 

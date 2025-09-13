@@ -1,7 +1,5 @@
 package com.infisense.usbir.view;
 
-
-
 import android.view.MotionEvent;
 import android.view.View;
 

@@ -92,9 +92,7 @@ class AlarmHelp private constructor(val context: Context) {
         }
     }
 
-    /**
-     *
-     */
+    
     fun alarmData(
         realMax: Float,
         realMin: Float,

@@ -181,7 +181,8 @@ class EnhancedAuthenticationManager:
         Perform multi-tier authentication
 
         Returns:
-            Tuple[bool, Optional[AuthenticationContext], str]: (success, context, reason)
+            Tuple[bool, Optional[AuthenticationContext], str]: (success, context,
+                reason)
         """
 
         # Check if device is locked

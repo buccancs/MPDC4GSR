@@ -23,8 +23,8 @@ import java.util.Locale
  */
 object LocationUtil {
     /**
-     * 获取最后一个位置info，并反向地理infoencoding为 省市区.
-     * @return 省-市-区，若获取failed或无可知位置info则为 null
+     * Get/Retrieve最后一个位置info，并反向地理infoencoding为 省市区.
+     * @return 省-市-区，若Get/Retrievefailed或无可知位置info则为 null
      */
     @RequiresPermission(Permission.ACCESS_FINE_LOCATION)
     suspend fun getLastLocationStr(context: Context): String? =
@@ -52,7 +52,7 @@ object LocationUtil {
         }
 
     /**
-     * 在给定 activity 生命周期内add 位置info 开关state监听.
+     * 在给定 activity 生命周期内add 位置info 开关stateListener.
      */
     fun addBtStateListener(
         activity: ComponentActivity,

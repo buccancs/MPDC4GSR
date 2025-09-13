@@ -23,6 +23,9 @@ import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 object TS004Repository {
+    /**
+     * Executes any functionality.
+     */
     private fun Any.toBody(): RequestBody = Gson().toJson(this).toRequestBody()
 
     var netWork: Network? = null
@@ -30,7 +33,7 @@ object TS004Repository {
     private fun getOKHttpClient(): OkHttpClient {
         val build =
             OkHttpClient.Builder()
-                .retryOnConnectionFailure(false) // 不重试
+                .retryOnConnectionFailure(false) 
                 .connectTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定interface统一超时15秒
                 .readTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定interface统一超时15秒
                 .writeTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定interface统一超时15秒
@@ -52,9 +55,9 @@ object TS004Repository {
             .create(TS004Service::class.java)
 
     /**
-     * 批量下载file
+     * 批量Downloadfile
      * @param dataMap key-URL，value-save为的file
-     * @param listener 每个下载结果的回调，在主line程回调
+     * @param listener 每个Download结果的Callback，在主line程Callback
      */
     suspend fun downloadList(
         dataMap: Map<String, File>,
@@ -110,7 +113,7 @@ object TS004Repository {
         }
 
     /**
-     * 同步时间.
+     * Synchronize时间.
      */
     suspend fun syncTime(): Boolean =
         withContext(Dispatchers.IO) {
@@ -131,7 +134,7 @@ object TS004Repository {
         }
 
     /**
-     * 同步时区.
+     * Synchronize时区.
      */
     suspend fun syncTimeZone(): Boolean =
         withContext(Dispatchers.IO) {
@@ -145,7 +148,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取versioninfo
+     * Get/Retrieveversioninfo
      */
     suspend fun getVersion(): TS004Response<VersionBean>? =
         withContext(Dispatchers.IO) {
@@ -157,7 +160,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取deviceinfo
+     * Get/Retrievedeviceinfo
      */
     suspend fun getDeviceInfo(): TS004Response<DeviceInfo>? =
         withContext(Dispatchers.IO) {
@@ -169,7 +172,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取file数量.
+     * Get/Retrievefile数量.
      * @param fileType 0-image 1-录像 2-所有
      */
     suspend fun getFileCount(fileType: Int): Int? =
@@ -184,7 +187,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取指定type的最新的一个file.
+     * Get/Retrieve指定type的最新的一个file.
      * @param fileType 0-image 1-录像 2-所有
      */
     suspend fun getNewestFile(fileType: Int): List<FileBean>? =
@@ -201,7 +204,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取指定type的所有file列表.
+     * Get/Retrieve指定type的所有file列表.
      * @param fileType 0-image 1-录像 2-所有
      */
     suspend fun getAllFileList(fileType: Int): List<FileBean> =
@@ -223,7 +226,7 @@ object TS004Repository {
         }
 
     /**
-     * 分页load指定type的file列表.
+     * Paginationload指定type的file列表.
      * @param fileType 0-image 1-录像 2-所有
      * @return null-请求failed
      */
@@ -266,7 +269,7 @@ object TS004Repository {
         }
 
     /**
-     * 执行firmware升级.
+     * 执行firmwareUpgrade.
      */
     suspend fun updateFirmware(file: File): Boolean =
         withContext(Dispatchers.IO) {
@@ -292,7 +295,7 @@ object TS004Repository {
                 }
 
                 var status = getTS004Service().getUpgradeStatus().data?.status
-                while (status == 0 || status == 1 || status == 2) { // document跟实际值对不上
+                while (status == 0 || status == 1 || status == 2) { 
                     delay(1000)
                     status = getTS004Service().getUpgradeStatus().data?.status
                 }
@@ -323,15 +326,14 @@ object TS004Repository {
                 fileInputStream = FileInputStream(file)
 
                 var hasReadCount = 0
-                var byteArray = ByteArray(1024 * 1024 * 5) // 5M每包
-
+                var byteArray = ByteArray(1024 * 1024 * 5) 
                 var readCount = fileInputStream.read(byteArray)
                 while (readCount != -1) {
                     hasReadCount += readCount
                     if (hasReadCount == 1024 * 1024 * 5) {
                         getTS004Service().sendUpgradeFile(byteArray.toRequestBody())
                         hasReadCount = 0
-                        byteArray = ByteArray(1024 * 1024 * 5) // 5M每包
+                        byteArray = ByteArray(1024 * 1024 * 5) 
                     }
                     readCount = fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
                 }
@@ -378,7 +380,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取pseudo color样式
+     * Get/Retrievepseudo color样式
      */
     suspend fun getPseudoColor(): TS004Response<PseudoColorBean>? =
         withContext(Dispatchers.IO) {
@@ -391,7 +393,7 @@ object TS004Repository {
 
     /**
      * settings测距
-     * @param state 0-关闭，1-开启
+     * @param state 0-Close，1-开启
      */
     suspend fun setRangeFind(state: Int): Boolean =
         withContext(Dispatchers.IO) {
@@ -405,7 +407,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取测距
+     * Get/Retrieve测距
      */
     suspend fun getRangeFind(): TS004Response<RangeBean>? =
         withContext(Dispatchers.IO) {
@@ -432,7 +434,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取屏幕brightness
+     * Get/Retrieve屏幕brightness
      */
     suspend fun getPanelParam(): TS004Response<BrightnessBean>? =
         withContext(Dispatchers.IO) {
@@ -445,7 +447,7 @@ object TS004Repository {
 
     /**
      * settings画中画
-     * @param enable  true 打开，false 关闭
+     * @param enable  true Open，false Close
      */
     suspend fun setPip(enable: Boolean): Boolean =
         withContext(Dispatchers.IO) {
@@ -459,7 +461,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取画中画
+     * Get/Retrieve画中画
      */
     suspend fun getPip(): TS004Response<PipBean>? =
         withContext(Dispatchers.IO) {
@@ -487,7 +489,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取放大倍数
+     * Get/Retrieve放大倍数
      */
     suspend fun getZoom(): TS004Response<ZoomBean>? =
         withContext(Dispatchers.IO) {
@@ -527,7 +529,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取recordingstate
+     * Get/Retrieverecordingstate
      */
     suspend fun getRecordStatus(): TS004Response<RecordStatusBean>? =
         withContext(Dispatchers.IO) {
@@ -539,7 +541,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取storage分区info
+     * Get/Retrievestorage分区info
      */
     suspend fun getFreeSpace(): FreeSpaceBean? =
         withContext(Dispatchers.IO) {
@@ -551,7 +553,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取storage分区info
+     * Get/Retrievestorage分区info
      */
     suspend fun getFormatStorage(): Boolean =
         withContext(Dispatchers.IO) {
@@ -563,7 +565,7 @@ object TS004Repository {
         }
 
     /**
-     * 恢复出厂settings
+     * Restore出厂settings
      */
     suspend fun getResetAll(): Boolean =
         withContext(Dispatchers.IO) {
@@ -577,7 +579,7 @@ object TS004Repository {
 
     /**
      * settings超分
-     * @param state 0-关闭 1-开启
+     * @param state 0-Close 1-开启
      */
     suspend fun setTISR(state: Int): Boolean =
         withContext(Dispatchers.IO) {
@@ -591,7 +593,7 @@ object TS004Repository {
         }
 
     /**
-     * 获取超分state
+     * Get/Retrieve超分state
      */
     suspend fun getTISR(): TS004Response<TISRBean>? =
         withContext(Dispatchers.IO) {

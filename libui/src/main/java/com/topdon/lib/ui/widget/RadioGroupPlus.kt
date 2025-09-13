@@ -43,12 +43,16 @@ import androidx.annotation.IdRes
  *
  * @see RadioButton
  */
-/**
- * RadioGroupPlus class
- */
+
 /**
  * Custom Radio group plus view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * RadioGroupPlus manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class RadioGroupPlus : LinearLayout {
     /**
@@ -95,6 +99,9 @@ class RadioGroupPlus : LinearLayout {
         init()
     }
 
+    /**
+     * Initializes the component with default configuration.
+     */
     private fun init() {
         mChildOnCheckedChangeListener = CheckedStateTracker()
         mPassThroughListener = PassThroughHierarchyChangeListener()
@@ -268,12 +275,16 @@ class RadioGroupPlus : LinearLayout {
      * [LinearLayout Attributes][com.android.internal.R.styleable.LinearLayout_Layout]
      * for a list of all child view attributes that this class supports.
      */
-    /**
-     * LayoutParams class
-     */
+    
 /**
  * Custom Layout params view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * LayoutParams manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
     class LayoutParams : LinearLayout.LayoutParams {
         /**
@@ -337,12 +348,16 @@ class RadioGroupPlus : LinearLayout {
      * Interface definition for a callback to be invoked when the checked
      * radio button changed in this group.
      */
-    /**
-     * OnCheckedChangeListener class
-     */
+    
 /**
  * Custom On checked change listener view for thermal imaging display.
  * Provides specialized rendering and interaction capabilities.
+ */
+/**
+ * OnCheckedChangeListener manages camera operations and image capture functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
     interface OnCheckedChangeListener {
         /**
@@ -388,6 +403,9 @@ class RadioGroupPlus : LinearLayout {
         OnHierarchyChangeListener {
         var mOnHierarchyChangeListener: OnHierarchyChangeListener? = null
 
+    /**
+     * Executes traversetree functionality.
+     */
         fun traverseTree(view: View) {
             if (view is RadioButton) {
                 var id = view.getId()

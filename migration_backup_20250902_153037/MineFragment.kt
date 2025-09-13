@@ -67,7 +67,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class MineFragment : BaseFragment(), View.OnClickListener {
     /**
-     * onResume() 阶段是否需要refresh登录state相关 UI.
+     * onResume() 阶段是否需要refreshLoginstate相关 UI.
      */
     private var isNeedRefreshLogin = false
 
@@ -96,7 +96,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    // 要是当前已connection TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+                    // 要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(false)
                     }
@@ -205,7 +205,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             setting_item_language -> { // 语言
                 languagePickResult.launch(Intent(requireContext(), LanguageActivity::class.java))
             }
-            setting_item_clear -> { // 清除cache，实际已隐藏
+            setting_item_clear -> { // Clearcache，实际已Hide
                 clearCache()
             }
             drag_customer_view -> { // 客服
@@ -222,14 +222,14 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
     private fun loginAction() {
         isNeedRefreshLogin = true
-        // activityLogin()回调不可靠，但必然触发onResume()
+        // activityLogin()Callback不可靠，但必然触发onResume()
         val bgBitmap = BitmapFactory.decodeResource(resources, R.mipmap.bg_login)
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
 
     private fun checkLoginResult() {
         if (LMS.getInstance().isLogin) {
-            // 登录success
+            // Loginsuccess
             LMS.getInstance().getUserInfo { userinfo: CommonBean ->
                 try {
                     val json = userinfo.data
@@ -246,14 +246,14 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     // updateui
                     changeLoginStyle()
                 } catch (e: Exception) {
-                    XLog.e(" 登录exception: ${e.message}")
+                    XLog.e(" Loginexception: ${e.message}")
                 }
             }
         } else {
-            // 登录failed
-            XLog.e(" 登录failed")
+            // Loginfailed
+            XLog.e(" Loginfailed")
             changeLoginStyle()
-            setting_user_img_night.setImageResource(R.mipmap.ic_default_user_head) // 恢复默认头像
+            setting_user_img_night.setImageResource(R.mipmap.ic_default_user_head) // Restore默认头像
         }
     }
 
@@ -306,12 +306,12 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             setting_user_text.setCompoundDrawables(null, null, drawable, null)
             setting_user_lay.visibility = View.GONE
             tv_email.text = ""
-            setting_user_img_night.setImageResource(R.mipmap.ic_default_user_head) // 恢复默认头像
+            setting_user_img_night.setImageResource(R.mipmap.ic_default_user_head) // Restore默认头像
         }
     }
 
     /**
-     * 清除cache
+     * Clearcache
      */
     private fun clearCache() {
         lifecycleScope.launch {
@@ -321,7 +321,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     AppDatabase.getInstance().thermalDao().deleteByUserId(SharedManager.getUserId())
                     CleanUtils.cleanExternalCache()
                 } catch (e: Exception) {
-                    XLog.w("清除cacheexception: ${e.message}")
+                    XLog.w("Clearcacheexception: ${e.message}")
                 }
                 delay(1000)
             }

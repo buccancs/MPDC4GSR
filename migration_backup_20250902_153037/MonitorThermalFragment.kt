@@ -303,7 +303,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     }
 
     /**
-     * temperature显示
+     * temperatureShow/Display
      */
     fun onTempBtnClick() {
         if (mGuideInterface == null) {
@@ -405,7 +405,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                 onTempBtnClick()
             }
             2006 -> {
-                // 清除还原
+                // Clear还原
                 clearFence()
             }
             in 3000..3010 -> {
@@ -417,11 +417,11 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                 full()
             }
             10001 -> {
-                // start记录
+                // startRecord
                 recordThermal()
             }
             10003 -> {
-                // stop记录
+                // stopRecord
                 isRecord = false
             }
         }
@@ -472,7 +472,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         type = "fence"
     }
 
-    // 显示pointlinearea布局
+    // Show/Displaypointlinearea布局
     private fun showFence(index: Int) {
         if (fenceFlag.getIndex(index) == 0) {
             fenceFlag = 1.shl(4 * (index - 1)) // settings001 or 010 or 100
@@ -495,7 +495,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                     startPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-                    // 获取point
+                    // Get/Retrievepoint
                     val activity: MonitorActivity = requireActivity() as MonitorActivity
                     selectIndex.clear()
                     selectIndex =
@@ -510,7 +510,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-                    // 获取line
+                    // Get/Retrieveline
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
                             .getLineIndex(startPoint, endPoint)
@@ -525,7 +525,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-                    // 获取area
+                    // Get/Retrievearea
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
                             .getAreaIndex(startPoint, endPoint)
@@ -555,7 +555,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     private fun full() {
         rotateType =
             if (rotateType == 0) {
-                Log.w("123", "横屏显示")
+                Log.w("123", "横屏Show/Display")
                 1
             } else {
                 0
@@ -602,7 +602,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                 delay(timeMillis)
                 time++
             }
-            Log.w("123", "stop记录, data量:$time")
+            Log.w("123", "stopRecord, data量:$time")
         }
     }
 }

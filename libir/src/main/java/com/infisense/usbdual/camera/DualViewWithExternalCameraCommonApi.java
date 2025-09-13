@@ -30,7 +30,6 @@ import java.util.Locale;
 
 import static com.infisense.usbdual.camera.IFrameData.FRAME_LEN;
 
-
 /**
  * Created by fengjibo on 2023/9/20.
  */
@@ -85,7 +84,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
     private final byte[] amplifyIRRotateArray;//单infrared的data 256 * MULTIPLE * 192 * MULTIPLE
 
     public static final int MULTIPLE = 2;
-
 
     public boolean isOpenAmplify() {
         return isOpenAmplify;
@@ -185,7 +183,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         mSurfaceNativeWindow = new SurfaceNativeWindow();
 
         /**
-         * 同时打开防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
+         * 同时Open防灼烧和自动gainswitch后，如果想modify防灼烧和自动gainswitch的触发优先级，可以通过modify下area的触发parameterimplementation
          */
         // 自动gainswitchparameterauto gain switch parameter
         gain_switch_param.above_pixel_prop = 0.1f;    //用于high -> low gain,device像素总area积的百分比
@@ -220,9 +218,9 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
              * tempData 原始temperaturedata，formatY16，长度irWidth * irHeight * 2
              * remapTempData fusionimage尺寸一致的temperaturedata formatYUV422 dualwidth * dualHeight * 2
              * vlData 原始visible lightdata formatRGB24 vlWidth * vlHeight * 3
-             * vlARGBData fusionimage尺寸一致的visible lightdata dualwidth * dualHeight * 4（仅picture-in-picturemode回调data）
+             * vlARGBData fusionimage尺寸一致的visible lightdata dualwidth * dualHeight * 4（仅picture-in-picturemodeCallbackdata）
              * picture-in-picturemodeScreenFusion:mixData 为单infrareddata，formatARGB，长度dualwidth * dualHeight * 4
-             * fusionmode为IROnlyNoFusion, 只会返回irData和tempData,data位置不变
+             * fusionmode为IROnlyNoFusion, 只会ReturnirData和tempData,data位置不变
              */
             /**
              * frame 所有data集合 (GPU)
@@ -235,7 +233,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
              * remapTempData fusionimage尺寸一致的temperaturedata formatYUV422 dualwidth * dualHeight * 2
              * vlData 原始visible lightdata formatARGB vlWidth * vlHeight * 4
              * picture-in-picturemodeScreenFusion:mixData 为单infrareddata，formatARGB，长度dualwidth * dualHeight * 4
-             * fusionmode为IROnlyNoFusion, 只会返回irData和tempData,data位置不变
+             * fusionmode为IROnlyNoFusion, 只会ReturnirData和tempData,data位置不变
              */
             @Override
             public void onFrame(byte[] frame) {
@@ -269,7 +267,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                 System.arraycopy(frame, fusionLength + irSize * 4 + Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 2, vlData,
                         0, vlSize);
                 System.arraycopy(frame, 0, frameData, 0, FRAME_LEN); //无损data
-                //合并原始infrareddata和原始temperaturedata
+                //Merge原始infrareddata和原始temperaturedata
                 System.arraycopy(frame, dualCameraWidth*dualCameraHeight*4, frameIrAndTempData, 0, frameIrAndTempData.length);
 
                 //picture-in-picturemodeScreenFusion:mixData 为单infrareddata，formatARGB，长度dualwidth * dualHeight * 4
@@ -349,7 +347,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 //                    }).start();
 //
 //                }
-                //请不要旋转image测试
+                //请不要旋转imageTest
                 // 自动gainswitch，不effective的话请您的device是否支持自动gainswitch
                 if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
                     System.arraycopy(frame, fusionLength + irSize * 2, normalTempData, 0, irSize * 2);
@@ -395,9 +393,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         auto_gain_switch_info.cur_detected_high_cnt = 0;
     }
 
-    /**
-     *
-     */
+    
     public void startPreview() {
         /**
          * setIrDataPreHandleEnable 开启后
@@ -417,9 +413,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         return dualUVCCamera;
     }
 
-    /**
-     *
-     */
+    
     public void stopPreview() {
         dualUVCCamera.setFrameCallback(null);
         dualUVCCamera.onStopPreview();

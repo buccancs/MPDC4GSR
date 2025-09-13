@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-
 import com.topdon.ble.callback.WriteCharacteristicCallback;
 
 /**

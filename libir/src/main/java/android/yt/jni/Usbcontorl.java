@@ -21,7 +21,7 @@ public class Usbcontorl extends Usbjni {
                 String tempString = null;
                 // 一次读入一行，直到读入null为fileend
                 while ((tempString = reader.readLine()) != null) {
-                    // 显示行号
+                    // Show/Display行号
                     if (tempString.contains("libusb3803_hub.so")) {
                         isload = true;
                         break;

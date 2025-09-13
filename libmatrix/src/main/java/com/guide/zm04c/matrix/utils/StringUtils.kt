@@ -48,7 +48,7 @@ class StringUtils {
         }
 
         /**
-         * 根据字体大小返回字符串需要的宽高数组，int[]{宽,高}
+         * 根据字体大小Return字符串需要的宽高数组，int[]{宽,高}
          *
          * @param str
          * @param textSizePxVal

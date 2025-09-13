@@ -23,8 +23,8 @@ data class ImageTempBean(
  */
     @Parcelize
     data class TempBean(
-        val max: String, // 不带符号maximum温，单位跟随用户configuration
-        val min: String? = null, // 不带符号minimum温，单位跟随用户configuration
-        val average: String? = null, // 不带符号average温，单位跟随用户configuration
+        val max: String, // 不带符号maximum温，单位跟随Userconfiguration
+        val min: String? = null, // 不带符号minimum温，单位跟随Userconfiguration
+        val average: String? = null, // 不带符号average温，单位跟随Userconfiguration
     ) : Parcelable
 }

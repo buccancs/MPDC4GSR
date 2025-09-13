@@ -70,8 +70,6 @@ public class OpencvTools {
         System.loadLibrary("opencv_java4");
     }
 
-
-
     private static Mat resultMat = new Mat();
     public static byte[] supImageMix(byte[] imageARGB, int width, int height, byte[] resulARGB) {
         // Step 1: Convert byte[] to Mat
@@ -100,7 +98,6 @@ public class OpencvTools {
         return resulARGB;
     }
 
-
     /**
      * 效果更好的超分，但是此function耗时过长，应用于capture
      * @param inBitmap
@@ -120,7 +117,6 @@ public class OpencvTools {
         Log.e("4倍超分模型：", String.valueOf((System.currentTimeMillis() - startTime)));
         return SupRUtils.INSTANCE.byteArrayToBitmap(byteArray);
     }
-
 
     public static byte[] supImageFourExToByte(byte[] imgByte) {
         long startTime = System.currentTimeMillis();
@@ -163,7 +159,7 @@ public class OpencvTools {
         Mat srcMat = new Mat();
         Utils.bitmapToMat(outputBitmap, srcMat);
 
-        // 在这里可以使用 OpenCV 进行进一步processing，例如缩放
+        // 在这里可以使用 OpenCV 进行进一步processing，例如Scale
         Mat dstMat = new Mat();
         Imgproc.resize(srcMat, dstMat, new org.opencv.core.Size(srcMat.cols() * 4, srcMat.rows() * 4));
 
@@ -178,7 +174,6 @@ public class OpencvTools {
 
         return finalBitmap;
     }
-
 
     public static Bitmap supImageFourExToBitmap(Bitmap inBitmap) {
         long startTime = System.currentTimeMillis();
@@ -200,7 +195,7 @@ public class OpencvTools {
         // 将 Bitmap conversion为 Mat
         Mat srcMat = new Mat();
         Utils.bitmapToMat(outputBitmap, srcMat);
-        // 在这里可以使用 OpenCV 进行进一步processing，例如缩放
+        // 在这里可以使用 OpenCV 进行进一步processing，例如Scale
         Mat dstMat = new Mat();
         Imgproc.resize(srcMat, dstMat, new org.opencv.core.Size(srcMat.cols() * 4, srcMat.rows() * 4));
         // 将processing后的 Mat conversion回 Bitmap
@@ -212,7 +207,6 @@ public class OpencvTools {
         Log.e("4倍超分模型：", String.valueOf((System.currentTimeMillis() - startTime)));
         return finalBitmap;
     }
-
 
     public static byte[] supImage(byte[] imageARGB, int width, int height, byte[] resulARGB){
         // Step 1: 将 byte[] conversion成 Mat 对象
@@ -248,15 +242,13 @@ public class OpencvTools {
         for (int i = 0; i < singleLength; i++) {
             // 这里假定我们只将原本一个字节的datacopy到新的两个字节中的第一个
             // 这种情况下第二个字节可能是保留为0，用于表示较大的color空间或者进行format对齐。
-            // 您可能需要根据具体的imagedataformat来调整这部分代码
+            // 您可能需要根据具体的imagedataformat来Adjust这部分代码
             doubleByteImage[2 * i] = singleByteImage[i];
             // 如果需要其它processing (例如settings第二个字节的值) 在这里操作
             // doubleByteImage[2 * i + 1] = <some value>;
         }
         return doubleByteImage;
     }
-
-
 
     /**
      * temperature转成开尔文
@@ -274,7 +266,7 @@ public class OpencvTools {
             if (maxValue < temp[i]){
                 maxValue = temp[i];
             }
-            // 将摄氏temperatureconversion回开尔文，并逆转之前的缩放操作
+            // 将摄氏temperatureconversion回开尔文，并逆转之前的Scale操作
             float tempInKelvin = temp[i] + 273.15f;
             float originalValue = tempInKelvin * 64;
             // 将浮point数conversion为整数
@@ -324,8 +316,6 @@ public class OpencvTools {
         return map;
     }
 
-
-
     public static byte[] matToByteArray(Mat mat) {
         int rows = mat.rows();
         int cols = mat.cols();
@@ -359,8 +349,8 @@ public class OpencvTools {
         normalize(im, im, 0, 255, NORM_MINMAX);
 //        cvtColor(im, im, CV_8UC1);
         Mat colorMat = generateColorBar(colorList, maxTemp,minTemp,customMaxTemp,customMinTemp,isGrayUse);
-//        Log.e("测试mat小值",colorMat.at(double[].class,0,0)+"");
-//        Log.e("测试mat大值",colorMat.at(double[].class,255,0)+"");
+//        Log.e("Testmat小值",colorMat.at(double[].class,0,0)+"");
+//        Log.e("Testmat大值",colorMat.at(double[].class,255,0)+"");
         if (colorMat!=null){
             applyColorMap(im, im, colorMat);
             Imgproc.cvtColor(im, im, Imgproc.COLOR_BGR2RGBA);
@@ -453,7 +443,6 @@ public class OpencvTools {
         // waitKey(0);
         return im;
     }
-
 
     private static Mat draw_high_temp_edge_argb_pse(byte[] image, byte[] temperature, int cols, int rows, double high_t, int color_h, int type) throws IOException {
         double[] temp = new double[cols * rows];
@@ -765,7 +754,6 @@ public class OpencvTools {
 
     }
 
-
     /**
      * @param image   原imageYUVformat
      * @param image_w image宽度
@@ -823,9 +811,6 @@ public class OpencvTools {
         Utils.matToBitmap(mat, dstBitmap);
         return dstBitmap;
     }
-
-
-
 
     public static Mat calcHU(Size size,double t2){
         Mat hu = new Mat(size,CV_32FC1);
@@ -921,7 +906,6 @@ public class OpencvTools {
         Core.idft(image_padd_2c,image_padd_2c,DFT_SCALE);
         System.out.println(image_padd_2c.channels());
 
-
         Core.exp(image_padd_2c,image_padd_2c);
         Core.subtract(image_padd_2c,new Scalar(1),image_padd_2c);
         List<Mat> image_padd_s = new ArrayList<Mat>();
@@ -955,14 +939,13 @@ public class OpencvTools {
 
     }
 
-
     /**
      * 支持多color的pseudo color条
      * @param colorList : color条
      * @param maxTemp : 实际temperature最大值
      * @param minTemp ： 实际temperature最小值
-     * @param customMaxTemp : 用户settings的最大值
-     * @param customMinTemp : 用户settings的最小值
+     * @param customMaxTemp : Usersettings的最大值
+     * @param customMinTemp : Usersettings的最小值
      * @param isGrayUse : 是否是grayscale渐变
      * @return
      */
@@ -996,7 +979,7 @@ public class OpencvTools {
                 colors[0] = r;
                 colors[1] = g;
                 colors[2] = b;
-                Log.w("测试","低于最小值");
+                Log.w("Test","低于最小值");
             }else if (maxGrey != -1 && ratio > maxGrey){
                 if (isGrayUse){
                     //超出最大值
@@ -1014,9 +997,9 @@ public class OpencvTools {
                 colors[0] = r;
                 colors[1] = g;
                 colors[2] = b;
-                Log.w("测试","大于于最大值");
+                Log.w("Test","大于于最大值");
             }else if (maxTemp >= customMaxTemp && minTemp <= customMinTemp){
-                Log.w("测试","实际temperature大于并且小于自定义的最high/low temperature");
+                Log.w("Test","实际temperature大于并且小于自定义的最high/low temperature");
                 //实际temperature大于并且小于自定义的最high/low temperature
                colors = capColor(colorList,maxTemp,minTemp,customMaxTemp,customMinTemp,isGrayUse,ratio);
             }else if (customMinTemp > maxTemp){
@@ -1050,14 +1033,14 @@ public class OpencvTools {
                 colors = capColor(tmpColor,
                         maxTemp,minTemp,maxTemp,minTemp,isGrayUse,ratio);
             }
-            Log.w("测试","编号值"+i+":"+colors[0]+"--"+ colors[1]+"--"+colors[2]+"//"+maxTemp+"--"+minTemp+"-"+customMaxTemp);
+            Log.w("Test","编号值"+i+":"+colors[0]+"--"+ colors[1]+"--"+colors[2]+"//"+maxTemp+"--"+minTemp+"-"+customMaxTemp);
             colorBar.put(i, 0, colors[2], colors[1], colors[0]);
         }
         return colorBar;
     }
 
     /**
-     * 获取某个temperature的梯度color值
+     * Get/Retrieve某个temperature的梯度color值
      * @param colorList
      * @param customMaxTemp
      * @param customMinTemp
@@ -1091,7 +1074,7 @@ public class OpencvTools {
        return nowColorList;
     }
     /**
-     * 获取某个temperature的梯度color值
+     * Get/Retrieve某个temperature的梯度color值
      * @param colorList
      * @param customMaxTemp
      * @param customMinTemp
@@ -1465,8 +1448,6 @@ public class OpencvTools {
         return result;
     }
 
-
-
     // 自定义比较器，用于比较双精度浮point数
     static class CustomComparator implements Comparator<Float> {
         @Override
@@ -1482,8 +1463,6 @@ public class OpencvTools {
         }
     }
 
-
-
     private static double calculateHistogram(Mat image1, Mat image2) {
         Mat hist1 = calculateHistogram(image1);
         Mat hist2 = calculateHistogram(image2);
@@ -1491,7 +1470,6 @@ public class OpencvTools {
         final double similarity = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL);
         return similarity;
     }
-
 
     private static double calculateMSE(Mat image1, Mat image2) {
         Mat diff = new Mat();

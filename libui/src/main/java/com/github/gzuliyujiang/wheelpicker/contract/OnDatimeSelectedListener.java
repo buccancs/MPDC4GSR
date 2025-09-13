@@ -22,7 +22,7 @@ package com.github.gzuliyujiang.wheelpicker.contract;
 public interface OnDatimeSelectedListener {
 
     /**
-     * 日期时间selection回调
+     * 日期时间selectionCallback
      *
      * @param year   年
      * @param month  月

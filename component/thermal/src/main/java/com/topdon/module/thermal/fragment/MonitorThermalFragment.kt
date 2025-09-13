@@ -407,7 +407,7 @@ addtemperature
                 onTempBtnClick()
             }
             2006 -> {
-清除还原
+Clear还原
                 clearFence()
             }
             in 3000..3010 -> {
@@ -419,11 +419,11 @@ setpseudo-color
                 full()
             }
             10001 -> {
-start记录
+startRecord
                 recordThermal()
             }
             10003 -> {
-stop记录
+stopRecord
                 isRecord = false
             }
         }
@@ -560,7 +560,7 @@ getarea
     private fun full() {
         rotateType =
             if (rotateType == 0) {
-                Log.w("123", "横屏显示")
+                Log.w("123", "横屏Show/Display")
                 1
             } else {
                 0
@@ -607,7 +607,7 @@ getarea
                 delay(timeMillis)
                 time++
             }
-            Log.w("123", "stop记录, data量:$time")
+            Log.w("123", "stopRecord, data量:$time")
         }
     }
 }

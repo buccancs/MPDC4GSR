@@ -51,7 +51,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     private var snStr = ""
 
     /**
-     * 使用 DualUVCCamera 进行画area预览、获取回调data的关键工具class.
+     * 使用 DualUVCCamera 进行画area预览、Get/RetrieveCallbackdata的关键工具class.
      *
      * 注意：这个命名有问题，虽然叫 View，但却不是 View!
      */
@@ -102,12 +102,12 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     private var vlUVCCamera: IRUVCDual? = null
 
     /**
-     * 子classimplementation该method，返回用于渲染画area的 SurfaceView
+     * 子classimplementation该method，Return用于渲染画area的 SurfaceView
      */
     abstract fun getSurfaceView(): SurfaceView
 
     /**
-     * 子classimplementation该method，返回用于显示temperature图层的 TemperatureDualView
+     * 子classimplementation该method，Return用于Show/Displaytemperature图层的 TemperatureDualView
      */
     abstract fun getTemperatureDualView(): TemperatureView
 
@@ -125,9 +125,9 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
         super.initView()
         if (isDualIR())
             {
-                // defaultDataFlowMode 是 image+temperature，故而 SDK 返回的sensor原始宽度为 256x384
+                // defaultDataFlowMode 是 image+temperature，故而 SDK Return的sensor原始宽度为 256x384
                 // 那么一帧image、一帧temperature的尺寸就是 256x(384/2) = 256x192
-                // 由于竖屏显示需要旋转，那么最终出图尺寸就是 192x256
+                // 由于竖屏Show/Display需要旋转，那么最终出图尺寸就是 192x256
                 imageWidth = 192
                 imageHeight = 256
                 USBMonitorManager.getInstance().init(irPid, isUseIRISP, defaultDataFlowMode)
@@ -157,11 +157,11 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                 return
             }
         /**
-         * 打开infraredmodule
-         * 需要确认好module的pid和分辨率
+         * Openinfraredmodule
+         * 需要Confirm好module的pid和分辨率
          */
         USBMonitorManager.getInstance().registerUSB()
-        // 在USBMonitorManager onConnect回调中打开visible lightmodule
+        // 在USBMonitorManager onConnectCallback中Openvisible lightmodule
         getTemperatureDualView().setUseIRISP(isUseIRISP)
         if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
             getTemperatureDualView().setImageSize(Const.IR_HEIGHT, Const.IR_WIDTH, null)
@@ -185,7 +185,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                     // 避免冲突，需要延时
                     /**
                      * 开visible lightcamera
-                     * 需要确认好module的pid和分辨率
+                     * 需要Confirm好module的pid和分辨率
                      */
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)

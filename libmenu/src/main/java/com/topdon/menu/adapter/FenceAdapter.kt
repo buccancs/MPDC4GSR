@@ -57,7 +57,7 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
         dataList.add(Data(R.string.thermal_line, MenuR.drawable.selector_menu2_fence_line, FenceType.LINE))
         dataList.add(Data(R.string.thermal_rect, MenuR.drawable.selector_menu2_fence_rect, FenceType.RECT))
         dataList.add(Data(R.string.thermal_full_rect, MenuR.drawable.selector_menu2_fence_full, FenceType.FULL))
-        if (menuType != MenuType.GALLERY_EDIT) { // 2D编辑的menu没有趋势图
+        if (menuType != MenuType.GALLERY_EDIT) { 
             dataList.add(Data(R.string.thermal_trend, MenuR.drawable.selector_menu2_fence_trend, FenceType.TREND))
         }
         dataList.add(Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, FenceType.DEL))

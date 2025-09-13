@@ -206,7 +206,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 显示操作指引弹框.
+     * Show/Display操作指引弹框.
      */
     private fun showGuideDialog() {
         if (SharedManager.homeGuideStep == 0) { // 已看过或不再tip
@@ -313,7 +313,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
     }
 
     /**
-     * 动态申请权限
+     * 动态申请Permission
      */
     private fun initStoragePermission(permissionList: List<String>) {
         if (PermissionUtils.isVisualUser())
@@ -339,7 +339,7 @@ class IRMainActivity : BaseActivity(), View.OnClickListener {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-                            // 拒绝授权并且不再提醒
+                            // 拒绝Authorization并且不再提醒
                             TipDialog.Builder(this@IRMainActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(getString(R.string.app_album_content))

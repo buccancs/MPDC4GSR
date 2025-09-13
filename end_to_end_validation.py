@@ -11,21 +11,14 @@ This comprehensive validation system tests the complete PC-to-phone control pipe
 """
 
 import asyncio
-from typing import Any
 import json
-from typing import Any
 import logging
-from typing import Any
 import socket
-from typing import Any
 import ssl
-from typing import Any
 import sys
-from typing import Any
 import time
-from typing import Any
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 # Configure logging
 logging.basicConfig(
@@ -401,7 +394,7 @@ class PCToPhoneValidator:
                 "📋 Next steps:",
                 "   1. Test with physical Android device on same network",
                 "   2. Verify firewall settings allow TCP connections on port 8080",
-                "   3. Test discovery functionality with mDNS/Zeroconf",
+                "   3. Test discovery functionality with mDNS/Zerocon",
                 "   4. Validate recording functionality end-to-end",
             ]
         )

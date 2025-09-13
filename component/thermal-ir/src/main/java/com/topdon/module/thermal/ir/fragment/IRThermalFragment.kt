@@ -83,7 +83,7 @@ true-TC007 false-其他插件式device
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-要是当前已connection TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+要是当前已connection TS004、TC007，切到流量上，不然LoginRegister意见反馈那些没网
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     } else
@@ -168,7 +168,7 @@ true-TC007 false-其他插件式device
             }
             tvMainEnter -> {
                 if (!DeviceTools.isConnect()) {
-没有接入device不需要tip，有系统授权tip框
+没有接入device不需要tip，有系统Authorizationtip框
                     if (DeviceTools.findUsbDevice() == null) {
                         activity?.let {
                             TipDialog.Builder(it)
@@ -199,7 +199,7 @@ true-TC007 false-其他插件式device
                                         doNotAskAgain: Boolean,
                                     ) {
                                         if (doNotAskAgain) {
-拒绝授权并且不再提醒
+拒绝Authorization并且不再提醒
                                             context?.let {
                                                 TipDialog.Builder(it)
                                                     .setTitleMessage(getString(R.string.app_tip))
@@ -305,7 +305,7 @@ targetSdk高于27且android os为10
     }
 
     /**
-动态申请权限
+动态申请Permission
      */
     private fun initStoragePermission(permissionList: List<String>) {
     }

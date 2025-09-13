@@ -3,7 +3,7 @@ package com.topdon.lib.core.repository
 /**
  * websocket data推送响应.
  * @param cmd 推送指令
- * @param data 推送实体class，视不同指令返回对象不同
+ * @param data 推送实体class，视不同指令Return对象不同
  * @param id 推送id
  */
 data class WsResponse<T>(
@@ -24,7 +24,7 @@ data class WsPseudoColor(
  * websocket - 测距
  */
 data class WsRange(
-    val state: Int?, // 0-关闭，1-开启
+    val state: Int?, // 0-Close，1-开启
 )
 
 /**
@@ -38,13 +38,13 @@ data class WsLight(
  * websocket - 画中画
  */
 data class WsPip(
-    val enable: Int?, // 0-关闭，1-开启
+    val enable: Int?, // 0-Close，1-开启
 )
 
 /**
  * websocket - 放大倍数
  */
 data class WsZoom(
-    val enable: Boolean?, // 使能缩放标识
-    val factor: Int?, // 缩放比例
+    val enable: Boolean?, 
+    val factor: Int?, 
 )

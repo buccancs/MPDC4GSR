@@ -18,7 +18,13 @@ import com.infisense.usbir.utils.TargetUtils
 import com.topdon.lib.core.bean.ObserveBean
 
 /**
- * 缩放view基class - Optimized findViewById usage
+ * Scaleview基class - Optimized findViewById usage
+ */
+/**
+ * ZoomCaliperView implements custom user interface component functionality.
+ *
+ * @author IRCamera Development Team
+ * @since 1.0
  */
 class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private var centerX: Float = Float.MAX_VALUE
@@ -27,7 +33,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     private var isReverse: Boolean = false
     private lateinit var mTextureView: View
     private var canScale = false
-    private var def_caliper = 180f // 2米是出厂measurementdatastandard
+    private var def_caliper = 180f 
     var magnifier: Magnifier? = null
     var textureMagnifier: Magnifier? = null
     var m: Float = 0.0f
@@ -46,6 +52,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         defStyleAttr,
     )
 
+    /**
+     * Initializes the component with default configuration.
+     */
     private fun initView() {
         inflate(context, R.layout.zoom_bb, this)
         // Cache view reference instead of repeated findViewById calls
@@ -97,7 +106,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         val layoutParams = mTextureView.layoutParams
         layoutParams.width = showBitmapHeightWidth.toInt()
         layoutParams.height = showBitmapHeight.toInt()
-//        Log.e("测试","旋转后的宽高：target"+showBitmapHeight+"///"+imageHeight+"---")
+//        Log.e("Test","旋转后的宽高：target"+showBitmapHeight+"///"+imageHeight+"---")
         mTextureView.layoutParams = layoutParams
         (mTextureView as ImageView).setImageBitmap(originalBitmap)
     }
@@ -106,7 +115,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         super.onDetachedFromWindow()
     }
 
-    private var startX = 0f // 记录落point到控件的距离
+    private var startX = 0f 
     private var startY = 0f
     private var moveX = 0f
     private var moveY = 0f
@@ -114,10 +123,10 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     private var parentViewH = 0f
     private var isScale = false
     private var scale = 1f
-    private var scaleW = 0f // 单边缩放长度
+    private var scaleW = 0f 
     private var scaleH = 0f
 
-    // 原始image
+    
     private lateinit var originalBitmap: Bitmap
     private var imageWidth = 0
     private var imageHeight = 0
@@ -156,10 +165,10 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
             MotionEvent.ACTION_MOVE -> {
                 if (isCheckChildView)
                     {
-                        // 滑动
+                        
                         moveX = event.x - startX
                         moveY = event.y - startY
-                        // 越界归位
+                        
                         if (m < 100f && m >= 50f)
                             {
                                 contentWith = (mTextureView.measuredWidth / 2).toInt()
@@ -252,6 +261,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         super.onAttachedToWindow()
     }
 
+    /**
+     * Handles touch gesture events.
+     */
     private fun isTouchPointInView(
         targetView: View?,
         xAxis: Int,
@@ -270,7 +282,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     }
 
     override fun onScale(detector: ScaleGestureDetector): Boolean {
-        // 缩放
+        
         isScale = true
         detector?.let {
             val scaleFactor = it.scaleFactor - 1
@@ -297,6 +309,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         updateRotation()
     }
 
+    /**
+     * Updates the rotation with new data.
+     */
     private fun updateRotation()  {
         if (isReverse)
             {
@@ -307,6 +322,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
             }
     }
 
+    /**
+     * Callback method triggered when resumeview occurs.
+     */
     private fun onResumeView() {
     }
 
@@ -337,6 +355,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     private var curChooseMeasureMode: Int = ObserveBean.TYPE_MEASURE_PERSON
     private var curChooseTargetMode: Int = ObserveBean.TYPE_TARGET_HORIZONTAL
 
+    /**
+     * Updates the selectbitmap with new data.
+     */
     fun updateSelectBitmap(
         targetMeasureMode: Int,
         targetType: Int,
@@ -352,6 +373,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         updateTargetBitmap(targetMeasureMode, targetType, targetColorType, parentCameraView)
     }
 
+    /**
+     * Updates the targetbitmap with new data.
+     */
     fun updateTargetBitmap(
         targetMeasureMode: Int,
         targetType: Int,
@@ -363,7 +387,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         val targetIcon = TargetUtils.getSelectTargetDraw(targetMeasureMode, targetType, targetColorType)
         originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, targetIcon) as? BitmapDrawable)?.bitmap ?: return
         (mTextureView as ImageView).setImageBitmap(originalBitmap)
-//        Log.e("测试","旋转后的宽高updateSelectBitmap"+parentCameraView!!.width+"---"+parentCameraView!!.height)
+//        Log.e("Test","旋转后的宽高updateSelectBitmap"+parentCameraView!!.width+"---"+parentCameraView!!.height)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             magnifier?.dismiss()
             if (m >= 100f)
@@ -423,6 +447,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         }
     }
 
+    /**
+     * Executes hideview functionality.
+     */
     fun hideView()  {
         this.visibility = GONE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -430,6 +457,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         }
     }
 
+    /**
+     * Executes showview functionality.
+     */
     fun showView()  {
         this.visibility = VISIBLE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -437,6 +467,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         }
     }
 
+    /**
+     * Updates the magnifier with new data.
+     */
     fun updateMagnifier()  {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             magnifier?.update()
@@ -470,6 +503,9 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
             }
     }
 
+    /**
+     * Updates the center with new data.
+     */
     fun updateCenter()  {
         val parent = parent as ViewGroup
         centerX = parent.measuredWidth.toFloat() / 2

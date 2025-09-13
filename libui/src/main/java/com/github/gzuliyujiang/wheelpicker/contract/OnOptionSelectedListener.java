@@ -22,7 +22,7 @@ package com.github.gzuliyujiang.wheelpicker.contract;
 public interface OnOptionSelectedListener {
 
     /**
-     * 单项条目selection回调
+     * 单项条目selectionCallback
      *
      * @param position selected项的index
      * @param item     selected项的内容

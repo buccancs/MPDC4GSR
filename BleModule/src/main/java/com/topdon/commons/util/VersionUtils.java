@@ -13,7 +13,7 @@ import android.text.TextUtils;
 public class VersionUtils {
 
     /**
-     * 如果version1 大于 version2 返回true 否则返回fasle 支持 2.2 2.2.1 比较
+     * 如果version1 大于 version2 Returntrue 否则Returnfasle 支持 2.2 2.2.1 比较
      * 支持不同位数的比较  2.0.0.0.0.1  2.0 对比
      *
      * @param v1 versionservice器version " 1.1.2 "

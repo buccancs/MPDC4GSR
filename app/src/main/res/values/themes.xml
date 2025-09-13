@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Resource definitions - themes -->
 <resources>
 
     <style name="Blank" parent="Theme.AppCompat.Light.NoActionBar">

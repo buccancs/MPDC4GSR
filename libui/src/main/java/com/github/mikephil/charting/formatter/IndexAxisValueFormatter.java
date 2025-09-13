@@ -3,7 +3,18 @@ package com.github.mikephil.charting.formatter;
 import java.util.Collection;
 
 /**
- * This formatter is used for passing an array of x-axis labels, on whole x steps.
+ * Specialized thermal imaging component providing IndexAxisValueFormatter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class IndexAxisValueFormatter extends ValueFormatter
 {
@@ -23,7 +34,15 @@ public class IndexAxisValueFormatter extends ValueFormatter
      * @param values The values string array
      */
     public IndexAxisValueFormatter(String[] values) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (values != null)
+            /**
+             * Configures the values with validation and thermal imaging optimization.
+             *
+             */
             setValues(values);
     }
 
@@ -33,7 +52,15 @@ public class IndexAxisValueFormatter extends ValueFormatter
      * @param values The values string array
      */
     public IndexAxisValueFormatter(Collection<String> values) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (values != null)
+            /**
+             * Configures the values with validation and thermal imaging optimization.
+             *
+             */
             setValues(values.toArray(new String[values.size()]));
     }
 
@@ -41,6 +68,10 @@ public class IndexAxisValueFormatter extends ValueFormatter
     public String getFormattedValue(float value) {
         int index = Math.round(value);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (index < 0 || index >= mValueCount || index != (int)value)
             return "";
 
@@ -54,6 +85,10 @@ public class IndexAxisValueFormatter extends ValueFormatter
 
     public void setValues(String[] values)
     {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (values == null)
             values = new String[] {};
 

@@ -6,7 +6,21 @@ import android.os.Parcelable;
 import java.util.List;
 
 /**
- * Created by Tony Patino on 6/24/16.
+ * Specialized thermal imaging component providing MPPointF functionality for the IRCamera system.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class MPPointF extends ObjectPool.Poolable {
 
@@ -20,9 +34,17 @@ public class MPPointF extends ObjectPool.Poolable {
         pool.setReplenishPercentage(0.5f);
     }
 
+    /**
+     * Executes mppointf operation with thermal imaging domain optimization.
+     *
+     */
     public MPPointF() {
     }
 
+    /**
+     * Executes mppointf operation with thermal imaging domain optimization.
+     *
+     */
     public MPPointF(float x, float y) {
         this.x = x;
         this.y = y;

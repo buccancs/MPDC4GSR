@@ -1,7 +1,7 @@
-//package com.topdon.tc001.jni.algorithm.so;
+// Package com.topdon.tc001.jni.algorithm.so;
 //
-//import androidx.annotation.NonNull;
+// Import androidx.annotation.NonNull;
 //
-//public class algorithm {
-//    public static native byte[] AdjustPhoto(@NonNull String strFilePath, byte[] bytes);
-//}
+// Public class algorithm {
+// Public static native byte[] AdjustPhoto(@NonNull String strFilePath, byte[] bytes);
+// }

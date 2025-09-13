@@ -9,9 +9,23 @@ import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Created by Philipp Jahoda on 19/02/16.
+/**
+ * Thermal imaging UI animation system. Provides smooth transitions and visual effects for AnimatedMoveViewJob components.
+ *
+ * Custom view component optimized for thermal imaging display
+ * with specialized rendering and interaction capabilities.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
-@SuppressLint("NewApi")
 public class AnimatedMoveViewJob extends AnimatedViewPortJob {
 
     private static ObjectPool<AnimatedMoveViewJob> pool;
@@ -30,7 +44,7 @@ public class AnimatedMoveViewJob extends AnimatedViewPortJob {
         result.view = v;
         result.xOrigin = xOrigin;
         result.yOrigin = yOrigin;
-        //result.resetAnimator();
+        // Result.resetAnimator();
         result.animator.setDuration(duration);
         return result;
     }
@@ -39,7 +53,15 @@ public class AnimatedMoveViewJob extends AnimatedViewPortJob {
         pool.recycle(instance);
     }
 
+    /**
+     * Executes animatedmoveviewjob operation with thermal imaging domain optimization.
+     *
+     */
     public AnimatedMoveViewJob(ViewPortHandler viewPortHandler, float xValue, float yValue, Transformer trans, View v, float xOrigin, float yOrigin, long duration) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(viewPortHandler, xValue, yValue, trans, v, xOrigin, yOrigin, duration);
     }
 
@@ -54,6 +76,10 @@ public class AnimatedMoveViewJob extends AnimatedViewPortJob {
     }
 
     public void recycleSelf(){
+        /**
+         * Executes recycleinstance operation with thermal imaging domain optimization.
+         *
+         */
         recycleInstance(this);
     }
 

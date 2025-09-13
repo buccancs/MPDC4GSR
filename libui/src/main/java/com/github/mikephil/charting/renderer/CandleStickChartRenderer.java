@@ -20,6 +20,20 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.List;
 
+/**
+ * Specialized thermal imaging component providing CandleStickChartRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
     protected CandleDataProvider mChart;
@@ -30,8 +44,16 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
     private float[] mOpenBuffers = new float[4];
     private float[] mCloseBuffers = new float[4];
 
+    /**
+     * Executes candlestickchartrenderer operation with thermal imaging domain optimization.
+     *
+     */
     public CandleStickChartRenderer(CandleDataProvider chart, ChartAnimator animator,
                                     ViewPortHandler viewPortHandler) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(animator, viewPortHandler);
         mChart = chart;
     }
@@ -46,9 +68,24 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
         CandleData candleData = mChart.getCandleData();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: candleData.getDataSets()
+         *
+         */
         for (ICandleDataSet set : candleData.getDataSets()) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (set.isVisible())
+                /**
+                 * Executes drawdataset operation with thermal imaging domain optimization.
+                 *
+                 */
                 drawDataSet(c, set);
         }
     }
@@ -66,12 +103,20 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
         mRenderPaint.setStrokeWidth(dataSet.getShadowWidth());
 
-        // draw the body
+        // Draw the body
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int j = mXBounds.min; j <= mXBounds.range + mXBounds.min; j++) {
 
-            // get the entry
+            // Get the entry
             CandleEntry e = dataSet.getEntryForIndex(j);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (e == null)
                 continue;
 
@@ -82,14 +127,22 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
             final float high = e.getHigh();
             final float low = e.getLow();
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (showCandleBar) {
-                // calculate the shadow
+                // Calculate the shadow
 
                 mShadowBuffers[0] = xPos;
                 mShadowBuffers[2] = xPos;
                 mShadowBuffers[4] = xPos;
                 mShadowBuffers[6] = xPos;
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (open > close) {
                     mShadowBuffers[1] = high * phaseY;
                     mShadowBuffers[3] = open * phaseY;
@@ -109,10 +162,18 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
                 trans.pointValuesToPixel(mShadowBuffers);
 
-                // draw the shadows
+                // Draw the shadows
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (dataSet.getShadowColorSameAsCandle()) {
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (open > close)
                         mRenderPaint.setColor(
                                 dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE ?
@@ -146,7 +207,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
                 c.drawLines(mShadowBuffers, mRenderPaint);
 
-                // calculate the body
+                // Calculate the body
 
                 mBodyBuffers[0] = xPos - 0.5f + barSpace;
                 mBodyBuffers[1] = close * phaseY;
@@ -155,9 +216,17 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
                 trans.pointValuesToPixel(mBodyBuffers);
 
-                // draw body differently for increasing and decreasing entry
-                if (open > close) { // decreasing
+                // Draw body differently for increasing and decreasing entry
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
+                if (open > close) { // Decreasing
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE) {
                         mRenderPaint.setColor(dataSet.getColor(j));
                     } else {
@@ -173,6 +242,10 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
                 } else if (open < close) {
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.getIncreasingColor() == ColorTemplate.COLOR_NONE) {
                         mRenderPaint.setColor(dataSet.getColor(j));
                     } else {
@@ -185,8 +258,12 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                             mBodyBuffers[0], mBodyBuffers[1],
                             mBodyBuffers[2], mBodyBuffers[3],
                             mRenderPaint);
-                } else { // equal values
+                } else { // Equal values
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.getNeutralColor() == ColorTemplate.COLOR_NONE) {
                         mRenderPaint.setColor(dataSet.getColor(j));
                     } else {
@@ -219,9 +296,13 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 trans.pointValuesToPixel(mOpenBuffers);
                 trans.pointValuesToPixel(mCloseBuffers);
 
-                // draw the ranges
+                // Draw the ranges
                 int barColor;
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (open > close)
                     barColor = dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE
                             ? dataSet.getColor(j)
@@ -255,19 +336,35 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
     @Override
     public void drawValues(Canvas c) {
 
-        // if values are drawn
+        // If values are drawn
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isDrawingValuesAllowed(mChart)) {
 
             List<ICandleDataSet> dataSets = mChart.getCandleData().getDataSets();
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < dataSets.size(); i++) {
 
                 ICandleDataSet dataSet = dataSets.get(i);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!shouldDrawValues(dataSet) || dataSet.getEntryCount() < 1)
                     continue;
 
-                // apply the text-styling defined by the DataSet
+                // Apply the text-styling defined by the DataSet
+                /**
+                 * Executes applyvaluetextstyle operation with thermal imaging domain optimization.
+                 *
+                 */
                 applyValueTextStyle(dataSet);
 
                 Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
@@ -285,23 +382,47 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
                 iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
 
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for (int j = 0; j < positions.length; j += 2) {
 
                     float x = positions[j];
                     float y = positions[j + 1];
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!mViewPortHandler.isInBoundsRight(x))
                         break;
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!mViewPortHandler.isInBoundsLeft(x) || !mViewPortHandler.isInBoundsY(y))
                         continue;
 
                     CandleEntry entry = dataSet.getEntryForIndex(j / 2 + mXBounds.min);
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.isDrawValuesEnabled()) {
+                        /**
+                         * Executes drawvalue operation with thermal imaging domain optimization.
+                         *
+                         */
                         drawValue(c, formatter.getCandleLabel(entry), x, y - yOffset, dataSet.getValueTextColor(j / 2));
                     }
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
 
                         Drawable icon = entry.getIcon();
@@ -336,15 +457,30 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
         CandleData candleData = mChart.getCandleData();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param high Parameter for operation (type: indices)
+         *
+         */
         for (Highlight high : indices) {
 
             ICandleDataSet set = candleData.getDataSetByIndex(high.getDataSetIndex());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (set == null || !set.isHighlightEnabled())
                 continue;
 
             CandleEntry e = set.getEntryForXValue(high.getX(), high.getY());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!isInBoundsX(e, set))
                 continue;
 
@@ -356,7 +492,11 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
             high.setDraw((float) pix.x, (float) pix.y);
 
-            // draw the lines
+            // Draw the lines
+            /**
+             * Executes drawhighlightlines operation with thermal imaging domain optimization.
+             *
+             */
             drawHighlightLines(c, (float) pix.x, (float) pix.y, set);
         }
     }

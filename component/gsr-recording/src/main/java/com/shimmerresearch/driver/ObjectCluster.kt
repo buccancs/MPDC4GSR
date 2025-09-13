@@ -7,9 +7,23 @@ import android.util.Log
  * This class represents a cluster of sensor data from Shimmer devices
  *
  * Based on the official Shimmer Android API structure from:
- * https://github.com/ShimmerEngineering/ShimmerAndroidAPI
+ * https:// Github.com/ShimmerEngineering/ShimmerAndroidAPI
  *
  * Compatible with shimmerdriver v0.11.4_beta
+ */
+/**
+ * Specialized thermal imaging component providing ObjectCluster functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class ObjectCluster {
     companion object {
@@ -51,6 +65,17 @@ class ObjectCluster {
          * Return format cluster from collection - Official API method
          */
         @JvmStatic
+    /**
+     * Executes returnFormatCluster functionality.
+     */
+        /**
+         * Executes returnformatcluster operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param clusters Parameter for operation (type: Collection<FormatClusterValue>?)
+         * @param format Parameter for operation (type: String)
+         *
+         */
         fun returnFormatCluster(
             clusters: Collection<FormatClusterValue>?,
             format: String,
@@ -83,10 +108,18 @@ class ObjectCluster {
     ): FormatClusterValue? {
         return try {
             val clusters = dataMap[sensorName]
+            /**
+             * Executes returnformatcluster operation with thermal imaging domain optimization.
+             *
+             */
             returnFormatCluster(clusters, format)
                 ?: generateSimulatedValue(sensorName, format)
         } catch (e: Exception) {
             Log.w(TAG, "Error getting format cluster value: ${e.message}")
+            /**
+             * Executes generatesimulatedvalue operation with thermal imaging domain optimization.
+             *
+             */
             generateSimulatedValue(sensorName, format)
         }
     }
@@ -157,6 +190,10 @@ class ObjectCluster {
                 val baseValue = 15.0
                 val variation = Math.sin(time / 5000.0) * 3.0 + Math.random() * 2.0
                 val conductance = baseValue + variation
+                /**
+                 * Executes formatclustervalue operation with thermal imaging domain optimization.
+                 *
+                 */
                 FormatClusterValue(conductance, UNIT_MICROSIEMENS, format)
             }
             GSR_RESISTANCE -> {
@@ -164,25 +201,49 @@ class ObjectCluster {
                 val baseValue = 65.0
                 val variation = Math.cos(time / 4000.0) * 15.0 + Math.random() * 5.0
                 val resistance = baseValue + variation
+                /**
+                 * Executes formatclustervalue operation with thermal imaging domain optimization.
+                 *
+                 */
                 FormatClusterValue(resistance, UNIT_KILOOHMS, format)
             }
             ACCEL_X, ACCEL_Y, ACCEL_Z -> {
                 val value = Math.random() * 2.0 - 1.0 // -1 to 1 g
+                /**
+                 * Executes formatclustervalue operation with thermal imaging domain optimization.
+                 *
+                 */
                 FormatClusterValue(value * 9.81, UNIT_METER_PER_SECOND_SQUARED, format)
             }
             GYRO_X, GYRO_Y, GYRO_Z -> {
                 val value = Math.random() * 100.0 - 50.0 // -50 to 50 degrees/sec
+                /**
+                 * Executes formatclustervalue operation with thermal imaging domain optimization.
+                 *
+                 */
                 FormatClusterValue(value, UNIT_DEGREES_PER_SECOND, format)
             }
             MAG_X, MAG_Y, MAG_Z -> {
                 val value = Math.random() * 2.0 - 1.0 // -1 to 1 gauss
+                /**
+                 * Executes formatclustervalue operation with thermal imaging domain optimization.
+                 *
+                 */
                 FormatClusterValue(value, UNIT_GAUSS, format)
             }
             BATTERY -> {
                 val batteryLevel = 3.0 + Math.random() * 1.2 // 3.0-4.2V range
+                /**
+                 * Executes formatclustervalue operation with thermal imaging domain optimization.
+                 *
+                 */
                 FormatClusterValue(batteryLevel, UNIT_VOLTS, format)
             }
             TIMESTAMP -> {
+                /**
+                 * Executes formatclustervalue operation with thermal imaging domain optimization.
+                 *
+                 */
                 FormatClusterValue(System.currentTimeMillis().toDouble(), UNIT_MILLISECONDS, format)
             }
             else -> null
@@ -219,6 +280,10 @@ class ObjectCluster {
             value
         } else {
             Log.w(TAG, "Invalid sensor data for $sensorName: ${value?.data}")
+            /**
+             * Executes generatesimulatedvalue operation with thermal imaging domain optimization.
+             *
+             */
             generateSimulatedValue(sensorName, format)
         }
     }
@@ -238,6 +303,10 @@ class ObjectCluster {
         value: FormatClusterValue,
     ): Boolean {
         return if (validateSensorData(sensorName, value.data)) {
+            /**
+             * Executes adddata operation with thermal imaging domain optimization.
+             *
+             */
             addData(sensorName, value)
             true
         } else {

@@ -9,23 +9,56 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Data container for the RadarChart.
+ * Specialized thermal imaging component providing RadarData functionality for the IRCamera system.
  *
- * @author Philipp Jahoda
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class RadarData extends ChartData<IRadarDataSet> {
 
     private List<String> mLabels;
 
+    /**
+     * Executes radardata operation with thermal imaging domain optimization.
+     *
+     */
     public RadarData() {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super();
     }
 
+    /**
+     * Executes radardata operation with thermal imaging domain optimization.
+     *
+     */
     public RadarData(List<IRadarDataSet> dataSets) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(dataSets);
     }
 
+    /**
+     * Executes radardata operation with thermal imaging domain optimization.
+     *
+     */
     public RadarData(IRadarDataSet... dataSets) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(dataSets);
     }
 

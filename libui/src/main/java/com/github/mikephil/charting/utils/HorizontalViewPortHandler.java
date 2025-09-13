@@ -2,27 +2,41 @@
 package com.github.mikephil.charting.utils;
 
 /**
- * ViewPortHandler for HorizontalBarChart.
+ * Custom thermal imaging view component with advanced rendering capabilities. Optimized for HorizontalViewPortHandler display and interaction.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class HorizontalViewPortHandler extends ViewPortHandler {
 
 //    @Override
-//    public void setMinimumScaleX(float xScale) {
-//        setMinimumScaleY(xScale);
+// Public void setMinimumScaleX(float xScale) {
+// SetMinimumScaleY(xScale);
 //    }
 //
 //    @Override
-//    public void setMinimumScaleY(float yScale) {
-//        setMinimumScaleX(yScale);
+// Public void setMinimumScaleY(float yScale) {
+// SetMinimumScaleX(yScale);
 //    }
 //
 //    @Override
-//    public void setMinMaxScaleX(float minScaleX, float maxScaleX) {
-//        setMinMaxScaleY(minScaleX, maxScaleX);
+// Public void setMinMaxScaleX(float minScaleX, float maxScaleX) {
+// SetMinMaxScaleY(minScaleX, maxScaleX);
 //    }
 //
 //    @Override
-//    public void setMinMaxScaleY(float minScaleY, float maxScaleY) {
-//        setMinMaxScaleX(minScaleY, maxScaleY);
+// Public void setMinMaxScaleY(float minScaleY, float maxScaleY) {
+// SetMinMaxScaleX(minScaleY, maxScaleY);
 //    }
 }

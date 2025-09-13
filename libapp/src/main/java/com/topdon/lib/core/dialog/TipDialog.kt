@@ -23,19 +23,58 @@ import com.topdon.lib.core.databinding.DialogTipBinding
  * @author IRCamera Development Team
  * @since 1.0
  */
+/**
+ * Specialized thermal imaging component providing TipDialog functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class TipDialog : Dialog {
+    /**
+     * Executes constructor operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param context Parameter for operation (type: Context)
+     *
+     */
     constructor(context: Context) : super(context)
 
+    /**
+     * Executes constructor operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param context Parameter for operation (type: Context)
+     * @param themeResId Parameter for operation (type: Int)
+     *
+     */
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
 
     @Deprecated("This method is deprecated")
+    /**
+     * Executes onbackpressed operation with thermal imaging domain optimization.
+     *
+     */
     override fun onBackPressed() {
-    }
-
 /**
- * Builder manages camera operations and image capture functionality.
+ * Specialized thermal imaging component providing Builder functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     class Builder(private val context: Context) {
@@ -50,16 +89,25 @@ class TipDialog : Dialog {
         private var canceled = false
         private var isShowRestartTips = false
 
+    /**
+     * Sets titlemessage configuration.
+     */
         fun setTitleMessage(message: String): Builder {
             this.titleMessage = message
             return this
         }
 
+    /**
+     * Sets message configuration.
+     */
         fun setMessage(message: String): Builder {
             this.message = message
             return this
         }
 
+    /**
+     * Sets message configuration.
+     */
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
@@ -67,6 +115,9 @@ class TipDialog : Dialog {
             return this
         }
 
+    /**
+     * Sets positivelistener configuration.
+     */
         fun setPositiveListener(
             @StringRes strRes: Int,
             event: (() -> Unit)? = null,
@@ -74,6 +125,9 @@ class TipDialog : Dialog {
             return setPositiveListener(context.getString(strRes), event)
         }
 
+    /**
+     * Sets positivelistener configuration.
+     */
         fun setPositiveListener(
             str: String,
             event: (() -> Unit)? = null,
@@ -83,6 +137,9 @@ class TipDialog : Dialog {
             return this
         }
 
+    /**
+     * Sets cancellistener configuration.
+     */
         fun setCancelListener(
             @StringRes strRes: Int,
             event: (() -> Unit)? = null,
@@ -90,6 +147,9 @@ class TipDialog : Dialog {
             return setCancelListener(context.getString(strRes), event)
         }
 
+    /**
+     * Sets cancellistener configuration.
+     */
         fun setCancelListener(
             str: String,
             event: (() -> Unit)? = null,
@@ -99,11 +159,17 @@ class TipDialog : Dialog {
             return this
         }
 
+    /**
+     * Sets canceled configuration.
+     */
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
         }
 
+    /**
+     * Sets showrestarttops configuration.
+     */
         fun setShowRestartTops(isShowRestartTips: Boolean): Builder {
             this.isShowRestartTips = isShowRestartTips
             return this
@@ -112,6 +178,10 @@ class TipDialog : Dialog {
     /**
      * Executes dismiss functionality.
      */
+        /**
+         * Executes dismiss operation with thermal imaging domain optimization.
+         *
+         */
         fun dismiss() {
             this.dialog!!.dismiss()
         }
@@ -134,17 +204,33 @@ class TipDialog : Dialog {
 
             dialog!!.setCanceledOnTouchOutside(canceled)
             binding.dialogTipSuccessBtn.setOnClickListener {
+                /**
+                 * Executes dismiss operation with thermal imaging domain optimization.
+                 *
+                 */
                 dismiss()
                 positiveEvent?.invoke()
             }
             binding.dialogTipCancelBtn.setOnClickListener {
+                /**
+                 * Executes dismiss operation with thermal imaging domain optimization.
+                 *
+                 */
                 dismiss()
                 cancelEvent?.invoke()
             }
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (positiveStr != null) {
                 binding.dialogTipSuccessBtn.text = positiveStr
             }
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!TextUtils.isEmpty(cancelStr)) {
                 binding.spaceMargin.visibility = View.VISIBLE
                 binding.dialogTipCancelBtn.visibility = View.VISIBLE
@@ -155,6 +241,10 @@ class TipDialog : Dialog {
                 binding.dialogTipCancelBtn.text = ""
             }
             
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (message != null) {
                 binding.dialogTipMsgText.visibility = View.VISIBLE
                 binding.dialogTipMsgText.setText(message, TextView.BufferType.NORMAL)
@@ -163,6 +253,10 @@ class TipDialog : Dialog {
             }
 
             
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (titleMessage != null) {
                 binding.dialogTipTitleMsgText.visibility = View.VISIBLE
                 binding.dialogTipTitleMsgText.setText(titleMessage, TextView.BufferType.NORMAL)

@@ -55,6 +55,20 @@ import java.util.concurrent.atomic.AtomicBoolean
  * 
  * @author IRCamera Android Sensor Node (Spoke)
  */
+/**
+ * Specialized thermal imaging component providing RecordingService functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class RecordingService : LifecycleService() {
 
     companion object {
@@ -93,6 +107,10 @@ class RecordingService : LifecycleService() {
         fun startRecording(context: Context, sessionDirectory: String) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_START_RECORDING
+                /**
+                 * Executes putextra operation with thermal imaging domain optimization.
+                 *
+                 */
                 putExtra(EXTRA_SESSION_DIRECTORY, sessionDirectory)
             }
             context.startForegroundService(intent)
@@ -134,7 +152,15 @@ class RecordingService : LifecycleService() {
         fun addSyncMarker(context: Context, markerType: String, timestampNs: Long) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_ADD_SYNC_MARKER
+                /**
+                 * Executes putextra operation with thermal imaging domain optimization.
+                 *
+                 */
                 putExtra(EXTRA_MARKER_TYPE, markerType)
+                /**
+                 * Executes putextra operation with thermal imaging domain optimization.
+                 *
+                 */
                 putExtra(EXTRA_TIMESTAMP_NS, timestampNs)
             }
             context.startService(intent)
@@ -146,7 +172,15 @@ class RecordingService : LifecycleService() {
         fun connectToPC(context: Context, ipAddress: String, port: Int = 8080) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_CONNECT_PC
+                /**
+                 * Executes putextra operation with thermal imaging domain optimization.
+                 *
+                 */
                 putExtra(EXTRA_PC_IP, ipAddress)
+                /**
+                 * Executes putextra operation with thermal imaging domain optimization.
+                 *
+                 */
                 putExtra(EXTRA_PC_PORT, port)
             }
             context.startService(intent)
@@ -220,21 +254,49 @@ class RecordingService : LifecycleService() {
     )
 
     inner class RecordingServiceBinder : Binder() {
+    /**
+     * Retrieves service information.
+     */
         fun getService(): RecordingService = this@RecordingService
+    /**
+     * Retrieves recordingcontroller information.
+     */
         fun getRecordingController(): RecordingController = recordingController
+    /**
+     * Retrieves networkserver information.
+     */
         fun getNetworkServer(): NetworkServer = networkServer
+    /**
+     * Executes isConnectedToPC functionality.
+     */
+        /**
+         * Executes isconnectedtopc operation with thermal imaging domain optimization.
+         *
+         */
         fun isConnectedToPC(): Boolean = isConnectedToPC
     }
 
+    /**
+     * Executes oncreate operation with thermal imaging domain optimization.
+     *
+     */
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "RecordingService created")
         
         // Initialize Phase 0 baseline components
+        /**
+         * Initializes the ializephase0baseline component for thermal imaging operations.
+         *
+         */
         initializePhase0Baseline()
         
         // Initialize notification manager
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        /**
+         * Executes createnotificationchannel operation with thermal imaging domain optimization.
+         *
+         */
         createNotificationChannel()
         
         // Initialize NSD manager
@@ -264,28 +326,64 @@ class RecordingService : LifecycleService() {
                 isInitialized = sensorsSuccess
                 
 <<<<<<< HEAD
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (success) {
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
                         "service_initialized"
                     )
+                    /**
+                     * Configures the upstatusmonitoring with validation and thermal imaging optimization.
+                     *
+                     */
                     setupStatusMonitoring()
                     
                     // Start server socket automatically if enabled
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (FeatureFlags.MDNS_ENABLE) {
+                        /**
+                         * Executes startserversocket operation with thermal imaging domain optimization.
+                         *
+                         */
                         startServerSocket()
 =======
                 val networkSuccess = initializeNetworkClient()
                 isNetworkInitialized = networkSuccess
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (sensorsSuccess) {
                     Log.i(TAG, "Recording service initialized successfully")
+                    /**
+                     * Configures the upstatusmonitoring with validation and thermal imaging optimization.
+                     *
+                     */
                     setupStatusMonitoring()
+                    /**
+                     * Configures the upnetworkserver with validation and thermal imaging optimization.
+                     *
+                     */
                     setupNetworkServer()
                     
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (networkSuccess) {
                         Log.i(TAG, "Network client initialized successfully")
+                        /**
+                         * Executes startnetworkdiscovery operation with thermal imaging domain optimization.
+                         *
+                         */
                         startNetworkDiscovery()
                     } else {
                         Log.w(TAG, "Network client initialization failed - running in server-only mode")
@@ -297,6 +395,10 @@ class RecordingService : LifecycleService() {
                         "RecordingService",
                         "initialization_failed"
                     )
+                    /**
+                     * Executes stopself operation with thermal imaging domain optimization.
+                     *
+                     */
                     stopSelf()
                 }
             } catch (e: Exception) {
@@ -304,8 +406,16 @@ class RecordingService : LifecycleService() {
                     StructuredLogger.LogLevel.ERROR,
                     "RecordingService",
                     "initialization_exception",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("error" to e.message)
                 )
+                /**
+                 * Executes stopself operation with thermal imaging domain optimization.
+                 *
+                 */
                 stopSelf()
                 throw e
             }
@@ -331,6 +441,10 @@ class RecordingService : LifecycleService() {
                 StructuredLogger.LogLevel.INFO,
                 "RecordingService",
                 "phase0_baseline_initialized",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "feature_flags" to FeatureFlags.getAllFlags(),
                     "protocol_version" to ProtocolVersion.CURRENT_VERSION
@@ -342,13 +456,34 @@ class RecordingService : LifecycleService() {
         }
     }
 
+    /**
+     * Executes onstartcommand operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param intent Parameter for operation (type: Intent?)
+     * @param flags Parameter for operation (type: Int)
+     * @param startId Parameter for operation (type: Int)
+     *
+     */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (intent?.action) {
             ACTION_START_RECORDING -> {
                 val sessionDirectory = intent.getStringExtra(EXTRA_SESSION_DIRECTORY)
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (sessionDirectory != null) {
+                    /**
+                     * Executes startrecordingsession operation with thermal imaging domain optimization.
+                     *
+                     */
                     startRecordingSession(sessionDirectory)
                 } else {
                     Log.e(TAG, "No session directory provided for recording")
@@ -356,21 +491,41 @@ class RecordingService : LifecycleService() {
             }
             
             ACTION_STOP_RECORDING -> {
+                /**
+                 * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                 *
+                 */
                 stopRecordingSession()
             }
             
             ACTION_START_SERVER -> {
+                /**
+                 * Executes startserversocket operation with thermal imaging domain optimization.
+                 *
+                 */
                 startServerSocket()
             }
             
             ACTION_STOP_SERVER -> {
+                /**
+                 * Executes stopserversocket operation with thermal imaging domain optimization.
+                 *
+                 */
                 stopServerSocket()
             }
             
             ACTION_ADD_SYNC_MARKER -> {
                 val markerType = intent.getStringExtra(EXTRA_MARKER_TYPE)
                 val timestampNs = intent.getLongExtra(EXTRA_TIMESTAMP_NS, System.nanoTime())
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (markerType != null) {
+                    /**
+                     * Executes addsyncmarker operation with thermal imaging domain optimization.
+                     *
+                     */
                     addSyncMarker(markerType, timestampNs)
                 }
             }
@@ -378,16 +533,32 @@ class RecordingService : LifecycleService() {
             ACTION_CONNECT_PC -> {
                 val ipAddress = intent.getStringExtra(EXTRA_PC_IP)
                 val port = intent.getIntExtra(EXTRA_PC_PORT, 8080)
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (ipAddress != null) {
+                    /**
+                     * Executes connecttopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     connectToPC(ipAddress, port)
                 }
             }
             
             ACTION_DISCONNECT_PC -> {
+                /**
+                 * Executes disconnectfrompc operation with thermal imaging domain optimization.
+                 *
+                 */
                 disconnectFromPC()
             }
             
             ACTION_START_DISCOVERY -> {
+                /**
+                 * Executes startpcdiscovery operation with thermal imaging domain optimization.
+                 *
+                 */
                 startPCDiscovery()
             }
         }
@@ -395,11 +566,22 @@ class RecordingService : LifecycleService() {
         return START_STICKY // Changed to STICKY to ensure server persistence
     }
 
+    /**
+     * Executes onbind operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param intent Parameter for operation (type: Intent)
+     *
+     */
     override fun onBind(intent: Intent): IBinder {
         super.onBind(intent)
         return binder
     }
 
+    /**
+     * Executes ondestroy operation with thermal imaging domain optimization.
+     *
+     */
     override fun onDestroy() {
         super.onDestroy()
         
@@ -413,6 +595,10 @@ class RecordingService : LifecycleService() {
             try {
 <<<<<<< HEAD
                 // Stop server socket first
+                /**
+                 * Executes stopserversocket operation with thermal imaging domain optimization.
+                 *
+                 */
                 stopServerSocket()
                 
                 // Stop recording if active
@@ -428,6 +614,10 @@ class RecordingService : LifecycleService() {
                     StructuredLogger.LogLevel.ERROR,
                     "RecordingService",
                     "service_cleanup_error",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("error" to e.message)
                 )
             } finally {
@@ -440,9 +630,17 @@ class RecordingService : LifecycleService() {
                 networkServer.stop()
                 isConnectedToPC = false
                 Log.i(TAG, "Network server stopped")
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Network server stopped")
                 
                 // Clean up network client resources if initialized
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (isNetworkInitialized) {
                     networkClient.disconnect()
                 }
@@ -459,7 +657,18 @@ class RecordingService : LifecycleService() {
         }
     }
 
+    /**
+     * Executes createNotificationChannel functionality.
+     */
+    /**
+     * Executes createnotificationchannel operation with thermal imaging domain optimization.
+     *
+     */
     private fun createNotificationChannel() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
@@ -467,13 +676,31 @@ class RecordingService : LifecycleService() {
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
                 description = "Multi-modal sensor recording service"
+                /**
+                 * Configures the showbadge with validation and thermal imaging optimization.
+                 *
+                 */
                 setShowBadge(false)
             }
             notificationManager.createNotificationChannel(channel)
         }
     }
 
+    /**
+     * Executes startRecordingSession functionality.
+     */
+    /**
+     * Executes startrecordingsession operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param sessionDirectory Parameter for operation (type: String)
+     *
+     */
     private fun startRecordingSession(sessionDirectory: String) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!isInitialized) {
             Log.e(TAG, "Service not initialized, cannot start recording")
             return
@@ -483,6 +710,10 @@ class RecordingService : LifecycleService() {
             try {
                 // Create session directory
                 val sessionDir = File(sessionDirectory)
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!sessionDir.exists()) {
                     sessionDir.mkdirs()
                 }
@@ -491,49 +722,108 @@ class RecordingService : LifecycleService() {
                 recordingStartTime = System.nanoTime()
                 
                 // Start foreground service
+                /**
+                 * Executes startforeground operation with thermal imaging domain optimization.
+                 *
+                 */
                 startForeground(NOTIFICATION_ID, createRecordingNotification("Starting recording..."))
                 
                 // Start recording
                 val success = recordingController.startRecording(sessionDirectory)
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (success) {
                     Log.i(TAG, "Recording session started: $sessionDirectory")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Recording in progress")
                 } else {
                     Log.e(TAG, "Failed to start recording session")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Recording failed to start")
+                    /**
+                     * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                     *
+                     */
                     stopRecordingSession()
                 }
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting recording session", e)
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Recording error occurred")
+                /**
+                 * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                 *
+                 */
                 stopRecordingSession()
             }
         }
     }
 
+    /**
+     * Executes stopRecordingSession functionality.
+     */
+    /**
+     * Executes stoprecordingsession operation with thermal imaging domain optimization.
+     *
+     */
     private fun stopRecordingSession() {
         lifecycleScope.launch {
             try {
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Stopping recording...")
                 
                 val success = recordingController.stopRecording()
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (success) {
                     val sessionDuration = if (recordingStartTime > 0) {
                         (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
                     } else 0.0
                     
                     Log.i(TAG, "Recording session stopped (duration: ${sessionDuration}s)")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Recording completed (${String.format("%.1f", sessionDuration)}s)")
                     
                     // Stop foreground service after a brief delay to show completion message
                     kotlinx.coroutines.delay(2000)
+                    /**
+                     * Executes stopforeground operation with thermal imaging domain optimization.
+                     *
+                     */
                     stopForeground(true)
+                    /**
+                     * Executes stopself operation with thermal imaging domain optimization.
+                     *
+                     */
                     stopSelf()
                 } else {
                     Log.e(TAG, "Failed to stop recording session cleanly")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Recording stop failed")
                 }
                 
@@ -542,11 +832,26 @@ class RecordingService : LifecycleService() {
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping recording session", e)
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Recording stop error")
             }
         }
     }
 
+    /**
+     * Executes addSyncMarker functionality.
+     */
+    /**
+     * Executes addsyncmarker operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param markerType Parameter for operation (type: String)
+     * @param timestampNs Parameter for operation (type: Long)
+     *
+     */
     private fun addSyncMarker(markerType: String, timestampNs: Long) {
         lifecycleScope.launch {
             try {
@@ -555,8 +860,19 @@ class RecordingService : LifecycleService() {
                 
                 // Briefly update notification to show sync event
                 val originalText = "Recording in progress"
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param marker Parameter for operation (type: $markerType")
+                 *
+                 */
                 updateNotification("Sync marker: $markerType")
                 kotlinx.coroutines.delay(1000)
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification(originalText)
                 
             } catch (e: Exception) {
@@ -565,10 +881,17 @@ class RecordingService : LifecycleService() {
         }
     }
 
+    /**
+     * Sets upstatusmonitoring configuration.
+     */
     private fun setupStatusMonitoring() {
         // Monitor recording state changes
         recordingController.recordingStateFlow
             .onEach { state ->
+                /**
+                 * Executes when operation with thermal imaging domain optimization.
+                 *
+                 */
                 when (state) {
                     RecordingState.STARTING -> updateNotification("Starting sensors...")
                     RecordingState.RECORDING -> updateNotification("Recording in progress")
@@ -586,10 +909,18 @@ class RecordingService : LifecycleService() {
                 val totalSamples = statusList.sumOf { it.samplesRecorded }
                 val totalStorage = statusList.sumOf { it.storageUsedMB }
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (activeSensors > 0) {
                     val statusText = "Recording: $activeSensors sensors, " +
                             "${totalSamples} samples, " +
                             "${String.format("%.1f", totalStorage)}MB"
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification(statusText)
                 }
             }
@@ -600,19 +931,55 @@ class RecordingService : LifecycleService() {
             .onEach { error ->
                 Log.w(TAG, "Recording controller error: ${error.message}")
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!error.isRecoverable) {
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param error Parameter for operation (type: ${error.message}")
+                     *
+                     */
                     updateNotification("Critical error: ${error.message}")
+                    /**
+                     * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                     *
+                     */
                     stopRecordingSession()
                 } else {
                     // Show temporary error notification
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param Warning Parameter for operation (type: ${error.message}")
+                     *
+                     */
                     updateNotification("Warning: ${error.message}")
                     kotlinx.coroutines.delay(3000)
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Recording in progress")
                 }
             }
             .launchIn(lifecycleScope)
     }
 
+    /**
+     * Executes createRecordingNotification functionality.
+     */
+    /**
+     * Executes createrecordingnotification operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param contentText Parameter for operation (type: String)
+     *
+     */
     private fun createRecordingNotification(contentText: String): Notification {
         val stopIntent = Intent(this, RecordingService::class.java).apply {
             action = ACTION_STOP_RECORDING
@@ -637,6 +1004,16 @@ class RecordingService : LifecycleService() {
             .build()
     }
 
+    /**
+     * Executes updateNotification functionality.
+     */
+    /**
+     * Executes updatenotification operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param contentText Parameter for operation (type: String)
+     *
+     */
     private fun updateNotification(contentText: String) {
         try {
             val notification = createRecordingNotification(contentText)
@@ -662,6 +1039,9 @@ class RecordingService : LifecycleService() {
      * Initialize network client and set up command handlers
      */
 <<<<<<< HEAD
+    /**
+     * Retrieves currentsession information.
+     */
     fun getCurrentSession(): SessionInfo? {
         return currentSessionDirectory?.let { directory ->
             SessionInfo(
@@ -709,6 +1089,10 @@ class RecordingService : LifecycleService() {
                 }
             }
         ) { stopToken ->
+            /**
+             * Executes runserversocketsupervised operation with thermal imaging domain optimization.
+             *
+             */
             runServerSocketSupervised(stopToken)
         }
     }
@@ -724,57 +1108,128 @@ class RecordingService : LifecycleService() {
             
             structuredLogger.logServerEvent(
                 "server_socket_started",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf("port" to SERVER_PORT)
             )
             
             // Register NSD service if enabled
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (FeatureFlags.MDNS_ENABLE) {
+                /**
+                 * Executes registernsdservice operation with thermal imaging domain optimization.
+                 *
+                 */
                 registerNsdService()
             }
             
             // Start as foreground service if not already
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!isServiceForeground()) {
+                /**
+                 * Executes startforeground operation with thermal imaging domain optimization.
+                 *
+                 */
                 startForeground(NOTIFICATION_ID, createServerNotification("Server listening for PC connections"))
             }
             
             // Run accept loop
+            /**
+             * Executes while operation with thermal imaging domain optimization.
+             *
+             */
             while (!stopToken.isStopRequested() && isServerRunning.get()) {
                 try {
                     val clientSocket = withContext(Dispatchers.IO) {
                         serverSocket?.accept()
                     }
                     
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (clientSocket != null && isServerRunning.get()) {
                         val clientId = "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
                         
                         structuredLogger.logConnection(
                             "pc_client_connected",
                             clientId,
+                            /**
+                             * Executes mapof operation with thermal imaging domain optimization.
+                             *
+                             */
                             mapOf("client_address" to clientSocket.inetAddress.hostAddress)
                         )
                         
                         // Handle client connection
+                        /**
+                         * Executes handlenewclientconnection operation with thermal imaging domain optimization.
+                         *
+                         */
                         handleNewClientConnection(clientSocket, clientId)
                         
                         // Update notification
+                        /**
+                         * Executes withcontext operation with thermal imaging domain optimization.
+                         *
+                         */
                         withContext(Dispatchers.Main) {
+                            /**
+                             * Executes updatenotification operation with thermal imaging domain optimization.
+                             *
+                             * @param
+                             * @param PCs Parameter for operation (type: ${activeConnections.size}")
+                             *
+                             */
                             updateNotification("Connected PCs: ${activeConnections.size}")
                         }
                     }
                 } catch (e: SocketException) {
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (isServerRunning.get() && !stopToken.isStopRequested()) {
                         structuredLogger.logServerEvent(
                             "accept_socket_error",
+                            /**
+                             * Executes mapof operation with thermal imaging domain optimization.
+                             *
+                             */
                             mapOf("error" to e.message)
                         )
+                        /**
+                         * Executes delay operation with thermal imaging domain optimization.
+                         *
+                         */
                         delay(1000)
                     }
                 } catch (e: Exception) {
                     structuredLogger.logServerEvent(
                         "accept_unexpected_error", 
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf("error" to e.message)
                     )
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (isServerRunning.get() && !stopToken.isStopRequested()) {
+                        /**
+                         * Executes delay operation with thermal imaging domain optimization.
+                         *
+                         */
                         delay(5000) // Longer delay for unexpected errors
                     }
                 }
@@ -783,6 +1238,10 @@ class RecordingService : LifecycleService() {
         } catch (e: Exception) {
             structuredLogger.logServerEvent(
                 "server_socket_failed",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf("error" to e.message)
             )
             isServerRunning.set(false)
@@ -790,6 +1249,10 @@ class RecordingService : LifecycleService() {
         } finally {
             // Cleanup
             structuredLogger.logServerEvent("server_socket_cleanup_started")
+            /**
+             * Executes cleanupserversocket operation with thermal imaging domain optimization.
+             *
+             */
             cleanupServerSocket()
         }
     }
@@ -813,6 +1276,10 @@ class RecordingService : LifecycleService() {
                 structuredLogger.logConnection(
                     "connection_cleanup_error",
                     connection.clientId,
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("error" to e.message)
                 )
             }
@@ -825,6 +1292,10 @@ class RecordingService : LifecycleService() {
         } catch (e: Exception) {
             structuredLogger.logServerEvent(
                 "server_socket_close_error",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf("error" to e.message)
             )
         } finally {
@@ -832,6 +1303,10 @@ class RecordingService : LifecycleService() {
         }
         
         // Unregister NSD service
+        /**
+         * Executes unregisternsdservice operation with thermal imaging domain optimization.
+         *
+         */
         unregisterNsdService()
         
         structuredLogger.logServerEvent("server_socket_cleanup_completed")
@@ -851,6 +1326,10 @@ class RecordingService : LifecycleService() {
         // Unregister from supervisor
         crashSafeSupervisor.unregisterJob("server_socket")
         
+        /**
+         * Executes cleanupserversocket operation with thermal imaging domain optimization.
+         *
+         */
         cleanupServerSocket()
         
         structuredLogger.logServerEvent("server_socket_stopped")
@@ -864,27 +1343,62 @@ class RecordingService : LifecycleService() {
             while (isServerRunning.get() && !currentCoroutineContext().isActive.not()) {
                 try {
                     val clientSocket = serverSocket?.accept()
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (clientSocket != null && isServerRunning.get()) {
                         val clientId = "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
                         Log.i(TAG, "PC client connected: $clientId")
                         
                         // Handle client connection
+                        /**
+                         * Executes handlenewclientconnection operation with thermal imaging domain optimization.
+                         *
+                         */
                         handleNewClientConnection(clientSocket, clientId)
                         
                         // Update notification
+                        /**
+                         * Executes withcontext operation with thermal imaging domain optimization.
+                         *
+                         */
                         withContext(Dispatchers.Main) {
+                            /**
+                             * Executes updatenotification operation with thermal imaging domain optimization.
+                             *
+                             * @param
+                             * @param PCs Parameter for operation (type: ${activeConnections.size}")
+                             *
+                             */
                             updateNotification("Connected PCs: ${activeConnections.size}")
                         }
                     }
                 } catch (e: SocketException) {
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (isServerRunning.get()) {
                         Log.w(TAG, "Server socket accept error", e)
                         // Brief delay before retry
+                        /**
+                         * Executes delay operation with thermal imaging domain optimization.
+                         *
+                         */
                         delay(1000)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Unexpected error in accept loop", e)
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (isServerRunning.get()) {
+                        /**
+                         * Executes delay operation with thermal imaging domain optimization.
+                         *
+                         */
                         delay(5000) // Longer delay for unexpected errors
                     }
                 }
@@ -908,6 +1422,10 @@ class RecordingService : LifecycleService() {
             // Create client handler job
             val clientJob = lifecycleScope.launch(Dispatchers.IO) {
                 try {
+                    /**
+                     * Executes handleclientmessages operation with thermal imaging domain optimization.
+                     *
+                     */
                     handleClientMessages(clientId, inputStream, outputStream)
                 } catch (e: Exception) {
                     Log.w(TAG, "Client $clientId handler error", e)
@@ -922,7 +1440,18 @@ class RecordingService : LifecycleService() {
                     Log.i(TAG, "PC client disconnected: $clientId")
                     
                     // Update notification
+                    /**
+                     * Executes withcontext operation with thermal imaging domain optimization.
+                     *
+                     */
                     withContext(Dispatchers.Main) {
+                        /**
+                         * Executes updatenotification operation with thermal imaging domain optimization.
+                         *
+                         * @param
+                         * @param PCs Parameter for operation (type: ${activeConnections.size}")
+                         *
+                         */
                         updateNotification("Connected PCs: ${activeConnections.size}")
                     }
                 }
@@ -956,10 +1485,18 @@ class RecordingService : LifecycleService() {
         inputStream: DataInputStream, 
         outputStream: DataOutputStream
     ) {
+        /**
+         * Executes while operation with thermal imaging domain optimization.
+         *
+         */
         while (isServerRunning.get() && currentCoroutineContext().isActive) {
             try {
                 // Read message length
                 val messageLength = inputStream.readInt()
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (messageLength > 1024 * 1024) { // 1MB limit
                     Log.w(TAG, "Message too large from $clientId: $messageLength bytes")
                     break
@@ -973,10 +1510,18 @@ class RecordingService : LifecycleService() {
                 val message = JSONObject(String(messageData, Charsets.UTF_8))
                 
                 // Process message
+                /**
+                 * Executes processclientmessage operation with thermal imaging domain optimization.
+                 *
+                 */
                 processClientMessage(clientId, message, outputStream)
                 
             } catch (e: SocketTimeoutException) {
                 // Send keepalive
+                /**
+                 * Executes sendkeepalive operation with thermal imaging domain optimization.
+                 *
+                 */
                 sendKeepAlive(outputStream)
             } catch (e: EOFException) {
                 Log.i(TAG, "Client $clientId disconnected normally")
@@ -985,10 +1530,22 @@ class RecordingService : LifecycleService() {
                 Log.w(TAG, "Error handling message from $clientId", e)
                 break
 =======
+    /**
+     * Initializes the ializenetworkclient component for thermal imaging operations.
+     *
+     */
     private suspend fun initializeNetworkClient(): Boolean {
         return try {
             val success = networkClient.initialize()
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (success) {
+                /**
+                 * Configures the upnetworkcommandhandlers with validation and thermal imaging optimization.
+                 *
+                 */
                 setupNetworkCommandHandlers()
                 Log.i(TAG, "Network client initialized successfully")
             } else {
@@ -1008,22 +1565,42 @@ class RecordingService : LifecycleService() {
         // Set up command handlers for legacy NetworkClient compatibility
         try {
             networkClient.setMessageHandler("start_recording") { message ->
+                /**
+                 * Executes handlestartrecordingcommand operation with thermal imaging domain optimization.
+                 *
+                 */
                 handleStartRecordingCommand(message)
             }
             
             networkClient.setMessageHandler("stop_recording") { message ->
+                /**
+                 * Executes handlestoprecordingcommand operation with thermal imaging domain optimization.
+                 *
+                 */
                 handleStopRecordingCommand(message)
             }
             
             networkClient.setMessageHandler("sync_flash") { message ->
+                /**
+                 * Executes handlesyncflashcommand operation with thermal imaging domain optimization.
+                 *
+                 */
                 handleSyncFlashCommand(message)
             }
             
             networkClient.setMessageHandler("query_capabilities") { message ->
+                /**
+                 * Executes handlequerycapabilitiescommand operation with thermal imaging domain optimization.
+                 *
+                 */
                 handleQueryCapabilitiesCommand(message)
             }
             
             networkClient.setMessageHandler("query_status") { message ->
+                /**
+                 * Executes handlequerystatuscommand operation with thermal imaging domain optimization.
+                 *
+                 */
                 handleQueryStatusCommand(message)
             }
         } catch (e: Exception) {
@@ -1054,6 +1631,10 @@ class RecordingService : LifecycleService() {
                 val sessionDirectory = "/storage/emulated/0/IRCamera_Sessions/$sessionId"
                 
                 Log.i(TAG, "Received start recording command from PC Controller")
+                /**
+                 * Executes startrecordingsession operation with thermal imaging domain optimization.
+                 *
+                 */
                 startRecordingSession(sessionDirectory)
                 
             } catch (e: Exception) {
@@ -1069,6 +1650,10 @@ class RecordingService : LifecycleService() {
         lifecycleScope.launch {
             try {
                 Log.i(TAG, "Received stop recording command from PC Controller")
+                /**
+                 * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                 *
+                 */
                 stopRecordingSession()
                 
             } catch (e: Exception) {
@@ -1087,6 +1672,10 @@ class RecordingService : LifecycleService() {
                 val timestamp = System.nanoTime()
                 
                 Log.i(TAG, "Received sync flash command from PC Controller")
+                /**
+                 * Executes addsyncmarker operation with thermal imaging domain optimization.
+                 *
+                 */
                 addSyncMarker("flash_sync", timestamp)
                 
             } catch (e: Exception) {
@@ -1130,21 +1719,43 @@ class RecordingService : LifecycleService() {
     
     // Network server setup and management
     
+    /**
+     * Sets upnetworkserver configuration.
+     */
     private fun setupNetworkServer() {
         lifecycleScope.launch {
             try {
                 // Start the TCP server immediately when service initializes
                 val serverStarted = networkServer.start()
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (serverStarted) {
                     Log.i(TAG, "Network server started automatically, listening on port 8080")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Listening for PC Controller on port 8080")
                 } else {
                     Log.e(TAG, "Failed to start network server automatically")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Network server failed to start")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error setting up network server", e)
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param error Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 updateNotification("Network server error: ${e.message}")
             }
         }
@@ -1153,11 +1764,23 @@ class RecordingService : LifecycleService() {
         lifecycleScope.launch {
             networkServer.connectionStateFlow.collect { connected ->
                 isConnectedToPC = connected
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (connected) {
                     Log.i(TAG, "PC Controller connected to network server")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("PC Controller connected")
                 } else {
                     Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Listening for PC Controller on port 8080")
                 }
             }
@@ -1166,11 +1789,26 @@ class RecordingService : LifecycleService() {
         // Monitor incoming messages from PC Controller
         lifecycleScope.launch {
             networkServer.messageFlow.collect { message ->
+                /**
+                 * Executes handlepccommand operation with thermal imaging domain optimization.
+                 *
+                 */
                 handlePCCommand(message)
             }
         }
     }
     
+    /**
+     * Executes connectToPC functionality.
+     */
+    /**
+     * Executes connecttopc operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param ipAddress Parameter for operation (type: String)
+     * @param port Parameter for operation (type: Int)
+     *
+     */
     private fun connectToPC(ipAddress: String, port: Int) {
         // Dual approach: try client connection first, fallback to server mode
         lifecycleScope.launch {
@@ -1178,30 +1816,68 @@ class RecordingService : LifecycleService() {
                 Log.i(TAG, "Attempting connection to PC Controller at $ipAddress:$port")
                 
                 // Ensure our server is running for PC to connect to us
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!networkServer.isRunning()) {
                     val started = networkServer.start()
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (started) {
                         Log.i(TAG, "Network server started, ready for PC Controller connection")
+                        /**
+                         * Executes updatenotification operation with thermal imaging domain optimization.
+                         *
+                         */
                         updateNotification("Ready for PC Controller connection")
                     } else {
                         Log.e(TAG, "Failed to start network server")
+                        /**
+                         * Executes updatenotification operation with thermal imaging domain optimization.
+                         *
+                         */
                         updateNotification("Failed to start network server")
                     }
                 } else {
                     Log.i(TAG, "Network server already running, ready for PC Controller")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Network server ready")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error during PC connection attempt", e)
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param error Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 updateNotification("Connection error: ${e.message}")
             }
         }
     }
     
+    /**
+     * Executes disconnectFromPC functionality.
+     */
+    /**
+     * Executes disconnectfrompc operation with thermal imaging domain optimization.
+     *
+     */
     private fun disconnectFromPC() {
         lifecycleScope.launch {
             try {
                 // Disconnect client if connected
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (isNetworkInitialized) {
                     networkClient.disconnect()
                 }
@@ -1210,6 +1886,10 @@ class RecordingService : LifecycleService() {
                 networkServer.stop()
                 isConnectedToPC = false
                 Log.i(TAG, "Disconnected from PC Controller")
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Disconnected from PC Controller") 
             } catch (e: Exception) {
                 Log.e(TAG, "Error disconnecting from PC", e)
@@ -1234,6 +1914,10 @@ class RecordingService : LifecycleService() {
             "message_received",
             messageId,
             clientId,
+            /**
+             * Executes mapof operation with thermal imaging domain optimization.
+             *
+             */
             mapOf(
                 "message_type" to messageType,
                 "protocol_version" to message.optString("protocol_version", "unknown")
@@ -1241,27 +1925,51 @@ class RecordingService : LifecycleService() {
         )
         
         // Validate protocol version
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!ProtocolVersion.validateMessageVersion(message)) {
             val errorMsg = "Unsupported protocol version"
             structuredLogger.logProtocolMessage(
                 "protocol_version_error", 
                 messageId,
                 clientId,
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf("error" to errorMsg)
             )
+            /**
+             * Executes senderror operation with thermal imaging domain optimization.
+             *
+             */
             sendError(outputStream, errorMsg)
             return
         }
         
         try {
+            /**
+             * Executes when operation with thermal imaging domain optimization.
+             *
+             */
             when (messageType) {
                 "protocol_handshake" -> {
                     val handshakeResult = ProtocolVersion.validateHandshakeResponse(message)
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (handshakeResult.success) {
                         structuredLogger.logProtocolMessage(
                             "handshake_success",
                             messageId,
                             clientId,
+                            /**
+                             * Executes mapof operation with thermal imaging domain optimization.
+                             *
+                             */
                             mapOf(
                                 "negotiated_version" to (handshakeResult.negotiatedVersion ?: "unknown"),
                                 "capabilities" to handshakeResult.commonCapabilities.joinToString(",")
@@ -1274,14 +1982,26 @@ class RecordingService : LifecycleService() {
                                 android.provider.Settings.Secure.ANDROID_ID
                             )
                         )
+                        /**
+                         * Executes sendmessage operation with thermal imaging domain optimization.
+                         *
+                         */
                         sendMessage(outputStream, responseMessage)
                     } else {
                         structuredLogger.logProtocolMessage(
                             "handshake_failed",
                             messageId,
                             clientId,
+                            /**
+                             * Executes mapof operation with thermal imaging domain optimization.
+                             *
+                             */
                             mapOf("error" to (handshakeResult.error ?: "unknown"))
                         )
+                        /**
+                         * Executes senderror operation with thermal imaging domain optimization.
+                         *
+                         */
                         sendError(outputStream, handshakeResult.error ?: "Handshake failed")
                     }
                 }
@@ -1293,6 +2013,10 @@ class RecordingService : LifecycleService() {
                     structuredLogger.logSessionEvent(
                         "remote_session_start_request",
                         sessionId,
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf("session_name" to sessionName, "client_id" to clientId)
                     )
                     
@@ -1300,16 +2024,40 @@ class RecordingService : LifecycleService() {
                     val baseDir = File(getExternalFilesDir(null), "recordings")
                     val sessionDir = File(baseDir, sessionId)
                     
+                    /**
+                     * Executes withcontext operation with thermal imaging domain optimization.
+                     *
+                     */
                     withContext(Dispatchers.Main) {
+                        /**
+                         * Executes startrecordingsession operation with thermal imaging domain optimization.
+                         *
+                         */
                         startRecordingSession(sessionDir.absolutePath)
                     }
                     
                     // Send acknowledgment
                     val ackMessage = ProtocolVersion.createProtocolMessage("ack", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("ack_for", "session_start")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("result", "Recording started")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("session_id", sessionId)
                     })
+                    /**
+                     * Executes sendmessage operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendMessage(outputStream, ackMessage)
                 }
                 
@@ -1317,17 +2065,41 @@ class RecordingService : LifecycleService() {
                     structuredLogger.logSessionEvent(
                         "remote_session_stop_request",
                         "current",
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf("client_id" to clientId)
                     )
                     
+                    /**
+                     * Executes withcontext operation with thermal imaging domain optimization.
+                     *
+                     */
                     withContext(Dispatchers.Main) {
+                        /**
+                         * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                         *
+                         */
                         stopRecordingSession()
                     }
                     
                     val ackMessage = ProtocolVersion.createProtocolMessage("ack", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("ack_for", "session_stop")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("result", "Recording stopped")
                     })
+                    /**
+                     * Executes sendmessage operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendMessage(outputStream, ackMessage)
                 }
                 
@@ -1338,17 +2110,41 @@ class RecordingService : LifecycleService() {
                         StructuredLogger.LogLevel.INFO,
                         "SyncFlash",
                         "remote_sync_flash_request",
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf("duration_ms" to durationMs, "client_id" to clientId)
                     )
                     
+                    /**
+                     * Executes withcontext operation with thermal imaging domain optimization.
+                     *
+                     */
                     withContext(Dispatchers.Main) {
+                        /**
+                         * Executes performsyncflash operation with thermal imaging domain optimization.
+                         *
+                         */
                         performSyncFlash(durationMs)
                     }
                     
                     val ackMessage = ProtocolVersion.createProtocolMessage("ack", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("ack_for", "sync_flash")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("result", "Flash performed")
                     })
+                    /**
+                     * Executes sendmessage operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendMessage(outputStream, ackMessage)
                 }
                 
@@ -1358,6 +2154,10 @@ class RecordingService : LifecycleService() {
                         messageId,
                         clientId
                     )
+                    /**
+                     * Executes sendstatusresponse operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendStatusResponse(outputStream)
                 }
                 
@@ -1366,13 +2166,29 @@ class RecordingService : LifecycleService() {
                         "heartbeat_received",
                         messageId,
                         clientId,
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf("timestamp" to message.optLong("timestamp", 0))
                     )
                     
                     val ackMessage = ProtocolVersion.createProtocolMessage("ack", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("ack_for", "heartbeat")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("result", "alive")
                     })
+                    /**
+                     * Executes sendmessage operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendMessage(outputStream, ackMessage)
                 }
                 
@@ -1381,12 +2197,27 @@ class RecordingService : LifecycleService() {
                         "unknown_message_type",
                         messageId,
                         clientId,
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf("message_type" to messageType)
                     )
                     
                     val errorMessage = ProtocolVersion.createProtocolMessage("error", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         * @param
+                         * @param type Parameter for operation (type: $messageType")
+                         *
+                         */
                         put("error", "Unknown message type: $messageType")
                     })
+                    /**
+                     * Executes sendmessage operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendMessage(outputStream, errorMessage)
                 }
             }
@@ -1395,6 +2226,10 @@ class RecordingService : LifecycleService() {
                 "message_processing_error",
                 messageId,
                 clientId,
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "message_type" to messageType,
                     "error" to e.message
@@ -1402,8 +2237,19 @@ class RecordingService : LifecycleService() {
             )
             
             val errorMessage = ProtocolVersion.createProtocolMessage("error", JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param messageType Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 put("error", "Error processing $messageType: ${e.message}")
             })
+            /**
+             * Executes sendmessage operation with thermal imaging domain optimization.
+             *
+             */
             sendMessage(outputStream, errorMessage)
         }
     }
@@ -1414,22 +2260,62 @@ class RecordingService : LifecycleService() {
     private suspend fun sendAck(outputStream: DataOutputStream, messageType: String, result: String) {
         val ackMessage = JSONObject().apply {
             put("message_type", "ack")
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("ack_for", messageType)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("result", result)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("timestamp", System.currentTimeMillis())
         }
+        /**
+         * Executes sendmessage operation with thermal imaging domain optimization.
+         *
+         */
         sendMessage(outputStream, ackMessage)
     }
     
     /**
      * Send error to PC client
      */
+    /**
+     * Executes senderror operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param outputStream Parameter for operation (type: DataOutputStream)
+     * @param error Parameter for operation (type: String)
+     *
+     */
     private suspend fun sendError(outputStream: DataOutputStream, error: String) {
         val errorMessage = JSONObject().apply {
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("message_type", "error")
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("error", error)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("timestamp", System.currentTimeMillis())
         }
+        /**
+         * Executes sendmessage operation with thermal imaging domain optimization.
+         *
+         */
         sendMessage(outputStream, errorMessage)
     }
     
@@ -1439,15 +2325,47 @@ class RecordingService : LifecycleService() {
     private suspend fun sendStatusResponse(outputStream: DataOutputStream) {
         val statusMessage = JSONObject().apply {
             put("message_type", "status_response")
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("device_id", android.provider.Settings.Secure.getString(
                 contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("recording_active", recordingController.isRecording)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("connected_clients", activeConnections.size)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("server_running", isServerRunning.get())
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("sensors_initialized", isInitialized)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("current_session", currentSessionDirectory)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("timestamp", System.currentTimeMillis())
         }
+        /**
+         * Executes sendmessage operation with thermal imaging domain optimization.
+         *
+         */
         sendMessage(outputStream, statusMessage)
     }
     
@@ -1457,8 +2375,16 @@ class RecordingService : LifecycleService() {
     private suspend fun sendKeepAlive(outputStream: DataOutputStream) {
         val keepAliveMessage = JSONObject().apply {
             put("message_type", "keepalive")
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("timestamp", System.currentTimeMillis())
         }
+        /**
+         * Executes sendmessage operation with thermal imaging domain optimization.
+         *
+         */
         sendMessage(outputStream, keepAliveMessage)
     }
     
@@ -1469,6 +2395,10 @@ class RecordingService : LifecycleService() {
         withContext(Dispatchers.IO) {
             try {
                 // Ensure protocol version is included
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!message.has("protocol_version")) {
                     message.put("protocol_version", ProtocolVersion.CURRENT_VERSION)
                 }
@@ -1482,6 +2412,10 @@ class RecordingService : LifecycleService() {
                     StructuredLogger.LogLevel.DEBUG,
                     "ServerSocket",
                     "message_sent",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "message_type" to message.optString("message_type", "unknown"),
                         "size_bytes" to messageData.size
@@ -1493,20 +2427,43 @@ class RecordingService : LifecycleService() {
                     StructuredLogger.LogLevel.ERROR,
                     "ServerSocket",
                     "message_send_error",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("error" to e.message)
                 )
                 throw e
 =======
+    /**
+     * Executes startPCDiscovery functionality.
+     */
+    /**
+     * Executes startpcdiscovery operation with thermal imaging domain optimization.
+     *
+     */
     private fun startPCDiscovery() {
         lifecycleScope.launch {
             try {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (isNetworkInitialized) {
                     // Use client discovery
+                    /**
+                     * Executes startnetworkdiscovery operation with thermal imaging domain optimization.
+                     *
+                     */
                     startNetworkDiscovery()
                 } else {
                     // TODO: Implement PC discovery using zeroconf/mDNS
                     // For now, log that discovery was requested
                     Log.i(TAG, "PC Controller discovery requested")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Searching for PC Controller...")
                 }
             } catch (e: Exception) {
@@ -1515,19 +2472,54 @@ class RecordingService : LifecycleService() {
         }
     }
     
+    /**
+     * Executes handlepccommand operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param message Parameter for operation (type: JSONObject)
+     *
+     */
     private suspend fun handlePCCommand(message: JSONObject) {
         try {
             val messageType = message.optString("message_type")
             Log.i(TAG, "Processing PC command: $messageType")
             
+            /**
+             * Executes when operation with thermal imaging domain optimization.
+             *
+             */
             when (messageType) {
                 "enhanced_device_registration" -> {
                     Log.i(TAG, "PC Controller device registration request")
+                    /**
+                     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendResponseToPC("enhanced_registration_ack", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("status", "success")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("device_type", "android_sensor_node")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("capabilities", JSONObject().apply {
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("recording", true)
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("sensors", arrayOf("rgb_camera", "thermal_camera", "gsr"))
                         })
                     })
@@ -1535,11 +2527,31 @@ class RecordingService : LifecycleService() {
                 
                 "session_start_command" -> {
                     val sessionDirectory = message.optString("session_directory")
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (sessionDirectory.isNotEmpty()) {
                         Log.i(TAG, "Received remote start command from PC for session: $sessionDirectory")
+                        /**
+                         * Executes startrecordingsession operation with thermal imaging domain optimization.
+                         *
+                         */
                         startRecordingSession(sessionDirectory)
+                        /**
+                         * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                         *
+                         */
                         sendResponseToPC("session_start_response", JSONObject().apply {
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("status", "started")
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("session_directory", sessionDirectory)
                         })
                     }
@@ -1547,8 +2559,20 @@ class RecordingService : LifecycleService() {
                 
                 "session_stop_command" -> {
                     Log.i(TAG, "Received remote stop command from PC")
+                    /**
+                     * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                     *
+                     */
                     stopRecordingSession()
+                    /**
+                     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendResponseToPC("session_stop_response", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("status", "stopped")
                     })
                 }
@@ -1556,11 +2580,31 @@ class RecordingService : LifecycleService() {
                 "sync_marker_command" -> {
                     val markerType = message.optString("marker_type")
                     val timestampNs = message.optLong("timestamp_ns", System.nanoTime())
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (markerType.isNotEmpty()) {
                         Log.i(TAG, "Received remote sync marker from PC: $markerType")
+                        /**
+                         * Executes addsyncmarker operation with thermal imaging domain optimization.
+                         *
+                         */
                         addSyncMarker(markerType, timestampNs)
+                        /**
+                         * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                         *
+                         */
                         sendResponseToPC("sync_marker_response", JSONObject().apply {
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("status", "added")
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("marker_type", markerType)
                         })
                     }
@@ -1568,40 +2612,104 @@ class RecordingService : LifecycleService() {
                 
                 "ping" -> {
                     Log.d(TAG, "Received ping from PC Controller")
+                    /**
+                     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendResponseToPC("pong", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("timestamp_ns", System.nanoTime())
                     })
                 }
                 
                 "status_request" -> {
                     Log.d(TAG, "PC Controller requested status")
+                    /**
+                     * Executes sendstatustopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendStatusToPC()
                 }
                 
                 else -> {
                     Log.w(TAG, "Unknown command from PC Controller: $messageType")
+                    /**
+                     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param command Parameter for operation (type: $messageType")
+                     *
+                     */
                     sendResponseToPC("error", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         * @param
+                         * @param command Parameter for operation (type: $messageType")
+                         *
+                         */
                         put("message", "Unknown command: $messageType")
                     })
                 }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error handling PC command", e)
+            /**
+             * Executes sendresponsetopc operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param command Parameter for operation (type: ${e.message}")
+             *
+             */
             sendResponseToPC("error", JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param command Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 put("message", "Error processing command: ${e.message}")
             })
         }
     }
     
+    /**
+     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param messageType Parameter for operation (type: String)
+     * @param data Parameter for operation (type: JSONObject = JSONObject()
+     *
+     */
     private suspend fun sendResponseToPC(messageType: String, data: JSONObject = JSONObject()) {
         try {
             val response = JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("message_type", messageType)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_id", android.provider.Settings.Secure.getString(
                     contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timestamp_ns", System.nanoTime())
                 // Merge additional data
                 data.keys().forEach { key ->
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put(key, data.get(key))
                 }
             }
@@ -1614,17 +2722,49 @@ class RecordingService : LifecycleService() {
         }
     }
     
+    /**
+     * Executes sendstatustopc operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun sendStatusToPC() {
         try {
             val statusData = JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("is_recording", recordingController.isRecording)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("current_session", currentSessionDirectory ?: "")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("recording_start_time", recordingStartTime)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("service_initialized", isInitialized)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("network_server_running", networkServer.isRunning())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("pc_connected", isConnectedToPC)
             }
             
+            /**
+             * Executes sendresponsetopc operation with thermal imaging domain optimization.
+             *
+             */
             sendResponseToPC("status_response", statusData)
             Log.i(TAG, "Status sent to PC Controller")
             
@@ -1640,7 +2780,15 @@ class RecordingService : LifecycleService() {
     private suspend fun initializeNetworkClient(): Boolean {
         return try {
             val success = networkClient.initialize()
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (success) {
+                /**
+                 * Configures the upnetworkcommandhandlers with validation and thermal imaging optimization.
+                 *
+                 */
                 setupNetworkCommandHandlers()
                 Log.i(TAG, "Network client initialized successfully")
             } else {
@@ -1659,33 +2807,64 @@ class RecordingService : LifecycleService() {
     private fun setupNetworkCommandHandlers() {
         // Set up command handlers
         networkClient.setMessageHandler("start_recording") { message ->
+            /**
+             * Executes handlestartrecordingcommand operation with thermal imaging domain optimization.
+             *
+             */
             handleStartRecordingCommand(message)
         }
         
         networkClient.setMessageHandler("stop_recording") { message ->
+            /**
+             * Executes handlestoprecordingcommand operation with thermal imaging domain optimization.
+             *
+             */
             handleStopRecordingCommand(message)
         }
         
         networkClient.setMessageHandler("sync_flash") { message ->
+            /**
+             * Executes handlesyncflashcommand operation with thermal imaging domain optimization.
+             *
+             */
             handleSyncFlashCommand(message)
         }
         
         networkClient.setMessageHandler("query_capabilities") { message ->
+            /**
+             * Executes handlequerycapabilitiescommand operation with thermal imaging domain optimization.
+             *
+             */
             handleQueryCapabilitiesCommand(message)
         }
         
         networkClient.setMessageHandler("query_status") { message ->
+            /**
+             * Executes handlequerystatuscommand operation with thermal imaging domain optimization.
+             *
+             */
             handleQueryStatusCommand(message)
         }
         
         // Set up network event listener for automatic connection handling
         networkClient.setEventListener(object : NetworkClient.NetworkEventListener {
+            /**
+             * Executes oncontrollerdiscovered operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param controller Parameter for operation (type: NetworkClient.ControllerInfo)
+             *
+             */
             override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
                 Log.i(TAG, "PC Controller discovered: ${controller.deviceName} at ${controller.ipAddress}")
                 
                 // Automatically attempt to connect to discovered PC Controllers
                 lifecycleScope.launch {
                     networkClient.connectToController(controller.ipAddress, controller.port) { success ->
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (success) {
                             Log.i(TAG, "Successfully connected to PC Controller: ${controller.deviceName}")
                         } else {
@@ -1695,40 +2874,106 @@ class RecordingService : LifecycleService() {
                 }
             }
             
+            /**
+             * Executes onconnected operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param controller Parameter for operation (type: NetworkClient.ControllerInfo)
+             *
+             */
             override fun onConnected(controller: NetworkClient.ControllerInfo) {
                 Log.i(TAG, "Connected to PC Controller: ${controller.deviceName}")
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Connected to PC Controller")
             }
             
+            /**
+             * Executes ondisconnected operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param reason Parameter for operation (type: String)
+             *
+             */
             override fun onDisconnected(reason: String) {
                 Log.i(TAG, "Disconnected from PC Controller: $reason")
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Disconnected from PC Controller") 
             }
             
+            /**
+             * Executes onremotemeasurementrequest operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param sessionInfo Parameter for operation (type: com.topdon.gsr.model.SessionInfo)
+             *
+             */
             override fun onRemoteMeasurementRequest(sessionInfo: com.topdon.gsr.model.SessionInfo) {
                 Log.i(TAG, "Received remote measurement request")
                 // Handle remote measurement requests if needed
             }
             
+            /**
+             * Executes onsyncflash operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param durationMs Duration in milliseconds (type: Int)
+             *
+             */
             override fun onSyncFlash(durationMs: Int) {
                 Log.i(TAG, "Sync flash request: ${durationMs}ms")
                 // Handle sync flash requests
             }
             
+            /**
+             * Executes ontimesynchronized operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param offsetNanoseconds Parameter for operation (type: Long)
+             *
+             */
             override fun onTimeSynchronized(offsetNanoseconds: Long) {
                 Log.i(TAG, "Time synchronized with PC Controller (offset: ${offsetNanoseconds}ns)")
             }
             
+            /**
+             * Executes ondatastreamingstarted operation with thermal imaging domain optimization.
+             *
+             */
             override fun onDataStreamingStarted() {
                 Log.i(TAG, "Data streaming started")
             }
             
+            /**
+             * Executes ondatastreamingstopped operation with thermal imaging domain optimization.
+             *
+             */
             override fun onDataStreamingStopped() {
                 Log.i(TAG, "Data streaming stopped")
             }
             
+            /**
+             * Executes onerror operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param operation Parameter for operation (type: String)
+             * @param error Parameter for operation (type: String)
+             *
+             */
             override fun onError(operation: String, error: String) {
                 Log.e(TAG, "Network error in $operation: $error")
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param error Parameter for operation (type: $operation")
+                 *
+                 */
                 updateNotification("Network error: $operation")
             }
         })
@@ -1741,6 +2986,10 @@ class RecordingService : LifecycleService() {
         lifecycleScope.launch {
             try {
                 networkClient.startDiscovery { success ->
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (success) {
                         Log.i(TAG, "Network discovery started successfully")
                     } else {
@@ -1763,14 +3012,38 @@ class RecordingService : LifecycleService() {
                 val sessionDirectory = "/storage/emulated/0/IRCamera_Sessions/$sessionId"
                 
                 Log.i(TAG, "Received start recording command from PC Controller")
+                /**
+                 * Executes startrecordingsession operation with thermal imaging domain optimization.
+                 *
+                 */
                 startRecordingSession(sessionDirectory)
                 
                 // Send acknowledgment back to PC Controller
                 val response = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message_type", "response")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("response_to", "start_recording") 
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("status", "success")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("session_id", sessionId)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message", "Recording started successfully")
                 }
                 networkClient.sendMessage(response)
@@ -1780,9 +3053,28 @@ class RecordingService : LifecycleService() {
                 
                 // Send error response
                 val response = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message_type", "response")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("response_to", "start_recording")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("status", "error")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param recording Parameter for operation (type: ${e.message}")
+                     *
+                     */
                     put("message", "Failed to start recording: ${e.message}")
                 }
                 networkClient.sendMessage(response)
@@ -1795,9 +3087,23 @@ class RecordingService : LifecycleService() {
 <<<<<<< HEAD
      * Perform sync flash for PC synchronization
      */
+    /**
+     * Executes performSyncFlash functionality.
+     */
+    /**
+     * Executes performsyncflash operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param durationMs Duration in milliseconds (type: Int)
+     *
+     */
     private fun performSyncFlash(durationMs: Int) {
         // This would need to be handled by the main activity
         // For now, just add a sync marker
+        /**
+         * Executes addsyncmarker operation with thermal imaging domain optimization.
+         *
+         */
         addSyncMarker("pc_sync_flash", System.nanoTime())
     }
     
@@ -1820,21 +3126,51 @@ class RecordingService : LifecycleService() {
             }
             
             nsdManager?.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, object : NsdManager.RegistrationListener {
+                /**
+                 * Executes onserviceregistered operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo?)
+                 *
+                 */
                 override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {
                     Log.i(TAG, "NSD service registered: ${serviceInfo?.serviceName}")
                     nsdServiceInfo = serviceInfo
                     isServiceRegistered = true
                 }
                 
+                /**
+                 * Executes onregistrationfailed operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo?)
+                 * @param errorCode Parameter for operation (type: Int)
+                 *
+                 */
                 override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
                     Log.e(TAG, "NSD service registration failed: $errorCode")
                 }
                 
+                /**
+                 * Executes onserviceunregistered operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo?)
+                 *
+                 */
                 override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
                     Log.i(TAG, "NSD service unregistered: ${serviceInfo?.serviceName}")
                     isServiceRegistered = false
                 }
                 
+                /**
+                 * Executes onunregistrationfailed operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo?)
+                 * @param errorCode Parameter for operation (type: Int)
+                 *
+                 */
                 override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
                     Log.e(TAG, "NSD service unregistration failed: $errorCode")
                 }
@@ -1848,20 +3184,58 @@ class RecordingService : LifecycleService() {
     /**
      * Unregister NSD service
      */
+    /**
+     * Executes unregisternsdservice operation with thermal imaging domain optimization.
+     *
+     */
     private fun unregisterNsdService() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!isServiceRegistered || nsdServiceInfo == null) {
             return
         }
         
         try {
             nsdManager?.unregisterService(object : NsdManager.RegistrationListener {
+                /**
+                 * Executes onserviceregistered operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo?)
+                 *
+                 */
                 override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {}
+                /**
+                 * Executes onregistrationfailed operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo?)
+                 * @param errorCode Parameter for operation (type: Int)
+                 *
+                 */
                 override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {}
+                /**
+                 * Executes onserviceunregistered operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo?)
+                 *
+                 */
                 override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
                     Log.i(TAG, "NSD service unregistered successfully")
                     isServiceRegistered = false
                     nsdServiceInfo = null
                 }
+                /**
+                 * Executes onunregistrationfailed operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param serviceInfo Parameter for operation (type: NsdServiceInfo?)
+                 * @param errorCode Parameter for operation (type: Int)
+                 *
+                 */
                 override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
                     Log.e(TAG, "NSD service unregistration failed: $errorCode")
                 }
@@ -1927,17 +3301,47 @@ class RecordingService : LifecycleService() {
 =======
      * Handle stop recording command from PC Controller
      */
+    /**
+     * Executes handleStopRecordingCommand functionality.
+     */
+    /**
+     * Executes handlestoprecordingcommand operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param message Parameter for operation (type: JSONObject)
+     *
+     */
     private fun handleStopRecordingCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
                 Log.i(TAG, "Received stop recording command from PC Controller")
+                /**
+                 * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                 *
+                 */
                 stopRecordingSession()
                 
                 // Send acknowledgment back to PC Controller
                 val response = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message_type", "response")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("response_to", "stop_recording")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("status", "success")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message", "Recording stopped successfully")
                 }
                 networkClient.sendMessage(response)
@@ -1947,9 +3351,28 @@ class RecordingService : LifecycleService() {
                 
                 // Send error response
                 val response = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message_type", "response")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("response_to", "stop_recording") 
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("status", "error")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param recording Parameter for operation (type: ${e.message}")
+                     *
+                     */
                     put("message", "Failed to stop recording: ${e.message}")
                 }
                 networkClient.sendMessage(response)
@@ -1969,6 +3392,10 @@ class RecordingService : LifecycleService() {
                 Log.i(TAG, "Received sync flash command from PC Controller")
                 
                 // Add sync marker to recording
+                /**
+                 * Executes addsyncmarker operation with thermal imaging domain optimization.
+                 *
+                 */
                 addSyncMarker("flash_sync", timestamp)
                 
                 // TODO: Implement screen flash functionality
@@ -1976,10 +3403,30 @@ class RecordingService : LifecycleService() {
                 
                 // Send acknowledgment back to PC Controller
                 val response = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message_type", "response")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("response_to", "sync_flash")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("status", "success")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("timestamp_ns", timestamp)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message", "Sync flash executed")
                 }
                 networkClient.sendMessage(response)
@@ -1999,20 +3446,64 @@ class RecordingService : LifecycleService() {
                 Log.i(TAG, "Received query capabilities command from PC Controller")
                 
                 val capabilities = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("rgb_camera", true)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("thermal_camera", true) // Assuming thermal camera is available
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("gsr_sensor", true)     // Assuming GSR sensor is available
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("sync_flash", true)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("background_recording", true)
                 }
                 
                 // Send capabilities response back to PC Controller
                 val response = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message_type", "response")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("response_to", "query_capabilities")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("status", "capabilities_data")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("capabilities", capabilities)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("device_model", android.os.Build.MODEL)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("android_version", android.os.Build.VERSION.RELEASE)
                 }
                 networkClient.sendMessage(response)
@@ -2033,18 +3524,54 @@ class RecordingService : LifecycleService() {
                 
                 val currentSession = getCurrentSession()
                 val status = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("is_recording", recordingController.isRecording)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("is_initialized", isInitialized)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("current_session", currentSession?.directory ?: "")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("recording_start_time", currentSession?.startTime ?: 0)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("uptime_ms", System.currentTimeMillis())
                 }
                 
                 // Send status response back to PC Controller
                 val response = JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("message_type", "response")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("response_to", "query_status")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("status", "status_data")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("data", status)
                 }
                 networkClient.sendMessage(response)
@@ -2064,7 +3591,25 @@ class RecordingService : LifecycleService() {
      * Manually connect to a PC Controller using IP address
      * This can be used as a fallback when automatic discovery fails
      */
+    /**
+     * Executes connectToPC functionality.
+     */
+    /**
+     * Executes connecttopc operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param ipAddress Parameter for operation (type: String)
+     * @param port Parameter for operation (type: Int = 8080)
+     * @param callback Parameter for operation (type: ((Boolean)
+     *
+     * @return Operation result or configured object (type: Unit)? = null))
+     *
+     */
     fun connectToPC(ipAddress: String, port: Int = 8080, callback: ((Boolean) -> Unit)? = null) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!isNetworkInitialized) {
             Log.e(TAG, "Network client not initialized")
             callback?.invoke(false)
@@ -2077,11 +3622,23 @@ class RecordingService : LifecycleService() {
                 
                 val success = networkClient.connectToController(ipAddress, port)
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (success) {
                     Log.i(TAG, "Manual connection to PC Controller successful")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Connected to PC Controller ($ipAddress)")
                 } else {
                     Log.w(TAG, "Manual connection to PC Controller failed")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Failed to connect to PC ($ipAddress)")
                 }
                 
@@ -2096,21 +3653,43 @@ class RecordingService : LifecycleService() {
 =======
     // Network server setup and management
     
+    /**
+     * Sets upnetworkserver configuration.
+     */
     private fun setupNetworkServer() {
         lifecycleScope.launch {
             try {
                 // Start the TCP server immediately when service initializes
                 val serverStarted = networkServer.start()
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (serverStarted) {
                     Log.i(TAG, "Network server started automatically, listening on port 8080")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Listening for PC Controller on port 8080")
                 } else {
                     Log.e(TAG, "Failed to start network server automatically")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Network server failed to start")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error setting up network server", e)
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param error Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 updateNotification("Network server error: ${e.message}")
             }
         }
@@ -2119,11 +3698,23 @@ class RecordingService : LifecycleService() {
         lifecycleScope.launch {
             networkServer.connectionStateFlow.collect { connected ->
                 isConnectedToPC = connected
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (connected) {
                     Log.i(TAG, "PC Controller connected to network server")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("PC Controller connected")
                 } else {
                     Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Listening for PC Controller on port 8080")
                 }
             }
@@ -2132,11 +3723,26 @@ class RecordingService : LifecycleService() {
         // Monitor incoming messages from PC Controller
         lifecycleScope.launch {
             networkServer.messageFlow.collect { message ->
+                /**
+                 * Executes handlepccommand operation with thermal imaging domain optimization.
+                 *
+                 */
                 handlePCCommand(message)
             }
         }
     }
     
+    /**
+     * Executes connectToPC functionality.
+     */
+    /**
+     * Executes connecttopc operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param ipAddress Parameter for operation (type: String)
+     * @param port Parameter for operation (type: Int)
+     *
+     */
     private fun connectToPC(ipAddress: String, port: Int) {
         // With server architecture, we don't "connect" to PC
         // Instead, we ensure our server is running and ready for PC to connect to us
@@ -2144,26 +3750,60 @@ class RecordingService : LifecycleService() {
             try {
                 Log.i(TAG, "Ensuring network server is ready for PC Controller connection")
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!networkServer.isRunning()) {
                     val started = networkServer.start()
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (started) {
                         Log.i(TAG, "Network server started, ready for PC Controller at any IP")
+                        /**
+                         * Executes updatenotification operation with thermal imaging domain optimization.
+                         *
+                         */
                         updateNotification("Ready for PC Controller connection")
                     } else {
                         Log.e(TAG, "Failed to start network server")
+                        /**
+                         * Executes updatenotification operation with thermal imaging domain optimization.
+                         *
+                         */
                         updateNotification("Failed to start network server")
                     }
                 } else {
                     Log.i(TAG, "Network server already running, ready for PC Controller")
+                    /**
+                     * Executes updatenotification operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateNotification("Network server ready")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error ensuring network server is ready", e)
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param error Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 updateNotification("Network server error: ${e.message}")
             }
         }
     }
     
+    /**
+     * Executes disconnectFromPC functionality.
+     */
+    /**
+     * Executes disconnectfrompc operation with thermal imaging domain optimization.
+     *
+     */
     private fun disconnectFromPC() {
         lifecycleScope.launch {
             try {
@@ -2171,6 +3811,10 @@ class RecordingService : LifecycleService() {
                 networkServer.stop()
                 isConnectedToPC = false
                 Log.i(TAG, "Network server stopped, PC Controller disconnected")
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Network server stopped") 
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping network server", e)
@@ -2178,35 +3822,81 @@ class RecordingService : LifecycleService() {
         }
     }
     
+    /**
+     * Executes startPCDiscovery functionality.
+     */
+    /**
+     * Executes startpcdiscovery operation with thermal imaging domain optimization.
+     *
+     */
     private fun startPCDiscovery() {
         lifecycleScope.launch {
             try {
                 // TODO: Implement PC discovery using zeroconf/mDNS
                 // For now, log that discovery was requested
                 Log.i(TAG, "PC Controller discovery requested")
+                /**
+                 * Executes updatenotification operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateNotification("Searching for PC Controller...")
                 
                 // This could be extended to use NetworkDiscoveryService
-                // or implement manual discovery logic here
+                // Or implement manual discovery logic here
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting PC discovery", e)
             }
         }
     }
     
+    /**
+     * Executes handlepccommand operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param message Parameter for operation (type: JSONObject)
+     *
+     */
     private suspend fun handlePCCommand(message: JSONObject) {
         try {
             val messageType = message.optString("message_type")
             Log.i(TAG, "Processing PC command: $messageType")
             
+            /**
+             * Executes when operation with thermal imaging domain optimization.
+             *
+             */
             when (messageType) {
                 "enhanced_device_registration" -> {
                     Log.i(TAG, "PC Controller device registration request")
+                    /**
+                     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendResponseToPC("enhanced_registration_ack", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("status", "success")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("device_type", "android_sensor_node")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("capabilities", JSONObject().apply {
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("recording", true)
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("sensors", arrayOf("rgb_camera", "thermal_camera", "gsr"))
                         })
                     })
@@ -2214,11 +3904,31 @@ class RecordingService : LifecycleService() {
                 
                 "session_start_command" -> {
                     val sessionDirectory = message.optString("session_directory")
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (sessionDirectory.isNotEmpty()) {
                         Log.i(TAG, "Received remote start command from PC for session: $sessionDirectory")
+                        /**
+                         * Executes startrecordingsession operation with thermal imaging domain optimization.
+                         *
+                         */
                         startRecordingSession(sessionDirectory)
+                        /**
+                         * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                         *
+                         */
                         sendResponseToPC("session_start_response", JSONObject().apply {
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("status", "started")
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("session_directory", sessionDirectory)
                         })
                     }
@@ -2226,8 +3936,20 @@ class RecordingService : LifecycleService() {
                 
                 "session_stop_command" -> {
                     Log.i(TAG, "Received remote stop command from PC")
+                    /**
+                     * Executes stoprecordingsession operation with thermal imaging domain optimization.
+                     *
+                     */
                     stopRecordingSession()
+                    /**
+                     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendResponseToPC("session_stop_response", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("status", "stopped")
                     })
                 }
@@ -2235,11 +3957,31 @@ class RecordingService : LifecycleService() {
                 "sync_marker_command" -> {
                     val markerType = message.optString("marker_type")
                     val timestampNs = message.optLong("timestamp_ns", System.nanoTime())
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (markerType.isNotEmpty()) {
                         Log.i(TAG, "Received remote sync marker from PC: $markerType")
+                        /**
+                         * Executes addsyncmarker operation with thermal imaging domain optimization.
+                         *
+                         */
                         addSyncMarker(markerType, timestampNs)
+                        /**
+                         * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                         *
+                         */
                         sendResponseToPC("sync_marker_response", JSONObject().apply {
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("status", "added")
+                            /**
+                             * Executes put operation with thermal imaging domain optimization.
+                             *
+                             */
                             put("marker_type", markerType)
                         })
                     }
@@ -2247,40 +3989,104 @@ class RecordingService : LifecycleService() {
                 
                 "ping" -> {
                     Log.d(TAG, "Received ping from PC Controller")
+                    /**
+                     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendResponseToPC("pong", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("timestamp_ns", System.nanoTime())
                     })
                 }
                 
                 "status_request" -> {
                     Log.d(TAG, "PC Controller requested status")
+                    /**
+                     * Executes sendstatustopc operation with thermal imaging domain optimization.
+                     *
+                     */
                     sendStatusToPC()
                 }
                 
                 else -> {
                     Log.w(TAG, "Unknown command from PC Controller: $messageType")
+                    /**
+                     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param command Parameter for operation (type: $messageType")
+                     *
+                     */
                     sendResponseToPC("error", JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         * @param
+                         * @param command Parameter for operation (type: $messageType")
+                         *
+                         */
                         put("message", "Unknown command: $messageType")
                     })
                 }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error handling PC command", e)
+            /**
+             * Executes sendresponsetopc operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param command Parameter for operation (type: ${e.message}")
+             *
+             */
             sendResponseToPC("error", JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param command Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 put("message", "Error processing command: ${e.message}")
             })
         }
     }
     
+    /**
+     * Executes sendresponsetopc operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param messageType Parameter for operation (type: String)
+     * @param data Parameter for operation (type: JSONObject = JSONObject()
+     *
+     */
     private suspend fun sendResponseToPC(messageType: String, data: JSONObject = JSONObject()) {
         try {
             val response = JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("message_type", messageType)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_id", android.provider.Settings.Secure.getString(
                     contentResolver, android.provider.Settings.Secure.ANDROID_ID))
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timestamp_ns", System.nanoTime())
                 // Merge additional data
                 data.keys().forEach { key ->
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put(key, data.get(key))
                 }
             }
@@ -2293,17 +4099,49 @@ class RecordingService : LifecycleService() {
         }
     }
     
+    /**
+     * Executes sendstatustopc operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun sendStatusToPC() {
         try {
             val statusData = JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("is_recording", recordingController.isRecording)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("current_session", currentSessionDirectory ?: "")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("recording_start_time", recordingStartTime)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("service_initialized", isInitialized)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("network_server_running", networkServer.isRunning())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("pc_connected", isConnectedToPC)
             }
             
+            /**
+             * Executes sendresponsetopc operation with thermal imaging domain optimization.
+             *
+             */
             sendResponseToPC("status_response", statusData)
             Log.i(TAG, "Status sent to PC Controller")
             

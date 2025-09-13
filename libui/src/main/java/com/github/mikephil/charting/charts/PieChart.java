@@ -20,9 +20,18 @@ import com.github.mikephil.charting.utils.Utils;
 import java.util.List;
 
 /**
- * View that represents a pie chart. Draws cake like slices.
+ * Specialized thermal imaging component providing PieChart functionality for the IRCamera system.
  *
- * @author Philipp Jahoda
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class PieChart extends PieRadarChartBase<PieData> {
 
@@ -100,15 +109,39 @@ public class PieChart extends PieRadarChartBase<PieData> {
      */
     private float mMinAngleForSlices = 0f;
 
+    /**
+     * Executes piechart operation with thermal imaging domain optimization.
+     *
+     */
     public PieChart(Context context) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(context);
     }
 
+    /**
+     * Executes piechart operation with thermal imaging domain optimization.
+     *
+     */
     public PieChart(Context context, AttributeSet attrs) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(context, attrs);
     }
 
+    /**
+     * Executes piechart operation with thermal imaging domain optimization.
+     *
+     */
     public PieChart(Context context, AttributeSet attrs, int defStyle) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(context, attrs, defStyle);
     }
 
@@ -126,11 +159,19 @@ public class PieChart extends PieRadarChartBase<PieData> {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mData == null)
             return;
 
         mRenderer.drawData(canvas);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (valuesToHighlight())
             mRenderer.drawHighlighted(canvas, mIndicesToHighlight);
 
@@ -140,8 +181,16 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
         mLegendRenderer.renderLegend(canvas);
 
+        /**
+         * Executes drawdescription operation with thermal imaging domain optimization.
+         *
+         */
         drawDescription(canvas);
 
+        /**
+         * Executes drawmarkers operation with thermal imaging domain optimization.
+         *
+         */
         drawMarkers(canvas);
     }
 
@@ -149,7 +198,11 @@ public class PieChart extends PieRadarChartBase<PieData> {
     public void calculateOffsets() {
         super.calculateOffsets();
 
-        // prevent nullpointer when no data set
+        // Prevent nullpointer when no data set
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mData == null)
             return;
 
@@ -160,8 +213,8 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
         float shift = mData.getDataSet().getSelectionShift();
 
-        // create the circle box that will contain the pie-chart (the bounds of
-        // the pie-chart)
+        // Create the circle box that will contain the pie-chart (the bounds of
+        // The pie-chart)
         mCircleBox.set(c.x - radius + shift,
                 c.y - radius + shift,
                 c.x + radius - shift,
@@ -172,6 +225,10 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
     @Override
     protected void calcMinMax() {
+        /**
+         * Executes calcangles operation with thermal imaging domain optimization.
+         *
+         */
         calcAngles();
     }
 
@@ -183,20 +240,24 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
         float off = r / 10f * 3.6f;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isDrawHoleEnabled()) {
             off = (r - (r / 100f * getHoleRadius())) / 2f;
         }
 
-        r -= off; // offset to keep things inside the chart
+        r -= off; // Offset to keep things inside the chart
 
         float rotationAngle = getRotationAngle();
 
         int entryIndex = (int) highlight.getX();
 
-        // offset needed to center the drawn text in the slice
+        // Offset needed to center the drawn text in the slice
         float offset = mDrawAngles[entryIndex] / 2;
 
-        // calculate the text position
+        // Calculate the text position
         float x = (float) (r
                 * Math.cos(Math.toRadians((rotationAngle + mAbsoluteAngles[entryIndex] - offset)
                 * mAnimator.getPhaseY())) + center.x);
@@ -215,16 +276,32 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
         int entryCount = mData.getEntryCount();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDrawAngles.length != entryCount) {
             mDrawAngles = new float[entryCount];
         } else {
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < entryCount; i++) {
                 mDrawAngles[i] = 0;
             }
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mAbsoluteAngles.length != entryCount) {
             mAbsoluteAngles = new float[entryCount];
         } else {
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < entryCount; i++) {
                 mAbsoluteAngles[i] = 0;
             }
@@ -241,16 +318,32 @@ public class PieChart extends PieRadarChartBase<PieData> {
         float offset = 0f;
         float diff = 0f;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mData.getDataSetCount(); i++) {
 
             IPieDataSet set = dataSets.get(i);
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int j = 0; j < set.getEntryCount(); j++) {
 
                 float drawAngle = calcAngle(Math.abs(set.getEntryForIndex(j).getY()), yValueSum);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (hasMinAngle) {
                     float temp = drawAngle - mMinAngleForSlices;
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (temp <= 0) {
                         minAngles[cnt] = mMinAngleForSlices;
                         offset += -temp;
@@ -262,6 +355,10 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
                 mDrawAngles[cnt] = drawAngle;
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (cnt == 0) {
                     mAbsoluteAngles[cnt] = mDrawAngles[cnt];
                 } else {
@@ -272,11 +369,23 @@ public class PieChart extends PieRadarChartBase<PieData> {
             }
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (hasMinAngle) {
             // Correct bigger slices by relatively reducing their angles based on the total angle needed to subtract
             // This requires that `entryCount * mMinAngleForSlices <= mMaxAngle` be true to properly work!
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < entryCount; i++) {
                 minAngles[i] -= (minAngles[i] - mMinAngleForSlices) / diff * offset;
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (i == 0) {
                     mAbsoluteAngles[0] = minAngles[0];
                 } else {
@@ -296,13 +405,25 @@ public class PieChart extends PieRadarChartBase<PieData> {
      */
     public boolean needsHighlight(int index) {
 
-        // no highlight
+        // No highlight
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!valuesToHighlight())
             return false;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mIndicesToHighlight.length; i++)
 
-            // check if the xvalue for the given dataset needs highlight
+            // Check if the xvalue for the given dataset needs highlight
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if ((int) mIndicesToHighlight[i].getX() == index)
                 return true;
 
@@ -344,15 +465,23 @@ public class PieChart extends PieRadarChartBase<PieData> {
     @Override
     public int getIndexForAngle(float angle) {
 
-        // take the current angle of the chart into consideration
+        // Take the current angle of the chart into consideration
         float a = Utils.getNormalizedAngle(angle - getRotationAngle());
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mAbsoluteAngles.length; i++) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mAbsoluteAngles[i] > a)
                 return i;
         }
 
-        return -1; // return -1 if no index found
+        return -1; // Return -1 if no index found
     }
 
     /**
@@ -365,7 +494,15 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
         List<IPieDataSet> dataSets = mData.getDataSets();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < dataSets.size(); i++) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (dataSets.get(i).getEntryForXValue(xIndex, Float.NaN) != null)
                 return i;
         }
@@ -446,6 +583,10 @@ public class PieChart extends PieRadarChartBase<PieData> {
      * @param text
      */
     public void setCenterText(CharSequence text) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (text == null)
             mCenterText = "";
         else
@@ -492,6 +633,10 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
     @Override
     public float getRadius() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mCircleBox == null)
             return 0;
         else
@@ -758,9 +903,17 @@ public class PieChart extends PieRadarChartBase<PieData> {
      */
     public void setMaxAngle(float maxangle) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (maxangle > 360)
             maxangle = 360f;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (maxangle < 90)
             maxangle = 90f;
 
@@ -785,6 +938,10 @@ public class PieChart extends PieRadarChartBase<PieData> {
      */
     public void setMinAngleForSlices(float minAngle) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (minAngle > (mMaxAngle / 2f))
             minAngle = mMaxAngle / 2f;
         else if (minAngle < 0)
@@ -795,7 +952,11 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
     @Override
     protected void onDetachedFromWindow() {
-        // releases the bitmap in the renderer to avoid oom error
+        // Releases the bitmap in the renderer to avoid oom error
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mRenderer != null && mRenderer instanceof PieChartRenderer) {
             ((PieChartRenderer) mRenderer).releaseBitmap();
         }

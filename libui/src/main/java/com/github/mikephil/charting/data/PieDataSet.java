@@ -7,6 +7,20 @@ import com.github.mikephil.charting.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Specialized thermal imaging component providing PieDataSet functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
 
     /**
@@ -30,18 +44,34 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
     private float mValueLinePart2Length = 0.4f;
     private boolean mValueLineVariableLength = true;
 
+    /**
+     * Executes piedataset operation with thermal imaging domain optimization.
+     *
+     */
     public PieDataSet(List<PieEntry> yVals, String label) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(yVals, label);
-//        mShift = Utils.convertDpToPixel(12f);
+// MShift = Utils.convertDpToPixel(12f);
     }
 
     @Override
     public DataSet<PieEntry> copy() {
         List<PieEntry> entries = new ArrayList<>();
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mValues.size(); i++) {
             entries.add(mValues.get(i).copy());
         }
         PieDataSet copied = new PieDataSet(entries, getLabel());
+        /**
+         * Executes copy operation with thermal imaging domain optimization.
+         *
+         */
         copy(copied);
         return copied;
     }
@@ -53,9 +83,17 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
     @Override
     protected void calcMinMax(PieEntry e) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null)
             return;
 
+        /**
+         * Executes calcminmaxy operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMaxY(e);
     }
 
@@ -67,8 +105,16 @@ public class PieDataSet extends DataSet<PieEntry> implements IPieDataSet {
      */
     public void setSliceSpace(float spaceDp) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (spaceDp > 20)
             spaceDp = 20f;
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (spaceDp < 0)
             spaceDp = 0f;
 

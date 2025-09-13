@@ -9,8 +9,18 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Multi-device coordination service for synchronized recording across multiple Android nodes
- * Implements distributed session management and cross-device synchronization protocols
+ * Specialized thermal imaging component providing MultiDeviceCoordination functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class MultiDeviceCoordination(
     private val context: Context,
@@ -58,13 +68,51 @@ class MultiDeviceCoordination(
         val isCompleted: Boolean = false,
     )
 
+/**
+ * Specialized thermal imaging component providing CoordinationEvent functionality for the IRCamera system.
+ *
+ * This component is part of the IRCamera thermal imaging system, providing
+ * specialized functionality for thermal data processing and visualization.
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
     enum class CoordinationEvent(val eventType: String) {
+        /**
+         * Executes session start operation with thermal imaging domain optimization.
+         *
+         */
         SESSION_START("session_start"),
+        /**
+         * Executes session stop operation with thermal imaging domain optimization.
+         *
+         */
         SESSION_STOP("session_stop"),
+        /**
+         * Executes recording start operation with thermal imaging domain optimization.
+         *
+         */
         RECORDING_START("recording_start"),
+        /**
+         * Executes recording stop operation with thermal imaging domain optimization.
+         *
+         */
         RECORDING_STOP("recording_stop"),
+        /**
+         * Executes sync flash operation with thermal imaging domain optimization.
+         *
+         */
         SYNC_FLASH("sync_flash"),
+        /**
+         * Executes calibration operation with thermal imaging domain optimization.
+         *
+         */
         CALIBRATION("calibration"),
+        /**
+         * Executes time sync operation with thermal imaging domain optimization.
+         *
+         */
         TIME_SYNC("time_sync"),
     }
 
@@ -77,12 +125,24 @@ class MultiDeviceCoordination(
             isCoordinating.set(true)
 
             // Start device discovery and registration
+            /**
+             * Executes startdevicediscovery operation with thermal imaging domain optimization.
+             *
+             */
             startDeviceDiscovery()
 
             // Begin leader election process
+            /**
+             * Initializes the iateleaderelection component for thermal imaging operations.
+             *
+             */
             initiateLeaderElection()
 
             // Start synchronization heartbeat
+            /**
+             * Executes startsynchronizationloop operation with thermal imaging domain optimization.
+             *
+             */
             startSynchronizationLoop()
 
             Log.d(TAG, "Multi-device coordination initialized for session: $sessionId")
@@ -94,11 +154,35 @@ class MultiDeviceCoordination(
     private suspend fun startDeviceDiscovery() {
         val discoveryMessage =
             JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("type", "device_discovery")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_id", deviceId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_name", android.os.Build.MODEL)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("capabilities", JSONArray(listOf("gsr", "thermal", "rgb_camera")))
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("session_id", currentSessionId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timestamp", System.currentTimeMillis())
             }
 
@@ -107,10 +191,18 @@ class MultiDeviceCoordination(
 
         // Set up discovery response handler
         networkClient.setMessageHandler("device_discovery_response") { message ->
+            /**
+             * Executes handledevicediscoveryresponse operation with thermal imaging domain optimization.
+             *
+             */
             handleDeviceDiscoveryResponse(message)
         }
 
         networkClient.setMessageHandler("device_discovery") { message ->
+            /**
+             * Executes handledevicediscoveryrequest operation with thermal imaging domain optimization.
+             *
+             */
             handleDeviceDiscoveryRequest(message)
         }
     }
@@ -123,6 +215,10 @@ class MultiDeviceCoordination(
         if (remoteDeviceId.isEmpty() || remoteDeviceId == deviceId) return
 
         val deviceInfo =
+            /**
+             * Executes deviceinfo operation with thermal imaging domain optimization.
+             *
+             */
             DeviceInfo(
                 deviceId = remoteDeviceId,
                 deviceName = message.optString("device_name", "Unknown"),
@@ -142,13 +238,45 @@ class MultiDeviceCoordination(
     private fun handleDeviceDiscoveryRequest(message: JSONObject) {
         val response =
             JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("type", "device_discovery_response")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_id", deviceId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_name", android.os.Build.MODEL)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("capabilities", JSONArray(listOf("gsr", "thermal", "rgb_camera")))
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("session_id", currentSessionId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("clock_offset", networkClient.getClockOffset())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("battery_level", getBatteryLevel())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timestamp", System.currentTimeMillis())
             }
 
@@ -163,19 +291,47 @@ class MultiDeviceCoordination(
     private suspend fun initiateLeaderElection() {
         val electionMessage =
             JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("type", "leader_election")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_id", deviceId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("priority", calculateLeadershipPriority())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timestamp", System.currentTimeMillis())
             }
 
         networkClient.broadcastMessage(electionMessage)
 
         // Wait for responses and determine leader
+        /**
+         * Executes delay operation with thermal imaging domain optimization.
+         *
+         */
         delay(LEADER_ELECTION_TIMEOUT)
+        /**
+         * Executes determineleader operation with thermal imaging domain optimization.
+         *
+         */
         determineLeader()
 
         networkClient.setMessageHandler("leader_election") { message ->
+            /**
+             * Executes handleleaderelection operation with thermal imaging domain optimization.
+             *
+             */
             handleLeaderElection(message)
         }
     }
@@ -193,6 +349,10 @@ class MultiDeviceCoordination(
         priority += 50 // Base for having all sensor capabilities
 
         // Higher priority for devices with stable network connection
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (networkClient.isConnected()) priority += 25
 
         return priority
@@ -206,6 +366,10 @@ class MultiDeviceCoordination(
         val remotePriority = message.optInt("priority", 0)
         val myPriority = calculateLeadershipPriority()
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (remotePriority > myPriority ||
             (remotePriority == myPriority && remoteDeviceId < deviceId)
         ) {
@@ -220,9 +384,17 @@ class MultiDeviceCoordination(
     private fun determineLeader() {
         if (isLeader.get()) {
             Log.d(TAG, "This device is the coordination leader")
+            /**
+             * Executes startleadershipduties operation with thermal imaging domain optimization.
+             *
+             */
             startLeadershipDuties()
         } else {
             Log.d(TAG, "This device is a follower")
+            /**
+             * Executes startfollowermode operation with thermal imaging domain optimization.
+             *
+             */
             startFollowerMode()
         }
     }
@@ -234,14 +406,30 @@ class MultiDeviceCoordination(
         coordinationScope.launch {
             while (isCoordinating.get() && isLeader.get()) {
                 // Send periodic synchronization signals
+                /**
+                 * Executes broadcastsyncsignal operation with thermal imaging domain optimization.
+                 *
+                 */
                 broadcastSyncSignal()
 
                 // Monitor device health
+                /**
+                 * Executes checkdevicehealth operation with thermal imaging domain optimization.
+                 *
+                 */
                 checkDeviceHealth()
 
                 // Coordinate session events
+                /**
+                 * Executes processscheduledevents operation with thermal imaging domain optimization.
+                 *
+                 */
                 processScheduledEvents()
 
+                /**
+                 * Executes delay operation with thermal imaging domain optimization.
+                 *
+                 */
                 delay(SYNC_INTERVAL_MS)
             }
         }
@@ -256,6 +444,10 @@ class MultiDeviceCoordination(
         }
 
         networkClient.setMessageHandler("coordination_event") { message ->
+            /**
+             * Executes handlecoordinationevent operation with thermal imaging domain optimization.
+             *
+             */
             handleCoordinationEvent(message)
         }
     }
@@ -266,10 +458,30 @@ class MultiDeviceCoordination(
     private suspend fun broadcastSyncSignal() {
         val syncMessage =
             JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("type", "sync_signal")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("leader_id", deviceId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("session_id", currentSessionId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("sync_timestamp", System.currentTimeMillis())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_count", connectedDevices.size + 1)
             }
 
@@ -284,15 +496,27 @@ class MultiDeviceCoordination(
         val currentTime = System.currentTimeMillis()
         val drift = Math.abs(currentTime - leaderTimestamp)
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (drift > MAX_SYNC_DRIFT_MS) {
             Log.w(TAG, "Time drift detected: ${drift}ms")
             // Trigger time resynchronization
             coordinationScope.launch {
+                /**
+                 * Executes requesttimeresync operation with thermal imaging domain optimization.
+                 *
+                 */
                 requestTimeResync()
             }
         }
 
         // Send heartbeat response
+        /**
+         * Executes sendheartbeat operation with thermal imaging domain optimization.
+         *
+         */
         sendHeartbeat()
     }
 
@@ -302,10 +526,30 @@ class MultiDeviceCoordination(
     private fun sendHeartbeat() {
         val heartbeatMessage =
             JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("type", "device_heartbeat")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_id", deviceId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timestamp", System.currentTimeMillis())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("battery_level", getBatteryLevel())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("is_recording", isDeviceRecording())
             }
 
@@ -321,11 +565,19 @@ class MultiDeviceCoordination(
         eventType: CoordinationEvent,
         delayMs: Long = 1000L,
     ): String =
+        /**
+         * Executes withcontext operation with thermal imaging domain optimization.
+         *
+         */
         withContext(Dispatchers.IO) {
             val eventId = generateEventId(eventType.eventType)
             val scheduledTime = System.currentTimeMillis() + delayMs
 
             val syncEvent =
+                /**
+                 * Executes syncevent operation with thermal imaging domain optimization.
+                 *
+                 */
                 SyncEvent(
                     eventId = eventId,
                     eventType = eventType.eventType,
@@ -336,11 +588,35 @@ class MultiDeviceCoordination(
 
             // Broadcast event to all devices
             val eventMessage =
+                /**
+                 * Executes jsonobject operation with thermal imaging domain optimization.
+                 *
+                 */
                 JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("type", "coordination_event")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("event_id", eventId)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("event_type", eventType.eventType)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("scheduled_time", scheduledTime)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("session_id", currentSessionId)
                 }
 
@@ -361,11 +637,27 @@ class MultiDeviceCoordination(
         // Schedule local execution of the event
         coordinationScope.launch {
             val delay = scheduledTime - System.currentTimeMillis()
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (delay > 0) {
+                /**
+                 * Executes delay operation with thermal imaging domain optimization.
+                 *
+                 */
                 delay(delay)
             }
 
+            /**
+             * Executes executecoordinatedevent operation with thermal imaging domain optimization.
+             *
+             */
             executeCoordinatedEvent(eventType, eventId)
+            /**
+             * Executes sendeventconfirmation operation with thermal imaging domain optimization.
+             *
+             */
             sendEventConfirmation(eventId)
         }
     }
@@ -379,6 +671,10 @@ class MultiDeviceCoordination(
     ) {
         Log.d(TAG, "Executing coordinated event: $eventType")
 
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (eventType) {
             "session_start" -> handleSessionStart()
             "session_stop" -> handleSessionStop()
@@ -396,9 +692,25 @@ class MultiDeviceCoordination(
     private suspend fun sendEventConfirmation(eventId: String) {
         val confirmationMessage =
             JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("type", "event_confirmation")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("event_id", eventId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("device_id", deviceId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("execution_timestamp", System.currentTimeMillis())
             }
 
@@ -452,9 +764,23 @@ class MultiDeviceCoordination(
     )
 
     // Helper methods
+    /**
+     * Executes jsonArrayToList functionality.
+     */
+    /**
+     * Executes jsonarraytolist operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param jsonArray Parameter for operation (type: JSONArray?)
+     *
+     */
     private fun jsonArrayToList(jsonArray: JSONArray?): List<String> {
         val list = mutableListOf<String>()
         jsonArray?.let {
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (i in 0 until it.length()) {
                 list.add(it.optString(i))
             }
@@ -462,53 +788,112 @@ class MultiDeviceCoordination(
         return list
     }
 
+    /**
+     * Executes generateEventId functionality.
+     */
+    /**
+     * Executes generateeventid operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param eventType Parameter for operation (type: String)
+     *
+     */
     private fun generateEventId(eventType: String): String {
         return "${eventType}_${deviceId}_${System.currentTimeMillis()}"
     }
 
+    /**
+     * Retrieves batterylevel information.
+     */
     private fun getBatteryLevel(): Int {
         val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as android.os.BatteryManager
         return batteryManager.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY)
     }
 
+    /**
+     * Executes isDeviceRecording functionality.
+     */
+    /**
+     * Executes isdevicerecording operation with thermal imaging domain optimization.
+     *
+     */
     private fun isDeviceRecording(): Boolean {
         // This would be connected to the actual recording state
         return false // Placeholder
     }
 
+    /**
+     * Executes requesttimeresync operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun requestTimeResync() {
         // Request time resynchronization with PC Controller
         Log.d(TAG, "Requesting time resynchronization")
     }
 
+    /**
+     * Executes handlesessionstart operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun handleSessionStart() {
         Log.d(TAG, "Coordinated session start")
     }
 
+    /**
+     * Executes handlesessionstop operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun handleSessionStop() {
         Log.d(TAG, "Coordinated session stop")
     }
 
+    /**
+     * Executes handlerecordingstart operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun handleRecordingStart() {
         Log.d(TAG, "Coordinated recording start")
     }
 
+    /**
+     * Executes handlerecordingstop operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun handleRecordingStop() {
         Log.d(TAG, "Coordinated recording stop")
     }
 
+    /**
+     * Executes handlecalibration operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun handleCalibration() {
         Log.d(TAG, "Coordinated calibration")
     }
 
+    /**
+     * Executes handletimesync operation with thermal imaging domain optimization.
+     *
+     */
     private suspend fun handleTimeSync() {
         Log.d(TAG, "Coordinated time sync")
     }
 
+    /**
+     * Executes checkDeviceHealth functionality.
+     */
+    /**
+     * Executes checkdevicehealth operation with thermal imaging domain optimization.
+     *
+     */
     private fun checkDeviceHealth() {
         val currentTime = System.currentTimeMillis()
         connectedDevices.entries.removeAll { (_, device) ->
             val isStale = (currentTime - device.lastHeartbeat) > HEARTBEAT_TIMEOUT
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (isStale) {
                 Log.w(TAG, "Device ${device.deviceId} is no longer responding")
             }
@@ -516,6 +901,13 @@ class MultiDeviceCoordination(
         }
     }
 
+    /**
+     * Executes processScheduledEvents functionality.
+     */
+    /**
+     * Executes processscheduledevents operation with thermal imaging domain optimization.
+     *
+     */
     private fun processScheduledEvents() {
         // Process any scheduled events that are ready
         syncEvents.entries.removeAll { (_, event) ->
@@ -523,13 +915,36 @@ class MultiDeviceCoordination(
         }
     }
 
+    /**
+     * Executes startSynchronizationLoop functionality.
+     */
+    /**
+     * Executes startsynchronizationloop operation with thermal imaging domain optimization.
+     *
+     */
     private fun startSynchronizationLoop() {
         syncJob =
             coordinationScope.launch {
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (isCoordinating.get()) {
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (isLeader.get()) {
+                        /**
+                         * Executes broadcastsyncsignal operation with thermal imaging domain optimization.
+                         *
+                         */
                         broadcastSyncSignal()
                     }
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(SYNC_INTERVAL_MS)
                 }
             }

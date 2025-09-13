@@ -80,9 +80,9 @@ import com.topdon.tc001.config.ProtocolVersion
 import com.topdon.tc001.logging.StructuredLogger
 import com.topdon.tc001.supervisor.CrashSafeSupervisor
 // Zoho dependencies commented out - not available in build
-// import com.zoho.commons.LauncherModes
-// import com.zoho.commons.LauncherProperties
-// import com.zoho.salesiqembed.ZohoSalesIQ
+// Import com.zoho.commons.LauncherModes
+// Import com.zoho.commons.LauncherProperties
+// Import com.zoho.salesiqembed.ZohoSalesIQ
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
@@ -91,6 +91,20 @@ import java.io.IOException
 import java.io.OutputStream
 
 // Legacy ARouter route annotation - now using NavigationManager
+/**
+ * Specialized thermal imaging component providing MainActivity functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     private val versionViewModel: VersionViewModel by viewModels()
 
@@ -110,6 +124,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
     
+/**
+ * Specialized thermal imaging component providing ConnectionStatus functionality for the IRCamera system.
+ *
+ * This component is part of the IRCamera thermal imaging system, providing
+ * specialized functionality for thermal data processing and visualization.
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
     enum class ConnectionStatus {
         DISCONNECTED,
         DISCOVERING,
@@ -119,6 +143,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
     
     private val serviceConnection = object : ServiceConnection {
+        /**
+         * Executes onserviceconnected operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param name Parameter for operation (type: ComponentName?)
+         * @param service Parameter for operation (type: IBinder?)
+         *
+         */
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as RecordingService.RecordingServiceBinder
             recordingService = binder.getService()
@@ -126,9 +158,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             Log.i(TAG, "Recording service connected")
             
             // Now that we have the service, we can set up remote control
+            /**
+             * Configures the upremotecontrol with validation and thermal imaging optimization.
+             *
+             */
             setupRemoteControl()
         }
         
+        /**
+         * Executes onservicedisconnected operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param name Parameter for operation (type: ComponentName?)
+         *
+         */
         override fun onServiceDisconnected(name: ComponentName?) {
             recordingService = null
             isServiceBound = false
@@ -142,6 +185,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun setupRemoteControl() {
         Log.i(TAG, "Setting up enhanced remote control capabilities")
         
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!isServiceBound || recordingService == null) {
             Log.w(TAG, "Recording service not available for remote control setup")
             return
@@ -149,9 +196,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         
         try {
             // Enable automatic reconnection with exponential backoff
+            /**
+             * Executes enableautoreconnection operation with thermal imaging domain optimization.
+             *
+             */
             enableAutoReconnection()
             
             // Start connection health monitoring
+            /**
+             * Executes startheartbeat operation with thermal imaging domain optimization.
+             *
+             */
             startHeartbeat()
             
             // Set up UI click handlers for network status
@@ -162,10 +217,21 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             
         } catch (e: Exception) {
             Log.e(TAG, "Error setting up remote control", e)
+            /**
+             * Executes shownetworkerror operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param control Parameter for operation (type: ${e.message}")
+             *
+             */
             showNetworkError("Failed to setup remote control: ${e.message}")
         }
     }
     
+    /**
+     * Initializes the contentlayoutid component for thermal imaging operations.
+     *
+     */
     override fun initContentLayoutId(): Int = R.layout.activity_main
     
     companion object {
@@ -173,6 +239,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     // Recorddeviceinfo
+    /**
+     * Executes logInfo functionality.
+     */
+    /**
+     * Executes loginfo operation with thermal imaging domain optimization.
+     *
+     */
     private fun logInfo() {
         try {
             val str = StringBuilder()
@@ -187,37 +260,79 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             str.append("CPU_ABI: ${Build.CPU_ABI}").append("\n")
             str.append("SDK_INT: ${Build.VERSION.SDK_INT}").append("\n")
             str.append("RELEASE: ${Build.VERSION.RELEASE}").append("\n")
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (SharedManager.getHasShowClause()) {
                 XLog.i(str)
             }
         } catch (e: Exception) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (SharedManager.getHasShowClause()) {
                 XLog.e("log error: ${e.message}")
             }
         }
     }
     
+    /**
+     * Executes oncreate operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param savedInstanceState Parameter for operation (type: Bundle?)
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         // Phase 0 - Initialize baseline components first
+        /**
+         * Initializes the ializephase0baseline component for thermal imaging operations.
+         *
+         */
         initializePhase0Baseline()
         
+        /**
+         * Initializes the view component for thermal imaging operations.
+         *
+         */
         initView()
+        /**
+         * Initializes the data component for thermal imaging operations.
+         *
+         */
         initData()
         
         // Initialize PC-to-phone control networking
+        /**
+         * Initializes the networking component for thermal imaging operations.
+         *
+         */
         initNetworking()
     }
 
+    /**
+     * Initializes view component.
+     */
     private fun initView() {
         // Check if clause needs to be shown (moved from SplashActivity)
         if (!SharedManager.getHasShowClause()) {
             NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
+            /**
+             * Executes finish operation with thermal imaging domain optimization.
+             *
+             */
             finish()
             return
         }
 
+        /**
+         * Executes loginfo operation with thermal imaging domain optimization.
+         *
+         */
         logInfo()
         
         // Initialize network status UI elements
@@ -233,7 +348,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.viewPage.adapter = ViewPagerAdapter(this)
         binding.viewPage.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
+                /**
+                 * Executes onpageselected operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param position Parameter for operation (type: Int)
+                 *
+                 */
                 override fun onPageSelected(position: Int) {
+                    /**
+                     * Executes refreshtabselect operation with thermal imaging domain optimization.
+                     *
+                     */
                     refreshTabSelect(position)
                 }
             },
@@ -248,27 +374,59 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         
         // Add click listener for network status (for manual connection)
         binding.networkStatusBar.setOnClickListener {
+            /**
+             * Executes handlenetworkstatusclick operation with thermal imaging domain optimization.
+             *
+             */
             handleNetworkStatusClick()
         }
         
         App.instance.initWebSocket()
+        /**
+         * Executes copyfile operation with thermal imaging domain optimization.
+         *
+         */
         copyFile("SR.pb", File(filesDir, "SR.pb"))
         BaseApplication.instance.clearDb()
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (BaseApplication.instance.isDomestic()) {
+            /**
+             * Executes checkappversion operation with thermal imaging domain optimization.
+             *
+             */
             checkAppVersion(true)
         } else {
             versionViewModel.checkVersion()
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!SharedManager.hasTcLine && !SharedManager.hasTS004 && !SharedManager.hasTC007) {
             // 仅当device列表为空时，才执行自动跳转
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (DeviceTools.isConnect()) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!WebSocketProxy.getInstance().isConnected()) {
                     NavigationManager.build(RouterConfig.IR_MAIN)
                         .withBoolean(ExtraKeyConfig.IS_TC007, false)
                         .navigation(this)
                 }
             } else {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (WebSocketProxy.getInstance().isTS004Connect()) {
                     NavigationManager.build(RouterConfig.IR_MONOCULAR).navigation(this)
                 } else if (WebSocketProxy.getInstance().isTC007Connect()) {
@@ -279,62 +437,120 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (DeviceTools.isConnect()) {
             SharedManager.hasTcLine = true
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (WebSocketProxy.getInstance().isTS004Connect()) {
             SharedManager.hasTS004 = true
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (WebSocketProxy.getInstance().isTC007Connect()) {
             SharedManager.hasTC007 = true
         }
-//        initLauncher()
+// InitLauncher()
     }
 
+    /**
+     * Executes onstart operation with thermal imaging domain optimization.
+     *
+     */
     override fun onStart() {
         super.onStart()
 
-        // versionDownload
+        // VersionDownload
         versionViewModel.updateLiveData.observe(this) {
+            /**
+             * Executes firmwareupdialog operation with thermal imaging domain optimization.
+             *
+             */
             FirmwareUpDialog(this).apply {
                 titleStr = getString(com.topdon.lib.core.R.string.update_new_version)
                 sizeStr = it.versionNo
                 contentStr = it.description
                 isShowCancel = !it.isForcedUpgrade
                 onConfirmClickListener = {
+                    /**
+                     * Executes updateapk operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateApk(it.downPageUrl)
                 }
                 onCancelClickListener = {
-                    SharedManager.setVersionCheckDate(System.currentTimeMillis()) // refreshversiontip时间
+                    SharedManager.setVersionCheckDate(System.currentTimeMillis()) // Refreshversiontip时间
                 }
             }.show()
         }
     }
 
+    /**
+     * Executes updateApk functionality.
+     */
+    /**
+     * Executes updateapk operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param url Parameter for operation (type: String)
+     *
+     */
     private fun updateApk(url: String) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (applicationInfo.targetSdkVersion < Build.VERSION_CODES.P) {
-            // 目标version27默认跳到官网Download
+            // 目标version27default跳到官网Download
             val intent = Intent()
             intent.action = "android.intent.action.VIEW"
             intent.data = Uri.parse(url)
+            /**
+             * Executes startactivity operation with thermal imaging domain optimization.
+             *
+             */
             startActivity(intent)
         } else {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (AppUtils.isAppInstalled("com.android.vending")) {
                 try {
                     val intent = Intent()
                     intent.action = "android.intent.action.VIEW"
                     intent.data = Uri.parse(AppConfig.GOOGLE_APK_MARKET_URL)
+                    /**
+                     * Executes startactivity operation with thermal imaging domain optimization.
+                     *
+                     */
                     startActivity(intent)
                 } catch (e: Exception) {
                     val intent = Intent()
                     intent.action = "android.intent.action.VIEW"
                     intent.data = Uri.parse(AppConfig.GOOGLE_APK_URL)
+                    /**
+                     * Executes startactivity operation with thermal imaging domain optimization.
+                     *
+                     */
                     startActivity(intent)
                 }
             } else {
                 val intent = Intent()
                 intent.action = "android.intent.action.VIEW"
                 intent.data = Uri.parse(AppConfig.GOOGLE_APK_URL)
+                /**
+                 * Executes startactivity operation with thermal imaging domain optimization.
+                 *
+                 */
                 startActivity(intent)
             }
         }
@@ -342,8 +558,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private var resetTipsDialog: TipDialog? = null
 
+    /**
+     * Executes showResetTipsDialog functionality.
+     */
+    /**
+     * Executes showresettipsdialog operation with thermal imaging domain optimization.
+     *
+     */
     private fun showResetTipsDialog() {
         disconnectDialog?.dismiss()
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (resetTipsDialog == null) {
             resetTipsDialog =
                 TipDialog.Builder(this)
@@ -357,10 +584,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private var disconnectDialog: TipDialog? = null
 
+    /**
+     * Executes dialogDisconnect functionality.
+     */
+    /**
+     * Executes dialogdisconnect operation with thermal imaging domain optimization.
+     *
+     */
     private fun dialogDisconnect() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (resetTipsDialog?.isShowing == true) {
             return
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (disconnectDialog == null) {
             disconnectDialog =
                 TipDialog.Builder(this)
@@ -372,10 +614,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         disconnectDialog?.show()
     }
 
+    /**
+     * Executes copyFile functionality.
+     */
+    /**
+     * Executes copyfile operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param filename Parameter for operation (type: String)
+     * @param targetFile Parameter for operation (type: File)
+     *
+     */
     private fun copyFile(
         filename: String,
         targetFile: File,
     ) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (targetFile.exists()) { // 已存在就不覆盖了
             return
         }
@@ -384,6 +641,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             val outputStream: OutputStream = FileOutputStream(targetFile)
             val buffer = ByteArray(1024)
             var length: Int
+            /**
+             * Executes while operation with thermal imaging domain optimization.
+             *
+             */
             while (inputStream.read(buffer).also { length = it } > 0) {
                 outputStream.write(buffer, 0, length)
             }
@@ -394,6 +655,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
+    /**
+     * Initializes data component.
+     */
     private fun initData() {
         checkPermissionType = 0
         checkCameraPermission()
@@ -402,20 +666,43 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         Log.i("MainActivity", "✅ PC-to-Phone communication integration available - RecordingService supports network control")
     }
 
+    /**
+     * Executes onresume operation with thermal imaging domain optimization.
+     *
+     */
     override fun onResume() {
         super.onResume()
         LMS.getInstance().language = ConstantLanguages.ENGLISH
 //        DeviceTools.isConnect(true)
     }
 
+    /**
+     * Executes onpause operation with thermal imaging domain optimization.
+     *
+     */
     override fun onPause() {
         super.onPause()
     }
 
+    /**
+     * Executes onclick operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param v Parameter for operation (type: View?)
+     *
+     */
     override fun onClick(v: View?) {
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (v) {
             binding.clIconGallery -> { // 图库
                 checkPermissionType = 1
+                /**
+                 * Executes checkstoragepermission operation with thermal imaging domain optimization.
+                 *
+                 */
                 checkStoragePermission()
             }
             binding.viewMain -> { // 首页
@@ -427,16 +714,32 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
+    /**
+     * Executes onkeydown operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param keyCode Parameter for operation (type: Int)
+     * @param event Parameter for operation (type: KeyEvent?)
+     *
+     */
     override fun onKeyDown(
         keyCode: Int,
         event: KeyEvent?,
     ): Boolean {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             TipDialog.Builder(this)
                 .setMessage(getString(R.string.main_exit, CommUtils.getAppName()))
                 .setCancelListener(R.string.app_no)
                 .setPositiveListener(R.string.app_yes) {
                     BaseApplication.instance.exitAll()
+                    /**
+                     * Executes finish operation with thermal imaging domain optimization.
+                     *
+                     */
                     finish()
                 }
                 .create().show()
@@ -446,11 +749,24 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Retrieves devicepermission information.
+     */
     fun getDevicePermission(event: DevicePermissionEvent) {
         DeviceTools.requestUsb(this, 0, event.device)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Executes onWinterClick functionality.
+     */
+    /**
+     * Executes onwinterclick operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param event Parameter for operation (type: WinterClickEvent)
+     *
+     */
     fun onWinterClick(event: WinterClickEvent) {
         binding.viewMinePoint.isVisible = false
     }
@@ -459,6 +775,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
      * refresh 3 个 tab 的selectedstate
      * @param index 当前selected哪个 tab，`[0, 2]`
      */
+    /**
+     * Executes refreshTabSelect functionality.
+     */
+    /**
+     * Executes refreshtabselect operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param index Parameter for operation (type: Int)
+     *
+     */
     private fun refreshTabSelect(index: Int) {
         binding.ivIconGallery.isSelected = false
         binding.tvIconGallery.isSelected = false
@@ -466,6 +792,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.tvIconMine.isSelected = false
         binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_not_select)
 
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (index) {
             0 -> { // 图库
                 binding.ivIconGallery.isSelected = true
@@ -481,23 +811,51 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
+    /**
+     * Executes connected operation with thermal imaging domain optimization.
+     *
+     */
     override fun connected() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (SharedManager.isConnectAutoOpen) {
             checkPermissionType = 2
+            /**
+             * Manages thermal camera operations with hardware-optimized performance and error handling.
+             *
+             */
             checkCameraPermission()
         }
     }
 
     private var tipOtgDialog: TipOtgDialog? = null
 
+    /**
+     * Executes disconnected operation with thermal imaging domain optimization.
+     *
+     */
     override fun disConnected() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (WebSocketProxy.getInstance().isTS004Connect()) {
             NavigationManager.build(RouterConfig.IR_MONOCULAR).navigation(this)
         }
         // 无connectionOTGtip
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (tipOtgDialog != null && tipOtgDialog!!.isShowing) {
             return
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (SharedManager.isTipOTG && !BaseApplication.instance.hasOtgShow) {
             tipOtgDialog =
                 TipOtgDialog.Builder(this)
@@ -512,28 +870,93 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * Executes onTS004ResetEvent functionality.
+     */
+    /**
+     * Executes onts004resetevent operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param event Parameter for operation (type: TS004ResetEvent)
+     *
+     */
     fun onTS004ResetEvent(event: TS004ResetEvent) {
+        /**
+         * Executes showresettipsdialog operation with thermal imaging domain optimization.
+         *
+         */
         showResetTipsDialog()
     }
 
+    /**
+     * Executes onsocketconnected operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param isTS004 Parameter for operation (type: Boolean)
+     *
+     */
     override fun onSocketConnected(isTS004: Boolean) {
         disconnectDialog?.dismiss()
     }
 
+    /**
+     * Executes onsocketdisconnected operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param isTS004 Parameter for operation (type: Boolean)
+     *
+     */
     override fun onSocketDisConnected(isTS004: Boolean) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED) && isTS004) { // TC007不用
+            /**
+             * Executes dialogdisconnect operation with thermal imaging domain optimization.
+             *
+             */
             dialogDisconnect()
         }
     }
 
+/**
+ * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ViewPagerAdapter display and interaction.
+ *
+ * This component is part of the IRCamera thermal imaging system, providing
+ * specialized functionality for thermal data processing and visualization.
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
     private class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
+        /**
+         * Retrieves the itemcount with optimized performance for thermal imaging operations.
+         *
+         */
         override fun getItemCount() = 3
 
+        /**
+         * Executes createfragment operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param position Parameter for operation (type: Int)
+         *
+         */
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> {
+                    /**
+                     * Executes irgallerytabfragment operation with thermal imaging domain optimization.
+                     *
+                     */
                     IRGalleryTabFragment().apply {
                         arguments =
+                            /**
+                             * Executes bundle operation with thermal imaging domain optimization.
+                             *
+                             */
                             Bundle().also {
                                 it.putBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, true)
                                 it.putBoolean(ExtraKeyConfig.HAS_BACK_ICON, false)
@@ -552,23 +975,42 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
      * 因申请Permission前需要弹窗tipUser，所以modify成key value形式
      * @return key：Permission种class value：具体Permission
      */
+    /**
+     * Retrieves needpermissionlist information.
+     */
     private fun getNeedPermissionList(): SparseArray<List<String>> {
         val sparseArray = SparseArray<List<String>>()
         sparseArray.append(R.string.permission_request_camera_app, listOf(Manifest.permission.CAMERA))
         (
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (this.applicationInfo.targetSdkVersion >= 34) {
+                /**
+                 * Executes listof operation with thermal imaging domain optimization.
+                 *
+                 */
                 listOf(
                     Permission.READ_MEDIA_VIDEO,
                     Permission.READ_MEDIA_IMAGES,
                     Permission.WRITE_EXTERNAL_STORAGE,
                 )
             } else if (this.applicationInfo.targetSdkVersion == 33) {
+                /**
+                 * Executes listof operation with thermal imaging domain optimization.
+                 *
+                 */
                 listOf(
                     Permission.READ_MEDIA_VIDEO,
                     Permission.READ_MEDIA_IMAGES,
                     Permission.WRITE_EXTERNAL_STORAGE,
                 )
             } else {
+                /**
+                 * Executes listof operation with thermal imaging domain optimization.
+                 *
+                 */
                 listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
             }
         ).let {
@@ -577,14 +1019,37 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         return sparseArray
     }
 
+    /**
+     * Executes checkCameraPermission functionality.
+     */
+    /**
+     * Manages thermal camera operations with hardware-optimized performance and error handling.
+     *
+     */
     private fun checkCameraPermission() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!PermissionUtils.isVisualUser() &&
             !XXPermissions.isGranted(
                 this,
+                /**
+                 * Retrieves the needpermissionlist with optimized performance for thermal imaging operations.
+                 *
+                 */
                 getNeedPermissionList()[R.string.permission_request_camera_app],
             )
         ) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (BaseApplication.instance.isDomestic()) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (SharedManager.getMainPermissionsState()) {
                     // 国内版拒绝Authorization之后就别再Authorization了华为上架不通过
                     return
@@ -593,13 +1058,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     .setMessage(getString(R.string.permission_request_camera_app, CommUtils.getAppName()))
                     .setCancelListener(R.string.app_cancel)
                     .setPositiveListener(R.string.app_confirm) {
+                        /**
+                         * Initializes the camerapermission component for thermal imaging operations.
+                         *
+                         */
                         initCameraPermission()
                     }
                     .create().show()
             } else {
+                /**
+                 * Initializes the camerapermission component for thermal imaging operations.
+                 *
+                 */
                 initCameraPermission()
             }
         } else {
+            /**
+             * Initializes the camerapermission component for thermal imaging operations.
+             *
+             */
             initCameraPermission()
         }
     }
@@ -607,35 +1084,83 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     /**
      * 动态申请Permission
      */
+    /**
+     * Initializes the camerapermission component for thermal imaging operations.
+     *
+     */
     private fun initCameraPermission() {
         XXPermissions.with(this)
             .permission(getNeedPermissionList()[R.string.permission_request_camera_app])
             .request(
                 object : OnPermissionCallback {
+                    /**
+                     * Executes ongranted operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param permissions Parameter for operation (type: MutableList<String>)
+                     * @param allGranted Parameter for operation (type: Boolean)
+                     *
+                     */
                     override fun onGranted(
                         permissions: MutableList<String>,
                         allGranted: Boolean,
                     ) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (allGranted) {
+                            /**
+                             * Executes checkstoragepermission operation with thermal imaging domain optimization.
+                             *
+                             */
                             checkStoragePermission()
                         }
                     }
 
+                    /**
+                     * Executes ondenied operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param permissions Parameter for operation (type: MutableList<String>)
+                     * @param doNotAskAgain Parameter for operation (type: Boolean)
+                     *
+                     */
                     override fun onDenied(
                         permissions: MutableList<String>,
                         doNotAskAgain: Boolean,
                     ) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (BaseApplication.instance.isDomestic()) {
                             SharedManager.setMainPermissionsState(true)
                         }
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (doNotAskAgain) {
                             // 拒绝Authorization并且不再提醒
                             TipDialog.Builder(this@MainActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
                                 .setMessage(
+                                    /**
+                                     * Executes if operation with thermal imaging domain optimization.
+                                     *
+                                     */
                                     if (PermissionUtils.hasCameraPermission()) {
+                                        /**
+                                         * Retrieves the string with optimized performance for thermal imaging operations.
+                                         *
+                                         */
                                         getString(R.string.app_album_content)
                                     } else {
+                                        /**
+                                         * Retrieves the string with optimized performance for thermal imaging operations.
+                                         *
+                                         */
                                         getString(R.string.app_camera_content)
                                     },
                                 )
@@ -652,20 +1177,47 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             )
     }
 
+    /**
+     * Executes checkStoragePermission functionality.
+     */
+    /**
+     * Executes checkstoragepermission operation with thermal imaging domain optimization.
+     *
+     */
     private fun checkStoragePermission() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!XXPermissions.isGranted(this, getNeedPermissionList()[R.string.permission_request_storage_app])) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
                     .setMessage(getString(R.string.permission_request_storage_app, CommUtils.getAppName()))
                     .setCancelListener(R.string.app_cancel)
                     .setPositiveListener(R.string.app_confirm) {
+                        /**
+                         * Initializes the storagepermission component for thermal imaging operations.
+                         *
+                         */
                         initStoragePermission()
                     }
                     .create().show()
             } else {
+                /**
+                 * Initializes the storagepermission component for thermal imaging operations.
+                 *
+                 */
                 initStoragePermission()
             }
         } else {
+            /**
+             * Initializes the storagepermission component for thermal imaging operations.
+             *
+             */
             initStoragePermission()
         }
     }
@@ -673,30 +1225,74 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     /**
      * 动态申请Permission
      */
+    /**
+     * Initializes the storagepermission component for thermal imaging operations.
+     *
+     */
     private fun initStoragePermission() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (PermissionUtils.isVisualUser()) {
+            /**
+             * Executes jumpiractivity operation with thermal imaging domain optimization.
+             *
+             */
             jumpIRActivity()
             return
         }
         XXPermissions.with(this)
             .permission(
+                /**
+                 * Retrieves the needpermissionlist with optimized performance for thermal imaging operations.
+                 *
+                 */
                 getNeedPermissionList()[R.string.permission_request_storage_app],
             )
             .request(
                 object : OnPermissionCallback {
+                    /**
+                     * Executes ongranted operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param permissions Parameter for operation (type: MutableList<String>)
+                     * @param allGranted Parameter for operation (type: Boolean)
+                     *
+                     */
                     override fun onGranted(
                         permissions: MutableList<String>,
                         allGranted: Boolean,
                     ) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (allGranted) {
+                            /**
+                             * Executes jumpiractivity operation with thermal imaging domain optimization.
+                             *
+                             */
                             jumpIRActivity()
                         }
                     }
 
+                    /**
+                     * Executes ondenied operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param permissions Parameter for operation (type: MutableList<String>)
+                     * @param doNotAskAgain Parameter for operation (type: Boolean)
+                     *
+                     */
                     override fun onDenied(
                         permissions: MutableList<String>,
                         doNotAskAgain: Boolean,
                     ) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (doNotAskAgain) {
                             // 拒绝Authorization并且不再提醒
                             TipDialog.Builder(this@MainActivity)
@@ -715,7 +1311,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             )
     }
 
+    /**
+     * Executes jumpIRActivity functionality.
+     */
+    /**
+     * Executes jumpiractivity operation with thermal imaging domain optimization.
+     *
+     */
     fun jumpIRActivity() {
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (checkPermissionType) {
             0 -> {
                 DeviceTools.isConnect(isSendConnectEvent = true)
@@ -724,6 +1331,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 binding.viewPage.setCurrentItem(0, false)
             }
             2 -> {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (DeviceTools.isTC001PlusConnect()) {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     // Fixed: Replaced deprecated startActivityForResult with startActivity as no result processing is needed
@@ -745,15 +1356,51 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private var appVersionUtil: AppVersionUtil? = null
 
+    /**
+     * Executes checkAppVersion functionality.
+     */
+    /**
+     * Executes checkappversion operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param isShow Parameter for operation (type: Boolean)
+     *
+     */
     private fun checkAppVersion(isShow: Boolean) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (appVersionUtil == null) {
             appVersionUtil =
+                /**
+                 * Executes appversionutil operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param object Parameter for operation (type: AppVersionUtil.DotIsShowListener {                         override fun isShow(show: Boolean)
+                 * @param version Parameter for operation (type: String)
+                 *
+                 */
                 AppVersionUtil(
                     this,
                     object : AppVersionUtil.DotIsShowListener {
+                        /**
+                         * Executes isshow operation with thermal imaging domain optimization.
+                         *
+                         * @param
+                         * @param show Parameter for operation (type: Boolean)
+                         *
+                         */
                         override fun isShow(show: Boolean) {
                         }
 
+                        /**
+                         * Executes version operation with thermal imaging domain optimization.
+                         *
+                         * @param
+                         * @param version Parameter for operation (type: String)
+                         *
+                         */
                         override fun version(version: String) {
                         }
                     },
@@ -768,6 +1415,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     /**
      * Initialize Phase 0 baseline components: feature flags, structured logging, 
      * protocol versioning, and crash-safe supervision
+     */
+    /**
+     * Initializes ializephase0baseline component.
      */
     private fun initializePhase0Baseline() {
         Log.i(TAG, "Initializing Phase 0 baseline components")
@@ -785,11 +1435,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             
             // 4. Validate configuration
             val configWarnings = FeatureFlags.validateConfiguration()
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (configWarnings.isNotEmpty()) {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.WARNING,
                     "MainActivity",
                     "configuration_warnings",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("warnings" to configWarnings.joinToString("; "))
                 )
             }
@@ -832,6 +1490,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             StructuredLogger.LogLevel.INFO,
             "MainActivity",
             "networking_initialization_started",
+            /**
+             * Executes mapof operation with thermal imaging domain optimization.
+             *
+             */
             mapOf(
                 "feature_flags" to FeatureFlags.getAllFlags(),
                 "protocol_version" to ProtocolVersion.CURRENT_VERSION
@@ -868,10 +1530,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     }
                 }
             ) { stopToken ->
+                /**
+                 * Initializes the ializewebsocketclientsupervised component for thermal imaging operations.
+                 *
+                 */
                 initializeWebSocketClientSupervised(stopToken)
             }
             
             // Bind to recording service for remote control capability
+            /**
+             * Executes bindrecordingservice operation with thermal imaging domain optimization.
+             *
+             */
             bindRecordingService()
             
             // Start recording service with server socket automatically
@@ -889,9 +1559,24 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
                 "networking_initialization_failed",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf("error" to e.message)
             )
+            /**
+             * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+             *
+             */
             updateConnectionStatus(ConnectionStatus.ERROR)
+            /**
+             * Executes shownetworkerror operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param failed Parameter for operation (type: ${e.message}")
+             *
+             */
             showNetworkError("Network initialization failed: ${e.message}")
         }
     }
@@ -905,9 +1590,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 // Initialize WebSocket client
                 webSocketClient = WebSocketClient(this@MainActivity).apply {
                     // Set up event listener for WebSocket events
+                    /**
+                     * Configures the eventlistener with validation and thermal imaging optimization.
+                     *
+                     */
                     setEventListener(createWebSocketEventListener())
                     
                     // Start connection (includes discovery and auto-connect)
+                    /**
+                     * Executes start operation with thermal imaging domain optimization.
+                     *
+                     */
                     start()
                 }
                 
@@ -918,15 +1611,31 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 )
                 
                 // Wait for connection or stop signal
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (!stopToken.isStopRequested() && webSocketClient?.isConnected() != true) {
                     kotlinx.coroutines.delay(1000)
                 }
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (webSocketClient?.isConnected() == true) {
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus(ConnectionStatus.CONNECTED)
                 }
                 
                 // Keep running while connected
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (!stopToken.isStopRequested() && webSocketClient?.isConnected() == true) {
                     kotlinx.coroutines.delay(1000)
                 }
@@ -937,9 +1646,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     StructuredLogger.LogLevel.ERROR,
                     "WebSocketClient",
                     "supervision_error",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("error" to e.message)
                 )
                 
+                /**
+                 * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateConnectionStatus(ConnectionStatus.ERROR)
                 
                 // Wait before retry
@@ -952,7 +1669,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
                 
                 // Start automatic discovery and connection if enabled
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (FeatureFlags.MDNS_ENABLE) {
+                    /**
+                     * Executes startnetworkdiscovery operation with thermal imaging domain optimization.
+                     *
+                     */
                     startNetworkDiscovery()
                 } else {
                     structuredLogger.log(
@@ -963,6 +1688,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
                 
                 // Wait for stop signal or connection status changes
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (!stopToken.isStopRequested() && connectionStatus != ConnectionStatus.ERROR) {
                     kotlinx.coroutines.delay(1000)
                 }
@@ -972,9 +1701,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     StructuredLogger.LogLevel.ERROR,
                     "NetworkClient",
                     "supervised_execution_error",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("error" to e.message)
                 )
                 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!stopToken.isStopRequested()) {
                     kotlinx.coroutines.delay(10000) // Wait before retry
                 }
@@ -998,6 +1735,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 structuredLogger.logConnection(
                     "server_discovered",
                     serverInfo.host,
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "server_name" to serverInfo.name,
                         "host" to serverInfo.host,
@@ -1008,6 +1749,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 )
                 
                 runOnUiThread {
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                     Toast.makeText(this@MainActivity, 
                         "Found PC Server: ${serverInfo.name}", 
@@ -1015,10 +1760,21 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
             
+            /**
+             * Executes onconnecting operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param serverInfo Parameter for operation (type: WebSocketClient.ServerInfo)
+             *
+             */
             override fun onConnecting(serverInfo: WebSocketClient.ServerInfo) {
                 structuredLogger.logConnection(
                     "connecting",
                     serverInfo.host,
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "server_name" to serverInfo.name,
                         "host" to serverInfo.host,
@@ -1027,14 +1783,29 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 )
                 
                 runOnUiThread {
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                 }
             }
             
+            /**
+             * Executes onconnected operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param serverInfo Parameter for operation (type: WebSocketClient.ServerInfo)
+             *
+             */
             override fun onConnected(serverInfo: WebSocketClient.ServerInfo) {
                 structuredLogger.logConnection(
                     "websocket_connected",
                     serverInfo.host,
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "server_name" to serverInfo.name,
                         "uses_tls" to serverInfo.usesTLS,
@@ -1043,6 +1814,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 )
                 
                 runOnUiThread {
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus(ConnectionStatus.CONNECTED)
                     Toast.makeText(this@MainActivity, 
                         "Connected to PC: ${serverInfo.name}", 
@@ -1050,11 +1825,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
             
+            /**
+             * Executes onauthenticated operation with thermal imaging domain optimization.
+             *
+             */
             override fun onAuthenticated() {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "WebSocketClient",
                     "authenticated_successfully",
+                    /**
+                     * Executes emptymap operation with thermal imaging domain optimization.
+                     *
+                     */
                     emptyMap()
                 )
                 
@@ -1065,14 +1848,29 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
             
+            /**
+             * Executes ondisconnected operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param reason Parameter for operation (type: String)
+             *
+             */
             override fun onDisconnected(reason: String) {
                 structuredLogger.logConnection(
                     "websocket_disconnected",
                     "",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("reason" to reason)
                 )
                 
                 runOnUiThread {
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus(ConnectionStatus.DISCONNECTED)
                     Toast.makeText(this@MainActivity, 
                         "Disconnected from PC: $reason", 
@@ -1080,21 +1878,45 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
             
+            /**
+             * Executes onmessage operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param messageType Parameter for operation (type: String)
+             * @param message Parameter for operation (type: org.json.JSONObject)
+             *
+             */
             override fun onMessage(messageType: String, message: org.json.JSONObject) {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.DEBUG,
                     "WebSocketClient",
                     "message_received",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("message_type" to messageType)
                 )
                 
+                /**
+                 * Executes when operation with thermal imaging domain optimization.
+                 *
+                 */
                 when (messageType) {
                     "session_start_response" -> {
                         val success = message.optBoolean("success", false)
                         val sessionId = message.optString("session_id", "")
                         
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (success) {
                             runOnUiThread {
+                                /**
+                                 * Executes handleremotesessionstart operation with thermal imaging domain optimization.
+                                 *
+                                 */
                                 handleRemoteSessionStart(sessionId)
                             }
                         }
@@ -1102,8 +1924,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     "session_stop_response" -> {
                         val success = message.optBoolean("success", false)
                         
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (success) {
                             runOnUiThread {
+                                /**
+                                 * Executes handleremotesessionstop operation with thermal imaging domain optimization.
+                                 *
+                                 */
                                 handleRemoteSessionStop()
                             }
                         }
@@ -1111,6 +1941,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     "sync_flash" -> {
                         val durationMs = message.optInt("duration_ms", 500)
                         runOnUiThread {
+                            /**
+                             * Executes performsyncflash operation with thermal imaging domain optimization.
+                             *
+                             */
                             performSyncFlash(durationMs)
                         }
                     }
@@ -1121,26 +1955,57 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
             
+            /**
+             * Executes onerror operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param error Parameter for operation (type: String)
+             * @param exception Parameter for operation (type: Throwable?)
+             *
+             */
             override fun onError(error: String, exception: Throwable?) {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
                     "WebSocketClient",
                     "websocket_error",
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf("error" to error)
                 )
                 
                 runOnUiThread {
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus(ConnectionStatus.ERROR)
+                    /**
+                     * Executes shownetworkerror operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param error Parameter for operation (type: $error")
+                     *
+                     */
                     showNetworkError("WebSocket error: $error")
                 }
             }
             
+            /**
+             * Executes onheartbeatreceived operation with thermal imaging domain optimization.
+             *
+             */
             override fun onHeartbeatReceived() {
                 // Update last heartbeat time for connection health monitoring
                 structuredLogger.log(
                     StructuredLogger.LogLevel.DEBUG,
                     "WebSocketClient",
                     "heartbeat_received",
+                    /**
+                     * Executes emptymap operation with thermal imaging domain optimization.
+                     *
+                     */
                     emptyMap()
                 )
             }
@@ -1155,6 +2020,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             structuredLogger.logSessionEvent(
                 "remote_session_start",
                 sessionId,
+                /**
+                 * Executes emptymap operation with thermal imaging domain optimization.
+                 *
+                 */
                 emptyMap()
             )
             
@@ -1169,6 +2038,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.ERROR,
                 "RemoteControl",
                 "session_start_error",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf("error" to e.message)
             )
         }
@@ -1183,6 +2056,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.INFO,
                 "RemoteControl",
                 "remote_session_stop",
+                /**
+                 * Executes emptymap operation with thermal imaging domain optimization.
+                 *
+                 */
                 emptyMap()
             )
             
@@ -1197,6 +2074,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.ERROR,
                 "RemoteControl",
                 "session_stop_error",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf("error" to e.message)
             )
         }
@@ -1226,6 +2107,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             StructuredLogger.LogLevel.INFO,
             "WebSocketClient",
             "discovery_started",
+            /**
+             * Executes emptymap operation with thermal imaging domain optimization.
+             *
+             */
             emptyMap()
         )
         
@@ -1239,8 +2124,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
         Log.i(TAG, "Processing remote recording request for session: ${sessionInfo.sessionId}")
         
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!isServiceBound || recordingService == null) {
             Log.e(TAG, "Recording service not available for remote request")
+            /**
+             * Executes shownetworkerror operation with thermal imaging domain optimization.
+             *
+             */
             showNetworkError("Recording service not ready")
             return
         }
@@ -1250,6 +2143,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             val baseDir = File(getExternalFilesDir(null), "recordings")
             val sessionDir = File(baseDir, sessionInfo.sessionId)
             
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!sessionDir.exists()) {
                 sessionDir.mkdirs()
             }
@@ -1263,6 +2160,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start remote recording", e)
+            /**
+             * Executes shownetworkerror operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param recording Parameter for operation (type: ${e.message}")
+             *
+             */
             showNetworkError("Failed to start recording: ${e.message}")
         }
     }
@@ -1306,6 +2210,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Update UI elements if they exist
         networkStatusIndicator?.let { indicator ->
             networkStatusText?.let { text ->
+                /**
+                 * Executes when operation with thermal imaging domain optimization.
+                 *
+                 */
                 when (status) {
                     ConnectionStatus.DISCONNECTED -> {
                         indicator.setColorFilter(android.graphics.Color.GRAY)
@@ -1343,10 +2251,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.setMessage("$message\n\nWhat would you like to do?")
         
         builder.setPositiveButton("Retry Discovery") { _, _ ->
+            /**
+             * Executes startnetworkdiscovery operation with thermal imaging domain optimization.
+             *
+             */
             startNetworkDiscovery()
         }
         
         builder.setNegativeButton("Manual Connect") { _, _ ->
+            /**
+             * Executes showmanualconnectiondialog operation with thermal imaging domain optimization.
+             *
+             */
             showManualConnectionDialog()
         }
         
@@ -1367,20 +2283,40 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
         
         Log.i(TAG, "Attempting connection to PC at $ipAddress:$port")
+        /**
+         * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+         *
+         */
         updateConnectionStatus(ConnectionStatus.CONNECTING)
         
         lifecycleScope.launch {
             try {
+                /**
+                 * Executes withcontext operation with thermal imaging domain optimization.
+                 *
+                 */
                 withContext(Dispatchers.IO) {
                     // Try both secure and non-secure connections
                     var success = networkClient?.connectToController(ipAddress, port, true) ?: false
                     
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!success) {
                         Log.i(TAG, "Secure connection failed, trying non-secure...")
                         success = networkClient?.connectToController(ipAddress, port, false) ?: false
                     }
                     
+                    /**
+                     * Executes withcontext operation with thermal imaging domain optimization.
+                     *
+                     */
                     withContext(Dispatchers.Main) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (success) {
                             Log.i(TAG, "Connection successful to $ipAddress:$port")
                             Toast.makeText(this@MainActivity, 
@@ -1388,14 +2324,36 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                                 Toast.LENGTH_LONG).show()
                         } else {
                             Log.w(TAG, "Connection failed to $ipAddress:$port")
+                            /**
+                             * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                             *
+                             */
                             updateConnectionStatus(ConnectionStatus.ERROR)
+                            /**
+                             * Executes shownetworkerror operation with thermal imaging domain optimization.
+                             *
+                             * @param
+                             * @param ipAddress Parameter for operation (type: $port")
+                             *
+                             */
                             showNetworkError("Failed to connect to PC at $ipAddress:$port")
                         }
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Connection error to $ipAddress:$port", e)
+                /**
+                 * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateConnectionStatus(ConnectionStatus.ERROR)
+                /**
+                 * Executes shownetworkerror operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param error Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 showNetworkError("Connection error: ${e.message}")
             }
         }
@@ -1428,14 +2386,30 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             var reconnectDelay = 5000L // Start with 5 seconds
             val maxDelay = 60000L // Max 60 seconds
             
+            /**
+             * Executes while operation with thermal imaging domain optimization.
+             *
+             */
             while (!isFinishing) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (connectionStatus == ConnectionStatus.ERROR || 
                     connectionStatus == ConnectionStatus.DISCONNECTED) {
                     
                     Log.i(TAG, "Attempting auto-reconnection...")
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                     
                     val success = tryReconnection()
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (success) {
                         Log.i(TAG, "Auto-reconnection successful")
                         reconnectDelay = 5000L // Reset delay on success
@@ -1459,7 +2433,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             try {
                 // Strategy 1: Try last known controllers
                 val controllers = networkClient?.getDiscoveredControllers()
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!controllers.isNullOrEmpty()) {
+                    /**
+                     * Executes for operation with thermal imaging domain optimization.
+                     *
+                     */
                     for (controller in controllers) {
                         Log.i(TAG, "Reconnection attempt to ${controller.ipAddress}")
                         val success = networkClient?.connectToController(
@@ -1467,6 +2449,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             controller.port
                         ) ?: false
                         
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (success) {
                             return@withContext true
                         }
@@ -1475,8 +2461,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 
                 // Strategy 2: Start fresh discovery
                 networkClient?.startDiscovery { discoverySuccess ->
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (discoverySuccess) {
                         val newControllers = networkClient?.getDiscoveredControllers()
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (!newControllers.isNullOrEmpty()) {
                             // Try connecting to first discovered controller
                             lifecycleScope.launch {
@@ -1485,7 +2479,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                                     controller.ipAddress, 
                                     controller.port
                                 ) { connectSuccess ->
+                                    /**
+                                     * Executes if operation with thermal imaging domain optimization.
+                                     *
+                                     */
                                     if (!connectSuccess) {
+                                        /**
+                                         * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                                         *
+                                         */
                                         updateConnectionStatus(ConnectionStatus.ERROR)
                                     }
                                 }
@@ -1509,6 +2511,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun startHeartbeat() {
         lifecycleScope.launch {
             while (!isFinishing) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (connectionStatus == ConnectionStatus.CONNECTED) {
                     try {
                         // WebSocket client handles heartbeat automatically
@@ -1517,6 +2523,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         
                     } catch (e: Exception) {
                         Log.w(TAG, "Status request exception", e)
+                        /**
+                         * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                         *
+                         */
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
                 }
@@ -1542,11 +2552,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
         
         val currentServer = webSocketClient?.getCurrentServer()
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (currentServer != null) {
             sb.append("Current Server: ${currentServer.name} (${currentServer.host}:${currentServer.port})\n")
         }
         
         sb.append("Service Bound: $isServiceBound\n")
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isServiceBound && recordingService != null) {
             try {
                 val recordingController = recordingService?.getRecordingController()
@@ -1580,6 +2598,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         when (connectionStatus) {
             ConnectionStatus.DISCONNECTED, ConnectionStatus.ERROR -> {
                 // Show dialog for manual IP connection or status report
+                /**
+                 * Executes showconnectionoptionsdialog operation with thermal imaging domain optimization.
+                 *
+                 */
                 showConnectionOptionsDialog()
             }
             ConnectionStatus.DISCOVERING, ConnectionStatus.CONNECTING -> {
@@ -1588,6 +2610,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
             ConnectionStatus.CONNECTED -> {
                 // Show connection info and metrics
+                /**
+                 * Executes showconnectioninfodialog operation with thermal imaging domain optimization.
+                 *
+                 */
                 showConnectionInfoDialog()
             }
         }
@@ -1607,18 +2633,34 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("PC Connection Options")
         builder.setItems(options) { _, which ->
+            /**
+             * Executes when operation with thermal imaging domain optimization.
+             *
+             */
             when (which) {
                 0 -> {
                     // Retry Discovery
                     Log.i(TAG, "Retrying network discovery")
+                    /**
+                     * Executes startnetworkdiscovery operation with thermal imaging domain optimization.
+                     *
+                     */
                     startNetworkDiscovery()
                 }
                 1 -> {
                     // Manual IP Connection
+                    /**
+                     * Executes showmanualconnectiondialog operation with thermal imaging domain optimization.
+                     *
+                     */
                     showManualConnectionDialog()
                 }
                 2 -> {
                     // Status Report
+                    /**
+                     * Executes showstatusreportdialog operation with thermal imaging domain optimization.
+                     *
+                     */
                     showStatusReportDialog()
                 }
                 3 -> {
@@ -1641,6 +2683,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         message.append("Connection Status: Connected\n\n")
         message.append("Performance Metrics:\n$metrics\n\n")
         
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (currentServer != null) {
             message.append("Connected to:\n")
             message.append("Server: ${currentServer.name}\n")
@@ -1655,6 +2701,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.setTitle("PC Connection Info")
         builder.setMessage(message.toString())
         builder.setPositiveButton("Test Recording") { _, _ ->
+            /**
+             * Executes testremoterecordingcapability operation with thermal imaging domain optimization.
+             *
+             */
             testRemoteRecordingCapability()
         }
         builder.setNegativeButton("Close", null)
@@ -1700,6 +2750,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             Toast.makeText(this, "Testing remote recording capability...", Toast.LENGTH_SHORT).show()
             
             // Simulate remote recording request
+            /**
+             * Executes handleremoterecordingrequest operation with thermal imaging domain optimization.
+             *
+             */
             handleRemoteRecordingRequest(testSessionInfo)
             
         } catch (e: Exception) {
@@ -1723,15 +2777,31 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         
         builder.setPositiveButton("Connect") { _, _ ->
             val ipAddress = input.text.toString().trim()
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (ipAddress.isNotEmpty()) {
+                /**
+                 * Executes connecttopc operation with thermal imaging domain optimization.
+                 *
+                 */
                 connectToPC(ipAddress)
             } else {
                 // Try common default IP addresses
+                /**
+                 * Executes trycommonipaddresses operation with thermal imaging domain optimization.
+                 *
+                 */
                 tryCommonIPAddresses()
             }
         }
         
         builder.setNegativeButton("Try Defaults") { _, _ ->
+            /**
+             * Executes trycommonipaddresses operation with thermal imaging domain optimization.
+             *
+             */
             tryCommonIPAddresses()
         }
         
@@ -1747,7 +2817,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             "192.168.1.100", "192.168.1.101", "192.168.1.102",
             "192.168.0.100", "192.168.0.101", "192.168.0.102", 
             "10.0.0.100", "10.0.0.101", "10.0.0.102",
-            "127.0.0.1" // localhost for testing
+            "127.0.0.1" // Localhost for testing
         )
         
         Toast.makeText(this, "Trying common IP addresses...", Toast.LENGTH_SHORT).show()
@@ -1755,10 +2825,22 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         lifecycleScope.launch {
             var connected = false
             
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (ip in commonIPs) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (connected) break // Stop if we've already connected
                 
                 Log.i(TAG, "Trying to connect to $ip")
+                /**
+                 * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateConnectionStatus(ConnectionStatus.CONNECTING)
                 
                 try {
@@ -1768,6 +2850,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         networkClient?.connectToController(ip, 8080, false) ?: false
                     }
                     
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (success) {
                         Log.i(TAG, "Successfully connected to $ip")
                         Toast.makeText(this@MainActivity, "Connected to PC at $ip", Toast.LENGTH_LONG).show()
@@ -1782,16 +2868,32 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
             
             // If all failed, restart discovery
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!connected) {
+                /**
+                 * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateConnectionStatus(ConnectionStatus.DISCONNECTED)
                 Toast.makeText(this@MainActivity, 
                     "No PC found at common addresses. Restarting discovery...", 
                     Toast.LENGTH_LONG).show()
+                /**
+                 * Executes startnetworkdiscovery operation with thermal imaging domain optimization.
+                 *
+                 */
                 startNetworkDiscovery()
             }
         }
     }
     
+    /**
+     * Executes ondestroy operation with thermal imaging domain optimization.
+     *
+     */
     override fun onDestroy() {
         super.onDestroy()
         
@@ -1809,7 +2911,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             // Stop server socket
             RecordingService.stopServer(this)
             
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (isServiceBound) {
+                /**
+                 * Executes unbindservice operation with thermal imaging domain optimization.
+                 *
+                 */
                 unbindService(serviceConnection)
                 isServiceBound = false
             }
@@ -1820,6 +2930,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
                 "networking_cleanup_error",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf("error" to e.message)
             )
         }
@@ -1837,8 +2951,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
      * Launch GSR Quick Recording Activity
      * This provides direct access to the GSR recording functionality from the main app
      */
+    /**
+     * Executes launchGSRRecording functionality.
+     */
+    /**
+     * Executes launchgsrrecording operation with thermal imaging domain optimization.
+     *
+     */
     fun launchGSRRecording() {
         // Check GSR permissions first
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (GSRSensorRecorder.hasRequiredPermissions(this)) {
             GSRQuickRecordingActivity.start(this)
         } else {

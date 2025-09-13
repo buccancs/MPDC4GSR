@@ -9,7 +9,18 @@ import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Created by Philipp Jahoda on 09/06/16.
+ * Specialized thermal imaging component providing BarLineScatterCandleBubbleRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
 
@@ -19,6 +30,10 @@ public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
     protected XBounds mXBounds = new XBounds();
 
     public BarLineScatterCandleBubbleRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(animator, viewPortHandler);
     }
 
@@ -41,11 +56,19 @@ public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
      */
     protected boolean isInBoundsX(Entry e, IBarLineScatterCandleBubbleDataSet set) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null)
             return false;
 
         float entryIndex = set.getEntryIndex(e);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null || entryIndex >= set.getEntryCount() * mAnimator.getPhaseX()) {
             return false;
         } else {

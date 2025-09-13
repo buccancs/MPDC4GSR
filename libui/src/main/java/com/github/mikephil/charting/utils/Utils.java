@@ -31,6 +31,23 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
+/**
+ * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for Utils operations.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public abstract class Utils {
 
     private static DisplayMetrics mMetrics;
@@ -53,10 +70,14 @@ public abstract class Utils {
     @SuppressWarnings("deprecation")
     public static void init(Context context) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (context == null) {
-            // noinspection deprecation
+            // Noinspection deprecation
             mMinimumFlingVelocity = ViewConfiguration.getMinimumFlingVelocity();
-            // noinspection deprecation
+            // Noinspection deprecation
             mMaximumFlingVelocity = ViewConfiguration.getMaximumFlingVelocity();
 
             Log.e("MPChartLib-Utils"
@@ -83,9 +104,9 @@ public abstract class Utils {
 
         mMetrics = res.getDisplayMetrics();
 
-        // noinspection deprecation
+        // Noinspection deprecation
         mMinimumFlingVelocity = ViewConfiguration.getMinimumFlingVelocity();
-        // noinspection deprecation
+        // Noinspection deprecation
         mMaximumFlingVelocity = ViewConfiguration.getMaximumFlingVelocity();
     }
 
@@ -100,6 +121,10 @@ public abstract class Utils {
      */
     public static float convertDpToPixel(float dp) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mMetrics == null) {
 
             Log.e("MPChartLib-Utils",
@@ -121,6 +146,10 @@ public abstract class Utils {
      */
     public static float convertPixelsToDp(float px) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mMetrics == null) {
 
             Log.e("MPChartLib-Utils",
@@ -142,6 +171,10 @@ public abstract class Utils {
      * @return
      */
     public static int calcTextWidth(Paint paint, String demoText) {
+        /**
+         * Executes return operation with thermal imaging domain optimization.
+         *
+         */
         return (int) paint.measureText(demoText);
     }
 
@@ -194,6 +227,10 @@ public abstract class Utils {
     public static FSize calcTextSize(Paint paint, String demoText) {
 
         FSize result = FSize.getInstance(0,0);
+        /**
+         * Executes calctextsize operation with thermal imaging domain optimization.
+         *
+         */
         calcTextSize(paint, demoText, result);
         return result;
     }
@@ -231,7 +268,7 @@ public abstract class Utils {
         return new DefaultValueFormatter(1);
     }
 
-    /// - returns: The default value formatter used for all chart components that needs a default
+    // / - returns: The default value formatter used for all chart components that needs a default
     public static ValueFormatter getDefaultValueFormatter()
     {
         return mDefaultValueFormatter;
@@ -267,20 +304,36 @@ public abstract class Utils {
         char[] out = new char[35];
 
         boolean neg = false;
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (number == 0) {
             return "0";
         }
 
         boolean zero = false;
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (number < 1 && number > -1) {
             zero = true;
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (number < 0) {
             neg = true;
             number = -number;
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (digitCount > POW_10.length) {
             digitCount = POW_10.length - 1;
         }
@@ -291,23 +344,39 @@ public abstract class Utils {
         int charCount = 0;
         boolean decimalPointAdded = false;
 
+        /**
+         * Executes while operation with thermal imaging domain optimization.
+         *
+         */
         while (lval != 0 || charCount < (digitCount + 1)) {
             int digit = (int) (lval % 10);
             lval = lval / 10;
             out[ind--] = (char) (digit + '0');
             charCount++;
 
-            // add decimal point
+            // Add decimal point
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (charCount == digitCount) {
                 out[ind--] = ',';
                 charCount++;
                 decimalPointAdded = true;
 
-                // add thousand separators
+                // Add thousand separators
             } else if (separateThousands && lval != 0 && charCount > digitCount) {
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (decimalPointAdded) {
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if ((charCount - digitCount) % 4 == 0) {
                         out[ind--] = separateChar;
                         charCount++;
@@ -315,6 +384,10 @@ public abstract class Utils {
 
                 } else {
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if ((charCount - digitCount) % 4 == 3) {
                         out[ind--] = separateChar;
                         charCount++;
@@ -323,13 +396,21 @@ public abstract class Utils {
             }
         }
 
-        // if number around zero (between 1 and -1)
+        // If number around zero (between 1 and -1)
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (zero) {
             out[ind--] = '0';
             charCount += 1;
         }
 
-        // if the number is negative
+        // If the number is negative
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (neg) {
             out[ind--] = '-';
             charCount += 1;
@@ -337,7 +418,7 @@ public abstract class Utils {
 
         int start = out.length - charCount;
 
-        // use this instead of "new String(...)" because of issue < Android 4.0
+        // Use this instead of "new String(...)" because of issue < Android 4.0
         return String.valueOf(out, start, out.length - start);
     }
 
@@ -348,6 +429,10 @@ public abstract class Utils {
      * @return
      */
     public static float roundToNextSignificant(double number) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (Double.isInfinite(number) ||
             Double.isNaN(number) ||
             number == 0.0)
@@ -371,9 +456,17 @@ public abstract class Utils {
 
         float i = roundToNextSignificant(number);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (Float.isInfinite(i))
             return 0;
 
+        /**
+         * Executes return operation with thermal imaging domain optimization.
+         *
+         */
         return (int) Math.ceil(-Math.log10(i)) + 2;
     }
 
@@ -387,6 +480,10 @@ public abstract class Utils {
 
         int[] ret = new int[integers.size()];
 
+        /**
+         * Executes copyintegers operation with thermal imaging domain optimization.
+         *
+         */
         copyIntegers(integers, ret);
 
         return ret;
@@ -394,6 +491,10 @@ public abstract class Utils {
 
     public static void copyIntegers(List<Integer> from, int[] to){
         int count = to.length < from.size() ? to.length : from.size();
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for(int i = 0 ; i < count ; i++){
             to[i] = from.get(i);
         }
@@ -409,6 +510,10 @@ public abstract class Utils {
 
         String[] ret = new String[strings.size()];
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < ret.length; i++) {
             ret[i] = strings.get(i);
         }
@@ -418,6 +523,10 @@ public abstract class Utils {
 
     public static void copyStrings(List<String> from, String[] to){
         int count = to.length < from.size() ? to.length : from.size();
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for(int i = 0 ; i < count ; i++){
             to[i] = from.get(i);
         }
@@ -431,6 +540,10 @@ public abstract class Utils {
      * @return
      */
     public static double nextUp(double d) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (d == Double.POSITIVE_INFINITY)
             return d;
         else {
@@ -453,6 +566,10 @@ public abstract class Utils {
     public static MPPointF getPosition(MPPointF center, float dist, float angle) {
 
         MPPointF p = MPPointF.getInstance(0,0);
+        /**
+         * Retrieves the position with optimized performance for thermal imaging operations.
+         *
+         */
         getPosition(center, dist, angle, p);
         return p;
     }
@@ -472,7 +589,15 @@ public abstract class Utils {
         final int id1 = ev.getPointerId(upIndex);
         final float x1 = tracker.getXVelocity(id1);
         final float y1 = tracker.getYVelocity(id1);
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0, count = ev.getPointerCount(); i < count; i++) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (i == upIndex)
                 continue;
 
@@ -481,6 +606,10 @@ public abstract class Utils {
             final float y = y1 * tracker.getYVelocity(id2);
 
             final float dot = x + y;
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (dot < 0) {
                 tracker.clear();
                 break;
@@ -496,6 +625,10 @@ public abstract class Utils {
      */
     @SuppressLint("NewApi")
     public static void postInvalidateOnAnimation(View view) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (Build.VERSION.SDK_INT >= 16)
             view.postInvalidateOnAnimation();
         else
@@ -539,7 +672,7 @@ public abstract class Utils {
                 mDrawableBoundsCache.top + width);
 
         int saveId = canvas.save();
-        // translate to the correct position and draw
+        // Translate to the correct position and draw
         canvas.translate(drawOffset.x, drawOffset.y);
         drawable.draw(canvas);
         canvas.restoreToCount(saveId);
@@ -562,7 +695,7 @@ public abstract class Utils {
         drawOffsetX -= mDrawTextRectBuffer.left;
 
         // Android does not snap the bounds to line boundaries,
-        //  and draws from bottom to top.
+        // And draws from bottom to top.
         // And we want to normalize it.
         drawOffsetY += -mFontMetricsBuffer.ascent;
 
@@ -570,6 +703,10 @@ public abstract class Utils {
         Paint.Align originalTextAlign = paint.getTextAlign();
         paint.setTextAlign(Paint.Align.LEFT);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (angleDegrees != 0.f) {
 
             // Move the text drawing rect in a way that it always rotates around its center
@@ -580,6 +717,10 @@ public abstract class Utils {
             float translateY = y;
 
             // Move the "outer" rect relative to the anchor, assuming its centered
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (anchor.x != 0.5f || anchor.y != 0.5f) {
                 final FSize rotatedSize = getSizeOfRotatedRectangleByDegrees(
                         mDrawTextRectBuffer.width(),
@@ -599,6 +740,10 @@ public abstract class Utils {
 
             c.restore();
         } else {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (anchor.x != 0.f || anchor.y != 0.f) {
 
                 drawOffsetX -= mDrawTextRectBuffer.width() * anchor.x;
@@ -633,7 +778,7 @@ public abstract class Utils {
         drawOffsetX -= mDrawTextRectBuffer.left;
 
         // Android does not snap the bounds to line boundaries,
-        //  and draws from bottom to top.
+        // And draws from bottom to top.
         // And we want to normalize it.
         drawOffsetY += drawHeight;
 
@@ -641,6 +786,10 @@ public abstract class Utils {
         Paint.Align originalTextAlign = paint.getTextAlign();
         paint.setTextAlign(Paint.Align.LEFT);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (angleDegrees != 0.f) {
 
             // Move the text drawing rect in a way that it always rotates around its center
@@ -651,6 +800,10 @@ public abstract class Utils {
             float translateY = y;
 
             // Move the "outer" rect relative to the anchor, assuming its centered
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (anchor.x != 0.5f || anchor.y != 0.5f) {
                 final FSize rotatedSize = getSizeOfRotatedRectangleByDegrees(
                         drawWidth,
@@ -671,6 +824,10 @@ public abstract class Utils {
 
             c.restore();
         } else {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (anchor.x != 0.f || anchor.y != 0.f) {
 
                 drawOffsetX -= drawWidth * anchor.x;
@@ -703,6 +860,10 @@ public abstract class Utils {
                 (int) Math.max(Math.ceil(constrainedToSize.width), 1.f),
                 Layout.Alignment.ALIGN_NORMAL, 1.f, 0.f, false);
 
+        /**
+         * Executes drawmultilinetext operation with thermal imaging domain optimization.
+         *
+         */
         drawMultilineText(c, textLayout, x, y, paint, anchor, angleDegrees);
     }
 

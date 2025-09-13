@@ -1,51 +1,51 @@
-// package com.topdon.tc001.jpush
-// import android.content.Context
-// import android.content.Intent
-// import android.util.Log
-// import cn.jpush.android.api.CmdMessage
-// import cn.jpush.android.api.CustomMessage
-// import cn.jpush.android.api.JPushInterface
-// import cn.jpush.android.api.JPushMessage
-// import cn.jpush.android.api.NotificationMessage
-// import cn.jpush.android.service.JPushMessageReceiver
-// import com.topdon.lib.core.BaseApplication
-// import com.topdon.lms.sdk.helper.TagAliasOperatorHelper
+// Package com.topdon.tc001.jpush
+// Import android.content.Context
+// Import android.content.Intent
+// Import android.util.Log
+// Import cn.jpush.android.api.CmdMessage
+// Import cn.jpush.android.api.CustomMessage
+// Import cn.jpush.android.api.JPushInterface
+// Import cn.jpush.android.api.JPushMessage
+// Import cn.jpush.android.api.NotificationMessage
+// Import cn.jpush.android.service.JPushMessageReceiver
+// Import com.topdon.lib.core.BaseApplication
+// Import com.topdon.lms.sdk.helper.TagAliasOperatorHelper
 //
-// class PushMessageReceiver : JPushMessageReceiver(){
-//    private val TAG = "PushMessageService"
+// Class PushMessageReceiver : JPushMessageReceiver(){
+// Private val TAG = "PushMessageService"
 //
-//    override fun onMessage(context: Context?, customMessage: CustomMessage) {
+// Override fun onMessage(context: Context?, customMessage: CustomMessage) {
 //        Log.e(TAG, "[onMessage] $customMessage")
 // //        Intent intent = new Intent("com.jiguang.demo.message");
-// //        intent.putExtra("msg", customMessage.message);
-// //        context.sendBroadcast(intent);
+// // Intent.putExtra("msg", customMessage.message);
+// // Context.sendBroadcast(intent);
 //    }
 //
-//    override fun onNotifyMessageOpened(context: Context?, message: NotificationMessage) {
+// Override fun onNotifyMessageOpened(context: Context?, message: NotificationMessage) {
 //        Log.e(TAG, "[onNotifyMessageOpened] $message")
-//        setZeroBadgeNumber()
-//        try {
-//            //Open自定义的Activity
+// SetZeroBadgeNumber()
+// Try {
+//            // Open自定义的Activity
 //        } catch (throwable: Throwable) {
 //        }
 //    }
 //
-//    override fun onInAppMessageClick(context: Context?, notificationMessage: NotificationMessage?) {
-//        super.onInAppMessageClick(context, notificationMessage)
+// Override fun onInAppMessageClick(context: Context?, notificationMessage: NotificationMessage?) {
+// Super.onInAppMessageClick(context, notificationMessage)
 //        Log.e(TAG, "[onInAppMessageClick] Userclick了notification栏button")
 //    }
 //
-//    override fun onMultiActionClicked(context: Context?, intent: Intent) {
+// Override fun onMultiActionClicked(context: Context?, intent: Intent) {
 //        Log.e(TAG, "[onMultiActionClicked] Userclick了notification栏button")
-//        setZeroBadgeNumber()
-//        val nActionExtra = intent.extras!!.getString(JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA)
+// SetZeroBadgeNumber()
+// Val nActionExtra = intent.extras!!.getString(JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA)
 //
-//        //开发者根据不同 Action 携带的 extra 字段来allocate不同的动作。
-//        if (nActionExtra == null) {
+//        // 开发者根据不同 Action 携带的 extra 字段来allocate不同的动作。
+// If (nActionExtra == null) {
 //            Log.d(TAG, "ACTION_NOTIFICATION_CLICK_ACTION nActionExtra is null")
-//            return
+// Return
 //        }
-//        if (nActionExtra == "my_extra1") {
+// If (nActionExtra == "my_extra1") {
 //            Log.e(TAG, "[onMultiActionClicked] Userclicknotification栏button一")
 //        } else if (nActionExtra == "my_extra2") {
 //            Log.e(TAG, "[onMultiActionClicked] Userclicknotification栏button二")
@@ -56,130 +56,130 @@
 //        }
 //    }
 //
-//    private fun setZeroBadgeNumber() {
+// Private fun setZeroBadgeNumber() {
 //        Log.e(TAG, "[onMultiActionClicked] clear角标")
 //        JPushInterface.setBadgeNumber(BaseApplication.instance, 0)
 //    }
 //
-//    override fun onNotifyMessageArrived(context: Context?, message: NotificationMessage) {
+// Override fun onNotifyMessageArrived(context: Context?, message: NotificationMessage) {
 //        Log.e(TAG, "[onNotifyMessageArrived] $message")
-//        setZeroBadgeNumber()
+// SetZeroBadgeNumber()
 //    }
 //
-//    override fun onNotifyMessageDismiss(context: Context?, message: NotificationMessage) {
+// Override fun onNotifyMessageDismiss(context: Context?, message: NotificationMessage) {
 //        Log.e(TAG, "[onNotifyMessageDismiss] $message")
 //    }
 //
-//    override fun onRegister(context: Context, registrationId: String) {
+// Override fun onRegister(context: Context, registrationId: String) {
 //        Log.e(TAG, "[onRegister] $registrationId")
-//        val intent = Intent("com.jiguang.demo.message")
-//        intent.putExtra("rid", registrationId)
-//        context.sendBroadcast(intent)
+// Val intent = Intent("com.jiguang.demo.message")
+// Intent.putExtra("rid", registrationId)
+// Context.sendBroadcast(intent)
 //    }
 //
-//    override fun onConnected(context: Context?, isConnected: Boolean) {
+// Override fun onConnected(context: Context?, isConnected: Boolean) {
 //        Log.e(TAG, "[onConnected] $isConnected")
-//        setZeroBadgeNumber()
+// SetZeroBadgeNumber()
 //    }
 //
-//    override fun onCommandResult(context: Context?, cmdMessage: CmdMessage) {
+// Override fun onCommandResult(context: Context?, cmdMessage: CmdMessage) {
 //        Log.e(TAG, "[onCommandResult] $cmdMessage")
 //    }
 //
-//    override fun onTagOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
+// Override fun onTagOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
 //        TagAliasOperatorHelper.getInstance().onTagOperatorResult(context, jPushMessage)
-//        super.onTagOperatorResult(context, jPushMessage)
+// Super.onTagOperatorResult(context, jPushMessage)
 //        Log.e(TAG, "[onTagOperatorResult]")
 //    }
 //
-//    override fun onCheckTagOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
+// Override fun onCheckTagOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
 //        TagAliasOperatorHelper.getInstance().onCheckTagOperatorResult(context, jPushMessage)
-//        super.onCheckTagOperatorResult(context, jPushMessage)
+// Super.onCheckTagOperatorResult(context, jPushMessage)
 //        Log.e(TAG, "[onCheckTagOperatorResult]")
 //    }
 //
-//    override fun onAliasOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
+// Override fun onAliasOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
 //        TagAliasOperatorHelper.getInstance().onAliasOperatorResult(context, jPushMessage)
-//        super.onAliasOperatorResult(context, jPushMessage)
+// Super.onAliasOperatorResult(context, jPushMessage)
 //        Log.e(TAG, "[onAliasOperatorResult]")
 //    }
 //
-//    override fun onMobileNumberOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
+// Override fun onMobileNumberOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
 //        TagAliasOperatorHelper.getInstance().onMobileNumberOperatorResult(context, jPushMessage)
-//        super.onMobileNumberOperatorResult(context, jPushMessage)
+// Super.onMobileNumberOperatorResult(context, jPushMessage)
 //        Log.e(TAG, "[onMobileNumberOperatorResult]")
 //    }
 //
-//    override fun onNotificationSettingsCheck(context: Context?, isOn: Boolean, source: Int) {
-//        super.onNotificationSettingsCheck(context, isOn, source)
+// Override fun onNotificationSettingsCheck(context: Context?, isOn: Boolean, source: Int) {
+// Super.onNotificationSettingsCheck(context, isOn, source)
 //        Log.e(TAG, "[onNotificationSettingsCheck] isOn:$isOn,source:$source")
 //    }
 //
-//    override fun onInAppMessageArrived(
-//        context: Context?,
-//        notificationMessage: NotificationMessage?
+// Override fun onInAppMessageArrived(
+// Context: Context?,
+// NotificationMessage: NotificationMessage?
 //    ) {
-//        super.onInAppMessageArrived(context, notificationMessage)
+// Super.onInAppMessageArrived(context, notificationMessage)
 //        Log.e(TAG, "[onInAppMessageArrived]")
 //    }
 //
-//    override fun onPullInAppResult(context: Context?, jPushMessage: JPushMessage?) {
-//        super.onPullInAppResult(context, jPushMessage)
+// Override fun onPullInAppResult(context: Context?, jPushMessage: JPushMessage?) {
+// Super.onPullInAppResult(context, jPushMessage)
 //        Log.e(TAG, "[onInAppMessageArrived]")
 //    }
 //
-//    override fun onSspNotificationWillShow(
-//        context: Context?,
-//        notificationMessage: NotificationMessage?,
-//        s: String?
+// Override fun onSspNotificationWillShow(
+// Context: Context?,
+// NotificationMessage: NotificationMessage?,
+// S: String?
 //    ): Boolean {
-//        return super.onSspNotificationWillShow(context, notificationMessage, s)
+// Return super.onSspNotificationWillShow(context, notificationMessage, s)
 //    }
 //
-//    override fun onCheckInAppMessageState(context: Context?, s: String?): Byte {
-//        return super.onCheckInAppMessageState(context, s)
+// Override fun onCheckInAppMessageState(context: Context?, s: String?): Byte {
+// Return super.onCheckInAppMessageState(context, s)
 //    }
 //
-//    override fun onCheckSspNotificationState(context: Context?, s: String?): Byte {
-//        return super.onCheckSspNotificationState(context, s)
+// Override fun onCheckSspNotificationState(context: Context?, s: String?): Byte {
+// Return super.onCheckSspNotificationState(context, s)
 //    }
 //
-//    override fun onGeofenceReceived(context: Context?, s: String?) {
-//        super.onGeofenceReceived(context, s)
+// Override fun onGeofenceReceived(context: Context?, s: String?) {
+// Super.onGeofenceReceived(context, s)
 //        Log.e(TAG, "[onGeofenceReceived]")
 //    }
 //
-//    override fun onGeofenceRegion(context: Context?, s: String?, v: Double, v1: Double) {
-//        super.onGeofenceRegion(context, s, v, v1)
+// Override fun onGeofenceRegion(context: Context?, s: String?, v: Double, v1: Double) {
+// Super.onGeofenceRegion(context, s, v, v1)
 //        Log.e(TAG, "[onGeofenceRegion]")
 //    }
 //
-//    override fun onInAppMessageDismiss(
-//        context: Context?,
-//        notificationMessage: NotificationMessage?
+// Override fun onInAppMessageDismiss(
+// Context: Context?,
+// NotificationMessage: NotificationMessage?
 //    ) {
-//        super.onInAppMessageDismiss(context, notificationMessage)
+// Super.onInAppMessageDismiss(context, notificationMessage)
 //        Log.e(TAG, "[onInAppMessageDismiss]")
 //    }
 //
-//    override fun onInAppMessageUnShow(
-//        context: Context?,
-//        notificationMessage: NotificationMessage?
+// Override fun onInAppMessageUnShow(
+// Context: Context?,
+// NotificationMessage: NotificationMessage?
 //    ) {
-//        super.onInAppMessageUnShow(context, notificationMessage)
+// Super.onInAppMessageUnShow(context, notificationMessage)
 //        Log.e(TAG, "[onInAppMessageUnShow]")
 //    }
 //
-//    override fun onNotifyMessageUnShow(
-//        context: Context?,
-//        notificationMessage: NotificationMessage?
+// Override fun onNotifyMessageUnShow(
+// Context: Context?,
+// NotificationMessage: NotificationMessage?
 //    ) {
-//        super.onNotifyMessageUnShow(context, notificationMessage)
+// Super.onNotifyMessageUnShow(context, notificationMessage)
 //        Log.e(TAG, "[onNotifyMessageUnShow]")
 //    }
 //
-//    override fun onPropertyOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
-//        super.onPropertyOperatorResult(context, jPushMessage)
+// Override fun onPropertyOperatorResult(context: Context?, jPushMessage: JPushMessage?) {
+// Super.onPropertyOperatorResult(context, jPushMessage)
 //        Log.e(TAG, "[onPropertyOperatorResult]")
 //    }
 // }

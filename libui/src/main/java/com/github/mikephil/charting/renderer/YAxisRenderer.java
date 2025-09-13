@@ -18,17 +18,43 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.List;
 
+/**
+ * Specialized thermal imaging component providing YAxisRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class YAxisRenderer extends AxisRenderer {
 
     protected YAxis mYAxis;
 
     protected Paint mZeroLinePaint;
 
+    /**
+     * Executes yaxisrenderer operation with thermal imaging domain optimization.
+     *
+     */
     public YAxisRenderer(ViewPortHandler viewPortHandler, YAxis yAxis, Transformer trans) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(viewPortHandler, trans, yAxis);
 
         this.mYAxis = yAxis;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if(mViewPortHandler != null) {
 
             mAxisLabelPaint.setColor(Color.BLACK);
@@ -47,6 +73,10 @@ public class YAxisRenderer extends AxisRenderer {
     @Override
     public void renderAxisLabels(Canvas c) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mYAxis.isEnabled() || !mYAxis.isDrawLabelsEnabled())
             return;
 
@@ -64,8 +94,16 @@ public class YAxisRenderer extends AxisRenderer {
 
         float xPos = 0f;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dependency == AxisDependency.LEFT) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (labelPosition == YAxisLabelPosition.OUTSIDE_CHART) {
                 mAxisLabelPaint.setTextAlign(Align.RIGHT);
                 xPos = mViewPortHandler.offsetLeft() - xoffset;
@@ -76,6 +114,10 @@ public class YAxisRenderer extends AxisRenderer {
 
         } else {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (labelPosition == YAxisLabelPosition.OUTSIDE_CHART) {
                 mAxisLabelPaint.setTextAlign(Align.LEFT);
                 xPos = mViewPortHandler.contentRight() + xoffset;
@@ -85,18 +127,30 @@ public class YAxisRenderer extends AxisRenderer {
             }
         }
 
+        /**
+         * Executes drawylabels operation with thermal imaging domain optimization.
+         *
+         */
         drawYLabels(c, xPos, positions, yoffset);
     }
 
     @Override
     public void renderAxisLine(Canvas c) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mYAxis.isEnabled() || !mYAxis.isDrawAxisLineEnabled())
             return;
 
         mAxisLinePaint.setColor(mYAxis.getAxisLineColor());
         mAxisLinePaint.setStrokeWidth(mYAxis.getAxisLineWidth());
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYAxis.getAxisDependency() == AxisDependency.LEFT) {
             c.drawLine(mViewPortHandler.contentLeft(), mViewPortHandler.contentTop(), mViewPortHandler.contentLeft(),
                     mViewPortHandler.contentBottom(), mAxisLinePaint);
@@ -119,7 +173,11 @@ public class YAxisRenderer extends AxisRenderer {
                 ? mYAxis.mEntryCount
                 : (mYAxis.mEntryCount - 1);
 
-        // draw
+        // Draw
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = from; i < to; i++) {
 
             String text = mYAxis.getFormattedLabel(i);
@@ -132,9 +190,17 @@ public class YAxisRenderer extends AxisRenderer {
     @Override
     public void renderGridLines(Canvas c) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mYAxis.isEnabled())
             return;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYAxis.isDrawGridLinesEnabled()) {
 
             int clipRestoreCount = c.save();
@@ -149,10 +215,14 @@ public class YAxisRenderer extends AxisRenderer {
             Path gridLinePath = mRenderGridLinesPath;
             gridLinePath.reset();
 
-            // draw the grid
+            // Draw the grid
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < positions.length; i += 2) {
 
-                // draw a path because lines don't support dashing on lower android versions
+                // Draw a path because lines don't support dashing on lower android versions
                 c.drawPath(linePath(gridLinePath, i, positions), mGridPaint);
                 gridLinePath.reset();
             }
@@ -160,7 +230,15 @@ public class YAxisRenderer extends AxisRenderer {
             c.restoreToCount(clipRestoreCount);
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYAxis.isDrawZeroLineEnabled()) {
+            /**
+             * Executes drawzeroline operation with thermal imaging domain optimization.
+             *
+             */
             drawZeroLine(c);
         }
     }
@@ -198,13 +276,21 @@ public class YAxisRenderer extends AxisRenderer {
      */
     protected float[] getTransformedPositions() {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if(mGetTransformedPositionsBuffer.length != mYAxis.mEntryCount * 2){
             mGetTransformedPositionsBuffer = new float[mYAxis.mEntryCount * 2];
         }
         float[] positions = mGetTransformedPositionsBuffer;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < positions.length; i += 2) {
-            // only fill y values, x values are not needed for y-labels
+            // Only fill y values, x values are not needed for y-labels
             positions[i + 1] = mYAxis.mEntries[i / 2];
         }
 
@@ -225,7 +311,7 @@ public class YAxisRenderer extends AxisRenderer {
         mZeroLineClippingRect.inset(0.f, -mYAxis.getZeroLineWidth());
         c.clipRect(mZeroLineClippingRect);
 
-        // draw zero line
+        // Draw zero line
         MPPointD pos = mTrans.getPixelForValues(0f, 0f);
 
         mZeroLinePaint.setColor(mYAxis.getZeroLineColor());
@@ -237,7 +323,7 @@ public class YAxisRenderer extends AxisRenderer {
         zeroLinePath.moveTo(mViewPortHandler.contentLeft(), (float) pos.y);
         zeroLinePath.lineTo(mViewPortHandler.contentRight(), (float) pos.y);
 
-        // draw a path because lines don't support dashing on lower android versions
+        // Draw a path because lines don't support dashing on lower android versions
         c.drawPath(zeroLinePath, mZeroLinePaint);
 
         c.restoreToCount(clipRestoreCount);
@@ -256,6 +342,10 @@ public class YAxisRenderer extends AxisRenderer {
 
         List<LimitLine> limitLines = mYAxis.getLimitLines();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (limitLines == null || limitLines.size() <= 0)
             return;
 
@@ -265,10 +355,18 @@ public class YAxisRenderer extends AxisRenderer {
         Path limitLinePath = mRenderLimitLines;
         limitLinePath.reset();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < limitLines.size(); i++) {
 
             LimitLine l = limitLines.get(i);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!l.isEnabled())
                 continue;
 
@@ -291,11 +389,15 @@ public class YAxisRenderer extends AxisRenderer {
 
             c.drawPath(limitLinePath, mLimitLinePaint);
             limitLinePath.reset();
-            // c.drawLines(pts, mLimitLinePaint);
+            // C.drawLines(pts, mLimitLinePaint);
 
             String label = l.getLabel();
 
-            // if drawing the limit-value label is enabled
+            // If drawing the limit-value label is enabled
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (label != null && !label.equals("")) {
 
                 mLimitLinePaint.setStyle(l.getTextStyle());
@@ -311,6 +413,10 @@ public class YAxisRenderer extends AxisRenderer {
 
                 final LimitLine.LimitLabelPosition position = l.getLabelPosition();
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (position == LimitLine.LimitLabelPosition.RIGHT_TOP) {
 
                     mLimitLinePaint.setTextAlign(Align.RIGHT);

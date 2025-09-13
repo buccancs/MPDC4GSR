@@ -26,6 +26,20 @@ import kotlin.random.Random
  * - Session-based file organization
  * - WebSocket-based transfer protocol
  */
+/**
+ * Specialized thermal imaging component providing FileUploadService functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class FileUploadService(private val context: Context) {
     companion object {
         private const val TAG = "FileUploadService"
@@ -37,6 +51,16 @@ class FileUploadService(private val context: Context) {
         private const val TRANSFER_TIMEOUT_MS = 30000L // 30 seconds per chunk
 
         // Upload states
+/**
+ * Specialized thermal imaging component providing UploadStatus functionality for the IRCamera system.
+ *
+ * This component is part of the IRCamera thermal imaging system, providing
+ * specialized functionality for thermal data processing and visualization.
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
         enum class UploadStatus {
             PENDING,
             IN_PROGRESS,
@@ -47,13 +71,51 @@ class FileUploadService(private val context: Context) {
         }
 
         // File types for classification
+/**
+ * Specialized thermal imaging component providing FileType functionality for the IRCamera system.
+ *
+ * This component is part of the IRCamera thermal imaging system, providing
+ * specialized functionality for thermal data processing and visualization.
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
         enum class FileType(val extension: String, val mimeType: String) {
+            /**
+             * Executes thermal video operation with thermal imaging domain optimization.
+             *
+             */
             THERMAL_VIDEO("mp4", "video/mp4"),
+            /**
+             * Executes visual video operation with thermal imaging domain optimization.
+             *
+             */
             VISUAL_VIDEO("mp4", "video/mp4"),
+            /**
+             * Executes gsr data operation with thermal imaging domain optimization.
+             *
+             */
             GSR_DATA("csv", "text/csv"),
+            /**
+             * Executes imu data operation with thermal imaging domain optimization.
+             *
+             */
             IMU_DATA("csv", "text/csv"),
+            /**
+             * Executes audio operation with thermal imaging domain optimization.
+             *
+             */
             AUDIO("wav", "audio/wav"),
+            /**
+             * Executes metadata operation with thermal imaging domain optimization.
+             *
+             */
             METADATA("json", "application/json"),
+            /**
+             * Executes calibration operation with thermal imaging domain optimization.
+             *
+             */
             CALIBRATION("json", "application/json"),
         }
     }
@@ -94,11 +156,23 @@ class FileUploadService(private val context: Context) {
         var errorMessage: String? = null,
     ) {
         val progressPercent: Float
+            /**
+             * Retrieves the  with optimized performance for thermal imaging operations.
+             *
+             */
             get() = if (fileSize > 0) (bytesUploaded.toFloat() / fileSize * 100f) else 0f
 
         val transferRate: Float
+            /**
+             * Retrieves the  with optimized performance for thermal imaging operations.
+             *
+             */
             get() {
                 val elapsed =
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (status == UploadStatus.IN_PROGRESS && startTime > 0) {
                         System.currentTimeMillis() - startTime
                     } else if (endTime > startTime) {
@@ -122,6 +196,10 @@ class FileUploadService(private val context: Context) {
             component = TAG,
             event = "service_initialized",
             details =
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "chunk_size" to chunkSize,
                     "max_concurrent" to maxConcurrent,
@@ -130,11 +208,25 @@ class FileUploadService(private val context: Context) {
         )
 
         // Start upload processor coroutine
+        /**
+         * Executes startuploadprocessor operation with thermal imaging domain optimization.
+         *
+         */
         startUploadProcessor()
     }
 
     /**
      * Queue a file for upload
+     */
+    /**
+     * Executes queueupload operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param filePath Parameter for operation (type: String)
+     * @param sessionId Parameter for operation (type: String)
+     * @param deviceId Parameter for operation (type: String)
+     * @param fileType Parameter for operation (type: FileType)
+     *
      */
     suspend fun queueUpload(
         filePath: String,
@@ -144,6 +236,10 @@ class FileUploadService(private val context: Context) {
     ): String {
         try {
             val file = File(filePath)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists() || !file.canRead()) {
                 throw IllegalArgumentException("File does not exist or is not readable: $filePath")
             }
@@ -156,6 +252,10 @@ class FileUploadService(private val context: Context) {
 
             // Create upload job
             val uploadJob =
+                /**
+                 * Executes uploadjob operation with thermal imaging domain optimization.
+                 *
+                 */
                 UploadJob(
                     jobId = jobId,
                     filePath = filePath,
@@ -170,6 +270,10 @@ class FileUploadService(private val context: Context) {
 
             // Check for existing partial upload
             val existingOffset = checkExistingUpload(uploadJob)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (existingOffset > 0) {
                 uploadJob.resumeOffset = existingOffset
                 uploadJob.bytesUploaded = existingOffset
@@ -177,6 +281,10 @@ class FileUploadService(private val context: Context) {
                     component = TAG,
                     event = "upload_resume",
                     details =
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf(
                             "job_id" to jobId,
                             "file_name" to file.name,
@@ -193,6 +301,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_queued",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to jobId,
                         "file_name" to file.name,
@@ -207,6 +319,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_queue_error",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "file_path" to filePath,
                         "error" to e.message,
@@ -219,6 +335,13 @@ class FileUploadService(private val context: Context) {
     /**
      * Cancel an upload
      */
+    /**
+     * Executes cancelupload operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param jobId Parameter for operation (type: String)
+     *
+     */
     suspend fun cancelUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
 
@@ -229,6 +352,10 @@ class FileUploadService(private val context: Context) {
             component = TAG,
             event = "upload_cancelled",
             details =
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "job_id" to jobId,
                     "file_name" to job.fileName,
@@ -241,15 +368,30 @@ class FileUploadService(private val context: Context) {
     /**
      * Pause an upload
      */
+    /**
+     * Executes pauseupload operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param jobId Parameter for operation (type: String)
+     *
+     */
     suspend fun pauseUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (job.status == UploadStatus.IN_PROGRESS) {
             job.status = UploadStatus.PAUSED
             logger.logEvent(
                 component = TAG,
                 event = "upload_paused",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to jobId,
                         "file_name" to job.fileName,
@@ -265,9 +407,20 @@ class FileUploadService(private val context: Context) {
     /**
      * Resume a paused upload
      */
+    /**
+     * Executes resumeupload operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param jobId Parameter for operation (type: String)
+     *
+     */
     suspend fun resumeUpload(jobId: String): Boolean {
         val job = activeUploads[jobId] ?: return false
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (job.status == UploadStatus.PAUSED) {
             job.status = UploadStatus.PENDING
             uploadQueue.send(jobId)
@@ -276,6 +429,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_resumed",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to jobId,
                         "file_name" to job.fileName,
@@ -291,6 +448,13 @@ class FileUploadService(private val context: Context) {
     /**
      * Get upload status
      */
+    /**
+     * Retrieves the uploadstatus with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param jobId Parameter for operation (type: String)
+     *
+     */
     fun getUploadStatus(jobId: String): UploadJob? {
         return activeUploads[jobId]
     }
@@ -298,12 +462,20 @@ class FileUploadService(private val context: Context) {
     /**
      * Get all active uploads
      */
+    /**
+     * Retrieves the activeuploads with optimized performance for thermal imaging operations.
+     *
+     */
     fun getActiveUploads(): List<UploadJob> {
         return activeUploads.values.toList()
     }
 
     /**
      * Get upload statistics
+     */
+    /**
+     * Retrieves the uploadstats with optimized performance for thermal imaging operations.
+     *
      */
     fun getUploadStats(): Map<String, Any> {
         val jobs = activeUploads.values
@@ -328,20 +500,36 @@ class FileUploadService(private val context: Context) {
                     val jobId = uploadQueue.receive()
 
                     // Check concurrent limits
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (concurrentUploads.get() >= maxConcurrent) {
                         // Put back in queue and wait
                         uploadQueue.send(jobId)
+                        /**
+                         * Executes delay operation with thermal imaging domain optimization.
+                         *
+                         */
                         delay(1000)
                         continue
                     }
 
                     val job = activeUploads[jobId]
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (job == null || job.status != UploadStatus.PENDING) {
                         continue
                     }
 
                     // Start upload in separate coroutine
                     launch {
+                        /**
+                         * Executes executeupload operation with thermal imaging domain optimization.
+                         *
+                         */
                         executeUpload(job)
                     }
                 } catch (e: Exception) {
@@ -350,6 +538,10 @@ class FileUploadService(private val context: Context) {
                         event = "upload_processor_error",
                         details = mapOf("error" to e.message),
                     )
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(5000) // Wait before retrying
                 }
             }
@@ -358,6 +550,13 @@ class FileUploadService(private val context: Context) {
 
     /**
      * Execute individual upload
+     */
+    /**
+     * Executes executeupload operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param job Parameter for operation (type: UploadJob)
+     *
      */
     private suspend fun executeUpload(job: UploadJob) {
         concurrentUploads.incrementAndGet()
@@ -370,6 +569,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_started",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to job.jobId,
                         "file_name" to job.fileName,
@@ -380,15 +583,27 @@ class FileUploadService(private val context: Context) {
 
             // Send upload initiation message to PC
             val initResponse = initiateUpload(job)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!initResponse) {
                 throw Exception("Failed to initiate upload with PC controller")
             }
 
             // Upload file in chunks
+            /**
+             * Executes uploadfilechunks operation with thermal imaging domain optimization.
+             *
+             */
             uploadFileChunks(job)
 
             // Verify upload completion
             val verifyResponse = verifyUploadCompletion(job)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!verifyResponse) {
                 throw Exception("Upload verification failed")
             }
@@ -402,6 +617,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_completed",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to job.jobId,
                         "file_name" to job.fileName,
@@ -420,6 +639,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_failed",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to job.jobId,
                         "file_name" to job.fileName,
@@ -429,7 +652,15 @@ class FileUploadService(private val context: Context) {
             )
 
             // Retry if under limit
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (job.retryCount <= retryLimit) {
+                /**
+                 * Executes delay operation with thermal imaging domain optimization.
+                 *
+                 */
                 delay(5000L * job.retryCount) // Exponential backoff
                 job.status = UploadStatus.PENDING
                 uploadQueue.send(job.jobId)
@@ -438,6 +669,10 @@ class FileUploadService(private val context: Context) {
                     component = TAG,
                     event = "upload_retry_scheduled",
                     details =
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf(
                             "job_id" to job.jobId,
                             "retry_count" to job.retryCount,
@@ -456,16 +691,60 @@ class FileUploadService(private val context: Context) {
     private suspend fun initiateUpload(job: UploadJob): Boolean {
         return try {
             val initMessage =
+                /**
+                 * Executes jsonobject operation with thermal imaging domain optimization.
+                 *
+                 */
                 JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("type", "upload_initiate")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("job_id", job.jobId)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("file_name", job.fileName)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("file_size", job.fileSize)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("file_type", job.fileType.name)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("checksum", job.checksum)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("session_id", job.sessionId)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("device_id", job.deviceId)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("chunk_size", chunkSize)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("resume_offset", job.resumeOffset)
                 }
 
@@ -475,6 +754,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_initiate_error",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to job.jobId,
                         "error" to e.message,
@@ -487,9 +770,20 @@ class FileUploadService(private val context: Context) {
     /**
      * Upload file in chunks
      */
+    /**
+     * Executes uploadfilechunks operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param job Parameter for operation (type: UploadJob)
+     *
+     */
     private suspend fun uploadFileChunks(job: UploadJob) {
         val file = File(job.filePath)
 
+        /**
+         * Executes fileinputstream operation with thermal imaging domain optimization.
+         *
+         */
         FileInputStream(file).use { inputStream ->
             // Skip to resume offset
             inputStream.skip(job.resumeOffset)
@@ -498,10 +792,18 @@ class FileUploadService(private val context: Context) {
             var offset = job.resumeOffset
             var chunkIndex = (offset / chunkSize).toInt()
 
+            /**
+             * Executes while operation with thermal imaging domain optimization.
+             *
+             */
             while (offset < job.fileSize && job.status == UploadStatus.IN_PROGRESS) {
                 val bytesToRead = minOf(chunkSize.toLong(), job.fileSize - offset).toInt()
                 val bytesRead = inputStream.read(buffer, 0, bytesToRead)
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (bytesRead <= 0) break
 
                 // Encode chunk data as base64
@@ -510,17 +812,53 @@ class FileUploadService(private val context: Context) {
 
                 // Send chunk to PC
                 val chunkMessage =
+                    /**
+                     * Executes jsonobject operation with thermal imaging domain optimization.
+                     *
+                     */
                     JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("type", "upload_chunk")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("job_id", job.jobId)
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("chunk_index", chunkIndex)
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("chunk_offset", offset)
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("chunk_size", bytesRead)
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("chunk_data", encodedData)
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("is_final_chunk", offset + bytesRead >= job.fileSize)
                     }
 
                 val chunkSent = webSocketClient?.sendMessage(chunkMessage.toString()) ?: false
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!chunkSent) {
                     throw Exception("Failed to send chunk $chunkIndex")
                 }
@@ -531,6 +869,10 @@ class FileUploadService(private val context: Context) {
                 chunkIndex++
 
                 // Small delay to prevent overwhelming the connection
+                /**
+                 * Executes delay operation with thermal imaging domain optimization.
+                 *
+                 */
                 delay(10)
             }
         }
@@ -542,10 +884,30 @@ class FileUploadService(private val context: Context) {
     private suspend fun verifyUploadCompletion(job: UploadJob): Boolean {
         return try {
             val verifyMessage =
+                /**
+                 * Executes jsonobject operation with thermal imaging domain optimization.
+                 *
+                 */
                 JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("type", "upload_verify")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("job_id", job.jobId)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("expected_size", job.fileSize)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("expected_checksum", job.checksum)
                 }
 
@@ -555,6 +917,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_verify_error",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to job.jobId,
                         "error" to e.message,
@@ -570,11 +936,35 @@ class FileUploadService(private val context: Context) {
     private suspend fun checkExistingUpload(job: UploadJob): Long {
         return try {
             val checkMessage =
+                /**
+                 * Executes jsonobject operation with thermal imaging domain optimization.
+                 *
+                 */
                 JSONObject().apply {
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("type", "upload_check_existing")
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("job_id", job.jobId)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("file_name", job.fileName)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("session_id", job.sessionId)
+                    /**
+                     * Executes put operation with thermal imaging domain optimization.
+                     *
+                     */
                     put("device_id", job.deviceId)
                 }
 
@@ -586,6 +976,10 @@ class FileUploadService(private val context: Context) {
                 component = TAG,
                 event = "upload_check_error",
                 details =
+                    /**
+                     * Executes mapof operation with thermal imaging domain optimization.
+                     *
+                     */
                     mapOf(
                         "job_id" to job.jobId,
                         "error" to e.message,
@@ -601,10 +995,18 @@ class FileUploadService(private val context: Context) {
     private fun calculateSHA256(file: File): String {
         val digest = MessageDigest.getInstance("SHA-256")
 
+        /**
+         * Executes fileinputstream operation with thermal imaging domain optimization.
+         *
+         */
         FileInputStream(file).use { inputStream ->
             val buffer = ByteArray(8192)
             var bytesRead: Int
 
+            /**
+             * Executes while operation with thermal imaging domain optimization.
+             *
+             */
             while (inputStream.read(buffer).also { bytesRead = it } != -1) {
                 digest.update(buffer, 0, bytesRead)
             }
@@ -615,6 +1017,15 @@ class FileUploadService(private val context: Context) {
 
     /**
      * Generate unique job ID
+     */
+    /**
+     * Executes generatejobid operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param sessionId Parameter for operation (type: String)
+     * @param deviceId Parameter for operation (type: String)
+     * @param fileName Parameter for operation (type: String)
+     *
      */
     private fun generateJobId(
         sessionId: String,
@@ -629,11 +1040,19 @@ class FileUploadService(private val context: Context) {
     /**
      * Shutdown the service
      */
+    /**
+     * Executes shutdown operation with thermal imaging domain optimization.
+     *
+     */
     fun shutdown() {
         isActive.set(false)
 
         // Cancel all active uploads
         activeUploads.values.forEach { job ->
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (job.status == UploadStatus.IN_PROGRESS) {
                 job.status = UploadStatus.CANCELLED
             }
@@ -643,6 +1062,10 @@ class FileUploadService(private val context: Context) {
             component = TAG,
             event = "service_shutdown",
             details =
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "active_uploads" to activeUploads.size,
                 ),

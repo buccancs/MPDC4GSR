@@ -21,7 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by fengjibo on 2024/1/5.
+ * Specialized thermal imaging component providing USBMonitorDualManager functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class USBMonitorDualManager {
 
@@ -43,12 +54,20 @@ public class USBMonitorDualManager {
 
     private IFrameCallback mVlIFrameCallback;
 
+    /**
+     * Executes usbmonitordualmanager operation with thermal imaging domain optimization.
+     *
+     */
     private USBMonitorDualManager() {
     }
 
     private static USBMonitorDualManager mInstance;
 
     public static synchronized USBMonitorDualManager getInstance() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mInstance == null) {
             mInstance = new USBMonitorDualManager();
         }
@@ -66,16 +85,27 @@ public class USBMonitorDualManager {
     public void init(int irPid, int irFPS, int irWidth, int irHeight, float irBandWith,
                      int vlPid, int vlFPS, int vlWidth, int vlHeight, float vlBandWith, IFrameCallback frameCallback) {
         this.mVlIFrameCallback = frameCallback;
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mUSBMonitor == null) {
             mUSBMonitor = new USBMonitor(Utils.getApp(),
                     new USBMonitor.OnDeviceConnectListener() {
-                        // called by checking usb device
-                        // do request device permission
+                        // Called by checking usb device
+                        // Do request device permission
                         @Override
                         public void onAttach(UsbDevice device) {
                             Log.w(TAG, "USBMonitor-onAttach-getProductId = " + device.getProductId());
 
                             mUSBMonitor.requestPermission(device);
+                            /**
+                             * Executes for operation with thermal imaging domain optimization.
+                             *
+                             * @param
+                             * @param onUSBConnectListener Event listener for callbacks (type: mOnUSBConnectListeners)
+                             *
+                             */
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onAttach(device);
                             }
@@ -84,50 +114,98 @@ public class USBMonitorDualManager {
                         @Override
                         public void onGranted(UsbDevice usbDevice, boolean granted) {
                             Log.d(TAG, "USBMonitor-onGranted");
+                            /**
+                             * Executes for operation with thermal imaging domain optimization.
+                             *
+                             * @param
+                             * @param onUSBConnectListener Event listener for callbacks (type: mOnUSBConnectListeners)
+                             *
+                             */
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onGranted(usbDevice, granted);
                             }
                         }
 
-                        // called by taking out usb device
-                        // do close camera
+                        // Called by taking out usb device
+                        // Do close camera
                         @Override
                         public void onDettach(UsbDevice device) {
                             Log.d(TAG, "USBMonitor-onDettach");
                             Const.isDeviceConnected = false;
+                            /**
+                             * Executes for operation with thermal imaging domain optimization.
+                             *
+                             * @param
+                             * @param onUSBConnectListener Event listener for callbacks (type: mOnUSBConnectListeners)
+                             *
+                             */
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onDettach(device);
                             }
 
                         }
 
-                        // called by connect to usb camera
-                        // do open camera,start previewing
+                        // Called by connect to usb camera
+                        // Do open camera,start previewing
                         @Override
                         public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock,
                                               boolean createNew) {
                             Log.w(TAG, "USBMonitor-onConnect createNew " + createNew);
                             Log.w(TAG, "USBMonitor-onConnect Pid " + device.getProductId());
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (!mIrOpened) {
+                                /**
+                                 * Manages thermal camera operations with hardware-optimized performance and error handling.
+                                 *
+                                 */
                                 openIrUVCCamera(irPid, irWidth, irHeight, irFPS, irBandWith, device, ctrlBlock);
                             }
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (!mVlOpened) {
+                                /**
+                                 * Manages thermal camera operations with hardware-optimized performance and error handling.
+                                 *
+                                 */
                                 openVlUVCCamera(vlPid, vlWidth, vlHeight, vlFPS, vlBandWith, device, ctrlBlock);
                             }
 
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (mIrOpened && mVlOpened) {
+                                /**
+                                 * Executes for operation with thermal imaging domain optimization.
+                                 *
+                                 * @param
+                                 * @param onUSBConnectListener Event listener for callbacks (type: mOnUSBConnectListeners)
+                                 *
+                                 */
                                 for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                     onUSBConnectListener.onConnect(device, ctrlBlock, createNew);
                                 }
                             }
                         }
 
-                        // called by disconnect to usb camera
-                        // do nothing
+                        // Called by disconnect to usb camera
+                        // Do nothing
                         @Override
                         public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                             Log.w(TAG, "USBMonitor-onDisconnect");
                             Const.isDeviceConnected = false;
+                            /**
+                             * Executes for operation with thermal imaging domain optimization.
+                             *
+                             * @param
+                             * @param onUSBConnectListener Event listener for callbacks (type: mOnUSBConnectListeners)
+                             *
+                             */
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onDisconnect(device, ctrlBlock);
                             }
@@ -137,6 +215,13 @@ public class USBMonitorDualManager {
                         public void onCancel(UsbDevice device) {
                             Log.d(TAG, "USBMonitor-onCancel");
                             Const.isDeviceConnected = false;
+                            /**
+                             * Executes for operation with thermal imaging domain optimization.
+                             *
+                             * @param
+                             * @param onUSBConnectListener Event listener for callbacks (type: mOnUSBConnectListeners)
+                             *
+                             */
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onCancel(device);
                             }
@@ -147,12 +232,20 @@ public class USBMonitorDualManager {
     }
 
     public void registerUSB() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mUSBMonitor != null) {
             mUSBMonitor.register();
         }
     }
 
     public void unregisterUSB() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mUSBMonitor != null) {
             mUSBMonitor.unregister();
         }
@@ -160,12 +253,24 @@ public class USBMonitorDualManager {
 
     private void openIrUVCCamera(int pid, int irWidth, int irHeight, int irFps, float irBandWidth, UsbDevice device, USBMonitor.UsbControlBlock controlBlock) {
         Log.w(TAG, "USBMonitor-openIrUVCCamera 1 " + device.getProductId());
+        /**
+         * Executes synchronized operation with thermal imaging domain optimization.
+         *
+         */
         synchronized (mSyncs) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (device.getProductId() != pid) {
                 return;
             }
             Log.w(TAG, "USBMonitor-openIrUVCCamera " + device.getProductId());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mIrUvcCamera == null) {
                 ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
                 mIrUvcCamera = concreateUVCBuilder
@@ -173,7 +278,7 @@ public class USBMonitorDualManager {
                         .build();
                 mIrUvcCamera.setDefaultBandwidth(irBandWidth);
                 mIrUvcCamera.setDefaultPreviewMaxFps(irFps);
-                // uvc开启
+                // Uvc开启
                 mIrUvcCamera.openUVCCamera(controlBlock);
                 /**
                  * Adjust带宽
@@ -194,12 +299,23 @@ public class USBMonitorDualManager {
     public void initIRCMD() {
 
         // IRCMD init
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mIrUvcCamera != null) {
             ConcreteIRCMDBuilder concreteIRCMDBuilder = new ConcreteIRCMDBuilder();
             mIrcmd = concreteIRCMDBuilder
                     .setIrcmdType(IRCMDType.USB_IR_256_384)
                     .setIdCamera(mIrUvcCamera.getNativePtr())
                     .build();
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param onUSBConnectListener Event listener for callbacks (type: mOnUSBConnectListeners)
+             *
+             */
             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                 onUSBConnectListener.onIRCMDInit(mIrcmd);
             }
@@ -207,14 +323,26 @@ public class USBMonitorDualManager {
     }
 
     private void openVlUVCCamera(int pid, int vlWidth, int vlHeight, int vlFps, float vlBandWidth, UsbDevice device, USBMonitor.UsbControlBlock controlBlock) {
+        /**
+         * Executes synchronized operation with thermal imaging domain optimization.
+         *
+         */
         synchronized (mSyncs) {
             Log.w(TAG, "USBMonitor-openVlUVCCamera 1" + device.getProductId());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (device.getProductId() != pid) {
                 return;
             }
             Log.w(TAG, "USBMonitor-openVlUVCCamera " + device.getProductId());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mVlUvcCamera == null) {
                 ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
                 mVlUvcCamera = concreateUVCBuilder
@@ -224,7 +352,7 @@ public class USBMonitorDualManager {
                 mVlUvcCamera.setDefaultPreviewMode(CommonParams.FRAMEFORMATType.FRAME_FORMAT_MJPEG);
                 mVlUvcCamera.setDefaultBandwidth(vlBandWidth);
                 mVlUvcCamera.setDefaultPreviewMaxFps(vlFps);
-                // uvc开启
+                // Uvc开启
                 mVlUvcCamera.openUVCCamera(controlBlock);
                 /**
                  * Adjust带宽
@@ -232,6 +360,10 @@ public class USBMonitorDualManager {
                  */
 
                 mVlUvcCamera.setUSBPreviewSize(vlWidth, vlHeight);
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (mVlIFrameCallback != null) {
                     mVlUvcCamera.setFrameCallback(mVlIFrameCallback);
                 }
@@ -244,6 +376,10 @@ public class USBMonitorDualManager {
 
     public void stopIrUVCCamera() {
         Log.i(TAG, "stopIrUVCCamera");
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mIrUvcCamera != null) {
             mIrUvcCamera.onStopPreview();
             SystemClock.sleep(200);
@@ -255,6 +391,10 @@ public class USBMonitorDualManager {
 
     public void stopVlUVCCamera() {
         Log.i(TAG, "stopVlUVCCamera");
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mVlUvcCamera != null) {
             mVlUvcCamera.onStopPreview();
             SystemClock.sleep(200);

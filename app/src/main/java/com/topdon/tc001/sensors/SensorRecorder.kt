@@ -12,6 +12,20 @@ import kotlinx.coroutines.flow.Flow
  *
  * @author IRCamera Android Sensor Node (Spoke)
  */
+/**
+ * Specialized thermal imaging component providing SensorRecorder functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 interface SensorRecorder {
     /**
      * Unique identifier for this sensor recorder instance
@@ -39,6 +53,10 @@ interface SensorRecorder {
      *
      * @return true if initialization successful, false otherwise
      */
+    /**
+     * Initializes the ialize component for thermal imaging operations.
+     *
+     */
     suspend fun initialize(): Boolean
 
     /**
@@ -48,6 +66,13 @@ interface SensorRecorder {
      * @param sessionDirectory Directory where sensor data should be stored
      * @return true if recording started successfully, false otherwise
      */
+    /**
+     * Executes startrecording operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param sessionDirectory Parameter for operation (type: String)
+     *
+     */
     suspend fun startRecording(sessionDirectory: String): Boolean
 
     /**
@@ -55,6 +80,10 @@ interface SensorRecorder {
      * Should cleanly stop all background operations and flush any buffered data.
      *
      * @return true if recording stopped successfully, false otherwise
+     */
+    /**
+     * Executes stoprecording operation with thermal imaging domain optimization.
+     *
      */
     suspend fun stopRecording(): Boolean
 
@@ -65,6 +94,15 @@ interface SensorRecorder {
      * @param markerType Type of sync marker (e.g., "flash", "manual", "auto")
      * @param timestampNs High-precision timestamp in nanoseconds
      * @param metadata Optional additional sync marker data
+     */
+    /**
+     * Executes addsyncmarker operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param markerType Parameter for operation (type: String)
+     * @param timestampNs Parameter for operation (type: Long)
+     * @param metadata Parameter for operation (type: Map<String)
+     *
      */
     suspend fun addSyncMarker(
         markerType: String,
@@ -82,17 +120,26 @@ interface SensorRecorder {
      * Flow of recording status updates.
      * Emits RecordingStatus updates for real-time monitoring.
      */
+    /**
+     * Retrieves statusflow information.
+     */
     fun getStatusFlow(): Flow<RecordingStatus>
 
     /**
      * Flow of error events from this sensor.
      * Critical for error handling and recovery in the RecordingController.
      */
+    /**
+     * Retrieves errorflow information.
+     */
     fun getErrorFlow(): Flow<SensorError>
 
     /**
      * Get current recording statistics.
      * Used for real-time monitoring and quality assurance.
+     */
+    /**
+     * Retrieves recordingstats information.
      */
     fun getRecordingStats(): RecordingStats
 }
@@ -114,16 +161,19 @@ data class RecordingStatus(
  * Error information from sensor operations
  */
 data class SensorError(
-    val sensorId: String,
-    val sensorType: String,
-    val errorType: ErrorType,
-    val errorMessage: String,
-    val timestampNs: Long,
-    val isRecoverable: Boolean = true,
-)
-
 /**
- * Types of sensor errors for classification and handling
+ * Specialized thermal imaging component providing ErrorType functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 enum class ErrorType {
     INITIALIZATION_FAILED,

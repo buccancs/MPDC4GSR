@@ -13,12 +13,29 @@ import com.csl.irCamera.databinding.ItemGsrVideoFileBinding
 import java.io.File
 
 /**
- * Adapter for GSR Data Files RecyclerView
+ * Specialized thermal imaging component providing GSRDataAdapter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+/**
+ * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ViewHolder display and interaction.
+ *
+ * Custom view component optimized for thermal imaging display
+ * with specialized rendering and interaction capabilities.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
-class GSRDataAdapter(
-    private val dataFiles: List<GSRDataFragment.GSRDataFile>,
-    private val onItemClick: (GSRDataFragment.GSRDataFile) -> Unit,
-) : RecyclerView.Adapter<GSRDataAdapter.ViewHolder>() {
     class ViewHolder(private val binding: ItemGsrDataFileBinding) : RecyclerView.ViewHolder(binding.root) {
         val fileIcon = binding.fileIcon
         val fileName = binding.fileName
@@ -29,6 +46,14 @@ class GSRDataAdapter(
         val createdDate = binding.createdDate
     }
 
+    /**
+     * Executes oncreateviewholder operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param parent Parameter for operation (type: ViewGroup)
+     * @param viewType Parameter for operation (type: Int)
+     *
+     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -42,6 +67,14 @@ class GSRDataAdapter(
         return ViewHolder(binding)
     }
 
+    /**
+     * Executes onbindviewholder operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param holder Parameter for operation (type: ViewHolder)
+     * @param position Parameter for operation (type: Int)
+     *
+     */
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -56,12 +89,30 @@ class GSRDataAdapter(
         holder.createdDate.text = dataFile.createdDate
 
         holder.itemView.setOnClickListener {
+            /**
+             * Executes onitemclick operation with thermal imaging domain optimization.
+             *
+             */
             onItemClick(dataFile)
         }
     }
 
+    /**
+     * Retrieves the itemcount with optimized performance for thermal imaging operations.
+     *
+     */
     override fun getItemCount() = dataFiles.size
 
+    /**
+     * Executes formatFileSize functionality.
+     */
+    /**
+     * Executes formatfilesize operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param bytes Parameter for operation (type: Long)
+     *
+     */
     private fun formatFileSize(bytes: Long): String {
         return when {
             bytes >= 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
@@ -69,21 +120,30 @@ class GSRDataAdapter(
             else -> "$bytes B"
         }
     }
-
-    private fun formatDuration(seconds: Long): String {
-        val minutes = seconds / 60
-        val remainingSeconds = seconds % 60
-        return "%d:%02d".format(minutes, remainingSeconds)
-    }
-}
-
 /**
- * Adapter for GSR Video Files RecyclerView
+ * Specialized thermal imaging component providing GSRVideoAdapter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+/**
+ * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ViewHolder display and interaction.
+ *
+ * Custom view component optimized for thermal imaging display
+ * with specialized rendering and interaction capabilities.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
-class GSRVideoAdapter(
-    private val videoFiles: List<File>,
-    private val onItemClick: (File) -> Unit,
-) : RecyclerView.Adapter<GSRVideoAdapter.ViewHolder>() {
     class ViewHolder(private val binding: ItemGsrVideoFileBinding) : RecyclerView.ViewHolder(binding.root) {
         val videoThumbnail = binding.videoThumbnail
         val fileName = binding.fileName
@@ -93,6 +153,14 @@ class GSRVideoAdapter(
         val createdDate = binding.createdDate
     }
 
+    /**
+     * Executes oncreateviewholder operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param parent Parameter for operation (type: ViewGroup)
+     * @param viewType Parameter for operation (type: Int)
+     *
+     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -106,6 +174,14 @@ class GSRVideoAdapter(
         return ViewHolder(binding)
     }
 
+    /**
+     * Executes onbindviewholder operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param holder Parameter for operation (type: ViewHolder)
+     * @param position Parameter for operation (type: Int)
+     *
+     */
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -135,29 +211,46 @@ class GSRVideoAdapter(
         holder.duration.text = "Duration: Unknown"
 
         holder.itemView.setOnClickListener {
+            /**
+             * Executes onitemclick operation with thermal imaging domain optimization.
+             *
+             */
             onItemClick(videoFile)
         }
     }
 
+    /**
+     * Retrieves the itemcount with optimized performance for thermal imaging operations.
+     *
+     */
     override fun getItemCount() = videoFiles.size
 
-    private fun formatFileSize(bytes: Long): String {
-        return when {
-            bytes >= 1024 * 1024 * 1024 -> "%.1f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
-            bytes >= 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
-            bytes >= 1024 -> "%.1f KB".format(bytes / 1024.0)
-            else -> "$bytes B"
-        }
-    }
-}
-
+    /**
+     * Executes formatFileSize functionality.
 /**
- * Adapter for GSR RAW Image Files RecyclerView
+ * Specialized thermal imaging component providing GSRRawImageAdapter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+/**
+ * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ViewHolder display and interaction.
+ *
+ * Custom view component optimized for thermal imaging display
+ * with specialized rendering and interaction capabilities.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
-class GSRRawImageAdapter(
-    private val rawImageFiles: List<File>,
-    private val onItemClick: (File) -> Unit,
-) : RecyclerView.Adapter<GSRRawImageAdapter.ViewHolder>() {
     class ViewHolder(private val binding: ItemGsrRawImageFileBinding) : RecyclerView.ViewHolder(binding.root) {
         val imageThumbnail = binding.imageThumbnail
         val fileName = binding.fileName
@@ -167,6 +260,14 @@ class GSRRawImageAdapter(
         val createdDate = binding.createdDate
     }
 
+    /**
+     * Executes oncreateviewholder operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param parent Parameter for operation (type: ViewGroup)
+     * @param viewType Parameter for operation (type: Int)
+     *
+     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -180,6 +281,14 @@ class GSRRawImageAdapter(
         return ViewHolder(binding)
     }
 
+    /**
+     * Executes onbindviewholder operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param holder Parameter for operation (type: ViewHolder)
+     * @param position Parameter for operation (type: Int)
+     *
+     */
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -201,28 +310,45 @@ class GSRRawImageAdapter(
             ).format(java.util.Date(rawImageFile.lastModified()))
 
         holder.itemView.setOnClickListener {
+            /**
+             * Executes onitemclick operation with thermal imaging domain optimization.
+             *
+             */
             onItemClick(rawImageFile)
         }
     }
 
+    /**
+     * Retrieves the itemcount with optimized performance for thermal imaging operations.
+     *
+     */
     override fun getItemCount() = rawImageFiles.size
 
-    private fun formatFileSize(bytes: Long): String {
-        return when {
-            bytes >= 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
-            bytes >= 1024 -> "%.1f KB".format(bytes / 1024.0)
-            else -> "$bytes B"
-        }
-    }
-}
-
+    /**
 /**
- * Adapter for GSR Sessions RecyclerView
+ * Specialized thermal imaging component providing GSRSessionAdapter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+/**
+ * Custom thermal imaging view component with advanced rendering capabilities. Optimized for ViewHolder display and interaction.
+ *
+ * Custom view component optimized for thermal imaging display
+ * with specialized rendering and interaction capabilities.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
-class GSRSessionAdapter(
-    private val sessions: List<GSRSessionFragment.GSRSessionInfo>,
-    private val onItemClick: (GSRSessionFragment.GSRSessionInfo) -> Unit,
-) : RecyclerView.Adapter<GSRSessionAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val sessionIcon: ImageView = view.findViewById(R.id.session_icon)
         val sessionId: TextView = view.findViewById(R.id.session_id)
@@ -233,6 +359,14 @@ class GSRSessionAdapter(
         val startTime: TextView = view.findViewById(R.id.start_time)
     }
 
+    /**
+     * Executes oncreateviewholder operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param parent Parameter for operation (type: ViewGroup)
+     * @param viewType Parameter for operation (type: Int)
+     *
+     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -243,6 +377,14 @@ class GSRSessionAdapter(
         return ViewHolder(view)
     }
 
+    /**
+     * Executes onbindviewholder operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param holder Parameter for operation (type: ViewHolder)
+     * @param position Parameter for operation (type: Int)
+     *
+     */
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -257,11 +399,27 @@ class GSRSessionAdapter(
 
         // Count available files
         val fileCount = mutableListOf<String>()
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (session.gsrDataFile != null) fileCount.add("GSR Data")
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (session.videoFile != null) fileCount.add("Video")
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (session.rawImageCount > 0) fileCount.add("${session.rawImageCount} RAW Images")
 
         holder.fileCount.text =
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (fileCount.isEmpty()) {
                 "No files"
             } else {
@@ -269,12 +427,30 @@ class GSRSessionAdapter(
             }
 
         holder.itemView.setOnClickListener {
+            /**
+             * Executes onitemclick operation with thermal imaging domain optimization.
+             *
+             */
             onItemClick(session)
         }
     }
 
+    /**
+     * Retrieves the itemcount with optimized performance for thermal imaging operations.
+     *
+     */
     override fun getItemCount() = sessions.size
 
+    /**
+     * Executes formatDuration functionality.
+     */
+    /**
+     * Executes formatduration operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param seconds Parameter for operation (type: Long)
+     *
+     */
     private fun formatDuration(seconds: Long): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60

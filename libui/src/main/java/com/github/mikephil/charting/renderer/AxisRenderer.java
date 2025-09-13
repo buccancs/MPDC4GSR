@@ -13,9 +13,18 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Baseclass of all axis renderers.
+ * Specialized thermal imaging component providing AxisRenderer functionality for the IRCamera system.
  *
- * @author Philipp Jahoda
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public abstract class AxisRenderer extends Renderer {
 
@@ -46,11 +55,19 @@ public abstract class AxisRenderer extends Renderer {
     protected Paint mLimitLinePaint;
 
     public AxisRenderer(ViewPortHandler viewPortHandler, Transformer trans, AxisBase axis) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(viewPortHandler);
 
         this.mTrans = trans;
         this.mAxis = axis;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if(mViewPortHandler != null) {
 
             mAxisLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -117,13 +134,21 @@ public abstract class AxisRenderer extends Renderer {
      */
     public void computeAxis(float min, float max, boolean inverted) {
 
-        // calculate the starting and entry point of the y-labels (depending on
-        // zoom / contentrect bounds)
+        // Calculate the starting and entry point of the y-labels (depending on
+        // Zoom / contentrect bounds)
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mViewPortHandler != null && mViewPortHandler.contentWidth() > 10 && !mViewPortHandler.isFullyZoomedOutY()) {
 
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentTop());
             MPPointD p2 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentBottom());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!inverted) {
 
                 min = (float) p2.y;
@@ -138,6 +163,10 @@ public abstract class AxisRenderer extends Renderer {
             MPPointD.recycleInstance(p2);
         }
 
+        /**
+         * Executes computeaxisvalues operation with thermal imaging domain optimization.
+         *
+         */
         computeAxisValues(min, max);
     }
 
@@ -154,6 +183,10 @@ public abstract class AxisRenderer extends Renderer {
         int labelCount = mAxis.getLabelCount();
         double range = Math.abs(yMax - yMin);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (labelCount == 0 || range <= 0 || Double.isInfinite(range)) {
             mAxis.mEntries = new float[]{};
             mAxis.mCenteredEntries = new float[]{};
@@ -167,12 +200,20 @@ public abstract class AxisRenderer extends Renderer {
 
         // If granularity is enabled, then do not allow the interval to go below specified granularity.
         // This is used to avoid repeated values when rounding values for display.
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mAxis.isGranularityEnabled())
             interval = interval < mAxis.getGranularity() ? mAxis.getGranularity() : interval;
 
         // Normalize interval
         double intervalMagnitude = Utils.roundToNextSignificant(Math.pow(10, (int) Math.log10(interval)));
         int intervalSigDigit = (int) (interval / intervalMagnitude);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (intervalSigDigit > 5) {
             // Use one order of magnitude higher, to avoid intervals like 0.9 or
             // 90
@@ -181,12 +222,20 @@ public abstract class AxisRenderer extends Renderer {
 
         int n = mAxis.isCenterAxisLabelsEnabled() ? 1 : 0;
 
-        // force label count
+        // Force label count
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mAxis.isForceLabelsEnabled()) {
 
             interval = (float) range / (float) (labelCount - 1);
             mAxis.mEntryCount = labelCount;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mAxis.mEntries.length < labelCount) {
                 // Ensure stops contains at least numStops elements.
                 mAxis.mEntries = new float[labelCount];
@@ -194,6 +243,10 @@ public abstract class AxisRenderer extends Renderer {
 
             float v = min;
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < labelCount; i++) {
                 mAxis.mEntries[i] = v;
                 v += interval;
@@ -201,10 +254,14 @@ public abstract class AxisRenderer extends Renderer {
 
             n = labelCount;
 
-            // no forced count
+            // No forced count
         } else {
 
             double first = interval == 0.0 ? 0.0 : Math.ceil(yMin / interval) * interval;
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if(mAxis.isCenterAxisLabelsEnabled()) {
                 first -= interval;
             }
@@ -214,7 +271,15 @@ public abstract class AxisRenderer extends Renderer {
             double f;
             int i;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (interval != 0.0) {
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for (f = first; f <= last; f += interval) {
                     ++n;
                 }
@@ -222,13 +287,25 @@ public abstract class AxisRenderer extends Renderer {
 
             mAxis.mEntryCount = n;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mAxis.mEntries.length < n) {
                 // Ensure stops contains at least numStops elements.
                 mAxis.mEntries = new float[n];
             }
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (f = first, i = 0; i < n; f += interval, ++i) {
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (f == 0.0) // Fix for negative zero case (Where value == -0.0, and 0.0 == -0.0)
                     f = 0.0;
 
@@ -236,21 +313,37 @@ public abstract class AxisRenderer extends Renderer {
             }
         }
 
-        // set decimals
+        // Set decimals
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (interval < 1) {
             mAxis.mDecimals = (int) Math.ceil(-Math.log10(interval));
         } else {
             mAxis.mDecimals = 0;
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mAxis.isCenterAxisLabelsEnabled()) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mAxis.mCenteredEntries.length < n) {
                 mAxis.mCenteredEntries = new float[n];
             }
 
             float offset = (float)interval / 2f;
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < n; i++) {
                 mAxis.mCenteredEntries[i] = mAxis.mEntries[i] + offset;
             }

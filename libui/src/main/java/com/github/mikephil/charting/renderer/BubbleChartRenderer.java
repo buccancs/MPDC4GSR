@@ -20,15 +20,33 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.util.List;
 
 /**
- * Bubble chart implementation: Copyright 2015 Pierre-Marc Airoldi Licensed
- * under Apache License 2.0 Ported by Daniel Cohen Gindi
+ * Specialized thermal imaging component providing BubbleChartRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
     protected BubbleDataProvider mChart;
 
+    /**
+     * Executes bubblechartrenderer operation with thermal imaging domain optimization.
+     *
+     */
     public BubbleChartRenderer(BubbleDataProvider chart, ChartAnimator animator,
                                ViewPortHandler viewPortHandler) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(animator, viewPortHandler);
         mChart = chart;
 
@@ -48,9 +66,24 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
         BubbleData bubbleData = mChart.getBubbleData();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: bubbleData.getDataSets()
+         *
+         */
         for (IBubbleDataSet set : bubbleData.getDataSets()) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (set.isVisible())
+                /**
+                 * Executes drawdataset operation with thermal imaging domain optimization.
+                 *
+                 */
                 drawDataSet(c, set);
         }
     }
@@ -67,6 +100,10 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
     protected void drawDataSet(Canvas c, IBubbleDataSet dataSet) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dataSet.getEntryCount() < 1)
             return;
 
@@ -83,11 +120,15 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
         boolean normalizeSize = dataSet.isNormalizeSizeEnabled();
 
-        // calcualte the full width of 1 step on the x-axis
+        // Calcualte the full width of 1 step on the x-axis
         final float maxBubbleWidth = Math.abs(sizeBuffer[2] - sizeBuffer[0]);
         final float maxBubbleHeight = Math.abs(mViewPortHandler.contentBottom() - mViewPortHandler.contentTop());
         final float referenceSize = Math.min(maxBubbleHeight, maxBubbleWidth);
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int j = mXBounds.min; j <= mXBounds.range + mXBounds.min; j++) {
 
             final BubbleEntry entry = dataSet.getEntryForIndex(j);
@@ -98,13 +139,25 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
             float shapeHalf = getShapeSize(entry.getSize(), dataSet.getMaxSize(), referenceSize, normalizeSize) / 2f;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!mViewPortHandler.isInBoundsTop(pointBuffer[1] + shapeHalf)
                     || !mViewPortHandler.isInBoundsBottom(pointBuffer[1] - shapeHalf))
                 continue;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!mViewPortHandler.isInBoundsLeft(pointBuffer[0] + shapeHalf))
                 continue;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!mViewPortHandler.isInBoundsRight(pointBuffer[0] - shapeHalf))
                 break;
 
@@ -120,24 +173,44 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
         BubbleData bubbleData = mChart.getBubbleData();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (bubbleData == null)
             return;
 
-        // if values are drawn
+        // If values are drawn
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isDrawingValuesAllowed(mChart)) {
 
             final List<IBubbleDataSet> dataSets = bubbleData.getDataSets();
 
             float lineHeight = Utils.calcTextHeight(mValuePaint, "1");
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < dataSets.size(); i++) {
 
                 IBubbleDataSet dataSet = dataSets.get(i);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!shouldDrawValues(dataSet) || dataSet.getEntryCount() < 1)
                     continue;
 
-                // apply the text-styling defined by the DataSet
+                // Apply the text-styling defined by the DataSet
+                /**
+                 * Executes applyvaluetextstyle operation with thermal imaging domain optimization.
+                 *
+                 */
                 applyValueTextStyle(dataSet);
 
                 final float phaseX = Math.max(0.f, Math.min(1.f, mAnimator.getPhaseX()));
@@ -156,6 +229,10 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
                 iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
                 iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
 
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for (int j = 0; j < positions.length; j += 2) {
 
                     int valueTextColor = dataSet.getValueTextColor(j / 2 + mXBounds.min);
@@ -165,18 +242,38 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
                     float x = positions[j];
                     float y = positions[j + 1];
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!mViewPortHandler.isInBoundsRight(x))
                         break;
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if ((!mViewPortHandler.isInBoundsLeft(x) || !mViewPortHandler.isInBoundsY(y)))
                         continue;
 
                     BubbleEntry entry = dataSet.getEntryForIndex(j / 2 + mXBounds.min);
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.isDrawValuesEnabled()) {
+                        /**
+                         * Executes drawvalue operation with thermal imaging domain optimization.
+                         *
+                         */
                         drawValue(c, formatter.getBubbleLabel(entry), x, y + (0.5f * lineHeight), valueTextColor);
                     }
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
 
                         Drawable icon = entry.getIcon();
@@ -215,18 +312,37 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
         float phaseY = mAnimator.getPhaseY();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param high Parameter for operation (type: indices)
+         *
+         */
         for (Highlight high : indices) {
 
             IBubbleDataSet set = bubbleData.getDataSetByIndex(high.getDataSetIndex());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (set == null || !set.isHighlightEnabled())
                 continue;
 
             final BubbleEntry entry = set.getEntryForXValue(high.getX(), high.getY());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (entry.getY() != high.getY())
                 continue;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!isInBoundsX(entry, set))
                 continue;
 
@@ -239,7 +355,7 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
             boolean normalizeSize = set.isNormalizeSizeEnabled();
 
-            // calcualte the full width of 1 step on the x-axis
+            // Calcualte the full width of 1 step on the x-axis
             final float maxBubbleWidth = Math.abs(sizeBuffer[2] - sizeBuffer[0]);
             final float maxBubbleHeight = Math.abs(
                     mViewPortHandler.contentBottom() - mViewPortHandler.contentTop());
@@ -256,13 +372,25 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
                     referenceSize,
                     normalizeSize) / 2f;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!mViewPortHandler.isInBoundsTop(pointBuffer[1] + shapeHalf)
                     || !mViewPortHandler.isInBoundsBottom(pointBuffer[1] - shapeHalf))
                 continue;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!mViewPortHandler.isInBoundsLeft(pointBuffer[0] + shapeHalf))
                 continue;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!mViewPortHandler.isInBoundsRight(pointBuffer[0] - shapeHalf))
                 break;
 

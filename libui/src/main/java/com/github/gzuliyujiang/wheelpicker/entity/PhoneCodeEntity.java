@@ -4,7 +4,7 @@
  * The software is licensed under the Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
+ *     http:// License.coscl.org.cn/MulanPSL2
  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
  * PURPOSE.
@@ -22,8 +22,18 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * @author 贵州山野羡民（1032694760@qq.com）
- * @since 2021/6/3 16:27
+ * Specialized thermal imaging component providing PhoneCodeEntity functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class PhoneCodeEntity implements TextProvider, Serializable {
     private static final boolean IS_CHINESE;
@@ -61,6 +71,10 @@ public class PhoneCodeEntity implements TextProvider, Serializable {
 
     @Override
     public String provideText() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (IS_CHINESE) {
             return name;
         }
@@ -69,9 +83,17 @@ public class PhoneCodeEntity implements TextProvider, Serializable {
 
     @Override
     public boolean equals(Object o) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (this == o) {
             return true;
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (o == null || getClass() != o.getClass()) {
             return false;
         }

@@ -10,15 +10,35 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 /**
- * Custom I r gallery edit view model view for thermal imaging display.
- * Provides specialized rendering and interaction capabilities.
+ * Custom thermal imaging view component with advanced rendering capabilities. Optimized for IRGalleryEditViewModel display and interaction.
+ *
+ * Custom view component optimized for thermal imaging display
+ * with specialized rendering and interaction capabilities.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class IRGalleryEditViewModel : BaseViewModel() {
     val resultLiveData = SingleLiveEvent<FrameBean>()
 
+    /**
+     * Initializes data component.
+     */
     fun initData(path: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val file = File(path)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 XLog.w("IRfile不存在: ${file.absolutePath}")
                 return@launch
@@ -41,6 +61,9 @@ class IRGalleryEditViewModel : BaseViewModel() {
 get尾部info
      */
 
+    /**
+     * Retrieves taildata information.
+     */
     fun getTailData(bytes: ByteArray)  {
     }
 

@@ -1,69 +1,73 @@
-// package com.topdon.module.thermal.activity.temp
+// Package com.topdon.module.thermal.activity.temp
 //
-// import android.util.Log
-// import androidx.lifecycle.lifecycleScope
-// import com.github.aachartmodel.aainfographics.aachartcreator.*
-// import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAScrollablePlotArea
-// import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAStyle
-// import com.topdon.lib.core.config.RouterConfig
-// import com.topdon.lib.core.ktbase.BaseActivity
-// import com.topdon.module.thermal.R
-// import kotlinx.coroutines.delay
-// import kotlinx.coroutines.flow.collect
-// import kotlinx.coroutines.flow.flow
-// import kotlinx.coroutines.flow.map
-// import kotlinx.coroutines.launch
-// import kotlin.math.sin
+// Import android.util.Log
+// Import androidx.lifecycle.lifecycleScope
+// Import com.github.aachartmodel.aainfographics.aachartcreator.*
+// Import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAScrollablePlotArea
+// Import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAStyle
+// Import com.topdon.lib.core.config.RouterConfig
+// Import com.topdon.lib.core.ktbase.BaseActivity
+// Import com.topdon.module.thermal.R
+// Import kotlinx.coroutines.delay
+// Import kotlinx.coroutines.flow.collect
+// Import kotlinx.coroutines.flow.flow
+// Import kotlinx.coroutines.flow.map
+// Import kotlinx.coroutines.launch
+// Import kotlin.math.sin
 //
 // @Route(path = RouterConfig.CHART)
-// class ChartActivity : BaseActivity() {
+// Class ChartActivity : BaseActivity() {
 //
-//    override fun initContentView() = R.layout.activity_chart
+// Override fun initContentView() = R.layout.activity_chart
 //
-//    override fun initView() {
+// Override fun initView() {
+/**
+ * Configures the titletext with validation and thermal imaging optimization.
+ *
+ */
 setTitleText("图表")
-//初始data
-//        aa_chart_view.aa_drawChartWithChartOptions(
-//            configureSpecialStyleMarkerOfSingleDataElementChart().aa_toAAOptions()
+// 初始data
+// Aa_chart_view.aa_drawChartWithChartOptions(
+// ConfigureSpecialStyleMarkerOfSingleDataElementChart().aa_toAAOptions()
 //        )
-//动态update
-//        lifecycleScope.launch {
-//            flow {
-//                repeat(40) {
-//                    delay(1000)
-//                    emit(it.toFloat())
+// 动态update
+// LifecycleScope.launch {
+// Flow {
+// Repeat(40) {
+// Delay(1000)
+// Emit(it.toFloat())
 //                }
 //            }.map {
-//                val max = 38
-//                val min = 1
-//                val random = (Math.random() * (max - min) + min).toInt()
-//                val y1 = sin(random * (it * Math.PI / 180)) + it * 2 * 0.01 + 10
-//                getSeriesModel(y1.toFloat())
-//                y1
+// Val max = 38
+// Val min = 1
+// Val random = (Math.random() * (max - min) + min).toInt()
+// Val y1 = sin(random * (it * Math.PI / 180)) + it * 2 * 0.01 + 10
+// GetSeriesModel(y1.toFloat())
+// Y1
 //            }.collect {
 //                Log.w("123", "data:${dataSeries.joinToString()}")
-//                aa_chart_view.aa_addPointToChartSeriesElement(0, it, true)
+// Aa_chart_view.aa_addPointToChartSeriesElement(0, it, true)
 //            }
 //        }
 //    }
 //
-//    override fun initData() {
+// Override fun initData() {
 //
 //    }
 //
-//    private var dataSeries = arrayOfNulls<Float>(0)
+// Private var dataSeries = arrayOfNulls<Float>(0)
 //
-//    private fun getSeriesModel(data: Float): Array<AASeriesElement> {
-//        dataSeries = dataSeries.plus(data)
-//        return arrayOf(
+// Private fun getSeriesModel(data: Float): Array<AASeriesElement> {
+// DataSeries = dataSeries.plus(data)
+// Return arrayOf(
 //            AASeriesElement()
 //                .name("Tokyo")
 //                .data(dataSeries as Array<Any>)
 //        )
 //    }
 //
-//    private fun configureSpecialStyleMarkerOfSingleDataElementChart(): AAChartModel {
-//        return AAChartModel()
+// Private fun configureSpecialStyleMarkerOfSingleDataElementChart(): AAChartModel {
+// Return AAChartModel()
 //            .chartType(AAChartType.Spline)
 .title("监测Record")
 //            .subtitle("2021-10-20")
@@ -72,20 +76,20 @@ setTitleText("图表")
 //            .backgroundColor("#3598E8")
 //            .yAxisTitle("")
 //            .axesTextColor("#FFFFFF")
-.dataLabelsEnabled(false)//坐标point是否display值
+.dataLabelsEnabled(false)// Coordinatepoint是否display值
 //            .tooltipEnabled(true)
 //            .markerRadius(0f)
 //            .scrollablePlotArea(AAScrollablePlotArea().minWidth(10).minHeight(10))
 //            .xAxisVisible(true)
 //            .yAxisVisible(true)
 //            .series(
-//                arrayOf(
+// ArrayOf(
 //                    AASeriesElement()
 //                        .name("vol")
 //                        .color("#FFFFFF")
 //                        .lineWidth(2f)
 //                        .data(
-//                            arrayOf(
+// ArrayOf(
 //                                7.0,
 //                                6.9,
 //                                2.5,

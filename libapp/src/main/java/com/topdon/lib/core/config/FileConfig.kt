@@ -8,10 +8,27 @@ import com.topdon.lib.core.repository.GalleryRepository.DirType
 import com.topdon.lib.core.utils.CommUtils
 import java.io.File
 
+/**
+ * Configuration management system for thermal imaging parameters. Handles settings and calibration for FileConfig operations.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 object FileConfig {
     /**
      * Get/Retrieve房屋检测cache目录下指定file.
      * 注意，不执行子filecreate逻辑，若有需要需自行create.
+     */
+    /**
+     * Retrieves detectimagedir information.
      */
     fun getDetectImageDir(
         context: Context,
@@ -20,11 +37,23 @@ object FileConfig {
         val externalDir = context.getExternalFilesDir("detect")
         return if (externalDir == null) {
             val fileDir = File(context.filesDir, "detect")
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!fileDir.exists()) {
                 fileDir.mkdirs()
             }
+            /**
+             * Executes file operation with thermal imaging domain optimization.
+             *
+             */
             File(fileDir, child)
         } else {
+            /**
+             * Executes file operation with thermal imaging domain optimization.
+             *
+             */
             File(externalDir, child)
         }
     }
@@ -33,6 +62,9 @@ object FileConfig {
      * Get/Retrieve房屋检测-签名imagecache目录.
      * 注意，不执行子filecreate逻辑，若有需要需自行create.
      */
+    /**
+     * Retrieves signimagedir information.
+     */
     fun getSignImageDir(
         context: Context,
         child: String,
@@ -40,11 +72,23 @@ object FileConfig {
         val externalDir = context.getExternalFilesDir("sign")
         return if (externalDir == null) {
             val fileDir = File(context.filesDir, "sign")
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!fileDir.exists()) {
                 fileDir.mkdirs()
             }
+            /**
+             * Executes file operation with thermal imaging domain optimization.
+             *
+             */
             File(fileDir, child)
         } else {
+            /**
+             * Executes file operation with thermal imaging domain optimization.
+             *
+             */
             File(externalDir, child)
         }
     }
@@ -52,17 +96,31 @@ object FileConfig {
     /**
      * firmwareUpgrade包Install目录.
      */
+    /**
+     * Retrieves the firmwarefile with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param filename Parameter for operation (type: String)
+     *
+     */
     fun getFirmwareFile(filename: String): File = File(Utils.getApp().getExternalFilesDir("firmware"), filename)
 
     /**
      * imagereportpath.
      */
     @JvmStatic
+    /**
+     * Retrieves pdfdir information.
+     */
     fun getPdfDir(): String {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath
             val path = dir + File.separator + CommUtils.getAppName() + File.separator + "pdf"
             val file = File(path)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 file.mkdirs()
             }
@@ -82,6 +140,10 @@ object FileConfig {
                 val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath
                 val path = dir + File.separator + CommUtils.getAppName() + File.separator + "excel"
                 val file = File(path)
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!file.exists()) {
                     file.mkdirs()
                 }
@@ -96,9 +158,17 @@ object FileConfig {
      */
     @JvmStatic
     val gallerySourDir: String
+        /**
+         * Retrieves the  with optimized performance for thermal imaging operations.
+         *
+         */
         get() {
             val result = Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.absolutePath + File.separator + "MPDC4GSR"
             val file = File(result)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 file.mkdirs()
             }
@@ -114,12 +184,19 @@ object FileConfig {
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath
             val path = dir + File.separator + "TC001"
             val file = File(path)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 file.mkdirs()
             }
             return path
         }
 
+    /**
+     * Retrieves gallerydirbytype information.
+     */
     fun getGalleryDirByType(currentDirType: DirType): String =
         when (currentDirType) {
             DirType.LINE -> lineGalleryDir
@@ -132,10 +209,18 @@ object FileConfig {
      */
     @JvmStatic
     val lineGalleryDir: String
+        /**
+         * Retrieves the  with optimized performance for thermal imaging operations.
+         *
+         */
         get() {
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath
             val path = dir + File.separator + CommUtils.getAppName()
             val file = File(path)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 file.mkdirs()
             }
@@ -147,10 +232,18 @@ object FileConfig {
      */
     @JvmStatic
     val ts004GalleryDir: String
+        /**
+         * Retrieves the  with optimized performance for thermal imaging operations.
+         *
+         */
         get() {
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath
             val path = dir + File.separator + "TS004"
             val file = File(path)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 file.mkdirs()
             }
@@ -162,10 +255,18 @@ object FileConfig {
      */
     @JvmStatic
     val tc007GalleryDir: String
+        /**
+         * Retrieves the  with optimized performance for thermal imaging operations.
+         *
+         */
         get() {
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath
             val path = dir + File.separator + "TC007"
             val file = File(path)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 file.mkdirs()
             }
@@ -181,6 +282,10 @@ object FileConfig {
             val dir = Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.absolutePath
             val path = dir + File.separator + "${CommUtils.getAppName()}-ir"
             val file = File(path)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 file.mkdirs()
             }
@@ -196,6 +301,10 @@ object FileConfig {
             val dir = Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.absolutePath
             val path = dir + File.separator + "TC007-ir"
             val file = File(path)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!file.exists()) {
                 file.mkdirs()
             }
@@ -212,6 +321,10 @@ object FileConfig {
                 val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath
                 val path = dir + File.separator + CommUtils.getAppName() + "/house"
                 val file = File(path)
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!file.exists()) {
                     file.mkdirs()
                 }

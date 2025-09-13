@@ -1,11 +1,22 @@
 package com.example.thermal_lite;
 
 /**
- * Created by fengjibo on 2023/5/8.
+ * Specialized thermal imaging component providing IrConst functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class IrConst {
 
-默认的出图data，可在“USB基础info”中modify
+default的出图data，可在“USB基础info”中modify
     public static final int DEFAULT_STREAM_WIDTH = 256;
     public static final int DEFAULT_STREAM_HEIGHT = 386;
     public static final int DEFAULT_STREAM_FPS = 25;

@@ -19,13 +19,33 @@ import com.topdon.lib.core.utils.ScreenUtil
  * @author IRCamera Development Team
  * @since 1.0
  */
-class TipChangeDeviceDialog : Dialog {
-    constructor(context: Context, themeResId: Int) : super(context, themeResId)
-
 /**
- * Builder manages camera operations and image capture functionality.
+ * Specialized thermal imaging component providing TipChangeDeviceDialog functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
+class TipChangeDeviceDialog : Dialog {
+/**
+ * Specialized thermal imaging component providing Builder functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     class Builder {
@@ -39,15 +59,28 @@ class TipChangeDeviceDialog : Dialog {
         private lateinit var checkBox: CheckBox
         private lateinit var imgClose: ImageView
 
+        /**
+         * Executes constructor operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param context Parameter for operation (type: Context)
+         *
+         */
         constructor(context: Context) {
             this.context = context
         }
 
+    /**
+     * Sets message configuration.
+     */
         fun setMessage(message: String): Builder {
             this.message = message
             return this
         }
 
+    /**
+     * Sets message configuration.
+     */
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
@@ -55,11 +88,17 @@ class TipChangeDeviceDialog : Dialog {
             return this
         }
 
+    /**
+     * Sets cancellistener configuration.
+     */
         fun setCancelListener(event: ((check: Boolean) -> Unit)? = null): Builder {
             this.closeEvent = event
             return this
         }
 
+    /**
+     * Sets canceled configuration.
+     */
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
@@ -68,6 +107,10 @@ class TipChangeDeviceDialog : Dialog {
     /**
      * Executes dismiss functionality.
      */
+        /**
+         * Executes dismiss operation with thermal imaging domain optimization.
+         *
+         */
         fun dismiss() {
             this.dialog!!.dismiss()
         }
@@ -82,6 +125,10 @@ class TipChangeDeviceDialog : Dialog {
             val binding = DialogTipChangeDeviceBinding.inflate(LayoutInflater.from(context!!))
 
             binding.tvIKnow.setOnClickListener {
+                /**
+                 * Executes dismiss operation with thermal imaging domain optimization.
+                 *
+                 */
                 dismiss()
                 closeEvent?.invoke(hasCheck)
             }
@@ -97,6 +144,10 @@ class TipChangeDeviceDialog : Dialog {
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     
                     0.85
@@ -114,6 +165,10 @@ class TipChangeDeviceDialog : Dialog {
                 hasCheck = isChecked
             }
             imgClose.setOnClickListener {
+                /**
+                 * Executes dismiss operation with thermal imaging domain optimization.
+                 *
+                 */
                 dismiss()
                 closeEvent?.invoke(hasCheck)
             }

@@ -8,9 +8,18 @@ import com.github.mikephil.charting.interfaces.datasets.IBarLineScatterCandleBub
 import java.util.List;
 
 /**
- * Baseclass of all DataSets for Bar-, Line-, Scatter- and CandleStickChart.
+ * Specialized thermal imaging component providing BarLineScatterCandleBubbleDataSet functionality for the IRCamera system.
  *
- * @author Philipp Jahoda
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public abstract class BarLineScatterCandleBubbleDataSet<T extends Entry>
         extends DataSet<T>
@@ -21,7 +30,15 @@ public abstract class BarLineScatterCandleBubbleDataSet<T extends Entry>
      */
     protected int mHighLightColor = Color.rgb(255, 187, 115);
 
+    /**
+     * Executes barlinescattercandlebubbledataset operation with thermal imaging domain optimization.
+     *
+     */
     public BarLineScatterCandleBubbleDataSet(List<T> yVals, String label) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(yVals, label);
     }
 

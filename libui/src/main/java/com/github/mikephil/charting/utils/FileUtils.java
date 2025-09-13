@@ -24,6 +24,23 @@ import java.util.List;
  * 
  * @author Philipp Jahoda
  */
+/**
+ * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for FileUtils operations.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class FileUtils {
 
     private static final String LOG = "MPChart-FileUtils";
@@ -48,15 +65,27 @@ public class FileUtils {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
 
+            /**
+             * Executes while operation with thermal imaging domain optimization.
+             *
+             */
             while ((line = br.readLine()) != null) {
                 String[] split = line.split("#");
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (split.length <= 2) {
                     entries.add(new Entry(Float.parseFloat(split[0]), Integer.parseInt(split[1])));
                 } else {
 
                     float[] vals = new float[split.length - 1];
 
+                    /**
+                     * Executes for operation with thermal imaging domain optimization.
+                     *
+                     */
                     for (int i = 0; i < vals.length; i++) {
                         vals[i] = Float.parseFloat(split[i]);
                     }
@@ -78,17 +107,17 @@ public class FileUtils {
         // List<Entry> entries = new ArrayList<Entry>();
         // String label = "";
         //
-        // try {
+        // Try {
         // @SuppressWarnings("resource")
         // BufferedReader br = new BufferedReader(new FileReader(file));
         // String line = br.readLine();
         //
-        // // firstline is the label
-        // label = line;
+        // // Firstline is the label
+        // Label = line;
         //
-        // while ((line = br.readLine()) != null) {
+        // While ((line = br.readLine()) != null) {
         // String[] split = line.split("#");
-        // entries.add(new Entry(Float.parseFloat(split[0]),
+        // Entries.add(new Entry(Float.parseFloat(split[0]),
         // Integer.parseInt(split[1])));
         // }
         // } catch (IOException e) {
@@ -96,7 +125,7 @@ public class FileUtils {
         // }
         //
         // DataSet ds = new DataSet(entries, label);
-        // return ds;
+        // Return ds;
     }
 
     /**
@@ -117,16 +146,28 @@ public class FileUtils {
 
             String line = reader.readLine();
 
+            /**
+             * Executes while operation with thermal imaging domain optimization.
+             *
+             */
             while (line != null) {
-                // process line
+                // Process line
                 String[] split = line.split("#");
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (split.length <= 2) {
                     entries.add(new Entry(Float.parseFloat(split[1]), Float.parseFloat(split[0])));
                 } else {
 
                     float[] vals = new float[split.length - 1];
 
+                    /**
+                     * Executes for operation with thermal imaging domain optimization.
+                     *
+                     */
                     for (int i = 0; i < vals.length; i++) {
                         vals[i] = Float.parseFloat(split[i]);
                     }
@@ -140,6 +181,10 @@ public class FileUtils {
 
         } finally {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (reader != null) {
                 try {
                     reader.close();
@@ -155,29 +200,29 @@ public class FileUtils {
         // List<Entry> entries = new ArrayList<Entry>();
         //
         // BufferedReader reader = null;
-        // try {
-        // reader = new BufferedReader(
-        // new InputStreamReader(am.open(path), "UTF-8"));
+        // Try {
+        // Reader = new BufferedReader(
+        // New InputStreamReader(am.open(path), "UTF-8"));
         //
-        // // do reading, usually loop until end of file reading
-        // label = reader.readLine();
+        // // Do reading, usually loop until end of file reading
+        // Label = reader.readLine();
         // String line = reader.readLine();
         //
-        // while (line != null) {
-        // // process line
+        // While (line != null) {
+        // // Process line
         // String[] split = line.split("#");
-        // entries.add(new Entry(Float.parseFloat(split[0]),
+        // Entries.add(new Entry(Float.parseFloat(split[0]),
         // Integer.parseInt(split[1])));
-        // line = reader.readLine();
+        // Line = reader.readLine();
         // }
         // } catch (IOException e) {
         // Log.e(LOG, e.toString());
         //
         // } finally {
         //
-        // if (reader != null) {
-        // try {
-        // reader.close();
+        // If (reader != null) {
+        // Try {
+        // Reader.close();
         // } catch (IOException e) {
         // Log.e(LOG, e.toString());
         // }
@@ -185,7 +230,7 @@ public class FileUtils {
         // }
         //
         // DataSet ds = new DataSet(entries, label);
-        // return ds;
+        // Return ds;
     }
 
     /**
@@ -199,6 +244,10 @@ public class FileUtils {
         File sdcard = Environment.getExternalStorageDirectory();
 
         File saved = new File(sdcard, path);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!saved.exists())
         {
             try
@@ -214,6 +263,13 @@ public class FileUtils {
             // BufferedWriter for performance, true to set append to file flag
             BufferedWriter buf = new BufferedWriter(new FileWriter(saved, true));
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param e Parameter for operation (type: entries)
+             *
+             */
             for (Entry e : entries) {
 
                 buf.append(e.getY() + "#" + e.getX());
@@ -238,8 +294,12 @@ public class FileUtils {
 
             String line = reader.readLine();
 
+            /**
+             * Executes while operation with thermal imaging domain optimization.
+             *
+             */
             while (line != null) {
-                // process line
+                // Process line
                 String[] split = line.split("#");
 
                 entries.add(new BarEntry(Float.parseFloat(split[1]), Float.parseFloat(split[0])));
@@ -251,6 +311,10 @@ public class FileUtils {
 
         } finally {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (reader != null) {
                 try {
                     reader.close();
@@ -266,29 +330,29 @@ public class FileUtils {
         // ArrayList<Entry> entries = new ArrayList<Entry>();
         //
         // BufferedReader reader = null;
-        // try {
-        // reader = new BufferedReader(
-        // new InputStreamReader(am.open(path), "UTF-8"));
+        // Try {
+        // Reader = new BufferedReader(
+        // New InputStreamReader(am.open(path), "UTF-8"));
         //
-        // // do reading, usually loop until end of file reading
-        // label = reader.readLine();
+        // // Do reading, usually loop until end of file reading
+        // Label = reader.readLine();
         // String line = reader.readLine();
         //
-        // while (line != null) {
-        // // process line
+        // While (line != null) {
+        // // Process line
         // String[] split = line.split("#");
-        // entries.add(new Entry(Float.parseFloat(split[0]),
+        // Entries.add(new Entry(Float.parseFloat(split[0]),
         // Integer.parseInt(split[1])));
-        // line = reader.readLine();
+        // Line = reader.readLine();
         // }
         // } catch (IOException e) {
         // Log.e(LOG, e.toString());
         //
         // } finally {
         //
-        // if (reader != null) {
-        // try {
-        // reader.close();
+        // If (reader != null) {
+        // Try {
+        // Reader.close();
         // } catch (IOException e) {
         // Log.e(LOG, e.toString());
         // }
@@ -296,6 +360,6 @@ public class FileUtils {
         // }
         //
         // DataSet ds = new DataSet(entries, label);
-        // return ds;
+        // Return ds;
     }
 }

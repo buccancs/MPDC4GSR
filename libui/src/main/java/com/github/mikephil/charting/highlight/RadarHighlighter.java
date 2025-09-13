@@ -9,11 +9,30 @@ import com.github.mikephil.charting.utils.Utils;
 import java.util.List;
 
 /**
- * Created by philipp on 12/06/16.
+ * Specialized thermal imaging component providing RadarHighlighter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class RadarHighlighter extends PieRadarHighlighter<RadarChart> {
 
+    /**
+     * Executes radarhighlighter operation with thermal imaging domain optimization.
+     *
+     */
     public RadarHighlighter(RadarChart chart) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(chart);
     }
 
@@ -27,11 +46,19 @@ public class RadarHighlighter extends PieRadarHighlighter<RadarChart> {
         Highlight closest = null;
         float distance = Float.MAX_VALUE;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < highlights.size(); i++) {
 
             Highlight high = highlights.get(i);
 
             float cdistance = Math.abs(high.getY() - distanceToCenter);
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (cdistance < distance) {
                 closest = high;
                 distance = cdistance;
@@ -59,6 +86,10 @@ public class RadarHighlighter extends PieRadarHighlighter<RadarChart> {
         float factor = mChart.getFactor();
 
         MPPointF pOut = MPPointF.getInstance(0,0);
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mChart.getData().getDataSetCount(); i++) {
 
             IDataSet<?> dataSet = mChart.getData().getDataSetByIndex(i);

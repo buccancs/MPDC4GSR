@@ -9,8 +9,20 @@ import com.blankj.utilcode.util.SizeUtils
 val Float.dp: Float
     get() = ColorUtils.dpToPxF(this)
 val Int.dp: Int
+    /**
+     * Retrieves the  with optimized performance for thermal imaging operations.
+     *
+     */
     get() = ColorUtils.dpToPx(this)
 val Float.sp: Float
+    /**
+     * Retrieves the  with optimized performance for thermal imaging operations.
+     *
+     */
     get() = SizeUtils.sp2px(this).toFloat()
 val Int.sp: Float
+    /**
+     * Retrieves the  with optimized performance for thermal imaging operations.
+     *
+     */
     get() = SizeUtils.sp2px(this.toFloat()).toFloat()

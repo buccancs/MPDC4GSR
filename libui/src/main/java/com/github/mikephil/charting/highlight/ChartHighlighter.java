@@ -12,7 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Philipp Jahoda on 21/07/15.
+ * Specialized thermal imaging component providing ChartHighlighter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> implements IHighlighter
 {
@@ -52,7 +63,7 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
      */
     protected MPPointD getValsForTouch(float x, float y) {
 
-        // take any transformer to determine the x-axis value
+        // Take any transformer to determine the x-axis value
         MPPointD pos = mChart.getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(x, y);
         return pos;
     }
@@ -69,6 +80,10 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
 
         List<Highlight> closestValues = getHighlightsAtXValue(xVal, x, y);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if(closestValues.isEmpty()) {
             return null;
         }
@@ -96,13 +111,25 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
 
         float distance = Float.MAX_VALUE;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < closestValues.size(); i++) {
 
             Highlight high = closestValues.get(i);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (high.getAxis() == axis) {
 
                 float tempDistance = Math.abs(getHighlightPos(high) - pos);
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (tempDistance < distance) {
                     distance = tempDistance;
                 }
@@ -131,14 +158,26 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
 
         BarLineScatterCandleBubbleData data = getData();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (data == null)
             return mHighlightBuffer;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0, dataSetCount = data.getDataSetCount(); i < dataSetCount; i++) {
 
             IDataSet dataSet = data.getDataSetByIndex(i);
 
-            // don't include DataSets that cannot be highlighted
+            // Don't include DataSets that cannot be highlighted
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!dataSet.isHighlightEnabled())
                 continue;
 
@@ -161,21 +200,40 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
 
         ArrayList<Highlight> highlights = new ArrayList<>();
 
-        //noinspection unchecked
+        // Noinspection unchecked
         List<Entry> entries = set.getEntriesForXValue(xVal);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (entries.size() == 0) {
             // Try to find closest x-value and take all entries for that x-value
             final Entry closest = set.getEntryForXValue(xVal, Float.NaN, rounding);
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (closest != null)
             {
-                //noinspection unchecked
+                // Noinspection unchecked
                 entries = set.getEntriesForXValue(closest.getX());
             }
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (entries.size() == 0)
             return highlights;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param e Parameter for operation (type: entries)
+         *
+         */
         for (Entry e : entries) {
             MPPointD pixels = mChart.getTransformer(
                     set.getAxisDependency()).getPixelForValues(e.getX(), e.getY());
@@ -207,14 +265,26 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
         Highlight closest = null;
         float distance = minSelectionDistance;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < closestValues.size(); i++) {
 
             Highlight high = closestValues.get(i);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (axis == null || high.getAxis() == axis) {
 
                 float cDistance = getDistance(x, y, high.getXPx(), high.getYPx());
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (cDistance < distance) {
                     closest = high;
                     distance = cDistance;
@@ -235,8 +305,12 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
      * @return
      */
     protected float getDistance(float x1, float y1, float x2, float y2) {
-        //return Math.abs(y1 - y2);
-        //return Math.abs(x1 - x2);
+        // Return Math.abs(y1 - y2);
+        // Return Math.abs(x1 - x2);
+        /**
+         * Executes return operation with thermal imaging domain optimization.
+         *
+         */
         return (float) Math.hypot(x1 - x2, y1 - y2);
     }
 

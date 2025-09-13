@@ -1,189 +1,189 @@
-//package com.infisense.usbir.thread;
+// Package com.infisense.usbir.thread;
 //
-//import android.graphics.Bitmap;
-//import android.graphics.Color;
-//import android.os.SystemClock;
-//import android.util.Log;
+// Import android.graphics.Bitmap;
+// Import android.graphics.Color;
+// Import android.os.SystemClock;
+// Import android.util.Log;
 //
-//import com.elvishew.xlog.XLog;
-//import com.infisense.iruvc.utils.SynchronizedBitmap;
-//import com.infisense.usbir.tools.BitmapTools;
-//import com.infisense.usbir.tools.ImageTools;
+// Import com.elvishew.xlog.XLog;
+// Import com.infisense.iruvc.utils.SynchronizedBitmap;
+// Import com.infisense.usbir.tools.BitmapTools;
+// Import com.infisense.usbir.tools.ImageTools;
 //
-//import java.nio.ByteBuffer;
+// Import java.nio.ByteBuffer;
 //
-///**
+// /**
 // * bytes -> bitmap
 // * 将源data转出imagephoto
 // */
-//public class ImageThreadTCOld extends Thread {
+// Public class ImageThreadTCOld extends Thread {
 //
-//    private static final int TYPE_TINY1B = 1;
-//    private static final int TYPE_TINY1C = 0;
-//    private final String TAG = "ImageThread";
-//    private Bitmap bitmap;
-//    private SynchronizedBitmap syncImage;
-//    private int imageWidth;
-//    private int imageHeight;
-//    private byte[] imageSrc;
-//    private byte[] temperatureSrc;//temperature源data
-//    private int rotate = 0;
-//    private float max = Float.MAX_VALUE;
-//    private float min = Float.MIN_VALUE;
-//    private int maxColor = 0;
-//    private int minColor = 0;
+// Private static final int TYPE_TINY1B = 1;
+// Private static final int TYPE_TINY1C = 0;
+// Private final String TAG = "ImageThread";
+// Private Bitmap bitmap;
+// Private SynchronizedBitmap syncImage;
+// Private int imageWidth;
+// Private int imageHeight;
+// Private byte[] imageSrc;
+// Private byte[] temperatureSrc;// Temperature源data
+// Private int rotate = 0;
+// Private float max = Float.MAX_VALUE;
+// Private float min = Float.MIN_VALUE;
+// Private int maxColor = 0;
+// Private int minColor = 0;
 //
-//    public void setSyncImage(SynchronizedBitmap syncImage) {
-//        this.syncImage = syncImage;
+// Public void setSyncImage(SynchronizedBitmap syncImage) {
+// This.syncImage = syncImage;
 //    }
 //
-//    public void setImageSrc(byte[] imageSrc) {
-//        this.imageSrc = imageSrc;
+// Public void setImageSrc(byte[] imageSrc) {
+// This.imageSrc = imageSrc;
 //    }
 //
-//    public void setTemperatureSrc(byte[] temperatureSrc) {
-//        this.temperatureSrc = temperatureSrc;
+// Public void setTemperatureSrc(byte[] temperatureSrc) {
+// This.temperatureSrc = temperatureSrc;
 //    }
 //
-//    public void setRotate(int rotate) {
-//        this.rotate = rotate;
+// Public void setRotate(int rotate) {
+// This.rotate = rotate;
 //    }
-//    public byte[] imageDst = null;
+// Public byte[] imageDst = null;
 //
 //
-//    public void setLimit(float max, float min) {
-//        this.max = max;
-//        this.min = min;
-//    }
-//
-//    public void setLimit(float max, float min, int maxColor, int minColor) {
-//        this.max = max;
-//        this.min = min;
-//        this.maxColor = maxColor;
-//        this.minColor = minColor;
+// Public void setLimit(float max, float min) {
+// This.max = max;
+// This.min = min;
 //    }
 //
-//    public int pseudoColorMode = Libirprocess.IRPROC_COLOR_MODE_0;
-//
-//    public ImageThreadTCOld(int imageWidth, int imageHeight) {
-//        this.imageWidth = imageWidth;
-//        this.imageHeight = imageHeight;
+// Public void setLimit(float max, float min, int maxColor, int minColor) {
+// This.max = max;
+// This.min = min;
+// This.maxColor = maxColor;
+// This.minColor = minColor;
 //    }
 //
-//    public void setPseudoColorMode(int pseudoColorMode) {
-//        this.pseudoColorMode = pseudoColorMode;
+// Public int pseudoColorMode = Libirprocess.IRPROC_COLOR_MODE_0;
+//
+// Public ImageThreadTCOld(int imageWidth, int imageHeight) {
+// This.imageWidth = imageWidth;
+// This.imageHeight = imageHeight;
 //    }
 //
-//    public void setBitmap(Bitmap bitmap) {
-//        this.bitmap = bitmap;
+// Public void setPseudoColorMode(int pseudoColorMode) {
+// This.pseudoColorMode = pseudoColorMode;
+//    }
+//
+// Public void setBitmap(Bitmap bitmap) {
+// This.bitmap = bitmap;
 //    }
 //
 //    @Override
-//    public void run() {
-//        byte[] imagerTemp1 = new byte[imageWidth * imageHeight * 2];
-//        byte[] imagerTemp2 = new byte[imageWidth * imageHeight * 4];
-//        imageDst = new byte[imageWidth * imageHeight * 4];
-//        while (!isInterrupted()) {
+// Public void run() {
+// Byte[] imagerTemp1 = new byte[imageWidth * imageHeight * 2];
+// Byte[] imagerTemp2 = new byte[imageWidth * imageHeight * 4];
+// ImageDst = new byte[imageWidth * imageHeight * 4];
+// While (!isInterrupted()) {
 //
-//            synchronized (syncImage.dataLock) {
-//                if (syncImage.start) {
+// Synchronized (syncImage.dataLock) {
+// If (syncImage.start) {
 //
-//                    //uvc Width,Height
+//                    // Uvc Width,Height
 //
 //                /*
-//                imageprocess(imagerTemp1, imagerTemp2, imageRes);
+// Imageprocess(imagerTemp1, imagerTemp2, imageRes);
 //
-//                if(pseudocolorMode!=0) {
+// If(pseudocolorMode!=0) {
 //                    Libirprocess.yuyv_map_to_argb_pseudocolor(imageSrc, imageHeight * imageWidth, pseudocolorMode, imageDst);
 //                }else {
 //                    Libirparse.yuv422_to_argb(imageSrc,imageHeight*imageWidth,imageDst);
 //                }
 //                 */
-//                    if (pseudoColorMode != 0) {
+// If (pseudoColorMode != 0) {
 //                        Libirprocess.yuyv_map_to_argb_pseudocolor(imageSrc, (long) imageHeight * imageWidth, pseudoColorMode, imageDst);
 //                    } else {
 //                        Libirparse.yuv422_to_argb(imageSrc, imageHeight * imageWidth, imageDst);
 //                    }
-//                    //Libirprocess.rotate_180(image,imageRes,Libirprocess.IRPROC_SRC_FMT_Y14,imager180);
-//                    //Libirprocess.y14_map_to_yuyv_pseudocolor(imageSrc,imageHeight*imageWidth,Libirprocess.IRPROC_COLOR_MODE_3,imagerTemp2);
+//                    // Libirprocess.rotate_180(image,imageRes,Libirprocess.IRPROC_SRC_FMT_Y14,imager180);
+//                    // Libirprocess.y14_map_to_yuyv_pseudocolor(imageSrc,imageHeight*imageWidth,Libirprocess.IRPROC_COLOR_MODE_3,imagerTemp2);
 //
-//                    //Libirparse.yuv422_to_argb(imager180,imageHeight*imageWidth,imagergb);
+//                    // Libirparse.yuv422_to_argb(imager180,imageHeight*imageWidth,imagergb);
 //
-//                    if (syncImage.type == TYPE_TINY1B) {
+// If (syncImage.type == TYPE_TINY1B) {
 //                        Libirparse.y14_to_yuv422(imageSrc, imageHeight * imageWidth, imagerTemp1);
-//                        //Libirparse.yuv422_to_argb(imagerTemp2, imageHeight * imageWidth, imagerTemp1);
-//                        //Libirprocess.y14_map_to_yuyv_pseudocolor(imageSrc,imageHeight*imageWidth,Libirprocess.IRPROC_COLOR_MODE_1,imagerTemp2);
-//                        //Libirparse.yuv422_to_argb(imagerTemp2,imageHeight*imageWidth,imagerTemp1);
-//                        //Libirparse.y14_to_argb(imageSrc, imageHeight * imageWidth, imagerTemp1);
+//                        // Libirparse.yuv422_to_argb(imagerTemp2, imageHeight * imageWidth, imagerTemp1);
+//                        // Libirprocess.y14_map_to_yuyv_pseudocolor(imageSrc,imageHeight*imageWidth,Libirprocess.IRPROC_COLOR_MODE_1,imagerTemp2);
+//                        // Libirparse.yuv422_to_argb(imagerTemp2,imageHeight*imageWidth,imagerTemp1);
+//                        // Libirparse.y14_to_argb(imageSrc, imageHeight * imageWidth, imagerTemp1);
 //
 //                    } else {
-//                        imagerTemp1 = imageSrc;
+// ImagerTemp1 = imageSrc;
 //                    }
 //
-//                    if (pseudoColorMode != 0) {
+// If (pseudoColorMode != 0) {
 //                        Libirprocess.yuyv_map_to_argb_pseudocolor(imagerTemp1, (long) imageHeight * imageWidth, pseudoColorMode, imagerTemp2);
 //                    } else {
 //                        Libirparse.yuv422_to_argb(imagerTemp1, imageHeight * imageWidth, imagerTemp2);
 //                    }
 //
-////                    // imagerTemp2二次processing (temperature原始data)
-////                    if (max != 0 && min != 0) {
-////                        ImageTools.INSTANCE.readFrame(imagerTemp2, temperatureSrc, max, min);
-////                    }
+// //                    // ImagerTemp2二次processing (temperature原始data)
+// // If (max != 0 && min != 0) {
+// //                        ImageTools.INSTANCE.readFrame(imagerTemp2, temperatureSrc, max, min);
+// //                    }
 //
-//                    if (rotate == 270) {
+// If (rotate == 270) {
 //                        Libirprocess.ImageRes_t imageRes = new Libirprocess.ImageRes_t();
-//                        imageRes.height = (char) imageWidth;
-//                        imageRes.width = (char) imageHeight;
+// ImageRes.height = (char) imageWidth;
+// ImageRes.width = (char) imageHeight;
 //                        Libirprocess.rotate_right_90(imagerTemp2, imageRes, Libirprocess.IRPROC_SRC_FMT_ARGB8888, imageDst);
 //                    } else if (rotate == 90) {
 //                        Libirprocess.ImageRes_t imageRes = new Libirprocess.ImageRes_t();
-//                        imageRes.height = (char) imageWidth;
-//                        imageRes.width = (char) imageHeight;
+// ImageRes.height = (char) imageWidth;
+// ImageRes.width = (char) imageHeight;
 //                        Libirprocess.rotate_left_90(imagerTemp2, imageRes, Libirprocess.IRPROC_SRC_FMT_ARGB8888, imageDst);
 //                    } else if (rotate == 180) {
 //                        Libirprocess.ImageRes_t imageRes = new Libirprocess.ImageRes_t();
-//                        imageRes.height = (char) imageHeight;
-//                        imageRes.width = (char) imageWidth;
+// ImageRes.height = (char) imageHeight;
+// ImageRes.width = (char) imageWidth;
 //                        Libirprocess.rotate_180(imagerTemp2, imageRes, Libirprocess.IRPROC_SRC_FMT_ARGB8888, imageDst);
 //                    } else {
-//                        imageDst = imagerTemp2;
+// ImageDst = imagerTemp2;
 //                    }
 //                }
 //            }
 //
-//            //jpegBytes = PixelFormatConverter.yuv422ToJpeg(pseudoImage, imageWidth, imageHeight);
+//            // JpegBytes = PixelFormatConverter.yuv422ToJpeg(pseudoImage, imageWidth, imageHeight);
 //
-//            // imagerTemp2二次processing (temperature旋转后data)
-//            if (max != Float.MAX_VALUE || min != Float.MIN_VALUE ) {
+//            // ImagerTemp2二次processing (temperaturerotation后data)
+// If (max != Float.MAX_VALUE || min != Float.MIN_VALUE ) {
 //                // 当不设高温，只settings低温时
-//                if (max == -273) {
+// If (max == -273) {
 //                    // 替换color的method里maximum温不能低于minimum温
-//                    max = 1000000;
+// Max = 1000000;
 //                }
-//                //FF808080固定触发
-//                if (maxColor == Color.parseColor("#FF808080") && minColor == Color.parseColor("#FF808080")) {
-//                    ImageTools.INSTANCE.readFrame(imageDst, temperatureSrc, max, min);//替换grayscaleprocessing
+//                // FF808080固定触发
+// If (maxColor == Color.parseColor("#FF808080") && minColor == Color.parseColor("#FF808080")) {
+//                    ImageTools.INSTANCE.readFrame(imageDst, temperatureSrc, max, min);// 替换grayscaleprocessing
 //                } else {
 //                    Log.w("123", "max:" + max + ", min: " + min);
-////                    ImageTools.INSTANCE.readFrame(imageDst, temperatureSrc, max, min,maxColor,minColor);//替换colorprocessing
-//                    BitmapTools.INSTANCE.replaceBitmapColor(imageDst, temperatureSrc, max, min,0,0);//替换colorprocessing
+// //                    ImageTools.INSTANCE.readFrame(imageDst, temperatureSrc, max, min,maxColor,minColor);// 替换colorprocessing
+//                    BitmapTools.INSTANCE.replaceBitmapColor(imageDst, temperatureSrc, max, min,0,0);// 替换colorprocessing
 //                }
 //                Log.w("原始image:", imageDst.toString());
 //            }
-//            synchronized (syncImage.viewLock) {
-//                if (!syncImage.valid) {
-//                    if (bitmap != null) {
-//                        bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst)); //bitmapimagerefreshdata
+// Synchronized (syncImage.viewLock) {
+// If (!syncImage.valid) {
+// If (bitmap != null) {
+// Bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst)); // Bitmapimagerefreshdata
 //                    } else {
 //                        XLog.e("ImageThreadTC copyPixelsFromBuffer(): bitmap is null");
 //                    }
-//                    syncImage.valid = true;
+// SyncImage.valid = true;
 //
-//                    syncImage.viewLock.notify();
+// SyncImage.viewLock.notify();
 //                }
 //            }
-//            try {
+// Try {
 //                SystemClock.sleep(20);
 //            } catch (Exception e) {
 //                XLog.e("Image Threadrefreshexception: " + e.getMessage());
@@ -192,16 +192,16 @@
 //        Log.w(TAG, "ImageThread exit:");
 //    }
 //
-//    public Bitmap getBitmap() {
-//        return bitmap;
+// Public Bitmap getBitmap() {
+// Return bitmap;
 //    }
 //
-//    private void imageprocess(byte[] src, byte[] dst, Libirprocess.ImageRes_t imageRes) {
-//        imageRes.height = (char) imageHeight;
-//        imageRes.width = (char) imageWidth;
+// Private void imageprocess(byte[] src, byte[] dst, Libirprocess.ImageRes_t imageRes) {
+// ImageRes.height = (char) imageHeight;
+// ImageRes.width = (char) imageWidth;
 //        Libirprocess.rotate_right_90(imageSrc, imageRes, Libirprocess.IPROC_SRC_FMT_YUV422, src);
-//        imageRes.height = (char) imageWidth;
-//        imageRes.width = (char) imageHeight;
+// ImageRes.height = (char) imageWidth;
+// ImageRes.width = (char) imageHeight;
 //        Libirprocess.mirror(src, imageRes, Libirprocess.IRPROC_SRC_FMT_Y14, dst);
 //    }
-//}
+// }

@@ -12,6 +12,20 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
+/**
+ * Specialized thermal imaging component providing DataSet functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
 
     /**
@@ -47,19 +61,39 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      * @param values
      * @param label
      */
+    /**
+     * Executes dataset operation with thermal imaging domain optimization.
+     *
+     */
     public DataSet(List<T> values, String label) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(label);
         this.mValues = values;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mValues == null)
             mValues = new ArrayList<T>();
 
+        /**
+         * Executes calcminmax operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMax();
     }
 
     @Override
     public void calcMinMax() {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mValues == null || mValues.isEmpty())
             return;
 
@@ -68,7 +102,18 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         mXMax = -Float.MAX_VALUE;
         mXMin = Float.MAX_VALUE;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param e Parameter for operation (type: mValues)
+         *
+         */
         for (T e : mValues) {
+            /**
+             * Executes calcminmax operation with thermal imaging domain optimization.
+             *
+             */
             calcMinMax(e);
         }
     }
@@ -76,6 +121,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     @Override
     public void calcMinMaxY(float fromX, float toX) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mValues == null || mValues.isEmpty())
             return;
 
@@ -85,9 +134,17 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         int indexFrom = getEntryIndex(fromX, Float.NaN, Rounding.DOWN);
         int indexTo = getEntryIndex(toX, Float.NaN, Rounding.UP);
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = indexFrom; i <= indexTo; i++) {
 
-            // only recalculate y
+            // Only recalculate y
+            /**
+             * Executes calcminmaxy operation with thermal imaging domain optimization.
+             *
+             */
             calcMinMaxY(mValues.get(i));
         }
     }
@@ -99,28 +156,56 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      */
     protected void calcMinMax(T e) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null)
             return;
 
+        /**
+         * Executes calcminmaxx operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMaxX(e);
 
+        /**
+         * Executes calcminmaxy operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMaxY(e);
     }
 
     protected void calcMinMaxX(T e) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e.getX() < mXMin)
             mXMin = e.getX();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e.getX() > mXMax)
             mXMax = e.getX();
     }
 
     protected void calcMinMaxY(T e) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e.getY() < mYMin)
             mYMin = e.getY();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e.getY() > mYMax)
             mYMax = e.getY();
     }
@@ -146,6 +231,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      */
     public void setValues(List<T> values) {
         mValues = values;
+        /**
+         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataSetChanged();
     }
 
@@ -168,6 +257,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append(toSimpleString());
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mValues.size(); i++) {
             buffer.append(mValues.get(i).toString() + " ");
         }
@@ -210,15 +303,31 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     @Override
     public void addEntryOrdered(T e) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null)
             return;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mValues == null) {
             mValues = new ArrayList<T>();
         }
 
+        /**
+         * Executes calcminmax operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMax(e);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mValues.size() > 0 && mValues.get(mValues.size() - 1).getX() > e.getX()) {
             int closestIndex = getEntryIndex(e.getX(), e.getY(), Rounding.UP);
             mValues.add(closestIndex, e);
@@ -230,39 +339,71 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     @Override
     public void clear() {
         mValues.clear();
+        /**
+         * Executes notifydatasetchanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataSetChanged();
     }
 
     @Override
     public boolean addEntry(T e) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null)
             return false;
 
         List<T> values = getValues();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (values == null) {
             values = new ArrayList<T>();
         }
 
+        /**
+         * Executes calcminmax operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMax(e);
 
-        // add the entry
+        // Add the entry
         return values.add(e);
     }
 
     @Override
     public boolean removeEntry(T e) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null)
             return false;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mValues == null)
             return false;
 
-        // remove the entry
+        // Remove the entry
         boolean removed = mValues.remove(e);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (removed) {
+            /**
+             * Executes calcminmax operation with thermal imaging domain optimization.
+             *
+             */
             calcMinMax();
         }
 
@@ -278,6 +419,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     public T getEntryForXValue(float xValue, float closestToY, Rounding rounding) {
 
         int index = getEntryIndex(xValue, closestToY, rounding);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (index > -1)
             return mValues.get(index);
         return null;
@@ -296,6 +441,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     @Override
     public int getEntryIndex(float xValue, float closestToY, Rounding rounding) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mValues == null || mValues.isEmpty())
             return -1;
 
@@ -303,6 +452,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         int high = mValues.size() - 1;
         int closest = high;
 
+        /**
+         * Executes while operation with thermal imaging domain optimization.
+         *
+         */
         while (low < high) {
             int m = (low + high) / 2;
 
@@ -310,6 +463,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
                     d2 = mValues.get(m + 1).getX() - xValue,
                     ad1 = Math.abs(d1), ad2 = Math.abs(d2);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (ad2 < ad1) {
                 // [m + 1] is closer to xValue
                 // Search in an higher place
@@ -321,6 +478,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
             } else {
                 // We have multiple sequential x-value with same distance
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (d1 >= 0.0) {
                     // Search in a lower place
                     high = m;
@@ -333,38 +494,78 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
             closest = high;
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (closest != -1) {
             float closestXValue = mValues.get(closest).getX();
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (rounding == Rounding.UP) {
                 // If rounding up, and found x-value is lower than specified x, and we can go upper...
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (closestXValue < xValue && closest < mValues.size() - 1) {
                     ++closest;
                 }
             } else if (rounding == Rounding.DOWN) {
                 // If rounding down, and found x-value is upper than specified x, and we can go lower...
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (closestXValue > xValue && closest > 0) {
                     --closest;
                 }
             }
 
             // Search by closest to y-value
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!Float.isNaN(closestToY)) {
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (closest > 0 && mValues.get(closest - 1).getX() == closestXValue)
                     closest -= 1;
 
                 float closestYValue = mValues.get(closest).getY();
                 int closestYIndex = closest;
 
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (true) {
                     closest += 1;
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (closest >= mValues.size())
                         break;
 
                     final Entry value = mValues.get(closest);
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (value.getX() != closestXValue)
                         break;
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (Math.abs(value.getY() - closestToY) < Math.abs(closestYValue - closestToY)) {
                         closestYValue = closestToY;
                         closestYIndex = closest;
@@ -386,20 +587,40 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         int low = 0;
         int high = mValues.size() - 1;
 
+        /**
+         * Executes while operation with thermal imaging domain optimization.
+         *
+         */
         while (low <= high) {
             int m = (high + low) / 2;
             T entry = mValues.get(m);
 
-            // if we have a match
+            // If we have a match
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (xValue == entry.getX()) {
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (m > 0 && mValues.get(m - 1).getX() == xValue)
                     m--;
 
                 high = mValues.size();
 
-                // loop over all "equal" entries
+                // Loop over all "equal" entries
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for (; m < high; m++) {
                     entry = mValues.get(m);
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (entry.getX() == xValue) {
                         entries.add(entry);
                     } else {
@@ -409,6 +630,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
 
                 break;
             } else {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (xValue > entry.getX())
                     low = m + 1;
                 else

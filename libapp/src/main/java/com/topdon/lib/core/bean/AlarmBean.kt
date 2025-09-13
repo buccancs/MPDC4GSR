@@ -58,6 +58,10 @@ data class AlarmBean(
     /**
      * Executes tobytearray functionality.
      */
+    /**
+     * Executes tobytearray operation with thermal imaging domain optimization.
+     *
+     */
     fun toByteArray(): ByteArray =
         ByteBuffer.allocate(28)
             .put(if (isHighOpen) 1 else 0)
@@ -74,6 +78,10 @@ data class AlarmBean(
 
     /**
      * 判断temperature报警是否开启
+     */
+    /**
+     * Executes isopen operation with thermal imaging domain optimization.
+     *
      */
     fun isOpen(): Boolean = isHighOpen || isLowOpen
 }

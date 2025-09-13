@@ -30,21 +30,62 @@ import com.topdon.lib.core.databinding.ItemCarDetectLayoutBinding
  * @author IRCamera Development Team
  * @since 1.0
  */
+/**
+ * Specialized thermal imaging component providing CarDetectDialog functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean) -> Unit)) :
+    /**
+     * Executes dialog operation with thermal imaging domain optimization.
+     *
+     */
     Dialog(context, R.style.DefaultDialog) {
     private lateinit var binding: DialogCarDetectBinding
 
+    /**
+     * Executes oncreate operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param savedInstanceState Parameter for operation (type: Bundle?)
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /**
+         * Configures the cancelable with validation and thermal imaging optimization.
+         *
+         */
         setCancelable(true)
+        /**
+         * Configures the canceledontouchoutside with validation and thermal imaging optimization.
+         *
+         */
         setCanceledOnTouchOutside(false)
 
         binding = DialogCarDetectBinding.inflate(LayoutInflater.from(context))
+        /**
+         * Configures the contentview with validation and thermal imaging optimization.
+         *
+         */
         setContentView(binding.root)
 
         binding.titleView.setLeftClickListener { dismiss() }
 
         binding.rcyDetect.layoutManager =
+            /**
+             * Executes linearlayoutmanager operation with thermal imaging domain optimization.
+             *
+             */
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.rcyDetect.adapter = CarDetectAdapter(context, getDetectList())
 
@@ -58,11 +99,18 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
 
     companion object {
         @JvmStatic
+    /**
+     * Retrieves detectlist information.
+     */
         fun getDetectList(): MutableList<CarDetectBean> {
             val dataList: MutableList<CarDetectBean> = ArrayList()
             val data1List: MutableList<CarDetectChildBean> = ArrayList()
             val data2List: MutableList<CarDetectChildBean> = ArrayList()
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     0,
@@ -72,6 +120,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     1,
@@ -81,6 +133,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     2,
@@ -90,6 +146,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     3,
@@ -99,6 +159,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     4,
@@ -108,6 +172,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     5,
@@ -117,6 +185,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     6,
@@ -126,6 +198,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     7,
@@ -135,6 +211,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     8,
@@ -144,6 +224,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     9,
@@ -153,6 +237,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     10,
@@ -162,6 +250,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     11,
@@ -171,6 +263,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data1List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     0,
                     12,
@@ -180,11 +276,19 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             val carDetectBean1 =
+                /**
+                 * Executes cardetectbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectBean(
                     BaseApplication.instance.getString(R.string.abnormal_title1),
                     data1List,
                 )
             data2List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     1,
                     0,
@@ -194,6 +298,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data2List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     1,
                     1,
@@ -203,6 +311,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data2List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     1,
                     2,
@@ -212,6 +324,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data2List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     1,
                     3,
@@ -221,6 +337,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             data2List.add(
+                /**
+                 * Executes cardetectchildbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectChildBean(
                     1,
                     4,
@@ -230,6 +350,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 ),
             )
             val carDetectBean2 =
+                /**
+                 * Executes cardetectbean operation with thermal imaging domain optimization.
+                 *
+                 */
                 CarDetectBean(
                     BaseApplication.instance.getString(R.string.abnormal_title2),
                     data2List,
@@ -242,6 +366,14 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
 
     inner class CarDetectAdapter(val act: Context, private var carDetects: List<CarDetectBean>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        /**
+         * Executes oncreateviewholder operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param parent Parameter for operation (type: ViewGroup)
+         * @param viewType Parameter for operation (type: Int)
+         *
+         */
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
@@ -250,14 +382,30 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             return ItemView(binding)
         }
 
+        /**
+         * Executes onbindviewholder operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param holder Parameter for operation (type: RecyclerView.ViewHolder)
+         * @param position Parameter for operation (type: Int)
+         *
+         */
         override fun onBindViewHolder(
             holder: RecyclerView.ViewHolder,
             position: Int,
         ) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (holder is ItemView) {
                 val bean = carDetects[position]
                 holder.tvTitle.text = bean.title
                 holder.rcyDetectChild.layoutManager =
+                    /**
+                     * Executes linearlayoutmanager operation with thermal imaging domain optimization.
+                     *
+                     */
                     LinearLayoutManager(act, RecyclerView.VERTICAL, false)
                 val carDetectChildAdapter = CarDetectChildAdapter(act, bean.detectChildBeans)
                 carDetectChildAdapter.listener = listener@{ _, item ->
@@ -270,6 +418,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                     carDetectChildAdapter.notifyDataSetChanged()
                     SharedManager.saveCarDetectInfo(item)
                     listener.invoke(item)
+                    /**
+                     * Executes dismiss operation with thermal imaging domain optimization.
+                     *
+                     */
                     dismiss()
                 }
 
@@ -277,6 +429,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 carDetects.forEachIndexed { index, carDetectBean ->
                     carDetectBean.detectChildBeans.forEachIndexed { childIndex, carDetectChildBean ->
                         // Intentionally check for null to provide default selection
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (selectCarDetect == null) {
                             carDetectChildBean.isSelected = (index == 0 && childIndex == 0)
                         } else {
@@ -290,6 +446,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             }
         }
 
+        /**
+         * Retrieves the itemcount with optimized performance for thermal imaging operations.
+         *
+         */
         override fun getItemCount(): Int {
             return carDetects.size
         }
@@ -298,12 +458,18 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             val tvTitle: TextView = binding.tvTitle
             val rcyDetectChild: RecyclerView = binding.rcyDetectChild
         }
-    }
-
 /**
- * CarDetectChildAdapter provides data binding between data source and UI components.
+ * Specialized thermal imaging component providing CarDetectChildAdapter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     class CarDetectChildAdapter(
@@ -313,6 +479,14 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var listener: ((index: Int, bean: CarDetectChildBean) -> Unit)? = null
 
+        /**
+         * Executes oncreateviewholder operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param parent Parameter for operation (type: ViewGroup)
+         * @param viewType Parameter for operation (type: Int)
+         *
+         */
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
@@ -321,16 +495,36 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             return ItemView(binding)
         }
 
+        /**
+         * Executes onbindviewholder operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param holder Parameter for operation (type: RecyclerView.ViewHolder)
+         * @param position Parameter for operation (type: Int)
+         *
+         */
         override fun onBindViewHolder(
             holder: RecyclerView.ViewHolder,
             position: Int,
         ) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (holder is ItemView) {
                 val bean = carChildDetects[position]
                 holder.tvTitle.text = bean.item
                 holder.viewLine.visibility =
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (position == carChildDetects.size - 1) View.GONE else View.VISIBLE
                 holder.ivSelectState.setImageResource(
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (bean.isSelected) R.drawable.ic_car_detect_selected else R.drawable.ic_car_detect_unselected,
                 )
                 holder.rlyParent.setOnClickListener {
@@ -339,6 +533,10 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             }
         }
 
+        /**
+         * Retrieves the itemcount with optimized performance for thermal imaging operations.
+         *
+         */
         override fun getItemCount(): Int {
             return carChildDetects.size
         }

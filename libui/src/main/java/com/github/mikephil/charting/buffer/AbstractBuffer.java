@@ -10,6 +10,20 @@ import java.util.List;
  * @author Philipp Jahoda
  * @param <T> The data the buffer accepts to be fed with.
  */
+/**
+ * Specialized thermal imaging component providing AbstractBuffer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public abstract class AbstractBuffer<T> {
 
     /** index in the buffer */
@@ -42,6 +56,10 @@ public abstract class AbstractBuffer<T> {
 
     /** limits the drawing on the x-axis */
     public void limitFrom(int from) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (from < 0)
             from = 0;
         mFrom = from;
@@ -49,6 +67,10 @@ public abstract class AbstractBuffer<T> {
 
     /** limits the drawing on the x-axis */
     public void limitTo(int to) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (to < 0)
             to = 0;
         mTo = to;

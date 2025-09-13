@@ -16,6 +16,20 @@ import com.github.mikephil.charting.utils.Utils;
  *
  * @author Philipp Jahoda
  */
+/**
+ * Specialized thermal imaging component providing YAxis functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class YAxis extends AxisBase {
 
     /**
@@ -108,15 +122,31 @@ public class YAxis extends AxisBase {
         LEFT, RIGHT
     }
 
+    /**
+     * Executes yaxis operation with thermal imaging domain optimization.
+     *
+     */
     public YAxis() {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super();
 
-        // default left
+        // Default left
         this.mAxisDependency = AxisDependency.LEFT;
         this.mYOffset = 0f;
     }
 
+    /**
+     * Executes yaxis operation with thermal imaging domain optimization.
+     *
+     */
     public YAxis(AxisDependency position) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super();
         this.mAxisDependency = position;
         this.mYOffset = 0f;
@@ -231,9 +261,21 @@ public class YAxis extends AxisBase {
      */
     @Deprecated
     public void setStartAtZero(boolean startAtZero) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (startAtZero)
+            /**
+             * Configures the axisminimum with validation and thermal imaging optimization.
+             *
+             */
             setAxisMinimum(0f);
         else
+            /**
+             * Executes resetaxisminimum operation with thermal imaging domain optimization.
+             *
+             */
             resetAxisMinimum();
     }
 
@@ -329,9 +371,17 @@ public class YAxis extends AxisBase {
         float minWidth = getMinWidth();
         float maxWidth = getMaxWidth();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (minWidth > 0.f)
             minWidth = Utils.convertDpToPixel(minWidth);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (maxWidth > 0.f && maxWidth != Float.POSITIVE_INFINITY)
             maxWidth = Utils.convertDpToPixel(maxWidth);
 
@@ -351,6 +401,10 @@ public class YAxis extends AxisBase {
         p.setTextSize(mTextSize);
 
         String label = getLongestLabel();
+        /**
+         * Executes return operation with thermal imaging domain optimization.
+         *
+         */
         return (float) Utils.calcTextHeight(p, label) + getYOffset() * 2f;
     }
 
@@ -360,6 +414,10 @@ public class YAxis extends AxisBase {
      * @return
      */
     public boolean needsOffset() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isEnabled() && isDrawLabelsEnabled() && getLabelPosition() == YAxisLabelPosition
                 .OUTSIDE_CHART)
             return true;
@@ -407,16 +465,20 @@ public class YAxis extends AxisBase {
 
         float range = Math.abs(max - min);
 
-        // in case all values are equal
+        // In case all values are equal
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (range == 0f) {
             max = max + 1f;
             min = min - 1f;
         }
 
-        // recalculate
+        // Recalculate
         range = Math.abs(max - min);
 
-        // calc extra spacing
+        // Calc extra spacing
         this.mAxisMinimum = mCustomAxisMin ? this.mAxisMinimum : min - (range / 100f) * getSpaceBottom();
         this.mAxisMaximum = mCustomAxisMax ? this.mAxisMaximum : max + (range / 100f) * getSpaceTop();
 

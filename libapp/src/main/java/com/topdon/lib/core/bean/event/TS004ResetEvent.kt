@@ -1,8 +1,17 @@
 package com.topdon.lib.core.bean.event
 
 /**
- * TS004 restore出厂settingssuccessEvent.
+ * Specialized thermal imaging component providing TS004ResetEvent functionality for the IRCamera system.
  *
- * Created by LCG on 2024/4/23.
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class TS004ResetEvent

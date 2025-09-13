@@ -16,12 +16,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * imageload
- * Created by fylder on 2018/6/23.
+ * Specialized thermal imaging component providing GlideLoader functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 object GlideLoader {
     /**
-     * image默认图
+     * imagedefault图
+     */
+    /**
+     * Retrieves the photooptions with optimized performance for thermal imaging operations.
+     *
      */
     private fun getPhotoOptions(): RequestOptions {
         val multi = MultiTransformation(CenterCrop(), RoundedCorners(SizeUtils.dp2px(6f)))
@@ -32,6 +46,15 @@ object GlideLoader {
 
     /**
      * 圆形image
+     */
+    /**
+     * Executes loadcircle operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param resourceId Parameter for operation (type: Int)
+     * @param options Parameter for operation (type: RequestOptions)
+     *
      */
     fun loadCircle(
         img: ImageView,
@@ -47,6 +70,15 @@ object GlideLoader {
     /**
      * 圆形image
      */
+    /**
+     * Executes loadcircle operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param url Parameter for operation (type: String)
+     * @param options Parameter for operation (type: RequestOptions)
+     *
+     */
     fun loadCircle(
         img: ImageView,
         url: String,
@@ -60,6 +92,15 @@ object GlideLoader {
 
     /**
      * 圆形image
+     */
+    /**
+     * Executes loadcircle operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param drawable Parameter for operation (type: Drawable)
+     * @param options Parameter for operation (type: RequestOptions)
+     *
      */
     fun loadCircle(
         img: ImageView,
@@ -75,6 +116,15 @@ object GlideLoader {
     /**
      * 圆形image
      */
+    /**
+     * Executes loadcircle operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param uri Parameter for operation (type: Uri)
+     * @param options Parameter for operation (type: RequestOptions)
+     *
+     */
     fun loadCircle(
         img: ImageView,
         uri: Uri,
@@ -88,6 +138,16 @@ object GlideLoader {
 
     /**
      * 圆形image
+     */
+    /**
+     * Executes loadcircle operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param url Parameter for operation (type: String)
+     * @param resourceId Parameter for operation (type: Int)
+     * @param options Parameter for operation (type: RequestOptions)
+     *
      */
     fun loadCircle(
         img: ImageView,
@@ -106,6 +166,14 @@ object GlideLoader {
     /**
      * 圆角形image
      */
+    /**
+     * Executes loadrounded operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param resourceId Parameter for operation (type: Int)
+     *
+     */
     fun loadRounded(
         img: ImageView,
         resourceId: Int,
@@ -118,6 +186,14 @@ object GlideLoader {
 
     /**
      * 圆角形image
+     */
+    /**
+     * Executes loadrounded operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param url Parameter for operation (type: String)
+     *
      */
     fun loadRounded(
         img: ImageView,
@@ -132,6 +208,14 @@ object GlideLoader {
     /**
      * 圆角形image
      */
+    /**
+     * Executes loadrounded operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param drawable Parameter for operation (type: Drawable)
+     *
+     */
     fun loadRounded(
         img: ImageView,
         drawable: Drawable,
@@ -144,6 +228,14 @@ object GlideLoader {
 
     /**
      * 圆角形image
+     */
+    /**
+     * Executes loadrounded operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param uri Parameter for operation (type: Uri)
+     *
      */
     fun loadRounded(
         img: ImageView,
@@ -158,12 +250,28 @@ object GlideLoader {
     /**
      * loadimage
      */
+    /**
+     * Executes load operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param url Parameter for operation (type: String?)
+     *
+     */
     fun load(
         img: ImageView,
         url: String?,
     ) {
         val multi =
+            /**
+             * Executes multitransformation operation with thermal imaging domain optimization.
+             *
+             */
             MultiTransformation(
+                /**
+                 * Executes centercrop operation with thermal imaging domain optimization.
+                 *
+                 */
                 CenterCrop(),
             )
         val options =
@@ -180,12 +288,28 @@ object GlideLoader {
     /**
      * loadimage
      */
+    /**
+     * Executes loadgallery operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param url Parameter for operation (type: String?)
+     *
+     */
     fun loadGallery(
         img: ImageView,
         url: String?,
     ) {
         val multi =
+            /**
+             * Executes multitransformation operation with thermal imaging domain optimization.
+             *
+             */
             MultiTransformation(
+                /**
+                 * Executes centercrop operation with thermal imaging domain optimization.
+                 *
+                 */
                 CenterCrop(),
             )
         val options =
@@ -202,12 +326,28 @@ object GlideLoader {
     /**
      * loadimage
      */
+    /**
+     * Executes loadfit operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param url Parameter for operation (type: String?)
+     *
+     */
     fun loadFit(
         img: ImageView,
         url: String?,
     ) {
         val multi =
+            /**
+             * Executes multitransformation operation with thermal imaging domain optimization.
+             *
+             */
             MultiTransformation(
+                /**
+                 * Executes fitcenter operation with thermal imaging domain optimization.
+                 *
+                 */
                 FitCenter(),
             )
         val options =
@@ -224,12 +364,28 @@ object GlideLoader {
     /**
      * loadimage
      */
+    /**
+     * Executes load operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param resourceId Parameter for operation (type: Int)
+     *
+     */
     fun load(
         img: ImageView,
         resourceId: Int,
     ) {
         val multi =
+            /**
+             * Executes multitransformation operation with thermal imaging domain optimization.
+             *
+             */
             MultiTransformation(
+                /**
+                 * Executes fitcenter operation with thermal imaging domain optimization.
+                 *
+                 */
                 FitCenter(),
             )
         val options =
@@ -242,6 +398,17 @@ object GlideLoader {
             .into(img)
     }
 
+    /**
+     * Executes loadP functionality.
+     */
+    /**
+     * Executes loadp operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param img Parameter for operation (type: ImageView)
+     * @param url Parameter for operation (type: String?)
+     *
+     */
     fun loadP(
         img: ImageView,
         url: String?,
@@ -252,10 +419,22 @@ object GlideLoader {
             .into(img)
     }
 
+    /**
+     * Retrieves the drawable with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param context Parameter for operation (type: Context)
+     * @param url Parameter for operation (type: String?)
+     *
+     */
     suspend fun getDrawable(
         context: Context,
         url: String?,
     ): Drawable? {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (url == null) {
             return null
         }

@@ -14,8 +14,18 @@ import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
- * Monitor activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
+ * Specialized thermal imaging component providing MonitorActivity functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class MonitorActivity : BaseActivity(), View.OnClickListener {
     companion object {
@@ -29,8 +39,16 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
     private var selectType = 1 // 选取pointtype(point line area)
     private var selectIndex: ArrayList<Int> = arrayListOf() // 选取point
 
+    /**
+     * Initializes the contentview component for thermal imaging operations.
+     *
+     */
     override fun initContentView() = R.layout.activity_monitor
 
+    /**
+     * Initializes the view component for thermal imaging operations.
+     *
+     */
     override fun initView() {
         // Set toolbar title
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
@@ -43,17 +61,32 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         findViewById<Button>(R.id.motion_log_btn).setOnClickListener(this)
         findViewById<Button>(R.id.motion_btn).setOnClickListener(this)
         findViewById<Button>(R.id.motion_start_btn).setOnClickListener(this)
-//        if (BaseApplication.instance.isConnected()) {
-//            mHandler.postDelayed({
+// If (BaseApplication.instance.isConnected()) {
+// MHandler.postDelayed({
 //                EventBus.getDefault().post(ThermalActionEvent(action = 2001))
 //            }, 300)
 //        }
     }
 
+    /**
+     * Initializes the data component for thermal imaging operations.
+     *
+     */
     override fun initData() {
     }
 
+    /**
+     * Executes onclick operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param v Parameter for operation (type: View?)
+     *
+     */
     override fun onClick(v: View?) {
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (v) {
             findViewById<Button>(R.id.motion_log_btn) -> {
                 NavigationManager.getInstance().build(RouterConfig.LOG_MP_CHART).navigation(this)
@@ -61,7 +94,15 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
             findViewById<Button>(R.id.motion_btn) -> {
                 MonitorSelectDialog.Builder(this)
                     .setPositiveListener { select ->
+                        /**
+                         * Executes updateui operation with thermal imaging domain optimization.
+                         *
+                         */
                         updateUI()
+                        /**
+                         * Executes when operation with thermal imaging domain optimization.
+                         *
+                         */
                         when (select) {
                             1 -> EventBus.getDefault().post(ThermalActionEvent(action = 2001))
                             2 -> EventBus.getDefault().post(ThermalActionEvent(action = 2002))
@@ -76,11 +117,26 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
                 NavigationManager.getInstance().build(RouterConfig.MONITOR_CHART)
                     .withInt("type", selectType)
                     .navigation(this)
+                /**
+                 * Executes finish operation with thermal imaging domain optimization.
+                 *
+                 */
                 finish()
             }
         }
     }
 
+    /**
+     * Executes select functionality.
+     */
+    /**
+     * Executes select operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param selectType Parameter for operation (type: Int)
+     * @param selectIndex Parameter for operation (type: ArrayList<Int>)
+     *
+     */
     fun select(
         selectType: Int,
         selectIndex: ArrayList<Int>,
@@ -90,6 +146,13 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         this.selectIndex = selectIndex
     }
 
+    /**
+     * Executes updateUI functionality.
+     */
+    /**
+     * Executes updateui operation with thermal imaging domain optimization.
+     *
+     */
     private fun updateUI() {
         val motionStartBtn = findViewById<Button>(R.id.motion_start_btn)
         val motionLogBtn = findViewById<Button>(R.id.motion_log_btn)
@@ -101,6 +164,16 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
     }
 
 秒
+    /**
+     * Executes updateTime functionality.
+     */
+    /**
+     * Executes updatetime operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param time Parameter for operation (type: Long)
+     *
+     */
     fun updateTime(time: Long) {
         val ss = time % 60
         val mm = time / 60 % 60

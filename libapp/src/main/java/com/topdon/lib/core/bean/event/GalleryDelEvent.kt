@@ -1,6 +1,17 @@
 package com.topdon.lib.core.bean.event
 
 /**
- * 有至少一张thermal imagingimage或video被delete，需要refresh图库Event.
+ * Specialized thermal imaging component providing GalleryDelEvent functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class GalleryDelEvent

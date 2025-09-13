@@ -28,6 +28,20 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Specialized thermal imaging component providing LineChartRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class LineChartRenderer extends LineRadarRenderer {
 
     protected LineDataProvider mChart;
@@ -57,8 +71,16 @@ public class LineChartRenderer extends LineRadarRenderer {
     protected Path cubicPath = new Path();
     protected Path cubicFillPath = new Path();
 
+    /**
+     * Executes linechartrenderer operation with thermal imaging domain optimization.
+     *
+     */
     public LineChartRenderer(LineDataProvider chart, ChartAnimator animator,
                              ViewPortHandler viewPortHandler) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(animator, viewPortHandler);
         mChart = chart;
 
@@ -79,10 +101,18 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         Bitmap drawBitmap = mDrawBitmap == null ? null : mDrawBitmap.get();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (drawBitmap == null
                 || (drawBitmap.getWidth() != width)
                 || (drawBitmap.getHeight() != height)) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (width > 0 && height > 0) {
                 drawBitmap = Bitmap.createBitmap(width, height, mBitmapConfig);
                 mDrawBitmap = new WeakReference<>(drawBitmap);
@@ -95,11 +125,30 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         LineData lineData = mChart.getLineData();
 
-        //TODO 2022-05-16 Attempt to invoke virtual method 'java.util.List com.github.mikephil.charting.data.LineData.getDataSets()' on a null object reference
+        // TODO: 2022-05-16 Attempt to invoke virtual method 'java.util.List com.github.mikephil.charting.data.LineData.getDataSets()' on a null object reference
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (lineData != null) {
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param set Parameter for operation (type: lineData.getDataSets()
+             *
+             */
             for (ILineDataSet set : lineData.getDataSets()) {
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (set.isVisible())
+                    /**
+                     * Executes drawdataset operation with thermal imaging domain optimization.
+                     *
+                     */
                     drawDataSet(c, set);
             }
         }
@@ -109,24 +158,44 @@ public class LineChartRenderer extends LineRadarRenderer {
 
     protected void drawDataSet(Canvas c, ILineDataSet dataSet) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dataSet.getEntryCount() < 1)
             return;
 
         mRenderPaint.setStrokeWidth(dataSet.getLineWidth());
         mRenderPaint.setPathEffect(dataSet.getDashPathEffect());
 
+        /**
+         * Executes switch operation with thermal imaging domain optimization.
+         *
+         */
         switch (dataSet.getMode()) {
             default:
             case LINEAR:
             case STEPPED:
+                /**
+                 * Executes drawlinear operation with thermal imaging domain optimization.
+                 *
+                 */
                 drawLinear(c, dataSet);
                 break;
 
             case CUBIC_BEZIER:
+                /**
+                 * Executes drawcubicbezier operation with thermal imaging domain optimization.
+                 *
+                 */
                 drawCubicBezier(dataSet);
                 break;
 
             case HORIZONTAL_BEZIER:
+                /**
+                 * Executes drawhorizontalbezier operation with thermal imaging domain optimization.
+                 *
+                 */
                 drawHorizontalBezier(dataSet);
                 break;
         }
@@ -144,14 +213,22 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         cubicPath.reset();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXBounds.range >= 1) {
 
             Entry prev = dataSet.getEntryForIndex(mXBounds.min);
             Entry cur = prev;
 
-            // let the spline start
+            // Let the spline start
             cubicPath.moveTo(cur.getX(), cur.getY() * phaseY);
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int j = mXBounds.min + 1; j <= mXBounds.range + mXBounds.min; j++) {
 
                 prev = cur;
@@ -167,12 +244,20 @@ public class LineChartRenderer extends LineRadarRenderer {
             }
         }
 
-        // if filled is enabled, close the path
+        // If filled is enabled, close the path
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dataSet.isDrawFilledEnabled()) {
 
             cubicFillPath.reset();
             cubicFillPath.addPath(cubicPath);
-            // create a new path, this is bad for performance
+            // Create a new path, this is bad for performance
+            /**
+             * Executes drawcubicfill operation with thermal imaging domain optimization.
+             *
+             */
             drawCubicFill(mBitmapCanvas, dataSet, cubicFillPath, trans, mXBounds);
         }
 
@@ -199,6 +284,10 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         cubicPath.reset();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXBounds.range >= 1) {
 
             float prevDx = 0f;
@@ -220,11 +309,19 @@ public class LineChartRenderer extends LineRadarRenderer {
             Entry next = cur;
             int nextIndex = -1;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (cur == null) return;
 
-            // let the spline start
+            // Let the spline start
             cubicPath.moveTo(cur.getX(), cur.getY() * phaseY);
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int j = mXBounds.min + 1; j <= mXBounds.range + mXBounds.min; j++) {
 
                 prevPrev = prev;
@@ -245,12 +342,20 @@ public class LineChartRenderer extends LineRadarRenderer {
             }
         }
 
-        // if filled is enabled, close the path
+        // If filled is enabled, close the path
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dataSet.isDrawFilledEnabled()) {
 
             cubicFillPath.reset();
             cubicFillPath.addPath(cubicPath);
 
+            /**
+             * Executes drawcubicfill operation with thermal imaging domain optimization.
+             *
+             */
             drawCubicFill(mBitmapCanvas, dataSet, cubicFillPath, trans, mXBounds);
         }
 
@@ -277,11 +382,23 @@ public class LineChartRenderer extends LineRadarRenderer {
         trans.pathValueToPixel(spline);
 
         final Drawable drawable = dataSet.getFillDrawable();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (drawable != null) {
 
+            /**
+             * Executes drawfilledpath operation with thermal imaging domain optimization.
+             *
+             */
             drawFilledPath(c, spline, drawable);
         } else {
 
+            /**
+             * Executes drawfilledpath operation with thermal imaging domain optimization.
+             *
+             */
             drawFilledPath(c, spline, dataSet.getFillColor(), dataSet.getFillAlpha());
         }
     }
@@ -309,7 +426,11 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         Canvas canvas = null;
 
-        // if the data-set is dashed, draw on bitmap-canvas
+        // If the data-set is dashed, draw on bitmap-canvas
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dataSet.isDashedLineEnabled()) {
             canvas = mBitmapCanvas;
         } else {
@@ -318,31 +439,67 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         mXBounds.set(mChart, dataSet);
 
-        // if drawing filled is enabled
+        // If drawing filled is enabled
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dataSet.isDrawFilledEnabled() && entryCount > 0) {
+            /**
+             * Executes drawlinearfill operation with thermal imaging domain optimization.
+             *
+             */
             drawLinearFill(c, dataSet, trans, mXBounds);
         }
 
-        // more than 1 color
+        // More than 1 color
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dataSet.getColors().size() > 1) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mLineBuffer.length <= pointsPerEntryPair * 2)
                 mLineBuffer = new float[pointsPerEntryPair * 4];
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int j = mXBounds.min; j <= mXBounds.range + mXBounds.min; j++) {
 
                 Entry e = dataSet.getEntryForIndex(j);
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (e == null) continue;
 
                 mLineBuffer[0] = e.getX();
                 mLineBuffer[1] = e.getY() * phaseY;
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (j < mXBounds.max) {
 
                     e = dataSet.getEntryForIndex(j + 1);
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (e == null) break;
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (isDrawSteppedEnabled) {
                         mLineBuffer[2] = e.getX();
                         mLineBuffer[3] = mLineBuffer[1];
@@ -362,24 +519,36 @@ public class LineChartRenderer extends LineRadarRenderer {
 
                 trans.pointValuesToPixel(mLineBuffer);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!mViewPortHandler.isInBoundsRight(mLineBuffer[0]))
                     break;
 
-                // make sure the lines don't do shitty things outside
-                // bounds
+                // Make sure the lines don't do shitty things outside
+                // Bounds
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!mViewPortHandler.isInBoundsLeft(mLineBuffer[2])
                         || (!mViewPortHandler.isInBoundsTop(mLineBuffer[1]) && !mViewPortHandler
                         .isInBoundsBottom(mLineBuffer[3])))
                     continue;
 
-                // get the color that is set for this line-segment
+                // Get the color that is set for this line-segment
                 mRenderPaint.setColor(dataSet.getColor(j));
 
                 canvas.drawLines(mLineBuffer, 0, pointsPerEntryPair * 2, mRenderPaint);
             }
 
-        } else { // only one color per dataset
+        } else { // Only one color per dataset
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mLineBuffer.length < Math.max((entryCount) * pointsPerEntryPair, pointsPerEntryPair) * 2)
                 mLineBuffer = new float[Math.max((entryCount) * pointsPerEntryPair, pointsPerEntryPair) * 4];
 
@@ -387,19 +556,35 @@ public class LineChartRenderer extends LineRadarRenderer {
 
             e1 = dataSet.getEntryForIndex(mXBounds.min);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (e1 != null) {
 
                 int j = 0;
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for (int x = mXBounds.min; x <= mXBounds.range + mXBounds.min; x++) {
 
                     e1 = dataSet.getEntryForIndex(x == 0 ? 0 : (x - 1));
                     e2 = dataSet.getEntryForIndex(x);
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (e1 == null || e2 == null) continue;
 
                     mLineBuffer[j++] = e1.getX();
                     mLineBuffer[j++] = e1.getY() * phaseY;
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (isDrawSteppedEnabled) {
                         mLineBuffer[j++] = e2.getX();
                         mLineBuffer[j++] = e1.getY() * phaseY;
@@ -411,6 +596,10 @@ public class LineChartRenderer extends LineRadarRenderer {
                     mLineBuffer[j++] = e2.getY() * phaseY;
                 }
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (j > 0) {
                     trans.pointValuesToPixel(mLineBuffer);
 
@@ -454,17 +643,37 @@ public class LineChartRenderer extends LineRadarRenderer {
             currentEndIndex = currentStartIndex + indexInterval;
             currentEndIndex = currentEndIndex > endingIndex ? endingIndex : currentEndIndex;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (currentStartIndex <= currentEndIndex) {
+                /**
+                 * Executes generatefilledpath operation with thermal imaging domain optimization.
+                 *
+                 */
                 generateFilledPath(dataSet, currentStartIndex, currentEndIndex, filled);
 
                 trans.pathValueToPixel(filled);
 
                 final Drawable drawable = dataSet.getFillDrawable();
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (drawable != null) {
 
+                    /**
+                     * Executes drawfilledpath operation with thermal imaging domain optimization.
+                     *
+                     */
                     drawFilledPath(c, filled, drawable);
                 } else {
 
+                    /**
+                     * Executes drawfilledpath operation with thermal imaging domain optimization.
+                     *
+                     */
                     drawFilledPath(c, filled, dataSet.getFillColor(), dataSet.getFillAlpha());
                 }
             }
@@ -498,13 +707,21 @@ public class LineChartRenderer extends LineRadarRenderer {
         filled.moveTo(entry.getX(), fillMin);
         filled.lineTo(entry.getX(), entry.getY() * phaseY);
 
-        // create a new path
+        // Create a new path
         Entry currentEntry = null;
         Entry previousEntry = entry;
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int x = startIndex + 1; x <= endIndex; x++) {
 
             currentEntry = dataSet.getEntryForIndex(x);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (isDrawSteppedEnabled) {
                 filled.lineTo(currentEntry.getX(), previousEntry.getY() * phaseY);
             }
@@ -514,7 +731,11 @@ public class LineChartRenderer extends LineRadarRenderer {
             previousEntry = currentEntry;
         }
 
-        // close up
+        // Close up
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (currentEntry != null) {
             filled.lineTo(currentEntry.getX(), fillMin);
         }
@@ -525,25 +746,45 @@ public class LineChartRenderer extends LineRadarRenderer {
     @Override
     public void drawValues(Canvas c) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isDrawingValuesAllowed(mChart)) {
 
             List<ILineDataSet> dataSets = mChart.getLineData().getDataSets();
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < dataSets.size(); i++) {
 
                 ILineDataSet dataSet = dataSets.get(i);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!shouldDrawValues(dataSet) || dataSet.getEntryCount() < 1)
                     continue;
 
-                // apply the text-styling defined by the DataSet
+                // Apply the text-styling defined by the DataSet
+                /**
+                 * Executes applyvaluetextstyle operation with thermal imaging domain optimization.
+                 *
+                 */
                 applyValueTextStyle(dataSet);
 
                 Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
 
-                // make sure the values do not interfear with the circles
+                // Make sure the values do not interfear with the circles
                 int valOffset = (int) (dataSet.getCircleRadius() * 1.75f);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!dataSet.isDrawCirclesEnabled())
                     valOffset = valOffset / 2;
 
@@ -557,23 +798,47 @@ public class LineChartRenderer extends LineRadarRenderer {
                 iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
                 iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
 
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for (int j = 0; j < positions.length; j += 2) {
 
                     float x = positions[j];
                     float y = positions[j + 1];
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!mViewPortHandler.isInBoundsRight(x))
                         break;
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!mViewPortHandler.isInBoundsLeft(x) || !mViewPortHandler.isInBoundsY(y))
                         continue;
 
                     Entry entry = dataSet.getEntryForIndex(j / 2 + mXBounds.min);
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.isDrawValuesEnabled()) {
+                        /**
+                         * Executes drawvalue operation with thermal imaging domain optimization.
+                         *
+                         */
                         drawValue(c, formatter.getPointLabel(entry), x, y - valOffset, dataSet.getValueTextColor(j / 2));
                     }
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (entry.getIcon() != null && dataSet.isDrawIconsEnabled()) {
 
                         Drawable icon = entry.getIcon();
@@ -601,6 +866,10 @@ public class LineChartRenderer extends LineRadarRenderer {
 
     @Override
     public void drawExtras(Canvas c) {
+        /**
+         * Executes drawcircles operation with thermal imaging domain optimization.
+         *
+         */
         drawCircles(c);
     }
 
@@ -625,10 +894,18 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         List<ILineDataSet> dataSets = mChart.getLineData().getDataSets();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < dataSets.size(); i++) {
 
             ILineDataSet dataSet = dataSets.get(i);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!dataSet.isVisible() || !dataSet.isDrawCirclesEnabled() ||
                     dataSet.getEntryCount() == 0)
                 continue;
@@ -649,6 +926,10 @@ public class LineChartRenderer extends LineRadarRenderer {
 
             DataSetImageCache imageCache;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mImageCaches.containsKey(dataSet)) {
                 imageCache = mImageCaches.get(dataSet);
             } else {
@@ -658,17 +939,29 @@ public class LineChartRenderer extends LineRadarRenderer {
 
             boolean changeRequired = imageCache.init(dataSet);
 
-            // only fill the cache with new bitmaps if a change is required
+            // Only fill the cache with new bitmaps if a change is required
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (changeRequired) {
                 imageCache.fill(dataSet, drawCircleHole, drawTransparentCircleHole);
             }
 
             int boundsRangeCount = mXBounds.range + mXBounds.min;
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int j = mXBounds.min; j <= boundsRangeCount; j++) {
 
                 Entry e = dataSet.getEntryForIndex(j);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (e == null) break;
 
                 mCirclesBuffer[0] = e.getX();
@@ -676,15 +969,27 @@ public class LineChartRenderer extends LineRadarRenderer {
 
                 trans.pointValuesToPixel(mCirclesBuffer);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!mViewPortHandler.isInBoundsRight(mCirclesBuffer[0]))
                     break;
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!mViewPortHandler.isInBoundsLeft(mCirclesBuffer[0]) ||
                         !mViewPortHandler.isInBoundsY(mCirclesBuffer[1]))
                     continue;
 
                 Bitmap circleBitmap = imageCache.getBitmap(j);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (circleBitmap != null) {
                     c.drawBitmap(circleBitmap, mCirclesBuffer[0] - circleRadius, mCirclesBuffer[1] - circleRadius, null);
                 }
@@ -697,15 +1002,30 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         LineData lineData = mChart.getLineData();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param high Parameter for operation (type: indices)
+         *
+         */
         for (Highlight high : indices) {
 
             ILineDataSet set = lineData.getDataSetByIndex(high.getDataSetIndex());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (set == null || !set.isHighlightEnabled())
                 continue;
 
             Entry e = set.getEntryForXValue(high.getX(), high.getY());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!isInBoundsX(e, set))
                 continue;
 
@@ -714,7 +1034,11 @@ public class LineChartRenderer extends LineRadarRenderer {
 
             high.setDraw((float) pix.x, (float) pix.y);
 
-            // draw the lines
+            // Draw the lines
+            /**
+             * Executes drawhighlightlines operation with thermal imaging domain optimization.
+             *
+             */
             drawHighlightLines(c, (float) pix.x, (float) pix.y, set);
         }
     }
@@ -728,6 +1052,10 @@ public class LineChartRenderer extends LineRadarRenderer {
      */
     public void setBitmapConfig(Bitmap.Config config) {
         mBitmapConfig = config;
+        /**
+         * Executes releasebitmap operation with thermal imaging domain optimization.
+         *
+         */
         releaseBitmap();
     }
 
@@ -748,8 +1076,16 @@ public class LineChartRenderer extends LineRadarRenderer {
             mBitmapCanvas.setBitmap(null);
             mBitmapCanvas = null;
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDrawBitmap != null) {
             Bitmap drawBitmap = mDrawBitmap.get();
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (drawBitmap != null) {
                 drawBitmap.recycle();
             }
@@ -758,6 +1094,16 @@ public class LineChartRenderer extends LineRadarRenderer {
         }
     }
 
+/**
+ * Specialized thermal imaging component providing DataSetImageCache functionality for the IRCamera system.
+ *
+ * This component is part of the IRCamera thermal imaging system, providing
+ * specialized functionality for thermal data processing and visualization.
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
     private class DataSetImageCache {
 
         private Path mCirclePathBuffer = new Path();
@@ -775,6 +1121,10 @@ public class LineChartRenderer extends LineRadarRenderer {
             int size = set.getCircleColorCount();
             boolean changeRequired = false;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (circleBitmaps == null) {
                 circleBitmaps = new Bitmap[size];
                 changeRequired = true;
@@ -799,6 +1149,10 @@ public class LineChartRenderer extends LineRadarRenderer {
             float circleRadius = set.getCircleRadius();
             float circleHoleRadius = set.getCircleHoleRadius();
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < colorCount; i++) {
 
                 Bitmap.Config conf = Bitmap.Config.ARGB_4444;
@@ -808,6 +1162,10 @@ public class LineChartRenderer extends LineRadarRenderer {
                 circleBitmaps[i] = circleBitmap;
                 mRenderPaint.setColor(set.getCircleColor(i));
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (drawTransparentCircleHole) {
                     // Begin path for circle with hole
                     mCirclePathBuffer.reset();
@@ -835,6 +1193,10 @@ public class LineChartRenderer extends LineRadarRenderer {
                             circleRadius,
                             mRenderPaint);
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (drawCircleHole) {
                         canvas.drawCircle(
                                 circleRadius,

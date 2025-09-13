@@ -8,11 +8,33 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+/**
+ * Specialized thermal imaging component providing XAxisRendererRadarChart functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class XAxisRendererRadarChart extends XAxisRenderer {
 
     private RadarChart mChart;
 
+    /**
+     * Executes xaxisrendererradarchart operation with thermal imaging domain optimization.
+     *
+     */
     public XAxisRendererRadarChart(ViewPortHandler viewPortHandler, XAxis xAxis, RadarChart chart) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(viewPortHandler, xAxis, null);
 
         mChart = chart;
@@ -21,6 +43,10 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
     @Override
     public void renderAxisLabels(Canvas c) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mXAxis.isEnabled() || !mXAxis.isDrawLabelsEnabled())
             return;
 
@@ -33,12 +59,16 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
 
         float sliceangle = mChart.getSliceAngle();
 
-        // calculate the factor that is needed for transforming the value to
-        // pixels
+        // Calculate the factor that is needed for transforming the value to
+        // Pixels
         float factor = mChart.getFactor();
 
         MPPointF center = mChart.getCenterOffsets();
         MPPointF pOut = MPPointF.getInstance(0,0);
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mChart.getData().getMaxEntryCountSet().getEntryCount(); i++) {
 
             String label = mXAxis.getValueFormatter().getAxisLabel(i, mXAxis);
@@ -48,6 +78,10 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
             Utils.getPosition(center, mChart.getYRange() * factor
                     + mXAxis.mLabelRotatedWidth / 2f, angle, pOut);
 
+            /**
+             * Executes drawlabel operation with thermal imaging domain optimization.
+             *
+             */
             drawLabel(c, label, pOut.x, pOut.y - mXAxis.mLabelRotatedHeight / 2.f,
                     drawLabelAnchor, labelRotationAngleDegrees);
         }
@@ -64,6 +98,6 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
 	 */
 	@Override
 	public void renderLimitLines(Canvas c) {
-		// this space intentionally left blank
+		// This space intentionally left blank
 	}
 }

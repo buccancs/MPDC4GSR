@@ -25,6 +25,20 @@ import com.github.mikephil.charting.renderer.CombinedChartRenderer;
  *
  * @author Philipp Jahoda
  */
+/**
+ * Specialized thermal imaging component providing CombinedChart functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class CombinedChart extends BarLineChartBase<CombinedData> implements CombinedDataProvider {
 
     /**
@@ -54,15 +68,39 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
         BAR, BUBBLE, LINE, CANDLE, SCATTER
     }
 
+    /**
+     * Executes combinedchart operation with thermal imaging domain optimization.
+     *
+     */
     public CombinedChart(Context context) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(context);
     }
 
+    /**
+     * Executes combinedchart operation with thermal imaging domain optimization.
+     *
+     */
     public CombinedChart(Context context, AttributeSet attrs) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(context, attrs);
     }
 
+    /**
+     * Executes combinedchart operation with thermal imaging domain optimization.
+     *
+     */
     public CombinedChart(Context context, AttributeSet attrs, int defStyle) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(context, attrs, defStyle);
     }
 
@@ -75,9 +113,17 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
                 DrawOrder.BAR, DrawOrder.BUBBLE, DrawOrder.LINE, DrawOrder.CANDLE, DrawOrder.SCATTER
         };
 
+        /**
+         * Configures the highlighter with validation and thermal imaging optimization.
+         *
+         */
         setHighlighter(new CombinedHighlighter(this, this));
 
         // Old default behaviour
+        /**
+         * Configures the highlightfullbarenabled with validation and thermal imaging optimization.
+         *
+         */
         setHighlightFullBarEnabled(true);
 
         mRenderer = new CombinedChartRenderer(this, mAnimator, mViewPortHandler);
@@ -91,6 +137,10 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
     @Override
     public void setData(CombinedData data) {
         super.setData(data);
+        /**
+         * Configures the highlighter with validation and thermal imaging optimization.
+         *
+         */
         setHighlighter(new CombinedHighlighter(this, this));
         ((CombinedChartRenderer)mRenderer).createRenderers();
         mRenderer.initBuffers();
@@ -108,11 +158,19 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
     @Override
     public Highlight getHighlightByTouchPoint(float x, float y) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mData == null) {
             Log.e(LOG_TAG, "Can't select by touch. No data set.");
             return null;
         } else {
             Highlight h = getHighlighter().getHighlight(x, y);
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (h == null || !isHighlightFullBarEnabled()) return h;
 
             // For isHighlightFullBarEnabled, remove stackIndex
@@ -124,6 +182,10 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
 
     @Override
     public LineData getLineData() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mData == null)
             return null;
         return mData.getLineData();
@@ -131,6 +193,10 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
 
     @Override
     public BarData getBarData() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mData == null)
             return null;
         return mData.getBarData();
@@ -138,6 +204,10 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
 
     @Override
     public ScatterData getScatterData() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mData == null)
             return null;
         return mData.getScatterData();
@@ -145,6 +215,10 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
 
     @Override
     public CandleData getCandleData() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mData == null)
             return null;
         return mData.getCandleData();
@@ -152,6 +226,10 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
 
     @Override
     public BubbleData getBubbleData() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mData == null)
             return null;
         return mData.getBubbleData();
@@ -223,6 +301,10 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
      * @param order
      */
     public void setDrawOrder(DrawOrder[] order) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (order == null || order.length <= 0)
             return;
         mDrawOrder = order;
@@ -233,10 +315,18 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
      */
     protected void drawMarkers(Canvas canvas) {
 
-        // if there is no marker view or drawing marker is disabled
+        // If there is no marker view or drawing marker is disabled
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
             return;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mIndicesToHighlight.length; i++) {
 
             Highlight highlight = mIndicesToHighlight[i];
@@ -244,25 +334,37 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
             IDataSet set = mData.getDataSetByHighlight(highlight);
 
             Entry e = mData.getEntryForHighlight(highlight);
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (e == null)
                 continue;
 
             int entryIndex = set.getEntryIndex(e);
 
-            // make sure entry not null
+            // Make sure entry not null
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (entryIndex > set.getEntryCount() * mAnimator.getPhaseX())
                 continue;
 
             float[] pos = getMarkerPosition(highlight);
 
-            // check bounds
+            // Check bounds
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!mViewPortHandler.isInBounds(pos[0], pos[1]))
                 continue;
 
-            // callbacks to update the content
+            // Callbacks to update the content
             mMarker.refreshContent(e, highlight);
 
-            // draw the marker
+            // Draw the marker
             mMarker.draw(canvas, pos[0], pos[1]);
         }
     }

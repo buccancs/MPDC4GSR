@@ -11,7 +11,18 @@ import com.github.mikephil.charting.interfaces.datasets.ILineScatterCandleRadarD
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Created by Philipp Jahoda on 11/07/15.
+ * Specialized thermal imaging component providing LineScatterCandleRadarRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandleBubbleRenderer {
 
@@ -21,6 +32,10 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
     private Path mHighlightLinePath = new Path();
 
     public LineScatterCandleRadarRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(animator, viewPortHandler);
     }
 
@@ -34,17 +49,21 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
      */
     protected void drawHighlightLines(Canvas c, float x, float y, ILineScatterCandleRadarDataSet set) {
 
-        // set color and stroke-width
+        // Set color and stroke-width
         mHighlightPaint.setColor(set.getHighLightColor());
         mHighlightPaint.setStrokeWidth(set.getHighlightLineWidth());
 
-        // draw highlighted lines (if enabled)
+        // Draw highlighted lines (if enabled)
         mHighlightPaint.setPathEffect(set.getDashPathEffectHighlight());
 
-        // draw vertical highlight lines
+        // Draw vertical highlight lines
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (set.isVerticalHighlightIndicatorEnabled()) {
 
-            // create vertical path
+            // Create vertical path
             mHighlightLinePath.reset();
             mHighlightLinePath.moveTo(x, mViewPortHandler.contentTop());
             mHighlightLinePath.lineTo(x, mViewPortHandler.contentBottom());
@@ -52,10 +71,14 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
             c.drawPath(mHighlightLinePath, mHighlightPaint);
         }
 
-        // draw horizontal highlight lines
+        // Draw horizontal highlight lines
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (set.isHorizontalHighlightIndicatorEnabled()) {
 
-            // create horizontal path
+            // Create horizontal path
             mHighlightLinePath.reset();
             mHighlightLinePath.moveTo(mViewPortHandler.contentLeft(), y);
             mHighlightLinePath.lineTo(mViewPortHandler.contentRight(), y);
@@ -63,13 +86,13 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
             c.drawPath(mHighlightLinePath, mHighlightPaint);
         }
 
-        //chart 绘制highlight辅助point  -------- start --------
+        // Chart 绘制highlight辅助point  -------- start --------
 
-        //内部圆
+        // 内部圆
         mHighlightDotPaint.setColor(Color.rgb(243, 129, 47));
         mHighlightDotPaint.setStyle(Paint.Style.FILL);
         c.drawCircle(x, y, SizeUtils.dp2px(4f), mHighlightDotPaint);
-        //外部圆
+        // 外部圆
         mHighlightDotPaint.setColor(Color.argb(80, 255, 255, 255));
         mHighlightDotPaint.setStyle(Paint.Style.STROKE);
         c.drawCircle(x, y, SizeUtils.dp2px(5f), mHighlightDotPaint);

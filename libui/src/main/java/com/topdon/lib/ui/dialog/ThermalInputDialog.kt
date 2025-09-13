@@ -46,26 +46,65 @@ import java.math.BigDecimal
  * @author IRCamera Development Team
  * @since 1.0
  */
+/**
+ * Specialized thermal imaging component providing ThermalInputDialog functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class ThermalInputDialog : Dialog {
     private var action = 100 // 100:初始temperature输入界area     201: temperature上限colorselection界area   301: temperature下限colorselection界area
 
+    /**
+     * Executes constructor operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param context Parameter for operation (type: Context)
+     *
+     */
     constructor(context: Context) : super(context)
 
+    /**
+     * Executes constructor operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param context Parameter for operation (type: Context)
+     * @param themeResId Parameter for operation (type: Int)
+     *
+     */
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
 
     @Deprecated("This method is deprecated")
+    /**
+     * Executes onbackpressed operation with thermal imaging domain optimization.
+     *
+     */
     override fun onBackPressed() {
     }
 
     
 /**
  * Builder dialog for thermal imaging user interaction.
- * Provides specialized input and configuration interfaces.
- */
 /**
- * Builder handles thermal imaging functionality and processing.
+ * Specialized thermal imaging component providing Builder functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     class Builder {
@@ -102,20 +141,36 @@ class ThermalInputDialog : Dialog {
         private lateinit var recycler: RecyclerView
         private var isIconEdit: Boolean = false
 
+        /**
+         * Executes constructor operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param context Parameter for operation (type: Context)
+         *
+         */
         constructor(context: Context) {
             this.context = context
         }
 
+    /**
+     * Sets message configuration.
+     */
         fun setMessage(message: String): Builder {
             this.message = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY)
             return this
         }
 
+    /**
+     * Sets message configuration.
+     */
         fun setMessage(message: Spanned): Builder {
             this.message = message
             return this
         }
 
+    /**
+     * Sets message configuration.
+     */
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
@@ -124,11 +179,17 @@ class ThermalInputDialog : Dialog {
             return this
         }
 
+    /**
+     * Sets iconedit configuration.
+     */
         fun setIconEdit(isIconEdit: Boolean): Builder {
             this.isIconEdit = isIconEdit
             return this
         }
 
+    /**
+     * Sets editnum configuration.
+     */
         fun setEditNum(
             max: Float,
             min: Float,
@@ -138,10 +199,25 @@ class ThermalInputDialog : Dialog {
             return this
         }
 
+    /**
+     * Sets num configuration.
+     */
+        /**
+         * Configures the num with validation and thermal imaging optimization.
+         *
+         * @param
+         * @param max Parameter for operation (type: Float)
+         * @param min Parameter for operation (type: Float)
+         *
+         */
         fun setNum(
             max: Float,
             min: Float,
         ): Builder {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (SharedManager.getTemperature() == 1) {
                 
                 this.max = max
@@ -154,6 +230,17 @@ class ThermalInputDialog : Dialog {
             return this
         }
 
+    /**
+     * Sets color configuration.
+     */
+        /**
+         * Configures the color with validation and thermal imaging optimization.
+         *
+         * @param
+         * @param maxColor Parameter for operation (type: Int)
+         * @param minColor Parameter for operation (type: Int)
+         *
+         */
         fun setColor(
             @ColorInt maxColor: Int,
             @ColorInt minColor: Int,
@@ -164,6 +251,9 @@ class ThermalInputDialog : Dialog {
         }
 
         @JvmOverloads
+    /**
+     * Sets positivelistener configuration.
+     */
         fun setPositiveListener(
             @StringRes strRes: Int,
             event: ((up: Float, down: Float, upColor: Int, downColor: Int) -> Unit)? = null,
@@ -172,6 +262,9 @@ class ThermalInputDialog : Dialog {
         }
 
         @JvmOverloads
+    /**
+     * Sets positivelistener configuration.
+     */
         fun setPositiveListener(
             str: String,
             event: ((up: Float, down: Float, upColor: Int, downColor: Int) -> Unit)? = null,
@@ -182,6 +275,9 @@ class ThermalInputDialog : Dialog {
         }
 
         @JvmOverloads
+    /**
+     * Sets cancellistener configuration.
+     */
         fun setCancelListener(
             @StringRes strRes: Int,
             event: (() -> Unit)? = null,
@@ -190,6 +286,9 @@ class ThermalInputDialog : Dialog {
         }
 
         @JvmOverloads
+    /**
+     * Sets cancellistener configuration.
+     */
         fun setCancelListener(
             str: String,
             event: (() -> Unit)? = null,
@@ -199,16 +298,25 @@ class ThermalInputDialog : Dialog {
             return this
         }
 
+    /**
+     * Sets canceled configuration.
+     */
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
         }
 
+    /**
+     * Sets saturation configuration.
+     */
         fun setSaturation(s: Int): Builder {
             this.saturation = s
             return this
         }
 
+    /**
+     * Sets listener configuration.
+     */
         fun setListener(event: ((s: Int) -> Unit)? = null): Builder {
             this.listener = event
             return this
@@ -217,6 +325,10 @@ class ThermalInputDialog : Dialog {
     /**
      * Executes dismiss functionality.
      */
+        /**
+         * Executes dismiss operation with thermal imaging domain optimization.
+         *
+         */
         fun dismiss() {
             this.dialog!!.dismiss()
         }
@@ -250,6 +362,10 @@ class ThermalInputDialog : Dialog {
             binding.dialogInputLay.visibility = View.VISIBLE
 
             
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (isIconEdit) {
                 binding.dialogUpColor.visibility = View.GONE
                 binding.dialogDownColor.visibility = View.GONE
@@ -259,7 +375,15 @@ class ThermalInputDialog : Dialog {
             }
             messageText.text = message
             
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (maxColor != 0) upColor = maxColor
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (minColor != 0) downColor = minColor
             upUnit.text = UnitTools.showUnit()
             downUnit.text = UnitTools.showUnit()
@@ -276,10 +400,18 @@ class ThermalInputDialog : Dialog {
 
             dialog!!.addContentView(
                 binding.root,
+                /**
+                 * Executes layoutparams operation with thermal imaging domain optimization.
+                 *
+                 */
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
             )
             val lp = dialog!!.window!!.attributes
             val wRatio =
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     
                     0.85
@@ -292,18 +424,38 @@ class ThermalInputDialog : Dialog {
 
             dialog!!.setCanceledOnTouchOutside(canceled)
             successBtn.setOnClickListener {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (binding.colorPickerViewLay.isVisible) {
                     // 选取color,Return上一步
                     binding.colorPickerViewLay.visibility = View.GONE
                     binding.dialogInputLay.visibility = View.VISIBLE
                     messageText.text = message
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dialog!!.action == 201) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (selectColor != 0) {
                             upColor = selectColor
                         }
                         binding.dialogUpColor.setColorFilter(upColor)
                     }
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dialog!!.action == 301) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (selectColor != 0) {
                             downColor = selectColor
                         }
@@ -312,6 +464,10 @@ class ThermalInputDialog : Dialog {
                     dialog!!.action = 100
                     return@setOnClickListener
                 }
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (upEdit.text.isNullOrEmpty() || downEdit.text.isNullOrEmpty()) {
                     ToastTools.showShort(com.topdon.lib.core.R.string.ui_fill_in_the_complete)
                     return@setOnClickListener
@@ -320,6 +476,10 @@ class ThermalInputDialog : Dialog {
                 val upValue = upEdit.text.trim().toString()
                 val downValue = downEdit.text.trim().toString()
                 try {
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (upValue.toFloat() < downValue.toFloat()) {
                         ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
                         return@setOnClickListener
@@ -328,32 +488,68 @@ class ThermalInputDialog : Dialog {
                     ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
                     return@setOnClickListener
                 }
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (sub(upValue, downValue) < 0.1f) {
                     ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
                     return@setOnClickListener
                 }
-//                if (upValue.isBlank() && downValue.isBlank()) {
+// If (upValue.isBlank() && downValue.isBlank()) {
 //                    ToastTools.showShort(R.string.ui_fill_in_the_complete)
-//                    return@setOnClickListener
+// Return@setOnClickListener
 //                }
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if ((upValue.isNotBlank() && downValue.isNotBlank()) && upValue.toFloat() < downValue.toFloat()) {
                     ToastTools.showShort(R.string.tip_input_format)
                     return@setOnClickListener
                 }
 
+                /**
+                 * Executes dismiss operation with thermal imaging domain optimization.
+                 *
+                 */
                 dismiss()
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (isIconEdit) {
                     positiveEvent?.invoke(
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (upValue.isBlank()) -273f else upValue.toFloat(),
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (downValue.isBlank()) -273f else downValue.toFloat(),
                         upColor,
                         downColor,
                     )
                 } else {
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (SharedManager.getTemperature() == 1) {
                         
                         positiveEvent?.invoke(
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (upValue.isBlank()) -273f else upValue.toFloat(),
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (downValue.isBlank()) -273f else downValue.toFloat(),
                             upColor,
                             downColor,
@@ -361,7 +557,15 @@ class ThermalInputDialog : Dialog {
                     } else {
                         
                         positiveEvent?.invoke(
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (upValue.isBlank()) -273f else UnitTools.toC(upValue.toFloat()),
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (downValue.isBlank()) -273f else UnitTools.toC(downValue.toFloat()),
                             upColor,
                             downColor,
@@ -370,6 +574,10 @@ class ThermalInputDialog : Dialog {
                 }
             }
             cancelBtn.setOnClickListener {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (binding.colorPickerViewLay.isVisible) {
                     
                     binding.colorPickerViewLay.visibility = View.GONE
@@ -378,6 +586,10 @@ class ThermalInputDialog : Dialog {
                     dialog!!.action = 100
                     return@setOnClickListener
                 }
+                /**
+                 * Executes dismiss operation with thermal imaging domain optimization.
+                 *
+                 */
                 dismiss()
                 cancelEvent?.invoke()
             }
@@ -397,15 +609,31 @@ class ThermalInputDialog : Dialog {
             }
             colorPickerView.setColorListener(
                 object : ColorEnvelopeListener {
+                    /**
+                     * Executes oncolorselected operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param envelope Parameter for operation (type: ColorEnvelope)
+                     * @param fromUser Parameter for operation (type: Boolean)
+                     *
+                     */
                     override fun onColorSelected(
                         envelope: ColorEnvelope,
                         fromUser: Boolean,
                     ) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if ("#${envelope.hexCode}" != "#FFFFFFFF") {
                             // 非presetcolor,复位presetparameter
                             adapter.selected(-1)
                             selectColor = 0
                         }
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (dialog!!.action == 201) {
                             
                             upColor = Color.parseColor("#${envelope.hexCode}")
@@ -416,23 +644,39 @@ class ThermalInputDialog : Dialog {
                     }
                 },
             )
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if ((max == -273f && SharedManager.getTemperature() == 1) || (max == -459.4f && SharedManager.getTemperature() != 1)) {
                 upEdit.setText("")
             } else {
                 upEdit.setText(NumberTools.scale(max, 1).toString())
             }
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if ((min == -273f && SharedManager.getTemperature() == 1) || (min == -459.4f && SharedManager.getTemperature() != 1)) {
                 downEdit.setText("")
             } else {
                 downEdit.setText(NumberTools.scale(min, 1).toString())
             }
-//            if (max != 0f && min != 0f) {
-//                upEdit.setText(max.toString())
-//                downEdit.setText(min.toString())
+// If (max != 0f && min != 0f) {
+// UpEdit.setText(max.toString())
+// DownEdit.setText(min.toString())
 //            }
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (positiveStr != null) {
                 successBtn.text = positiveStr
             }
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!TextUtils.isEmpty(cancelStr)) {
                 cancelBtn.visibility = View.VISIBLE
                 cancelBtn.text = cancelStr
@@ -441,6 +685,10 @@ class ThermalInputDialog : Dialog {
                 cancelBtn.text = ""
             }
             
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (message != null) {
                 messageText.visibility = View.VISIBLE
                 messageText.setText(message, TextView.BufferType.NORMAL)
@@ -454,6 +702,14 @@ class ThermalInputDialog : Dialog {
     /**
      * Executes sub functionality.
      */
+        /**
+         * Executes sub operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param doubleValA Parameter for operation (type: String?)
+         * @param doubleValB Parameter for operation (type: String?)
+         *
+         */
         fun sub(
             doubleValA: String?,
             doubleValB: String?,

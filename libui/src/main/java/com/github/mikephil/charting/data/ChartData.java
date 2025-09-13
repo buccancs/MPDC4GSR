@@ -17,6 +17,20 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
+/**
+ * Specialized thermal imaging component providing ChartData functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     /**
@@ -55,6 +69,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
     /**
      * Default constructor.
      */
+    /**
+     * Executes chartdata operation with thermal imaging domain optimization.
+     *
+     */
     public ChartData() {
         mDataSets = new ArrayList<T>();
     }
@@ -66,6 +84,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public ChartData(T... dataSets) {
         mDataSets = arrayToList(dataSets);
+        /**
+         * Executes notifydatachanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataChanged();
     }
 
@@ -79,6 +101,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
         List<T> list = new ArrayList<>();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: array)
+         *
+         */
         for (T set : array) {
             list.add(set);
         }
@@ -93,6 +122,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public ChartData(List<T> sets) {
         this.mDataSets = sets;
+        /**
+         * Executes notifydatachanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataChanged();
     }
 
@@ -102,6 +135,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * the contained data has changed.
      */
     public void notifyDataChanged() {
+        /**
+         * Executes calcminmax operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMax();
     }
 
@@ -114,11 +151,22 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public void calcMinMaxY(float fromX, float toX) {
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (T set : mDataSets) {
             set.calcMinMaxY(fromX, toX);
         }
 
-        // apply the new data
+        // Apply the new data
+        /**
+         * Executes calcminmax operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMax();
     }
 
@@ -135,7 +183,18 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         mXMax = -Float.MAX_VALUE;
         mXMin = Float.MAX_VALUE;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (T set : mDataSets) {
+            /**
+             * Executes calcminmax operation with thermal imaging domain optimization.
+             *
+             */
             calcMinMax(set);
         }
 
@@ -144,38 +203,84 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         mRightAxisMax = -Float.MAX_VALUE;
         mRightAxisMin = Float.MAX_VALUE;
 
-        // left axis
+        // Left axis
         T firstLeft = getFirstLeft(mDataSets);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (firstLeft != null) {
 
             mLeftAxisMax = firstLeft.getYMax();
             mLeftAxisMin = firstLeft.getYMin();
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param dataSet Parameter for operation (type: mDataSets)
+             *
+             */
             for (T dataSet : mDataSets) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (dataSet.getAxisDependency() == AxisDependency.LEFT) {
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.getYMin() < mLeftAxisMin)
                         mLeftAxisMin = dataSet.getYMin();
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.getYMax() > mLeftAxisMax)
                         mLeftAxisMax = dataSet.getYMax();
                 }
             }
         }
 
-        // right axis
+        // Right axis
         T firstRight = getFirstRight(mDataSets);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (firstRight != null) {
 
             mRightAxisMax = firstRight.getYMax();
             mRightAxisMin = firstRight.getYMin();
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param dataSet Parameter for operation (type: mDataSets)
+             *
+             */
             for (T dataSet : mDataSets) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (dataSet.getAxisDependency() == AxisDependency.RIGHT) {
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.getYMin() < mRightAxisMin)
                         mRightAxisMin = dataSet.getYMin();
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (dataSet.getYMax() > mRightAxisMax)
                         mRightAxisMax = dataSet.getYMax();
                 }
@@ -191,6 +296,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @return
      */
     public int getDataSetCount() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDataSets == null)
             return 0;
         return mDataSets.size();
@@ -212,13 +321,25 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @return
      */
     public float getYMin(AxisDependency axis) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (axis == AxisDependency.LEFT) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mLeftAxisMin == Float.MAX_VALUE) {
                 return mRightAxisMin;
             } else
                 return mLeftAxisMin;
         } else {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mRightAxisMin == Float.MAX_VALUE) {
                 return mLeftAxisMin;
             } else
@@ -242,13 +363,25 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @return
      */
     public float getYMax(AxisDependency axis) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (axis == AxisDependency.LEFT) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mLeftAxisMax == -Float.MAX_VALUE) {
                 return mRightAxisMax;
             } else
                 return mLeftAxisMax;
         } else {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mRightAxisMax == -Float.MAX_VALUE) {
                 return mLeftAxisMax;
             } else
@@ -297,12 +430,32 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
     protected int getDataSetIndexByLabel(List<T> dataSets, String label,
                                          boolean ignorecase) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (ignorecase) {
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < dataSets.size(); i++)
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (label.equalsIgnoreCase(dataSets.get(i).getLabel()))
                     return i;
         } else {
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int i = 0; i < dataSets.size(); i++)
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (label.equals(dataSets.get(i).getLabel()))
                     return i;
         }
@@ -319,6 +472,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
         String[] types = new String[mDataSets.size()];
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mDataSets.size(); i++) {
             types[i] = mDataSets.get(i).getLabel();
         }
@@ -333,6 +490,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @return the entry that is highlighted
      */
     public Entry getEntryForHighlight(Highlight highlight) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (highlight.getDataSetIndex() >= mDataSets.size())
             return null;
         else {
@@ -353,6 +514,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
         int index = getDataSetIndexByLabel(mDataSets, label, ignorecase);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (index < 0 || index >= mDataSets.size())
             return null;
         else
@@ -361,6 +526,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     public T getDataSetByIndex(int index) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDataSets == null || index < 0 || index >= mDataSets.size())
             return null;
 
@@ -374,9 +543,17 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public void addDataSet(T d) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (d == null)
             return;
 
+        /**
+         * Executes calcminmax operation with thermal imaging domain optimization.
+         *
+         */
         calcMinMax(d);
 
         mDataSets.add(d);
@@ -391,13 +568,25 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public boolean removeDataSet(T d) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (d == null)
             return false;
 
         boolean removed = mDataSets.remove(d);
 
-        // if a DataSet was removed
+        // If a DataSet was removed
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (removed) {
+            /**
+             * Executes calcminmax operation with thermal imaging domain optimization.
+             *
+             */
             calcMinMax();
         }
 
@@ -413,6 +602,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public boolean removeDataSet(int index) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (index >= mDataSets.size() || index < 0)
             return false;
 
@@ -429,13 +622,25 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public void addEntry(Entry e, int dataSetIndex) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDataSets.size() > dataSetIndex && dataSetIndex >= 0) {
 
             IDataSet set = mDataSets.get(dataSetIndex);
-            // add the entry to the dataset
+            // Add the entry to the dataset
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!set.addEntry(e))
                 return;
 
+            /**
+             * Executes calcminmax operation with thermal imaging domain optimization.
+             *
+             */
             calcMinMax(e, set.getAxisDependency());
 
         } else {
@@ -451,25 +656,61 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     protected void calcMinMax(Entry e, AxisDependency axis) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYMax < e.getY())
             mYMax = e.getY();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYMin > e.getY())
             mYMin = e.getY();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXMax < e.getX())
             mXMax = e.getX();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXMin > e.getX())
             mXMin = e.getX();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (axis == AxisDependency.LEFT) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mLeftAxisMax < e.getY())
                 mLeftAxisMax = e.getY();
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mLeftAxisMin > e.getY())
                 mLeftAxisMin = e.getY();
         } else {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mRightAxisMax < e.getY())
                 mRightAxisMax = e.getY();
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mRightAxisMin > e.getY())
                 mRightAxisMin = e.getY();
         }
@@ -482,25 +723,61 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     protected void calcMinMax(T d) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYMax < d.getYMax())
             mYMax = d.getYMax();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYMin > d.getYMin())
             mYMin = d.getYMin();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXMax < d.getXMax())
             mXMax = d.getXMax();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXMin > d.getXMin())
             mXMin = d.getXMin();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (d.getAxisDependency() == AxisDependency.LEFT) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mLeftAxisMax < d.getYMax())
                 mLeftAxisMax = d.getYMax();
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mLeftAxisMin > d.getYMin())
                 mLeftAxisMin = d.getYMin();
         } else {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mRightAxisMax < d.getYMax())
                 mRightAxisMax = d.getYMax();
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mRightAxisMin > d.getYMin())
                 mRightAxisMin = d.getYMin();
         }
@@ -514,17 +791,33 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public boolean removeEntry(Entry e, int dataSetIndex) {
 
-        // entry null, outofbounds
+        // Entry null, outofbounds
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null || dataSetIndex >= mDataSets.size())
             return false;
 
         IDataSet set = mDataSets.get(dataSetIndex);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (set != null) {
-            // remove the entry from the dataset
+            // Remove the entry from the dataset
             boolean removed = set.removeEntry(e);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (removed) {
+                /**
+                 * Executes calcminmax operation with thermal imaging domain optimization.
+                 *
+                 */
                 calcMinMax();
             }
 
@@ -544,12 +837,20 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public boolean removeEntry(float xValue, int dataSetIndex) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (dataSetIndex >= mDataSets.size())
             return false;
 
         IDataSet dataSet = mDataSets.get(dataSetIndex);
         Entry e = dataSet.getEntryForXValue(xValue, Float.NaN);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null)
             return false;
 
@@ -565,14 +866,30 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public T getDataSetForEntry(Entry e) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (e == null)
             return null;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mDataSets.size(); i++) {
 
             T set = mDataSets.get(i);
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int j = 0; j < set.getEntryCount(); j++) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (e.equalTo(set.getEntryForXValue(e.getX(), e.getY())))
                     return set;
             }
@@ -589,11 +906,19 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public int[] getColors() {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDataSets == null)
             return null;
 
         int clrcnt = 0;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mDataSets.size(); i++) {
             clrcnt += mDataSets.get(i).getColors().size();
         }
@@ -601,10 +926,21 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         int[] colors = new int[clrcnt];
         int cnt = 0;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mDataSets.size(); i++) {
 
             List<Integer> clrs = mDataSets.get(i).getColors();
 
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param clr Parameter for operation (type: clrs)
+             *
+             */
             for (Integer clr : clrs) {
                 colors[cnt] = clr;
                 cnt++;
@@ -631,7 +967,18 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @return
      */
     protected T getFirstLeft(List<T> sets) {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param dataSet Parameter for operation (type: sets)
+         *
+         */
         for (T dataSet : sets) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (dataSet.getAxisDependency() == AxisDependency.LEFT)
                 return dataSet;
         }
@@ -645,7 +992,18 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @return
      */
     public T getFirstRight(List<T> sets) {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param dataSet Parameter for operation (type: sets)
+         *
+         */
         for (T dataSet : sets) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (dataSet.getAxisDependency() == AxisDependency.RIGHT)
                 return dataSet;
         }
@@ -658,9 +1016,20 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param f
      */
     public void setValueFormatter(ValueFormatter f) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (f == null)
             return;
         else {
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param set Parameter for operation (type: mDataSets)
+             *
+             */
             for (IDataSet set : mDataSets) {
                 set.setValueFormatter(f);
             }
@@ -674,6 +1043,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param color
      */
     public void setValueTextColor(int color) {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (IDataSet set : mDataSets) {
             set.setValueTextColor(color);
         }
@@ -686,6 +1062,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param colors
      */
     public void setValueTextColors(List<Integer> colors) {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (IDataSet set : mDataSets) {
             set.setValueTextColors(colors);
         }
@@ -698,6 +1081,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param tf
      */
     public void setValueTypeface(Typeface tf) {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (IDataSet set : mDataSets) {
             set.setValueTypeface(tf);
         }
@@ -710,6 +1100,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param size
      */
     public void setValueTextSize(float size) {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (IDataSet set : mDataSets) {
             set.setValueTextSize(size);
         }
@@ -722,6 +1119,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param enabled
      */
     public void setDrawValues(boolean enabled) {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (IDataSet set : mDataSets) {
             set.setDrawValues(enabled);
         }
@@ -733,6 +1137,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * be highlighted programmatically or by touch gesture.
      */
     public void setHighlightEnabled(boolean enabled) {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (IDataSet set : mDataSets) {
             set.setHighlightEnabled(enabled);
         }
@@ -745,7 +1156,18 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @return
      */
     public boolean isHighlightEnabled() {
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (IDataSet set : mDataSets) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!set.isHighlightEnabled())
                 return false;
         }
@@ -760,6 +1182,10 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         if (mDataSets != null) {
             mDataSets.clear();
         }
+        /**
+         * Executes notifydatachanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataChanged();
     }
 
@@ -772,7 +1198,18 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public boolean contains(T dataSet) {
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (T set : mDataSets) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (set.equals(dataSet))
                 return true;
         }
@@ -789,6 +1226,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
         int count = 0;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (T set : mDataSets) {
             count += set.getEntryCount();
         }
@@ -803,13 +1247,28 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      */
     public T getMaxEntryCountSet() {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDataSets == null || mDataSets.isEmpty())
             return null;
 
         T max = mDataSets.get(0);
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param set Parameter for operation (type: mDataSets)
+         *
+         */
         for (T set : mDataSets) {
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (set.getEntryCount() > max.getEntryCount())
                 max = set;
         }

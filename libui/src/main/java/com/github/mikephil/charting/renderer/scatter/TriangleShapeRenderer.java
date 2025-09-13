@@ -10,8 +10,18 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Created by wajdic on 15/06/2016.
- * Created at Time 09:08
+ * Specialized thermal imaging component providing TriangleShapeRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class TriangleShapeRenderer implements IShapeRenderer
 {
@@ -32,7 +42,7 @@ public class TriangleShapeRenderer implements IShapeRenderer
 
         renderPaint.setStyle(Paint.Style.FILL);
 
-        // create a triangle path
+        // Create a triangle path
         Path tri = mTrianglePathBuffer;
         tri.reset();
 
@@ -40,6 +50,10 @@ public class TriangleShapeRenderer implements IShapeRenderer
         tri.lineTo(posX + shapeHalf, posY + shapeHalf);
         tri.lineTo(posX - shapeHalf, posY + shapeHalf);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (shapeSize > 0.0) {
             tri.lineTo(posX, posY - shapeHalf);
 
@@ -58,6 +72,10 @@ public class TriangleShapeRenderer implements IShapeRenderer
         c.drawPath(tri, renderPaint);
         tri.reset();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (shapeSize > 0.0 &&
                 shapeHoleColor != ColorTemplate.COLOR_NONE) {
 

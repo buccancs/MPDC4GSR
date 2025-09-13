@@ -26,6 +26,20 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  *
  * @author Philipp Jahoda
  */
+/**
+ * Specialized thermal imaging component providing BarLineChartTouchListener functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBase<? extends BarLineScatterCandleBubbleData<?
         extends IBarLineScatterCandleBubbleDataSet<? extends Entry>>>> {
 
@@ -82,8 +96,16 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
      * @param dragTriggerDistance the minimum movement distance that will be interpreted as a "drag" gesture in dp (3dp equals
      *                            to about 9 pixels on a 5.5" FHD screen)
      */
+    /**
+     * Executes barlinecharttouchlistener operation with thermal imaging domain optimization.
+     *
+     */
     public BarLineChartTouchListener(BarLineChartBase<? extends BarLineScatterCandleBubbleData<? extends
             IBarLineScatterCandleBubbleDataSet<? extends Entry>>> chart, Matrix touchMatrix, float dragTriggerDistance) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(chart);
         this.mMatrix = touchMatrix;
 
@@ -96,60 +118,116 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
         mVelocityTracker.addMovement(event);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mVelocityTracker != null) {
                 mVelocityTracker.recycle();
                 mVelocityTracker = null;
             }
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mTouchMode == NONE) {
             mGestureDetector.onTouchEvent(event);
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mChart.isDragEnabled() && (!mChart.isScaleXEnabled() && !mChart.isScaleYEnabled()))
             return true;
 
         // Handle touch events here...
+        /**
+         * Executes switch operation with thermal imaging domain optimization.
+         *
+         */
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
             case MotionEvent.ACTION_DOWN:
 
+                /**
+                 * Executes startaction operation with thermal imaging domain optimization.
+                 *
+                 */
                 startAction(event);
 
+                /**
+                 * Executes stopdeceleration operation with thermal imaging domain optimization.
+                 *
+                 */
                 stopDeceleration();
 
+                /**
+                 * Executes savetouchstart operation with thermal imaging domain optimization.
+                 *
+                 */
                 saveTouchStart(event);
 
                 break;
 
             case MotionEvent.ACTION_POINTER_DOWN:
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (event.getPointerCount() >= 2) {
 
                     mChart.disableScroll();
 
+                    /**
+                     * Executes savetouchstart operation with thermal imaging domain optimization.
+                     *
+                     */
                     saveTouchStart(event);
 
-                    // get the distance between the pointers on the x-axis
+                    // Get the distance between the pointers on the x-axis
                     mSavedXDist = getXDist(event);
 
-                    // get the distance between the pointers on the y-axis
+                    // Get the distance between the pointers on the y-axis
                     mSavedYDist = getYDist(event);
 
-                    // get the total distance between the pointers
+                    // Get the total distance between the pointers
                     mSavedDist = spacing(event);
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (mSavedDist > 10f) {
 
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (mChart.isPinchZoomEnabled()) {
                             mTouchMode = PINCH_ZOOM;
                         } else {
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (mChart.isScaleXEnabled() != mChart.isScaleYEnabled()) {
                                 mTouchMode = mChart.isScaleXEnabled() ? X_ZOOM : Y_ZOOM;
                             } else {
@@ -158,13 +236,21 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                         }
                     }
 
-                    // determine the touch-pointer center
+                    // Determine the touch-pointer center
+                    /**
+                     * Executes midpoint operation with thermal imaging domain optimization.
+                     *
+                     */
                     midPoint(mTouchPointCenter, event);
                 }
                 break;
 
             case MotionEvent.ACTION_MOVE:
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (mTouchMode == DRAG) {
 
                     mChart.disableScroll();
@@ -172,30 +258,54 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     float x = mChart.isDragXEnabled() ? event.getX() - mTouchStartPoint.x : 0.f;
                     float y = mChart.isDragYEnabled() ? event.getY() - mTouchStartPoint.y : 0.f;
 
+                    /**
+                     * Executes performdrag operation with thermal imaging domain optimization.
+                     *
+                     */
                     performDrag(event, x, y);
 
                 } else if (mTouchMode == X_ZOOM || mTouchMode == Y_ZOOM || mTouchMode == PINCH_ZOOM) {
 
                     mChart.disableScroll();
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (mChart.isScaleXEnabled() || mChart.isScaleYEnabled())
+                        /**
+                         * Executes performzoom operation with thermal imaging domain optimization.
+                         *
+                         */
                         performZoom(event);
 
                 } else if (mTouchMode == NONE
                         && Math.abs(distance(event.getX(), mTouchStartPoint.x, event.getY(),
                         mTouchStartPoint.y)) > mDragTriggerDist) {
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (mChart.isDragEnabled()) {
 
                         boolean shouldPan = !mChart.isFullyZoomedOut() ||
                                 !mChart.hasNoDragOffset();
 
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (shouldPan) {
 
                             float distanceX = Math.abs(event.getX() - mTouchStartPoint.x);
                             float distanceY = Math.abs(event.getY() - mTouchStartPoint.y);
 
                             // Disable dragging in a direction that's disallowed
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if ((mChart.isDragXEnabled() || distanceY >= distanceX) &&
                                     (mChart.isDragYEnabled() || distanceY <= distanceX)) {
 
@@ -205,10 +315,22 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
                         } else {
 
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (mChart.isHighlightPerDragEnabled()) {
                                 mLastGesture = ChartGesture.DRAG;
 
+                                /**
+                                 * Executes if operation with thermal imaging domain optimization.
+                                 *
+                                 */
                                 if (mChart.isHighlightPerDragEnabled())
+                                    /**
+                                     * Executes performhighlightdrag operation with thermal imaging domain optimization.
+                                     *
+                                     */
                                     performHighlightDrag(event);
                             }
                         }
@@ -226,11 +348,23 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 final float velocityY = velocityTracker.getYVelocity(pointerId);
                 final float velocityX = velocityTracker.getXVelocity(pointerId);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (Math.abs(velocityX) > Utils.getMinimumFlingVelocity() ||
                         Math.abs(velocityY) > Utils.getMinimumFlingVelocity()) {
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (mTouchMode == DRAG && mChart.isDragDecelerationEnabled()) {
 
+                        /**
+                         * Executes stopdeceleration operation with thermal imaging domain optimization.
+                         *
+                         */
                         stopDeceleration();
 
                         mDecelerationLastTime = AnimationUtils.currentAnimationTimeMillis();
@@ -246,13 +380,17 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     }
                 }
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (mTouchMode == X_ZOOM ||
                         mTouchMode == Y_ZOOM ||
                         mTouchMode == PINCH_ZOOM ||
                         mTouchMode == POST_ZOOM) {
 
                     // Range might have changed, which means that Y-axis labels
-                    // could have changed in size, affecting Y-axis size.
+                    // Could have changed in size, affecting Y-axis size.
                     // So we need to recalculate offsets.
                     mChart.calculateOffsets();
                     mChart.postInvalidate();
@@ -261,11 +399,19 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 mTouchMode = NONE;
                 mChart.enableScroll();
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (mVelocityTracker != null) {
                     mVelocityTracker.recycle();
                     mVelocityTracker = null;
                 }
 
+                /**
+                 * Executes endaction operation with thermal imaging domain optimization.
+                 *
+                 */
                 endAction(event);
 
                 break;
@@ -278,14 +424,18 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
             case MotionEvent.ACTION_CANCEL:
 
                 mTouchMode = NONE;
+                /**
+                 * Executes endaction operation with thermal imaging domain optimization.
+                 *
+                 */
                 endAction(event);
                 break;
         }
 
-        // perform the transformation, update the chart
+        // Perform the transformation, update the chart
         mMatrix = mChart.getViewPortHandler().refresh(mMatrix, mChart, true);
 
-        return true; // indicate event was handled
+        return true; // Indicate event was handled
     }
 
     /**
@@ -320,10 +470,18 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
-        // check if axis is inverted
+        // Check if axis is inverted
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (inverted()) {
 
-            // if there is an inverted horizontalbarchart
+            // If there is an inverted horizontalbarchart
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mChart instanceof HorizontalBarChart) {
                 distanceX = -distanceX;
             } else {
@@ -333,6 +491,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         mMatrix.postTranslate(distanceX, distanceY);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (l != null)
             l.onChartTranslate(event, distanceX, distanceY);
     }
@@ -344,25 +506,37 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
      */
     private void performZoom(MotionEvent event) {
 
-        if (event.getPointerCount() >= 2) { // two finger zoom
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
+        if (event.getPointerCount() >= 2) { // Two finger zoom
 
             OnChartGestureListener l = mChart.getOnChartGestureListener();
 
-            // get the distance between the pointers of the touch event
+            // Get the distance between the pointers of the touch event
             float totalDist = spacing(event);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (totalDist > mMinScalePointerDistance) {
 
-                // get the translation
+                // Get the translation
                 MPPointF t = getTrans(mTouchPointCenter.x, mTouchPointCenter.y);
                 ViewPortHandler h = mChart.getViewPortHandler();
 
-                // take actions depending on the activated touch mode
+                // Take actions depending on the activated touch mode
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (mTouchMode == PINCH_ZOOM) {
 
                     mLastGesture = ChartGesture.PINCH_ZOOM;
 
-                    float scale = totalDist / mSavedDist; // total scale
+                    float scale = totalDist / mSavedDist; // Total scale
 
                     boolean isZoomingOut = (scale < 1);
 
@@ -377,11 +551,19 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     float scaleX = (mChart.isScaleXEnabled()) ? scale : 1f;
                     float scaleY = (mChart.isScaleYEnabled()) ? scale : 1f;
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (canZoomMoreY || canZoomMoreX) {
 
                         mMatrix.set(mSavedMatrix);
                         mMatrix.postScale(scaleX, scaleY, t.x, t.y);
 
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (l != null)
                             l.onChartScale(event, scaleX, scaleY);
                     }
@@ -391,18 +573,26 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     mLastGesture = ChartGesture.X_ZOOM;
 
                     float xDist = getXDist(event);
-                    float scaleX = xDist / mSavedXDist; // x-axis scale
+                    float scaleX = xDist / mSavedXDist; // X-axis scale
 
                     boolean isZoomingOut = (scaleX < 1);
                     boolean canZoomMoreX = isZoomingOut ?
                             h.canZoomOutMoreX() :
                             h.canZoomInMoreX();
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (canZoomMoreX) {
 
                         mMatrix.set(mSavedMatrix);
                         mMatrix.postScale(scaleX, 1f, t.x, t.y);
 
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (l != null)
                             l.onChartScale(event, scaleX, 1f);
                     }
@@ -412,18 +602,26 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     mLastGesture = ChartGesture.Y_ZOOM;
 
                     float yDist = getYDist(event);
-                    float scaleY = yDist / mSavedYDist; // y-axis scale
+                    float scaleY = yDist / mSavedYDist; // Y-axis scale
 
                     boolean isZoomingOut = (scaleY < 1);
                     boolean canZoomMoreY = isZoomingOut ?
                             h.canZoomOutMoreY() :
                             h.canZoomInMoreY();
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (canZoomMoreY) {
 
                         mMatrix.set(mSavedMatrix);
                         mMatrix.postScale(1f, scaleY, t.x, t.y);
 
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (l != null)
                             l.onChartScale(event, 1f, scaleY);
                     }
@@ -443,6 +641,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (h != null && !h.equalTo(mLastHighlighted)) {
             mLastHighlighted = h;
             mChart.highlightValue(h, true);
@@ -476,6 +678,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     private static float spacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
+        /**
+         * Executes return operation with thermal imaging domain optimization.
+         *
+         */
         return (float) Math.sqrt(x * x + y * y);
     }
 
@@ -519,7 +725,11 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         float xTrans = x - vph.offsetLeft();
         float yTrans = 0f;
 
-        // check if axis is inverted
+        // Check if axis is inverted
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (inverted()) {
             yTrans = -(y - vph.offsetTop());
         } else {
@@ -535,6 +745,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
      * @return
      */
     private boolean inverted() {
+        /**
+         * Executes return operation with thermal imaging domain optimization.
+         *
+         */
         return (mClosestDataSetToTouch == null && mChart.isAnyAxisInverted()) || (mClosestDataSetToTouch != null
                 && mChart.isInverted(mClosestDataSetToTouch.getAxisDependency()));
     }
@@ -570,17 +784,29 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (l != null) {
             l.onChartDoubleTapped(e);
         }
 
-        // check if double-tap zooming is enabled
+        // Check if double-tap zooming is enabled
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mChart.isDoubleTapToZoomEnabled() && mChart.getData().getEntryCount() > 0) {
 
             MPPointF trans = getTrans(e.getX(), e.getY());
 
             mChart.zoom(mChart.isScaleXEnabled() ? 1.4f : 1f, mChart.isScaleYEnabled() ? 1.4f : 1f, trans.x, trans.y);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mChart.isLogEnabled())
                 Log.i("BarlineChartTouch", "Double-Tap, Zooming In, x: " + trans.x + ", y: "
                         + trans.y);
@@ -598,6 +824,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (l != null) {
 
             l.onChartLongPressed(e);
@@ -611,15 +841,27 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (l != null) {
             l.onChartSingleTapped(e);
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mChart.isHighlightPerTapEnabled()) {
             return false;
         }
 
         Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
+        /**
+         * Executes performhighlight operation with thermal imaging domain optimization.
+         *
+         */
         performHighlight(h, e);
 
         return super.onSingleTapUp(e);
@@ -632,6 +874,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (l != null) {
             l.onChartFling(e1, e2, velocityX, velocityY);
         }
@@ -646,6 +892,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
     public void computeScroll() {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDecelerationVelocity.x == 0.f && mDecelerationVelocity.y == 0.f)
             return; // There's no deceleration in progress
 
@@ -668,6 +918,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         float dragDistanceX = mChart.isDragXEnabled() ? mDecelerationCurrentPoint.x - mTouchStartPoint.x : 0.f;
         float dragDistanceY = mChart.isDragYEnabled() ? mDecelerationCurrentPoint.y - mTouchStartPoint.y : 0.f;
 
+        /**
+         * Executes performdrag operation with thermal imaging domain optimization.
+         *
+         */
         performDrag(event, dragDistanceX, dragDistanceY);
 
         event.recycle();
@@ -675,15 +929,23 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         mDecelerationLastTime = currentTime;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (Math.abs(mDecelerationVelocity.x) >= 0.01 || Math.abs(mDecelerationVelocity.y) >= 0.01)
             Utils.postInvalidateOnAnimation(mChart); // This causes computeScroll to fire, recommended for this by Google
         else {
             // Range might have changed, which means that Y-axis labels
-            // could have changed in size, affecting Y-axis size.
+            // Could have changed in size, affecting Y-axis size.
             // So we need to recalculate offsets.
             mChart.calculateOffsets();
             mChart.postInvalidate();
 
+            /**
+             * Executes stopdeceleration operation with thermal imaging domain optimization.
+             *
+             */
             stopDeceleration();
         }
     }

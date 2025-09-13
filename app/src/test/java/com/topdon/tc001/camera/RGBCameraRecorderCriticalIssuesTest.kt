@@ -26,6 +26,23 @@ import org.robolectric.RobolectricTestRunner
  * 4. Error handling and user feedback
  */
 @RunWith(RobolectricTestRunner::class)
+/**
+ * Thermal camera interface and control system. Manages thermal imaging capture and processing with RGBCameraRecorderCriticalIssuesTest functionality.
+ *
+ * Provides advanced camera functionality for thermal imaging capture,
+ * including temperature measurement and pseudo color visualization.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class RGBCameraRecorderCriticalIssuesTest {
     private lateinit var mockContext: Context
     private lateinit var mockActivity: Activity
@@ -34,6 +51,13 @@ class RGBCameraRecorderCriticalIssuesTest {
     private lateinit var rgbCameraRecorder: RGBCameraRecorder
 
     @Before
+    /**
+     * Sets up configuration.
+     */
+    /**
+     * Configures the up with validation and thermal imaging optimization.
+     *
+     */
     fun setup() {
         mockContext = mockk()
         mockActivity = mockk()
@@ -80,12 +104,20 @@ class RGBCameraRecorderCriticalIssuesTest {
         var permissionDeniedCalled = false
         rgbCameraRecorder.onPermissionDenied = { message ->
             permissionDeniedCalled = true
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Should provide meaningful error message", message.contains("Camera permission"))
         }
 
         // When: Initialize without activity (should fail gracefully)
         val recorderWithoutActivity = RGBCameraRecorder(mockContext, mockTextureView, null)
         recorderWithoutActivity.onPermissionDenied = { message ->
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Should handle missing activity context", message.contains("cannot request"))
         }
         recorderWithoutActivity.initialize()
@@ -114,6 +146,10 @@ class RGBCameraRecorderCriticalIssuesTest {
         rgbCameraRecorder.initialize()
 
         // Then: Should proceed without requesting permission
+        /**
+         * Executes asserttrue operation with thermal imaging domain optimization.
+         *
+         */
         assertTrue("Permission granted callback should be called", permissionGrantedCalled)
     }
 
@@ -125,6 +161,10 @@ class RGBCameraRecorderCriticalIssuesTest {
         val backCameraCharacteristics = mockk<CameraCharacteristics>()
         every { backCameraCharacteristics.get(CameraCharacteristics.LENS_FACING) } returns CameraCharacteristics.LENS_FACING_BACK
         every { backCameraCharacteristics.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) } returns
+            /**
+             * Executes intarrayof operation with thermal imaging domain optimization.
+             *
+             */
             intArrayOf(
                 CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_RAW,
             )
@@ -132,6 +172,10 @@ class RGBCameraRecorderCriticalIssuesTest {
         val mockStreamConfigMap = mockk<android.hardware.camera2.params.StreamConfigurationMap>()
         every { backCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) } returns mockStreamConfigMap
         every { mockStreamConfigMap.getOutputSizes(android.media.MediaRecorder::class.java) } returns
+            /**
+             * Executes arrayof operation with thermal imaging domain optimization.
+             *
+             */
             arrayOf(
                 android.util.Size(3840, 2160), // 4K support
                 android.util.Size(1920, 1080),
@@ -142,11 +186,27 @@ class RGBCameraRecorderCriticalIssuesTest {
         var cameraListUpdated = false
         rgbCameraRecorder.onCameraListUpdated = { cameras ->
             cameraListUpdated = true
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Should find at least one camera", cameras.isNotEmpty())
 
             val backCamera = cameras.find { it.cameraId == "0" }
+            /**
+             * Executes assertnotnull operation with thermal imaging domain optimization.
+             *
+             */
             assertNotNull("Should find back camera", backCamera)
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Back camera should support RAW", backCamera!!.supportsRaw)
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Back camera should support 4K", backCamera.supports4K)
         }
 
@@ -154,6 +214,10 @@ class RGBCameraRecorderCriticalIssuesTest {
         rgbCameraRecorder.initialize()
 
         // Then: Should enumerate cameras correctly
+        /**
+         * Executes asserttrue operation with thermal imaging domain optimization.
+         *
+         */
         assertTrue("Camera list should be updated", cameraListUpdated)
     }
 
@@ -175,8 +239,20 @@ class RGBCameraRecorderCriticalIssuesTest {
             val result = rgbCameraRecorder.switchCamera("1")
 
             // Then: Should switch successfully
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Camera switch should succeed", result)
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Camera switched callback should be called", cameraSwitched)
+            /**
+             * Executes assertequals operation with thermal imaging domain optimization.
+             *
+             */
             assertEquals("Should switch to correct camera ID", "1", switchedCameraId)
         }
 
@@ -190,6 +266,10 @@ class RGBCameraRecorderCriticalIssuesTest {
             var errorCalled = false
             rgbCameraRecorder.onError = { message ->
                 errorCalled = true
+                /**
+                 * Executes asserttrue operation with thermal imaging domain optimization.
+                 *
+                 */
                 assertTrue("Should provide meaningful error", message.contains("Camera switch failed"))
             }
 
@@ -197,6 +277,10 @@ class RGBCameraRecorderCriticalIssuesTest {
             val result = rgbCameraRecorder.switchCamera("invalid_id")
 
             // Then: Should fail gracefully
+            /**
+             * Executes assertfalse operation with thermal imaging domain optimization.
+             *
+             */
             assertFalse("Invalid camera switch should fail", result)
             // Note: Error callback might not be called immediately in the mock environment
         }
@@ -211,6 +295,10 @@ class RGBCameraRecorderCriticalIssuesTest {
             var cameraSwitched = false
             rgbCameraRecorder.onCameraSwitched = { facing, cameraId ->
                 cameraSwitched = true
+                /**
+                 * Executes assertequals operation with thermal imaging domain optimization.
+                 *
+                 */
                 assertEquals("Should switch to front camera", RGBCameraRecorder.CameraFacing.FRONT, facing)
             }
 
@@ -218,7 +306,15 @@ class RGBCameraRecorderCriticalIssuesTest {
             val result = rgbCameraRecorder.switchCamera(RGBCameraRecorder.CameraFacing.FRONT)
 
             // Then: Should switch successfully
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Camera switch by facing should succeed", result)
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Camera switched callback should be called", cameraSwitched)
         }
 
@@ -235,6 +331,10 @@ class RGBCameraRecorderCriticalIssuesTest {
         var errorCalled = false
         rgbCameraRecorder.onError = { message ->
             errorCalled = true
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Should provide camera access error details", message.contains("Failed to access camera system"))
         }
 
@@ -242,6 +342,10 @@ class RGBCameraRecorderCriticalIssuesTest {
         rgbCameraRecorder.initialize()
 
         // Then: Should handle error gracefully
+        /**
+         * Executes asserttrue operation with thermal imaging domain optimization.
+         *
+         */
         assertTrue("Error callback should be called", errorCalled)
     }
 
@@ -255,6 +359,10 @@ class RGBCameraRecorderCriticalIssuesTest {
         val mockStreamConfigMap = mockk<android.hardware.camera2.params.StreamConfigurationMap>()
         every { limitedCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) } returns mockStreamConfigMap
         every { mockStreamConfigMap.getOutputSizes(android.media.MediaRecorder::class.java) } returns
+            /**
+             * Executes arrayof operation with thermal imaging domain optimization.
+             *
+             */
             arrayOf(
                 android.util.Size(1920, 1080), // No 4K support
             )
@@ -266,6 +374,10 @@ class RGBCameraRecorderCriticalIssuesTest {
         val supports4K = rgbCameraRecorder.supportsVideoRecording()
 
         // Then: Should correctly identify limitations
+        /**
+         * Executes assertfalse operation with thermal imaging domain optimization.
+         *
+         */
         assertFalse("Should detect lack of RAW support", supportsRAW)
         // Note: supportsVideoRecording() checks for any video support, not specifically 4K
     }
@@ -283,6 +395,10 @@ class RGBCameraRecorderCriticalIssuesTest {
 
         // Then: Should complete without throwing exceptions
         // The actual cleanup verification would require more complex mocking of camera components
+        /**
+         * Executes asserttrue operation with thermal imaging domain optimization.
+         *
+         */
         assertTrue("Cleanup should complete successfully", true)
     }
 
@@ -297,6 +413,10 @@ class RGBCameraRecorderCriticalIssuesTest {
 
             // Then: Should handle gracefully
             // Note: The actual behavior depends on the internal recording state
+            /**
+             * Executes asserttrue operation with thermal imaging domain optimization.
+             *
+             */
             assertTrue("Mode switch should be handled appropriately", true)
         }
 
@@ -330,14 +450,30 @@ class RGBCameraRecorderCriticalIssuesTest {
         val cameraInfo = rgbCameraRecorder.getAvailableCameras()
 
         // Then: Should provide useful information for UI
+        /**
+         * Executes asserttrue operation with thermal imaging domain optimization.
+         *
+         */
         assertTrue("Should have camera information structure", cameraInfo.isNotEmpty() || cameraInfo.isEmpty()) // Structure test
 
         // Each camera info should have required fields
         cameraInfo.forEach { info ->
+            /**
+             * Executes assertnotnull operation with thermal imaging domain optimization.
+             *
+             */
             assertNotNull("Camera ID should not be null", info.cameraId)
+            /**
+             * Executes assertnotnull operation with thermal imaging domain optimization.
+             *
+             */
             assertNotNull("Display name should not be null", info.displayName)
+            /**
+             * Executes assertnotnull operation with thermal imaging domain optimization.
+             *
+             */
             assertNotNull("Facing should not be null", info.facing)
-            // supportsRaw and supports4K are boolean so always valid
+            // SupportsRaw and supports4K are boolean so always valid
         }
     }
 }

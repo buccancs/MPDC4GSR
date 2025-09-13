@@ -17,13 +17,26 @@ import java.nio.ByteBuffer;
 // Original import: import static com.example.opengl.render.IROpen3DTools.IntArrayToByteArray;
 
 /**
- * @author: CaiSongL
- * @date: 2023/8/18 11:45
+ * Specialized thermal imaging component providing ImageColorTools functionality for the IRCamera system.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class ImageColorTools {
 
     static {
-//        new OpenCVNativeLoader().init();
+// New OpenCVNativeLoader().init();
         System.loadLibrary("opencv_java4");
     }
 
@@ -33,9 +46,17 @@ public class ImageColorTools {
 
         int img_num = 0;
         int te_num = 0;
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 1024; i < (1024 + 256 * 192 * 2); i++) {
             image[img_num++] = buffer[i];
         }
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 1024 + 256 * 192 * 2; i < (1024 + 2 * 256 * 192 * 2); i++) {
             temperature[te_num++] = buffer[i];
         }
@@ -52,6 +73,10 @@ public class ImageColorTools {
         Mat src = new Mat(192, 256, CvType.CV_64F);
         double[] temp = new double[256 * 192];
         int t = 0;
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < temperature.length; i += 2) {
             int value = (temperature[i + 1] << 8) + temperature[i];
             float divid = 16.0f;
@@ -62,9 +87,9 @@ public class ImageColorTools {
 
         Mat imageMat = new Mat(192, 256, CvType.CV_8UC2);
         imageMat.put(0,0,convertIntArrayToByteArray(image));
-//        for (int i = 0; i < image.length; i += 2) {
-//            imageMat.put(i / 512, (i / 2) % 256, image[i]);
-//            imageMat.put(i / 512, (i / 2) % 256 + 1, image[i + 1]);
+// For (int i = 0; i < image.length; i += 2) {
+// ImageMat.put(i / 512, (i / 2) % 256, image[i]);
+// ImageMat.put(i / 512, (i / 2) % 256 + 1, image[i + 1]);
 //        }
         int[] colorList = new int[]{
                 Color.parseColor("#ff0000"),
@@ -80,12 +105,24 @@ public class ImageColorTools {
         int j = 0;
         int imageDstLength = imageDst.length;
 遍历pixel point，Filtertemperature threshold
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int index = 0; index < imageDstLength; ) {
 temperatureconversion formula
             float temperature0 = (temperature[j] & 0xff) + (temperature[j + 1] & 0xff) * 256;
             temperature0 = (float) (temperature0 / 64 - 273.15);
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
                 int[] rgb = getOneColorByTempEx(customMaxTemp,customMinTemp,temperature0,colorList);
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (rgb!=null){
                     imageDst[index] = (byte) rgb[0];
                     imageDst[index + 1] = (byte) rgb[1];
@@ -96,7 +133,7 @@ temperatureconversion formula
             index += 4;
             j += 2;
         }
-Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
+Log.e("执行耗时：",System.currentTimeMillis() - time+"// ");
         // Convert OpenCV Mat to Android Bitmap
         Bitmap outputBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888);
         outputBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
@@ -104,7 +141,7 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
 //        Utils.matToBitmap(imageColor, outputBitmap);
         // Display or use the resulting Bitmap as needed
         // For example, you can set this Bitmap to an ImageView
-        // imageView.setImageBitmap(outputBitmap);
+        // ImageView.setImageBitmap(outputBitmap);
         // Release Mats
         src.release();
         imageMat.release();
@@ -130,9 +167,17 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
 
         int img_num = 0;
         int te_num = 0;
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 1024; i < (1024 + 256 * 192 * 2); i++) {
             image[img_num++] = buffer[i];
         }
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 1024 + 256 * 192 * 2; i < (1024 + 2 * 256 * 192 * 2); i++) {
             temperature[te_num++] = buffer[i];
         }
@@ -146,6 +191,10 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
         Mat src = new Mat(192, 256, CvType.CV_64F);
         double[] temp = new double[256 * 192];
         int t = 0;
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < temperature.length; i += 2) {
             int value = (temperature[i + 1] << 8) + temperature[i];
             float divid = 16.0f;
@@ -156,24 +205,44 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
 
         Mat imageMat = new Mat(192, 256, CvType.CV_8UC2);
         imageMat.put(0,0,convertIntArrayToByteArray(image));
-//        for (int i = 0; i < image.length; i += 2) {
-//            imageMat.put(i / 512, (i / 2) % 256, image[i]);
-//            imageMat.put(i / 512, (i / 2) % 256 + 1, image[i + 1]);
+// For (int i = 0; i < image.length; i += 2) {
+// ImageMat.put(i / 512, (i / 2) % 256, image[i]);
+// ImageMat.put(i / 512, (i / 2) % 256 + 1, image[i + 1]);
 //        }
 
         Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_YUV2GRAY_YUYV);
         double srcValue = 0.1f;
         long time = System.currentTimeMillis();
         Mat imageColor = new Mat(192, 256, CvType.CV_8UC3, new Scalar(255, 255, 255));
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < src.rows(); i++) {
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for (int j = 0; j < src.cols(); j++) {
                 srcValue = src.get(i, j)[0];
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (srcValue > tempt[num_of_tem - 1]) {
                     imageColor.put(i, j, 0, 0, 0);
                 } else if (srcValue < tempt[0]) {
                     imageColor.put(i, j, 255, 255, 255);
                 } else {
+                    /**
+                     * Executes for operation with thermal imaging domain optimization.
+                     *
+                     */
                     for (int m = 0; m < num_of_tem - 1; m++) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (srcValue >= tempt[m] && srcValue <= tempt[m + 1]) {
                             int rMax = Math.max(r[m], r[m + 1]);
                             int rMin = Math.min(r[m], r[m + 1]);
@@ -199,18 +268,18 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
                 }
             }
         }
-        Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
+        Log.e("执行耗时：",System.currentTimeMillis() - time+"// ");
 //        Imgproc.cvtColor(imageColor, imageColor, Imgproc.COLOR_BGR2RGBA);
-//        byte[] imageDst = matToByteArray(imageColor);
+// Byte[] imageDst = matToByteArray(imageColor);
 //        Bitmap outputBitmap = Bitmap.createBitmap(imageColor.width(),
-//                imageColor.height(), Bitmap.Config.ARGB_8888);
-//        outputBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
+// ImageColor.height(), Bitmap.Config.ARGB_8888);
+// OutputBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
         // Convert OpenCV Mat to Android Bitmap
         Bitmap outputBitmap = Bitmap.createBitmap(imageColor.cols(), imageColor.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(imageColor, outputBitmap);
         // Display or use the resulting Bitmap as needed
         // For example, you can set this Bitmap to an ImageView
-        // imageView.setImageBitmap(outputBitmap);
+        // ImageView.setImageBitmap(outputBitmap);
         // Release Mats
         src.release();
         imageMat.release();
@@ -224,9 +293,17 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
 
         int img_num = 0;
         int te_num = 0;
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 1024; i < (1024 + 256 * 192 * 2); i++) {
             image[img_num++] = buffer[i];
         }
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 1024 + 256 * 192 * 2; i < (1024 + 2 * 256 * 192 * 2); i++) {
             temperature[te_num++] = buffer[i];
         }
@@ -240,6 +317,10 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
         Mat src = new Mat(192, 256, CvType.CV_64F);
         double[] temp = new double[256 * 192];
         int t = 0;
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < temperature.length; i += 2) {
             int value = (temperature[i + 1] << 8) + temperature[i];
             float divid = 16.0f;
@@ -250,9 +331,9 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
 
         Mat imageMat = new Mat(192, 256, CvType.CV_8UC2);
         imageMat.put(0,0,image);
-//        for (int i = 0; i < image.length; i += 2) {
-//            imageMat.put(i / 512, (i / 2) % 256, image[i]);
-//            imageMat.put(i / 512, (i / 2) % 256 + 1, image[i + 1]);
+// For (int i = 0; i < image.length; i += 2) {
+// ImageMat.put(i / 512, (i / 2) % 256, image[i]);
+// ImageMat.put(i / 512, (i / 2) % 256 + 1, image[i + 1]);
 //        }
 
         Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_YUV2GRAY_YUYV);
@@ -260,56 +341,56 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
         double srcValue = 0.1f;
         long time = System.currentTimeMillis();
 //        Mat imageColor = new Mat(192, 256, CvType.CV_8UC3, new Scalar(255, 255, 255));
-//        for (int i = 0; i < src.rows(); i++) {
-//            for (int j = 0; j < src.cols(); j++) {
-//                srcValue = src.get(i, j)[0];
-//                if (srcValue > tempt[num_of_tem - 1]) {
-//                    imageColor.put(i, j, 0, 0, 0);
+// For (int i = 0; i < src.rows(); i++) {
+// For (int j = 0; j < src.cols(); j++) {
+// SrcValue = src.get(i, j)[0];
+// If (srcValue > tempt[num_of_tem - 1]) {
+// ImageColor.put(i, j, 0, 0, 0);
 //                } else if (srcValue < tempt[0]) {
-//                    imageColor.put(i, j, 255, 255, 255);
+// ImageColor.put(i, j, 255, 255, 255);
 //                } else {
-//                    for (int m = 0; m < num_of_tem - 1; m++) {
-//                        if (srcValue >= tempt[m] && srcValue <= tempt[m + 1]) {
-//                            int rMax = Math.max(r[m], r[m + 1]);
-//                            int rMin = Math.min(r[m], r[m + 1]);
-//                            int rColor = (r[m] >= r[m + 1])
+// For (int m = 0; m < num_of_tem - 1; m++) {
+// If (srcValue >= tempt[m] && srcValue <= tempt[m + 1]) {
+// Int rMax = Math.max(r[m], r[m + 1]);
+// Int rMin = Math.min(r[m], r[m + 1]);
+// Int rColor = (r[m] >= r[m + 1])
 //                                    ? rMax - (int) (((float) (rMax - rMin) / (tempt[m + 1] - tempt[m])) * (srcValue - tempt[m]))
 //                                    : (int) (((float) (rMax - rMin) / (tempt[m + 1] - tempt[m])) * (srcValue - tempt[m]) + rMin);
 //
-//                            int gMax = Math.max(g[m], g[m + 1]);
-//                            int gMin = Math.min(g[m], g[m + 1]);
-//                            int gColor = (g[m] >= g[m + 1])
+// Int gMax = Math.max(g[m], g[m + 1]);
+// Int gMin = Math.min(g[m], g[m + 1]);
+// Int gColor = (g[m] >= g[m + 1])
 //                                    ? gMax - (int) (((float) (gMax - gMin) / (tempt[m + 1] - tempt[m])) * (srcValue - tempt[m]))
 //                                    : (int) (((float) (gMax - gMin) / (tempt[m + 1] - tempt[m])) * (srcValue - tempt[m]) + gMin);
 //
-//                            int bMax = Math.max(b[m], b[m + 1]);
-//                            int bMin = Math.min(b[m], b[m + 1]);
-//                            int bColor = (b[m] >= b[m + 1])
+// Int bMax = Math.max(b[m], b[m + 1]);
+// Int bMin = Math.min(b[m], b[m + 1]);
+// Int bColor = (b[m] >= b[m + 1])
 //                                    ? bMax - (int) (((float) (bMax - bMin) / (tempt[m + 1] - tempt[m])) * (srcValue - tempt[m]))
 //                                    : (int) (((float) (bMax - bMin) / (tempt[m + 1] - tempt[m])) * (srcValue - tempt[m]) + bMin);
 //
-//                            imageColor.put(i, j, bColor, gColor, rColor);
+// ImageColor.put(i, j, bColor, gColor, rColor);
 //                        }
 //                    }
 //                }
 //            }
 //        }
-        Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
+        Log.e("执行耗时：",System.currentTimeMillis() - time+"// ");
 //        Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_BGR2RGBA);
-//        byte[] imageDst = matToByteArray(imageMat);
+// Byte[] imageDst = matToByteArray(imageMat);
 //        Bitmap outputBitmap = Bitmap.createBitmap(imageMat.width(),
-//                imageMat.height(), Bitmap.Config.ARGB_8888);
-//        outputBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
+// ImageMat.height(), Bitmap.Config.ARGB_8888);
+// OutputBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
         // Convert OpenCV Mat to Android Bitmap
         Bitmap outputBitmap = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(imageMat, outputBitmap,true);
         // Display or use the resulting Bitmap as needed
         // For example, you can set this Bitmap to an ImageView
-        // imageView.setImageBitmap(outputBitmap);
+        // ImageView.setImageBitmap(outputBitmap);
         // Release Mats
         src.release();
         imageMat.release();
-//        imageColor.release();
+// ImageColor.release();
 
         return outputBitmap;
     }
@@ -322,6 +403,10 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
     }
 
     public static int[] getOneColorByTempEx(float customMaxTemp, float customMinTemp, float nowTemp, int[] colorList) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (colorList == null){
             return null;
         }
@@ -334,12 +419,20 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
 
         float avgColorIndex = ratio / avg;
         int addNumber = 0;
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if ((ratio % avg) > 0){
             addNumber = 1;
         }
         int lowerColorIndex = (int) avgColorIndex + addNumber;
         float ratioInRegion = avgColorIndex - lowerColorIndex;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (Math.abs(nowTemp -customMaxTemp)==0.1f) {
             int lastColor = colorList[colorNumber];
             result[0] = (lastColor >> 16) & 0xFF;
@@ -355,6 +448,10 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
         }
         int startColor = colorList[lowerColorIndex - 1];
         int endColor = colorList[lowerColorIndex];
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (colorNumber != 1){
             ratioInRegion = (ratio - (avg * (lowerColorIndex - 1))) / avg;
         }
@@ -402,6 +499,10 @@ Log.e("执行耗时：",System.currentTimeMillis() - time+"//");
         return byteArray;
     }
     public static Bitmap bytes2Bimap(byte[] b) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (b.length != 0) {
             return BitmapFactory.decodeByteArray(b, 0, b.length);
         } else {

@@ -1,66 +1,66 @@
-//package com.infisense.usbir.camera;
+// Package com.infisense.usbir.camera;
 //
-//import android.content.Context;
-//import android.hardware.usb.UsbDevice;
-//import android.os.SystemClock;
-//import android.util.Log;
+// Import android.content.Context;
+// Import android.hardware.usb.UsbDevice;
+// Import android.os.SystemClock;
+// Import android.util.Log;
 //
-//import com.elvishew.xlog.XLog;
-//import com.infisense.iruvc.sdkisp.LibIRProcess;
-//import com.infisense.iruvc.sdkisp.Libircmd;
-//import com.infisense.iruvc.sdkisp.Libirprocess;
-//import com.infisense.iruvc.usb.DeviceFilter;
-//import com.infisense.iruvc.usb.IFrameCallback;
-//import com.infisense.iruvc.usb.USBMonitor;
-//import com.infisense.iruvc.usb.UVCCamera;
-//import com.infisense.iruvc.utils.CommonParams;
-//import com.infisense.iruvc.utils.SynchronizedBitmap;
-//import com.infisense.iruvc.uvc.ConnectCallback;
-//import com.infisense.usbir.R;
-//import com.infisense.usbir.config.MsgCode;
-//import com.infisense.usbir.event.IRMsgEvent;
-//import com.infisense.usbir.utils.USBMonitorCallback;
-//import com.topdon.lib.core.bean.event.device.DeviceCameraEvent;
-//import com.topdon.lib.core.bean.event.device.ResetConnectEvent;
+// Import com.elvishew.xlog.XLog;
+// Import com.infisense.iruvc.sdkisp.LibIRProcess;
+// Import com.infisense.iruvc.sdkisp.Libircmd;
+// Import com.infisense.iruvc.sdkisp.Libirprocess;
+// Import com.infisense.iruvc.usb.DeviceFilter;
+// Import com.infisense.iruvc.usb.IFrameCallback;
+// Import com.infisense.iruvc.usb.USBMonitor;
+// Import com.infisense.iruvc.usb.UVCCamera;
+// Import com.infisense.iruvc.utils.CommonParams;
+// Import com.infisense.iruvc.utils.SynchronizedBitmap;
+// Import com.infisense.iruvc.uvc.ConnectCallback;
+// Import com.infisense.usbir.R;
+// Import com.infisense.usbir.config.MsgCode;
+// Import com.infisense.usbir.event.IRMsgEvent;
+// Import com.infisense.usbir.utils.USBMonitorCallback;
+// Import com.topdon.lib.core.bean.event.device.DeviceCameraEvent;
+// Import com.topdon.lib.core.bean.event.device.ResetConnectEvent;
 //
-//import org.greenrobot.eventbus.EventBus;
+// Import org.greenrobot.eventbus.EventBus;
 //
-//import java.util.List;
+// Import java.util.List;
 //
-///**
+// /**
 // * device -> bytes
 // * infrared出图核心工具class
 // */
-//public class IRUVCTC {
+// Public class IRUVCTC {
 //
-//    private static final String TAG = "IRUVC";
-//    private final int TinyB = 0x3901;
-//    private final IFrameCallback iFrameCallback;
-//    private final Context context;
-//    public UVCCamera uvcCamera;
-//    private USBMonitor mUSBMonitor;
-//    private int cameraWidth;
-//    private int cameraHeight;
-//    private byte[] image;
-//    private byte[] temperature;
-//    private SynchronizedBitmap syncimage;
-//    // devicePID白名单
-//    private int pids[] = {0x5840, 0x3901, 0x5830, 0x5838};
-//    public boolean auto_gain_switch = false;
-//    private boolean auto_over_portect = false;
+// Private static final String TAG = "IRUVC";
+// Private final int TinyB = 0x3901;
+// Private final IFrameCallback iFrameCallback;
+// Private final Context context;
+// Public UVCCamera uvcCamera;
+// Private USBMonitor mUSBMonitor;
+// Private int cameraWidth;
+// Private int cameraHeight;
+// Private byte[] image;
+// Private byte[] temperature;
+// Private SynchronizedBitmap syncimage;
+//    // DevicePID白名单
+// Private int pids[] = {0x5840, 0x3901, 0x5830, 0x5838};
+// Public boolean auto_gain_switch = false;
+// Private boolean auto_over_portect = false;
 //    /**
 //     * 自动gainswitch
 //     */
-//    private LibIRProcess.AutoGainSwitchInfo_t auto_gain_switch_info = new LibIRProcess.AutoGainSwitchInfo_t();
-//    private LibIRProcess.GainSwitchParam_t gain_switch_param = new LibIRProcess.GainSwitchParam_t();
-//    private int count = 0;
-//    private int rotate = 0;
-//    long timeLog = 0L;//Record时间
+// Private LibIRProcess.AutoGainSwitchInfo_t auto_gain_switch_info = new LibIRProcess.AutoGainSwitchInfo_t();
+// Private LibIRProcess.GainSwitchParam_t gain_switch_param = new LibIRProcess.GainSwitchParam_t();
+// Private int count = 0;
+// Private int rotate = 0;
+// Long timeLog = 0L;// Record时间
 //
-//    private byte[] imageTemp = null;
-//    private byte[] temperatureTemp = null;
-//    private int countTemp = 0;
-//    public byte[] imageEditTemp = null;
+// Private byte[] imageTemp = null;
+// Private byte[] temperatureTemp = null;
+// Private int countTemp = 0;
+// Public byte[] imageEditTemp = null;
 //    Long updateTime = 0L;
 //
 //    /**
@@ -69,153 +69,153 @@
 //     * @param context
 //     * @param syncimage
 //     */
-//    public IRUVCTC(int cameraHeight, int cameraWidth, Context context, SynchronizedBitmap syncimage,
+// Public IRUVCTC(int cameraHeight, int cameraWidth, Context context, SynchronizedBitmap syncimage,
 //                   CommonParams.DataFlowMode dataFlowMode, boolean isUseIRISP, boolean isUseGPU,
 //                   ConnectCallback connectCallback, USBMonitorCallback usbMonitorCallback) {
-//        this.mContext = context;
-//        this.syncimage = syncimage;
-//        this.isUseIRISP = isUseIRISP;
-//        this.isUseGPU = isUseGPU;
-//        this.mConnectCallback = connectCallback;
-//        this.defaultDataFlowMode = dataFlowMode;
-//        init(cameraHeight, cameraWidth, context);
+// This.mContext = context;
+// This.syncimage = syncimage;
+// This.isUseIRISP = isUseIRISP;
+// This.isUseGPU = isUseGPU;
+// This.mConnectCallback = connectCallback;
+// This.defaultDataFlowMode = dataFlowMode;
+// Init(cameraHeight, cameraWidth, context);
 //
 //
 //        // 注意：USBMonitor的所有Callbackfunction都是运行在line程中的
-//        mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
+// MUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 //
-//            // called by checking usb device
-//            // do request device permission
+//            // Called by checking usb device
+//            // Do request device permission
 //            @Override
-//            public void onAttach(UsbDevice device) {
+// Public void onAttach(UsbDevice device) {
 //                XLog.tag(TAG).w("onAttach");
-//                if (isIRpid(device.getProductId())) {
-//                    if (uvcCamera == null || !uvcCamera.getOpenStatus()) {
-//                        mUSBMonitor.requestPermission(device);
+// If (isIRpid(device.getProductId())) {
+// If (uvcCamera == null || !uvcCamera.getOpenStatus()) {
+// MUSBMonitor.requestPermission(device);
 //                    }
 //                }
 //            }
 //
 //            @Override
-//            public void onGranted(UsbDevice usbDevice, boolean b) {
+// Public void onGranted(UsbDevice usbDevice, boolean b) {
 //
 //            }
 //
-//            // called by connect to usb camera
-//            // do open camera,start previewing
+//            // Called by connect to usb camera
+//            // Do open camera,start previewing
 //            @Override
-//            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
+// Public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
 //                XLog.tag(TAG).w("onConnect");
-//                if (isIRpid(device.getProductId())) {
-//                    if (createNew) {
-//                        open(ctrlBlock);
-//                        start();
+// If (isIRpid(device.getProductId())) {
+// If (createNew) {
+// Open(ctrlBlock);
+// Start();
 //                    }
 //                }
 //                EventBus.getDefault().post(new ResetConnectEvent(1));
 //            }
 //
-//            // called by disconnect to usb camera
-//            // do nothing
+//            // Called by disconnect to usb camera
+//            // Do nothing
 //            @Override
-//            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
+// Public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
 //                XLog.tag(TAG).w("onDisconnect");
 //            }
 //
-//            // called by taking out usb device
-//            // do close camera
+//            // Called by taking out usb device
+//            // Do close camera
 //            @Override
-//            public void onDettach(UsbDevice device) {
+// Public void onDettach(UsbDevice device) {
 //                XLog.tag(TAG).w("onDetach");
-//                if (isIRpid(device.getProductId())) {
-//                    if (uvcCamera != null && uvcCamera.getOpenStatus()) {
-//                        stop();
+// If (isIRpid(device.getProductId())) {
+// If (uvcCamera != null && uvcCamera.getOpenStatus()) {
+// Stop();
 //                    }
 //                }
 //            }
 //
 //            @Override
-//            public void onCancel(UsbDevice device) {
-//                //在usb permissionGet/Retrieve无效时触发
+// Public void onCancel(UsbDevice device) {
+//                // 在usb permissionGet/Retrieve无效时触发
 //                XLog.tag(TAG).w("onCancel");
 //
 //            }
 //        });
-//        // auto gain switch parameter
-//        gain_switch_param.above_pixel_prop = 0.1f;    //用于high -> low gain,device像素总area积的百分比
-//        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); //用于high -> low gain,高gain向低gainswitch的触发temperature
-//        gain_switch_param.below_pixel_prop = 0.95f;   //用于low -> high gain,device像素总area积的百分比
-//        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);//用于low -> high gain,低gain向高gainswitch的触发temperature
-//        auto_gain_switch_info.switch_frame_cnt = 5 * 15; //continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
-//        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;//触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
-//        //over_portect parameter
-//        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4);
-//        int high_gain_over_temp_data = (int) ((100 + 273.15) * 16 * 4);
-//        float pixel_above_prop = 0.02f;         //0-1
+//        // Auto gain switch parameter
+// Gain_switch_param.above_pixel_prop = 0.1f;    // 用于high -> low gain,device像素总area积的百分比
+// Gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); // 用于high -> low gain,高gain向低gainswitch的触发temperature
+// Gain_switch_param.below_pixel_prop = 0.95f;   // 用于low -> high gain,device像素总area积的百分比
+// Gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);// 用于low -> high gain,低gain向高gainswitch的触发temperature
+// Auto_gain_switch_info.switch_frame_cnt = 5 * 15; // Continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
+// Auto_gain_switch_info.waiting_frame_cnt = 7 * 15;// 触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
+//        // Over_portect parameter
+// Int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4);
+// Int high_gain_over_temp_data = (int) ((100 + 273.15) * 16 * 4);
+// Float pixel_above_prop = 0.02f;         // 0-1
 //
 //        // Listener读取deviceinfrareddata
-//        iFrameCallback = frame -> {
+// IFrameCallback = frame -> {
 //            Log.d(TAG, "frame: " + "refresh："+(System.currentTimeMillis()-updateTime));
-//            updateTime = System.currentTimeMillis();
+// UpdateTime = System.currentTimeMillis();
 //            // Test帧率，可以根据实际需要决定是否保留
-//            if (count++ >= 25) {
-//                count = 1;
+// If (count++ >= 25) {
+// Count = 1;
 //                Log.d(TAG, "frame: " + frame.length);
 //            }
-//            if (syncimage == null) return;
-//            syncimage.start = true;
-//            synchronized (syncimage.dataLock) {
+// If (syncimage == null) return;
+// Syncimage.start = true;
+// Synchronized (syncimage.dataLock) {
 //                // 判断坏帧，出现坏帧则重启sensor
-//                int length = frame.length - 1;
-//                if (frame[length] == 1) {
+// Int length = frame.length - 1;
+// If (frame[length] == 1) {
 //                    EventBus.getDefault().post(new IRMsgEvent(MsgCode.RESTART_USB));
 //                    XLog.tag(TAG).i("RESTART_USB");
-//                    return;
+// Return;
 //                }
 //                /**
 //                 * copyinfrareddata到imagearray中
 //                 * 出图的framearray中前半部分是infrareddata，后半部分是temperaturedata，
 //                 * 例如256*384分辨率的device，前area的256*192是infrareddata，后area的256*192是temperaturedata，
-//                 * 其中的data是旋转90度的，需要旋转回来。
+//                 * 其中的data是rotation90度的，需要rotation回来。
 //                 */
-//                if (imageEditTemp != null && imageEditTemp.length >= length) {
-//                    //部分场景不需要saved帧data
+// If (imageEditTemp != null && imageEditTemp.length >= length) {
+//                    // 部分场景不需要saved帧data
 //                    System.arraycopy(frame, 0, imageEditTemp, 0, length);
 //                }
 //                System.arraycopy(frame, 0, image, 0, length / 2);
 //                Libirprocess.ImageRes_t imageRes = new Libirprocess.ImageRes_t();
-//                imageRes.height = (char) (cameraHeight / 2);
-//                imageRes.width = (char) cameraWidth;
-////                Libirprocess.rotate_right_90(frame, imageRes, Libirprocess.IRPROC_SRC_FMT_Y14, imageEditTemp);
-////                //Get/Retrieve原始temperaturedata
-////                System.arraycopy(frame, length / 2, temperatureSrc, 0, length / 2);
+// ImageRes.height = (char) (cameraHeight / 2);
+// ImageRes.width = (char) cameraWidth;
+// //                Libirprocess.rotate_right_90(frame, imageRes, Libirprocess.IRPROC_SRC_FMT_Y14, imageEditTemp);
+// //                // Get/Retrieve原始temperaturedata
+// //                System.arraycopy(frame, length / 2, temperatureSrc, 0, length / 2);
 //
-////                //savedTestdata
-////                countTemp++;
-////                if (countTemp == 100) {
-////                    imageTemp = new byte[length / 2];
-////                    temperatureTemp = new byte[length / 2];
-////
-////                    System.arraycopy(frame, 0, imageTemp, 0, length / 2);
-////                    XLog.tag("ahh").i("imageTemp: " + ByteUtils.INSTANCE.toHexString(imageTemp, " "));
-////
-////                    System.arraycopy(frame, length / 2, temperatureTemp, 0, length / 2);
-////                    XLog.tag("ahh").i("temperatureTemp: " + ByteUtils.INSTANCE.toHexString(temperatureTemp, " "));
-////                }
+// //                // SavedTestdata
+// // CountTemp++;
+// // If (countTemp == 100) {
+// // ImageTemp = new byte[length / 2];
+// // TemperatureTemp = new byte[length / 2];
+// //
+// //                    System.arraycopy(frame, 0, imageTemp, 0, length / 2);
+// //                    XLog.tag("ahh").i("imageTemp: " + ByteUtils.INSTANCE.toHexString(imageTemp, " "));
+// //
+// //                    System.arraycopy(frame, length / 2, temperatureTemp, 0, length / 2);
+// //                    XLog.tag("ahh").i("temperatureTemp: " + ByteUtils.INSTANCE.toHexString(temperatureTemp, " "));
+// //                }
 //
-//                if (rotate == 270) {
+// If (rotate == 270) {
 //                    // 270
-//                    byte[] temp = new byte[length / 2];
+// Byte[] temp = new byte[length / 2];
 //                    System.arraycopy(frame, length / 2, temp, 0, length / 2);
 //                    Libirprocess.rotate_right_90(temp, imageRes, Libirprocess.IRPROC_SRC_FMT_Y14, temperature);
 //                } else if (rotate == 90) {
 //                    // 90
-//                    byte[] temp = new byte[length / 2];
+// Byte[] temp = new byte[length / 2];
 //                    System.arraycopy(frame, length / 2, temp, 0, length / 2);
 //                    Libirprocess.rotate_left_90(temp, imageRes, Libirprocess.IRPROC_SRC_FMT_Y14, temperature);
 //                } else if (rotate == 180) {
 //                    // 180
-//                    byte[] temp = new byte[length / 2];
+// Byte[] temp = new byte[length / 2];
 //                    System.arraycopy(frame, length / 2, temp, 0, length / 2);
 //                    Libirprocess.rotate_180(temp, imageRes, Libirprocess.IRPROC_SRC_FMT_Y14, temperature);
 //                } else {
@@ -223,13 +223,13 @@
 //                    System.arraycopy(frame, length / 2, temperature, 0, length / 2);
 //                }
 //                // 自动gainswitch，不effective的话请您的device是否支持自动gainswitch
-//                if (auto_gain_switch) {
+// If (auto_gain_switch) {
 //                    Libircmd.auto_gain_switch(temperature, imageRes, auto_gain_switch_info, gain_switch_param, uvcCamera.nativePtr);
 //                }
 //                // 防灼烧保护
-//                if (auto_over_portect) {
+// If (auto_over_portect) {
 //                    Libircmd.avoid_overexposure(temperature, imageRes, low_gain_over_temp_data,
-//                            high_gain_over_temp_data, pixel_above_prop, 15 * 25, uvcCamera.nativePtr);
+// High_gain_over_temp_data, pixel_above_prop, 15 * 25, uvcCamera.nativePtr);
 //                }
 //            }
 //        };
@@ -238,26 +238,26 @@
 //    /**
 //     * @param rotate
 //     */
-//    public void setRotate(int rotate) {
-//        this.rotate = rotate;
+// Public void setRotate(int rotate) {
+// This.rotate = rotate;
 //    }
 //
 //    /**
 //     * @param image
 //     */
-//    public void setImage(byte[] image) {
-//        this.image = image;
+// Public void setImage(byte[] image) {
+// This.image = image;
 //    }
 //
 //    /**
 //     * @param temperature
 //     */
-//    public void setTemperature(byte[] temperature) {
-//        this.temperature = temperature;
+// Public void setTemperature(byte[] temperature) {
+// This.temperature = temperature;
 //    }
 //
-//    public void setImageEditSrc(byte[] imageEditTemp) {
-//        this.imageEditTemp = imageEditTemp;
+// Public void setImageEditSrc(byte[] imageEditTemp) {
+// This.imageEditTemp = imageEditTemp;
 //    }
 //
 //    /**
@@ -266,11 +266,11 @@
 //     * @param devpid
 //     * @return
 //     */
-//    private boolean isIRpid(int devpid) {
-//        for (int x : pids) {
-//            if (x == devpid) return true;
+// Private boolean isIRpid(int devpid) {
+// For (int x : pids) {
+// If (x == devpid) return true;
 //        }
-//        return false;
+// Return false;
 //    }
 //
 //    /**
@@ -278,100 +278,100 @@
 //     * @param cameraWidth
 //     * @param context
 //     */
-//    public void init(int cameraHeight, int cameraWidth, Context context) {
+// Public void init(int cameraHeight, int cameraWidth, Context context) {
 //        XLog.tag(TAG).w("init");
-//        uvcCamera = new UVCCamera(cameraWidth, cameraHeight, context);
-//        uvcCamera.create();
+// UvcCamera = new UVCCamera(cameraWidth, cameraHeight, context);
+// UvcCamera.create();
 //        EventBus.getDefault().post(new DeviceCameraEvent(100));
 //    }
 //
 //    /**
 //     *
 //     */
-//    public void registerUSB() {
-//        if (mUSBMonitor != null) {
-//            mUSBMonitor.register();
+// Public void registerUSB() {
+// If (mUSBMonitor != null) {
+// MUSBMonitor.register();
 //        }
 //    }
 //
 //    /**
 //     *
 //     */
-//    public void unregisterUSB() {
-//        if (mUSBMonitor != null) {
-//            mUSBMonitor.unregister();
+// Public void unregisterUSB() {
+// If (mUSBMonitor != null) {
+// MUSBMonitor.unregister();
 //        }
 //    }
 //
 //    /**
 //     * @return
 //     */
-//    public List<UsbDevice> getUsbDeviceList() {
-////        List<DeviceFilter> deviceFiltersTemp = DeviceFilter.getDeviceFilters(context, R.xml.device_filter);
+// Public List<UsbDevice> getUsbDeviceList() {
+// //        List<DeviceFilter> deviceFiltersTemp = DeviceFilter.getDeviceFilters(context, R.xml.device_filter);
 //        List<DeviceFilter> deviceFilters = DeviceFilter.getDeviceFilters(context, R.xml.ir_device_filter);
-//        if (mUSBMonitor == null || deviceFilters == null)
-////            throw new NullPointerException("mUSBMonitor ="+mUSBMonitor+"deviceFilters=;"+deviceFilters);
-//            return null;
-//        // matching all of filter devices
-//        return mUSBMonitor.getDeviceList(deviceFilters);
+// If (mUSBMonitor == null || deviceFilters == null)
+// // Throw new NullPointerException("mUSBMonitor ="+mUSBMonitor+"deviceFilters=;"+deviceFilters);
+// Return null;
+//        // Matching all of filter devices
+// Return mUSBMonitor.getDeviceList(deviceFilters);
 //    }
 //
 //    /**
 //     * @param index
 //     */
-//    public void requestPermission(int index) {
+// Public void requestPermission(int index) {
 //        List<UsbDevice> devList = getUsbDeviceList();
-//        if (devList == null || devList.size() == 0) {
-//            return;
+// If (devList == null || devList.size() == 0) {
+// Return;
 //        }
-//        int count = devList.size();
-//        if (index >= count)
-//            new IllegalArgumentException("index illegal,should be < devList.size()");
-//        if (mUSBMonitor != null) {
-//            mUSBMonitor.requestPermission(getUsbDeviceList().get(index));
+// Int count = devList.size();
+// If (index >= count)
+// New IllegalArgumentException("index illegal,should be < devList.size()");
+// If (mUSBMonitor != null) {
+// MUSBMonitor.requestPermission(getUsbDeviceList().get(index));
 //        }
 //    }
 //
 //    /**
 //     * @param ctrlBlock
 //     */
-//    public void open(USBMonitor.UsbControlBlock ctrlBlock) {
-//        if (ctrlBlock.getProductId() == TinyB) {
-//            if (syncimage != null) {
-//                syncimage.type = 1;
+// Public void open(USBMonitor.UsbControlBlock ctrlBlock) {
+// If (ctrlBlock.getProductId() == TinyB) {
+// If (syncimage != null) {
+// Syncimage.type = 1;
 //            }
 //        }
-//        if (uvcCamera == null) {
-//            init(cameraHeight, cameraWidth, context);
+// If (uvcCamera == null) {
+// Init(cameraHeight, cameraWidth, context);
 //        }
-//        uvcCamera.open(ctrlBlock);
+// UvcCamera.open(ctrlBlock);
 //    }
 //
 //    /**
 //     *
 //     */
-//    public void start() {
-//        try {
+// Public void start() {
+// Try {
 //            XLog.tag(TAG).w("start");
-//            uvcCamera.setOpenStatus(true);
-//            uvcCamera.setFrameCallback(iFrameCallback); //RegisterListenerEvent
-//            //uvcCamera.setgetframemode(uvcCamera.GET_FRAME_ASYNC);
-//            //default sync mode for some devices  Lost-Packet
-//            //uvcCamera.DEFAULT_BANDWIDTH=0.3f;//hub
-//            uvcCamera.startPreview(); //start读取data
-//            new Thread(() -> {
-//                try {
+// UvcCamera.setOpenStatus(true);
+// UvcCamera.setFrameCallback(iFrameCallback); // RegisterListenerEvent
+//            // UvcCamera.setgetframemode(uvcCamera.GET_FRAME_ASYNC);
+//            // Default sync mode for some devices  Lost-Packet
+//            // UvcCamera.DEFAULT_BANDWIDTH=0.3f;// Hub
+// UvcCamera.startPreview(); // Start读取data
+// New Thread(() -> {
+// Try {
 //                    Thread.sleep(100);
 //                } catch (InterruptedException e) {
-//                    e.printStackTrace();
+// E.printStackTrace();
 //                }
 //                EventBus.getDefault().post(new DeviceCameraEvent(101));
-//                //打快门
-//                if (uvcCamera != null) {
-//                    if (syncimage.type == 1) {
+//                // 打快门
+// If (uvcCamera != null) {
+// If (syncimage.type == 1) {
 //                        Libircmd.tiny1b_shutter_manual(uvcCamera.nativePtr);
 //                    } else {
-//                        //源码settings快门
+//                        // 源码settings快门
 //                        Libircmd.ooc_b_update(Libircmd.B_UPDATE, uvcCamera.nativePtr);
 //                    }
 //                }
@@ -385,50 +385,50 @@
 //    /**
 //     *
 //     */
-//    public void stop() {
+// Public void stop() {
 //        XLog.tag(TAG).w("stop");
-////        if (uvcCamera != null) {
-////            if (uvcCamera.getOpenStatus()) {
-////                uvcCamera.stopPreview();
-////            }
-////            final UVCCamera camera;
-////            camera = uvcCamera;
-////            uvcCamera = null;
-////            SystemClock.sleep(200);
-////            camera.destroy();
-////            EventBus.getDefault().post(new ResetConnectEvent(3));
-////        }
+// // If (uvcCamera != null) {
+// // If (uvcCamera.getOpenStatus()) {
+// // UvcCamera.stopPreview();
+// //            }
+// // Final UVCCamera camera;
+// // Camera = uvcCamera;
+// // UvcCamera = null;
+// //            SystemClock.sleep(200);
+// // Camera.destroy();
+// //            EventBus.getDefault().post(new ResetConnectEvent(3));
+// //        }
 //    }
 //
-////    Disposable disposable = null;
-////    private boolean isRun = false;
-////
-////    private void monitor() {
-////        if (disposable != null) {
-////            disposable.dispose();
-////        }
-////        disposable = Observable.interval(1L, TimeUnit.SECONDS).take(1000)
-////                .subscribeOn(Schedulers.io())
-////                .subscribe(aLong -> {
-////                    Log.w("123", "aLong" + aLong);
-//////                    if (isRun) {
-//////                        if (timeLog != 0 && System.currentTimeMillis() - timeLog > 1000) {
-//////                            //notification超时
-//////                            EventBus.getDefault().post(new DeviceConnectEvent(false, null));
-//////                            XLog.w("超过1s没data采集,Exit界area");
-////////                ToastTools.INSTANCE.showShort("超过1s没data采集,Exit界area");
-//////                        }
-//////                        timeLog = System.currentTimeMillis();
-//////                    }
-////                });
-////        Log.w("123", "Observable.timer");
-////    }
-////
-////    private void cancelMonitor() {
-////        isRun = false;
-////        if (disposable != null) {
-////            disposable.dispose();
-////        }
-////    }
+// //    Disposable disposable = null;
+// // Private boolean isRun = false;
+// //
+// // Private void monitor() {
+// // If (disposable != null) {
+// // Disposable.dispose();
+// //        }
+// // Disposable = Observable.interval(1L, TimeUnit.SECONDS).take(1000)
+// //                .subscribeOn(Schedulers.io())
+// //                .subscribe(aLong -> {
+// //                    Log.w("123", "aLong" + aLong);
+// /// /                    if (isRun) {
+// /// /                        if (timeLog != 0 && System.currentTimeMillis() - timeLog > 1000) {
+// /// /                            // Notification超时
+// /// /                            EventBus.getDefault().post(new DeviceConnectEvent(false, null));
+// /// /                            XLog.w("超过1s没data采集,Exit界area");
+// /// ///                ToastTools.INSTANCE.showShort("超过1s没data采集,Exit界area");
+// /// /                        }
+// /// /                        timeLog = System.currentTimeMillis();
+// /// /                    }
+// //                });
+// //        Log.w("123", "Observable.timer");
+// //    }
+// //
+// // Private void cancelMonitor() {
+// // IsRun = false;
+// // If (disposable != null) {
+// // Disposable.dispose();
+// //        }
+// //    }
 //
-//}
+// }

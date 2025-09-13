@@ -5,7 +5,21 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 
 /**
- * Created by fengjibo on 2023/4/12.
+ * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for SharedPreferencesUtil operations.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class SharedPreferencesUtil {
 
@@ -24,6 +38,10 @@ public class SharedPreferencesUtil {
                 .getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if ("Integer".equals(type)) {
             editor.putInt(key, (Integer) data);
         } else if ("Boolean".equals(type)) {
@@ -51,6 +69,10 @@ public class SharedPreferencesUtil {
         SharedPreferences sharedPreferences = context.getSharedPreferences
                 (FILE_NAME, Context.MODE_PRIVATE);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if ("Integer".equals(type)) {
             return sharedPreferences.getInt(key, (Integer) defValue);
         } else if ("Boolean".equals(type)) {

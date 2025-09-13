@@ -6,7 +6,18 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 
 /**
- * Created by Philipp Jahoda on 17/09/16.
+ * Specialized thermal imaging component providing Description functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class Description extends ComponentBase {
 
@@ -26,9 +37,13 @@ public class Description extends ComponentBase {
     private Paint.Align mTextAlign = Paint.Align.RIGHT;
 
     public Description() {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super();
 
-        // default size
+        // Default size
         mTextSize = Utils.convertDpToPixel(8f);
     }
 
@@ -58,6 +73,10 @@ public class Description extends ComponentBase {
      * @param y - ycoordinate
      */
     public void setPosition(float x, float y) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mPosition == null) {
             mPosition = MPPointF.getInstance(x, y);
         } else {

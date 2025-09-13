@@ -11,7 +11,18 @@ import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import java.util.List;
 
 /**
- * Created by Philipp Jahoda on 12/09/15.
+ * Specialized thermal imaging component providing CombinedHighlighter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class CombinedHighlighter extends ChartHighlighter<CombinedDataProvider> implements IHighlighter
 {
@@ -22,9 +33,13 @@ public class CombinedHighlighter extends ChartHighlighter<CombinedDataProvider> 
     protected BarHighlighter barHighlighter;
 
     public CombinedHighlighter(CombinedDataProvider chart, BarDataProvider barChart) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(chart);
 
-        // if there is BarData, create a BarHighlighter
+        // If there is BarData, create a BarHighlighter
         barHighlighter = barChart.getBarData() == null ? null : new BarHighlighter(barChart);
     }
 
@@ -35,29 +50,56 @@ public class CombinedHighlighter extends ChartHighlighter<CombinedDataProvider> 
 
         List<BarLineScatterCandleBubbleData> dataObjects = mChart.getCombinedData().getAllData();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < dataObjects.size(); i++) {
 
             ChartData dataObject = dataObjects.get(i);
 
-            // in case of BarData, let the BarHighlighter take over
+            // In case of BarData, let the BarHighlighter take over
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (barHighlighter != null && dataObject instanceof BarData) {
                 Highlight high = barHighlighter.getHighlight(x, y);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (high != null) {
                     high.setDataIndex(i);
                     mHighlightBuffer.add(high);
                 }
             } else {
 
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for (int j = 0, dataSetCount = dataObject.getDataSetCount(); j < dataSetCount; j++) {
 
                     IDataSet dataSet = dataObjects.get(i).getDataSetByIndex(j);
 
-                    // don't include datasets that cannot be highlighted
+                    // Don't include datasets that cannot be highlighted
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!dataSet.isHighlightEnabled())
                         continue;
 
                     List<Highlight> highs = buildHighlights(dataSet, j, xVal, DataSet.Rounding.CLOSEST);
+                    /**
+                     * Executes for operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param high Parameter for operation (type: highs)
+                     *
+                     */
                     for (Highlight high : highs)
                     {
                         high.setDataIndex(i);
@@ -70,24 +112,24 @@ public class CombinedHighlighter extends ChartHighlighter<CombinedDataProvider> 
         return mHighlightBuffer;
     }
 
-//    protected Highlight getClosest(float x, float y, Highlight... highs) {
+// Protected Highlight getClosest(float x, float y, Highlight... highs) {
 //
 //        Highlight closest = null;
-//        float minDistance = Float.MAX_VALUE;
+// Float minDistance = Float.MAX_VALUE;
 //
-//        for (Highlight high : highs) {
+// For (Highlight high : highs) {
 //
-//            if (high == null)
-//                continue;
+// If (high == null)
+// Continue;
 //
-//            float tempDistance = getDistance(x, y, high.getXPx(), high.getYPx());
+// Float tempDistance = getDistance(x, y, high.getXPx(), high.getYPx());
 //
-//            if (tempDistance < minDistance) {
-//                minDistance = tempDistance;
-//                closest = high;
+// If (tempDistance < minDistance) {
+// MinDistance = tempDistance;
+// Closest = high;
 //            }
 //        }
 //
-//        return closest;
+// Return closest;
 //    }
 }

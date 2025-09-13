@@ -41,10 +41,22 @@ cameraproperty值set
  * @author: CaiSongL
  * @date: 2023/4/3 15:00
  */
-// Legacy ARouter route annotation - now using NavigationManager
 /**
- * I r camera setting activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
+ * Thermal camera interface and control system. Manages thermal imaging capture and processing with IRCameraSettingActivity functionality.
+ *
+ * Provides advanced camera functionality for thermal imaging capture,
+ * including temperature measurement and pseudo color visualization.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class IRCameraSettingActivity : BaseActivity() {
     companion object {
@@ -63,15 +75,31 @@ class IRCameraSettingActivity : BaseActivity() {
     private var productName = ""
 
     private val permissionList =
+        /**
+         * Executes listof operation with thermal imaging domain optimization.
+         *
+         */
         listOf(
             Permission.ACCESS_FINE_LOCATION,
             Permission.ACCESS_COARSE_LOCATION,
         )
 
+    /**
+     * Initializes the contentview component for thermal imaging operations.
+     *
+     */
     override fun initContentView(): Int = R.layout.activity_ir_camera_setting
 
+    /**
+     * Initializes the view component for thermal imaging operations.
+     *
+     */
     override fun initView() {
         productName = intent.getStringExtra(KEY_PRODUCT_TYPE) ?: ""
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isTC007())
             {
                 watermarkBean = SharedManager.wifiWatermarkBean // TC007只有watermark
@@ -125,6 +153,10 @@ class IRCameraSettingActivity : BaseActivity() {
         tvTimeShow.isVisible = watermarkBean.isAddTime
 
         tvAddress.inputType = InputType.TYPE_NULL
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (TextUtils.isEmpty(watermarkBean.address))
             {
                 tvAddress.visibility = View.GONE
@@ -137,6 +169,10 @@ class IRCameraSettingActivity : BaseActivity() {
         edAddress.setText(watermarkBean.address)
         tvTitleShow.text = watermarkBean.title
         switchDelay.setOnCheckedChangeListener { _, isChecked ->
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (isChecked)
                 {
                     clDelayMore.visibility = View.VISIBLE
@@ -148,6 +184,10 @@ class IRCameraSettingActivity : BaseActivity() {
             SharedManager.continuousBean = continuousBean
         }
         switchWatermark.setOnCheckedChangeListener { _, isChecked ->
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (isChecked)
                 {
                     clWatermarkMore.visibility = View.VISIBLE
@@ -160,6 +200,10 @@ class IRCameraSettingActivity : BaseActivity() {
             watermarkBean.isOpen = isChecked
         }
         switchTime.setOnCheckedChangeListener { _, isChecked ->
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (isChecked)
                 {
                     tvTimeShow.text = TimeTool.getNowTime()
@@ -172,6 +216,16 @@ class IRCameraSettingActivity : BaseActivity() {
         }
         edTitle.addTextChangedListener(
             object : TextWatcher {
+                /**
+                 * Executes beforetextchanged operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param s Parameter for operation (type: CharSequence?)
+                 * @param start Parameter for operation (type: Int)
+                 * @param count Parameter for operation (type: Int)
+                 * @param after Parameter for operation (type: Int)
+                 *
+                 */
                 override fun beforeTextChanged(
                     s: CharSequence?,
                     start: Int,
@@ -180,6 +234,16 @@ class IRCameraSettingActivity : BaseActivity() {
                 ) {
                 }
 
+                /**
+                 * Executes ontextchanged operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param s Parameter for operation (type: CharSequence?)
+                 * @param start Parameter for operation (type: Int)
+                 * @param before Parameter for operation (type: Int)
+                 * @param count Parameter for operation (type: Int)
+                 *
+                 */
                 override fun onTextChanged(
                     s: CharSequence?,
                     start: Int,
@@ -188,6 +252,13 @@ class IRCameraSettingActivity : BaseActivity() {
                 ) {
                 }
 
+                /**
+                 * Executes aftertextchanged operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param s Parameter for operation (type: Editable?)
+                 *
+                 */
                 override fun afterTextChanged(s: Editable?) {
                     watermarkBean.title = edTitle.text.toString()
                     tvTitleShow.text = watermarkBean.title
@@ -196,6 +267,16 @@ class IRCameraSettingActivity : BaseActivity() {
         )
         edAddress.addTextChangedListener(
             object : TextWatcher {
+                /**
+                 * Executes beforetextchanged operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param s Parameter for operation (type: CharSequence?)
+                 * @param start Parameter for operation (type: Int)
+                 * @param count Parameter for operation (type: Int)
+                 * @param after Parameter for operation (type: Int)
+                 *
+                 */
                 override fun beforeTextChanged(
                     s: CharSequence?,
                     start: Int,
@@ -204,6 +285,16 @@ class IRCameraSettingActivity : BaseActivity() {
                 ) {
                 }
 
+                /**
+                 * Executes ontextchanged operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param s Parameter for operation (type: CharSequence?)
+                 * @param start Parameter for operation (type: Int)
+                 * @param before Parameter for operation (type: Int)
+                 * @param count Parameter for operation (type: Int)
+                 *
+                 */
                 override fun onTextChanged(
                     s: CharSequence?,
                     start: Int,
@@ -212,9 +303,20 @@ class IRCameraSettingActivity : BaseActivity() {
                 ) {
                 }
 
+                /**
+                 * Executes aftertextchanged operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param s Parameter for operation (type: Editable?)
+                 *
+                 */
                 override fun afterTextChanged(s: Editable?) {
                     watermarkBean.address = edAddress.text.toString()
                     tvAddress.text = watermarkBean.address
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!watermarkBean.address.isNullOrEmpty())
                         {
                             tvAddress.visibility = View.VISIBLE
@@ -227,7 +329,15 @@ class IRCameraSettingActivity : BaseActivity() {
         )
         imgLocation.setOnClickListener(
             object : SingleClickListener() {
+                /**
+                 * Executes onsingleclick operation with thermal imaging domain optimization.
+                 *
+                 */
                 override fun onSingleClick() {
+                    /**
+                     * Executes checkstoragepermission operation with thermal imaging domain optimization.
+                     *
+                     */
                     checkStoragePermission()
                 }
             },
@@ -236,11 +346,21 @@ TC007device不需要延迟拍照
         lyAuto.visibility = if (isTC007()) View.GONE else View.VISIBLE
     }
 
+    /**
+     * Executes isTC007 functionality.
+     */
+    /**
+     * Executes istc007 operation with thermal imaging domain optimization.
+     *
+     */
     fun isTC007(): Boolean {
         return productName.contains("TC007")
     }
 
     @SuppressLint("MissingPermission")
+    /**
+     * Retrieves location information.
+     */
     private fun getLocation(): String? {
 1.get位置管理器
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
@@ -248,6 +368,10 @@ TC007device不需要延迟拍照
 2.get位置提供器，GPS或是NetWork
         val providers = locationManager?.getProviders(true)
         locationProvider =
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
 如果是GPS
                 LocationManager.GPS_PROVIDER
@@ -258,6 +382,10 @@ TC007device不需要延迟拍照
                 return null
             }
         var location = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (location == null)
             {
                 location = locationManager?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
@@ -267,6 +395,10 @@ TC007device不需要延迟拍照
                 null
             } else
             {
+                /**
+                 * Retrieves the address with optimized performance for thermal imaging operations.
+                 *
+                 */
                 getAddress(location)
             }
     }
@@ -274,6 +406,15 @@ TC007device不需要延迟拍照
     var locationListener: LocationListener =
         object : LocationListener {
 Provider的state在可用、暂时不可用和无service三个state直接switch时触发此function
+            /**
+             * Executes onstatuschanged operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param provider Parameter for operation (type: String)
+             * @param status Parameter for operation (type: Int)
+             * @param extras Parameter for operation (type: Bundle)
+             *
+             */
             override fun onStatusChanged(
                 provider: String,
                 status: Int,
@@ -287,16 +428,34 @@ Provider的state在可用、暂时不可用和无service三个state直接switch�
             }
 
 Provider被enable时触发此function，比如GPS被Open
+            /**
+             * Executes onproviderenabled operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param provider Parameter for operation (type: String)
+             *
+             */
             override fun onProviderEnabled(provider: String) {
                 Toast.makeText(
                     this@IRCameraSettingActivity,
                     "GPSOpen",
                     Toast.LENGTH_SHORT,
                 ).show()
+                /**
+                 * Retrieves the location with optimized performance for thermal imaging operations.
+                 *
+                 */
                 getLocation()
             }
 
 Provider被disable时触发此function，比如GPS被disabled
+            /**
+             * Executes onproviderdisabled operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param provider Parameter for operation (type: String)
+             *
+             */
             override fun onProviderDisabled(provider: String) {
                 Toast.makeText(
                     this@IRCameraSettingActivity,
@@ -305,8 +464,19 @@ Provider被disable时触发此function，比如GPS被disabled
                 ).show()
             }
 
-当坐标改变时触发此function，如果Provider传进相同的坐标，它就不会被触发
+当coordinate改变时触发此function，如果Provider传进相同的coordinate，它就不会被触发
+            /**
+             * Executes onlocationchanged operation with thermal imaging domain optimization.
+             *
+             * @param
+             * @param location Parameter for operation (type: Location)
+             *
+             */
             override fun onLocationChanged(location: Location) {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (location != null) {
 如果位置发生变化，重新display地理位置经纬度
                     Toast.makeText(
@@ -320,12 +490,23 @@ Provider被disable时触发此function，比如GPS被disabled
         }
 
     @SuppressLint("MissingPermission")
+    /**
+     * Retrieves lastknownlocation information.
+     */
     private fun getLastKnownLocation(): Location? {
         locationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
         val providers: List<String> = locationManager!!.getProviders(true)
         var bestLocation: Location? = null
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (provider in providers) {
             val l: Location = locationManager!!.getLastKnownLocation(provider) ?: continue
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (bestLocation == null || l.accuracy < bestLocation.accuracy) {
                 // Found best last known location: %s", l);
                 bestLocation = l
@@ -335,9 +516,16 @@ Provider被disable时触发此function，比如GPS被disabled
     }
 
 getaddressinfo:城市、街道等info
+    /**
+     * Retrieves address information.
+     */
     private fun getAddress(location: Location?): String {
         var result: List<Address?>? = null
         try {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (location != null) {
                 val gc = Geocoder(this, Locale.getDefault())
                 result =
@@ -351,18 +539,34 @@ getaddressinfo:城市、街道等info
             e.printStackTrace()
         }
         var str = ""
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (result != null && result.isNotEmpty())
             {
                 result?.get(0)?.let {
                     str += getNullString(it.adminArea)
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (TextUtils.isEmpty(it.subLocality) && !str.contains(getNullString(it.subAdminArea)))
                         {
                             str += getNullString(it.subAdminArea)
                         }
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!str.contains(getNullString(it.locality)))
                         {
                             str += getNullString(it.locality)
                         }
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (!str.contains(getNullString(it.subLocality)))
                         {
                             str += getNullString(it.subLocality)
@@ -372,6 +576,9 @@ getaddressinfo:城市、街道等info
         return str
     }
 
+    /**
+     * Retrieves nullstring information.
+     */
     private fun getNullString(str: String?): String  {
         return if (str.isNullOrEmpty())
             {
@@ -382,8 +589,16 @@ getaddressinfo:城市、街道等info
             }
     }
 
+    /**
+     * Executes onpause operation with thermal imaging domain optimization.
+     *
+     */
     override fun onPause() {
         super.onPause()
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isTC007())
             {
                 SharedManager.wifiWatermarkBean = watermarkBean
@@ -393,32 +608,71 @@ getaddressinfo:城市、街道等info
             }
     }
 
+    /**
+     * Executes ondestroy operation with thermal imaging domain optimization.
+     *
+     */
     override fun onDestroy() {
         super.onDestroy()
     }
 
+    /**
+     * Initializes the data component for thermal imaging operations.
+     *
+     */
     override fun initData() {
     }
 
+    /**
+     * Initializes locationpermission component.
+     */
     private fun initLocationPermission() {
         XXPermissions.with(this@IRCameraSettingActivity)
             .permission(
                 permissionList,
             ).request(
                 object : OnPermissionCallback {
+                    /**
+                     * Executes ongranted operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param permissions Parameter for operation (type: MutableList<String>)
+                     * @param all Parameter for operation (type: Boolean)
+                     *
+                     */
                     override fun onGranted(
                         permissions: MutableList<String>,
                         all: Boolean,
                     ) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (all)
                             {
+                                /**
+                                 * Executes showloadingdialog operation with thermal imaging domain optimization.
+                                 *
+                                 */
                                 showLoadingDialog(LibR.string.get_current_address)
                                 lifecycleScope.launch {
                                     var addressText: String? = ""
+                                    /**
+                                     * Executes withcontext operation with thermal imaging domain optimization.
+                                     *
+                                     */
                                     withContext(Dispatchers.IO) {
                                         addressText = getLocation()
                                     }
+                                    /**
+                                     * Executes dismissloadingdialog operation with thermal imaging domain optimization.
+                                     *
+                                     */
                                     dismissLoadingDialog()
+                                    /**
+                                     * Executes if operation with thermal imaging domain optimization.
+                                     *
+                                     */
                                     if (addressText == null)
                                         {
                                             ToastUtils.showShort(LibR.string.get_Location_failed)
@@ -436,12 +690,28 @@ getaddressinfo:城市、街道等info
                             }
                     }
 
+                    /**
+                     * Executes ondenied operation with thermal imaging domain optimization.
+                     *
+                     * @param
+                     * @param permissions Parameter for operation (type: MutableList<String>)
+                     * @param never Parameter for operation (type: Boolean)
+                     *
+                     */
                     override fun onDenied(
                         permissions: MutableList<String>,
                         never: Boolean,
                     ) {
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (never) {
 如果是被永久拒绝就跳转到应用Permission系统set页area
+                            /**
+                             * Executes if operation with thermal imaging domain optimization.
+                             *
+                             */
                             if (BaseApplication.instance.isDomestic())
                                 {
                                     ToastUtils.showShort(getString(LibR.string.app_location_content))
@@ -466,20 +736,47 @@ getaddressinfo:城市、街道等info
             )
     }
 
+    /**
+     * Executes checkStoragePermission functionality.
+     */
+    /**
+     * Executes checkstoragepermission operation with thermal imaging domain optimization.
+     *
+     */
     private fun checkStoragePermission() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!XXPermissions.isGranted(this, permissionList)) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
                     .setMessage(getString(LibR.string.permission_request_location_app, CommUtils.getAppName()))
                     .setCancelListener(LibR.string.app_cancel)
                     .setPositiveListener(LibR.string.app_confirm) {
+                        /**
+                         * Initializes the locationpermission component for thermal imaging operations.
+                         *
+                         */
                         initLocationPermission()
                     }
                     .create().show()
             } else {
+                /**
+                 * Initializes the locationpermission component for thermal imaging operations.
+                 *
+                 */
                 initLocationPermission()
             }
         } else {
+            /**
+             * Initializes the locationpermission component for thermal imaging operations.
+             *
+             */
             initLocationPermission()
         }
     }

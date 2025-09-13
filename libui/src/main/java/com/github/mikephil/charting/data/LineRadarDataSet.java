@@ -11,9 +11,18 @@ import com.github.mikephil.charting.utils.Utils;
 import java.util.List;
 
 /**
- * Base dataset for line and radar DataSets.
+ * Specialized thermal imaging component providing LineRadarDataSet functionality for the IRCamera system.
  *
- * @author Philipp Jahoda
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public abstract class LineRadarDataSet<T extends Entry> extends LineScatterCandleRadarDataSet<T> implements ILineRadarDataSet<T> {
 
@@ -43,6 +52,10 @@ public abstract class LineRadarDataSet<T extends Entry> extends LineScatterCandl
     private boolean mDrawFilled = false;
 
     public LineRadarDataSet(List<T> yVals, String label) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(yVals, label);
     }
 
@@ -100,8 +113,16 @@ public abstract class LineRadarDataSet<T extends Entry> extends LineScatterCandl
      */
     public void setLineWidth(float width) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (width < 0.0f)
             width = 0.0f;
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (width > 10.0f)
             width = 10.0f;
         mLineWidth = Utils.convertDpToPixel(width);

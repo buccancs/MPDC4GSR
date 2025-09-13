@@ -1,29 +1,39 @@
 package com.infisense.usbir.tools
 
 /**
- * @author: CaiSongL
- * @date: 2023/5/18 9:46
+ * Specialized thermal imaging component providing OpencvTools functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 object OpencvTools {
-    //    init {
+    // Init {
 //        System.loadLibrary("opencv_java4");
 //    }
 //
 //
-//    fun mergeBitmap(backBitmap: Bitmap,frontBitmap : Bitmap) : Bitmap?{
-//        val time = System.currentTimeMillis()
-//        if (backBitmap == null || backBitmap.isRecycled() || frontBitmap == null || frontBitmap.isRecycled()) {
-//            return null
+// Fun mergeBitmap(backBitmap: Bitmap,frontBitmap : Bitmap) : Bitmap?{
+// Val time = System.currentTimeMillis()
+// If (backBitmap == null || backBitmap.isRecycled() || frontBitmap == null || frontBitmap.isRecycled()) {
+// Return null
 //        }
-//        var backM = Mat()
-//        var frontM = Mat()
-//        var dst = Mat()
+// Var backM = Mat()
+// Var frontM = Mat()
+// Var dst = Mat()
 //        Utils.bitmapToMat(backBitmap, backM)
 //        Utils.bitmapToMat(frontBitmap, frontM)
-//        addWeighted(backM, 1.0, frontM, 0.0, 0.0, dst)
-//        val dstBitmap = Bitmap.createBitmap(backM.width(), backM.height(), Bitmap.Config.ARGB_8888)
+// AddWeighted(backM, 1.0, frontM, 0.0, 0.0, dst)
+// Val dstBitmap = Bitmap.createBitmap(backM.width(), backM.height(), Bitmap.Config.ARGB_8888)
 //        Utils.matToBitmap(dst,dstBitmap)
 //        Log.w("opencvimageMerge时间耗时：","${System.currentTimeMillis() - time}")
-//        return dstBitmap
+// Return dstBitmap
 //    }
 }

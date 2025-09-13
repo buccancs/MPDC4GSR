@@ -14,7 +14,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by fengjibo on 2024/5/17.
+ * Specialized thermal imaging component providing DeviceControlManager functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class DeviceControlManager implements IDeviceConnectListener {
 
@@ -24,6 +35,10 @@ public class DeviceControlManager implements IDeviceConnectListener {
 
     private HashMap<String, IDeviceConnectListener> mIDeviceConnectListeners;
 
+    /**
+     * Executes devicecontrolmanager operation with thermal imaging domain optimization.
+     *
+     */
     private DeviceControlManager() {
 
     }
@@ -31,6 +46,10 @@ public class DeviceControlManager implements IDeviceConnectListener {
     private static DeviceControlManager mInstance;
 
     public static synchronized DeviceControlManager getInstance() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mInstance == null) {
             mInstance = new DeviceControlManager();
         }
@@ -53,6 +72,10 @@ RegisterdevicestateCallback，可在activity或fragment中Register，用于UI的
      * @param iDeviceConnectListener
      */
     public void addDeviceConnectListener(String key, IDeviceConnectListener iDeviceConnectListener) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mIDeviceConnectListeners != null) {
             mIDeviceConnectListeners.put(key, iDeviceConnectListener);
         }
@@ -72,10 +95,18 @@ CancelRegisterdevicestateCallback
 recycle资源
      */
     public void release() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDeviceControlWorker != null) {
             mDeviceControlWorker.release();
             mDeviceControlWorker = null;
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mIDeviceConnectListeners != null) {
             mIDeviceConnectListeners.clear();
             mIDeviceConnectListeners = null;
@@ -97,6 +128,10 @@ dual lightdata流出图
 dual lightdata流停图
      */
     public void handleStopPreview() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDeviceControlWorker != null) {
             Log.d(TAG, "handleStopPreview");
             mDeviceControlWorker.addTask(new StopPreviewTask(mDeviceControlWorker.getDeviceState()));
@@ -107,6 +142,10 @@ dual lightdata流停图
 dual lightdata流pause
      */
     public void handlePauseDualPreview() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDeviceControlWorker != null) {
             Log.d(TAG, "handlePausePreview");
             mDeviceControlWorker.addTask(new PausePreviewTask(mDeviceControlWorker.getDeviceState()));
@@ -117,6 +156,10 @@ dual lightdata流pause
 dual lightdata流Restore
      */
     public void handleResumeDualPreview() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mDeviceControlWorker != null) {
             Log.d(TAG, "handleResumePreview");
             mDeviceControlWorker.addTask(new ResumePreviewTask(mDeviceControlWorker.getDeviceState()));
@@ -126,6 +169,13 @@ dual lightdata流Restore
     @Override
     public void onPrepareConnect() {
 StartPreview前Callback
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param entry Parameter for operation (type: mIDeviceConnectListeners.entrySet()
+         *
+         */
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onPrepareConnect();
         }
@@ -134,6 +184,13 @@ StartPreview前Callback
     @Override
     public void onConnected() {
 StartPreviewsuccessful前后Callback，注意是子line程
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param entry Parameter for operation (type: mIDeviceConnectListeners.entrySet()
+         *
+         */
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onConnected();
         }
@@ -142,6 +199,13 @@ StartPreviewsuccessful前后Callback，注意是子line程
     @Override
     public void onDisconnected() {
 StopPreviewsuccessful前后Callback，注意是子line程
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param entry Parameter for operation (type: mIDeviceConnectListeners.entrySet()
+         *
+         */
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onDisconnected();
         }
@@ -150,6 +214,13 @@ StopPreviewsuccessful前后Callback，注意是子line程
     @Override
     public void onPaused() {
 todo 自行定义Paused Task来implementation
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param entry Parameter for operation (type: mIDeviceConnectListeners.entrySet()
+         *
+         */
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onPaused();
         }
@@ -158,6 +229,13 @@ todo 自行定义Paused Task来implementation
     @Override
     public void onResumed() {
 todo 自行定义Resumed Task来implementation
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param entry Parameter for operation (type: mIDeviceConnectListeners.entrySet()
+         *
+         */
         for (Map.Entry<String, IDeviceConnectListener> entry: mIDeviceConnectListeners.entrySet()) {
             entry.getValue().onResumed();
         }

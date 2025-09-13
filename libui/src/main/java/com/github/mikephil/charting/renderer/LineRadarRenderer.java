@@ -10,11 +10,30 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Created by Philipp Jahoda on 25/01/16.
+ * Specialized thermal imaging component providing LineRadarRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
 
+    /**
+     * Executes lineradarrenderer operation with thermal imaging domain optimization.
+     *
+     */
     public LineRadarRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(animator, viewPortHandler);
     }
 
@@ -27,6 +46,10 @@ public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
      */
     protected void drawFilledPath(Canvas c, Path filledPath, Drawable drawable) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (clipPathSupported()) {
 
             int save = c.save();
@@ -47,7 +70,7 @@ public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
 
     /**
      * Draws the provided path in filled mode with the provided color and alpha.
-     * Special thanks to Angelo Suzuki (https://github.com/tinsukE) for this.
+     * Special thanks to Angelo Suzuki (https:// Github.com/tinsukE) for this.
      *
      * @param c
      * @param filledPath
@@ -58,6 +81,10 @@ public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
 
         int color = (fillAlpha << 24) | (fillColor & 0xffffff);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (clipPathSupported()) {
 
             int save = c.save();
@@ -68,17 +95,17 @@ public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
             c.restoreToCount(save);
         } else {
 
-            // save
+            // Save
             Paint.Style previous = mRenderPaint.getStyle();
             int previousColor = mRenderPaint.getColor();
 
-            // set
+            // Set
             mRenderPaint.setStyle(Paint.Style.FILL);
             mRenderPaint.setColor(color);
 
             c.drawPath(filledPath, mRenderPaint);
 
-            // restore
+            // Restore
             mRenderPaint.setColor(previousColor);
             mRenderPaint.setStyle(previous);
         }

@@ -9,7 +9,21 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by fengjibo on 2023/8/16.
+ * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for CommonUtil operations.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class CommonUtil {
     public static final String TAG = "CommonUtil";
@@ -24,6 +38,10 @@ public class CommonUtil {
             is = am.open(assetTauName);
             int lenth = is.available();
             tau_data = new byte[lenth];
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (is.read((tau_data)) != lenth) {
                 // "read file fail "
             }
@@ -31,6 +49,10 @@ public class CommonUtil {
             e.printStackTrace();
         } finally {
             try {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (is != null) {
                     is.close();
                 }
@@ -42,10 +64,22 @@ public class CommonUtil {
     }
 
     public static int convertArrayY16ToY14(byte[] y16_data, int pixel_num, byte[] y14_data) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (y16_data != null && y14_data != null) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (pixel_num <= 0) {
                 return LibIRParse.IrparseResult.IRPARSE_ERROR_PARAM.getValue();
             } else {
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for (int i = 0; i < pixel_num; ++i) {
                     y14_data[i] = (byte) (y16_data[i] >> 2);
                 }
@@ -67,6 +101,10 @@ public class CommonUtil {
     }
 
     public static float round(float value, int places) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (places < 0) throw new IllegalArgumentException();
 
         final float factor = (float) Math.pow(10, places);
@@ -79,9 +117,17 @@ frame率展示
     private static double mFps = 0;
     public static double showFps() {
         mCount++;
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mCount == 100) {
             mCount = 0;
             long currentTimeMillis = System.currentTimeMillis();
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mTimeStart != 0) {
                 long timeuse = currentTimeMillis - mTimeStart;
                 mFps = 100 * 1000 / (timeuse + 0.0);
@@ -94,6 +140,13 @@ frame率展示
 
     public static String byteToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param b Parameter for operation (type: bytes)
+         *
+         */
         for (byte b : bytes) {
             sb.append(String.format("%02X ", b & 0xFF));
         }

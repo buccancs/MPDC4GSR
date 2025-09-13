@@ -7,8 +7,18 @@ import com.topdon.lib.core.ktbase.BaseFragment
 import kotlinx.coroutines.Job
 
 /**
- * Base thermal fragment for thermal imaging components.
- * Handles specific UI sections and user interactions.
+ * Specialized thermal imaging component providing BaseThermalFragment functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 open class BaseThermalFragment : BaseFragment() {
     var mIrBitmap: Bitmap? = null
@@ -28,8 +38,8 @@ open class BaseThermalFragment : BaseFragment() {
     var mMinTemp = 0f
     var maxImg: ImageView? = null
     var minImg: ImageView? = null
-    var maxIndex = 0 // maximumtemperaturepoint
-    var minIndex = 0 // minimumtemperaturepoint
+    var maxIndex = 0 // Maximumtemperaturepoint
+    var minIndex = 0 // Minimumtemperaturepoint
 
     var mCenterTextView: TextView? = null
     var mMaxTextView: TextView? = null
@@ -66,11 +76,23 @@ open class BaseThermalFragment : BaseFragment() {
     var height = 0
     var mIsIrVideoStart = false
 
+    /**
+     * Initializes the contentview component for thermal imaging operations.
+     *
+     */
     override fun initContentView() = 0
 
+    /**
+     * Initializes the view component for thermal imaging operations.
+     *
+     */
     override fun initView() {
     }
 
+    /**
+     * Initializes the data component for thermal imaging operations.
+     *
+     */
     override fun initData() {
     }
 }

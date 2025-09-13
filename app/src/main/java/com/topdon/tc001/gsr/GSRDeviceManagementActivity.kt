@@ -20,9 +20,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * GSR Device Management Activity - UI parity with IR camera device management
- * Provides comprehensive device discovery, connection, and configuration interface
- * following the same patterns as thermal camera (Topdon TC001) management
+ * Specialized thermal imaging component providing GSRDeviceManagementActivity functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class GSRDeviceManagementActivity :
     BaseBindingActivity<ActivityGsrDeviceManagementBinding>(),
@@ -30,6 +39,16 @@ class GSRDeviceManagementActivity :
     companion object {
         private const val TAG = "GSRDeviceManagement"
 
+    /**
+     * Executes startActivity functionality.
+     */
+        /**
+         * Executes startactivity operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param context Parameter for operation (type: Context)
+         *
+         */
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRDeviceManagementActivity::class.java))
         }
@@ -48,17 +67,48 @@ class GSRDeviceManagementActivity :
     private var isScanning = false
     private var isConnecting = false
 
+    /**
+     * Initializes the contentlayoutid component for thermal imaging operations.
+     *
+     */
     override fun initContentLayoutId() = R.layout.activity_gsr_device_management
 
+    /**
+     * Executes oncreate operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param savedInstanceState Parameter for operation (type: Bundle?)
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         prefs = getSharedPreferences("gsr_device_prefs", Context.MODE_PRIVATE)
 
+        /**
+         * Initializes the ializeui component for thermal imaging operations.
+         *
+         */
         initializeUI()
+        /**
+         * Configures the uppermissionhandling with validation and thermal imaging optimization.
+         *
+         */
         setupPermissionHandling()
+        /**
+         * Initializes the ializegsrcomponents component for thermal imaging operations.
+         *
+         */
         initializeGSRComponents()
+        /**
+         * Configures the updevicelistrecycler with validation and thermal imaging optimization.
+         *
+         */
         setupDeviceListRecycler()
+        /**
+         * Executes loadsaveddevices operation with thermal imaging domain optimization.
+         *
+         */
         loadSavedDevices()
     }
 
@@ -76,12 +126,20 @@ class GSRDeviceManagementActivity :
         binding.settingsButton.setOnClickListener(this)
 
         // Setup device connection status indicators
+        /**
+         * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+         *
+         */
         updateConnectionStatus("Not Connected")
 
         // Setup scanning indicator
         binding.scanningIndicator.visibility = View.GONE
 
         // Setup device list empty state
+        /**
+         * Executes updatedeviceliststate operation with thermal imaging domain optimization.
+         *
+         */
         updateDeviceListState()
     }
 
@@ -95,14 +153,30 @@ class GSRDeviceManagementActivity :
             ) { permissions ->
                 val allGranted = permissions.values.all { it }
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (allGranted) {
                     Log.i(TAG, "All required permissions granted")
+                    /**
+                     * Executes enabledeviceoperations operation with thermal imaging domain optimization.
+                     *
+                     */
                     enableDeviceOperations(true)
                     pendingOperation?.invoke()
                     pendingOperation = null
                 } else {
                     Log.w(TAG, "Some permissions were denied")
+                    /**
+                     * Executes showpermissionrequireddialog operation with thermal imaging domain optimization.
+                     *
+                     */
                     showPermissionRequiredDialog()
+                    /**
+                     * Executes enabledeviceoperations operation with thermal imaging domain optimization.
+                     *
+                     */
                     enableDeviceOperations(false)
                 }
             }
@@ -117,15 +191,34 @@ class GSRDeviceManagementActivity :
                 gsrSensorRecorder = GSRSensorRecorder(this@GSRDeviceManagementActivity)
                 val initialized = gsrSensorRecorder?.initialize() ?: false
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (initialized) {
                     Log.i(TAG, "GSR sensor recorder initialized successfully")
+                    /**
+                     * Executes enabledeviceoperations operation with thermal imaging domain optimization.
+                     *
+                     */
                     enableDeviceOperations(BluetoothPermissionUtils.hasBluetoothPermissions(this@GSRDeviceManagementActivity))
                 } else {
                     Log.w(TAG, "GSR sensor recorder initialization failed")
+                    /**
+                     * Executes showerrormessage operation with thermal imaging domain optimization.
+                     *
+                     */
                     showErrorMessage("Failed to initialize GSR system")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error initializing GSR components", e)
+                /**
+                 * Executes showerrormessage operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param system Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 showErrorMessage("Error initializing GSR system: ${e.message}")
             }
         }
@@ -138,6 +231,10 @@ class GSRDeviceManagementActivity :
         deviceAdapter =
             GSRDeviceAdapter(discoveredDevices) { device ->
                 // Device item click handler
+                /**
+                 * Executes connecttodevice operation with thermal imaging domain optimization.
+                 *
+                 */
                 connectToDevice(device)
             }
 
@@ -160,7 +257,18 @@ class GSRDeviceManagementActivity :
         }
     }
 
+    /**
+     * Executes onclick operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param v Parameter for operation (type: View?)
+     *
+     */
     override fun onClick(v: View?) {
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (v?.id) {
             R.id.scanDevicesButton -> startDeviceScan()
             R.id.stopScanButton -> stopDeviceScan()
@@ -175,11 +283,19 @@ class GSRDeviceManagementActivity :
     private fun startDeviceScan() {
         if (!BluetoothPermissionUtils.hasBleScanningPermissions(this)) {
             requestRequiredPermissions {
+                /**
+                 * Executes startdevicescan operation with thermal imaging domain optimization.
+                 *
+                 */
                 startDeviceScan()
             }
             return
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isScanning) {
             Log.w(TAG, "Device scan already in progress")
             return
@@ -188,6 +304,10 @@ class GSRDeviceManagementActivity :
         lifecycleScope.launch {
             try {
                 isScanning = true
+                /**
+                 * Executes updatescanningstate operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateScanningState(true)
 
                 Log.i(TAG, "Starting GSR device scan")
@@ -195,6 +315,10 @@ class GSRDeviceManagementActivity :
                 // Clear previous results
                 discoveredDevices.clear()
                 deviceAdapter.notifyDataSetChanged()
+                /**
+                 * Executes updatedeviceliststate operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateDeviceListState()
 
                 // Perform device discovery
@@ -202,9 +326,17 @@ class GSRDeviceManagementActivity :
 
                 // Simulate progressive discovery (like IR camera scanning)
                 devices.forEach { deviceName ->
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(500) // Simulate discovery time
 
                     val deviceInfo =
+                        /**
+                         * Executes gsrdeviceinfo operation with thermal imaging domain optimization.
+                         *
+                         */
                         GSRDeviceInfo(
                             name = deviceName,
                             address = extractMacAddress(deviceName),
@@ -216,18 +348,37 @@ class GSRDeviceManagementActivity :
 
                     discoveredDevices.add(deviceInfo)
                     deviceAdapter.notifyItemInserted(discoveredDevices.size - 1)
+                    /**
+                     * Executes updatedeviceliststate operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateDeviceListState()
 
                     Log.d(TAG, "Discovered GSR device: $deviceName")
                 }
 
                 Log.i(TAG, "Device scan completed. Found ${devices.size} devices")
+                /**
+                 * Executes showtoast operation with thermal imaging domain optimization.
+                 *
+                 */
                 showToast("Found ${devices.size} GSR devices")
             } catch (e: Exception) {
                 Log.e(TAG, "Device scan failed", e)
+                /**
+                 * Executes showerrormessage operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param failed Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 showErrorMessage("Device scan failed: ${e.message}")
             } finally {
                 isScanning = false
+                /**
+                 * Executes updatescanningstate operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateScanningState(false)
             }
         }
@@ -240,8 +391,16 @@ class GSRDeviceManagementActivity :
         if (!isScanning) return
 
         isScanning = false
+        /**
+         * Executes updatescanningstate operation with thermal imaging domain optimization.
+         *
+         */
         updateScanningState(false)
         Log.i(TAG, "Device scan stopped by user")
+        /**
+         * Executes showtoast operation with thermal imaging domain optimization.
+         *
+         */
         showToast("Device scan stopped")
     }
 
@@ -261,9 +420,21 @@ class GSRDeviceManagementActivity :
 
                 // Update current connection status
                 val connectedDevice = discoveredDevices.find { it.isConnected }
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (connectedDevice != null) {
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus("Connected to ${connectedDevice.name}")
                 } else {
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus("Not Connected")
                 }
 
@@ -283,8 +454,16 @@ class GSRDeviceManagementActivity :
             return
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
             requestRequiredPermissions {
+                /**
+                 * Executes connecttodevice operation with thermal imaging domain optimization.
+                 *
+                 */
                 connectToDevice(device)
             }
             return
@@ -293,22 +472,50 @@ class GSRDeviceManagementActivity :
         lifecycleScope.launch {
             try {
                 isConnecting = true
+                /**
+                 * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateConnectionStatus("Connecting to ${device.name}...")
 
                 Log.i(TAG, "Attempting to connect to GSR device: ${device.name}")
 
                 val success = gsrSensorRecorder?.connectToShimmerDevice(device.address) ?: false
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (success) {
                     device.isConnected = true
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus("Connected to ${device.name}")
+                    /**
+                     * Executes savedeviceconnection operation with thermal imaging domain optimization.
+                     *
+                     */
                     saveDeviceConnection(device)
+                    /**
+                     * Executes showtoast operation with thermal imaging domain optimization.
+                     *
+                     */
                     showToast("Successfully connected to ${device.name}")
 
                     Log.i(TAG, "Successfully connected to GSR device: ${device.name}")
                 } else {
                     device.isConnected = false
+                    /**
+                     * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                     *
+                     */
                     updateConnectionStatus("Connection failed")
+                    /**
+                     * Executes showerrormessage operation with thermal imaging domain optimization.
+                     *
+                     */
                     showErrorMessage("Failed to connect to ${device.name}")
 
                     Log.w(TAG, "Failed to connect to GSR device: ${device.name}")
@@ -318,7 +525,18 @@ class GSRDeviceManagementActivity :
             } catch (e: Exception) {
                 Log.e(TAG, "Connection attempt failed", e)
                 device.isConnected = false
+                /**
+                 * Executes updateconnectionstatus operation with thermal imaging domain optimization.
+                 *
+                 */
                 updateConnectionStatus("Connection error")
+                /**
+                 * Executes showerrormessage operation with thermal imaging domain optimization.
+                 *
+                 * @param
+                 * @param error Parameter for operation (type: ${e.message}")
+                 *
+                 */
                 showErrorMessage("Connection error: ${e.message}")
                 deviceAdapter.notifyDataSetChanged()
             } finally {
@@ -330,6 +548,10 @@ class GSRDeviceManagementActivity :
     /**
      * Open GSR settings activity
      */
+    /**
+     * Executes opengsrsettings operation with thermal imaging domain optimization.
+     *
+     */
     private fun openGSRSettings() {
         GSRSettingsActivity.startActivity(this)
     }
@@ -340,7 +562,15 @@ class GSRDeviceManagementActivity :
     private fun requestRequiredPermissions(onGranted: (() -> Unit)? = null) {
         val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (missingPermissions.isEmpty()) {
+            /**
+             * Executes enabledeviceoperations operation with thermal imaging domain optimization.
+             *
+             */
             enableDeviceOperations(true)
             onGranted?.invoke()
             return
@@ -405,6 +635,10 @@ class GSRDeviceManagementActivity :
             .setTitle("Permissions Required")
             .setMessage("Bluetooth permissions are required to discover and connect to GSR devices. Please grant the required permissions.")
             .setPositiveButton("Grant Permissions") { _, _ ->
+                /**
+                 * Executes requestrequiredpermissions operation with thermal imaging domain optimization.
+                 *
+                 */
                 requestRequiredPermissions()
             }
             .setNegativeButton("Cancel", null)
@@ -413,6 +647,13 @@ class GSRDeviceManagementActivity :
 
     /**
      * Utility methods
+     */
+    /**
+     * Executes extractmacaddress operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param deviceName Parameter for operation (type: String)
+     *
      */
     private fun extractMacAddress(deviceName: String): String {
         // Extract MAC address from device name (format: "DeviceName (XX:XX:XX:XX:XX:XX)")
@@ -423,28 +664,81 @@ class GSRDeviceManagementActivity :
         }
     }
 
+    /**
+     * Executes checkdeviceconnection operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param address Parameter for operation (type: String)
+     *
+     */
     private suspend fun checkDeviceConnection(address: String): Boolean {
         // Check if device is currently connected
         return gsrSensorRecorder?.getShimmerConnectionStatus()?.contains("Connected") == true
     }
 
+    /**
+     * Executes saveDeviceConnection functionality.
+     */
+    /**
+     * Executes savedeviceconnection operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param device Parameter for operation (type: GSRDeviceInfo)
+     *
+     */
     private fun saveDeviceConnection(device: GSRDeviceInfo) {
         // Save successful connection for future reference
         prefs.edit().apply {
+            /**
+             * Executes putstring operation with thermal imaging domain optimization.
+             *
+             */
             putString("last_connected_device", device.address)
+            /**
+             * Executes putstring operation with thermal imaging domain optimization.
+             *
+             */
             putString("last_connected_name", device.name)
+            /**
+             * Executes apply operation with thermal imaging domain optimization.
+             *
+             */
             apply()
         }
     }
 
+    /**
+     * Executes showToast functionality.
+     */
+    /**
+     * Executes showtoast operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param message Parameter for operation (type: String)
+     *
+     */
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Executes showErrorMessage functionality.
+     */
+    /**
+     * Executes showerrormessage operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param message Parameter for operation (type: String)
+     *
+     */
     private fun showErrorMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
+    /**
+     * Executes ondestroy operation with thermal imaging domain optimization.
+     *
+     */
     override fun onDestroy() {
         super.onDestroy()
 

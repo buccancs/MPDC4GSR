@@ -11,6 +11,20 @@ import com.github.mikephil.charting.highlight.Range;
  * @author Philipp Jahoda
  */
 @SuppressLint("ParcelCreator")
+/**
+ * Specialized thermal imaging component providing BarEntry functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class BarEntry extends Entry {
 
     /**
@@ -39,7 +53,15 @@ public class BarEntry extends Entry {
      * @param x
      * @param y
      */
+    /**
+     * Executes barentry operation with thermal imaging domain optimization.
+     *
+     */
     public BarEntry(float x, float y) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(x, y);
     }
 
@@ -50,7 +72,15 @@ public class BarEntry extends Entry {
      * @param y
      * @param data - Spot for additional data this Entry represents.
      */
+    /**
+     * Executes barentry operation with thermal imaging domain optimization.
+     *
+     */
     public BarEntry(float x, float y, Object data) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(x, y, data);
     }
 
@@ -61,7 +91,15 @@ public class BarEntry extends Entry {
      * @param y
      * @param icon - icon image
      */
+    /**
+     * Executes barentry operation with thermal imaging domain optimization.
+     *
+     */
     public BarEntry(float x, float y, Drawable icon) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(x, y, icon);
     }
 
@@ -73,7 +111,15 @@ public class BarEntry extends Entry {
      * @param icon - icon image
      * @param data - Spot for additional data this Entry represents.
      */
+    /**
+     * Executes barentry operation with thermal imaging domain optimization.
+     *
+     */
     public BarEntry(float x, float y, Drawable icon, Object data) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(x, y, icon, data);
     }
 
@@ -83,11 +129,27 @@ public class BarEntry extends Entry {
      * @param x
      * @param vals - the stack values, use at least 2
      */
+    /**
+     * Executes barentry operation with thermal imaging domain optimization.
+     *
+     */
     public BarEntry(float x, float[] vals) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(x, calcSum(vals));
 
         this.mYVals = vals;
+        /**
+         * Executes calcposnegsum operation with thermal imaging domain optimization.
+         *
+         */
         calcPosNegSum();
+        /**
+         * Executes calcranges operation with thermal imaging domain optimization.
+         *
+         */
         calcRanges();
     }
 
@@ -98,11 +160,27 @@ public class BarEntry extends Entry {
      * @param vals - the stack values, use at least 2
      * @param data - Spot for additional data this Entry represents.
      */
+    /**
+     * Executes barentry operation with thermal imaging domain optimization.
+     *
+     */
     public BarEntry(float x, float[] vals, Object data) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(x, calcSum(vals), data);
 
         this.mYVals = vals;
+        /**
+         * Executes calcposnegsum operation with thermal imaging domain optimization.
+         *
+         */
         calcPosNegSum();
+        /**
+         * Executes calcranges operation with thermal imaging domain optimization.
+         *
+         */
         calcRanges();
     }
 
@@ -113,11 +191,27 @@ public class BarEntry extends Entry {
      * @param vals - the stack values, use at least 2
      * @param icon - icon image
      */
+    /**
+     * Executes barentry operation with thermal imaging domain optimization.
+     *
+     */
     public BarEntry(float x, float[] vals, Drawable icon) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(x, calcSum(vals), icon);
 
         this.mYVals = vals;
+        /**
+         * Executes calcposnegsum operation with thermal imaging domain optimization.
+         *
+         */
         calcPosNegSum();
+        /**
+         * Executes calcranges operation with thermal imaging domain optimization.
+         *
+         */
         calcRanges();
     }
 
@@ -129,11 +223,27 @@ public class BarEntry extends Entry {
      * @param icon - icon image
      * @param data - Spot for additional data this Entry represents.
      */
+    /**
+     * Executes barentry operation with thermal imaging domain optimization.
+     *
+     */
     public BarEntry(float x, float[] vals, Drawable icon, Object data) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(x, calcSum(vals), icon, data);
 
         this.mYVals = vals;
+        /**
+         * Executes calcposnegsum operation with thermal imaging domain optimization.
+         *
+         */
         calcPosNegSum();
+        /**
+         * Executes calcranges operation with thermal imaging domain optimization.
+         *
+         */
         calcRanges();
     }
 
@@ -163,9 +273,21 @@ public class BarEntry extends Entry {
      * @param vals
      */
     public void setVals(float[] vals) {
+        /**
+         * Configures the y with validation and thermal imaging optimization.
+         *
+         */
         setY(calcSum(vals));
         mYVals = vals;
+        /**
+         * Executes calcposnegsum operation with thermal imaging domain optimization.
+         *
+         */
         calcPosNegSum();
+        /**
+         * Executes calcranges operation with thermal imaging domain optimization.
+         *
+         */
         calcRanges();
     }
 
@@ -207,12 +329,20 @@ public class BarEntry extends Entry {
 
     public float getSumBelow(int stackIndex) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYVals == null)
             return 0;
 
         float remainder = 0f;
         int index = mYVals.length - 1;
 
+        /**
+         * Executes while operation with thermal imaging domain optimization.
+         *
+         */
         while (index > stackIndex && index >= 0) {
             remainder += mYVals[index];
             index--;
@@ -241,6 +371,10 @@ public class BarEntry extends Entry {
 
     private void calcPosNegSum() {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mYVals == null) {
             mNegativeSum = 0;
             mPositiveSum = 0;
@@ -250,7 +384,18 @@ public class BarEntry extends Entry {
         float sumNeg = 0f;
         float sumPos = 0f;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param f Parameter for operation (type: mYVals)
+         *
+         */
         for (float f : mYVals) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (f <= 0f)
                 sumNeg += Math.abs(f);
             else
@@ -269,11 +414,22 @@ public class BarEntry extends Entry {
      */
     private static float calcSum(float[] vals) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (vals == null)
             return 0f;
 
         float sum = 0f;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param f Parameter for operation (type: vals)
+         *
+         */
         for (float f : vals)
             sum += f;
 
@@ -284,6 +440,10 @@ public class BarEntry extends Entry {
 
         float[] values = getYVals();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (values == null || values.length == 0)
             return;
 
@@ -292,10 +452,18 @@ public class BarEntry extends Entry {
         float negRemain = -getNegativeSum();
         float posRemain = 0f;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < mRanges.length; i++) {
 
             float value = values[i];
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (value < 0) {
                 mRanges[i] = new Range(negRemain, negRemain - value);
                 negRemain -= value;

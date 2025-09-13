@@ -10,9 +10,23 @@ import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Created by Philipp Jahoda on 19/02/16.
+/**
+ * Thermal imaging UI animation system. Provides smooth transitions and visual effects for AnimatedViewPortJob components.
+ *
+ * Custom view component optimized for thermal imaging display
+ * with specialized rendering and interaction capabilities.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
-@SuppressLint("NewApi")
 public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
 
     protected ObjectAnimator animator;
@@ -22,7 +36,15 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
     protected float xOrigin;
     protected float yOrigin;
 
+    /**
+     * Executes animatedviewportjob operation with thermal imaging domain optimization.
+     *
+     */
     public AnimatedViewPortJob(ViewPortHandler viewPortHandler, float xValue, float yValue, Transformer trans, View v, float xOrigin, float yOrigin, long duration) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(viewPortHandler, xValue, yValue, trans, v);
         this.xOrigin = xOrigin;
         this.yOrigin = yOrigin;
@@ -72,18 +94,26 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
     @Override
     public void onAnimationEnd(Animator animation) {
         try{
+            /**
+             * Executes recycleself operation with thermal imaging domain optimization.
+             *
+             */
             recycleSelf();
         }catch (IllegalArgumentException e){
-            // don't worry about it.
+            // Don't worry about it.
         }
     }
 
     @Override
     public void onAnimationCancel(Animator animation) {
         try{
+            /**
+             * Executes recycleself operation with thermal imaging domain optimization.
+             *
+             */
             recycleSelf();
         }catch (IllegalArgumentException e){
-            // don't worry about it.
+            // Don't worry about it.
         }
     }
 

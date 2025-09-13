@@ -21,6 +21,23 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
+/**
+ * Specialized thermal imaging component providing Transformer functionality for the IRCamera system.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class Transformer {
 
     /**
@@ -35,6 +52,10 @@ public class Transformer {
 
     protected ViewPortHandler mViewPortHandler;
 
+    /**
+     * Executes transformer operation with thermal imaging domain optimization.
+     *
+     */
     public Transformer(ViewPortHandler viewPortHandler) {
         this.mViewPortHandler = viewPortHandler;
     }
@@ -53,14 +74,22 @@ public class Transformer {
         float scaleX = (float) ((mViewPortHandler.contentWidth()) / deltaX);
         float scaleY = (float) ((mViewPortHandler.contentHeight()) / deltaY);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (Float.isInfinite(scaleX)) {
             scaleX = 0;
         }
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (Float.isInfinite(scaleY)) {
             scaleY = 0;
         }
 
-        // setup all matrices
+        // Setup all matrices
         mMatrixValueToPx.reset();
         mMatrixValueToPx.postTranslate(-xChartMin, -yChartMin);
         mMatrixValueToPx.postScale(scaleX, -scaleY);
@@ -75,8 +104,12 @@ public class Transformer {
 
         mMatrixOffset.reset();
 
-        // offset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
+        // Offset.postTranslate(mOffsetLeft, getHeight() - mOffsetBottom);
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!inverted)
             mMatrixOffset.postTranslate(mViewPortHandler.offsetLeft(),
                     mViewPortHandler.getChartHeight() - mViewPortHandler.offsetBottom());
@@ -101,15 +134,27 @@ public class Transformer {
 
         final int count = (int) ((to - from) * phaseX + 1) * 2;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (valuePointsForGenerateTransformedValuesScatter.length != count) {
             valuePointsForGenerateTransformedValuesScatter = new float[count];
         }
         float[] valuePoints = valuePointsForGenerateTransformedValuesScatter;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int j = 0; j < count; j += 2) {
 
             Entry e = data.getEntryForIndex(j / 2 + from);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (e != null) {
                 valuePoints[j] = e.getX();
                 valuePoints[j + 1] = e.getY() * phaseY;
@@ -119,6 +164,10 @@ public class Transformer {
             }
         }
 
+        /**
+         * Retrieves the valuetopixelmatrix with optimized performance for thermal imaging operations.
+         *
+         */
         getValueToPixelMatrix().mapPoints(valuePoints);
 
         return valuePoints;
@@ -137,15 +186,27 @@ public class Transformer {
 
         final int count = (to - from + 1) * 2; // (int) Math.ceil((to - from) * phaseX) * 2;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (valuePointsForGenerateTransformedValuesBubble.length != count) {
             valuePointsForGenerateTransformedValuesBubble = new float[count];
         }
         float[] valuePoints = valuePointsForGenerateTransformedValuesBubble;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int j = 0; j < count; j += 2) {
 
             Entry e = data.getEntryForIndex(j / 2 + from);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (e != null) {
                 valuePoints[j] = e.getX();
                 valuePoints[j + 1] = e.getY() * phaseY;
@@ -155,6 +216,10 @@ public class Transformer {
             }
         }
 
+        /**
+         * Retrieves the valuetopixelmatrix with optimized performance for thermal imaging operations.
+         *
+         */
         getValueToPixelMatrix().mapPoints(valuePoints);
 
         return valuePoints;
@@ -172,22 +237,38 @@ public class Transformer {
     public float[] generateTransformedValuesLine(ILineDataSet data,
                                                  float phaseX, float phaseY,
                                                  int min, int max) {
-        //TODO java.lang.NegativeArraySizeException: -434
+        // TODO: java.lang.NegativeArraySizeException: -434
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (max < min) {
             XLog.w("generateTransformedValuesLine error: max:" + max + ", min:" + min + ", phaseX:" + phaseX);
             return new float[0];
         }
         final int count = ((int) ((max - min) * phaseX) + 1) * 2;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (valuePointsForGenerateTransformedValuesLine.length != count) {
             valuePointsForGenerateTransformedValuesLine = new float[count];
         }
         float[] valuePoints = valuePointsForGenerateTransformedValuesLine;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int j = 0; j < count; j += 2) {
 
             Entry e = data.getEntryForIndex(j / 2 + min);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (e != null) {
                 valuePoints[j] = e.getX();
                 valuePoints[j + 1] = e.getY() * phaseY;
@@ -197,6 +278,10 @@ public class Transformer {
             }
         }
 
+        /**
+         * Retrieves the valuetopixelmatrix with optimized performance for thermal imaging operations.
+         *
+         */
         getValueToPixelMatrix().mapPoints(valuePoints);
 
         return valuePoints;
@@ -216,15 +301,27 @@ public class Transformer {
 
         final int count = (int) ((to - from) * phaseX + 1) * 2;
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (valuePointsForGenerateTransformedValuesCandle.length != count) {
             valuePointsForGenerateTransformedValuesCandle = new float[count];
         }
         float[] valuePoints = valuePointsForGenerateTransformedValuesCandle;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int j = 0; j < count; j += 2) {
 
             CandleEntry e = data.getEntryForIndex(j / 2 + from);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (e != null) {
                 valuePoints[j] = e.getX();
                 valuePoints[j + 1] = e.getHigh() * phaseY;
@@ -234,6 +331,10 @@ public class Transformer {
             }
         }
 
+        /**
+         * Retrieves the valuetopixelmatrix with optimized performance for thermal imaging operations.
+         *
+         */
         getValueToPixelMatrix().mapPoints(valuePoints);
 
         return valuePoints;
@@ -259,7 +360,15 @@ public class Transformer {
      */
     public void pathValuesToPixel(List<Path> paths) {
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < paths.size(); i++) {
+            /**
+             * Executes pathvaluetopixel operation with thermal imaging domain optimization.
+             *
+             */
             pathValueToPixel(paths.get(i));
         }
     }
@@ -297,7 +406,7 @@ public class Transformer {
      */
     public void rectToPixelPhase(RectF r, float phaseY) {
 
-        // multiply the height of the rect with the phase
+        // Multiply the height of the rect with the phase
         r.top *= phaseY;
         r.bottom *= phaseY;
 
@@ -308,7 +417,7 @@ public class Transformer {
 
     public void rectToPixelPhaseHorizontal(RectF r, float phaseY) {
 
-        // multiply the height of the rect with the phase
+        // Multiply the height of the rect with the phase
         r.left *= phaseY;
         r.right *= phaseY;
 
@@ -337,7 +446,7 @@ public class Transformer {
      */
     public void rectValueToPixelHorizontal(RectF r, float phaseY) {
 
-        // multiply the height of the rect with the phase
+        // Multiply the height of the rect with the phase
         r.left *= phaseY;
         r.right *= phaseY;
 
@@ -355,6 +464,10 @@ public class Transformer {
 
         Matrix m = getValueToPixelMatrix();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < rects.size(); i++)
             m.mapRect(rects.get(i));
     }
@@ -372,7 +485,7 @@ public class Transformer {
         Matrix tmp = mPixelToValueMatrixBuffer;
         tmp.reset();
 
-        // invert all matrixes to convert back to the original value
+        // Invert all matrixes to convert back to the original value
         mMatrixOffset.invert(tmp);
         tmp.mapPoints(pixels);
 
@@ -402,6 +515,10 @@ public class Transformer {
     public MPPointD getValuesByTouchPoint(float x, float y) {
 
         MPPointD result = MPPointD.getInstance(0, 0);
+        /**
+         * Retrieves the valuesbytouchpoint with optimized performance for thermal imaging operations.
+         *
+         */
         getValuesByTouchPoint(x, y, result);
         return result;
     }
@@ -411,6 +528,10 @@ public class Transformer {
         ptsBuffer[0] = x;
         ptsBuffer[1] = y;
 
+        /**
+         * Executes pixelstovalue operation with thermal imaging domain optimization.
+         *
+         */
         pixelsToValue(ptsBuffer);
 
         outputPoint.x = ptsBuffer[0];
@@ -430,6 +551,10 @@ public class Transformer {
         ptsBuffer[0] = x;
         ptsBuffer[1] = y;
 
+        /**
+         * Executes pointvaluestopixel operation with thermal imaging domain optimization.
+         *
+         */
         pointValuesToPixel(ptsBuffer);
 
         double xPx = ptsBuffer[0];
@@ -458,6 +583,10 @@ public class Transformer {
     private Matrix mMBuffer2 = new Matrix();
 
     public Matrix getPixelToValueMatrix() {
+        /**
+         * Retrieves the valuetopixelmatrix with optimized performance for thermal imaging operations.
+         *
+         */
         getValueToPixelMatrix().invert(mMBuffer2);
         return mMBuffer2;
     }

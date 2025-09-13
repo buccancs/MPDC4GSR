@@ -21,6 +21,20 @@ import kotlin.math.abs
  * @author IRCamera Development Team
  * @since 1.0
  */
+/**
+ * Specialized thermal imaging component providing TimeSyncService functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class TimeSyncService {
     companion object {
         private const val TAG = "TimeSyncService"
@@ -49,12 +63,18 @@ class TimeSyncService {
         val t4: Long, // Client receive time
         val roundTripDelay: Long,
         val clockOffset: Long,
-    )
-
 /**
- * TimeSyncListener manages camera operations and image capture functionality.
+ * Specialized thermal imaging component providing TimeSyncListener functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     interface TimeSyncListener {
@@ -76,6 +96,9 @@ class TimeSyncService {
 
     private var listener: TimeSyncListener? = null
 
+    /**
+     * Sets listener configuration.
+     */
     fun setListener(listener: TimeSyncListener?) {
         this.listener = listener
     }
@@ -87,6 +110,10 @@ class TimeSyncService {
         targetHost: String,
         targetPort: Int = 8080,
     ): SyncResult =
+        /**
+         * Executes withcontext operation with thermal imaging domain optimization.
+         *
+         */
         withContext(Dispatchers.IO) {
             listener?.onSyncStarted(targetHost)
             Log.i(TAG, "Starting time synchronization with $targetHost:$targetPort")
@@ -95,11 +122,19 @@ class TimeSyncService {
             var lastError: String? = null
 
             // Collect multiple samples for better accuracy
+            /**
+             * Executes repeat operation with thermal imaging domain optimization.
+             *
+             */
             repeat(MAX_SYNC_ATTEMPTS) { attempt ->
                 try {
                     val sample = performSyncRequest(targetHost, targetPort)
 
                     // Only accept samples with reasonable round-trip delay
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (sample.roundTripDelay <= MAX_ACCEPTABLE_DELAY_MS) {
                         samples.add(sample)
                         Log.d(TAG, "Sample ${attempt + 1}: offset=${sample.clockOffset}ms, delay=${sample.roundTripDelay}ms")
@@ -108,16 +143,32 @@ class TimeSyncService {
                     }
 
                     // Short delay between samples
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (attempt < MAX_SYNC_ATTEMPTS - 1) {
+                        /**
+                         * Executes delay operation with thermal imaging domain optimization.
+                         *
+                         */
                         delay(100)
                     }
                 } catch (e: Exception) {
                     lastError = e.message
                     Log.w(TAG, "Sync attempt ${attempt + 1} failed: ${e.message}")
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(500) // Longer delay after failures
                 }
             }
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (samples.size < MIN_SAMPLES) {
                 val error = "Insufficient samples for reliable sync (got ${samples.size}, need $MIN_SAMPLES)"
                 Log.e(TAG, error)
@@ -145,17 +196,37 @@ class TimeSyncService {
         targetPort: Int = 8080,
         intervalMs: Long = SYNC_INTERVAL_MS,
     ) {
+        /**
+         * Executes stopperiodicsync operation with thermal imaging domain optimization.
+         *
+         */
         stopPeriodicSync()
 
         periodicSyncJob =
             syncScope.launch {
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (isActive) {
                     try {
+                        /**
+                         * Executes synchronizetime operation with thermal imaging domain optimization.
+                         *
+                         */
                         synchronizeTime(targetHost, targetPort)
+                        /**
+                         * Executes delay operation with thermal imaging domain optimization.
+                         *
+                         */
                         delay(intervalMs)
                     } catch (e: Exception) {
                         Log.e(TAG, "Periodic sync error", e)
                         listener?.onSyncError("Periodic sync failed: ${e.message}")
+                        /**
+                         * Executes delay operation with thermal imaging domain optimization.
+                         *
+                         */
                         delay(intervalMs) // Continue trying
                     }
                 }
@@ -194,9 +265,25 @@ class TimeSyncService {
 
                 // Send sync request
                 val request =
+                    /**
+                     * Executes jsonobject operation with thermal imaging domain optimization.
+                     *
+                     */
                     JSONObject().apply {
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("message_type", "time_sync_request")
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("client_time", t1)
+                        /**
+                         * Executes put operation with thermal imaging domain optimization.
+                         *
+                         */
                         put("version", "1.0")
                     }
 
@@ -215,6 +302,10 @@ class TimeSyncService {
 
                 val response = JSONObject(String(responseData, Charsets.UTF_8))
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (response.optString("message_type") != "time_sync_response") {
                     throw IllegalStateException("Invalid sync response")
                 }
@@ -230,6 +321,10 @@ class TimeSyncService {
                 // Clock offset: ((T2 - T1) + (T3 - T4)) / 2
                 val clockOffset = ((t2 - t1) + (t3 - t4)) / 2
 
+                /**
+                 * Executes syncsample operation with thermal imaging domain optimization.
+                 *
+                 */
                 SyncSample(t1, t2, t3, t4, roundTripDelay, clockOffset)
             } finally {
                 socket.close()
@@ -268,10 +363,13 @@ class TimeSyncService {
      * Get high-precision timestamp in milliseconds
      * Uses System.nanoTime() for monotonic, high-precision timing
      */
+    /**
+     * Retrieves highprecisiontime information.
+     */
     private fun getHighPrecisionTime(): Long {
         // Use nanoTime for precision, but convert to wall-clock time
         val systemTime = System.currentTimeMillis()
-        val nanoOffset = (System.nanoTime() % 1000000) / 1000 // microsecond precision
+        val nanoOffset = (System.nanoTime() % 1000000) / 1000 // Microsecond precision
         return systemTime * 1000 + nanoOffset // Return in microseconds
     }
 
@@ -304,9 +402,25 @@ class TimeSyncService {
         val currentTime = getHighPrecisionTime()
 
         return JSONObject().apply {
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("message_type", "time_sync_broadcast")
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("sender_time", currentTime)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("version", "1.0")
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("sender_id", android.os.Build.MODEL)
         }
     }
@@ -334,7 +448,15 @@ class TimeSyncService {
     /**
      * Cleanup resources
      */
+    /**
+     * Executes cleanup operation with thermal imaging domain optimization.
+     *
+     */
     fun cleanup() {
+        /**
+         * Executes stopperiodicsync operation with thermal imaging domain optimization.
+         *
+         */
         stopPeriodicSync()
         syncScope.cancel()
     }

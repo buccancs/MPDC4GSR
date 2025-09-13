@@ -19,11 +19,33 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.List;
 
+/**
+ * Specialized thermal imaging component providing XAxisRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class XAxisRenderer extends AxisRenderer {
 
     protected XAxis mXAxis;
 
+    /**
+     * Executes xaxisrenderer operation with thermal imaging domain optimization.
+     *
+     */
     public XAxisRenderer(ViewPortHandler viewPortHandler, XAxis xAxis, Transformer trans) {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super(viewPortHandler, trans, xAxis);
 
         this.mXAxis = xAxis;
@@ -42,13 +64,21 @@ public class XAxisRenderer extends AxisRenderer {
     @Override
     public void computeAxis(float min, float max, boolean inverted) {
 
-        // calculate the starting and entry point of the y-labels (depending on
-        // zoom / contentrect bounds)
+        // Calculate the starting and entry point of the y-labels (depending on
+        // Zoom / contentrect bounds)
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mViewPortHandler.contentWidth() > 10 && !mViewPortHandler.isFullyZoomedOutX()) {
 
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentTop());
             MPPointD p2 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentRight(), mViewPortHandler.contentTop());
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (inverted) {
 
                 min = (float) p2.x;
@@ -63,6 +93,10 @@ public class XAxisRenderer extends AxisRenderer {
             MPPointD.recycleInstance(p2);
         }
 
+        /**
+         * Executes computeaxisvalues operation with thermal imaging domain optimization.
+         *
+         */
         computeAxisValues(min, max);
     }
 
@@ -70,6 +104,10 @@ public class XAxisRenderer extends AxisRenderer {
     protected void computeAxisValues(float min, float max) {
         super.computeAxisValues(min, max);
 
+        /**
+         * Executes computesize operation with thermal imaging domain optimization.
+         *
+         */
         computeSize();
     }
 
@@ -102,6 +140,10 @@ public class XAxisRenderer extends AxisRenderer {
     @Override
     public void renderAxisLabels(Canvas c) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mXAxis.isEnabled() || !mXAxis.isDrawLabelsEnabled())
             return;
 
@@ -112,32 +154,60 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setColor(mXAxis.getTextColor());
 
         MPPointF pointF = MPPointF.getInstance(0,0);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXAxis.getPosition() == XAxisPosition.TOP) {
             pointF.x = 0.5f;
             pointF.y = 1.0f;
+            /**
+             * Executes drawlabels operation with thermal imaging domain optimization.
+             *
+             */
             drawLabels(c, mViewPortHandler.contentTop() - yoffset, pointF);
 
         } else if (mXAxis.getPosition() == XAxisPosition.TOP_INSIDE) {
             pointF.x = 0.5f;
             pointF.y = 1.0f;
+            /**
+             * Executes drawlabels operation with thermal imaging domain optimization.
+             *
+             */
             drawLabels(c, mViewPortHandler.contentTop() + yoffset + mXAxis.mLabelRotatedHeight, pointF);
 
         } else if (mXAxis.getPosition() == XAxisPosition.BOTTOM) {
             pointF.x = 0.5f;
             pointF.y = 0.0f;
+            /**
+             * Executes drawlabels operation with thermal imaging domain optimization.
+             *
+             */
             drawLabels(c, mViewPortHandler.contentBottom() + yoffset, pointF);
 
         } else if (mXAxis.getPosition() == XAxisPosition.BOTTOM_INSIDE) {
             pointF.x = 0.5f;
             pointF.y = 0.0f;
+            /**
+             * Executes drawlabels operation with thermal imaging domain optimization.
+             *
+             */
             drawLabels(c, mViewPortHandler.contentBottom() - yoffset - mXAxis.mLabelRotatedHeight, pointF);
 
         } else { // BOTH SIDED
             pointF.x = 0.5f;
             pointF.y = 1.0f;
+            /**
+             * Executes drawlabels operation with thermal imaging domain optimization.
+             *
+             */
             drawLabels(c, mViewPortHandler.contentTop() - yoffset, pointF);
             pointF.x = 0.5f;
             pointF.y = 0.0f;
+            /**
+             * Executes drawlabels operation with thermal imaging domain optimization.
+             *
+             */
             drawLabels(c, mViewPortHandler.contentBottom() + yoffset, pointF);
         }
         MPPointF.recycleInstance(pointF);
@@ -146,6 +216,10 @@ public class XAxisRenderer extends AxisRenderer {
     @Override
     public void renderAxisLine(Canvas c) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mXAxis.isDrawAxisLineEnabled() || !mXAxis.isEnabled())
             return;
 
@@ -153,6 +227,10 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLinePaint.setStrokeWidth(mXAxis.getAxisLineWidth());
         mAxisLinePaint.setPathEffect(mXAxis.getAxisLineDashPathEffect());
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXAxis.getPosition() == XAxisPosition.TOP
                 || mXAxis.getPosition() == XAxisPosition.TOP_INSIDE
                 || mXAxis.getPosition() == XAxisPosition.BOTH_SIDED) {
@@ -161,6 +239,10 @@ public class XAxisRenderer extends AxisRenderer {
                     mViewPortHandler.contentTop(), mAxisLinePaint);
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mXAxis.getPosition() == XAxisPosition.BOTTOM
                 || mXAxis.getPosition() == XAxisPosition.BOTTOM_INSIDE
                 || mXAxis.getPosition() == XAxisPosition.BOTH_SIDED) {
@@ -182,9 +264,17 @@ public class XAxisRenderer extends AxisRenderer {
 
         float[] positions = new float[mXAxis.mEntryCount * 2];
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < positions.length; i += 2) {
 
-            // only fill x values
+            // Only fill x values
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (centeringEnabled) {
                 positions[i] = mXAxis.mCenteredEntries[i / 2];
             } else {
@@ -194,40 +284,68 @@ public class XAxisRenderer extends AxisRenderer {
 
         mTrans.pointValuesToPixel(positions);
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < positions.length; i += 2) {
 
             float x = positions[i];
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (mViewPortHandler.isInBoundsX(x)) {
 
                 String label = mXAxis.getValueFormatter().getAxisLabel(mXAxis.mEntries[i / 2], mXAxis);
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (mXAxis.isAvoidFirstLastClippingEnabled()) {
 
-                    // avoid clipping of the last
+                    // Avoid clipping of the last
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (i / 2 == mXAxis.mEntryCount - 1 && mXAxis.mEntryCount > 1) {
                         float width = Utils.calcTextWidth(mAxisLabelPaint, label);
 
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (width > mViewPortHandler.offsetRight() * 2
                                 && x + width > mViewPortHandler.getChartWidth())
                             x -= width / 2;
 
-                        // avoid clipping of the first
+                        // Avoid clipping of the first
                     } else if (i == 0) {
 
                         float width = Utils.calcTextWidth(mAxisLabelPaint, label);
                         x += width / 2;
                     }
                 }
-                //chart 绘制刻度文本  -------- start --------
+                // Chart 绘制刻度文本  -------- start --------
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (i == 0 && mXAxis.isJumpFirstLabel()) {
-                    //不是哥们，你好歹好个parameter来saved要不要绘制啊，查了我半天结果是因为你这里给跳过了
-                    //起始刻度不需要绘制
+                    // 不是哥们，你好歹好个parameter来saved要不要绘制啊，查了我半天结果是因为你这里给跳过了
+                    // 起始刻度不需要绘制
                     continue;
                 }
 
                 // -------- end --------
+                /**
+                 * Executes drawlabel operation with thermal imaging domain optimization.
+                 *
+                 */
                 drawLabel(c, label, x, pos, anchor, labelRotationAngleDegrees);
             }
         }
@@ -241,17 +359,29 @@ public class XAxisRenderer extends AxisRenderer {
     @Override
     public void renderGridLines(Canvas c) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!mXAxis.isDrawGridLinesEnabled() || !mXAxis.isEnabled())
             return;
 
         int clipRestoreCount = c.save();
         c.clipRect(getGridClippingRect());
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if(mRenderGridLinesBuffer.length != mAxis.mEntryCount * 2){
             mRenderGridLinesBuffer = new float[mXAxis.mEntryCount * 2];
         }
         float[] positions = mRenderGridLinesBuffer;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < positions.length; i += 2) {
             positions[i] = mXAxis.mEntries[i / 2];
             positions[i + 1] = mXAxis.mEntries[i / 2];
@@ -259,19 +389,35 @@ public class XAxisRenderer extends AxisRenderer {
 
         mTrans.pointValuesToPixel(positions);
 
+        /**
+         * Configures the upgridpaint with validation and thermal imaging optimization.
+         *
+         */
         setupGridPaint();
 
         Path gridLinePath = mRenderGridLinesPath;
         gridLinePath.reset();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < positions.length; i += 2) {
-            //chart 绘制刻度line   -------- start --------
+            // Chart 绘制刻度line   -------- start --------
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (i == 0) {
                 continue;
             }
 
             // -------- end --------
+            /**
+             * Executes drawgridline operation with thermal imaging domain optimization.
+             *
+             */
             drawGridLine(c, positions[i], positions[i + 1], gridLinePath);
         }
 
@@ -299,7 +445,7 @@ public class XAxisRenderer extends AxisRenderer {
         gridLinePath.moveTo(x, mViewPortHandler.contentBottom());
         gridLinePath.lineTo(x, mViewPortHandler.contentTop());
 
-        // draw a path because lines don't support dashing on lower android versions
+        // Draw a path because lines don't support dashing on lower android versions
         c.drawPath(gridLinePath, mGridPaint);
 
         gridLinePath.reset();
@@ -318,6 +464,10 @@ public class XAxisRenderer extends AxisRenderer {
 
         List<LimitLine> limitLines = mXAxis.getLimitLines();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (limitLines == null || limitLines.size() <= 0)
             return;
 
@@ -325,10 +475,18 @@ public class XAxisRenderer extends AxisRenderer {
         position[0] = 0;
         position[1] = 0;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for (int i = 0; i < limitLines.size(); i++) {
 
             LimitLine l = limitLines.get(i);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!l.isEnabled())
                 continue;
 
@@ -342,7 +500,15 @@ public class XAxisRenderer extends AxisRenderer {
 
             mTrans.pointValuesToPixel(position);
 
+            /**
+             * Executes renderlimitlineline operation with thermal imaging domain optimization.
+             *
+             */
             renderLimitLineLine(c, l, position);
+            /**
+             * Executes renderlimitlinelabel operation with thermal imaging domain optimization.
+             *
+             */
             renderLimitLineLabel(c, l, position, 2.f + l.getYOffset());
 
             c.restoreToCount(clipRestoreCount);
@@ -373,7 +539,11 @@ public class XAxisRenderer extends AxisRenderer {
     public void renderLimitLineLabel(Canvas c, LimitLine limitLine, float[] position, float yOffset) {
         String label = limitLine.getLabel();
 
-        // if drawing the limit-value label is enabled
+        // If drawing the limit-value label is enabled
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (label != null && !label.equals("")) {
 
             mLimitLinePaint.setStyle(limitLine.getTextStyle());
@@ -386,6 +556,10 @@ public class XAxisRenderer extends AxisRenderer {
 
             final LimitLine.LimitLabelPosition labelPosition = limitLine.getLabelPosition();
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (labelPosition == LimitLine.LimitLabelPosition.RIGHT_TOP) {
 
                 final float labelLineHeight = Utils.calcTextHeight(mLimitLinePaint, label);

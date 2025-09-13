@@ -18,6 +18,20 @@ import java.util.concurrent.atomic.AtomicLong
  * @author IRCamera Development Team
  * @since 1.0
  */
+/**
+ * Specialized thermal imaging component providing ReliableMessageService functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 class ReliableMessageService(private val context: Context? = null) {
     companion object {
         private const val TAG = "ReliableMessage"
@@ -47,18 +61,18 @@ class ReliableMessageService(private val context: Context? = null) {
         val targetHost: String,
         val targetPort: Int,
         val priority: MessagePriority,
-        val timeoutMs: Long,
-        val maxRetries: Int,
-        val sentAt: Long,
-        var retryCount: Int = 0,
-        var lastRetryAt: Long = 0,
-        val callback: MessageCallback?,
-    )
-
 /**
- * MessagePriority manages camera operations and image capture functionality.
+ * Specialized thermal imaging component providing MessagePriority functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     enum class MessagePriority {
@@ -66,12 +80,18 @@ class ReliableMessageService(private val context: Context? = null) {
         NORMAL, // Regular messages (data transfer)
         HIGH, // Important messages (control commands)
         CRITICAL, // Critical messages (emergency stop, sync)
-    }
-
 /**
- * MessageCallback manages camera operations and image capture functionality.
+ * Specialized thermal imaging component providing MessageCallback functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     interface MessageCallback {
@@ -95,12 +115,18 @@ class ReliableMessageService(private val context: Context? = null) {
             messageId: String,
             attempt: Int,
         )
-    }
-
 /**
- * MessageHandler manages camera operations and image capture functionality.
+ * Specialized thermal imaging component providing MessageHandler functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     interface MessageHandler {
@@ -108,15 +134,30 @@ class ReliableMessageService(private val context: Context? = null) {
      * Handles message events and responses.
      */
         fun handleMessage(message: JSONObject): JSONObject? // Return response or null
-    }
-
 /**
- * MessageTransport manages camera operations and image capture functionality.
+ * Specialized thermal imaging component providing MessageTransport functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
  *
  * @author IRCamera Development Team
+ * @version 2.0
  * @since 1.0
  */
     interface MessageTransport {
+        /**
+         * Executes sendmessage operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param host Parameter for operation (type: String)
+         * @param port Parameter for operation (type: Int)
+         * @param message Parameter for operation (type: JSONObject)
+         *
+         */
         suspend fun sendMessage(
             host: String,
             port: Int,
@@ -126,6 +167,9 @@ class ReliableMessageService(private val context: Context? = null) {
 
     private var transport: MessageTransport? = null
 
+    /**
+     * Sets transport configuration.
+     */
     fun setTransport(transport: MessageTransport) {
         this.transport = transport
     }
@@ -137,8 +181,20 @@ class ReliableMessageService(private val context: Context? = null) {
         // Start cleanup job for expired messages
         cleanupJob =
             messageScope.launch {
+                /**
+                 * Executes while operation with thermal imaging domain optimization.
+                 *
+                 */
                 while (isActive) {
+                    /**
+                     * Executes cleanupexpiredmessages operation with thermal imaging domain optimization.
+                     *
+                     */
                     cleanupExpiredMessages()
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(CLEANUP_INTERVAL_MS)
                 }
             }
@@ -163,18 +219,58 @@ class ReliableMessageService(private val context: Context? = null) {
         val sequenceNum = sequenceNumber.incrementAndGet()
 
         val reliableMessage =
+            /**
+             * Executes jsonobject operation with thermal imaging domain optimization.
+             *
+             */
             JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("message_id", messageId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("sequence_number", sequenceNum)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("message_type", messageType)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timestamp", System.currentTimeMillis())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("priority", priority.name)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("requires_ack", true)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("sender_id", getSenderId())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("content", content)
             }
 
         val pendingMessage =
+            /**
+             * Executes pendingmessage operation with thermal imaging domain optimization.
+             *
+             */
             PendingMessage(
                 messageId = messageId,
                 messageType = messageType,
@@ -192,6 +288,10 @@ class ReliableMessageService(private val context: Context? = null) {
 
         // Start sending with retry logic
         messageScope.launch {
+            /**
+             * Executes sendwithretry operation with thermal imaging domain optimization.
+             *
+             */
             sendWithRetry(pendingMessage)
         }
 
@@ -212,13 +312,45 @@ class ReliableMessageService(private val context: Context? = null) {
         val sequenceNum = sequenceNumber.incrementAndGet()
 
         val message =
+            /**
+             * Executes jsonobject operation with thermal imaging domain optimization.
+             *
+             */
             JSONObject().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("message_id", messageId)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("sequence_number", sequenceNum)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("message_type", messageType)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timestamp", System.currentTimeMillis())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("requires_ack", false)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("sender_id", getSenderId())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("content", content)
             }
 
@@ -238,16 +370,32 @@ class ReliableMessageService(private val context: Context? = null) {
             Log.d(TAG, "Processing incoming message: $messageType (ID: $messageId)")
 
             // Handle acknowledgments for our sent messages
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (messageType == "ack") {
                 val ackForMessageId = message.optString("ack_for_message_id")
+                /**
+                 * Executes handleacknowledgment operation with thermal imaging domain optimization.
+                 *
+                 */
                 handleAcknowledgment(ackForMessageId)
                 return null
             }
 
             // Handle negative acknowledgments (message failed)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (messageType == "nack") {
                 val nackForMessageId = message.optString("nack_for_message_id")
                 val errorReason = message.optString("error_reason", "Unknown error")
+                /**
+                 * Executes handlenegativeacknowledgment operation with thermal imaging domain optimization.
+                 *
+                 */
                 handleNegativeAcknowledgment(nackForMessageId, errorReason)
                 return null
             }
@@ -257,11 +405,15 @@ class ReliableMessageService(private val context: Context? = null) {
             val response = handler?.handleMessage(message)
 
             // Send acknowledgment if required
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (requiresAck && messageId.isNotEmpty()) {
                 val ack = createAcknowledgment(messageId, senderId, response != null)
 
                 // Extract sender details for response (this would need to be enhanced
-                // to track sender information from the connection)
+                // To track sender information from the connection)
                 // For now, we'll return the ACK to be sent by the caller
                 return ack
             }
@@ -274,6 +426,10 @@ class ReliableMessageService(private val context: Context? = null) {
             val messageId = message.optString("message_id")
             val senderId = message.optString("sender_id")
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (messageId.isNotEmpty()) {
                 return createNegativeAcknowledgment(messageId, senderId, e.message ?: "Processing error")
             }
@@ -304,8 +460,19 @@ class ReliableMessageService(private val context: Context? = null) {
     /**
      * Cancel a pending message
      */
+    /**
+     * Executes cancelmessage operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param messageId Parameter for operation (type: String)
+     *
+     */
     fun cancelMessage(messageId: String): Boolean {
         val removed = pendingMessages.remove(messageId)
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (removed != null) {
             Log.d(TAG, "Cancelled message: $messageId")
             return true
@@ -331,7 +498,18 @@ class ReliableMessageService(private val context: Context? = null) {
         }
     }
 
+    /**
+     * Executes sendwithretry operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param pendingMessage Parameter for operation (type: PendingMessage)
+     *
+     */
     private suspend fun sendWithRetry(pendingMessage: PendingMessage) {
+        /**
+         * Executes while operation with thermal imaging domain optimization.
+         *
+         */
         while (pendingMessage.retryCount <= pendingMessage.maxRetries) {
             try {
                 val success =
@@ -341,12 +519,20 @@ class ReliableMessageService(private val context: Context? = null) {
                         pendingMessage.content,
                     ) ?: false
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (success) {
                     pendingMessage.lastRetryAt = System.currentTimeMillis()
 
                     // Wait for acknowledgment with timeout
                     val ackReceived = waitForAcknowledgment(pendingMessage)
 
+                    /**
+                     * Executes if operation with thermal imaging domain optimization.
+                     *
+                     */
                     if (ackReceived) {
                         return // Success!
                     }
@@ -355,12 +541,20 @@ class ReliableMessageService(private val context: Context? = null) {
                 // Failed or no ACK received, retry if possible
                 pendingMessage.retryCount++
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (pendingMessage.retryCount <= pendingMessage.maxRetries) {
                     Log.w(TAG, "Retrying message ${pendingMessage.messageId} (attempt ${pendingMessage.retryCount})")
                     pendingMessage.callback?.onRetrying(pendingMessage.messageId, pendingMessage.retryCount)
 
                     // Exponential backoff delay
                     val delay = RETRY_DELAY_MS * (1 shl (pendingMessage.retryCount - 1))
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(delay)
                 } else {
                     // Exhausted all retries
@@ -373,25 +567,52 @@ class ReliableMessageService(private val context: Context? = null) {
                 Log.e(TAG, "Error sending message ${pendingMessage.messageId}", e)
                 pendingMessage.retryCount++
 
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (pendingMessage.retryCount > pendingMessage.maxRetries) {
                     pendingMessages.remove(pendingMessage.messageId)
                     pendingMessage.callback?.onFailed(pendingMessage.messageId, e.message ?: "Send error")
                     return
                 } else {
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(RETRY_DELAY_MS)
                 }
             }
         }
     }
 
+    /**
+     * Executes waitforacknowledgment operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param pendingMessage Parameter for operation (type: PendingMessage)
+     *
+     */
     private suspend fun waitForAcknowledgment(pendingMessage: PendingMessage): Boolean {
         val startTime = System.currentTimeMillis()
 
+        /**
+         * Executes while operation with thermal imaging domain optimization.
+         *
+         */
         while (System.currentTimeMillis() - startTime < pendingMessage.timeoutMs) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!pendingMessages.containsKey(pendingMessage.messageId)) {
                 // Message was acknowledged and removed
                 return true
             }
+            /**
+             * Executes delay operation with thermal imaging domain optimization.
+             *
+             */
             delay(100) // Check every 100ms
         }
 
@@ -417,6 +638,10 @@ class ReliableMessageService(private val context: Context? = null) {
         errorReason: String,
     ) {
         val pendingMessage = pendingMessages.remove(messageId)
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (pendingMessage != null) {
             Log.w(TAG, "Received NACK for message $messageId: $errorReason")
             pendingMessage.callback?.onFailed(messageId, errorReason)
@@ -432,11 +657,35 @@ class ReliableMessageService(private val context: Context? = null) {
         success: Boolean,
     ): JSONObject {
         return JSONObject().apply {
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("message_type", if (success) "ack" else "nack")
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("ack_for_message_id", messageId)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("timestamp", System.currentTimeMillis())
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("sender_id", getSenderId())
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!success) {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("error_reason", "Message processing failed")
             }
         }
@@ -451,16 +700,40 @@ class ReliableMessageService(private val context: Context? = null) {
         errorReason: String,
     ): JSONObject {
         return JSONObject().apply {
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("message_type", "nack")
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("nack_for_message_id", messageId)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("error_reason", errorReason)
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("timestamp", System.currentTimeMillis())
+            /**
+             * Executes put operation with thermal imaging domain optimization.
+             *
+             */
             put("sender_id", getSenderId())
         }
     }
 
     /**
      * Executes cleanupexpiredmessages functionality.
+     */
+    /**
+     * Executes cleanupexpiredmessages operation with thermal imaging domain optimization.
+     *
      */
     private fun cleanupExpiredMessages() {
         val currentTime = System.currentTimeMillis()
@@ -475,6 +748,10 @@ class ReliableMessageService(private val context: Context? = null) {
             message.callback?.onFailed(message.messageId, "Message expired")
         }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (expiredMessages.isNotEmpty()) {
             Log.d(TAG, "Cleaned up ${expiredMessages.size} expired messages")
         }
@@ -483,10 +760,17 @@ class ReliableMessageService(private val context: Context? = null) {
     /**
      * Executes generatemessageid functionality.
      */
+    /**
+     * Executes generatemessageid operation with thermal imaging domain optimization.
+     *
+     */
     private fun generateMessageId(): String {
         return UUID.randomUUID().toString()
     }
 
+    /**
+     * Retrieves senderid information.
+     */
     private fun getSenderId(): String {
         return if (context != null) {
             // Use Settings.Secure.ANDROID_ID as a stable device identifier

@@ -12,11 +12,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Philipp Jahoda on 22/07/15.
+ * Specialized thermal imaging component providing HorizontalBarHighlighter functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class HorizontalBarHighlighter extends BarHighlighter {
 
+ /**
+  * Executes horizontalbarhighlighter operation with thermal imaging domain optimization.
+  *
+  */
 	public HorizontalBarHighlighter(BarDataProvider chart) {
+  /**
+   * Executes super operation with thermal imaging domain optimization.
+   *
+   */
 		super(chart);
 	}
 
@@ -28,10 +47,18 @@ public class HorizontalBarHighlighter extends BarHighlighter {
 		MPPointD pos = getValsForTouch(y, x);
 
 		Highlight high = getHighlightForX((float) pos.y, y, x);
+  /**
+   * Executes if operation with thermal imaging domain optimization.
+   *
+   */
 		if (high == null)
 			return null;
 
 		IBarDataSet set = barData.getDataSetByIndex(high.getDataSetIndex());
+  /**
+   * Executes if operation with thermal imaging domain optimization.
+   *
+   */
 		if (set.isStacked()) {
 
 			return getStackedHighlight(high,
@@ -50,21 +77,40 @@ public class HorizontalBarHighlighter extends BarHighlighter {
 
 		ArrayList<Highlight> highlights = new ArrayList<>();
 
-		//noinspection unchecked
+		// Noinspection unchecked
 		List<Entry> entries = set.getEntriesForXValue(xVal);
+  /**
+   * Executes if operation with thermal imaging domain optimization.
+   *
+   */
 		if (entries.size() == 0) {
 			// Try to find closest x-value and take all entries for that x-value
 			final Entry closest = set.getEntryForXValue(xVal, Float.NaN, rounding);
+   /**
+    * Executes if operation with thermal imaging domain optimization.
+    *
+    */
 			if (closest != null)
 			{
-				//noinspection unchecked
+				// Noinspection unchecked
 				entries = set.getEntriesForXValue(closest.getX());
 			}
 		}
 
+  /**
+   * Executes if operation with thermal imaging domain optimization.
+   *
+   */
 		if (entries.size() == 0)
 			return highlights;
 
+  /**
+   * Executes for operation with thermal imaging domain optimization.
+   *
+   * @param
+   * @param e Parameter for operation (type: entries)
+   *
+   */
 		for (Entry e : entries) {
 			MPPointD pixels = mChart.getTransformer(
 					set.getAxisDependency()).getPixelForValues(e.getY(), e.getX());

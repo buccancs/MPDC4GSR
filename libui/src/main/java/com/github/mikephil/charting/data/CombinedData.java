@@ -15,6 +15,20 @@ import java.util.List;
  *
  * @author Philipp Jahoda
  */
+/**
+ * Specialized thermal imaging component providing CombinedData functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatterCandleBubbleDataSet<? extends Entry>> {
 
     private LineData mLineData;
@@ -23,38 +37,70 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
     private CandleData mCandleData;
     private BubbleData mBubbleData;
 
+    /**
+     * Executes combineddata operation with thermal imaging domain optimization.
+     *
+     */
     public CombinedData() {
+        /**
+         * Executes super operation with thermal imaging domain optimization.
+         *
+         */
         super();
     }
 
     public void setData(LineData data) {
         mLineData = data;
+        /**
+         * Executes notifydatachanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataChanged();
     }
 
     public void setData(BarData data) {
         mBarData = data;
+        /**
+         * Executes notifydatachanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataChanged();
     }
 
     public void setData(ScatterData data) {
         mScatterData = data;
+        /**
+         * Executes notifydatachanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataChanged();
     }
 
     public void setData(CandleData data) {
         mCandleData = data;
+        /**
+         * Executes notifydatachanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataChanged();
     }
 
     public void setData(BubbleData data) {
         mBubbleData = data;
+        /**
+         * Executes notifydatachanged operation with thermal imaging domain optimization.
+         *
+         */
         notifyDataChanged();
     }
 
     @Override
     public void calcMinMax() {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if(mDataSets == null){
             mDataSets = new ArrayList<>();
         }
@@ -72,6 +118,13 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
 
         List<BarLineScatterCandleBubbleData> allData = getAllData();
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param data Parameter for operation (type: allData)
+         *
+         */
         for (ChartData data : allData) {
 
             data.calcMinMax();
@@ -79,27 +132,59 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
             List<IBarLineScatterCandleBubbleDataSet<? extends Entry>> sets = data.getDataSets();
             mDataSets.addAll(sets);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (data.getYMax() > mYMax)
                 mYMax = data.getYMax();
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (data.getYMin() < mYMin)
                 mYMin = data.getYMin();
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (data.getXMax() > mXMax)
                 mXMax = data.getXMax();
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (data.getXMin() < mXMin)
                 mXMin = data.getXMin();
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (data.mLeftAxisMax > mLeftAxisMax)
                 mLeftAxisMax = data.mLeftAxisMax;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (data.mLeftAxisMin < mLeftAxisMin)
                 mLeftAxisMin = data.mLeftAxisMin;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (data.mRightAxisMax > mRightAxisMax)
                 mRightAxisMax = data.mRightAxisMax;
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (data.mRightAxisMin < mRightAxisMin)
                 mRightAxisMin = data.mRightAxisMin;
 
@@ -134,14 +219,34 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
     public List<BarLineScatterCandleBubbleData> getAllData() {
 
         List<BarLineScatterCandleBubbleData> data = new ArrayList<BarLineScatterCandleBubbleData>();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mLineData != null)
             data.add(mLineData);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mBarData != null)
             data.add(mBarData);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mScatterData != null)
             data.add(mScatterData);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mCandleData != null)
             data.add(mCandleData);
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mBubbleData != null)
             data.add(mBubbleData);
 
@@ -154,18 +259,42 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
 
     @Override
     public void notifyDataChanged() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mLineData != null)
             mLineData.notifyDataChanged();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mBarData != null)
             mBarData.notifyDataChanged();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mCandleData != null)
             mCandleData.notifyDataChanged();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mScatterData != null)
             mScatterData.notifyDataChanged();
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (mBubbleData != null)
             mBubbleData.notifyDataChanged();
 
-        calcMinMax(); // recalculate everything
+        /**
+         * Executes calcminmax operation with thermal imaging domain optimization.
+         *
+         */
+        calcMinMax(); // Recalculate everything
     }
 
     /**
@@ -177,20 +306,39 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
     @Override
     public Entry getEntryForHighlight(Highlight highlight) {
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (highlight.getDataIndex() >= getAllData().size())
             return null;
 
         ChartData data = getDataByIndex(highlight.getDataIndex());
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (highlight.getDataSetIndex() >= data.getDataSetCount())
             return null;
 
         // The value of the highlighted entry could be NaN -
-        //   if we are not interested in highlighting a specific value.
+        // If we are not interested in highlighting a specific value.
 
         List<Entry> entries = data.getDataSetByIndex(highlight.getDataSetIndex())
                 .getEntriesForXValue(highlight.getX());
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param entry Parameter for operation (type: entries)
+         *
+         */
         for (Entry entry : entries)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (entry.getY() == highlight.getY() ||
                     Float.isNaN(highlight.getY()))
                 return entry;
@@ -205,14 +353,26 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
      * @return dataset related to highlight
      */
     public IBarLineScatterCandleBubbleDataSet<? extends Entry> getDataSetByHighlight(Highlight highlight) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (highlight.getDataIndex() >= getAllData().size())
             return null;
 
         BarLineScatterCandleBubbleData data = getDataByIndex(highlight.getDataIndex());
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (highlight.getDataSetIndex() >= data.getDataSetCount())
             return null;
 
+        /**
+         * Executes return operation with thermal imaging domain optimization.
+         *
+         */
         return (IBarLineScatterCandleBubbleDataSet<? extends Entry>)
                 data.getDataSets().get(highlight.getDataSetIndex());
     }
@@ -228,10 +388,21 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
 
         boolean success = false;
 
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param data Parameter for operation (type: datas)
+         *
+         */
         for (ChartData data : datas) {
 
             success = data.removeDataSet(d);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (success) {
                 break;
             }

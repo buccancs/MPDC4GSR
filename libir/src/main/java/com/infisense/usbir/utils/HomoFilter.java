@@ -18,6 +18,23 @@ import static org.opencv.imgcodecs.Imgcodecs.imread;
 import static org.opencv.imgproc.Imgproc.*;
 import static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
 
+/**
+ * Specialized thermal imaging component providing HomoFilter functionality for the IRCamera system.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 public class HomoFilter {
 
     public static Mat calcHU(Size size,double t2){
@@ -26,7 +43,15 @@ public class HomoFilter {
         int col = hu.cols();
         int cx = row / 2;
         int cy = row / 2;
+        /**
+         * Executes for operation with thermal imaging domain optimization.
+         *
+         */
         for(int i=0; i < row; i ++){
+            /**
+             * Executes for operation with thermal imaging domain optimization.
+             *
+             */
             for(int j = 0; j < col; j++){
                 double value = 1 / (1 + Math.pow(Math.sqrt(Math.pow(cx-i,2) + Math.pow(cy-j,2)),-t2));
                 hu.put(i,j,value);
@@ -37,7 +62,7 @@ public class HomoFilter {
         homo.add(new Mat(hu.size(),CV_32FC1,new Scalar(0)));
         Mat hu2c = new Mat(size,CV_32FC2);
         Core.merge(homo,hu2c);
-        //System.out.println(hu.dump());
+        // System.out.println(hu.dump());
         return hu2c;
     }
 
@@ -47,21 +72,45 @@ public class HomoFilter {
         int dy = src.cols() / 2;
         float[] data = new float[dy];
 
-        //System.out.println(src.dump());
+        // System.out.println(src.dump());
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if(src.rows() % 2 == 0) {
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (src.cols() % 2 == 0) {
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for(int i = 0; i < dx; i++){
                     src.get(i,0,data);
                     dst.put((dx+i),dy,data);
                 }
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for(int i = 0; i < dx; i++){
                     src.get(i,dy,data);
                     dst.put((dx+i),0,data);
                 }
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for(int i = 0; i < dx; i++){
                     src.get((dx+i),dy,data);
                     dst.put(i,0,data);
                 }
+                /**
+                 * Executes for operation with thermal imaging domain optimization.
+                 *
+                 */
                 for(int i = 0; i < dx; i++){
                     src.get((dx+i),0,data);
                     dst.put(i,dy,data);
@@ -71,7 +120,7 @@ public class HomoFilter {
                 System.out.println("copy failed");
             }
         }
-        //System.out.println(dst.dump());
+        // System.out.println(dst.dump());
         return dst;
     }
 
@@ -81,10 +130,18 @@ public class HomoFilter {
         Mat image;
         image = new Mat(r, c, CV_8UC2);
         image.put(0, 0, im);
+        /**
+         * Executes cvtcolor operation with thermal imaging domain optimization.
+         *
+         */
         cvtColor(image, image, COLOR_YUV2GRAY_YUYV);
+        /**
+         * Executes normalize operation with thermal imaging domain optimization.
+         *
+         */
         normalize(image, image, 0, 255, NORM_MINMAX);
         image.convertTo(image, CV_8UC1);
-        //imshow("src", image);
+        // Imshow("src", image);
         CLAHE clahe = Imgproc.createCLAHE();
         clahe.setClipLimit(1.0);
         clahe.setTilesGridSize(new Size(3,3));
@@ -118,23 +175,31 @@ public class HomoFilter {
         List<Mat> image_padd_s = new ArrayList<Mat>();
         Core.split(image_padd_2c,image_padd_s);
         Mat reinforce_src = new Mat();
+        /**
+         * Executes magnitude operation with thermal imaging domain optimization.
+         *
+         */
         magnitude(image_padd_s.get(0), image_padd_s.get(1), reinforce_src);
 
         Mat temp = new Mat();
+        /**
+         * Executes normalize operation with thermal imaging domain optimization.
+         *
+         */
         normalize(reinforce_src, temp, 0, 255, NORM_MINMAX);
         temp = iftCenter(temp);
         Mat result = new Mat();
         temp.convertTo(result,CV_8UC1);
-        //applyColorMap(image,image,15);
-        //imshow("image", image);
-        //equalizeHist(result,result);
+        // ApplyColorMap(image,image,15);
+        // Imshow("image", image);
+        // EqualizeHist(result,result);
 //        CLAHE clahe = Imgproc.createCLAHE();
-//        clahe.setClipLimit(2);
-//        clahe.setTilesGridSize(new Size(3,3));
-//        clahe.apply(result,result);
-//        applyColorMap(result,result,15);
-        //imshow("result", result);
-        //waitKey(0);
+// Clahe.setClipLimit(2);
+// Clahe.setTilesGridSize(new Size(3,3));
+// Clahe.apply(result,result);
+// ApplyColorMap(result,result,15);
+        // Imshow("result", result);
+        // WaitKey(0);
         return result;
 
     }

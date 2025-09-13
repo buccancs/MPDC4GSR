@@ -11,8 +11,18 @@ import kotlinx.coroutines.runBlocking
 import java.io.File
 
 /**
- * Synchronized Multi-Modal Recorder
- * Coordinates thermal, RGB, and GSR recording with unified Samsung S22 ground truth timing
+ * Specialized thermal imaging component providing SynchronizedMultiModalRecorder functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class SynchronizedMultiModalRecorder(
     private val context: Context,
@@ -51,6 +61,10 @@ class SynchronizedMultiModalRecorder(
     fun initialize() {
         rgbCameraRecorder =
             RGBCameraRecorder(context, rgbTextureView).apply {
+                /**
+                 * Initializes the ialize component for thermal imaging operations.
+                 *
+                 */
                 initialize()
 
                 onRecordingStarted = {
@@ -75,6 +89,10 @@ class SynchronizedMultiModalRecorder(
         sessionId: String? = null,
         rgbSettings: RGBCameraRecorder.RecordingSettings = RGBCameraRecorder.RecordingSettings(),
     ): Boolean {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isRecording) {
             Log.w(TAG, "Already recording")
             return false
@@ -92,6 +110,10 @@ class SynchronizedMultiModalRecorder(
             var gsrStarted = false
             GlobalScope.launch {
                 gsrStarted = thermalRecorder.startRecording(unifiedSessionId, null, true)
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!gsrStarted) {
                     Log.w(TAG, "GSR recording failed to start, continuing with thermal+RGB only")
                 }
@@ -100,8 +122,16 @@ class SynchronizedMultiModalRecorder(
             // 2. Start RGB camera recording with same session ID
             rgbCameraRecorder?.updateSettings(rgbSettings)
             val rgbStarted = runBlocking { rgbCameraRecorder?.startRecording(unifiedSessionId) } ?: false
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (!rgbStarted) {
                 Log.w(TAG, "RGB recording failed to start")
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (gsrStarted) {
                     thermalRecorder.stopRecording()
                 }
@@ -111,6 +141,10 @@ class SynchronizedMultiModalRecorder(
             // 3. Add synchronized start marker with exact timestamp coordination
             thermalRecorder.triggerSyncEvent(
                 "MULTIMODAL_START",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "sync_timestamp" to synchronizedTimestamp.toString(),
                     "unified_time_base" to "samsung_s22_ground_truth",
@@ -126,6 +160,10 @@ class SynchronizedMultiModalRecorder(
 
             // Create session data
             val session =
+                /**
+                 * Executes recordingsession operation with thermal imaging domain optimization.
+                 *
+                 */
                 RecordingSession(
                     sessionId = unifiedSessionId,
                     startTimestamp = synchronizedTimestamp,
@@ -141,6 +179,10 @@ class SynchronizedMultiModalRecorder(
             onError?.invoke("Failed to start synchronized recording: ${e.message}")
 
             // Cleanup on failure
+            /**
+             * Executes cleanup operation with thermal imaging domain optimization.
+             *
+             */
             cleanup()
             return false
         }
@@ -164,6 +206,10 @@ class SynchronizedMultiModalRecorder(
             // Add synchronized stop marker
             thermalRecorder.triggerSyncEvent(
                 "MULTIMODAL_STOP",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "sync_timestamp" to stopTimestamp.toString(),
                     "session_id" to sessionId,
@@ -180,6 +226,10 @@ class SynchronizedMultiModalRecorder(
 
             // Create final session with all output files
             val finalSession =
+                /**
+                 * Executes recordingsession operation with thermal imaging domain optimization.
+                 *
+                 */
                 RecordingSession(
                     sessionId = sessionId,
                     startTimestamp = gsrSession?.startTime ?: System.currentTimeMillis(),
@@ -200,6 +250,10 @@ class SynchronizedMultiModalRecorder(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop synchronized recording", e)
             onError?.invoke("Failed to stop synchronized recording: ${e.message}")
+            /**
+             * Executes cleanup operation with thermal imaging domain optimization.
+             *
+             */
             cleanup()
             return null
         }
@@ -212,14 +266,34 @@ class SynchronizedMultiModalRecorder(
         eventName: String,
         metadata: Map<String, String> = emptyMap(),
     ) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!isRecording) return
 
         val timestamp = TimeUtil.getSynchronizedTimestamp()
         val eventData =
             metadata.toMutableMap().apply {
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("sync_timestamp", timestamp.toString())
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("event_name", eventName)
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("session_id", currentSessionId ?: "unknown")
+                /**
+                 * Executes put operation with thermal imaging domain optimization.
+                 *
+                 */
                 put("timing_source", "samsung_s22_ground_truth")
             }
 
@@ -234,6 +308,10 @@ class SynchronizedMultiModalRecorder(
     fun switchRGBCamera(): RGBCameraRecorder.CameraFacing? {
         val currentFacing = rgbCameraRecorder?.getCurrentCameraFacing()
         val newFacing =
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (currentFacing == RGBCameraRecorder.CameraFacing.BACK) {
                 RGBCameraRecorder.CameraFacing.FRONT
             } else {
@@ -252,9 +330,21 @@ class SynchronizedMultiModalRecorder(
         rgbCameraRecorder?.updateSettings(settings)
 
         // Add sync event to mark settings change
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isRecording) {
+            /**
+             * Executes addsyncevent operation with thermal imaging domain optimization.
+             *
+             */
             addSyncEvent(
                 "RGB_SETTINGS_CHANGED",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "resolution" to settings.resolution.displayName,
                     "frame_rate" to settings.frameRate.toString(),
@@ -267,12 +357,31 @@ class SynchronizedMultiModalRecorder(
     /**
      * Enable/disable RGB flash
      */
+    /**
+     * Configures the rgbflash with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param enabled Parameter for operation (type: Boolean)
+     *
+     */
     fun setRGBFlash(enabled: Boolean) {
         runBlocking { rgbCameraRecorder?.setFlashEnabled(enabled) }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isRecording) {
+            /**
+             * Executes addsyncevent operation with thermal imaging domain optimization.
+             *
+             */
             addSyncEvent(
                 "RGB_FLASH_TOGGLE",
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "flash_enabled" to enabled.toString(),
                 ),
@@ -286,15 +395,38 @@ class SynchronizedMultiModalRecorder(
     fun pauseRGBRecording() {
         runBlocking { rgbCameraRecorder?.pauseRecording() }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isRecording) {
+            /**
+             * Executes addsyncevent operation with thermal imaging domain optimization.
+             *
+             */
             addSyncEvent("RGB_RECORDING_PAUSED")
         }
     }
 
+    /**
+     * Executes resumeRGBRecording functionality.
+     */
+    /**
+     * Executes resumergbrecording operation with thermal imaging domain optimization.
+     *
+     */
     fun resumeRGBRecording() {
         runBlocking { rgbCameraRecorder?.resumeRecording() }
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isRecording) {
+            /**
+             * Executes addsyncevent operation with thermal imaging domain optimization.
+             *
+             */
             addSyncEvent("RGB_RECORDING_RESUMED")
         }
     }
@@ -304,14 +436,29 @@ class SynchronizedMultiModalRecorder(
      */
     fun isRecording() = isRecording
 
+    /**
+     * Retrieves currentsessionid information.
+     */
     fun getCurrentSessionId() = currentSessionId
 
+    /**
+     * Retrieves currentrgbsettings information.
+     */
     fun getCurrentRGBSettings() = rgbCameraRecorder?.getCurrentSettings()
 
+    /**
+     * Retrieves rgbcamerafacing information.
+     */
     fun getRGBCameraFacing() = rgbCameraRecorder?.getCurrentCameraFacing()
 
+    /**
+     * Retrieves availablergbcameras information.
+     */
     fun getAvailableRGBCameras() = rgbCameraRecorder?.getAvailableCameraFacing() ?: emptyList()
 
+    /**
+     * Retrieves supportedrgbresolutions information.
+     */
     fun getSupportedRGBResolutions() = rgbCameraRecorder?.getSupportedResolutions() ?: emptyList()
 
     /**
@@ -324,8 +471,20 @@ class SynchronizedMultiModalRecorder(
     /**
      * Cleanup all resources
      */
+    /**
+     * Executes cleanup operation with thermal imaging domain optimization.
+     *
+     */
     fun cleanup() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (isRecording) {
+            /**
+             * Executes stopsynchronizedrecording operation with thermal imaging domain optimization.
+             *
+             */
             stopSynchronizedRecording()
         }
 
@@ -339,6 +498,16 @@ class SynchronizedMultiModalRecorder(
     /**
      * Create a new session combining thermal video recording with RGB+GSR
      * This integrates with the existing thermal recording workflow
+     */
+    /**
+     * Executes createThermalRGBSession functionality.
+     */
+    /**
+     * Executes createthermalrgbsession operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param thermalVideoFile Parameter for operation (type: File)
+     *
      */
     fun createThermalRGBSession(thermalVideoFile: File): RecordingSession? {
         val sessionId = currentSessionId ?: return null
@@ -366,15 +535,27 @@ class SynchronizedMultiModalRecorder(
             "timing_precision" to "sub_millisecond",
             "unified_time_base" to "samsung_s22_ground_truth",
             "recording_components" to
+                /**
+                 * Executes mapof operation with thermal imaging domain optimization.
+                 *
+                 */
                 mapOf(
                     "thermal" to "thermal_camera_video",
                     "rgb" to
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf(
                             "resolution" to (rgbCameraRecorder?.getCurrentSettings()?.resolution?.displayName ?: "unknown"),
                             "frame_rate" to (rgbCameraRecorder?.getCurrentSettings()?.frameRate ?: 0),
                             "camera_facing" to (rgbCameraRecorder?.getCurrentCameraFacing()?.displayName ?: "unknown"),
                         ),
                     "gsr" to
+                        /**
+                         * Executes mapof operation with thermal imaging domain optimization.
+                         *
+                         */
                         mapOf(
                             "sampling_rate" to "128Hz",
                             "device_type" to "shimmer3_gsr",
@@ -387,6 +568,13 @@ class SynchronizedMultiModalRecorder(
         )
     }
 
+    /**
+     * Executes detectSamsungS22Processor functionality.
+     */
+    /**
+     * Executes detectsamsungs22processor operation with thermal imaging domain optimization.
+     *
+     */
     private fun detectSamsungS22Processor(): String {
         val deviceModel = android.os.Build.MODEL
         return when {

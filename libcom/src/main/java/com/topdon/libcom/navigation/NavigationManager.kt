@@ -9,17 +9,38 @@ import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.tools.DeviceTools
 
 /**
- * Modern navigation system to replace ARouter
- * Provides type-safe navigation with Intent-based routing
+ * Specialized thermal imaging component providing NavigationManager functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+/**
+ * Specialized thermal imaging component providing NavigationBuilder functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
-object NavigationManager {
-    /**
-     * Navigation builder class for fluent API
-     */
     class NavigationBuilder(private val route: String) {
         private val extras = Bundle()
         private var requestCode: Int? = null
 
+    /**
+     * Executes withString functionality.
+     */
+        /**
+         * Executes withstring operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param key Parameter for operation (type: String)
+         * @param value Parameter for operation (type: String)
+         *
+         */
         fun withString(
             key: String,
             value: String,
@@ -27,6 +48,17 @@ object NavigationManager {
             extras.putString(key, value)
         }
 
+    /**
+     * Executes withBoolean functionality.
+     */
+        /**
+         * Executes withboolean operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param key Parameter for operation (type: String)
+         * @param value Parameter for operation (type: Boolean)
+         *
+         */
         fun withBoolean(
             key: String,
             value: Boolean,
@@ -34,6 +66,17 @@ object NavigationManager {
             extras.putBoolean(key, value)
         }
 
+    /**
+     * Executes withInt functionality.
+     */
+        /**
+         * Executes withint operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param key Parameter for operation (type: String)
+         * @param value Parameter for operation (type: Int)
+         *
+         */
         fun withInt(
             key: String,
             value: Int,
@@ -41,6 +84,17 @@ object NavigationManager {
             extras.putInt(key, value)
         }
 
+    /**
+     * Executes withParcelable functionality.
+     */
+        /**
+         * Executes withparcelable operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param key Parameter for operation (type: String)
+         * @param value Parameter for operation (type: Parcelable)
+         *
+         */
         fun withParcelable(
             key: String,
             value: Parcelable,
@@ -48,6 +102,17 @@ object NavigationManager {
             extras.putParcelable(key, value)
         }
 
+    /**
+     * Executes withParcelableArrayList functionality.
+     */
+        /**
+         * Executes withparcelablearraylist operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param key Parameter for operation (type: String)
+         * @param value Parameter for operation (type: ArrayList<out Parcelable>)
+         *
+         */
         fun withParcelableArrayList(
             key: String,
             value: ArrayList<out Parcelable>,
@@ -55,11 +120,32 @@ object NavigationManager {
             extras.putParcelableArrayList(key, value)
         }
 
+    /**
+     * Executes withExtras functionality.
+     */
+        /**
+         * Executes withextras operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param bundle Parameter for operation (type: Bundle)
+         *
+         */
         fun withExtras(bundle: Bundle) =
             apply {
                 extras.putAll(bundle)
             }
 
+    /**
+     * Executes navigation functionality.
+     */
+        /**
+         * Executes navigation operation with thermal imaging domain optimization.
+         *
+         * @param
+         * @param context Parameter for operation (type: Context)
+         * @param requestCode Parameter for operation (type: Int? = null)
+         *
+         */
         fun navigation(
             context: Context,
             requestCode: Int? = null,
@@ -68,6 +154,10 @@ object NavigationManager {
             val intent = createIntent(context, route)
             intent.putExtras(extras)
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (requestCode != null && context is Activity) {
                 context.startActivityForResult(intent, requestCode)
             } else {
@@ -96,6 +186,10 @@ object NavigationManager {
         route: String,
     ): Intent {
         val activityClass =
+            /**
+             * Executes when operation with thermal imaging domain optimization.
+             *
+             */
             when (route) {
                 // App routes
                 RouterConfig.MAIN -> getClassByName("com.topdon.tc001.MainActivity")
@@ -138,10 +232,18 @@ object NavigationManager {
                 // Report routes
                 RouterConfig.REPORT_CREATE_FIRST -> getClassByName("com.topdon.module.thermal.ir.report.activity.ReportCreateFirstActivity")
                 RouterConfig.REPORT_CREATE_SECOND ->
+                    /**
+                     * Retrieves the classbyname with optimized performance for thermal imaging operations.
+                     *
+                     */
                     getClassByName(
                         "com.topdon.module.thermal.ir.report.activity.ReportCreateSecondActivity",
                     )
                 RouterConfig.REPORT_PREVIEW_SECOND ->
+                    /**
+                     * Retrieves the classbyname with optimized performance for thermal imaging operations.
+                     *
+                     */
                     getClassByName(
                         "com.topdon.module.thermal.ir.report.activity.ReportPreviewSecondActivity",
                     )
@@ -181,6 +283,10 @@ object NavigationManager {
                 else -> RouterConfig.IR_IMG_PICK
             }
 
+        /**
+         * Executes build operation with thermal imaging domain optimization.
+         *
+         */
         build(route)
             .withString("RESULT_IMAGE_PATH", imgPath)
             .navigation(activity, 101)

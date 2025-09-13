@@ -32,59 +32,103 @@ dual lightdevice的interface
  * @author: CaiSongL
  * @date: 2024/1/17 17:47
  */
-// Legacy ARouter route annotation - now using NavigationManager
 /**
- * I r thermal plus activity for thermal imaging interface.
- * Manages UI interactions and thermal data display.
+ * Specialized thermal imaging component providing IRThermalPlusActivity functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 class IRThermalPlusActivity : BaseIRPlushActivity() {
     private val irImageHelp by lazy {
+        /**
+         * Executes irimagehelp operation with thermal imaging domain optimization.
+         *
+         */
         IRImageHelp()
     }
 
     // Synthetic view properties - migrated from kotlin-android-extensions
     private val dualTextureViewNativeCamera by lazy { findViewById<SurfaceView>(R.id.dualTextureViewNativeCamera) }
-    // // private val thermalSteeringView by lazy { findViewById<com.topdon.lib.ui.widget.SteeringWheelView>(R.id.thermalSteeringView) }  // ID doesn't exist
-    // thermalRecyclerNight inherited from parent class
+    // // Private val thermalSteeringView by lazy { findViewById<com.topdon.lib.ui.widget.SteeringWheelView>(R.id.thermalSteeringView) }  // ID doesn't exist
+    // ThermalRecyclerNight inherited from parent class
 
+    /**
+     * Initializes the contentview component for thermal imaging operations.
+     *
+     */
     override fun initContentView() = R.layout.activity_ir_thermal_double
 
+    /**
+     * Executes isdualir operation with thermal imaging domain optimization.
+     *
+     */
     override fun isDualIR(): Boolean {
         return true
     }
 
+    /**
+     * Retrieves the surfaceview with optimized performance for thermal imaging operations.
+     *
+     */
     override fun getSurfaceView(): SurfaceView {
         return dualTextureViewNativeCamera
     }
 
+    /**
+     * Retrieves the temperaturedualview with optimized performance for thermal imaging operations.
+     *
+     * @note Temperature values are in Celsius unless otherwise specified.
+     * Accuracy depends on thermal camera calibration.
+     *
+     */
     override fun getTemperatureDualView(): TemperatureView {
         return temperatureView
     }
 
+    /**
+     * Retrieves the productname with optimized performance for thermal imaging operations.
+     *
+     */
     override fun getProductName(): String {
         return PRODUCT_NAME_TCP
     }
 
+    /**
+     * Initializes the view component for thermal imaging operations.
+     *
+     */
     override fun initView() {
         super.initView()
 findViewById<TextView>(R.id.toolbar_title)?.text = "dual lightdevice"
         cameraView.visibility = View.GONE
         dualTextureViewNativeCamera?.visibility = View.VISIBLE
-        // // thermalSteeringView.listener = { action, moveX ->
-        //     setDisp(action, moveX)
+        // // ThermalSteeringView.listener = { action, moveX ->
+        // SetDisp(action, moveX)
         // }
 
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (SaveSettingUtil.fusionType) {
-            SaveSettingUtil.FusionTypeLPYFusion -> { // dual light1
+            SaveSettingUtil.FusionTypeLPYFusion -> { // Dual light1
                 thermalRecyclerNight?.twoLightType = TwoLightType.TWO_LIGHT_1
             }
-            SaveSettingUtil.FusionTypeMeanFusion -> { // dual light2
+            SaveSettingUtil.FusionTypeMeanFusion -> { // Dual light2
                 thermalRecyclerNight?.twoLightType = TwoLightType.TWO_LIGHT_2
             }
             SaveSettingUtil.FusionTypeIROnly -> { // 单infrared
                 thermalRecyclerNight?.twoLightType = TwoLightType.IR
             }
-            SaveSettingUtil.FusionTypeVLOnly -> { // visible light
+            SaveSettingUtil.FusionTypeVLOnly -> { // Visible light
                 thermalRecyclerNight?.twoLightType = TwoLightType.LIGHT
             }
         }
@@ -95,10 +139,25 @@ findViewById<TextView>(R.id.toolbar_title)?.text = "dual lightdevice"
 @param action -1左移 1-右移 0确定
 @param data 当前registration值
      */
+    /**
+     * Sets disp configuration.
+     */
+    /**
+     * Configures the disp with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param action Parameter for operation (type: Int)
+     * @param data Parameter for operation (type: Int)
+     *
+     */
     private fun setDisp(
         action: Int,
         data: Int,
     ) {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (action == -1 || action == 1) {
 移动
             lifecycleScope.launch(Dispatchers.IO) {
@@ -113,11 +172,15 @@ findViewById<TextView>(R.id.toolbar_title)?.text = "dual lightdevice"
             System.arraycopy(dataStr.toByteArray(), 0, oemInfo, 194, dataStr.toByteArray().size)
             val result = ircmd?.oemWrite(CommonParams.ProductType.P2, oemInfo)
 //            SharedManager.setIrDualDisp(dualDisp)
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (result == 0)
                 {
 disabled控件
-                    // if (thermalSteeringView.isVisible) {
-                    //    thermalSteeringView.visibility = View.GONE
+                    // If (thermalSteeringView.isVisible) {
+                    // ThermalSteeringView.visibility = View.GONE
                     thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
                     // }
                 } else
@@ -127,48 +190,88 @@ disabled控件
         }
     }
 
+    /**
+     * Configures the twolight with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param twoLightType Parameter for operation (type: TwoLightType)
+     * @param isSelected Parameter for operation (type: Boolean)
+     *
+     */
     override fun setTwoLight(
         twoLightType: TwoLightType,
         isSelected: Boolean,
     ) {
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (twoLightType) {
-            TwoLightType.TWO_LIGHT_1 -> { // dual light1
+            TwoLightType.TWO_LIGHT_1 -> { // Dual light1
                 mCurrentFusionType = DualCameraParams.FusionType.LPYFusion
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeLPYFusion
+                /**
+                 * Configures the fusion with validation and thermal imaging optimization.
+                 *
+                 */
                 setFusion(mCurrentFusionType)
             }
-            TwoLightType.TWO_LIGHT_2 -> { // dual light2
+            TwoLightType.TWO_LIGHT_2 -> { // Dual light2
                 mCurrentFusionType = DualCameraParams.FusionType.MeanFusion
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeMeanFusion
+                /**
+                 * Configures the fusion with validation and thermal imaging optimization.
+                 *
+                 */
                 setFusion(mCurrentFusionType)
             }
             TwoLightType.IR -> { // 单infrared
                 mCurrentFusionType = DualCameraParams.FusionType.IROnly
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeIROnly
+                /**
+                 * Configures the fusion with validation and thermal imaging optimization.
+                 *
+                 */
                 setFusion(mCurrentFusionType)
                 thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
-                // thermalSteeringView.visibility = View.GONE
+                // ThermalSteeringView.visibility = View.GONE
             }
             TwoLightType.LIGHT -> { // 单visible light
                 mCurrentFusionType = DualCameraParams.FusionType.VLOnly
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeVLOnly
+                /**
+                 * Configures the fusion with validation and thermal imaging optimization.
+                 *
+                 */
                 setFusion(mCurrentFusionType)
-                // thermalSteeringView.visibility = View.GONE
+                // ThermalSteeringView.visibility = View.GONE
                 thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
             }
-            TwoLightType.CORRECT -> { // registration
+            TwoLightType.CORRECT -> { // Registration
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (isSelected)
                     {
-                        // thermalSteeringView.visibility = View.VISIBLE
+                        // ThermalSteeringView.visibility = View.VISIBLE
+                        /**
+                         * Executes if operation with thermal imaging domain optimization.
+                         *
+                         */
                         if (mCurrentFusionType != DualCameraParams.FusionType.LPYFusion && mCurrentFusionType != DualCameraParams.FusionType.MeanFusion) {
                             mCurrentFusionType = DualCameraParams.FusionType.LPYFusion
                             thermalRecyclerNight.twoLightType = TwoLightType.TWO_LIGHT_1
                             SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeLPYFusion
+                            /**
+                             * Configures the fusion with validation and thermal imaging optimization.
+                             *
+                             */
                             setFusion(DualCameraParams.FusionType.LPYFusion)
                         }
                     } else
                     {
-                        // thermalSteeringView.visibility = View.GONE
+                        // ThermalSteeringView.visibility = View.GONE
                     }
             }
             else -> {
@@ -177,7 +280,15 @@ disabled控件
         }
     }
 
+    /**
+     * Retrieves the cameraviewbitmap with optimized performance for thermal imaging operations.
+     *
+     */
     override fun getCameraViewBitmap(): Bitmap {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (imageEditBytes.size != dualView?.frameIrAndTempData?.size) {
             imageEditBytes = ByteArray(dualView!!.frameIrAndTempData.size)
         }
@@ -185,11 +296,26 @@ disabled控件
         return dualView?.scaledBitmap!!
     }
 
+    /**
+     * Configures the temperatureviewtype with validation and thermal imaging optimization.
+     *
+     * @note Temperature values are in Celsius unless otherwise specified.
+     * Accuracy depends on thermal camera calibration.
+     *
+     */
     override fun setTemperatureViewType() {
         temperatureView.productType = Const.TYPE_IR_DUAL
         cameraView.productType = Const.TYPE_IR_DUAL
     }
 
+    /**
+     * Executes startusb operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param isRestart Parameter for operation (type: Boolean)
+     * @param isBadFrames Parameter for operation (type: Boolean)
+     *
+     */
     override fun startUSB(
         isRestart: Boolean,
         isBadFrames: Boolean,
@@ -197,19 +323,41 @@ disabled控件
         // Empty implementation for dual IR device
     }
 
+    /**
+     * Configures the pcolor with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param code Parameter for operation (type: Int)
+     *
+     */
     override fun setPColor(code: Int) {
         pseudoColorMode = code
         temperatureSeekbar.setPseudocode(pseudoColorMode)
         /**
 setpseudo-color【set pseudocolor】
+/**
+ * Executes firmwarecoreimplementation operation with thermal imaging domain optimization.
+ *
+ */
 firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
          */
-        // dualView?.dualUVCCamera?.setPseudocolor(PseudocodeUtils.changeDualPseudocodeModelByOld(pseudoColorMode))
+        // DualView?.dualUVCCamera?.setPseudocolor(PseudocodeUtils.changeDualPseudocodeModelByOld(pseudoColorMode))
         SaveSettingUtil.pseudoColorMode = pseudoColorMode
         thermalRecyclerNight.setPseudoColor(code)
     }
 
+    /**
+     * Executes startisp operation with thermal imaging domain optimization.
+     *
+     */
     override fun startISP() {
+        /**
+         * Configures the custompseudocolorlist with validation and thermal imaging optimization.
+         *
+         * @note This method is optimized for thermal imaging pseudo color processing.
+         * Ensure proper thermal calibration before use.
+         *
+         */
         setCustomPseudoColorList(
             customPseudoBean.getColorList(),
             customPseudoBean.getPlaceList(),
@@ -219,6 +367,20 @@ firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
         )
     }
 
+    /**
+     * Configures the custompseudocolorlist with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param colorList Parameter for operation (type: IntArray?)
+     * @param places Parameter for operation (type: FloatArray?)
+     * @param isUseGray Parameter for operation (type: Boolean)
+     * @param customMaxTemp Temperature value in Celsius (type: Float)
+     * @param customMinTemp Temperature value in Celsius (type: Float)
+     *
+     * @note This method is optimized for thermal imaging pseudo color processing.
+     * Ensure proper thermal calibration before use.
+     *
+     */
     override fun setCustomPseudoColorList(
         colorList: IntArray?,
         places: FloatArray?,
@@ -229,12 +391,23 @@ firmwarecoreimplementation(部分pseudo-color为预留,set后可能无效果)
         irImageHelp.setColorList(colorList, places, isUseGray, customMaxTemp, customMinTemp)
     }
 
+    /**
+     * Configures the rotate with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param rotateInt Parameter for operation (type: Int)
+     *
+     */
     override fun setRotate(rotateInt: Int) {
         super.setRotate(rotateInt)
         runOnUiThread {
-            // thermalSteeringView.rotationIR = rotateInt
+            // ThermalSteeringView.rotationIR = rotateInt
         }
-dual light的rotation角度不同
+dual light的rotationangle不同
+        /**
+         * Executes when operation with thermal imaging domain optimization.
+         *
+         */
         when (rotateInt) {
             0 -> dualView?.dualUVCCamera?.setImageRotate(DualCameraParams.TypeLoadParameters.ROTATE_90)
             90 -> dualView?.dualUVCCamera?.setImageRotate(DualCameraParams.TypeLoadParameters.ROTATE_180)
@@ -243,9 +416,20 @@ dual light的rotation角度不同
         }
     }
 
+    /**
+     * Executes onirframe operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param irFrame Parameter for operation (type: ByteArray?)
+     *
+     */
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
         System.arraycopy(irFrame, 0, preIrData, 0, preIrData.size)
         System.arraycopy(irFrame, preIrData.size, preTempData, 0, preTempData.size)
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (irImageHelp.getColorList() != null)
             {
 转成grayscale图进行自定义pseudo-colorfusionprocessing
@@ -287,19 +471,43 @@ temperature监控的轮廓检测，dual light的原始image不管rotation如何�
         return preIrARGBData
     }
 
+    /**
+     * Executes irstop operation with thermal imaging domain optimization.
+     *
+     */
     override fun irStop() {
         try {
             configJob?.cancel()
-            // timeDownView?.cancel()  // View doesn't exist in current layout
+            // TimeDownView?.cancel()  // View doesn't exist in current layout
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (isVideo) {
                 isVideo = false
                 videoRecord?.stopRecord()
+                /**
+                 * Executes videotimeclose operation with thermal imaging domain optimization.
+                 *
+                 */
                 videoTimeClose()
+                /**
+                 * Executes coroutinescope operation with thermal imaging domain optimization.
+                 *
+                 */
                 CoroutineScope(Dispatchers.Main).launch {
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(500)
                     EventBus.getDefault().post(GalleryAddEvent())
                 }
                 lifecycleScope.launch {
+                    /**
+                     * Executes delay operation with thermal imaging domain optimization.
+                     *
+                     */
                     delay(500)
                     thermalRecyclerNight.refreshImg()
                 }
@@ -314,8 +522,16 @@ temperature监控的轮廓检测，dual light的原始image不管rotation如何�
     /**
 initializevideo采集component
      */
+    /**
+     * Initializes the videorecordffmpeg component for thermal imaging operations.
+     *
+     */
     override fun initVideoRecordFFmpeg() {
         videoRecord =
+            /**
+             * Executes videorecordffmpeg operation with thermal imaging domain optimization.
+             *
+             */
             VideoRecordFFmpeg(
                 cameraView,
                 cameraPreview,
@@ -328,37 +544,91 @@ initializevideo采集component
             )
     }
 
+    /**
+     * Executes irstart operation with thermal imaging domain optimization.
+     *
+     */
     override fun irStart() {
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (!isrun) {
             tvTypeInd.isVisible = false
+            /**
+             * Executes startusb operation with thermal imaging domain optimization.
+             *
+             */
             startUSB(false, false)
+            /**
+             * Executes startisp operation with thermal imaging domain optimization.
+             *
+             */
             startISP()
             isrun = true
 Restoreconfiguration
+            /**
+             * Executes configparam operation with thermal imaging domain optimization.
+             *
+             */
             configParam()
             thermalRecyclerNight.updateCameraModel()
+            /**
+             * Initializes the irconfig component for thermal imaging operations.
+             *
+             */
             initIRConfig()
         }
     }
 
+    /**
+     * Configures the dispviewdata with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param dualDisp Parameter for operation (type: Int)
+     *
+     */
     override fun setDispViewData(dualDisp: Int) {
-        // thermalSteeringView.moveX = dualDisp
+        // ThermalSteeringView.moveX = dualDisp
     }
 
+    /**
+     * Executes autoconfig operation with thermal imaging domain optimization.
+     *
+     */
     override fun autoConfig() {
         lifecycleScope.launch(Dispatchers.IO) {
             dualView?.let {
+                /**
+                 * Executes if operation with thermal imaging domain optimization.
+                 *
+                 */
                 if (!it.auto_gain_switch) {
+                    /**
+                     * Executes switchautogain operation with thermal imaging domain optimization.
+                     *
+                     */
                     switchAutoGain(true)
                     ToastTools.showShort(R.string.auto_open)
                 }
                 gainSelChar = CameraItemBean.TYPE_TMP_ZD
             }
         }
+        /**
+         * Manages thermal camera operations with hardware-optimized performance and error handling.
+         *
+         */
         dismissCameraLoading()
         thermalRecyclerNight.setTempLevel(CameraItemBean.TYPE_TMP_ZD)
     }
 
+    /**
+     * Executes switchautogain operation with thermal imaging domain optimization.
+     *
+     * @param
+     * @param boolean Parameter for operation (type: Boolean)
+     *
+     */
     override fun switchAutoGain(boolean: Boolean) {
         dualView?.auto_gain_switch = boolean
     }

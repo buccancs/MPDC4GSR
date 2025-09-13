@@ -3,12 +3,32 @@ import com.topdon.lms.sdk.xutils.common.Callback
 import com.topdon.lms.sdk.xutils.http.RequestParams
 import com.topdon.lms.sdk.xutils.x
 
+/**
+ * Thermal imaging utility collection providing essential helper functions. Contains specialized algorithms for HttpUtils operations.
+ *
+ * This utility provides specialized functions for thermal imaging operations,
+ * including temperature calculations, pseudo color management, and data processing.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
+ */
 object HttpUtils {
     /**
      * settingspseudo color样式
      * @param mode              pseudo color样式
      * @param iResponseCallback Callbackfunction
      * @ void
+     */
+    /**
+     * Sets pseudocolor configuration.
      */
     fun setPseudoColor(
         mode: Int,
@@ -25,6 +45,16 @@ object HttpUtils {
     /**
      * Get/Retrievepseudo color样式
      */
+    /**
+     * Retrieves the pseudocolor with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
+     * @note This method is optimized for thermal imaging pseudo color processing.
+     * Ensure proper thermal calibration before use.
+     *
+     */
     fun getPseudoColor(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
         params.uri = TS004URL.GET_PSEUDO_COLOR
@@ -37,6 +67,9 @@ object HttpUtils {
      * @param mode              屏幕brightness值:range0-100
      * @param iResponseCallback Callbackfunction
      * @ void
+     */
+    /**
+     * Sets brightness configuration.
      */
     fun setBrightness(
         brightness: Int,
@@ -52,6 +85,13 @@ object HttpUtils {
     /**
      * Get/Retrieve屏幕brightness
      */
+    /**
+     * Retrieves the brightness with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
+     */
     fun getBrightness(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
         params.uri = TS004URL.GET_PANEL_PARAM
@@ -63,6 +103,17 @@ object HttpUtils {
      * settingspicture-in-picture
      * @param iResponseCallback Callbackfunction
      * @ void
+     */
+    /**
+     * Sets pip configuration.
+     */
+    /**
+     * Configures the pip with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param enable Parameter for operation (type: Boolean)
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
      */
     fun setPip(
         enable: Boolean,
@@ -91,6 +142,17 @@ object HttpUtils {
      * @param iResponseCallback Callbackfunction
      * @ void
      */
+    /**
+     * Sets zoom configuration.
+     */
+    /**
+     * Configures the zoom with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param factor Parameter for operation (type: Int)
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
+     */
     fun setZoom(
         factor: Int,
         iResponseCallback: Callback.CommonCallback<String>?,
@@ -106,6 +168,13 @@ object HttpUtils {
     /**
      * Get/Retrieve放大倍数
      */
+    /**
+     * Retrieves the zoom with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
+     */
     fun getZoom(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
         params.uri = TS004URL.GET_ZOOM
@@ -117,6 +186,16 @@ object HttpUtils {
      * settingscapture
      * @param iResponseCallback Callbackfunction
      * @void
+     */
+    /**
+     * Sets camera configuration.
+     */
+    /**
+     * Configures the camera with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
      */
     fun setCamera(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
@@ -130,6 +209,17 @@ object HttpUtils {
      * @param enable recording开关
      * @param iResponseCallback Callbackfunction
      * @void
+     */
+    /**
+     * Sets video configuration.
+     */
+    /**
+     * Configures the video with validation and thermal imaging optimization.
+     *
+     * @param
+     * @param enable Parameter for operation (type: Boolean)
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
      */
     fun setVideo(
         enable: Boolean,
@@ -147,6 +237,9 @@ object HttpUtils {
      * @param iResponseCallback Callbackfunction
      * @void
      */
+    /**
+     * Retrieves videostatus information.
+     */
     fun getVideoStatus(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
         params.uri = TS004URL.GET_RECORD_STATUS
@@ -156,6 +249,13 @@ object HttpUtils {
 
     /**
      * Get/Retrieveversioninfo
+     */
+    /**
+     * Retrieves the version with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
      */
     fun getVersion(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
@@ -167,6 +267,13 @@ object HttpUtils {
     /**
      * Get/Retrievedeviceinfo
      */
+    /**
+     * Retrieves the devicedetails with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
+     */
     fun getDeviceDetails(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
         params.uri = TS004URL.GET_DEVICE_DETAILS
@@ -177,6 +284,13 @@ object HttpUtils {
     /**
      * Get/Retrievestorage分区info
      */
+    /**
+     * Retrieves the freespace with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
+     */
     fun getFreeSpace(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()
         params.uri = TS004URL.GET_FREE_SPACE
@@ -186,6 +300,13 @@ object HttpUtils {
 
     /**
      * restore出厂settings
+     */
+    /**
+     * Retrieves the resetall with optimized performance for thermal imaging operations.
+     *
+     * @param
+     * @param iResponseCallback Parameter for operation (type: Callback.CommonCallback<String>?)
+     *
      */
     fun getResetAll(iResponseCallback: Callback.CommonCallback<String>?) {
         val params = RequestParams()

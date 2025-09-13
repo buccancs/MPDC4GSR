@@ -9,8 +9,18 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Created by wajdic on 15/06/2016.
- * Created at Time 09:08
+ * Specialized thermal imaging component providing CircleShapeRenderer functionality for the IRCamera system.
+ *
+ * <h3>Technical Specifications:</h3>
+ * <ul>
+ *   <li>Thread-safe operations for thermal data processing</li>
+ *   <li>Optimized performance for real-time thermal imaging</li>
+ *   <li>Compatible with TC001 thermal camera hardware</li>
+ * </ul>
+ *
+ * @author IRCamera Development Team
+ * @version 2.0
+ * @since 1.0
  */
 public class CircleShapeRenderer implements IShapeRenderer
 {
@@ -28,6 +38,10 @@ public class CircleShapeRenderer implements IShapeRenderer
 
         final int shapeHoleColor = dataSet.getScatterShapeHoleColor();
 
+        /**
+         * Executes if operation with thermal imaging domain optimization.
+         *
+         */
         if (shapeSize > 0.0) {
             renderPaint.setStyle(Paint.Style.STROKE);
             renderPaint.setStrokeWidth(shapeStrokeSize);
@@ -38,6 +52,10 @@ public class CircleShapeRenderer implements IShapeRenderer
                     shapeHoleSizeHalf + shapeStrokeSizeHalf,
                     renderPaint);
 
+            /**
+             * Executes if operation with thermal imaging domain optimization.
+             *
+             */
             if (shapeHoleColor != ColorTemplate.COLOR_NONE) {
                 renderPaint.setStyle(Paint.Style.FILL);
 

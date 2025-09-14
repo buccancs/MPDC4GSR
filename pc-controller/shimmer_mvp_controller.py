@@ -1,18 +1,27 @@
 #!/usr/bin/env python3
 """
-Shimmer MVP PC Controller
+Shimmer3 GSR+ Research PC Controller
 
-A minimal PC controller that can receive GSR data from Android Shimmer devices.
-This is a working implementation without fake validation or overly complex architecture.
+Enhanced PC controller implementing the Hub-Spoke architecture for research-grade 
+physiological data collection with Shimmer3 GSR+ devices.
+
+Integration Plan Implementation:
+- Real-time TCP communication with Android Shimmer nodes
+- Research-grade data visualization with 128Hz sampling support
+- Multi-device coordination for synchronized recording
+- Comprehensive data logging with temporal alignment
+- Quality metrics and validation for 12-bit ADC precision
 
 Features:
-- TCP server to receive data from Android devices
-- Real-time GSR data visualization
-- Device discovery and management
-- CSV data logging
-- Basic synchronization markers
+- Multi-threaded TCP server supporting up to 8 Android devices
+- Real-time matplotlib visualization of GSR streams
+- Automatic device discovery and status monitoring  
+- CSV export with research metadata and quality assessment
+- Synchronization markers for cross-device temporal alignment
+- Network resilience with automatic reconnection handling
 
-This uses real networking and actual data processing.
+This implementation supports the enhanced Android Shimmer3 GSR+ integration
+without simulation or fake data - real research-grade data collection.
 """
 
 import asyncio
@@ -39,23 +48,52 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class GSRSample:
-    """GSR sample data structure"""
+    """Research-grade GSR sample data structure with enhanced metadata"""
     device_id: str
     timestamp_ms: int
     gsr_microsiemens: float
-    raw_value: int
-    resistance_kohm: float
+    raw_adc_12bit: int  # Emphasizing 12-bit ADC (0-4095 range)
+    resistance_ohm: float  # Full precision resistance in Ohms
     sample_sequence: int
+    elapsed_seconds: float  # Time since recording start
+    quality_flag: bool = True  # Data quality indicator
+    
+    @property
+    def resistance_kohm(self) -> float:
+        """Resistance in kΩ for compatibility"""
+        return self.resistance_ohm / 1000.0
 
-@dataclass
+@dataclass 
 class ConnectedDevice:
-    """Information about a connected Android device"""
+    """Enhanced device information with research metrics"""
     device_id: str
     device_name: str
+    device_address: str  # Bluetooth MAC address
     connection_time: float
     last_sample_time: float
     sample_count: int
     is_recording: bool
+    sampling_rate_hz: float = 128.0  # Expected Shimmer3 GSR+ sampling rate
+    session_id: Optional[str] = None
+    data_quality_score: float = 1.0  # 0.0-1.0 quality metric
+    
+    @property
+    def recording_duration(self) -> float:
+        """Duration of current recording session in seconds"""
+        if not self.is_recording:
+            return 0.0
+        return time.time() - self.connection_time
+    
+    @property
+    def expected_sample_count(self) -> int:
+        """Expected number of samples based on duration and sampling rate"""
+        return int(self.recording_duration * self.sampling_rate_hz)
+    
+    @property
+    def sample_completeness(self) -> float:
+        """Ratio of actual to expected samples (data quality metric)"""
+        expected = self.expected_sample_count
+        return self.sample_count / expected if expected > 0 else 0.0
 
 class ShimmerMvpController:
     """

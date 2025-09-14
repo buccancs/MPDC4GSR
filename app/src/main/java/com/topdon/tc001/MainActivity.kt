@@ -13,6 +13,7 @@ import android.util.Log
 import android.util.SparseArray
 import android.view.KeyEvent
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -76,6 +77,7 @@ import com.topdon.tc001.controller.RecordingController
 import com.topdon.gsr.model.SessionInfo
 // Phase 0 baseline imports
 import com.topdon.tc001.config.FeatureFlags
+import com.topdon.tc001.viewmodel.MainActivityViewModel
 import com.topdon.tc001.config.ProtocolVersion
 import com.topdon.tc001.logging.StructuredLogger
 import com.topdon.tc001.supervisor.CrashSafeSupervisor
@@ -93,6 +95,7 @@ import java.io.OutputStream
 // Legacy ARouter route annotation - now using NavigationManager
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     private val versionViewModel: VersionViewModel by viewModels()
+    private val mainViewModel: MainActivityViewModel by viewModels()
 
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
     
@@ -105,6 +108,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     // UI elements for network status
     private var networkStatusIndicator: ImageView? = null
     private var networkStatusText: TextView? = null
+    
+    // UI elements for GSR status
+    private var gsrStatusIndicator: ImageView? = null
+    private var gsrStatusText: TextView? = null
+    
+    // UI elements for session control
+    private var sessionControlButton: Button? = null
     
     // Phase 0 baseline components
     private lateinit var structuredLogger: StructuredLogger
@@ -206,6 +216,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         
         // Initialize PC-to-phone control networking
         initNetworking()
+        
+        // Initialize ViewModel and set up observers
+        setupViewModelObservers()
+        mainViewModel.initializeComponents()
     }
 
     private fun initView() {
@@ -218,9 +232,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         logInfo()
         
-        // Initialize network status UI elements
+        // Initialize status UI elements
         networkStatusIndicator = binding.networkStatusIndicator
         networkStatusText = binding.networkStatusText
+        gsrStatusIndicator = binding.gsrStatusIndicator
+        gsrStatusText = binding.gsrStatusText
+        sessionControlButton = binding.sessionControlButton
         
         lifecycleScope.launch(Dispatchers.IO) {
             // Note: SupHelp AI upscaler integration is not included in this build
@@ -244,9 +261,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.viewMain.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
         
-        // Add click listener for network status (for manual connection)
+        // Add click listeners for status and control elements
         binding.networkStatusBar.setOnClickListener {
             handleNetworkStatusClick()
+        }
+        
+        gsrStatusIndicator?.setOnClickListener {
+            handleGSRStatusClick()
+        }
+        
+        sessionControlButton?.setOnClickListener {
+            handleSessionControlClick()
         }
         
         App.instance.initWebSocket()
@@ -966,6 +991,228 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         webSocketClient = null
     }
     
+    /**
+     * Set up observers for MainActivityViewModel to update UI based on state changes
+     */
+    private fun setupViewModelObservers() {
+        // GSR Connection State Observer
+        mainViewModel.gsrConnectionState.observe(this) { state ->
+            updateGSRStatusUI(state)
+        }
+        
+        // Network Connection State Observer
+        mainViewModel.networkConnectionState.observe(this) { state ->
+            updateNetworkStatusUI(state)
+        }
+        
+        // Session State Observer
+        mainViewModel.sessionState.observe(this) { state ->
+            updateSessionStatusUI(state)
+        }
+        
+        // Status Message Observer
+        mainViewModel.statusMessage.observe(this) { message ->
+            message?.let {
+                showStatusMessage(it)
+                mainViewModel.clearStatusMessage()
+            }
+        }
+        
+        // Connected Controller Info Observer
+        mainViewModel.connectedControllerInfo.observe(this) { controller ->
+            updateNetworkConnectionInfo(controller)
+        }
+        
+        // Current Session Observer
+        mainViewModel.currentSession.observe(this) { session ->
+            updateCurrentSessionInfo(session)
+        }
+    }
+    
+    /**
+     * Update GSR sensor status in the UI
+     */
+    private fun updateGSRStatusUI(state: MainActivityViewModel.GSRConnectionState) {
+        runOnUiThread {
+            gsrStatusText?.text = when (state) {
+                MainActivityViewModel.GSRConnectionState.DISCONNECTED -> "GSR: Disconnected"
+                MainActivityViewModel.GSRConnectionState.DISCOVERING -> "GSR: Searching..."
+                MainActivityViewModel.GSRConnectionState.CONNECTING -> "GSR: Connecting..."
+                MainActivityViewModel.GSRConnectionState.CONNECTED -> "GSR: Connected"
+                MainActivityViewModel.GSRConnectionState.ERROR -> "GSR: Error"
+            }
+            
+            // Update indicator color
+            gsrStatusIndicator?.setImageResource(when (state) {
+                MainActivityViewModel.GSRConnectionState.CONNECTED -> android.R.drawable.presence_online
+                MainActivityViewModel.GSRConnectionState.CONNECTING,
+                MainActivityViewModel.GSRConnectionState.DISCOVERING -> android.R.drawable.presence_away
+                MainActivityViewModel.GSRConnectionState.ERROR -> android.R.drawable.presence_busy
+                MainActivityViewModel.GSRConnectionState.DISCONNECTED -> android.R.drawable.presence_invisible
+            })
+        }
+    }
+    
+    /**
+     * Update network connection status in the UI
+     */
+    private fun updateNetworkStatusUI(state: MainActivityViewModel.NetworkConnectionState) {
+        runOnUiThread {
+            networkStatusText?.text = when (state) {
+                MainActivityViewModel.NetworkConnectionState.DISCONNECTED -> "PC: Disconnected"
+                MainActivityViewModel.NetworkConnectionState.DISCOVERING -> "PC: Searching..."
+                MainActivityViewModel.NetworkConnectionState.CONNECTING -> "PC: Connecting..."
+                MainActivityViewModel.NetworkConnectionState.CONNECTED -> "PC: Connected"
+                MainActivityViewModel.NetworkConnectionState.ERROR -> "PC: Error"
+            }
+            
+            // Update indicator color
+            networkStatusIndicator?.setImageResource(when (state) {
+                MainActivityViewModel.NetworkConnectionState.CONNECTED -> android.R.drawable.presence_online
+                MainActivityViewModel.NetworkConnectionState.CONNECTING,
+                MainActivityViewModel.NetworkConnectionState.DISCOVERING -> android.R.drawable.presence_away
+                MainActivityViewModel.NetworkConnectionState.ERROR -> android.R.drawable.presence_busy
+                MainActivityViewModel.NetworkConnectionState.DISCONNECTED -> android.R.drawable.presence_invisible
+            })
+        }
+    }
+    
+    /**
+     * Update session status in the UI
+     */
+    private fun updateSessionStatusUI(state: MainActivityViewModel.SessionState) {
+        runOnUiThread {
+            sessionControlButton?.text = when (state) {
+                MainActivityViewModel.SessionState.IDLE -> "Start Recording"
+                MainActivityViewModel.SessionState.STARTING -> "Starting..."
+                MainActivityViewModel.SessionState.RECORDING -> "Stop Recording"
+                MainActivityViewModel.SessionState.STOPPING -> "Stopping..."
+                MainActivityViewModel.SessionState.PAUSED -> "Resume Recording"
+                MainActivityViewModel.SessionState.ERROR -> "Session Error"
+            }
+            
+            // Enable/disable button based on state
+            sessionControlButton?.isEnabled = when (state) {
+                MainActivityViewModel.SessionState.STARTING,
+                MainActivityViewModel.SessionState.STOPPING -> false
+                else -> true
+            }
+            
+            Log.d(TAG, "Session Status: $state")
+        }
+    }
+    
+    /**
+     * Show status message to user (Toast for now, can be enhanced with custom UI)
+     */
+    private fun showStatusMessage(message: MainActivityViewModel.StatusMessage) {
+        runOnUiThread {
+            val context = when (message.level) {
+                MainActivityViewModel.StatusMessage.Level.INFO -> this
+                MainActivityViewModel.StatusMessage.Level.WARNING -> this
+                MainActivityViewModel.StatusMessage.Level.ERROR -> this
+            }
+            Toast.makeText(context, message.message, Toast.LENGTH_SHORT).show()
+            Log.i(TAG, "Status: ${message.level.name} - ${message.message}")
+        }
+    }
+    
+    /**
+     * Update network connection information display
+     */
+    private fun updateNetworkConnectionInfo(controller: NetworkClient.ControllerInfo?) {
+        runOnUiThread {
+            if (controller != null) {
+                networkStatusText?.text = "PC: ${controller.deviceName}"
+                Log.i(TAG, "Connected to PC controller: ${controller.deviceName} (${controller.ipAddress})")
+            }
+        }
+    }
+    
+    /**
+     * Update current session information display
+     */
+    private fun updateCurrentSessionInfo(session: SessionInfo?) {
+        runOnUiThread {
+            if (session != null) {
+                Log.i(TAG, "Current session: ${session.sessionId}")
+                // TODO: Update session UI elements
+            } else {
+                Log.i(TAG, "No active session")
+            }
+        }
+    }
+    
+    /**
+     * Enhanced network status click handler - integrates with ViewModel
+     */
+    private fun handleNetworkStatusClick() {
+        when (mainViewModel.networkConnectionState.value) {
+            MainActivityViewModel.NetworkConnectionState.DISCONNECTED -> {
+                // Start network discovery
+                mainViewModel.startNetworkDiscovery()
+            }
+            MainActivityViewModel.NetworkConnectionState.CONNECTED -> {
+                // Show connection info or disconnect option
+                mainViewModel.connectedControllerInfo.value?.let { controller ->
+                    Toast.makeText(this, "Connected to: ${controller.deviceName}\n${controller.ipAddress}:${controller.port}", Toast.LENGTH_LONG).show()
+                }
+            }
+            else -> {
+                // Show current status
+                Toast.makeText(this, "Network status: ${mainViewModel.networkConnectionState.value}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    /**
+     * Handle GSR status click - start connection or show details
+     */
+    private fun handleGSRStatusClick() {
+        when (mainViewModel.gsrConnectionState.value) {
+            MainActivityViewModel.GSRConnectionState.DISCONNECTED -> {
+                // Start GSR connection
+                mainViewModel.startGSRConnection()
+            }
+            MainActivityViewModel.GSRConnectionState.CONNECTED -> {
+                // Show GSR sensor details
+                Toast.makeText(this, "GSR sensor connected and streaming", Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                // Show current status
+                Toast.makeText(this, "GSR status: ${mainViewModel.gsrConnectionState.value}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    
+    /**
+     * Handle session control button click - start/stop recording
+     */
+    private fun handleSessionControlClick() {
+        when (mainViewModel.sessionState.value) {
+            MainActivityViewModel.SessionState.IDLE -> {
+                // Start recording session
+                val config = MainActivityViewModel.SessionConfig(
+                    modalities = listOf("thermal", "GSR"),
+                    saveImages = true
+                )
+                mainViewModel.startRecordingSession(config)
+            }
+            MainActivityViewModel.SessionState.RECORDING -> {
+                // Stop recording session
+                mainViewModel.stopRecordingSession()
+            }
+            MainActivityViewModel.SessionState.PAUSED -> {
+                // Resume recording (TODO: implement pause/resume functionality)
+                Toast.makeText(this, "Resume functionality coming soon", Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                // Show current status
+                Toast.makeText(this, "Session status: ${mainViewModel.sessionState.value}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
 
     private fun createWebSocketEventListener(): WebSocketClient.WebSocketEventListener {

@@ -179,12 +179,13 @@ class TimeManager(
                     val outputStream = socket.getOutputStream()
                     val inputStream = socket.getInputStream()
 
-                    // Create time sync request message
+                    // Create enhanced time sync request message
                     val requestJson =
                         """
                         {
-                            "type": "time_sync_request",
-                            "client_send_time": $localTime,
+                            "message_type": "time_sync_request",
+                            "client_timestamp": $localTime,
+                            "device_id": "android_${android.os.Build.MODEL.replace(" ", "_")}",
                             "session_id": "${UUID.randomUUID()}"
                         }
                         """.trimIndent()
@@ -215,8 +216,44 @@ class TimeManager(
 
     private fun parseTimeSyncResponse(responseJson: String): TimeSyncResponse? {
         return try {
-            // Parse real JSON response from PC Controller
-            // Expected format: {"pc_receive_time": ..., "pc_send_time": ...}
+            // Parse enhanced JSON response from PC Controller
+            // Expected format: {"message_type": "time_sync_response", "server_receive_time": ..., "server_send_time": ...}
+            
+            // Simple JSON parsing for the enhanced protocol
+            var serverReceiveTime: Long? = null
+            var serverSendTime: Long? = null
+            
+            // Look for the enhanced protocol fields first
+            if (responseJson.contains("server_receive_time") && responseJson.contains("server_send_time")) {
+                val lines = responseJson.split(",")
+                
+                for (line in lines) {
+                    when {
+                        line.contains("server_receive_time") -> {
+                            serverReceiveTime = line.substringAfter(":").trim()
+                                .removeSuffix("}")
+                                .removeSuffix(",")
+                                .toLongOrNull()
+                        }
+                        line.contains("server_send_time") -> {
+                            serverSendTime = line.substringAfter(":").trim()
+                                .removeSuffix("}")
+                                .removeSuffix(",")
+                                .toLongOrNull()
+                        }
+                    }
+                }
+                
+                if (serverReceiveTime != null && serverSendTime != null) {
+                    Log.d(TAG, "Enhanced time sync protocol response received from PC Controller")
+                    return TimeSyncResponse(
+                        pcReceiveTime = serverReceiveTime,
+                        pcSendTime = serverSendTime,
+                    )
+                }
+            }
+            
+            // Fallback to legacy protocol for compatibility
             val lines = responseJson.split(",")
             var pcReceiveTime: Long? = null
             var pcSendTime: Long? = null
@@ -229,6 +266,14 @@ class TimeManager(
                     line.contains("pc_send_time") -> {
                         pcSendTime = line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
+                    // Also check for server_timestamp as fallback
+                    line.contains("server_timestamp") && pcReceiveTime == null -> {
+                        pcReceiveTime = line.substringAfter(":").trim()
+                            .removeSuffix("}")
+                            .removeSuffix(",")
+                            .toLongOrNull()
+                        pcSendTime = pcReceiveTime // Use same value for both if only one timestamp
+                    }
                 }
             }
 
@@ -238,7 +283,7 @@ class TimeManager(
                     pcSendTime = pcSendTime,
                 )
             } else {
-                Log.w(TAG, "Invalid time sync response format from PC Controller")
+                Log.w(TAG, "Invalid time sync response format from PC Controller: $responseJson")
                 null
             }
         } catch (e: Exception) {

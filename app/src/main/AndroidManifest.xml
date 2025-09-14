@@ -141,6 +141,14 @@
             android:label="Unified Sensor Platform"
             android:theme="@style/AppTheme" />
 
+        <!-- Shimmer Integration Activity - Comprehensive Implementation -->
+        <activity
+            android:name="com.topdon.tc001.sensors.shimmer.ShimmerIntegrationActivity"
+            android:screenOrientation="userPortrait"
+            android:exported="true"
+            android:label="Shimmer3 GSR+ Integration"
+            android:theme="@style/AppTheme" />
+
         <!-- Phase 2 Validation Activity for Hardware Testing -->
         <activity
             android:name="com.topdon.tc001.Phase2ValidationActivity"

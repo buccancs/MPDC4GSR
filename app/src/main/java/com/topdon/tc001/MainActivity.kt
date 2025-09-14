@@ -1849,15 +1849,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         try {
             Log.i(TAG, "Showing developer sensor options")
             
-            // Create dialog to choose between MVP and comprehensive platform
+            // Enhanced dialog with comprehensive Shimmer integration following the integration plan
             val options = arrayOf(
                 "Shimmer GSR MVP",
-                "Unified Sensor Platform", 
+                "Shimmer3 GSR+ Integration (Comprehensive)", 
+                "Unified Sensor Platform",
                 "Cancel"
             )
             
             AlertDialog.Builder(this)
                 .setTitle("Developer Sensor Access")
+                .setMessage("Select sensor integration mode:\n\n" +
+                           "• MVP: Basic Shimmer GSR recording\n" +
+                           "• Comprehensive: Full integration plan implementation\n" +
+                           "• Unified Platform: Multi-modal sensor coordination")
                 .setItems(options) { _, which ->
                     when (which) {
                         0 -> {
@@ -1867,12 +1872,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             startActivity(intent)
                         }
                         1 -> {
+                            // Launch Comprehensive Shimmer3 GSR+ Integration
+                            Toast.makeText(this, "Opening Shimmer3 GSR+ Integration", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, com.topdon.tc001.sensors.shimmer.ShimmerIntegrationActivity::class.java)
+                            startActivity(intent)
+                        }
+                        2 -> {
                             // Launch Unified Sensor Platform
                             Toast.makeText(this, "Opening Unified Sensor Platform", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this, UnifiedSensorActivity::class.java)
                             startActivity(intent)
                         }
-                        2 -> {
+                        3 -> {
                             // Cancel - do nothing
                         }
                     }

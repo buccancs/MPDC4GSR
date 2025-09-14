@@ -251,6 +251,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             handleNetworkStatusClick()
         }
         
+        // Add long press listener for Shimmer MVP access (developer feature)
+        binding.viewMain.setOnLongClickListener {
+            launchShimmerMvp()
+            true
+        }
+        
         App.instance.initWebSocket()
         copyFile("SR.pb", File(filesDir, "SR.pb"))
         BaseApplication.instance.clearDb()
@@ -1830,6 +1836,24 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             structuredLogger.cleanup()
         } catch (e: Exception) {
             Log.e(TAG, "Error during Phase 0 cleanup", e)
+        }
+    }
+
+    /**
+     * Launch Shimmer MVP Activity  
+     * This provides access to the Shimmer GSR integration MVP
+     */
+    private fun launchShimmerMvp() {
+        try {
+            Log.i(TAG, "Launching Shimmer MVP Activity")
+            Toast.makeText(this, "Opening Shimmer GSR MVP", Toast.LENGTH_SHORT).show()
+            
+            val intent = Intent(this, ShimmerMvpActivity::class.java)
+            startActivity(intent)
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error launching Shimmer MVP: ${e.message}")
+            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 

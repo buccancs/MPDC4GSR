@@ -125,6 +125,14 @@
 
         </activity>
 
+        <!-- Shimmer GSR MVP Activity -->
+        <activity
+            android:name="com.topdon.tc001.ShimmerMvpActivity"
+            android:screenOrientation="userPortrait"
+            android:exported="true"
+            android:label="Shimmer GSR MVP"
+            android:theme="@style/AppTheme" />
+
         <!-- Phase 2 Validation Activity for Hardware Testing -->
         <activity
             android:name="com.topdon.tc001.Phase2ValidationActivity"

@@ -238,8 +238,10 @@ public class ShimmerBleController {
             try {
                 BluetoothDevice device = result.getDevice();
                 String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
+                String deviceAddress = device.getAddress();
                 
-                if (deviceName != null && isShimmerDevice(deviceName)) {
+                // Enhanced Shimmer device identification: check both name and MAC OUI (00:06:66)
+                if (isShimmerDevice(deviceName, deviceAddress)) {
                     UnifiedBleManager.DeviceType deviceType = determineShimmerDeviceType(deviceName, result.getScanRecord());
                     
                     if (currentScanListener != null) {
@@ -251,7 +253,7 @@ public class ShimmerBleController {
                         );
                     }
                     
-                    Log.d(TAG, "Found Shimmer device: " + deviceName + " (" + deviceType + ") RSSI: " + result.getRssi());
+                    Log.d(TAG, "Found Shimmer device: " + deviceName + " [" + deviceAddress + "] (" + deviceType + ") RSSI: " + result.getRssi());
                 }
                 
             } catch (Exception e) {
@@ -277,14 +279,25 @@ public class ShimmerBleController {
     };
     
 
-    private boolean isShimmerDevice(String deviceName) {
-        if (deviceName == null) return false;
+    private boolean isShimmerDevice(String deviceName, String deviceAddress) {
+        // Step 3: Enhanced device identification with MAC OUI filtering as specified
         
-        for (String pattern : SHIMMER_DEVICE_PATTERNS) {
-            if (deviceName.toLowerCase().contains(pattern.toLowerCase())) {
-                return true;
+        // Check MAC address OUI - Shimmer devices typically use 00:06:66
+        if (deviceAddress != null && deviceAddress.toUpperCase().startsWith("00:06:66")) {
+            Log.d(TAG, "Shimmer device detected by MAC OUI: " + deviceAddress);
+            return true;
+        }
+        
+        // Check device name patterns
+        if (deviceName != null) {
+            for (String pattern : SHIMMER_DEVICE_PATTERNS) {
+                if (deviceName.toLowerCase().contains(pattern.toLowerCase())) {
+                    Log.d(TAG, "Shimmer device detected by name pattern: " + deviceName);
+                    return true;
+                }
             }
         }
+        
         return false;
     }
     

@@ -71,7 +71,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
     private val connectionTimeoutMs = 10000L // 10 seconds
     
     // Class-level coroutine scope for proper lifecycle management
-    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     // Bluetooth management
     private val bluetoothManager = BluetoothManager(context)
@@ -223,6 +223,9 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         
         // Cancel all coroutines in the scope for proper cleanup
         coroutineScope.cancel()
+        
+        // Recreate coroutine scope for future use (allows reconnection)
+        coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         
         // Stop streaming first if active
         stopStreaming()
@@ -447,7 +450,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
 
     private fun startSimulationDataGeneration() {
         simulationJob =
-            CoroutineScope(Dispatchers.IO).launch {
+            coroutineScope.launch {
                 var sampleCount = 0L
 
                 while (isStreaming.get() && isActive) {

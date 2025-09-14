@@ -89,7 +89,16 @@ class ShimmerGSRRecorder(
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
         
         // 12-bit ADC resolution constant for accurate GSR calculations
-        private const val ADC_12BIT_MAX = 4095.0
+        private const val ADC_12BIT_MAX = 4095
+
+        // Shimmer3 sensor configuration constants
+        private const val GSR_SENSOR_BIT = 0x08.toByte()
+        private const val GSR_RANGE_AUTO = 0x00.toByte()
+        private const val TIMESTAMP_CHANNEL_BIT = 0x01.toByte()
+
+        // Enabled sensors mask (GSR + Timestamp)
+        private const val SENSOR_GSR_BIT = 0x10L
+        private const val SENSOR_TIMESTAMP_BIT = 0x08L
 
         private val SIGNALS_HEADER =
             arrayOf(
@@ -208,7 +217,7 @@ class ShimmerGSRRecorder(
                         val gsrConfig = createGSRConfiguration()
                         
                         // Apply GSR configuration to the device
-                        device.writeEnabledSensors(0x18L) // GSR + Timestamp sensors
+                        device.writeEnabledSensors(SENSOR_GSR_BIT or SENSOR_TIMESTAMP_BIT) // GSR + Timestamp sensors
                         device.writeSamplingRate(samplingRateHz.toDouble())
                         device.setGSRRange(0) // Auto-range for maximum sensitivity
                         
@@ -474,7 +483,7 @@ class ShimmerGSRRecorder(
                 val rawData = objectCluster.getFormatClusterValue("GSR", "RAW")
                 if (rawData?.data != null && rawData.data >= 0) {
                     // Ensure raw value is within 12-bit ADC range (0-4095) as required for accuracy
-                    val clampedValue = rawData.data.coerceIn(0.0, ADC_12BIT_MAX)
+                    val clampedValue = rawData.data.coerceIn(0.0, ADC_12BIT_MAX.toDouble())
                     Log.d(TAG, "Using raw GSR data (12-bit): ${clampedValue}")
                     return clampedValue
                 }
@@ -489,7 +498,7 @@ class ShimmerGSRRecorder(
                     ?: objectCluster.getFormatClusterValue("GSR_Conductance", "RAW")
                 
                 if (gsrRaw?.data != null && gsrRaw.data >= 0) {
-                    val clampedValue = gsrRaw.data.coerceIn(0.0, ADC_12BIT_MAX)
+                    val clampedValue = gsrRaw.data.coerceIn(0.0, ADC_12BIT_MAX.toDouble())
                     Log.d(TAG, "Using alternative GSR raw data (12-bit): ${clampedValue}")
                     return clampedValue
                 }
@@ -503,8 +512,8 @@ class ShimmerGSRRecorder(
                 if (conductanceData?.data != null && conductanceData.data > 0) {
                     // Proper reverse conversion from calibrated conductance to 12-bit raw
                     // Based on Shimmer3 GSR calibration: GSR(µS) = ((ADC/4095) * 3.0V) / R_feedback * 1000000
-                    val rawValue = (conductanceData.data * ADC_12BIT_MAX) / 1000.0 // Approximate reverse
-                    val clampedValue = rawValue.coerceIn(0.0, ADC_12BIT_MAX)
+                    val rawValue = (conductanceData.data * ADC_12BIT_MAX.toDouble()) / 1000.0 // Approximate reverse
+                    val clampedValue = rawValue.coerceIn(0.0, ADC_12BIT_MAX.toDouble())
                     Log.d(TAG, "Using calibrated GSR data (reverse to 12-bit): $clampedValue")
                     return clampedValue
                 }
@@ -521,7 +530,7 @@ class ShimmerGSRRecorder(
             // Shimmer3 GSR 12-bit ADC typically ranges from 500-3500 counts (within 0-4095 total range)
             var rawValue = 2000 + basePattern + breathingPattern + noise
             // Ensure value stays within valid 12-bit ADC range
-            rawValue = rawValue.coerceIn(0.0, ADC_12BIT_MAX)
+            rawValue = rawValue.coerceIn(0.0, ADC_12BIT_MAX.toDouble())
 
             Log.d(TAG, "Using simulated raw GSR data (12-bit): $rawValue")
             return rawValue
@@ -550,16 +559,15 @@ class ShimmerGSRRecorder(
             config[0] = samplingRateConfig
 
             // Enable GSR sensor (sensor enable bits)
-            config[1] = 0x08.toByte() // GSR sensor bit
+            config[1] = GSR_SENSOR_BIT
 
             // Step 5: Set GSR range configuration
             // GSR_RANGE_AUTORANGE for automatic ranging or specific range
             // For maximum sensitivity, use the most sensitive range (4.7 MΩ)
-            val gsrRangeConfig = 0x00.toByte() // Auto-range setting
-            config[2] = gsrRangeConfig
+            config[2] = GSR_RANGE_AUTO
 
             // Additional configuration for timestamp channel (important for data alignment)
-            config[3] = 0x01.toByte() // Enable timestamp channel
+            config[3] = TIMESTAMP_CHANNEL_BIT
 
             Log.d(TAG, "Created enhanced GSR configuration: ${samplingRateHz}Hz sampling, auto-range GSR, timestamp enabled")
             return config
@@ -568,8 +576,8 @@ class ShimmerGSRRecorder(
             // Return enhanced minimal configuration with GSR and timestamp enabled
             return ByteArray(12) { 
                 when (it) {
-                    1 -> 0x08.toByte() // GSR sensor
-                    3 -> 0x01.toByte() // Timestamp
+                    1 -> GSR_SENSOR_BIT
+                    3 -> TIMESTAMP_CHANNEL_BIT
                     else -> 0x00.toByte()
                 }
             }

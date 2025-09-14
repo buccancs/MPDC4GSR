@@ -341,9 +341,8 @@ class HubCoordinator:
             # Collect final sync quality stats
             session.sync_quality_stats = self._network_server.get_time_sync_stats()
             
-            # End time sync sessions
-            for device_id in session.participating_devices:
-                await self._network_server.end_time_sync_session(session_id)
+            # End time sync session once for all devices
+            await self._network_server.end_time_sync_session(session_id)
             
             # Move to history
             self._session_history.append(session_id)

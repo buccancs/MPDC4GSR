@@ -230,38 +230,23 @@ class TimeManager(
             // Parse enhanced JSON response from PC Controller
             // Expected format: {"message_type": "time_sync_response", "server_receive_time": ..., "server_send_time": ...}
             
-            // Simple JSON parsing for the enhanced protocol
+            // Use proper JSON parsing for robustness
             var serverReceiveTime: Long? = null
             var serverSendTime: Long? = null
-            
-            // Look for the enhanced protocol fields first
-            if (responseJson.contains("server_receive_time") && responseJson.contains("server_send_time")) {
-                val lines = responseJson.split(",")
-                
-                for (line in lines) {
-                    when {
-                        line.contains("server_receive_time") -> {
-                            serverReceiveTime = line.substringAfter(":").trim()
-                                .removeSuffix("}")
-                                .removeSuffix(",")
-                                .toLongOrNull()
-                        }
-                        line.contains("server_send_time") -> {
-                            serverSendTime = line.substringAfter(":").trim()
-                                .removeSuffix("}")
-                                .removeSuffix(",")
-                                .toLongOrNull()
-                        }
-                    }
-                }
-                
-                if (serverReceiveTime != null && serverSendTime != null) {
+
+            try {
+                val json = org.json.JSONObject(responseJson)
+                if (json.has("server_receive_time") && json.has("server_send_time")) {
                     Log.d(TAG, "Enhanced time sync protocol response received from PC Controller")
+                    serverReceiveTime = json.getLong("server_receive_time")
+                    serverSendTime = json.getLong("server_send_time")
                     return TimeSyncResponse(
                         pcReceiveTime = serverReceiveTime,
                         pcSendTime = serverSendTime,
                     )
                 }
+            } catch (e: org.json.JSONException) {
+                Log.w(TAG, "Could not parse as JSON, will attempt legacy parsing: $e")
             }
             
             // Fallback to legacy protocol for compatibility

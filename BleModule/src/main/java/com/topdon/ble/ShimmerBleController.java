@@ -31,6 +31,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ShimmerBleController {
     private static final String TAG = "ShimmerBleController";
     
+    // Shimmer device identification constants
+    private static final String SHIMMER_MAC_OUI = "00:06:66";
+    
     // Shimmer BLE UUIDs and constants
     private static final UUID SHIMMER_SERVICE_UUID = UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455");
     private static final UUID SHIMMER_DATA_CHAR_UUID = UUID.fromString("49535343-1E4D-4BD9-BA61-23C647249616");
@@ -240,7 +243,7 @@ public class ShimmerBleController {
                 String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
                 String deviceAddress = device.getAddress();
                 
-                // Enhanced Shimmer device identification: check both name and MAC OUI (00:06:66)
+                // Enhanced Shimmer device identification: check both name and MAC OUI
                 if (isShimmerDevice(deviceName, deviceAddress)) {
                     UnifiedBleManager.DeviceType deviceType = determineShimmerDeviceType(deviceName, result.getScanRecord());
                     
@@ -282,8 +285,8 @@ public class ShimmerBleController {
     private boolean isShimmerDevice(String deviceName, String deviceAddress) {
         // Step 3: Enhanced device identification with MAC OUI filtering as specified
         
-        // Check MAC address OUI - Shimmer devices typically use 00:06:66
-        if (deviceAddress != null && deviceAddress.toUpperCase().startsWith("00:06:66")) {
+        // Check MAC address OUI - Shimmer devices typically use specific OUI
+        if (deviceAddress != null && deviceAddress.toUpperCase().startsWith(SHIMMER_MAC_OUI)) {
             Log.d(TAG, "Shimmer device detected by MAC OUI: " + deviceAddress);
             return true;
         }

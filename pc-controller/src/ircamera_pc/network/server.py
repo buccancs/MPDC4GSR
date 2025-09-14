@@ -1438,7 +1438,7 @@ class NetworkServer:
         """Get time synchronization statistics."""
         if device_id:
             stats = self._enhanced_timesync.get_device_sync_stats(device_id)
-            return stats.__dict__ if stats else {}
+            return asdict(stats) if stats else {}
         else:
             return self._enhanced_timesync.get_sync_quality_summary()
     
@@ -1446,7 +1446,7 @@ class NetworkServer:
         """Get time synchronization statistics for all devices."""
         all_stats = self._enhanced_timesync.get_all_sync_stats()
         return {
-            device_id: stats.__dict__ 
+            device_id: asdict(stats) 
             for device_id, stats in all_stats.items()
         }
     

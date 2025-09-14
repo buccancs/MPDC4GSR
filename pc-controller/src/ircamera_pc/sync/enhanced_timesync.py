@@ -8,10 +8,10 @@ for precise temporal alignment in the Hub-and-Spoke architecture.
 import asyncio
 import json
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Tuple
-from collections import deque
+from typing import Dict, List, Optional, Tuple, Set
+from collections import deque, defaultdict
 import statistics
 
 try:
@@ -72,7 +72,7 @@ class DeviceTimeSyncStats:
     is_synchronized: bool = False
     sync_quality: str = "UNKNOWN"  # EXCELLENT, GOOD, FAIR, POOR
     
-    def update_stats(self):
+    def update_stats(self, stale_threshold_s: int = 60):
         """Update statistical measures from recent measurements."""
         if not self.measurements:
             return
@@ -103,13 +103,13 @@ class DeviceTimeSyncStats:
             self.median_rtt_ms = statistics.median(rtts_ms)
             
         # Assess sync quality
-        self._assess_sync_quality()
+        self._assess_sync_quality(stale_threshold_s)
     
-    def _assess_sync_quality(self):
+    def _assess_sync_quality(self, stale_threshold_s: int = 60):
         """Assess synchronization quality based on current metrics."""
-        # Check if recently synced (within 60 seconds)
+        # Check if recently synced (configurable threshold)
         if (self.last_sync_time is None or 
-            time.time() - self.last_sync_time > 60):
+            time.time() - self.last_sync_time > stale_threshold_s):
             self.is_synchronized = False
             self.sync_quality = "STALE"
             return
@@ -137,14 +137,14 @@ class EnhancedTimeSyncService:
     to achieve <5ms clock offset precision (not round-trip time measurement accuracy) across Hub-Spoke architecture.
     """
     
-    def __init__(self):
+    def __init__(self, stale_threshold_s: int = 60):
         """Initialize enhanced time synchronization service."""
         self._device_stats: Dict[str, DeviceTimeSyncStats] = {}
-        self._device_stats: Dict[str, DeviceTimeSyncStats] = {}
-        self._active_sessions: Dict[str, str] = {}  # session_id -> device_id
+        self._active_sessions: Dict[str, Set[str]] = defaultdict(set)  # session_id -> set of device_ids
         self._is_running = False
         
-        # Sync quality thresholds
+        # Configurable sync quality thresholds
+        self._stale_threshold_s = stale_threshold_s
         self._target_accuracy_ms = 5.0
         self._excellent_threshold_ms = 2.0
         self._good_threshold_ms = 5.0
@@ -276,7 +276,7 @@ class EnhancedTimeSyncService:
     async def register_session(self, session_id: str, device_id: str) -> bool:
         """Register a session for time synchronization tracking."""
         try:
-            self._active_sessions[session_id] = device_id
+            self._active_sessions[session_id].add(device_id)
             
             # Initialize device stats if needed
             if device_id not in self._device_stats:
@@ -290,11 +290,11 @@ class EnhancedTimeSyncService:
             return False
     
     async def end_session(self, session_id: str) -> bool:
-        """End a time synchronization session."""
+        """End a time synchronization session for all devices."""
         try:
-            device_id = self._active_sessions.pop(session_id, None)
-            if device_id:
-                logger.info(f"Ended time sync session {session_id} for device {device_id}")
+            device_ids = self._active_sessions.pop(session_id, set())
+            if device_ids:
+                logger.info(f"Ended time sync session {session_id} for devices {list(device_ids)}")
                 return True
             return False
             
@@ -373,13 +373,13 @@ class EnhancedTimeSyncService:
                 logger.error(f"Error in periodic stats update: {e}")
                 await asyncio.sleep(60)  # Continue after error
     
-    def is_device_synchronized(self, device_id: str, max_age_seconds: float = 60.0) -> bool:
+    def is_device_synchronized(self, device_id: str, max_age_seconds: float = None) -> bool:
         """
         Check if device is properly synchronized within time tolerance.
         
         Args:
             device_id: Device identifier
-            max_age_seconds: Maximum age of last sync in seconds
+            max_age_seconds: Maximum age of last sync in seconds (uses instance default if None)
             
         Returns:
             True if device is synchronized within requirements
@@ -387,6 +387,10 @@ class EnhancedTimeSyncService:
         stats = self._device_stats.get(device_id)
         if not stats:
             return False
+
+        # Use instance default if not provided
+        if max_age_seconds is None:
+            max_age_seconds = self._stale_threshold_s
             
         # Check sync age
         if (stats.last_sync_time is None or 

@@ -203,10 +203,7 @@ class TimeManager(
                     val lengthBuffer = ByteArray(4)
                     inputStream.read(lengthBuffer, 0, 4)
                     
-                    val responseLength = ((lengthBuffer[0].toInt() and 0xFF) shl 24) or
-                                       ((lengthBuffer[1].toInt() and 0xFF) shl 16) or
-                                       ((lengthBuffer[2].toInt() and 0xFF) shl 8) or
-                                       (lengthBuffer[3].toInt() and 0xFF)
+                    val responseLength = java.nio.ByteBuffer.wrap(lengthBuffer).getInt()
                     
                     // Then read the actual response data
                     val responseBuffer = ByteArray(responseLength)

@@ -28,3 +28,27 @@ buildscript {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory.get().asFile)
 }
+
+// Custom task to build only release variants (since debug variants are disabled)
+tasks.register("buildRelease") {
+    group = "build"
+    description = "Builds all modules using only release variants"
+    dependsOn(
+        ":app:assembleRelease",
+        ":BleModule:assembleRelease", 
+        ":libapp:assembleRelease",
+        ":libcom:assembleRelease",
+        ":libir:assembleRelease",
+        ":libmatrix:assembleRelease",
+        ":libmenu:assembleRelease",
+        ":libui:assembleRelease",
+        ":RangeSeekBar:assembleRelease",
+        ":component:CommonComponent:assembleRelease",
+        ":component:gsr-recording:assembleRelease",
+        ":component:pseudo:assembleRelease",
+        ":component:thermal:assembleRelease",
+        ":component:thermal-ir:assembleRelease",
+        ":component:thermal-lite:assembleRelease",
+        ":component:user:assembleRelease"
+    )
+}

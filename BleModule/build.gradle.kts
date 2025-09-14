@@ -21,13 +21,13 @@ android {
         }
     }
 
-    // Disable all debug variants to match release-only configuration
-    androidComponents {
-        beforeVariants { variant ->
-            // Only enable release variants
-            variant.enable = variant.buildType == "release"
-        }
-    }
+    // Enable both debug and release variants for full build support
+    // androidComponents {
+    //     beforeVariants { variant ->
+    //         // Only enable release variants
+    //         variant.enable = variant.buildType == "release"
+    //     }
+    // }
 
     buildFeatures {
         buildConfig = true

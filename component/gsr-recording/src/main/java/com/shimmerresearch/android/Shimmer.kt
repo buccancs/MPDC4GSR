@@ -69,6 +69,9 @@ class Shimmer(private val handler: Handler, private val context: Context) {
     private val maxRetryAttempts = 3
     private var reconnectionJob: Job? = null
     private val connectionTimeoutMs = 10000L // 10 seconds
+    
+    // Class-level coroutine scope for proper lifecycle management
+    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     // Bluetooth management
     private val bluetoothManager = BluetoothManager(context)
@@ -146,7 +149,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
             
             Log.i(TAG, "Scheduling reconnection attempt ${connectionRetryCount} in ${backoffDelayMs}ms")
             
-            reconnectionJob = CoroutineScope(Dispatchers.Main).launch {
+            reconnectionJob = coroutineScope.launch {
                 delay(backoffDelayMs)
                 if (deviceAddress.isNotEmpty()) {
                     connect(deviceAddress, deviceName)
@@ -217,6 +220,9 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         // Cancel any ongoing reconnection attempts
         reconnectionJob?.cancel()
         reconnectionJob = null
+        
+        // Cancel all coroutines in the scope for proper cleanup
+        coroutineScope.cancel()
         
         // Stop streaming first if active
         stopStreaming()

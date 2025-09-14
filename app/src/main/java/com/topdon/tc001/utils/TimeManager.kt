@@ -292,7 +292,8 @@ class TimeManager(
                             .removeSuffix("}")
                             .removeSuffix(",")
                             .toLongOrNull()
-                        pcSendTime = pcReceiveTime // Use same value for both if only one timestamp
+                        // Don't set pcSendTime = pcReceiveTime as this breaks NTP calculations
+                        // Leave pcSendTime as null to indicate incomplete sync data
                     }
                 }
             }

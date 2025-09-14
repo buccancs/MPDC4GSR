@@ -85,7 +85,7 @@ async def main():
                 if not session_id:
                     sync_ready = [
                         device_id for device_id in devices
-                        if hub._network_server.is_device_time_synchronized(device_id)
+                        if hub.is_device_synchronized(device_id)
                     ]
                     
                     if sync_ready:

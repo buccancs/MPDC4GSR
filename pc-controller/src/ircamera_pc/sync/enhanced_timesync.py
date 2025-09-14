@@ -134,7 +134,7 @@ class EnhancedTimeSyncService:
     Enhanced Time Synchronization Service for PC Controller Hub.
     
     Implements comprehensive NTP-like protocol matching Android TimeManager
-    to achieve <5ms temporal accuracy across Hub-Spoke architecture.
+    to achieve <5ms clock offset precision (not round-trip time measurement accuracy) across Hub-Spoke architecture.
     """
     
     def __init__(self):

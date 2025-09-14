@@ -534,6 +534,10 @@ class HubCoordinator:
         """Get synchronization statistics for specific device."""
         return self._network_server.get_time_sync_stats(device_id)
     
+    def is_device_synchronized(self, device_id: str) -> bool:
+        """Check if a specific device is synchronized."""
+        return self._network_server.is_device_time_synchronized(device_id)
+    
     def add_session_callback(self, event_type: str, callback: Callable) -> None:
         """Add session event callback."""
         if event_type in self._session_callbacks:

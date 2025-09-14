@@ -63,7 +63,7 @@ def test_manual_device_functionality():
             device_id="test_manual_device",
             device_name="Test Manual Device",
             device_type=DeviceType.ANDROID_SENSOR_NODE,  # Use correct enum
-            ip_address="192.168.1.100",     # Use ip_address instead of hostname
+            ip_address="192.168.1.100",
             port=8080,
             state=DeviceConnectionState.DISCOVERED,
             capabilities=["manual_device"]

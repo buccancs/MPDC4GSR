@@ -22,7 +22,7 @@
 
         <!-- Enhanced Status Bar with GSR, Network, and Session Controls -->
         <LinearLayout
-            android:id="@+id/network_status_bar"
+            android:id="@+id/networkStatusBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -42,7 +42,7 @@
                 android:layout_marginEnd="12dp">
                 
                 <ImageView
-                    android:id="@+id/gsr_status_indicator"
+                    android:id="@+id/gsrStatusIndicator"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:layout_marginEnd="4dp"
@@ -50,7 +50,7 @@
                     android:contentDescription="GSR sensor status" />
                     
                 <TextView
-                    android:id="@+id/gsr_status_text"
+                    android:id="@+id/gsrStatusText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GSR: Disconnected"
@@ -60,7 +60,7 @@
             
             <!-- Session Control Button -->
             <Button
-                android:id="@+id/session_control_button"
+                android:id="@+id/sessionControlButton"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:text="Start Recording"
@@ -84,7 +84,7 @@
                 android:gravity="center_vertical">
                 
                 <ImageView
-                    android:id="@+id/network_status_indicator"
+                    android:id="@+id/networkStatusIndicator"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:layout_marginEnd="4dp"
@@ -92,7 +92,7 @@
                     android:contentDescription="Network status" />
                     
                 <TextView
-                    android:id="@+id/network_status_text"
+                    android:id="@+id/networkStatusText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="PC: Disconnected"

@@ -5,10 +5,32 @@ Test script for IRCamera PC Remote Control Protocol
 This script demonstrates how to send JSON commands to the IRCamera Android app
 for remote multi-modal recording control.
 
-Usage:
-    python test_pc_control.py --host <android_ip> --port 8080 --command start
-    python test_pc_control.py --host <android_ip> --port 8080 --command stop
-    python test_pc_control.py --host <android_ip> --port 8080 --command ping
+Usage Examples:
+    # Start multi-modal recording with all sensors
+    python test_pc_control.py --host 192.168.1.100 --command start --session-id "TEST_001" --participant-id "P001"
+    
+    # Start thermal-only recording  
+    python test_pc_control.py --host 192.168.1.100 --command start --modalities thermal --session-id "THERMAL_TEST"
+    
+    # Stop current recording
+    python test_pc_control.py --host 192.168.1.100 --command stop
+    
+    # Check device status
+    python test_pc_control.py --host 192.168.1.100 --command status
+    
+    # Test connectivity
+    python test_pc_control.py --host 192.168.1.100 --command ping
+
+Prerequisites:
+    1. IRCamera Android app must be running
+    2. Android device must be on the same network
+    3. NetworkController must be initialized (happens automatically in MainActivity)
+
+Protocol Details:
+    - Transport: TCP/IP with JSON messages  
+    - Port: 8080 (default)
+    - Commands: start_recording, stop_recording, ping, get_status
+    - Response: JSON acknowledgment with status
 """
 
 import json

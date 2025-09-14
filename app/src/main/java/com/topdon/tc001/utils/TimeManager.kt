@@ -192,13 +192,7 @@ class TimeManager(
 
                     // Send request to PC Controller with length prefix as expected by server
                     val requestBytes = requestJson.toByteArray(Charsets.UTF_8)
-                    val lengthBytes = ByteArray(4)
-                    
-                    // Write 4-byte big-endian length prefix
-                    lengthBytes[0] = ((requestBytes.size shr 24) and 0xFF).toByte()
-                    lengthBytes[1] = ((requestBytes.size shr 16) and 0xFF).toByte()
-                    lengthBytes[2] = ((requestBytes.size shr 8) and 0xFF).toByte()
-                    lengthBytes[3] = (requestBytes.size and 0xFF).toByte()
+                    val lengthBytes = java.nio.ByteBuffer.allocate(4).putInt(requestBytes.size).array()
                     
                     outputStream.write(lengthBytes)
                     outputStream.write(requestBytes)

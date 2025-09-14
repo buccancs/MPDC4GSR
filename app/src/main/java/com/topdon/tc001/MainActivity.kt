@@ -67,6 +67,7 @@ import com.topdon.tc001.config.ProtocolVersion
 import com.topdon.tc001.fragment.MainFragment
 import com.topdon.tc001.gsr.GSRQuickRecordingActivity
 import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.network.NetworkClient
 import com.topdon.tc001.network.WebSocketClient
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.service.RecordingService
@@ -88,7 +89,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
 
     private var webSocketClient: WebSocketClient? = null
+    private var networkClient: NetworkClient? = null
     private var recordingService: RecordingService? = null
+    private var serviceBinder: RecordingService.RecordingServiceBinder? = null
     private var isServiceBound = false
     private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
 
@@ -109,7 +112,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as RecordingService.RecordingServiceBinder
+            serviceBinder = binder
             recordingService = binder.getService()
+            networkClient = binder.getNetworkClient()
             isServiceBound = true
             Log.i(TAG, "Recording service connected")
 
@@ -117,7 +122,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            serviceBinder = null
             recordingService = null
+            networkClient = null
             isServiceBound = false
             Log.i(TAG, "Recording service disconnected")
         }
@@ -867,7 +874,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
                 "networking_initialization_failed",
-                mapOf("error" to e.message)
+                mapOf("error" to (e.message ?: "Unknown error"))
             )
             updateConnectionStatus(ConnectionStatus.ERROR)
             showNetworkError("Network initialization failed: ${e.message}")
@@ -909,7 +916,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     StructuredLogger.LogLevel.ERROR,
                     "WebSocketClient",
                     "supervision_error",
-                    mapOf("error" to e.message)
+                    mapOf("error" to (e.message ?: "Unknown error"))
                 )
 
                 updateConnectionStatus(ConnectionStatus.ERROR)
@@ -1096,7 +1103,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 emptyMap()
             )
 
-            recordingService?.getRecordingController()?.startRecording()
+            lifecycleScope.launch {
+                val sessionDir = "${getExternalFilesDir("recordings")}/$sessionId"
+                serviceBinder?.getRecordingController()?.startRecording(sessionDir)
+            }
 
             Toast.makeText(this, "Remote recording started: $sessionId", Toast.LENGTH_LONG).show()
 
@@ -1106,7 +1116,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.ERROR,
                 "RemoteControl",
                 "session_start_error",
-                mapOf("error" to e.message)
+                mapOf("error" to (e.message ?: "Unknown error"))
             )
         }
     }
@@ -1120,7 +1130,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 emptyMap()
             )
 
-            recordingService?.getRecordingController()?.stopRecording()
+            lifecycleScope.launch {
+                serviceBinder?.getRecordingController()?.stopRecording()
+            }
 
             Toast.makeText(this, "Remote recording stopped", Toast.LENGTH_LONG).show()
 
@@ -1130,7 +1142,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.ERROR,
                 "RemoteControl",
                 "session_stop_error",
-                mapOf("error" to e.message)
+                mapOf("error" to (e.message ?: "Unknown error"))
             )
         }
     }
@@ -1198,7 +1210,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             window.decorView.setBackgroundColor(android.graphics.Color.WHITE)
 
             lifecycleScope.launch {
-                recordingService?.getRecordingController()
+                serviceBinder?.getRecordingController()
                     ?.addSyncMarker("pc_sync_flash", System.nanoTime())
             }
 
@@ -1373,7 +1385,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     }
                 }
 
-                networkClient?.startDiscovery { discoverySuccess ->
+                networkClient?.startDiscovery { discoverySuccess: Boolean ->
                     if (discoverySuccess) {
                         val newControllers = networkClient?.getDiscoveredControllers()
                         if (!newControllers.isNullOrEmpty()) {
@@ -1383,7 +1395,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                                 networkClient?.connectToController(
                                     controller.ipAddress,
                                     controller.port
-                                ) { connectSuccess ->
+                                ) { connectSuccess: Boolean ->
                                     if (!connectSuccess) {
                                         updateConnectionStatus(ConnectionStatus.ERROR)
                                     }
@@ -1442,14 +1454,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         sb.append("Service Bound: $isServiceBound\n")
         if (isServiceBound && recordingService != null) {
             try {
-                val recordingController = recordingService?.getRecordingController()
+                val recordingController = serviceBinder?.getRecordingController()
                 val summary = recordingController?.getSensorStatusSummary()
-                sb.append("Recording Status: $summary\n")
+                sb.append("Recording Status: ${summary ?: "N/A"}\n")
 
-                val serverStatus = recordingService?.getServerStatus()
+                val serverStatus = serviceBinder?.getServerStatus()
                 sb.append("Server Socket: $serverStatus\n")
 
-                val connectedClients = recordingService?.getConnectedClients()
+                val connectedClients = serviceBinder?.getConnectedClients()
                 sb.append("Connected PC Clients: ${connectedClients?.size ?: 0}\n")
                 connectedClients?.forEach { client ->
                     sb.append("  - $client\n")
@@ -1700,7 +1712,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
                 "networking_cleanup_error",
-                mapOf("error" to e.message)
+                mapOf("error" to (e.message ?: "Unknown error"))
             )
         }
 

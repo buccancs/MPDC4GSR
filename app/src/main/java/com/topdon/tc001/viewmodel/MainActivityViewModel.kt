@@ -306,7 +306,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         try {
             sessionManager = SessionManager(
                 getApplication(),
-                com.topdon.tc001.logging.StructuredLogger(getApplication())
+                com.topdon.tc001.logging.StructuredLogger.getInstance(getApplication())
             )
             
             _sessionState.postValue(SessionState.IDLE)
@@ -370,7 +370,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         if (controllers.isNotEmpty()) {
                             // Auto-connect to first discovered controller
                             val controller = controllers.first()
-                            val connected = client.connectToController(controller)
+                            val connected = client.connectToController(controller.ipAddress, controller.port)
                             if (connected) {
                                 _networkConnectionState.postValue(NetworkConnectionState.CONNECTED)
                                 _connectedControllerInfo.postValue(controller)

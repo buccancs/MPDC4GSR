@@ -349,9 +349,9 @@ class SessionManager(
                 participants = emptyList(),
             )
 
-        sessionHistory[sessionId] = endedSession
+        sessionHistory[session.id] = endedSession
         currentSession.set(null)
-        sessionId.set(null)
+        this.sessionId.set(null)
         sessionStartTime.set(0L)
 
         updateSessionState(SessionState.IDLE)
@@ -361,7 +361,7 @@ class SessionManager(
             "SessionManager",
             "session_ended",
             mapOf(
-                "session_id" to sessionId,
+                "session_id" to session.id,
                 "reason" to reason,
                 "duration_ms" to (endedSession.endTime - endedSession.startTime).toString(),
             ),

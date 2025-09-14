@@ -130,7 +130,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                         mapOf(
                             "job_id" to id,
                             "job_name" to name,
-                            "error" to e.message,
+                            "error" to (e.message ?: "Unknown error"),
                             "critical" to critical,
                         ),
                     )
@@ -238,7 +238,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             StructuredLogger.LogLevel.ERROR,
             "CrashSafeSupervisor",
             "supervisor_exception",
-            mapOf("error" to exception.message),
+            mapOf("error" to (exception.message ?: "Unknown error")),
         )
 
         Log.e(TAG, "Supervisor exception", exception)
@@ -256,7 +256,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             mapOf(
                 "job_id" to id,
                 "job_name" to name,
-                "error" to exception.message,
+                "error" to (exception.message ?: "Unknown error"),
             ),
         )
 
@@ -337,7 +337,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                         "job_id" to id,
                         "job_name" to name,
                         "restart_attempt" to restartCount,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
                 )
             }
@@ -354,7 +354,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                         StructuredLogger.LogLevel.ERROR,
                         "CrashSafeSupervisor",
                         "health_check_error",
-                        mapOf("error" to e.message),
+                        mapOf("error" to (e.message ?: "Unknown error")),
                     )
                 }
 
@@ -389,7 +389,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     "health_check_exception",
                     mapOf(
                         "job_id" to jobId,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
                 )
             }

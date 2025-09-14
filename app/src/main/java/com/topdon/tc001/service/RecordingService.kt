@@ -158,6 +158,17 @@ class RecordingService : LifecycleService() {
         fun getRecordingController(): RecordingController = recordingController
         fun getNetworkServer(): NetworkServer = networkServer
         fun isConnectedToPC(): Boolean = isConnectedToPC
+        fun getServerStatus(): String {
+            return if (isServerRunning.get()) {
+                "Running on port $SERVER_PORT (${activeConnections.size} clients)"
+            } else {
+                "Stopped"
+            }
+        }
+        fun getConnectedClients(): List<String> {
+            return activeConnections.keys.toList()
+        }
+        fun getNetworkClient(): NetworkClient? = if (isNetworkInitialized) networkClient else null
     }
 
     override fun onCreate() {

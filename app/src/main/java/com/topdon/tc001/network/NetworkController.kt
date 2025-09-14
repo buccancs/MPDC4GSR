@@ -17,7 +17,7 @@ class NetworkController(private val context: Context) {
     
     companion object {
         private const val TAG = "NetworkController"
-        private const val DEFAULT_PORT = 8080
+        const val DEFAULT_PORT = 8080
         private const val SOCKET_TIMEOUT = 30000 // 30 seconds
         private const val BUFFER_SIZE = 4096
     }

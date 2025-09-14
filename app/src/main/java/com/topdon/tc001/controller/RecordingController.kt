@@ -81,9 +81,9 @@ class RecordingController(
                             "gsr_shimmer_1" to false
                         }
                     }
+                )
 
-
-                    val initResults = initJobs . awaitAll ()
+                val initResults = initJobs.awaitAll()
 
                 initResults.forEach { (sensorId, success) ->
                     if (success) {

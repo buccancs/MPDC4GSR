@@ -530,7 +530,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                     enableStabilization = true,
                     enableFlash = false,
                     audioEnabled = true,
-                    enableRawCapture = binding.enableRawCaptureSwitch.isChecked,
                     rawCaptureFrameRate = rawFrameRate,
                 )
 

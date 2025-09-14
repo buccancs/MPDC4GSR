@@ -2,6 +2,7 @@ package com.topdon.tc001.controller
 
 import android.content.Context
 import android.util.Log
+import android.view.TextureView
 import androidx.lifecycle.LifecycleOwner
 import com.topdon.tc001.camera.RGBCameraRecorder
 import com.topdon.tc001.permissions.PermissionController
@@ -126,7 +127,9 @@ class HardwareValidationController(
                 return
             }
 
-            val cameraRecorder = RGBCameraRecorder(context)
+            // Create a dummy TextureView for validation purposes
+            val dummyTextureView = TextureView(context)
+            val cameraRecorder = RGBCameraRecorder(context, dummyTextureView)
             val initTime = measureTimeMillis {
 
 
@@ -171,7 +174,7 @@ class HardwareValidationController(
                 return
             }
 
-            val thermalRecorder = ThermalCameraRecorder(context)
+            val thermalRecorder = ThermalCameraRecorder(context, "thermal_validation_1")
 
 
 
@@ -220,7 +223,7 @@ class HardwareValidationController(
                 return
             }
 
-            val gsrRecorder = GSRSensorRecorder(context)
+            val gsrRecorder = GSRSensorRecorder(context, "gsr_validation_1")
 
 
 

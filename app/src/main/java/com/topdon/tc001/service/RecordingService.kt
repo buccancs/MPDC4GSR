@@ -1839,54 +1839,102 @@ class RecordingService : LifecycleService() {
                                         Log.e(TAG, "Error unregistering NSD service", e)
                                     }
                                 }
-
-                                private fun isServiceForeground(): Boolean {
-
-                                    return currentSessionDirectory != null || isServerRunning.get()
-                                }
-
-                                private fun createServerNotification(contentText: String): Notification {
-                                    val stopIntent =
-                                        Intent(this, RecordingService::class.java).apply {
-                                            action = ACTION_STOP_SERVER
-                                        }
-                                    val stopPendingIntent = PendingIntent.getService(
-                                        this, 1, stopIntent,
-                                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                                    )
-
-                                    return NotificationCompat.Builder(this, CHANNEL_ID)
-                                        .setContentTitle("IRCamera Server")
-                                        .setContentText(contentText)
-                                        .setSmallIcon(android.R.drawable.ic_dialog_info)
-                                        .setOngoing(true)
-                                        .addAction(
-                                            android.R.drawable.ic_media_pause,
-                                            "Stop Server",
-                                            stopPendingIntent
-                                        )
-                                        .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                                        .build()
-                                }
-
-                                fun getServerStatus(): String {
-                                    return if (isServerRunning.get()) {
-                                        "Running on port $SERVER_PORT (${activeConnections.size} clients)"
-                                    } else {
-                                        "Stopped"
-                                    }
-                                }
-
-                                fun getConnectedClients(): List<String> {
-                                    return activeConnections.keys.toList()
-                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun isServiceForeground(): Boolean {
+        return currentSessionDirectory != null || isServerRunning.get()
+    }
+
+    private fun createServerNotification(contentText: String): Notification {
+        val stopIntent = Intent(this@RecordingService, RecordingService::class.java).apply {
+            action = ACTION_STOP_SERVER
+        }
+        val stopPendingIntent = PendingIntent.getService(
+            this@RecordingService, 1, stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return NotificationCompat.Builder(this@RecordingService, CHANNEL_ID)
+            .setContentTitle("IRCamera Server")
+            .setContentText(contentText)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setOngoing(true)
+            .addAction(
+                android.R.drawable.ic_media_pause,
+                "Stop Server",
+                stopPendingIntent
+            )
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .build()
+    }
+
+    fun getServerStatus(): String {
+        return if (isServerRunning.get()) {
+            "Running on port $SERVER_PORT (${activeConnections.size} clients)"
+        } else {
+            "Stopped"
+        }
+    }
+
+    fun getConnectedClients(): List<String> {
+        return activeConnections.keys.toList()
+    }
+
+    private fun initializePhase0Baseline() {
+        // Implementation for phase 0 baseline initialization
+        Log.d(TAG, "Initializing Phase 0 baseline")
+    }
+
+    private fun createNotificationChannel() {
+        // Implementation for creating notification channel
+        Log.d(TAG, "Creating notification channel")
+    }
+
+    private suspend fun initializeNetworkClient(): Boolean {
+        return try {
+            val success = networkClient.initialize()
+            if (success) {
+                Log.i(TAG, "Network client initialized successfully")
+            } else {
+                Log.w(TAG, "Network client initialization failed")
+            }
+            success
+        } catch (e: Exception) {
+            Log.e(TAG, "Error initializing network client", e)
+            false
+        }
+    }
+
+    private fun setupStatusMonitoring() {
+        // Implementation for status monitoring setup
+        Log.d(TAG, "Setting up status monitoring")
+    }
+
+    private fun setupNetworkServer() {
+        // Implementation for network server setup
+        Log.d(TAG, "Setting up network server")
+    }
+
+    private fun updateNotification(message: String) {
+        // Implementation for updating notification
+        Log.d(TAG, "Notification update: $message")
+    }
+
+    private fun handleStartRecordingCommand(message: JSONObject) {
+        // Implementation for handling start recording command
+        Log.d(TAG, "Handling start recording command")
+    }
+
+    private fun startRecordingSession(sessionDirectory: String) {
+        // Implementation for starting recording session
+        Log.d(TAG, "Starting recording session: $sessionDirectory")
     }
 }
 

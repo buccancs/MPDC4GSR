@@ -70,8 +70,8 @@ import com.topdon.tc001.fragment.MainFragment
 import com.topdon.tc001.utils.AppVersionUtil
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.databinding.ActivityMainBinding
-// Network integration imports - Phase 1 WebSocket client
-import com.topdon.tc001.network.WebSocketClient
+// Network integration imports - Enhanced JSON protocol
+import com.topdon.tc001.network.NetworkController
 import com.topdon.tc001.service.RecordingService
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.gsr.model.SessionInfo
@@ -99,8 +99,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private var checkPermissionType: Int = -1 // 0 initData数据 1 图库  2 connect方法
     
-    // PC-to-phone control networking - Phase 1 WebSocket implementation
-    private var webSocketClient: WebSocketClient? = null
+    // PC-to-phone control networking - JSON protocol implementation
+    // NetworkController is managed by MainActivityViewModel
     private var recordingService: RecordingService? = null
     private var isServiceBound = false
     private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
@@ -214,12 +214,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         initView()
         initData()
         
-        // Initialize PC-to-phone control networking
-        initNetworking()
-        
         // Initialize ViewModel and set up observers
         setupViewModelObservers()
         mainViewModel.initializeComponents()
+        
+        // Initialize PC-to-phone control networking via ViewModel
+        initNetworkingViaViewModel()
     }
 
     private fun initView() {
@@ -832,13 +832,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     // ==================== PC-to-Phone Control Networking ====================
     
 
-    private fun initNetworking() {
-        Log.i(TAG, "Initializing PC-to-phone control networking with Phase 0 baseline")
+    private fun initNetworkingViaViewModel() {
+        Log.i(TAG, "Integrating PC-to-phone control via ViewModel NetworkController")
         
         structuredLogger.log(
             StructuredLogger.LogLevel.INFO,
             "MainActivity",
-            "networking_initialization_started",
+            "networking_integration_started",
             mapOf(
                 "feature_flags" to FeatureFlags.getAllFlags(),
                 "protocol_version" to ProtocolVersion.CURRENT_VERSION
@@ -846,36 +846,46 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         )
         
         try {
-            // Initialize WebSocket client with supervision - Phase 1
-            crashSafeSupervisor.registerJob(
-                id = "websocket_client",
-                name = "WebSocketClient",
-                critical = false,
-                restartable = true,
-                healthCheck = object : CrashSafeSupervisor.HealthCheck {
-                    override suspend fun checkHealth(): CrashSafeSupervisor.HealthStatus {
-                        val client = webSocketClient
-                        return if (client != null && client.isConnected()) {
-                            CrashSafeSupervisor.HealthStatus(
-                                isHealthy = true,
-                                message = "WebSocketClient connected and operational",
-                                details = mapOf(
-                                    "connection_status" to connectionStatus.name,
-                                    "authenticated" to client.isAuthenticated(),
-                                    "current_server" to (client.getCurrentServer()?.name ?: "none")
-                                )
-                            )
-                        } else {
-                            CrashSafeSupervisor.HealthStatus(
-                                isHealthy = false,
-                                message = "WebSocketClient not connected",
-                                details = mapOf("connection_status" to connectionStatus.name)
-                            )
-                        }
+            // NetworkController is initialized by MainActivityViewModel
+            // Set up additional observers for MainActivity integration
+            
+            // Observe network controller status changes
+            mainViewModel.networkConnectionState.observe(this) { state ->
+                when (state) {
+                    MainActivityViewModel.NetworkConnectionState.CONNECTED -> {
+                        updateConnectionStatus(ConnectionStatus.CONNECTED)
+                    }
+                    MainActivityViewModel.NetworkConnectionState.CONNECTING -> {
+                        updateConnectionStatus(ConnectionStatus.CONNECTING)
+                    }
+                    MainActivityViewModel.NetworkConnectionState.DISCONNECTED -> {
+                        updateConnectionStatus(ConnectionStatus.DISCONNECTED)
+                    }
+                    MainActivityViewModel.NetworkConnectionState.ERROR -> {
+                        updateConnectionStatus(ConnectionStatus.ERROR)
+                    }
+                    else -> {
+                        updateConnectionStatus(ConnectionStatus.DISCOVERING)
                     }
                 }
-            ) { stopToken ->
-                initializeWebSocketClientSupervised(stopToken)
+            }
+            
+            // Observe session state changes for PC remote control commands
+            mainViewModel.sessionState.observe(this) { state ->
+                when (state) {
+                    MainActivityViewModel.SessionState.RECORDING -> {
+                        // Update UI to reflect recording state
+                        updateSessionStatusUI(state)
+                    }
+                    MainActivityViewModel.SessionState.IDLE -> {
+                        // Update UI to reflect idle state
+                        updateSessionStatusUI(state)
+                    }
+                    else -> {
+                        // Handle other states
+                        updateSessionStatusUI(state)
+                    }
+                }
             }
             
             // Bind to recording service for remote control capability
@@ -887,109 +897,26 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
                 "MainActivity",
-                "networking_initialization_completed"
+                "networking_integration_completed"
             )
             
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize networking", e)
+            Log.e(TAG, "Failed to integrate networking via ViewModel", e)
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
-                "networking_initialization_failed",
+                "networking_integration_failed",
                 mapOf("error" to e.message)
             )
             updateConnectionStatus(ConnectionStatus.ERROR)
-            showNetworkError("Network initialization failed: ${e.message}")
+            showNetworkError("Network integration failed: ${e.message}")
         }
     }
     
 
-    private suspend fun initializeWebSocketClientSupervised(stopToken: CrashSafeSupervisor.StopToken) {
-        while (!stopToken.isStopRequested()) {
-            try {
-                // Initialize WebSocket client
-                webSocketClient = WebSocketClient(this@MainActivity).apply {
-                    // Set up event listener for WebSocket events
-                    setEventListener(createWebSocketEventListener())
-                    
-                    // Start connection (includes discovery and auto-connect)
-                    start()
-                }
-                
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.INFO,
-                    "WebSocketClient",
-                    "initialized_successfully"
-                )
-                
-                // Wait for connection or stop signal
-                while (!stopToken.isStopRequested() && webSocketClient?.isConnected() != true) {
-                    kotlinx.coroutines.delay(1000)
-                }
-                
-                if (webSocketClient?.isConnected() == true) {
-                    updateConnectionStatus(ConnectionStatus.CONNECTED)
-                }
-                
-                // Keep running while connected
-                while (!stopToken.isStopRequested() && webSocketClient?.isConnected() == true) {
-                    kotlinx.coroutines.delay(1000)
-                }
-                
-            } catch (e: Exception) {
-                Log.e(TAG, "Error in WebSocket client supervision", e)
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.ERROR,
-                    "WebSocketClient",
-                    "supervision_error",
-                    mapOf("error" to e.message)
-                )
-                
-                updateConnectionStatus(ConnectionStatus.ERROR)
-                
-                // Wait before retry
-                kotlinx.coroutines.delay(5000)
-            }
-        }
-        
-        // Clean up on stop
-        webSocketClient?.stop()
-    }
-                
-                // Start automatic discovery and connection if enabled
-                if (FeatureFlags.MDNS_ENABLE) {
-                    startNetworkDiscovery()
-                } else {
-                    structuredLogger.log(
-                        StructuredLogger.LogLevel.INFO,
-                        "NetworkClient",
-                        "mdns_discovery_disabled"
-                    )
-                }
-                
-                // Wait for stop signal or connection status changes
-                while (!stopToken.isStopRequested() && connectionStatus != ConnectionStatus.ERROR) {
-                    kotlinx.coroutines.delay(1000)
-                }
-                
-            } catch (e: Exception) {
-                structuredLogger.log(
-                    StructuredLogger.LogLevel.ERROR,
-                    "NetworkClient",
-                    "supervised_execution_error",
-                    mapOf("error" to e.message)
-                )
-                
-                if (!stopToken.isStopRequested()) {
-                    kotlinx.coroutines.delay(10000) // Wait before retry
-                }
-            }
-        }
-        
-        // Cleanup WebSocket client
-        webSocketClient?.stop()
-        webSocketClient = null
-    }
+    
+    // Note: WebSocket client methods have been replaced by NetworkController in MainActivityViewModel
+    // The JSON-based PC remote control is now handled via the ViewModel pattern
     
     /**
      * Set up observers for MainActivityViewModel to update UI based on state changes
@@ -1271,6 +1198,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
 
+    /* WebSocket Event Listener - Replaced by NetworkController in ViewModel
     private fun createWebSocketEventListener(): WebSocketClient.WebSocketEventListener {
         return object : WebSocketClient.WebSocketEventListener {
             override fun onServerDiscovered(serverInfo: WebSocketClient.ServerInfo) {

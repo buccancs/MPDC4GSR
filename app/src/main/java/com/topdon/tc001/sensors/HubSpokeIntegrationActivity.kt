@@ -656,4 +656,3 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
         return "Unknown IP"
     }
-}

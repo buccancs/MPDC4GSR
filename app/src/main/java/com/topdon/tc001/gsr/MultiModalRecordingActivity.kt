@@ -590,24 +590,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             }
         }
     }
-                    enableRawCapture = binding.enableRawCaptureSwitch.isChecked,
-                    rawCaptureFrameRate = rawFrameRate,
-                )
 
-            rgbCameraRecorder?.updateSettings(cameraSettings)
-
-            val cameraStarted = rgbCameraRecorder?.startRecording(sessionId) ?: false
-            if (!cameraStarted) {
-                // Reset guard flags on failure
-                isStartingRecording = false
-                binding.startButton.isEnabled = true
-                binding.startButton.text = "Start Recording"
-                binding.statusText.text = "Failed to start camera recording"
-                Toast.makeText(this, "Failed to start RGB camera recording", Toast.LENGTH_LONG).show()
-                return
-            }
-        }
-
+    private fun startRecordingInternal() {
         // Start GSR recording asynchronously
         lifecycleScope.launch {
             try {

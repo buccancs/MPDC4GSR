@@ -954,18 +954,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
         
-        // Clean up on stop
-        webSocketClient?.stop()
-    }
-        
         // Cleanup WebSocket client
         webSocketClient?.stop()
         webSocketClient = null
     }
     
-    /**
-     * Create network event listener to handle PC controller events with structured logging
-     */
     /**
      * Create WebSocket event listener - Phase 1 implementation
      */

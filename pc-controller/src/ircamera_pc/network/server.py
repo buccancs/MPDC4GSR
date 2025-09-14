@@ -23,6 +23,7 @@ except ImportError:
 
 from ..core.config import config
 from ..core.gsr_receiver import GSRReceiver
+from ..sync import EnhancedTimeSyncService
 from .discovery import NetworkDiscoveryService
 from .messaging import MessageCallback, MessagePriority, ReliableMessageService
 from .protocol import (
@@ -127,6 +128,7 @@ class NetworkServer:
         self._security_manager = SecurityManager()
         self._discovery_service = NetworkDiscoveryService()
         self._messaging_service = ReliableMessageService()
+        self._enhanced_timesync = EnhancedTimeSyncService()
 
         # GSR data receiver for hub-spoke communication
         self._gsr_receiver = GSRReceiver(config.get("gsr_receiver", {}))
@@ -243,6 +245,10 @@ class NetworkServer:
             await self._gsr_receiver.start()
             logger.info("GSR receiver started for hub-spoke communication")
 
+            # Start enhanced time synchronization service
+            await self._enhanced_timesync.start()
+            logger.info("Enhanced time synchronization service started")
+
             # Start plaintext server
             self._server = await asyncio.start_server(
                 self._handle_client,
@@ -300,6 +306,10 @@ class NetworkServer:
         # Stop GSR receiver
         await self._gsr_receiver.stop()
         logger.info("GSR receiver stopped")
+
+        # Stop enhanced time sync service
+        await self._enhanced_timesync.stop()
+        logger.info("Enhanced time synchronization service stopped")
 
         # Cancel heartbeat monitoring
         if self._heartbeat_task:
@@ -558,18 +568,27 @@ class NetworkServer:
     async def _handle_time_sync_request(
         self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle time synchronization request using protocol format."""
-        message.get("device_id")
-        client_timestamp = message.get("client_timestamp")
-
-        server_timestamp = datetime.now(timezone.utc).isoformat()
-
-        return create_message(
-            "time_sync_response",
-            server_timestamp=server_timestamp,
-            client_timestamp=client_timestamp,
-            processing_delay_ms=1.0,
-        )  # Minimal processing delay
+        """Handle time synchronization request using enhanced NTP-like protocol."""
+        try:
+            device_id = message.get("device_id", "unknown")
+            
+            # Delegate to enhanced time sync service
+            response = await self._enhanced_timesync.handle_time_sync_request(message, device_id)
+            
+            # Add message ID for proper protocol compliance
+            message_id = message.get("message_id")
+            if message_id:
+                response["message_id"] = message_id
+                
+            return response
+            
+        except Exception as e:
+            logger.error(f"Error in time sync handler: {e}")
+            return create_message(
+                "error",
+                error_code="SYNC_ERROR", 
+                error_message=f"Time sync error: {e}"
+            )
 
     async def _handle_gsr_data_batch(
         self, message: Dict[str, Any], writer: asyncio.StreamWriter
@@ -1392,30 +1411,6 @@ class NetworkServer:
             logger.error(f"Error handling GSR stream end: {e}")
             return {"message_type": "error", "error": str(e)}
 
-    async def _handle_time_sync_request(
-        self, message: Dict[str, Any], writer: asyncio.StreamWriter
-    ) -> Dict[str, Any]:
-        """Handle time synchronization request from Android device"""
-        try:
-            client_timestamp = message.get("client_timestamp")
-
-            if client_timestamp is None:
-                return {"message_type": "error", "error": "Missing client_timestamp"}
-
-            # Server timestamp in nanoseconds
-            server_timestamp = time.time_ns()
-
-            return {
-                "message_type": "time_sync_response",
-                "client_timestamp": client_timestamp,
-                "server_timestamp": server_timestamp,
-                "server_time": time.time(),
-            }
-
-        except Exception as e:
-            logger.error(f"Error handling time sync request: {e}")
-            return {"message_type": "error", "error": str(e)}
-
     def get_gsr_session_stats(self) -> Dict[str, Any]:
         """Get GSR session statistics for monitoring"""
         try:
@@ -1436,3 +1431,33 @@ class NetworkServer:
         except Exception as e:
             logger.error(f"Error exporting GSR session data: {e}")
             return None
+
+    # Enhanced Time Synchronization Interface
+    
+    def get_time_sync_stats(self, device_id: str = None) -> Dict[str, Any]:
+        """Get time synchronization statistics."""
+        if device_id:
+            stats = self._enhanced_timesync.get_device_sync_stats(device_id)
+            return asdict(stats) if stats else {}
+        else:
+            return self._enhanced_timesync.get_sync_quality_summary()
+    
+    def get_all_time_sync_stats(self) -> Dict[str, Any]:
+        """Get time synchronization statistics for all devices."""
+        all_stats = self._enhanced_timesync.get_all_sync_stats()
+        return {
+            device_id: asdict(stats) 
+            for device_id, stats in all_stats.items()
+        }
+    
+    def is_device_time_synchronized(self, device_id: str) -> bool:
+        """Check if device is properly time synchronized."""
+        return self._enhanced_timesync.is_device_synchronized(device_id)
+    
+    async def register_time_sync_session(self, session_id: str, device_id: str) -> bool:
+        """Register a session for time synchronization tracking."""
+        return await self._enhanced_timesync.register_session(session_id, device_id)
+    
+    async def end_time_sync_session(self, session_id: str) -> bool:
+        """End a time synchronization session."""
+        return await self._enhanced_timesync.end_session(session_id)

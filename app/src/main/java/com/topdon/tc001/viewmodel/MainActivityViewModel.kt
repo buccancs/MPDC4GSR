@@ -530,6 +530,23 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         _statusMessage.value = null
     }
     
+    /**
+     * Process thermal frame data through ThermalRecorder
+     * This method bridges the existing camera system with our unified logging
+     */
+    fun processThermalFrame(
+        frameData: ByteArray, 
+        width: Int, 
+        height: Int, 
+        minTempRange: Float, 
+        maxTempRange: Float, 
+        timestampNs: Long = System.nanoTime()
+    ) {
+        thermalRecorder?.processFrameFromIntensity(
+            frameData, width, height, minTempRange, maxTempRange, timestampNs
+        )
+    }
+    
     override fun onCleared() {
         super.onCleared()
         

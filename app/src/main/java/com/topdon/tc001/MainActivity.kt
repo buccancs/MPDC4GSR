@@ -1198,6 +1198,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     saveImages = true
                 )
                 mainViewModel.startRecordingSession(config)
+                
+                // Set up thermal camera integration after session starts
+                setupThermalCameraIntegration()
             }
             MainActivityViewModel.SessionState.RECORDING -> {
                 // Stop recording session
@@ -1210,6 +1213,59 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             else -> {
                 // Show current status
                 Toast.makeText(this, "Session status: ${mainViewModel.sessionState.value}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    
+    /**
+     * Set up thermal camera integration to work with our ThermalRecorder
+     * This method should be called when a recording session starts to hook into the existing camera system
+     */
+    private fun setupThermalCameraIntegration() {
+        // This is a placeholder for integration with the existing thermal camera system
+        // In a real implementation, this would hook into the UVCCamera callbacks
+        // and forward frame data to our ThermalRecorder
+        
+        Log.i(TAG, "Setting up thermal camera integration for multi-modal recording")
+        
+        // TODO: Hook into existing UVCCamera system to get frame callbacks
+        // For now, we'll create a simulation for testing purposes
+        lifecycleScope.launch {
+            delay(1000) // Simulate camera startup delay
+            simulateThermalFrames()
+        }
+    }
+    
+    /**
+     * Simulate thermal frames for testing (replace with real camera integration)
+     */
+    private fun simulateThermalFrames() {
+        if (mainViewModel.sessionState.value != MainActivityViewModel.SessionState.RECORDING) {
+            return
+        }
+        
+        lifecycleScope.launch {
+            repeat(10) { frameIndex ->
+                if (mainViewModel.sessionState.value == MainActivityViewModel.SessionState.RECORDING) {
+                    // Simulate thermal frame data
+                    val width = 256
+                    val height = 192
+                    val frameData = ByteArray(width * height)
+                    
+                    // Generate fake temperature data (simulate room temperature around 20-25°C)
+                    for (i in frameData.indices) {
+                        val temp = 20 + (Math.random() * 5).toFloat() // 20-25°C range
+                        frameData[i] = temp.toInt().toByte()
+                    }
+                    
+                    // Process frame through our ThermalRecorder
+                    // Note: This is a simplified simulation - real implementation would get actual thermal data
+                    mainViewModel.processThermalFrame(frameData, width, height, 20f, 30f)
+                    
+                    delay(111) // ~9 FPS (1000ms / 9 ≈ 111ms)
+                } else {
+                    break
+                }
             }
         }
     }

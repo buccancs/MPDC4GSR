@@ -1069,27 +1069,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     
-    /**
-     * Enhanced network status click handler - integrates with ViewModel
-     */
-    private fun handleNetworkStatusClick() {
-        when (mainViewModel.networkConnectionState.value) {
-            MainActivityViewModel.NetworkConnectionState.DISCONNECTED -> {
-                // Start network discovery
-                mainViewModel.startNetworkDiscovery()
-            }
-            MainActivityViewModel.NetworkConnectionState.CONNECTED -> {
-                // Show connection info or disconnect option
-                mainViewModel.connectedControllerInfo.value?.let { controller ->
-                    Toast.makeText(this, "Connected to: ${controller.deviceName}\n${controller.ipAddress}:${controller.port}", Toast.LENGTH_LONG).show()
-                }
-            }
-            else -> {
-                // Show current status
-                Toast.makeText(this, "Network status: ${mainViewModel.networkConnectionState.value}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+
 
 
     /**
@@ -1155,45 +1135,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         Log.i(TAG, "Setting up thermal camera integration for multi-modal recording")
         
         // TODO: Hook into existing UVCCamera system to get frame callbacks
-        // For now, we'll create a simulation for testing purposes
-        lifecycleScope.launch {
-            delay(1000) // Simulate camera startup delay
-            simulateThermalFrames()
-        }
-    }
-    
-    /**
-     * Simulate thermal frames for testing (replace with real camera integration)
-     */
-    private fun simulateThermalFrames() {
-        if (mainViewModel.sessionState.value != MainActivityViewModel.SessionState.RECORDING) {
-            return
-        }
-        
-        lifecycleScope.launch {
-            repeat(10) { frameIndex ->
-                if (mainViewModel.sessionState.value == MainActivityViewModel.SessionState.RECORDING) {
-                    // Simulate thermal frame data
-                    val width = 256
-                    val height = 192
-                    val frameData = ByteArray(width * height)
-                    
-                    // Generate fake temperature data (simulate room temperature around 20-25°C)
-                    for (i in frameData.indices) {
-                        val temp = 20 + (Math.random() * 5).toFloat() // 20-25°C range
-                        frameData[i] = temp.toInt().toByte()
-                    }
-                    
-                    // Process frame through our ThermalRecorder
-                    // Note: This is a simplified simulation - real implementation would get actual thermal data
-                    mainViewModel.processThermalFrame(frameData, width, height, 20f, 30f)
-                    
-                    delay(111) // ~9 FPS (1000ms / 9 ≈ 111ms)
-                } else {
-                    break
-                }
-            }
-        }
+        // This requires integration with the thermal camera hardware interface
+        // When integrated, frame callbacks should call: mainViewModel.processThermalFrame(frameData, width, height, minTemp, maxTemp)
     }
 
     /**

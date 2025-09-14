@@ -283,10 +283,19 @@ class ThermalRecorder(private val context: Context) {
     private suspend fun logFrameStats(stats: ThermalFrameStats) = withContext(Dispatchers.IO) {
         try {
             csvWriter?.let { writer ->
-                val csvLine = "${stats.timestampNs},${stats.frameSequence}," +
-                        "%.3f,%.3f,%.3f,${stats.pixelCount}".format(
-                            stats.minTemp, stats.avgTemp, stats.maxTemp
-                        )
+                val csvLine = StringBuilder().apply {
+                    append(stats.timestampNs)
+                    append(',')
+                    append(stats.frameSequence)
+                    append(',')
+                    append("%.3f".format(Locale.US, stats.minTemp))
+                    append(',')
+                    append("%.3f".format(Locale.US, stats.avgTemp))
+                    append(',')
+                    append("%.3f".format(Locale.US, stats.maxTemp))
+                    append(',')
+                    append(stats.pixelCount)
+                }.toString()
                 
                 writer.write(csvLine)
                 writer.write("\n")

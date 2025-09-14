@@ -106,8 +106,11 @@ class NetworkController(private val context: Context) {
             serverSocket?.close()
             serverSocket = null
             
-            // Cancel all coroutines
-            controllerScope.cancel()
+            // Cancel all coroutines and wait for completion
+            controllerScope.coroutineContext.cancelChildren()
+            runBlocking {
+                controllerScope.coroutineContext.job.join()
+            }
             
             Log.i(TAG, "NetworkController stopped")
         } catch (e: Exception) {

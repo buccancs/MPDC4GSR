@@ -216,9 +216,9 @@ def test_discovery_service():
             attributes=test_attributes
         )
         
-        print(f"✓ Mock device created: {mock_device.serviceName}")
+        print(f"✓ Mock device created: {mock_device.service_name}")
         print(f"  Type: {mock_device.device_type.name}")
-        print(f"  Address: {mock_device.ipAddress}:{mock_device.port}")
+        print(f"  Address: {mock_device.ip_address}:{mock_device.port}")
         
         return True
         

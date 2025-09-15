@@ -1685,7 +1685,6 @@ class RecordingService : LifecycleService() {
                 }
             }
         }
-    }
 
     private suspend fun sendResponseToPC(
         messageType: String,

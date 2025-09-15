@@ -869,21 +869,25 @@ class RecordingService : LifecycleService() {
             } catch (e: Exception) {
                 Log.w(TAG, "Error handling message from $clientId", e)
                 break
-                private suspend fun initializeNetworkClient(): Boolean {
-                    return try {
-                        val success = networkClient.initialize()
-                        if (success) {
-                            setupNetworkCommandHandlers()
-                            Log.i(TAG, "Network client initialized successfully")
-                        } else {
-                            Log.w(TAG, "Network client initialization failed")
-                        }
-                        success
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error initializing network client", e)
-                        false
-                    }
-                }
+            }
+        }
+    }
+
+    private suspend fun initializeNetworkClient(): Boolean {
+        return try {
+            val success = networkClient.initialize()
+            if (success) {
+                setupNetworkCommandHandlers()
+                Log.i(TAG, "Network client initialized successfully")
+            } else {
+                Log.w(TAG, "Network client initialization failed")
+            }
+            success
+        } catch (e: Exception) {
+            Log.e(TAG, "Error initializing network client", e)
+            false
+        }
+    }
 
     private fun setupNetworkCommandHandlers() {
         try {
@@ -1473,8 +1477,6 @@ class RecordingService : LifecycleService() {
                     }
                 }
             }
-            }
-        }
 
     private fun isServiceForeground(): Boolean {
         return currentSessionDirectory != null || isServerRunning.get()
@@ -1683,7 +1685,6 @@ class RecordingService : LifecycleService() {
                     Log.e(TAG, "Error unregistering NSD service", e)
                 }
             }
-        }
 
     private suspend fun sendResponseToPC(
         messageType: String,
@@ -1772,21 +1773,20 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error handling sync flash command", e)
         }
     }
-
+    
     private fun handleQueryCapabilitiesCommand(message: JSONObject) {
         try {
             Log.d(TAG, "Handling query capabilities command")
             val capabilities = JSONObject().apply {
                 put("sensors", JSONArray().apply {
                     put("RGB_Camera")
-                    put("Thermal_Camera") 
+                    put("Thermal_Camera")
                     put("GSR_Sensor")
                 })
-                put("max_sessions", 10)
-                put("supported_formats", JSONArray().apply {
-                    put("MP4")
-                    put("CSV")
-                    put("HDF5")
+                put("recording_formats", JSONArray().apply {
+                    put("mp4")
+                    put("csv")
+                    put("jpg")
                 })
                 put("sync_capabilities", JSONArray().apply {
                     put("flash_sync")
@@ -1801,7 +1801,7 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error handling query capabilities command", e)
         }
     }
-
+    
     private fun handleStopRecordingCommand(message: JSONObject) {
         try {
             Log.d(TAG, "Handling stop recording command")
@@ -1822,3 +1822,4 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error handling stop recording command", e)
         }
     }
+}

@@ -13,10 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.topdon.tc001.controller.RecordingController
-import com.topdon.tc001.sensors.unified.*
+import com.topdon.tc001.sensors.unified.UnifiedGSRRecorder
+import com.topdon.tc001.sensors.unified.UnifiedNetworkController
+import com.topdon.tc001.sensors.unified.UnifiedSessionManager
+import com.topdon.tc001.sensors.unified.ShimmerDeviceManager
+import com.topdon.tc001.sensors.unified.Shimmer3GSRRecorder
 import com.topdon.tc001.sensors.unified.adapters.DeviceAdapter
 import com.topdon.tc001.sensors.unified.adapters.PCControllerAdapter
-import com.topdon.tc001.sensors.unified.model.*
+import com.topdon.tc001.sensors.unified.model.DeviceInfo
+import com.topdon.tc001.sensors.unified.model.GSRSample
+import com.topdon.tc001.sensors.unified.model.PCControllerInfo
+import com.topdon.tc001.sensors.unified.model.SessionConfig
+import com.topdon.tc001.sensors.unified.model.SessionType
 import kotlinx.coroutines.launch
 
 class UnifiedSensorActivity : AppCompatActivity() {

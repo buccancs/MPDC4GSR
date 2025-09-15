@@ -1684,7 +1684,6 @@ class RecordingService : LifecycleService() {
                     Log.e(TAG, "Error unregistering NSD service", e)
                 }
             }
-            }
         }
     }
 
@@ -1707,7 +1706,6 @@ class RecordingService : LifecycleService() {
             data.keys().forEach { key ->
                 put(key, data.get(key))
             }
-            }
 
         networkServer.sendMessage(response)
         Log.d(TAG, "Sent response to PC: $messageType")
@@ -1726,7 +1724,7 @@ class RecordingService : LifecycleService() {
             put("service_initialized", isInitialized)
             put("network_server_running", networkServer.isRunning())
             put("pc_connected", isConnectedToPC)
-            }
+        }
 
         sendResponseToPC("status_response", statusData)
         Log.i(TAG, "Status sent to PC Controller")
@@ -1751,7 +1749,7 @@ class RecordingService : LifecycleService() {
         Log.d(TAG, "Handling query status command")
         lifecycleScope.launch {
             sendStatusToPC()
-            }
+        }
         } catch (e: Exception) {
         Log.e(TAG, "Error handling query status command", e)
         }

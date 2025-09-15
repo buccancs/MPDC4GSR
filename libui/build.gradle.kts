@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
+    kotlin("android") // Modern plugin ID format
     id("com.google.devtools.ksp") // Use KSP plugin from classpath
-    id("kotlin-parcelize") // Use modern kotlin-parcelize instead of kotlin-android-extensions for Parcelable
+    id("kotlin-parcelize") // Correct plugin ID - Use modern kotlin-parcelize instead of kotlin-android-extensions for Parcelable
 }
 
 ksp {

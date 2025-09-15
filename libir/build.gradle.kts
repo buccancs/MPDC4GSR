@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
-    id("kotlin-parcelize")
+    kotlin("android") // Modern plugin ID format
+    id("kotlin-parcelize") // Correct plugin ID for Parcelize
 }
 
 android {

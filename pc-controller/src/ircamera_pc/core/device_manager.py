@@ -66,7 +66,7 @@ class DeviceInfo:
     capabilities: DeviceCapabilities
     
     # Connection metadata
-    discovered_at: datetime = field(default_factory=datetime.now)
+    discovered_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     connected_at: Optional[datetime] = None
     last_heartbeat: Optional[datetime] = None
     connection_quality: ConnectionQuality = ConnectionQuality.GOOD

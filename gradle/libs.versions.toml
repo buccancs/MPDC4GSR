@@ -182,7 +182,7 @@ huaweiAgcp = "1.6.0.300"
 # Build Tools
 androidGradlePlugin = "8.13.0"
 kotlinGradlePlugin = "2.2.0"
-ksp = "2.2.0-2.0.2"
+ksp = "2.2.20-2.0.3"
 desugarJdkLibs = "2.1.5"
 
 [libraries]

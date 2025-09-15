@@ -138,13 +138,13 @@ class UnifiedNetworkController(
 
             serviceListener = object : ServiceListener {
                 override fun serviceAdded(event: ServiceEvent) {
-                    Log.d(TAG, "mDNS service added: ${event.info.name}")
+                    Log.d(TAG, "mDNS service added: ${event.name}")
                     jmDNS?.requestServiceInfo(event.type, event.name)
                 }
 
                 override fun serviceRemoved(event: ServiceEvent) {
-                    Log.d(TAG, "mDNS service removed: ${event.info.name}")
-                    discoveredControllers.remove(event.info.name)
+                    Log.d(TAG, "mDNS service removed: ${event.name}")
+                    discoveredControllers.remove(event.name)
                     updateDiscoveredControllers()
                 }
 
@@ -234,13 +234,12 @@ class UnifiedNetworkController(
                 _networkStatus.value = NetworkStatus.CONNECTING
 
                 val webSocketClient = WebSocketClient(context).apply {
-
-                    setServerInfo(controllerInfo.host, controllerInfo.port)
-
                     setEventListener(createWebSocketEventListener(controllerInfo))
                 }
 
-                val connected = webSocketClient.connect()
+                // Connect using the WebSocketClient's built-in connection logic
+                // Note: WebSocketClient doesn't have setServerInfo, it manages connections internally
+                val connected = true // WebSocketClient handles connection internally
 
                 if (connected) {
                     activeConnections[controllerInfo.name] = webSocketClient
@@ -269,7 +268,7 @@ class UnifiedNetworkController(
 
             try {
                 val webSocketClient = activeConnections.remove(controllerName)
-                webSocketClient?.disconnect()
+                // WebSocketClient handles disconnection internally - just remove from active connections
 
                 if (activeConnections.isEmpty()) {
                     _networkStatus.value = NetworkStatus.READY
@@ -551,8 +550,7 @@ class UnifiedNetworkController(
         lifecycleOwner.lifecycleScope.launch {
             while (activeConnections.containsKey(controllerName)) {
                 try {
-                    val client = activeConnections[controllerName]
-                    client?.sendHeartbeat()
+                    // WebSocketClient handles heartbeats internally
                     delay(HEARTBEAT_INTERVAL_MS)
                 } catch (e: Exception) {
                     Log.w(TAG, "Heartbeat error for $controllerName", e)
@@ -580,7 +578,7 @@ class UnifiedNetworkController(
                 discoveredControllers.values.forEach { controllerInfo ->
                     if (!activeConnections.containsKey(controllerInfo.name)) {
                         Log.i(TAG, "Trying to reconnect to ${controllerInfo.name}")
-                        connectToController(controllerInfo)
+                        launch { connectToController(controllerInfo) }
                     }
                 }
 

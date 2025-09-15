@@ -1755,15 +1755,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         }
 
                         1 -> {
-
+                            // Shimmer integration moved to GSR Settings Activity
                             Toast.makeText(
                                 this,
-                                "Opening Shimmer3 GSR+ Integration",
+                                "GSR functionality available in GSR Settings",
                                 Toast.LENGTH_SHORT
                             ).show()
                             val intent = Intent(
                                 this,
-                                com.topdon.tc001.sensors.shimmer.ShimmerIntegrationActivity::class.java
+                                com.topdon.tc001.gsr.GSRSettingsActivity::class.java
                             )
                             startActivity(intent)
                         }

@@ -328,7 +328,9 @@ class RecordingService : LifecycleService() {
             if (isNetworkInitialized) {
                 networkClient.disconnect()
             }
-            recordingController.cleanup()
+            lifecycleScope.launch {
+                recordingController.cleanup()
+            }
             crashSafeSupervisor.shutdown()
         } catch (e: Exception) {
             structuredLogger.log(
@@ -1044,7 +1046,7 @@ class RecordingService : LifecycleService() {
         } catch (e: Exception) {
             structuredLogger.logProtocolMessage(
                 "message_processing_error", messageId, clientId,
-                mapOf("message_type" to messageType, "error" to e.message)
+                mapOf<String, Any>("message_type" to messageType, "error" to (e.message ?: "Unknown error"))
             )
             val errorMessage = ProtocolVersion.createProtocolMessage(
                 "error",

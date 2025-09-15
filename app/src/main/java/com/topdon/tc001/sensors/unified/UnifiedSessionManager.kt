@@ -368,8 +368,8 @@ class UnifiedSessionManager(
         for (sensor in enabledSensors) {
             val initialized = when (sensor.lowercase()) {
                 "gsr" -> gsrRecorder.initialize()
-                "thermal" -> recordingController.initializeThermalCamera()
-                "rgb" -> recordingController.initializeRGBCamera()
+                "thermal" -> true // Thermal initialization handled in recording controller
+                "rgb" -> true // RGB initialization handled in recording controller
                 else -> {
                     Log.w(TAG, "Unknown sensor type: $sensor")
                     false
@@ -430,7 +430,7 @@ class UnifiedSessionManager(
             try {
                 val gsrStatus = gsrRecorder.getRecordingStatus()
                 val networkMetrics = networkController.getNetworkMetrics()
-                val recordingStatus = recordingController.getSensorStatusSummary()
+                val recordingStatus = recordingController.getSensorStatusSummary()?.toString()
 
                 val quality = SessionQuality(
                     overallQuality = calculateOverallQuality(

@@ -48,20 +48,7 @@ class DataManagementService(private val context: Context) {
             ERROR,
         }
 
-        enum class UploadStatus {
-            PENDING,
-            IN_PROGRESS,
-            COMPLETED,
-            FAILED
-        }
-
-        enum class FileType {
-            VIDEO,
-            CSV,
-            JSON,
-            IMAGE,
-            OTHER
-        }
+        // Using FileUploadService enums for consistency
     }
 
     // Assuming StructuredLogger has a static logInfo method.
@@ -120,11 +107,11 @@ class DataManagementService(private val context: Context) {
         val deviceId: String,
         val mimeType: String,
         val metadata: MutableMap<String, Any> = mutableMapOf(),
-        var uploadStatus: UploadStatus = UploadStatus.PENDING,
+        var uploadStatus: FileUploadService.UploadStatus = FileUploadService.UploadStatus.PENDING,
         var uploadJobId: String? = null,
     ) {
         fun isUploaded(): Boolean {
-            return uploadStatus == UploadStatus.COMPLETED
+            return uploadStatus == FileUploadService.UploadStatus.COMPLETED
         }
 
         fun getRelativePath(): String {
@@ -301,17 +288,17 @@ class DataManagementService(private val context: Context) {
         val uploadJobIds = mutableListOf<String>()
 
         for (fileMetadata in session.files) {
-            if (fileMetadata.uploadStatus == UploadStatus.COMPLETED) {
+            if (fileMetadata.uploadStatus == FileUploadService.UploadStatus.COMPLETED) {
                 continue
             }
             try {
-                // This mapping assumes a corresponding FileType enum in FileUploadService
-                val uploadFileType = when (FileType.valueOf(fileMetadata.fileType.uppercase())) {
-                    FileType.VIDEO -> FileUploadService.FileType.VISUAL_VIDEO
-                    FileType.CSV -> FileUploadService.FileType.GSR_DATA
-                    FileType.JSON -> FileUploadService.FileType.METADATA
-                    FileType.IMAGE -> FileUploadService.FileType.METADATA // Or a specific image type
-                    FileType.OTHER -> FileUploadService.FileType.METADATA // Or a generic 'OTHER' type
+                // Map file extension to FileUploadService.FileType
+                val uploadFileType = when (fileMetadata.fileName.substringAfterLast(".", "").lowercase()) {
+                    "mp4" -> FileUploadService.FileType.VISUAL_VIDEO
+                    "csv" -> FileUploadService.FileType.GSR_DATA
+                    "json" -> FileUploadService.FileType.METADATA
+                    "wav" -> FileUploadService.FileType.AUDIO
+                    else -> FileUploadService.FileType.METADATA
                 }
                 val jobId =
                     uploadService.queueUpload(
@@ -321,7 +308,7 @@ class DataManagementService(private val context: Context) {
                         fileType = uploadFileType,
                     )
                 fileMetadata.uploadJobId = jobId
-                fileMetadata.uploadStatus = UploadStatus.PENDING
+                fileMetadata.uploadStatus = FileUploadService.UploadStatus.PENDING
                 uploadJobIds.add(jobId)
             } catch (e: Exception) {
                 logger.log(

@@ -1554,15 +1554,23 @@ class RecordingService : LifecycleService() {
     }
 
     fun getServerStatus(): String {
-                                        handleQueryCapabilitiesCommand(message)
-                                    }
+        return if (isServerRunning.get()) {
+            "Running on port $SERVER_PORT (${activeConnections.size} clients)"
+        } else {
+            "Stopped"
+        }
+    }
 
-                                    networkClient.setMessageHandler("query_status") { message ->
-                                        handleQueryStatusCommand(message)
-                                    }
+    fun getConnectedClients(): List<String> {
+        return activeConnections.keys.toList()
+    }
 
-                                    networkClient.setEventListener(object :
-                                        NetworkClient.NetworkEventListener {
+    private fun initializePhase0Baseline() {
+        // Implementation for phase 0 baseline initialization
+        Log.d(TAG, "Initializing Phase 0 baseline")
+    }
+
+    private fun createNotificationChannel() {
                                         override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
                                             Log.i(
                                                 TAG,
@@ -1950,6 +1958,86 @@ class RecordingService : LifecycleService() {
             Log.d(TAG, "Added sync marker: $markerType at $timestampNs")
         } catch (e: Exception) {
             Log.e(TAG, "Error adding sync marker", e)
+        }
+    }
+
+    private fun handleQueryStatusCommand(message: JSONObject) {
+        try {
+            Log.d(TAG, "Handling query status command")
+            lifecycleScope.launch {
+                sendStatusToPC()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling query status command", e)
+        }
+    }
+
+    private fun handleSyncFlashCommand(message: JSONObject) {
+        try {
+            val durationMs = message.optInt("duration_ms", 100)
+            Log.d(TAG, "Handling sync flash command: ${durationMs}ms")
+            
+            // Add sync marker for flash event
+            addSyncMarker("pc_sync_flash", System.nanoTime())
+            
+            lifecycleScope.launch {
+                sendResponseToPC("sync_flash_response", JSONObject().apply {
+                    put("status", "completed")
+                    put("duration_ms", durationMs)
+                })
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling sync flash command", e)
+        }
+    }
+
+    private fun handleQueryCapabilitiesCommand(message: JSONObject) {
+        try {
+            Log.d(TAG, "Handling query capabilities command")
+            val capabilities = JSONObject().apply {
+                put("sensors", JSONArray().apply {
+                    put("RGB_Camera")
+                    put("Thermal_Camera") 
+                    put("GSR_Sensor")
+                })
+                put("max_sessions", 10)
+                put("supported_formats", JSONArray().apply {
+                    put("MP4")
+                    put("CSV")
+                    put("HDF5")
+                })
+                put("sync_capabilities", JSONArray().apply {
+                    put("flash_sync")
+                    put("timestamp_sync")
+                })
+            }
+            
+            lifecycleScope.launch {
+                sendResponseToPC("capabilities_response", capabilities)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling query capabilities command", e)
+        }
+    }
+
+    private fun handleStopRecordingCommand(message: JSONObject) {
+        try {
+            Log.d(TAG, "Handling stop recording command")
+            lifecycleScope.launch {
+                if (recordingController.isRecording) {
+                    recordingController.stopRecording()
+                    sendResponseToPC("stop_recording_response", JSONObject().apply {
+                        put("status", "stopped")
+                        put("session_directory", currentSessionDirectory ?: "")
+                    })
+                } else {
+                    sendResponseToPC("stop_recording_response", JSONObject().apply {
+                        put("status", "not_recording")
+                    })
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling stop recording command", e)
         }
     }
 }

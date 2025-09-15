@@ -1517,85 +1517,43 @@ class RecordingService : LifecycleService() {
                                     }
                                 }
 
-                                suspend fun sendResponseToPC(
-                                    messageType: String,
-                                    data: JSONObject = JSONObject()
-                                ) {
-                                    try {
-                                        val response = JSONObject().apply {
-                                            put("message_type", messageType)
-                                            put(
-                                                "device_id",
-                                                android.provider.Settings.Secure.getString(
-                                                    contentResolver,
-                                                    android.provider.Settings.Secure.ANDROID_ID
-                                                )
-                                            )
-                                            put("timestamp_ns", System.nanoTime())
+                                // Network command handlers and other functions moved to class level
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-                                            data.keys().forEach { key ->
-                                                put(key, data.get(key))
-                                            }
-                                        }
+    private fun isServiceForeground(): Boolean {
+        return currentSessionDirectory != null || isServerRunning.get()
+    }
 
-                                        networkServer.sendMessage(response)
-                                        Log.d(TAG, "Sent response to PC: $messageType")
+    private fun createServerNotification(contentText: String): Notification {
+        val stopIntent = Intent(this@RecordingService, RecordingService::class.java).apply {
+            action = ACTION_STOP_SERVER
+        }
+        val stopPendingIntent = PendingIntent.getService(
+            this@RecordingService, 1, stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error sending response to PC", e)
-                                    }
-                                }
+        return NotificationCompat.Builder(this@RecordingService, CHANNEL_ID)
+            .setContentTitle("IRCamera Server")
+            .setContentText(contentText)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setOngoing(true)
+            .addAction(
+                android.R.drawable.ic_media_pause,
+                "Stop Server",
+                stopPendingIntent
+            )
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .build()
+    }
 
-                                suspend fun sendStatusToPC() {
-                                    try {
-                                        val statusData = JSONObject().apply {
-                                            put("is_recording", recordingController.isRecording)
-                                            put("current_session", currentSessionDirectory ?: "")
-                                            put("recording_start_time", recordingStartTime)
-                                            put("service_initialized", isInitialized)
-                                            put("network_server_running", networkServer.isRunning())
-                                            put("pc_connected", isConnectedToPC)
-                                        }
-
-                                        sendResponseToPC("status_response", statusData)
-                                        Log.i(TAG, "Status sent to PC Controller")
-
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error sending status to PC", e)
-                                    }
-                                }
-
-                                suspend fun initializeNetworkClient(): Boolean {
-                                    return try {
-                                        val success = networkClient.initialize()
-                                        if (success) {
-                                            setupNetworkCommandHandlers()
-                                            Log.i(TAG, "Network client initialized successfully")
-                                        } else {
-                                            Log.w(TAG, "Network client initialization failed")
-                                        }
-                                        success
-                                    } catch (e: Exception) {
-                                        Log.e(TAG, "Error initializing network client", e)
-                                        false
-                                    }
-                                }
-
-                                fun setupNetworkCommandHandlers() {
-
-                                    networkClient.setMessageHandler("start_recording") { message ->
-                                        handleStartRecordingCommand(message)
-                                    }
-
-                                    networkClient.setMessageHandler("stop_recording") { message ->
-                                        handleStopRecordingCommand(message)
-                                    }
-
-                                    networkClient.setMessageHandler("sync_flash") { message ->
-                                        handleSyncFlashCommand(message)
-                                    }
-
-                                    networkClient.setMessageHandler("query_capabilities") { message ->
+    fun getServerStatus(): String {
                                         handleQueryCapabilitiesCommand(message)
                                     }
 
@@ -1935,6 +1893,64 @@ class RecordingService : LifecycleService() {
     private fun startRecordingSession(sessionDirectory: String) {
         // Implementation for starting recording session
         Log.d(TAG, "Starting recording session: $sessionDirectory")
+    }
+
+    private suspend fun sendResponseToPC(
+        messageType: String,
+        data: JSONObject = JSONObject()
+    ) {
+        try {
+            val response = JSONObject().apply {
+                put("message_type", messageType)
+                put(
+                    "device_id",
+                    android.provider.Settings.Secure.getString(
+                        contentResolver,
+                        android.provider.Settings.Secure.ANDROID_ID
+                    )
+                )
+                put("timestamp_ns", System.nanoTime())
+
+                data.keys().forEach { key ->
+                    put(key, data.get(key))
+                }
+            }
+
+            networkServer.sendMessage(response)
+            Log.d(TAG, "Sent response to PC: $messageType")
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending response to PC", e)
+        }
+    }
+
+    private suspend fun sendStatusToPC() {
+        try {
+            val statusData = JSONObject().apply {
+                put("is_recording", recordingController.isRecording)
+                put("current_session", currentSessionDirectory ?: "")
+                put("recording_start_time", recordingStartTime)
+                put("service_initialized", isInitialized)
+                put("network_server_running", networkServer.isRunning())
+                put("pc_connected", isConnectedToPC)
+            }
+
+            sendResponseToPC("status_response", statusData)
+            Log.i(TAG, "Status sent to PC Controller")
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending status to PC", e)
+        }
+    }
+
+    private fun addSyncMarker(markerType: String, timestampNs: Long) {
+        try {
+            // Add sync marker to all active recorders
+            recordingController.addSyncMarker(markerType, timestampNs)
+            Log.d(TAG, "Added sync marker: $markerType at $timestampNs")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error adding sync marker", e)
+        }
     }
 }
 

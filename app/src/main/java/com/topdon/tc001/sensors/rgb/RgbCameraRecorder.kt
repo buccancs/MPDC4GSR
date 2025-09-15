@@ -61,6 +61,7 @@ class RgbCameraRecorder(
     private val sessionStartTime = AtomicLong(0)
     private val lastFrameTime = AtomicLong(0)
     private var droppedFrames = AtomicLong(0)
+    private val syncMarkersRecorded = AtomicLong(0)
 
     private val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -487,7 +488,7 @@ class RgbCameraRecorder(
             } else 0.0,
             droppedSamples = droppedFrames.get(),
             storageUsedMB = calculateStorageUsed(),
-            syncMarkersCount = 0, // TODO: Track sync markers
+            syncMarkersCount = syncMarkersRecorded.get(),
             lastSampleTimestampNs = lastFrameTime.get()
         )
     }
@@ -536,6 +537,35 @@ class RgbCameraRecorder(
         )
 
         statusFlow.emit(status)
+    }
+
+    /**
+     * Records a synchronization marker for temporal alignment with other sensors
+     */
+    suspend fun recordSyncMarker(markerType: String = "SYNC") {
+        if (!isRecording) return
+        
+        val timestamp = System.nanoTime()
+        recordingScope.launch {
+            csvWriter?.let { writer ->
+                try {
+                    writer.writeNext(arrayOf(
+                        timestamp.toString(),
+                        "SYNC_MARKER",
+                        markerType,
+                        System.currentTimeMillis().toString(),
+                        "0", // frame_number
+                        "0"  // file_size
+                    ))
+                    writer.flush()
+                    syncMarkersRecorded.incrementAndGet()
+                    
+                    Log.d(TAG, "Sync marker recorded: $markerType at $timestamp")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to record sync marker", e)
+                }
+            }
+        }
     }
 
     private suspend fun emitError(errorType: ErrorType, message: String) {

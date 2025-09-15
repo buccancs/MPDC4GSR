@@ -87,25 +87,23 @@ dependencies {
     compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) // LMS SDK for thermal-ir classes
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
+    implementation(libs.localbroadcastmanager)
     implementation(libs.material)
     implementation(libs.utilcode)
     implementation(libs.glide)
     implementation(libs.lottie)
-    implementation("com.github.anzaizai:EasySwipeMenuLayout:1.1.4")
+    implementation(libs.easyswipemenulayout)
     implementation(libs.mn.image.browser)
-    implementation("com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.6.0-release-jitpack") {
+    implementation(libs.gsy.video.player.thermal) {
         exclude(group = "androidx.media3", module = "media3-cast")
         exclude(group = "androidx.media3", module = "media3-session")
         exclude(group = "androidx.media3", module = "media3-ui")
         exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
         exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
     }
-    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
-    implementation("androidx.media3:media3-exoplayer:1.3.1")
-    implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
-    implementation("androidx.media3:media3-ui:1.3.1")
-    implementation("io.github.scwang90:refresh-layout-kernel:2.1.1")
-    implementation("io.github.scwang90:refresh-header-classics:2.1.1")
-    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.exoplayer.dash)
+    implementation(libs.media3.ui)
+    implementation(libs.refresh.layout.kernel.legacy)
+    implementation(libs.refresh.header.classics.legacy)
 }

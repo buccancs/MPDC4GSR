@@ -257,7 +257,7 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation("com.google.guava:guava:31.1-android")
+    implementation(libs.guava)
 
     implementation(project(":component:thermal")) // Consolidated thermal functionality
     implementation(project(":component:thermal-ir")) // Thermal IR resources needed by app
@@ -313,18 +313,18 @@ dependencies {
 
     implementation(libs.umeng.common)
 
-    implementation("com.opencsv:opencsv:5.12.0")
-    implementation("com.google.code.gson:gson:2.13.2")
+    implementation(libs.opencsv)
+    implementation(libs.gson)
 
     // JmDNS dependency for network service discovery
-    implementation("org.jmdns:jmdns:3.5.8")
+    implementation(libs.jmdns)
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
-    implementation("no.nordicsemi.android:ble:2.11.0")
+    implementation(libs.nordic.ble)
     implementation(libs.nordic.ble.ktx)
 
 
@@ -339,35 +339,35 @@ dependencies {
     implementation(libs.bundles.camerax)
 
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
-    testImplementation("org.hamcrest:hamcrest:2.2")
+    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.hamcrest)
 
-    testImplementation("io.mockk:mockk:1.14.5")
-    testImplementation("io.mockk:mockk-android:1.14.5")
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockk.android)
 
     testImplementation(libs.kotlinx.coroutines.test)
 
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation(libs.test.ext.junit)
+    androidTestImplementation(libs.test.espresso.core)
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.test.rules)
 
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.7.0")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.7.0")
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    androidTestImplementation(libs.test.ext.junit.ktx)
+    androidTestImplementation(libs.test.espresso.contrib)
+    androidTestImplementation(libs.test.espresso.intents)
+    androidTestImplementation(libs.test.uiautomator)
 
-    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation(libs.robolectric)
 
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+    testImplementation(libs.mockwebserver)
 
-    androidTestImplementation("androidx.benchmark:benchmark-junit4:1.2.2")
+    androidTestImplementation(libs.benchmark.junit4)
 
-    testImplementation("com.google.truth:truth:1.1.4")
-    androidTestImplementation("com.google.truth:truth:1.1.4")
+    testImplementation(libs.truth)
+    androidTestImplementation(libs.truth)
 
-    testImplementation("com.github.javafaker:javafaker:1.0.2")
+    testImplementation(libs.javafaker)
 }
 
 fun getYearStr(): String {

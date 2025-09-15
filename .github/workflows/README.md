@@ -31,6 +31,15 @@ This directory contains automated CI/CD workflows for the IRCamera project.
 - OWASP dependency vulnerability scanning
 - License compliance checking
 
+### 6. **codeql-analysis.yml** - CodeQL Security Analysis
+**Triggers:** Push to main/develop/copilot branches, Pull Requests, Weekly schedule  
+**Features:**
+- Static code analysis for Java and Kotlin
+- Security vulnerability detection
+- Android-specific security checks
+- SARIF report generation
+- Integration with GitHub Security tab
+
 ## 🔧 Local Development
 
 Use the local development script to mirror CI checks:
@@ -38,6 +47,7 @@ Use the local development script to mirror CI checks:
 ./dev.sh validate    # Run all checks
 ./dev.sh format      # Format code
 ./dev.sh lint        # Run linting
+./dev.sh codeql      # Run CodeQL analysis (if CLI installed)
 ./dev.sh build       # Build project
 ```
 

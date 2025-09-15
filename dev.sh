@@ -29,6 +29,7 @@ show_help() {
     echo "  analyze     - Run performance analysis"
     echo "  health      - Quick health check"
     echo "  security    - Run security analysis"
+    echo "  codeql      - Run CodeQL security analysis"
     echo "  docs        - Generate documentation"
     echo "  test-suite  - Run advanced testing suite"
     echo "  release     - Manage releases and versioning"
@@ -301,6 +302,78 @@ clean_artifacts() {
     print_status "Clean completed"
 }
 
+run_codeql_analysis() {
+    print_status "Running CodeQL security analysis..."
+    
+    # Check if CodeQL CLI is available
+    if ! command -v codeql &> /dev/null; then
+        print_warning "CodeQL CLI not found locally. Analysis will run in GitHub Actions."
+        echo ""
+        echo -e "${YELLOW}To run CodeQL locally:${NC}"
+        echo "1. Download CodeQL CLI from: https://github.com/github/codeql-cli-binaries"
+        echo "2. Add to PATH"
+        echo "3. Run: codeql database create --language=java,kotlin --source-root=. ./codeql-db"
+        echo "4. Run: codeql database analyze ./codeql-db --format=sarif-latest --output=results.sarif"
+        echo ""
+        echo -e "${BLUE}Alternatively, push changes to trigger GitHub Actions CodeQL analysis${NC}"
+        return 0
+    fi
+    
+    # Create CodeQL database
+    local db_path="./codeql-database"
+    local results_path="./codeql-results.sarif"
+    
+    print_status "Creating CodeQL database..."
+    if [ -d "$db_path" ]; then
+        rm -rf "$db_path"
+    fi
+    
+    # Build project first to ensure all code is compiled
+    print_status "Building project for CodeQL analysis..."
+    ./gradlew build -x test --quiet || {
+        print_warning "Build failed, but continuing with CodeQL analysis"
+    }
+    
+    # Create database
+    codeql database create \
+        --language=java,kotlin \
+        --source-root=. \
+        --command="./gradlew build -x test --quiet" \
+        "$db_path" || {
+        print_error "Failed to create CodeQL database"
+        return 1
+    }
+    
+    # Run analysis
+    print_status "Running CodeQL analysis..."
+    codeql database analyze \
+        "$db_path" \
+        --format=sarif-latest \
+        --output="$results_path" \
+        --download || {
+        print_error "CodeQL analysis failed"
+        return 1
+    }
+    
+    # Show summary
+    if [ -f "$results_path" ]; then
+        local issues
+        issues=$(jq '.runs[0].results | length' "$results_path" 2>/dev/null || echo "unknown")
+        print_status "CodeQL analysis complete. Found $issues potential issues."
+        print_status "Results saved to: $results_path"
+        
+        # Show high-severity issues if any
+        if command -v jq &> /dev/null && [ "$issues" != "0" ] && [ "$issues" != "unknown" ]; then
+            echo ""
+            echo -e "${YELLOW}High-severity issues:${NC}"
+            jq -r '.runs[0].results[] | select(.level == "error" or .ruleId | contains("security")) | "- \(.message.text) (\(.ruleId))"' "$results_path" 2>/dev/null | head -5
+        fi
+    fi
+    
+    echo ""
+    print_status "CodeQL analysis completed. View detailed results in GitHub Security tab or $results_path"
+}
+
 # Main command handler
 case "${1:-help}" in
     "format")
@@ -347,6 +420,9 @@ case "${1:-help}" in
         else
             print_error "Security scanner not found or not executable"
         fi
+        ;;
+    "codeql")
+        run_codeql_analysis
         ;;
     "docs")
         if [ -x "./tools/doc-generator.sh" ]; then

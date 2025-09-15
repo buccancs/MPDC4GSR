@@ -6,7 +6,12 @@ import android.os.Build;
 
 import java.util.Arrays;
 
-
+/**
+ * Implemented according to Wiki-Pseudocode {@link}
+ * http://en.wikipedia.org/wiki/Ramer�Douglas�Peucker_algorithm
+ *
+ * @author Philipp Baldauf & Phliipp Jahoda
+ */
 public class Approximator {
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -42,7 +47,12 @@ public class Approximator {
         }
     }
 
-
+    /**
+     * Combine arrays.
+     *
+     * @param arrays
+     * @return
+     */
     float[] concat(float[]... arrays) {
         int length = 0;
         for (float[] array : arrays) {

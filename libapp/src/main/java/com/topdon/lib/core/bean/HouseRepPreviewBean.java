@@ -2,7 +2,9 @@ package com.topdon.lib.core.bean;
 
 import java.util.List;
 
-
+/**
+ * @author qiang.lv
+ */
 public class HouseRepPreviewBean {
     public String housePhoto;
     public String houseAddress;

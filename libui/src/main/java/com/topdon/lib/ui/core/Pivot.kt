@@ -3,9 +3,10 @@ package com.topdon.lib.ui.core
 import android.view.View
 import androidx.annotation.IntDef
 
-
-
-
+/**
+    * @author: CaiSongL
+    * @date: 2023/4/1 14:18
+    */
 class Pivot(
     @get:Axis
     @param:Axis val axis: Int,
@@ -29,7 +30,6 @@ class Pivot(
     }
     }
 
-
     enum class X {
     LEFT {
     override fun create(): Pivot {
@@ -49,7 +49,6 @@ class Pivot(
 
     abstract fun create(): Pivot
     }
-
 
     enum class Y {
     TOP {

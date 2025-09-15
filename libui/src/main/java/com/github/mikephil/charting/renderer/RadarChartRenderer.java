@@ -22,7 +22,9 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
     protected RadarChart mChart;
 
-
+    /**
+     * paint for drawing the web
+     */
     protected Paint mWebPaint;
     protected Paint mHighlightCirclePaint;
 
@@ -68,7 +70,13 @@ public class RadarChartRenderer extends LineRadarRenderer {
     }
 
     protected Path mDrawDataSetSurfacePathBuffer = new Path();
-
+    /**
+     * Draws the RadarDataSet
+     *
+     * @param c
+     * @param dataSet
+     * @param mostEntries the entry count of the dataset with the most entries
+     */
     protected void drawDataSet(Canvas c, IRadarDataSet dataSet, int mostEntries) {
 
         float phaseX = mAnimator.getPhaseX();
@@ -279,6 +287,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
                 Utils.getPosition(center, r, sliceangle * (i + 1) + rotationangle, p2out);
 
                 c.drawLine(p1out.x, p1out.y, p2out.x, p2out.y, mWebPaint);
+
 
             }
         }

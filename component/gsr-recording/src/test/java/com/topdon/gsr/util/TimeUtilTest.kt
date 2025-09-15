@@ -3,7 +3,9 @@ package com.topdon.gsr.util
 import org.junit.Assert.*
 import org.junit.Test
 
-
+/**
+    * Unit tests for TimeUtil
+    */
 class TimeUtilTest {
     @Test
     fun testPcTimeOffset() {

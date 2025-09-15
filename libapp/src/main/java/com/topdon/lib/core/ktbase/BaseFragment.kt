@@ -14,7 +14,9 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
+/**
+    * create by fylder on 2018/7/13
+    **/
 abstract class BaseFragment : Fragment() {
     val TAG = BaseFragment::class.java.simpleName
 
@@ -56,10 +58,14 @@ abstract class BaseFragment : Fragment() {
     EventBus.getDefault().unregister(this)
     }
 
-    
+    /**
+    * 新版 LMS 风格的加载中弹框.
+    */
     private var loadingDialog: LoadingDialog? = null
 
-    
+    /**
+    * 显示 LMS 风格的加载中弹框.
+    */
     fun showLoadingDialog(
     @StringRes resId: Int = 0,
     ) {
@@ -70,7 +76,9 @@ abstract class BaseFragment : Fragment() {
     loadingDialog?.show()
     }
 
-    
+    /**
+    * 显示 LMS 风格的加载中弹框.
+    */
     fun showLoadingDialog(text: CharSequence) {
     if (loadingDialog == null) {
     loadingDialog = LoadingDialog(requireContext())
@@ -79,7 +87,9 @@ abstract class BaseFragment : Fragment() {
     loadingDialog?.show()
     }
 
-    
+    /**
+    * 关闭 LMS 风格的加载中弹框.
+    */
     fun dismissLoadingDialog() {
     loadingDialog?.dismiss()
     }

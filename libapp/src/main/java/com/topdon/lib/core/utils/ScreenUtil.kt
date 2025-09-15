@@ -11,13 +11,11 @@ object ScreenUtil {
     fun getScreenHeight(context: Context): Int = context.resources.displayMetrics.heightPixels
 
     @JvmStatic
-
     fun isPortrait(context: Context): Boolean {
     return context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     }
 
     @JvmStatic
-
     fun isLandscape(context: Context): Boolean {
     return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }

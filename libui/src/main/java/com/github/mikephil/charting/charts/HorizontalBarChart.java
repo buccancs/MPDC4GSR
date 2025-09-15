@@ -20,7 +20,12 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.TransformerHorizontalBarChart;
 import com.github.mikephil.charting.utils.Utils;
 
-
+/**
+ * BarChart with horizontal bar orientation. In this implementation, x- and y-axis are switched, meaning the YAxis class
+ * represents the horizontal values and the XAxis class represents the vertical values.
+ *
+ * @author Philipp Jahoda
+ */
 public class HorizontalBarChart extends BarChart {
 
     public HorizontalBarChart(Context context) {
@@ -162,7 +167,13 @@ public class HorizontalBarChart extends BarChart {
 
     protected float[] mGetPositionBuffer = new float[2];
 
-
+    /**
+     * Returns a recyclable MPPointF instance.
+     *
+     * @param e
+     * @param axis
+     * @return
+     */
     @Override
     public MPPointF getPosition(Entry e, AxisDependency axis) {
 
@@ -178,7 +189,14 @@ public class HorizontalBarChart extends BarChart {
         return MPPointF.getInstance(vals[0], vals[1]);
     }
 
-
+    /**
+     * Returns the Highlight object (contains x-index and DataSet index) of the selected value at the given touch point
+     * inside the BarChart.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     @Override
     public Highlight getHighlightByTouchPoint(float x, float y) {
 
@@ -206,7 +224,9 @@ public class HorizontalBarChart extends BarChart {
         return result;
     }
 
-
+    /**
+     * ###### VIEWPORT METHODS BELOW THIS ######
+     */
 
     @Override
     public void setVisibleXRangeMaximum(float maxXRange) {

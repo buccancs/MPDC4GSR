@@ -8,84 +8,79 @@ import android.os.Parcelable
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.tools.DeviceTools
 
-
+/**
+    * Modern navigation system to replace ARouter
+    * Provides type-safe navigation with Intent-based routing
+    */
 object NavigationManager {
-
-
+    /**
+    * Navigation builder class for fluent API
+    */
     class NavigationBuilder(private val route: String) {
     private val extras = Bundle()
     private var requestCode: Int? = null
 
+    fun withString(
+    key: String,
+    value: String,
+    ) = apply {
+    extras.putString(key, value)
+    }
 
-        fun withString(
-            key: String,
-            value: String,
-        ) = apply {
-            extras.putString(key, value)
-        }
+    fun withBoolean(
+    key: String,
+    value: Boolean,
+    ) = apply {
+    extras.putBoolean(key, value)
+    }
 
+    fun withInt(
+    key: String,
+    value: Int,
+    ) = apply {
+    extras.putInt(key, value)
+    }
 
-        fun withBoolean(
-            key: String,
-            value: Boolean,
-        ) = apply {
-            extras.putBoolean(key, value)
-        }
+    fun withFloat(
+    key: String,
+    value: Float,
+    ) = apply {
+    extras.putFloat(key, value)
+    }
 
+    fun withLong(
+    key: String,
+    value: Long,
+    ) = apply {
+    extras.putLong(key, value)
+    }
 
-        fun withInt(
-            key: String,
-            value: Int,
-        ) = apply {
-            extras.putInt(key, value)
-        }
+    fun withParcelable(
+    key: String,
+    value: Parcelable,
+    ) = apply {
+    extras.putParcelable(key, value)
+    }
 
+    fun withParcelableArrayList(
+    key: String,
+    value: ArrayList<out Parcelable>,
+    ) = apply {
+    extras.putParcelableArrayList(key, value)
+    }
 
-        fun withFloat(
-            key: String,
-            value: Float,
-        ) = apply {
-            extras.putFloat(key, value)
-        }
+    fun withExtras(bundle: Bundle) =
+    apply {
+    extras.putAll(bundle)
+    }
 
-
-        fun withLong(
-            key: String,
-            value: Long,
-        ) = apply {
-            extras.putLong(key, value)
-        }
-
-
-        fun withParcelable(
-            key: String,
-            value: Parcelable,
-        ) = apply {
-            extras.putParcelable(key, value)
-        }
-
-
-        fun withParcelableArrayList(
-            key: String,
-            value: ArrayList<out Parcelable>,
-        ) = apply {
-            extras.putParcelableArrayList(key, value)
-        }
-
-
-        fun withExtras(bundle: Bundle) =
-            apply {
-                extras.putAll(bundle)
-            }
-
-
-        fun navigation(
-            context: Context,
-            requestCode: Int? = null,
-        ) {
-            this.requestCode = requestCode
-            val intent = createIntent(context, route)
-            intent.putExtras(extras)
+    fun navigation(
+    context: Context,
+    requestCode: Int? = null,
+    ) {
+    this.requestCode = requestCode
+    val intent = createIntent(context, route)
+    intent.putExtras(extras)
 
     if (requestCode != null && context is Activity) {
     context.startActivityForResult(intent, requestCode)
@@ -95,15 +90,21 @@ object NavigationManager {
     }
     }
 
-
+    /**
+    * Build navigation to a specific route
+    */
     fun build(route: String): NavigationBuilder {
     return NavigationBuilder(route)
     }
 
-
+    /**
+    * Get instance for API compatibility with ARouter
+    */
     fun getInstance(): NavigationManager = this
 
-
+    /**
+    * Create Intent based on route configuration
+    */
     private fun createIntent(
     context: Context,
     route: String,
@@ -202,7 +203,9 @@ object NavigationManager {
     return Intent(context, activityClass)
     }
 
-
+    /**
+    * Device-aware navigation for image picking
+    */
     fun jumpImagePick(
     activity: Activity,
     isTC007: Boolean,
@@ -222,7 +225,9 @@ object NavigationManager {
     .navigation(activity, 101)
     }
 
-
+    /**
+    * Get class by name with error handling
+    */
     private fun getClassByName(className: String): Class<*> {
     return try {
     Class.forName(className)

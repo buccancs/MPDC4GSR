@@ -20,7 +20,10 @@ object TimeTool {
     return dateFormat.format(date)
     }
 
-
+    /**
+    * long: 时间戳(毫秒)
+    * 精确到秒
+    */
     @SuppressLint("SimpleDateFormat")
     fun reportTime(time: Long): String {
     val date = Date(time)
@@ -30,7 +33,10 @@ object TimeTool {
     return dateFormat.format(date)
     }
 
-
+    /**
+    * 时间转时间戳
+    * 2021-01-01 00:00:00 => 1609430400000
+    */
     @SuppressLint("SimpleDateFormat")
     fun strToTime(timeStr: String): Long {
     return try {
@@ -44,7 +50,9 @@ object TimeTool {
     }
     }
 
-
+    /**
+    * @param type 1:秒 2:分 3:时 4:天
+    */
     @SuppressLint("SimpleDateFormat")
     fun showDateType(
     time: Long,
@@ -66,7 +74,9 @@ object TimeTool {
     return dateFormat.format(date)
     }
 
-
+    /**
+    * 精度秒转分
+    */
     @SuppressLint("SimpleDateFormat")
     fun timeToMinute(
     time: Long,
@@ -85,7 +95,10 @@ object TimeTool {
     return strToTime(str)
     }
 
-
+    /**
+    * long: 时间戳(毫秒)
+    * 精确到分
+    */
     @SuppressLint("SimpleDateFormat")
     fun showTimeSecond(time: Long): String {
     val date = Date(time)
@@ -104,7 +117,9 @@ object TimeTool {
     return dateFormat.format(date)
     }
 
-
+    /**
+    * 视频时长
+    */
     @SuppressLint("SimpleDateFormat")
     fun showVideoTime(time: Long): String {
     val totalSeconds = time / 1000
@@ -118,7 +133,9 @@ object TimeTool {
     }
     }
 
-
+    /**
+    * 视频时长
+    */
     @SuppressLint("SimpleDateFormat")
     fun showVideoLongTime(time: Long): String {
     val totalSeconds = time / 1000

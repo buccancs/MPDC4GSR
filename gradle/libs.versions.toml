@@ -37,6 +37,7 @@ kotlinx-coroutines-core = {group = "org.jetbrains.kotlinx", name = "kotlinx-coro
 kotlinx-coroutines-android = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines"}
 # Networking
 fastjson = {group = "com.alibaba", name = "fastjson", version.ref = "fastjson2"}
+fastjson2 = {group = "com.alibaba.fastjson2", name = "fastjson2", version.ref = "fastjson2"}
 jsbridge = {group = "com.github.lzyzsd", name = "jsbridge", version.ref = "jsbridge"}
 retrofit2 = {group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit"}
 converter-gson = {group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit"}
@@ -238,5 +239,3 @@ huaweiAgcp = "1.6.0.300"
 androidGradlePlugin = "8.11.0"
 kotlinGradlePlugin = "2.1.0"
 desugarJdkLibs = "2.1.5"
-
-huawei-agconnect = { id = "com.huawei.agconnect", version.ref = "huaweiAgcp" }

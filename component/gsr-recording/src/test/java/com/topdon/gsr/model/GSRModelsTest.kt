@@ -3,7 +3,9 @@ package com.topdon.gsr.model
 import org.junit.Assert.*
 import org.junit.Test
 
-
+/**
+    * Unit tests for GSR data models
+    */
 class GSRModelsTest {
     @Test
     fun testGSRSampleCreation() {

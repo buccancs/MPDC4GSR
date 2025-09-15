@@ -9,7 +9,10 @@ import com.topdon.lib.core.utils.CommUtils
 import java.io.File
 
 object FileConfig {
-
+    /**
+    * 获取房屋检测缓存目录下指定文件.
+    * 注意，不执行子文件创建逻辑，若有需要需自行创建.
+    */
     fun getDetectImageDir(
     context: Context,
     child: String,
@@ -26,7 +29,10 @@ object FileConfig {
     }
     }
 
-
+    /**
+    * 获取房屋检测-签名图片缓存目录.
+    * 注意，不执行子文件创建逻辑，若有需要需自行创建.
+    */
     fun getSignImageDir(
     context: Context,
     child: String,
@@ -43,10 +49,14 @@ object FileConfig {
     }
     }
 
-
+    /**
+    * 固件升级包安装目录.
+    */
     fun getFirmwareFile(filename: String): File = File(Utils.getApp().getExternalFilesDir("firmware"), filename)
 
-
+    /**
+    * 图片报告路径.
+    */
     @JvmStatic
     fun getPdfDir(): String {
     return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -62,7 +72,9 @@ object FileConfig {
     }
     }
 
-
+    /**
+    * 温度监控导出 Excel 目录.
+    */
     @JvmStatic
     val excelDir: String
     get() {
@@ -79,7 +91,9 @@ object FileConfig {
     }
     }
 
-
+    /**
+    * 原有图库目录
+    */
     @JvmStatic
     val gallerySourDir: String
     get() {
@@ -91,7 +105,9 @@ object FileConfig {
     return result
     }
 
-
+    /**
+    * 老 APP TC001 图库目录，仅用于相册迁移
+    */
     @JvmStatic
     val oldTc001GalleryDir: String
     get() {
@@ -111,7 +127,9 @@ object FileConfig {
     else -> ts004GalleryDir
     }
 
-
+    /**
+    * 有线设备 图库目录
+    */
     @JvmStatic
     val lineGalleryDir: String
     get() {
@@ -124,7 +142,9 @@ object FileConfig {
     return path
     }
 
-
+    /**
+    * TS004 手机本地图库目录
+    */
     @JvmStatic
     val ts004GalleryDir: String
     get() {
@@ -137,7 +157,9 @@ object FileConfig {
     return path
     }
 
-
+    /**
+    * TC007 手机本地图库目录
+    */
     @JvmStatic
     val tc007GalleryDir: String
     get() {
@@ -150,7 +172,9 @@ object FileConfig {
     return path
     }
 
-
+    /**
+    * 有线设备 手机本地图库温度数据目录
+    */
     @JvmStatic
     val lineIrGalleryDir: String
     get() {
@@ -163,7 +187,9 @@ object FileConfig {
     return path
     }
 
-
+    /**
+    * TC007 手机本地图库温度数据目录
+    */
     @JvmStatic
     val tc007IrGalleryDir: String
     get() {
@@ -176,7 +202,9 @@ object FileConfig {
     return path
     }
 
-
+    /**
+    * 外部存储/Documents/APP名称/house
+    */
     @JvmStatic
     val documentsDir: String
     get() {

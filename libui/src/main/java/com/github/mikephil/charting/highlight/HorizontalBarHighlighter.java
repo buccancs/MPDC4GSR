@@ -11,7 +11,9 @@ import com.github.mikephil.charting.utils.MPPointD;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Created by Philipp Jahoda on 22/07/15.
+ */
 public class HorizontalBarHighlighter extends BarHighlighter {
 
 	public HorizontalBarHighlighter(BarDataProvider chart) {

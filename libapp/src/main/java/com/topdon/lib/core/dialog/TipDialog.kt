@@ -13,7 +13,10 @@ import androidx.core.view.isVisible
 import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipBinding
 
-
+/**
+    * 提示窗
+    * create by fylder on 2018/6/15
+    **/
 class TipDialog : Dialog {
     constructor(context: Context) : super(context)
 

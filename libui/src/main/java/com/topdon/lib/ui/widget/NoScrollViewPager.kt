@@ -5,8 +5,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
-
-
 class NoScrollViewPager : ViewPager {
     private var isCanScroll = false
 
@@ -24,7 +22,7 @@ class NoScrollViewPager : ViewPager {
     }
 
     override fun setCurrentItem(item: Int) {
-        
-        super.setCurrentItem(item, false)
+    // 去除切换时动画
+    super.setCurrentItem(item, false)
     }
 }

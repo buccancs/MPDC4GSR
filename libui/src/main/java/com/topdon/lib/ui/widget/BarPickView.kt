@@ -14,25 +14,32 @@ import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
 
-
-
-
-
+/**
+    * 3D 编辑使用的，长地像 SeekBar 的那个条条.
+    */
 class BarPickView : View {
     companion object {
+    /**
+    * 默认条条背景颜色.
+    */
+    @ColorInt
+    private const val DEFAULT_BG_COLOR = 0xff787878.toInt()
 
-        @ColorInt
-        private const val DEFAULT_BG_COLOR = 0xff787878.toInt()
+    /**
+    * 默认进度条颜色.
+    */
+    @ColorInt
+    private const val DEFAULT_PROGRESS_COLOR = 0xffffffff.toInt()
 
+    /**
+    * Thumb 圆角尺寸，单位 dp.
+    */
+    private const val THUMB_CORNERS = 11f
 
-        @ColorInt
-        private const val DEFAULT_PROGRESS_COLOR = 0xffffffff.toInt()
-
-
-        private const val THUMB_CORNERS = 11f
-
-
-        private const val THUMB_STROKE_WIDTH = 1.5f
+    /**
+    * Thumb 描边尺寸，单位 dp.
+    */
+    private const val THUMB_STROKE_WIDTH = 1.5f
     }
 
     var onStartTrackingTouch: ((progress: Int, max: Int) -> Unit)? = null
@@ -41,12 +48,16 @@ class BarPickView : View {
 
     var onStopTrackingTouch: ((progress: Int, max: Int) -> Unit)? = null
 
-
+    /**
+    * 根据进度格式化指示 View 文字.
+    */
     var valueFormatListener: ((progress: Int) -> String) = {
     it.toString()
     }
 
-
+    /**
+    * 条条进度最大值.
+    */
     var max: Int = 100
     set(value) {
     if (field != value) {
@@ -56,34 +67,42 @@ class BarPickView : View {
     }
 
     var min: Int = 0
-        set(value) {
-            if (field != value) {
-                field = value
-                invalidate()
-            }
-        }
-
-
-    private var progress: Int = 0
-        set(value) {
-            if (field != value) {
-                field = value.coerceAtLeast(min).coerceAtMost(max)
-                invalidate()
-            }
-        }
-
-    fun setProgressAndRefresh(progress: Int) {
-        this.progress = progress
-        onProgressChanged?.invoke(this.progress, max)
+    set(value) {
+    if (field != value) {
+    field = value
+    invalidate()
+    }
     }
 
+    /**
+    * 条条当前进度.
+    */
+    private var progress: Int = 0
+    set(value) {
+    if (field != value) {
+    field = value.coerceAtLeast(min).coerceAtMost(max)
+    invalidate()
+    }
+    }
 
+    fun setProgressAndRefresh(progress: Int) {
+    this.progress = progress
+    onProgressChanged?.invoke(this.progress, max)
+    }
+
+    /**
+    * 条条尺寸，单位 px（横向时是高度，竖向时是宽度）
+    */
     private val barSize: Int
 
-
+    /**
+    * 顺时针旋转角度，仅支持 0、90、180、270.
+    */
     private val rotate: Int
 
-
+    /**
+    * 标签文字.
+    */
     private val labelText: String
 
     private val path = Path()
@@ -146,7 +165,9 @@ class BarPickView : View {
     return true
     }
 
-
+    /**
+    * 计算 Thumb 宽度，单位 px.
+    */
     private fun computeThumbWidth(): Int {
     val minTextWidth = paint.measureText(valueFormatListener.invoke(min)).toInt()
     val maxTextWidth = paint.measureText(valueFormatListener.invoke(max)).toInt()
@@ -195,11 +216,8 @@ class BarPickView : View {
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        // Canvas is never null in onDraw, removing unnecessary null check
-
-        computeBarRect()
-        computeThumbRect()
+    super.onDraw(canvas)
+    // Canvas is never null in onDraw, removing unnecessary null check
 
     computeBarRect()
     computeThumbRect()
@@ -212,7 +230,6 @@ class BarPickView : View {
     drawThumb(canvas)
     drawText(canvas)
     }
-
 
     private fun computeBarRect() {
     val textHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top
@@ -239,7 +256,6 @@ class BarPickView : View {
     barRect.set(left, top, right, bottom)
     }
     }
-
 
     private fun computeThumbRect() {
     val thumbWidth = computeThumbWidth()
@@ -269,7 +285,6 @@ class BarPickView : View {
     }
     }
 
-
     private fun clipToBarRect(canvas: Canvas) {
     canvas.save()
     val radius = (barSize / 2).toFloat()
@@ -295,7 +310,6 @@ class BarPickView : View {
     canvas.clipPath(path)
     }
     }
-
 
     private fun drawBgBar(canvas: Canvas) {
     paint.color = DEFAULT_BG_COLOR
@@ -329,7 +343,6 @@ class BarPickView : View {
     }
     }
 
-
     private fun drawProgress(canvas: Canvas) {
     paint.color = DEFAULT_PROGRESS_COLOR
 
@@ -362,7 +375,6 @@ class BarPickView : View {
     }
     }
 
-
     private fun drawThumb(canvas: Canvas) {
     paint.style = Paint.Style.STROKE
     val radius = SizeUtils.dp2px(THUMB_CORNERS).toFloat()
@@ -375,7 +387,6 @@ class BarPickView : View {
     val y = thumbRect.top + SizeUtils.dp2px(2f) - paint.fontMetricsInt.top
     canvas.drawText(progressText, x, y, paint)
     }
-
 
     private fun drawText(canvas: Canvas) {
     if (rotate == 0 || rotate == 180) {

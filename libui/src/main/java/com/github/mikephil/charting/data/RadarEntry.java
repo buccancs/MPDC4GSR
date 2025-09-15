@@ -2,7 +2,9 @@ package com.github.mikephil.charting.data;
 
 import android.annotation.SuppressLint;
 
-
+/**
+ * Created by philipp on 13/06/16.
+ */
 @SuppressLint("ParcelCreator")
 public class RadarEntry extends Entry {
 
@@ -14,7 +16,11 @@ public class RadarEntry extends Entry {
         super(0f, value, data);
     }
 
-
+    /**
+     * This is the same as getY(). Returns the value of the RadarEntry.
+     *
+     * @return
+     */
     public float getValue() {
         return getY();
     }

@@ -28,7 +28,9 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
     protected BarDataProvider mChart;
 
-
+    /**
+     * the rect object that is used for drawing the bars
+     */
     protected RectF mBarRect = new RectF();
 
     protected BarBuffer[] mBarBuffers;
@@ -187,6 +189,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                         dataSet.getGradientColor(j / 4).getEndColor(),
                         android.graphics.Shader.TileMode.MIRROR));
             }
+
 
             c.drawRect(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],
                     buffer.buffer[j + 3], mRenderPaint);
@@ -493,7 +496,10 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
         }
     }
 
-
+    /**
+     * Sets the drawing position of the highlight object based on the riven bar-rect.
+     * @param high
+     */
     protected void setHighlightDrawPos(Highlight high, RectF bar) {
         high.setDraw(bar.centerX(), bar.top);
     }

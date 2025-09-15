@@ -13,7 +13,10 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipProgressBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-
+/**
+    * 提示窗
+    * create by fylder on 2018/6/15
+    **/
 class TipProgressDialog : Dialog {
     constructor(context: Context) : super(context)
 
@@ -93,7 +96,9 @@ class TipProgressDialog : Dialog {
     }
     }
 
-
+    /**
+    * 提交回调
+    */
     interface OnClickListener {
     fun onClick(dialog: DialogInterface)
     }

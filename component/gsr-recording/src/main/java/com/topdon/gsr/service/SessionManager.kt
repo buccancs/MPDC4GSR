@@ -6,7 +6,10 @@ import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.util.TimeUtil
 import java.util.concurrent.ConcurrentHashMap
 
-
+/**
+    * Session lifecycle and metadata management
+    * Fixed memory leak by using application context and WeakReference
+    */
 class SessionManager private constructor(context: Context) {
     companion object {
     private const val TAG = "SessionManager"
@@ -48,7 +51,9 @@ class SessionManager private constructor(context: Context) {
     sessionListeners.remove(listener)
     }
 
-
+    /**
+    * Create a new session
+    */
     fun createSession(
     sessionId: String? = null,
     participantId: String? = null,
@@ -74,17 +79,23 @@ class SessionManager private constructor(context: Context) {
     return session
     }
 
-
+    /**
+    * Get active session by ID
+    */
     fun getSession(sessionId: String): SessionInfo? {
     return activeSessions[sessionId]
     }
 
-
+    /**
+    * Get all active sessions
+    */
     fun getActiveSessions(): List<SessionInfo> {
     return activeSessions.values.toList()
     }
 
-
+    /**
+    * Update session metadata
+    */
     fun updateSession(
     sessionId: String,
     updates: (SessionInfo) -> Unit,
@@ -98,7 +109,9 @@ class SessionManager private constructor(context: Context) {
     return true
     }
 
-
+    /**
+    * Complete a session (mark as ended)
+    */
     fun completeSession(sessionId: String): SessionInfo? {
     val session = activeSessions.remove(sessionId) ?: return null
 
@@ -109,7 +122,9 @@ class SessionManager private constructor(context: Context) {
     return session
     }
 
-
+    /**
+    * Force complete all active sessions
+    */
     fun completeAllSessions(): List<SessionInfo> {
     val completed = mutableListOf<SessionInfo>()
 
@@ -120,12 +135,16 @@ class SessionManager private constructor(context: Context) {
     return completed
     }
 
-
+    /**
+    * Check if session is active
+    */
     fun isSessionActive(sessionId: String): Boolean {
     return activeSessions.containsKey(sessionId)
     }
 
-
+    /**
+    * Get session statistics
+    */
     fun getSessionStats(sessionId: String): SessionStats? {
     val session = activeSessions[sessionId] ?: return null
 
@@ -138,7 +157,9 @@ class SessionManager private constructor(context: Context) {
     )
     }
 
-
+    /**
+    * Report session error
+    */
     fun reportSessionError(
     sessionId: String,
     error: String,

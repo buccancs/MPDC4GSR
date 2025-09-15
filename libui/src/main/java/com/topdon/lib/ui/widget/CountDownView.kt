@@ -15,10 +15,8 @@ import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import com.topdon.lib.ui.R as UiR
 
-
-
 class CountDownView : View {
-    // 圆环color
+    // 圆环颜色
     private var mRingColor = 0
 
     // 圆环宽度
@@ -48,7 +46,9 @@ class CountDownView : View {
 
     private var valueAnimator: ValueAnimator? = null
 
-
+    /**
+    * 监听事件
+    */
     private var mListener: OnCountDownListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -125,14 +125,18 @@ class CountDownView : View {
     )
     }
 
-
+    /**
+    * 设置倒计时间 单位秒
+    */
     fun setCountdownTime(mCountdownTime: Int) {
     this.mCountdownTime = mCountdownTime
     mRingText = mCountdownTime.toString()
     invalidate()
     }
 
-
+    /**
+    * 动画
+    */
     private fun getValueAnimator(countdownTime: Long): ValueAnimator? {
     val valueAnimator = ValueAnimator.ofFloat(0f, 100f)
     valueAnimator.duration = countdownTime
@@ -166,7 +170,9 @@ class CountDownView : View {
     canvas.drawText(mRingText!!, mRectF!!.centerX(), baseline.toFloat(), mTextPaint)
     }
 
-
+    /**
+    * 开始倒计时
+    */
     fun startCountDown() {
     valueAnimator = getValueAnimator((mCountdownTime * 1000).toLong())
     valueAnimator!!.addUpdateListener { animation ->
@@ -188,7 +194,9 @@ class CountDownView : View {
     )
     }
 
-
+    /**
+    * 停止倒计时
+    */
     fun stopCountDown() {
     if (valueAnimator!!.isRunning) {
     valueAnimator!!.cancel()
@@ -198,8 +206,6 @@ class CountDownView : View {
     fun setOnCountDownListener(mListener: OnCountDownListener) {
     this.mListener = mListener
     }
-
-
 
     interface OnCountDownListener {
     fun countDownFinished()

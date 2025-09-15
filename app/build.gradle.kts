@@ -5,7 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
+    kotlin("kapt") // Re-enabled for Shimmer integration
 }
 
 kapt {
@@ -264,7 +264,7 @@ dependencies {
     implementation(project(":BleModule"))
 
     implementation(libs.arouter.api)
-    kapt(libs.arouter.compiler)
+    kapt(libs.arouter.compiler) // Re-enabled for production build
 
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))

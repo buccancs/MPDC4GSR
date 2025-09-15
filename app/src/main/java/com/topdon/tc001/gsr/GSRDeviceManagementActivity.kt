@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,9 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivityGsrDeviceManagementBinding
 import com.topdon.ble.util.BluetoothPermissionUtils
-import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,10 +42,9 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private var isScanning = false
     private var isConnecting = false
 
-    override fun initContentLayoutId() = R.layout.activity_gsr_device_management
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_gsr_device_management)
 
         prefs = getSharedPreferences("gsr_device_prefs", Context.MODE_PRIVATE)
 
@@ -61,16 +60,16 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.title = "GSR Device Management"
 
         // Setup click listeners
-        binding.scanDevicesButton.setOnClickListener(this)
-        binding.stopScanButton.setOnClickListener(this)
-        binding.refreshButton.setOnClickListener(this)
-        binding.settingsButton.setOnClickListener(this)
+        findViewById<View>(R.id.scanDevicesButton)?.setOnClickListener(this)
+        findViewById<View>(R.id.stopScanButton)?.setOnClickListener(this)
+        findViewById<View>(R.id.refreshButton)?.setOnClickListener(this)
+        findViewById<View>(R.id.settingsButton)?.setOnClickListener(this)
 
         // Setup device connection status indicators
         updateConnectionStatus("Not Connected")
 
         // Setup scanning indicator
-        binding.scanningIndicator.visibility = View.GONE
+        findViewById<View>(R.id.scanningIndicator)?.visibility = View.GONE
 
         // Setup device list empty state
         updateDeviceListState()
@@ -123,7 +122,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                 connectToDevice(device)
             }
 
-        binding.deviceRecyclerView.apply {
+        findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.deviceRecyclerView)?.apply {
             layoutManager = LinearLayoutManager(this@GSRDeviceManagementActivity)
             adapter = deviceAdapter
         }
@@ -312,14 +311,14 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun updateScanningState(scanning: Boolean) {
-        binding.scanningIndicator.visibility = if (scanning) View.VISIBLE else View.GONE
-        binding.scanDevicesButton.isEnabled = !scanning
-        binding.stopScanButton.visibility = if (scanning) View.VISIBLE else View.GONE
-        binding.scanProgressText.text = if (scanning) "Scanning for devices..." else ""
+        findViewById<View>(R.id.scanningIndicator)?.visibility = if (scanning) View.VISIBLE else View.GONE
+        findViewById<Button>(R.id.scanDevicesButton)?.isEnabled = !scanning
+        findViewById<View>(R.id.stopScanButton)?.visibility = if (scanning) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.scanProgressText)?.text = if (scanning) "Scanning for devices..." else ""
     }
 
     private fun updateConnectionStatus(status: String) {
-        binding.connectionStatusText.text = status
+        findViewById<TextView>(R.id.connectionStatusText)?.text = status
 
         val color =
             when {
@@ -335,24 +334,24 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
                 else -> getColor(android.R.color.holo_red_dark)
             }
-        binding.connectionStatusText.setTextColor(color)
+        findViewById<TextView>(R.id.connectionStatusText)?.setTextColor(color)
     }
 
     private fun updateDeviceListState() {
         if (discoveredDevices.isEmpty()) {
-            binding.emptyStateText.visibility = View.VISIBLE
-            binding.emptyStateText.text =
+            findViewById<TextView>(R.id.emptyStateText)?.visibility = View.VISIBLE
+            findViewById<TextView>(R.id.emptyStateText)?.text =
                 "No devices found. Tap 'Scan Devices' to discover GSR sensors."
         } else {
-            binding.emptyStateText.visibility = View.GONE
+            findViewById<TextView>(R.id.emptyStateText)?.visibility = View.GONE
         }
 
-        binding.deviceCountText.text = "${discoveredDevices.size} device(s) found"
+        findViewById<TextView>(R.id.deviceCountText)?.text = "${discoveredDevices.size} device(s) found"
     }
 
     private fun enableDeviceOperations(enabled: Boolean) {
-        binding.scanDevicesButton.isEnabled = enabled && !isScanning
-        binding.refreshButton.isEnabled = enabled
+        findViewById<Button>(R.id.scanDevicesButton)?.isEnabled = enabled && !isScanning
+        findViewById<Button>(R.id.refreshButton)?.isEnabled = enabled
     }
 
     private fun showPermissionRequiredDialog() {

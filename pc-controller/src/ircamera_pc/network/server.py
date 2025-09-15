@@ -1411,29 +1411,7 @@ class NetworkServer:
             logger.error(f"Error handling GSR stream end: {e}")
             return {"message_type": "error", "error": str(e)}
 
-    async def _handle_time_sync_request(
-            self, message: Dict[str, Any], writer: asyncio.StreamWriter
-    ) -> Dict[str, Any]:
-        """Handle time synchronization request from Android device"""
-        try:
-            client_timestamp = message.get("client_timestamp")
 
-            if client_timestamp is None:
-                return {"message_type": "error", "error": "Missing client_timestamp"}
-
-            # Server timestamp in nanoseconds
-            server_timestamp = time.time_ns()
-
-            return {
-                "message_type": "time_sync_response",
-                "client_timestamp": client_timestamp,
-                "server_timestamp": server_timestamp,
-                "server_time": time.time(),
-            }
-
-        except Exception as e:
-            logger.error(f"Error handling time sync request: {e}")
-            return {"message_type": "error", "error": str(e)}
 
     def get_gsr_session_stats(self) -> Dict[str, Any]:
         """Get GSR session statistics for monitoring"""

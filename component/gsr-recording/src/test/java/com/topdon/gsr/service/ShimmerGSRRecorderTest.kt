@@ -46,7 +46,7 @@ class ShimmerGSRRecorderTest {
 
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED)
 
-        recorder = ShimmerGSRRecorder(context, samplingRateHz = 128)
+        recorder = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 128)
     }
 
     @Test
@@ -168,8 +168,8 @@ class ShimmerGSRRecorderTest {
     @Test
     fun testMultipleInstances() {
 
-        val recorder2 = ShimmerGSRRecorder(context, samplingRateHz = 64)
-        val recorder3 = ShimmerGSRRecorder(context, samplingRateHz = 512)
+        val recorder2 = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 64)
+        val recorder3 = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 512)
 
         assertNotNull("Second recorder should be created", recorder2)
         assertNotNull("Third recorder should be created", recorder3)
@@ -183,18 +183,21 @@ class ShimmerGSRRecorderTest {
         // Test Step 6: Recording mode support
         val streamingRecorder = ShimmerGSRRecorder(
             context,
+            MockShimmerDeviceFactory(),
             samplingRateHz = 128,
             recordingMode = ShimmerGSRRecorder.RecordingMode.STREAMING
         )
 
         val loggingRecorder = ShimmerGSRRecorder(
             context,
+            MockShimmerDeviceFactory(),
             samplingRateHz = 128,
             recordingMode = ShimmerGSRRecorder.RecordingMode.LOGGING
         )
 
         val logAndStreamRecorder = ShimmerGSRRecorder(
             context,
+            MockShimmerDeviceFactory(),
             samplingRateHz = 128,
             recordingMode = ShimmerGSRRecorder.RecordingMode.LOG_AND_STREAM
         )

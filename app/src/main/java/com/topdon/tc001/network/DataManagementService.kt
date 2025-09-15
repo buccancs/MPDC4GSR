@@ -180,8 +180,8 @@ class DataManagementService(private val context: Context) {
                 mapOf(
                     "session_id" to sessionId,
                     "device_id" to deviceId,
-                    "participant_id" to (participantId ?: "anonymous"),
-                    "study_id" to (studyId ?: "default"),
+                    "participant_id" to (participantId ?: "anonymous") as String,
+                    "study_id" to (studyId ?: "default") as String,
                     "conditions" to conditions.joinToString(","),
                 ),
         )
@@ -316,16 +316,24 @@ class DataManagementService(private val context: Context) {
                         else -> FileType.OTHER
                     }
 
+                val uploadFileType = when (fileType) {
+                    FileType.VIDEO -> FileUploadService.FileType.VISUAL_VIDEO
+                    FileType.CSV -> FileUploadService.FileType.GSR_DATA  
+                    FileType.JSON -> FileUploadService.FileType.METADATA
+                    FileType.IMAGE -> FileUploadService.FileType.METADATA
+                    FileType.OTHER -> FileUploadService.FileType.METADATA
+                }
+
                 val jobId =
                     uploadService.queueUpload(
                         filePath = fileMetadata.filePath,
                         sessionId = sessionId,
                         deviceId = fileMetadata.deviceId,
-                        fileType = fileType,
+                        fileType = uploadFileType,
                     )
 
                 fileMetadata.uploadJobId = jobId
-                fileMetadata.uploadStatus = FileUploadService.UploadStatus.PENDING
+                fileMetadata.uploadStatus = UploadStatus.PENDING
 
                 uploadJobIds.add(jobId)
             } catch (e: Exception) {
@@ -335,7 +343,7 @@ class DataManagementService(private val context: Context) {
                     details =
                         mapOf(
                             "file_id" to fileMetadata.fileId,
-                            "error" to e.message,
+                            "error" to (e.message ?: "Unknown error"),
                         ),
                 )
             }
@@ -402,7 +410,7 @@ class DataManagementService(private val context: Context) {
                     mapOf(
                         "session_id" to sessionId,
                         "format" to format.name,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
             return null
@@ -526,7 +534,7 @@ class DataManagementService(private val context: Context) {
                 details =
                     mapOf(
                         "session_id" to sessionId,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
             return false
@@ -563,7 +571,7 @@ class DataManagementService(private val context: Context) {
             StructuredLogger.logInfo(
                 TAG,
                 "load_sessions_error",
-                mapOf("error" to e.message),
+                mapOf("error" to (e.message ?: "Unknown error")),
             )
         }
     }
@@ -614,7 +622,7 @@ class DataManagementService(private val context: Context) {
                 details =
                     mapOf(
                         "metadata_file" to metadataFile.absolutePath,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
         }
@@ -665,7 +673,7 @@ class DataManagementService(private val context: Context) {
                 details =
                     mapOf(
                         "session_id" to session.sessionId,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
         }
@@ -709,7 +717,7 @@ class DataManagementService(private val context: Context) {
                 details =
                     mapOf(
                         "session_id" to session.sessionId,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
         }
@@ -761,7 +769,7 @@ class DataManagementService(private val context: Context) {
                 details =
                     mapOf(
                         "session_id" to session.sessionId,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
         }

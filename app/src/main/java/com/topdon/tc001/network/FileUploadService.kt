@@ -42,7 +42,7 @@ class FileUploadService(private val context: Context) {
         }
     }
 
-    private val logger = StructuredLogger.getInstance()
+    private val logger = StructuredLogger.getInstance(context)
     private val activeUploads = ConcurrentHashMap<String, UploadJob>()
     private val uploadQueue = Channel<String>(Channel.UNLIMITED)
     private val concurrentUploads = AtomicLong(0)
@@ -93,9 +93,9 @@ class FileUploadService(private val context: Context) {
         this.webSocketClient = webSocketClient
         isActive.set(true)
 
-        logger.logEvent(
-            component = TAG,
-            event = "service_initialized",
+        StructuredLogger.logInfo(
+            TAG,
+            "service_initialized",
             details =
                 mapOf(
                     "chunk_size" to chunkSize,
@@ -140,9 +140,9 @@ class FileUploadService(private val context: Context) {
             if (existingOffset > 0) {
                 uploadJob.resumeOffset = existingOffset
                 uploadJob.bytesUploaded = existingOffset
-                logger.logEvent(
-                    component = TAG,
-                    event = "upload_resume",
+                StructuredLogger.logInfo(
+                    TAG,
+                    "upload_resume",
                     details =
                         mapOf(
                             "job_id" to jobId,
@@ -155,9 +155,9 @@ class FileUploadService(private val context: Context) {
             activeUploads[jobId] = uploadJob
             uploadQueue.send(jobId)
 
-            logger.logEvent(
-                component = TAG,
-                event = "upload_queued",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_queued",
                 details =
                     mapOf(
                         "job_id" to jobId,
@@ -169,9 +169,9 @@ class FileUploadService(private val context: Context) {
 
             return jobId
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "upload_queue_error",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_queue_error",
                 details =
                     mapOf(
                         "file_path" to filePath,
@@ -188,9 +188,9 @@ class FileUploadService(private val context: Context) {
         job.status = UploadStatus.CANCELLED
         job.endTime = System.currentTimeMillis()
 
-        logger.logEvent(
-            component = TAG,
-            event = "upload_cancelled",
+        StructuredLogger.logInfo(
+            TAG,
+            "upload_cancelled",
             details =
                 mapOf(
                     "job_id" to jobId,
@@ -206,9 +206,9 @@ class FileUploadService(private val context: Context) {
 
         if (job.status == UploadStatus.IN_PROGRESS) {
             job.status = UploadStatus.PAUSED
-            logger.logEvent(
-                component = TAG,
-                event = "upload_paused",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_paused",
                 details =
                     mapOf(
                         "job_id" to jobId,
@@ -229,9 +229,9 @@ class FileUploadService(private val context: Context) {
             job.status = UploadStatus.PENDING
             uploadQueue.send(jobId)
 
-            logger.logEvent(
-                component = TAG,
-                event = "upload_resumed",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_resumed",
                 details =
                     mapOf(
                         "job_id" to jobId,
@@ -288,9 +288,9 @@ class FileUploadService(private val context: Context) {
                         executeUpload(job)
                     }
                 } catch (e: Exception) {
-                    logger.logEvent(
-                        component = TAG,
-                        event = "upload_processor_error",
+                    StructuredLogger.logInfo(
+                        TAG,
+                        "upload_processor_error",
                         details = mapOf("error" to e.message),
                     )
                     delay(5000) // Wait before retrying
@@ -306,9 +306,9 @@ class FileUploadService(private val context: Context) {
             job.status = UploadStatus.IN_PROGRESS
             job.startTime = System.currentTimeMillis()
 
-            logger.logEvent(
-                component = TAG,
-                event = "upload_started",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_started",
                 details =
                     mapOf(
                         "job_id" to job.jobId,
@@ -334,9 +334,9 @@ class FileUploadService(private val context: Context) {
             job.endTime = System.currentTimeMillis()
             job.bytesUploaded = job.fileSize
 
-            logger.logEvent(
-                component = TAG,
-                event = "upload_completed",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_completed",
                 details =
                     mapOf(
                         "job_id" to job.jobId,
@@ -355,9 +355,9 @@ class FileUploadService(private val context: Context) {
             job.errorMessage = e.message
             job.retryCount++
 
-            logger.logEvent(
-                component = TAG,
-                event = "upload_failed",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_failed",
                 details =
                     mapOf(
                         "job_id" to job.jobId,
@@ -372,9 +372,9 @@ class FileUploadService(private val context: Context) {
                 job.status = UploadStatus.PENDING
                 uploadQueue.send(job.jobId)
 
-                logger.logEvent(
-                    component = TAG,
-                    event = "upload_retry_scheduled",
+                StructuredLogger.logInfo(
+                    TAG,
+                    "upload_retry_scheduled",
                     details =
                         mapOf(
                             "job_id" to job.jobId,
@@ -406,9 +406,9 @@ class FileUploadService(private val context: Context) {
 
             webSocketClient?.sendMessage(initMessage.toString()) ?: false
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "upload_initiate_error",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_initiate_error",
                 details =
                     mapOf(
                         "job_id" to job.jobId,
@@ -477,9 +477,9 @@ class FileUploadService(private val context: Context) {
 
             webSocketClient?.sendMessage(verifyMessage.toString()) ?: false
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "upload_verify_error",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_verify_error",
                 details =
                     mapOf(
                         "job_id" to job.jobId,
@@ -504,9 +504,9 @@ class FileUploadService(private val context: Context) {
 
             0L
         } catch (e: Exception) {
-            logger.logEvent(
-                component = TAG,
-                event = "upload_check_error",
+            StructuredLogger.logInfo(
+                TAG,
+                "upload_check_error",
                 details =
                     mapOf(
                         "job_id" to job.jobId,
@@ -551,9 +551,9 @@ class FileUploadService(private val context: Context) {
             }
         }
 
-        logger.logEvent(
-            component = TAG,
-            event = "service_shutdown",
+        StructuredLogger.logInfo(
+            TAG,
+            "service_shutdown",
             details =
                 mapOf(
                     "active_uploads" to activeUploads.size,

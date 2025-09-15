@@ -448,7 +448,7 @@ class DeviceManager:
                 port=port,
                 device_type=DeviceType.ANDROID_SENSOR_NODE,  # Default type
                 attributes={},
-                discovered_at=datetime.now(),
+                discovered_at=datetime.now(timezone.utc),
                 last_seen=datetime.now()
             )
             

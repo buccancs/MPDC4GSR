@@ -224,7 +224,7 @@ class DeviceRegistry:
         
         # Update connection timestamps
         if new_state == DeviceConnectionState.ONLINE:
-            device.connected_at = datetime.now()
+            device.connected_at = datetime.now(timezone.utc)
             device.total_connections += 1
         elif old_state == DeviceConnectionState.ONLINE and new_state == DeviceConnectionState.DISCONNECTED:
             device.total_disconnections += 1

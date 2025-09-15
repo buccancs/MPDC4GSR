@@ -183,7 +183,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 val intent = Intent(this, MultiModalRecordingActivity::class.java)
                 startActivity(intent)
             }
-            }
         }
     }
 
@@ -333,3 +332,4 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             recordingController.cleanup()
         }
     }
+}

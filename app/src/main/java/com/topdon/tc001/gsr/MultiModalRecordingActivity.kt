@@ -60,6 +60,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private var currentSession: SessionInfo? = null
     private var sampleCount = 0L
     private var syncMarkCount = 0
+    
+    // Session information
+    private var sessionId: String = ""
+    private var participantId: String? = null
 
     // Permission handling
     private lateinit var permissionController: PermissionController
@@ -497,12 +501,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun proceedWithRecordingStart() {
-        val sessionId =
-            binding.participantIdInput.text.toString().trim().ifEmpty {
-                TimeUtil.generateSessionId("MultiModal")
-            }
-        val participantId =
-            binding.participantIdInput.text.toString().trim().takeIf { it.isNotEmpty() }
+        sessionId = binding.participantIdInput.text.toString().trim().ifEmpty {
+            TimeUtil.generateSessionId("MultiModal")
+        }
+        participantId = binding.participantIdInput.text.toString().trim().takeIf { it.isNotEmpty() }
 
         // Start RGB camera recording if enabled
         if (binding.enableVideoSwitch.isChecked) {
@@ -535,16 +537,23 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
             rgbCameraRecorder?.updateSettings(cameraSettings)
 
-            val cameraStarted = rgbCameraRecorder?.startRecording(sessionId) ?: false
-            if (!cameraStarted) {
-                // Reset guard flags on failure
-                isStartingRecording = false
-                binding.startButton.isEnabled = true
-                binding.startButton.text = "Start Recording"
-                binding.statusText.text = "Failed to start camera recording"
-                Toast.makeText(this, "Failed to start RGB camera recording", Toast.LENGTH_LONG)
-                    .show()
-                return
+            lifecycleScope.launch {
+                val cameraStarted = rgbCameraRecorder?.startRecording(sessionId) ?: false
+                if (!cameraStarted) {
+                    // Reset guard flags on failure
+                    runOnUiThread {
+                        isStartingRecording = false
+                        binding.startButton.isEnabled = true
+                        binding.startButton.text = "Start Recording"
+                        binding.statusText.text = "Failed to start camera recording"
+                        Toast.makeText(
+                            this@MultiModalRecordingActivity,
+                            "Failed to start RGB camera recording",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    return@launch
+                }
             }
         }
 
@@ -701,35 +710,46 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun stopRecording() {
-        // Stop enhanced recording service
-        try {
-            com.topdon.gsr.service.EnhancedRecordingService.stopRecording(this)
-            Log.i(TAG, "Enhanced recording service stopped")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to stop enhanced recording service", e)
-            // Continue - not critical
-        }
+        lifecycleScope.launch {
+            // Stop enhanced recording service
+            try {
+                com.topdon.gsr.service.EnhancedRecordingService.stopRecording(this@MultiModalRecordingActivity)
+                Log.i(TAG, "Enhanced recording service stopped")
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to stop enhanced recording service", e)
+                // Continue - not critical
+            }
 
-        // Stop RGB camera recording
-        val videoFile = rgbCameraRecorder?.stopRecording()
+            // Stop RGB camera recording
+            val videoFile = rgbCameraRecorder?.stopRecording()
 
-        val session = gsrRecorder.stopRecording()
-        session?.let {
-            Log.i(TAG, "Multi-modal recording stopped: ${it.sessionId}")
+            val session = gsrRecorder.stopRecording()
+            session?.let {
+                Log.i(TAG, "Multi-modal recording stopped: ${it.sessionId}")
 
-            val recordingInfo = mutableListOf<String>()
-            videoFile?.let { file -> recordingInfo.add("Video: ${file.name}") }
+                val recordingInfo = mutableListOf<String>()
+                videoFile?.let { file -> recordingInfo.add("Video: ${file.name}") }
             rgbCameraRecorder?.getRawImagesDirectory()?.let { dir ->
                 val rawCount = rgbCameraRecorder?.getRawCaptureCount() ?: 0
                 recordingInfo.add("RAW images: $rawCount in ${dir.name}")
             }
             recordingInfo.add("GSR samples: ${it.sampleCount}")
 
-            binding.statusText.text = "Recording completed. ${recordingInfo.joinToString(", ")}"
+            runOnUiThread {
+                binding.statusText.text = "Recording completed. ${recordingInfo.joinToString(", ")}"
+                isRecording = false
+                updateUI()
+            }
         }
 
-        isRecording = false
-        updateUI()
+        }
+
+        runOnUiThread {
+            if (!isRecording) {
+                isRecording = false
+                updateUI()
+            }
+        }
     }
 
     private fun triggerSyncEvent() {

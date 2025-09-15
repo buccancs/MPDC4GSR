@@ -55,20 +55,6 @@ class DataManagementService(private val context: Context) {
         }
     }
 
-    data class SessionData(
-        val sessionId: String,
-        val startTime: Long,
-        val status: SessionStatus,
-        val files: MutableList<String> = mutableListOf()
-    )
-
-    data class FileMetadata(
-        val filePath: String,
-        val fileType: FileType,
-        val size: Long,
-        val timestamp: Long
-    )
-
     private val logger = StructuredLogger.getInstance(context)
     private val activeSessions = ConcurrentHashMap<String, SessionData>()
     private val fileRegistry = ConcurrentHashMap<String, FileMetadata>()

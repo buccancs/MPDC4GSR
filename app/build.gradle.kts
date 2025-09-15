@@ -5,12 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt") // Keep kapt for ARouter compatibility
-    id("com.google.devtools.ksp") // Use KSP plugin from classpath
-}
-
-ksp {
-    arg("AROUTER_MODULE_NAME", project.name)
+    id("com.google.devtools.ksp") // Use KSP for Room and Glide
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -30,13 +25,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
-
-        // Configure ARouter annotation processor for kapt
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments["AROUTER_MODULE_NAME"] = project.name
-            }
-        }
 
         ndk {
             abiFilters += listOf("arm64-v8a")
@@ -272,8 +260,9 @@ dependencies {
 
     implementation(project(":BleModule"))
 
-    implementation(libs.arouter.api)
-    kapt(libs.arouter.compiler) // Use kapt for ARouter compiler compatibility
+    // Navigation - Using NavigationManager instead of ARouter
+    // implementation(libs.arouter.api)
+    // kapt(libs.arouter.compiler) // Removed ARouter to eliminate kapt dependency
 
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))

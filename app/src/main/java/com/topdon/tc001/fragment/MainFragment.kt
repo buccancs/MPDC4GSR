@@ -456,14 +456,14 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         .navigation(requireContext())
                 }
             }
-            .setNeutralListener("GSR Demo") {
-                // GSR Demo
-                NavigationManager.getInstance()
-                    .build(RouterConfig.GSR_DEMO)
-                    .navigation(requireContext())
-            }
-            .create()
-            .show()
+            // Remove setNeutralListener since it's not available in TipDialog API
+            // .setNeutralListener("GSR Demo") {
+            //     // GSR Demo
+            //     NavigationManager.getInstance()
+            //         .build(RouterConfig.GSR_DEMO)
+            //         .navigation(requireContext())
+            // }
+            .create().show()
     }
 
     private fun showDualModeCameraOptions() {

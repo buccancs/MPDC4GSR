@@ -7,8 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityShimmerMvpBinding
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.CallbackObject
@@ -51,12 +50,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var connectionStatusText: TextView
-    private lateinit var gsrValueText: TextView
-    private lateinit var sampleCountText: TextView
-    private lateinit var connectButton: Button
-    private lateinit var startRecordingButton: Button
-    private lateinit var stopRecordingButton: Button
+    private lateinit var binding: ActivityShimmerMvpBinding
 
     private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
     private var shimmerDevice: Shimmer? = null
@@ -97,7 +91,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shimmer_mvp)
+        binding = ActivityShimmerMvpBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initializeUI()
         initializeNetworkClient()
@@ -105,16 +100,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
     }
 
     private fun initializeUI() {
-        connectionStatusText = findViewById(R.id.connectionStatusText)
-        gsrValueText = findViewById(R.id.gsrValueText)
-        sampleCountText = findViewById(R.id.sampleCountText)
-        connectButton = findViewById(R.id.connectButton)
-        startRecordingButton = findViewById(R.id.startRecordingButton)
-        stopRecordingButton = findViewById(R.id.stopRecordingButton)
-
-        connectButton.setOnClickListener { scanForShimmerDevices() }
-        startRecordingButton.setOnClickListener { startRecording() }
-        stopRecordingButton.setOnClickListener { stopRecording() }
+        binding.connectButton.setOnClickListener { scanForShimmerDevices() }
+        binding.startRecordingButton.setOnClickListener { startRecording() }
+        binding.stopRecordingButton.setOnClickListener { stopRecording() }
 
         updateUI()
     }
@@ -188,7 +176,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, android.os.Handler())
                 Log.i(TAG, "Shimmer manager initialized - API compatibility mode")
                 updateConnectionStatus("Shimmer manager ready")
-                connectButton.isEnabled = true
+                binding.connectButton.isEnabled = true
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize Shimmer", e)
@@ -201,7 +189,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 updateConnectionStatus("Scanning for Shimmer3 GSR+ devices...")
-                connectButton.isEnabled = false
+                binding.connectButton.isEnabled = false
 
                 if (ActivityCompat.checkSelfPermission(
                         this@ShimmerMvpActivity,
@@ -230,7 +218,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 if (shimmerDevices.isEmpty()) {
                     updateConnectionStatus("No paired Shimmer3 GSR+ devices found")
                     showToast("Please pair your Shimmer3 GSR+ device in Bluetooth settings:\n1. Go to Settings > Bluetooth\n2. Pair your Shimmer device\n3. Return to this app")
-                    connectButton.isEnabled = true
+                    binding.connectButton.isEnabled = true
                     return@launch
                 }
 
@@ -263,7 +251,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error scanning for Shimmer3 GSR+ devices", e)
                 updateConnectionStatus("Device scan failed: ${e.message}")
-                connectButton.isEnabled = true
+                binding.connectButton.isEnabled = true
             }
         }
     }
@@ -278,7 +266,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 
                 Log.i(TAG, "Shimmer3 GSR+ configuration complete - Basic settings applied")
                 updateConnectionStatus("GSR+ Configured - Ready for recording")
-                startRecordingButton.isEnabled = true
+                binding.startRecordingButton.isEnabled = true
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error configuring Shimmer3 GSR+", e)
@@ -303,8 +291,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
                 runOnUiThread {
                     updateConnectionStatus("Recording GSR data...")
-                    startRecordingButton.isEnabled = false
-                    stopRecordingButton.isEnabled = true
+                    binding.startRecordingButton.isEnabled = false
+                    binding.stopRecordingButton.isEnabled = true
                 }
 
                 Log.i(TAG, "GSR recording started successfully")
@@ -333,8 +321,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
                 runOnUiThread {
                     updateConnectionStatus("Recording stopped - Data exported")
-                    startRecordingButton.isEnabled = true
-                    stopRecordingButton.isEnabled = false
+                    binding.startRecordingButton.isEnabled = true
+                    binding.stopRecordingButton.isEnabled = false
                 }
 
                 Log.i(TAG, "GSR recording stopped, ${gsrDataBuffer.size} samples collected")
@@ -374,9 +362,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 networkClient?.sendGSRSample(sample, sampleCount)
 
                 runOnUiThread {
-                    gsrValueText.text =
+                    binding.gsrValueText.text =
                         "GSR: %.3f µS (%.1f kΩ)".format(gsrValue, resistance / 1000)
-                    sampleCountText.text = "Samples: $sampleCount (${
+                    binding.sampleCountText.text = "Samples: $sampleCount (${
                         String.format(
                             "%.1f",
                             sampleCount * 1000.0 / GSR_SAMPLING_RATE
@@ -514,16 +502,16 @@ class ShimmerMvpActivity : AppCompatActivity() {
     }
 
     private fun updateConnectionStatus(status: String) {
-        connectionStatusText.text = status
+        binding.connectionStatusText.text = status
         Log.i(TAG, "Status: $status")
     }
 
     private fun updateUI() {
-        connectButton.isEnabled = false
-        startRecordingButton.isEnabled = false
-        stopRecordingButton.isEnabled = false
-        gsrValueText.text = "GSR: -- µS"
-        sampleCountText.text = "Samples: 0"
+        binding.connectButton.isEnabled = false
+        binding.startRecordingButton.isEnabled = false
+        binding.stopRecordingButton.isEnabled = false
+        binding.gsrValueText.text = "GSR: -- µS"
+        binding.sampleCountText.text = "Samples: 0"
         updateConnectionStatus("Initializing...")
     }
 

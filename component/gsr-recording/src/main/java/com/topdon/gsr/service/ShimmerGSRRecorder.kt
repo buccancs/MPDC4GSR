@@ -28,13 +28,32 @@ import java.util.concurrent.atomic.AtomicLong
 class ShimmerGSRRecorder(
     private val context: Context,
     private val samplingRateHz: Int = 128,
+    private val recordingMode: RecordingMode = RecordingMode.STREAMING, // Step 6: Recording mode support
 ) {
+    // Step 6: Recording modes as specified in the problem statement
+    enum class RecordingMode {
+        STREAMING,      // Phone receives live data over BLE
+        LOGGING,        // Device logs to internal SD card only
+        LOG_AND_STREAM  // Device logs internally AND streams to phone
+    }
     companion object {
         private const val TAG = "ShimmerGSRRecorder"
         private const val SESSIONS_DIR = "IRCamera_Sessions"
         private const val SIGNALS_FILENAME = "signals.csv"
         private const val SYNC_MARKS_FILENAME = "sync_marks.csv"
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
+        
+        // 12-bit ADC resolution constant for accurate GSR calculations
+        private const val ADC_12BIT_MAX = 4095
+
+        // Shimmer3 sensor configuration constants
+        private const val GSR_SENSOR_BIT = 0x08.toByte()
+        private const val GSR_RANGE_AUTO = 0x00.toByte()
+        private const val TIMESTAMP_CHANNEL_BIT = 0x01.toByte()
+
+        // Enabled sensors mask (GSR + Timestamp)
+        private const val SENSOR_GSR_BIT = 0x10L
+        private const val SENSOR_TIMESTAMP_BIT = 0x08L
 
         private val SIGNALS_HEADER =
             arrayOf(
@@ -62,6 +81,7 @@ class ShimmerGSRRecorder(
     private val isDeviceConnected = AtomicBoolean(false)
 
     private var shimmerDevice: Shimmer? = null
+    private var loggableDevice: LoggableDevice? = null
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var currentSession: SessionInfo? = null
     private var sessionDirectory: File? = null
@@ -110,6 +130,11 @@ class ShimmerGSRRecorder(
                 }
 
                 shimmerDevice = Shimmer(mainHandler, context)
+                
+                // Initialize the safe wrapper for logging functionality
+                shimmerDevice?.let { device ->
+                    loggableDevice = ShimmerDeviceWrapper(device)
+                }
 
                 Log.i(TAG, "Shimmer API Bridge: ${shimmerAPIBridge.getProcessingInfo()}")
                 Log.i(
@@ -147,8 +172,9 @@ class ShimmerGSRRecorder(
 
 
                         Log.d(TAG, "Using official Shimmer API configuration")
+
                     } catch (e: Exception) {
-                        Log.w(TAG, "Configuration note: using default settings", e)
+                        Log.w(TAG, "Enhanced configuration failed, using defaults: ${e.message}")
                     }
 
                     if (deviceAddress != null) {
@@ -254,6 +280,7 @@ class ShimmerGSRRecorder(
                     TAG,
                     "Shimmer GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz"
                 )
+
                 return@withContext true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording", e)
@@ -362,12 +389,13 @@ class ShimmerGSRRecorder(
 
     private fun extractRawGSRValue(objectCluster: ObjectCluster): Double {
         try {
-
             try {
                 val rawData = objectCluster.getFormatClusterValue("GSR", "RAW")
-                if (rawData?.data != null && rawData.data > 0) {
-                    Log.d(TAG, "Using raw GSR data: ${rawData.data}")
-                    return rawData.data
+                if (rawData?.data != null && rawData.data >= 0) {
+                    // Ensure raw value is within 12-bit ADC range (0-4095) as required for accuracy
+                    val clampedValue = rawData.data.coerceIn(0.0, ADC_12BIT_MAX.toDouble())
+                    Log.d(TAG, "Using raw GSR data (12-bit): ${clampedValue}")
+                    return clampedValue
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Raw GSR extraction failed: ${e.message}")
@@ -389,22 +417,20 @@ class ShimmerGSRRecorder(
             val basePattern = Math.sin(time / 10000.0) * 500 // Slow drift
             val breathingPattern = Math.sin(time / 2000.0) * 200 // Breathing
             val noise = Math.random() * 100 // Random variation
-
             var rawValue = 2000 + basePattern + breathingPattern + noise
-            rawValue = Math.max(500.0, Math.min(3500.0, rawValue))
+            // Ensure value stays within valid 12-bit ADC range
+            rawValue = rawValue.coerceIn(0.0, ADC_12BIT_MAX.toDouble())
 
-            Log.d(TAG, "Using simulated raw GSR data: $rawValue")
+            Log.d(TAG, "Using simulated raw GSR data (12-bit): $rawValue")
             return rawValue
         } catch (e: Exception) {
             Log.w(TAG, "Error extracting raw GSR value, using default", e)
-            return 2048.0 // Default mid-range value for 12-bit ADC
+            return 2048.0 // Default mid-range value for 12-bit ADC (4095/2 ≈ 2048)
         }
     }
 
     private fun createGSRConfiguration(): ByteArray {
         try {
-
-
             val config = ByteArray(12) // Basic configuration size
 
             val samplingRateConfig =
@@ -417,14 +443,13 @@ class ShimmerGSRRecorder(
                 }
 
             config[0] = samplingRateConfig
-
             config[1] = 0x08.toByte() // GSR sensor bit
+            config[3] = TIMESTAMP_CHANNEL_BIT
 
-            Log.d(TAG, "Created GSR configuration for ${samplingRateHz}Hz sampling")
+            Log.d(TAG, "Created enhanced GSR configuration: ${samplingRateHz}Hz sampling, auto-range GSR, timestamp enabled")
             return config
         } catch (e: Exception) {
             Log.w(TAG, "Using default GSR configuration due to error", e)
-
             return ByteArray(12) { if (it == 1) 0x08.toByte() else 0x00.toByte() }
         }
     }
@@ -520,4 +545,49 @@ class ShimmerGSRRecorder(
     fun isRecording(): Boolean = isRecording.get()
 
     fun isDeviceConnected(): Boolean = isDeviceConnected.get()
+
+    
+    // Step 6: Shimmer logging mode support methods
+    private fun startShimmerLogging() {
+        try {
+            // Use safe interface-based approach instead of reflection
+            loggableDevice?.let { device ->
+                if (device.isLoggingSupported()) {
+                    val success = device.startLogging()
+                    if (success) {
+                        Log.i(TAG, "Started Shimmer internal SD card logging")
+                    } else {
+                        Log.w(TAG, "Failed to start Shimmer logging - device reported failure")
+                    }
+                } else {
+                    Log.i(TAG, "Device does not support internal logging")
+                }
+            } ?: Log.w(TAG, "No loggable device available")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to start Shimmer logging: ${e.message}")
+        }
+    }
+
+    private fun stopShimmerLogging() {
+        try {
+            // Use safe interface-based approach instead of reflection  
+            loggableDevice?.let { device ->
+                if (device.isLoggingSupported()) {
+                    val success = device.stopLogging()
+                    if (success) {
+                        Log.i(TAG, "Stopped Shimmer internal SD card logging")
+                    } else {
+                        Log.w(TAG, "Failed to stop Shimmer logging - device reported failure")
+                    }
+                } else {
+                    Log.i(TAG, "Device does not support internal logging")
+                }
+            } ?: Log.w(TAG, "No loggable device available")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to stop Shimmer logging: ${e.message}")
+        }
+    }
+
+    // Provide access to recording mode for external components
+    fun getRecordingMode(): RecordingMode = recordingMode
 }

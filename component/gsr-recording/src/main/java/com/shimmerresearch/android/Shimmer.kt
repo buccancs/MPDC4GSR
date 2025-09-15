@@ -74,18 +74,22 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         address: String,
         name: String = "Shimmer3_GSR",
     ) {
-        Log.i(TAG, "Attempting to connect to Shimmer device: $address")
+        Log.i(TAG, "Attempting to connect to Shimmer device: $address (attempt ${connectionRetryCount + 1})")
         deviceAddress = address
         deviceName = name
 
         connectionState = STATE_CONNECTING
         sendMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTING, -1, null)
 
+        // Cancel any existing reconnection attempts
+        reconnectionJob?.cancel()
+
         try {
 
             val realShimmer = createRealShimmerConnection(address, name)
             if (realShimmer != null) {
                 realShimmerInstance = realShimmer
+                connectionRetryCount = 0 // Reset retry count on success
                 Log.i(TAG, "Successfully connected to real Shimmer device")
                 return
             }
@@ -94,11 +98,16 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         }
 
         handler.postDelayed({
-            isConnected.set(true)
-            connectionState = STATE_CONNECTED
-            sendMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTED, -1, null)
-            connectionCallback?.invoke("CONNECTED")
-            Log.i(TAG, "Simulated Shimmer connected successfully")
+            handler.removeCallbacks(connectionTimeout)
+            
+            if (connectionState == STATE_CONNECTING) {
+                isConnected.set(true)
+                connectionState = STATE_CONNECTED
+                connectionRetryCount = 0 // Reset on success
+                sendMessage(MESSAGE_STATE_CHANGE, STATE_CONNECTED, -1, null)
+                connectionCallback?.invoke("CONNECTED")
+                Log.i(TAG, "Simulated Shimmer connected successfully")
+            }
         }, 1000)
     }
 
@@ -150,9 +159,26 @@ class Shimmer(private val handler: Handler, private val context: Context) {
     }
 
     fun disconnect() {
+        // Step 9: Enhanced resource cleanup
+        Log.i(TAG, "Disconnecting Shimmer device...")
+        
+        // Cancel any ongoing reconnection attempts
+        reconnectionJob?.cancel()
+        reconnectionJob = null
+        
+        // Cancel all coroutines in the scope for proper cleanup
+        coroutineScope.cancel()
+        
+        // Recreate coroutine scope for future use (allows reconnection)
+        coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        
+        // Stop streaming first if active
         stopStreaming()
+        
+        // Reset connection state
         isConnected.set(false)
         connectionState = STATE_NONE
+        connectionRetryCount = 0
 
         try {
             realShimmerInstance?.let { device ->
@@ -167,7 +193,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
         realShimmerInstance = null
         sendMessage(MESSAGE_STATE_CHANGE, STATE_NONE, -1, null)
         connectionCallback?.invoke("DISCONNECTED")
-        Log.i(TAG, "Shimmer disconnected")
+        Log.i(TAG, "Shimmer disconnected and resources cleaned up")
     }
 
     fun isConnected(): Boolean = isConnected.get() || connectionState == STATE_CONNECTED
@@ -344,7 +370,7 @@ class Shimmer(private val handler: Handler, private val context: Context) {
 
     private fun startSimulationDataGeneration() {
         simulationJob =
-            CoroutineScope(Dispatchers.IO).launch {
+            coroutineScope.launch {
                 var sampleCount = 0L
 
                 while (isStreaming.get() && isActive) {

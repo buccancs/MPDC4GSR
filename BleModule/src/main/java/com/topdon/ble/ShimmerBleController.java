@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ShimmerBleController {
     private static final String TAG = "ShimmerBleController";
 
+    // Shimmer BLE UUIDs and constants
     private static final UUID SHIMMER_SERVICE_UUID = UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455");
     private static final UUID SHIMMER_DATA_CHAR_UUID = UUID.fromString("49535343-1E4D-4BD9-BA61-23C647249616");
     private static final UUID SHIMMER_CMD_CHAR_UUID = UUID.fromString("49535343-8841-43F4-A8D4-ECBE34729BB3");
@@ -242,7 +243,7 @@ public class ShimmerBleController {
             Log.e(TAG, "Error during Shimmer controller cleanup", e);
         }
     }
-
+  
     private boolean isShimmerDevice(String deviceName) {
         if (deviceName == null) return false;
 
@@ -251,6 +252,7 @@ public class ShimmerBleController {
                 return true;
             }
         }
+        
         return false;
     }
 

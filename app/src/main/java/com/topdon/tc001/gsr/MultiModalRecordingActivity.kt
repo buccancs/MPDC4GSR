@@ -721,14 +721,16 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             }
 
             // Stop RGB camera recording
-            val videoFile = rgbCameraRecorder?.stopRecording()
+            val videoStopped = rgbCameraRecorder?.stopRecording() ?: false
 
             val session = gsrRecorder.stopRecording()
             session?.let {
                 Log.i(TAG, "Multi-modal recording stopped: ${it.sessionId}")
 
                 val recordingInfo = mutableListOf<String>()
-                videoFile?.let { file -> recordingInfo.add("Video: ${file.name}") }
+                if (videoStopped) {
+                    recordingInfo.add("Video recording completed")
+                }
             rgbCameraRecorder?.getRawImagesDirectory()?.let { dir ->
                 val rawCount = rgbCameraRecorder?.getRawCaptureCount() ?: 0
                 recordingInfo.add("RAW images: $rawCount in ${dir.name}")

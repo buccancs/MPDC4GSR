@@ -109,11 +109,11 @@ class DataManagementService(private val context: Context) {
         val deviceId: String,
         val mimeType: String,
         val metadata: MutableMap<String, Any> = mutableMapOf(),
-        var uploadStatus: FileUploadService.UploadStatus = FileUploadService.UploadStatus.PENDING,
+        var uploadStatus: UploadStatus = UploadStatus.PENDING,
         var uploadJobId: String? = null,
     ) {
         fun isUploaded(): Boolean {
-            return uploadStatus == FileUploadService.UploadStatus.COMPLETED
+            return uploadStatus == UploadStatus.COMPLETED
         }
 
         fun getRelativePath(): String {
@@ -130,7 +130,7 @@ class DataManagementService(private val context: Context) {
 
         isInitialized.set(true)
 
-        logger.logInfo(
+        StructuredLogger.logInfo(
             TAG,
             "service_initialized",
             mapOf(
@@ -173,7 +173,7 @@ class DataManagementService(private val context: Context) {
 
         activeSessions[sessionId] = session
 
-        logger.logInfo(
+        StructuredLogger.logInfo(
             TAG,
             "session_created",
             details =
@@ -199,7 +199,7 @@ class DataManagementService(private val context: Context) {
 
         createFileManifest(session)
 
-        logger.logInfo(
+        StructuredLogger.logInfo(
             TAG,
             "session_ended",
             details =
@@ -224,7 +224,7 @@ class DataManagementService(private val context: Context) {
         try {
             val file = File(filePath)
             if (!file.exists()) {
-                logger.logInfo(
+                StructuredLogger.logInfo(
                     TAG,
                     "file_registration_error",
                     details =
@@ -264,7 +264,7 @@ class DataManagementService(private val context: Context) {
 
             activeSessions[sessionId]?.files?.add(metadata)
 
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "file_registered",
                 details =
@@ -279,13 +279,13 @@ class DataManagementService(private val context: Context) {
 
             return metadata
         } catch (e: Exception) {
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "file_registration_error",
                 details =
                     mapOf(
                         "file_path" to filePath,
-                        "error" to e.message,
+                        "error" to (e.message ?: "Unknown error"),
                     ),
             )
             return null
@@ -299,21 +299,21 @@ class DataManagementService(private val context: Context) {
         val uploadJobIds = mutableListOf<String>()
 
         for (fileMetadata in session.files) {
-            if (fileMetadata.uploadStatus == FileUploadService.UploadStatus.COMPLETED) {
+            if (fileMetadata.uploadStatus == UploadStatus.COMPLETED) {
                 continue // Already uploaded
             }
 
             try {
                 val fileType =
                     when (fileMetadata.fileType) {
-                        "thermal_video" -> FileUploadService.FileType.THERMAL_VIDEO
-                        "visual_video" -> FileUploadService.FileType.VISUAL_VIDEO
-                        "gsr_data" -> FileUploadService.FileType.GSR_DATA
-                        "imu_data" -> FileUploadService.FileType.IMU_DATA
-                        "audio" -> FileUploadService.FileType.AUDIO
-                        "metadata" -> FileUploadService.FileType.METADATA
-                        "calibration" -> FileUploadService.FileType.CALIBRATION
-                        else -> FileUploadService.FileType.METADATA
+                        "thermal_video" -> FileType.VIDEO
+                        "visual_video" -> FileType.VIDEO
+                        "gsr_data" -> FileType.CSV
+                        "imu_data" -> FileType.CSV
+                        "audio" -> FileType.OTHER
+                        "metadata" -> FileType.JSON
+                        "calibration" -> FileType.JSON
+                        else -> FileType.OTHER
                     }
 
                 val jobId =
@@ -329,7 +329,7 @@ class DataManagementService(private val context: Context) {
 
                 uploadJobIds.add(jobId)
             } catch (e: Exception) {
-                logger.logInfo(
+                StructuredLogger.logInfo(
                     TAG,
                     "upload_queue_error",
                     details =
@@ -341,7 +341,7 @@ class DataManagementService(private val context: Context) {
             }
         }
 
-        logger.logInfo(
+        StructuredLogger.logInfo(
             TAG,
             "files_queued_for_upload",
             details =
@@ -380,7 +380,7 @@ class DataManagementService(private val context: Context) {
             session.status = SessionStatus.EXPORTED
             saveSessionMetadata(session)
 
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "session_exported",
                 details =
@@ -395,7 +395,7 @@ class DataManagementService(private val context: Context) {
 
             return exportFile.absolutePath
         } catch (e: Exception) {
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "session_export_error",
                 details =
@@ -472,7 +472,7 @@ class DataManagementService(private val context: Context) {
             }
         }
 
-        logger.logInfo(
+        StructuredLogger.logInfo(
             TAG,
             "cleanup_completed",
             details =
@@ -507,7 +507,7 @@ class DataManagementService(private val context: Context) {
                 fileRegistry.remove(file.fileId)
             }
 
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "session_archived",
                 details =
@@ -520,7 +520,7 @@ class DataManagementService(private val context: Context) {
 
             return true
         } catch (e: Exception) {
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "session_archive_error",
                 details =
@@ -560,7 +560,7 @@ class DataManagementService(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "load_sessions_error",
                 mapOf("error" to e.message),
@@ -608,7 +608,7 @@ class DataManagementService(private val context: Context) {
 
             loadFileManifest(session)
         } catch (e: Exception) {
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "load_session_metadata_error",
                 details =
@@ -659,7 +659,7 @@ class DataManagementService(private val context: Context) {
                 fileRegistry[fileMetadata.fileId] = fileMetadata
             }
         } catch (e: Exception) {
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "load_file_manifest_error",
                 details =
@@ -703,7 +703,7 @@ class DataManagementService(private val context: Context) {
 
             metadataFile.writeText(json.toString(2))
         } catch (e: Exception) {
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "save_session_metadata_error",
                 details =
@@ -755,7 +755,7 @@ class DataManagementService(private val context: Context) {
 
             manifestFile.writeText(json.toString(2))
         } catch (e: Exception) {
-            logger.logInfo(
+            StructuredLogger.logInfo(
                 TAG,
                 "create_file_manifest_error",
                 details =

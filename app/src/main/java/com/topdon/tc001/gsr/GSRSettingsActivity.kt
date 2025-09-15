@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
 import android.util.Log
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText  
@@ -280,7 +281,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         availableDevices.add("No devices found")
 
         deviceAdapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, availableDevices).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, availableDevices).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
         binding.shimmerDeviceSpinner.adapter = deviceAdapter
@@ -292,50 +293,50 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
         val samplingRates = arrayOf("32 Hz", "64 Hz", "128 Hz", "256 Hz", "512 Hz")
         binding.gsrSamplingRateSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, samplingRates).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, samplingRates).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
         val gsrRanges = arrayOf("Auto Range", "40 kΩ - 4 MΩ", "10 kΩ - 1 MΩ", "4 kΩ - 400 kΩ")
         binding.gsrRangeSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, gsrRanges).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gsrRanges).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
         val videoResolutions =
             arrayOf("4K UHD (3840×2160)", "Full HD (1920×1080)", "HD (1280×720)", "SD (720×480)")
         binding.videoResolutionSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, videoResolutions).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, videoResolutions).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
         val videoFrameRates = arrayOf("30 fps", "60 fps", "24 fps", "15 fps")
         binding.videoFrameRateSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, videoFrameRates).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, videoFrameRates).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
         val rawFrameRates = arrayOf("30 fps", "15 fps", "10 fps", "5 fps", "1 fps")
         binding.rawFrameRateSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, rawFrameRates).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, rawFrameRates).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
         val rawQualities = arrayOf("Maximum (Level 3)", "High (Level 2)", "Standard (Level 1)")
         binding.rawQualitySpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, rawQualities).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, rawQualities).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
         val dataRetentions = arrayOf("Keep Forever", "30 Days", "7 Days", "24 Hours")
         binding.dataRetentionSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, dataRetentions).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dataRetentions).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
         val syncTolerances = arrayOf("1 ms", "5 ms", "10 ms", "50 ms", "100 ms")
         binding.syncToleranceSpinner.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_item, syncTolerances).apply {
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, syncTolerances).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
     }

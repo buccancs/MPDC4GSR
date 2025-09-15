@@ -8,17 +8,20 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
+import java.io.PrintWriter
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
@@ -129,10 +132,12 @@ class NetworkController(private val context: Context) {
             serverSocket?.close()
             serverSocket = null
 
-            // Cancel all coroutines and wait for completion
-            controllerScope.coroutineContext.cancelChildren()
+            // Cancel all coroutines
+            controllerScope.cancel()
+            
+            // Wait for cancellation to complete
             runBlocking {
-                controllerScope.coroutineContext.job.join()
+                delay(100) // Give some time for graceful shutdown
             }
 
             Log.i(TAG, "NetworkController stopped")

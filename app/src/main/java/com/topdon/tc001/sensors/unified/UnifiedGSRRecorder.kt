@@ -15,11 +15,14 @@ import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
 import com.shimmerresearch.driver.ShimmerDevice
+import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
+import com.shimmerresearch.driver.ShimmerDevice.SENSING_STATE
 import com.topdon.tc001.sensors.SensorRecorder
 import com.topdon.tc001.sensors.unified.model.DeviceInfo
 import com.topdon.tc001.sensors.unified.model.GSRSample
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.channels.BufferOverflow
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -151,7 +154,7 @@ class UnifiedGSRRecorder(
             _deviceStatus.value = "Discovering..."
             discoveredDevices.clear()
 
-            shimmerManager?.startScanBle()
+            shimmerManager?.startScanBtDevices()
 
             delay(5000)  // 5-second discovery window
 
@@ -179,7 +182,7 @@ class UnifiedGSRRecorder(
 
             discoveredDevices.sortBy { it.priority }
 
-            shimmerManager?.stopScanBle()
+            shimmerManager?.stopScanBtDevices()
 
             if (discoveredDevices.isNotEmpty()) {
                 _deviceStatus.value = "Found ${discoveredDevices.size} devices"
@@ -241,14 +244,14 @@ class UnifiedGSRRecorder(
 
         try {
 
-            shimmer.enableSensor(Shimmer.SENSOR_GSR)
-            shimmer.enableSensor(Shimmer.SENSOR_EXG1_24BIT) // For PPG if available
+            shimmer.setEnabledSensors(Shimmer.SENSOR_GSR, true)
+            // shimmer.setEnabledSensors(Shimmer.SENSOR_EXG1_24BIT, true) // For PPG if available
 
             shimmer.setSamplingRateShimmer(DEFAULT_SAMPLING_RATE)
 
             shimmer.setGSRRange(GSR_RANGE_AUTO)
 
-            shimmer.writeShimmerAndSensorConfiguration()
+            shimmer.writeEnabledSensors()
 
             Log.i(TAG, "GSR sensor configured: 128Hz sampling, autorange, 12-bit ADC")
 
@@ -384,7 +387,7 @@ class UnifiedGSRRecorder(
 
             val quality = when {
                 !isStreaming -> 0.0
-                connectionState == ShimmerDevice.SHIMMER_STATE_STREAMING -> {
+                connectionState == BT_STATE.STREAMING -> {
 
                     val baseQuality = 0.9
                     val sampleRate = recordedSamples.get() / maxOf(
@@ -395,7 +398,7 @@ class UnifiedGSRRecorder(
                     baseQuality * rateQuality
                 }
 
-                connectionState == ShimmerDevice.SHIMMER_STATE_CONNECTED -> 0.7
+                connectionState == BT_STATE.CONNECTED -> 0.7
                 else -> 0.3
             }
 
@@ -480,7 +483,7 @@ class UnifiedGSRRecorder(
 
             disconnectDevice()
 
-            shimmerManager?.stopScanBle()
+            shimmerManager?.stopScanBtDevices()
             shimmerManager = null
 
             discoveredDevices.clear()
@@ -504,7 +507,7 @@ class UnifiedGSRRecorder(
                 )
 
                 when (state) {
-                    ShimmerDevice.SHIMMER_STATE_CONNECTED -> {
+                    BT_STATE.CONNECTED -> {
                         connectedShimmer = shimmer
                         mainHandler.post {
                             _deviceStatus.value = "Connected: ${shimmer.deviceName}"
@@ -512,20 +515,20 @@ class UnifiedGSRRecorder(
                         }
                     }
 
-                    ShimmerDevice.SHIMMER_STATE_CONNECTING -> {
+                    BT_STATE.CONNECTING -> {
                         mainHandler.post {
                             _deviceStatus.value = "Connecting..."
                         }
                     }
 
-                    ShimmerDevice.SHIMMER_STATE_STREAMING -> {
+                    BT_STATE.STREAMING -> {
                         mainHandler.post {
                             _deviceStatus.value = "Streaming: ${shimmer.deviceName}"
                             _connectionQuality.value = 1.0
                         }
                     }
 
-                    ShimmerDevice.SHIMMER_STATE_NONE -> {
+                    BT_STATE.NONE -> {
                         if (connectedShimmer?.macAddress == shimmer.macAddress) {
                             connectedShimmer = null
                         }

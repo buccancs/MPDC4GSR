@@ -5,14 +5,14 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt") // Re-enabled for Shimmer integration
+    // kotlin("kapt") // Disabled to focus on Shimmer SDK core integration
 }
 
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.name)
-    }
-}
+// kapt {
+//     arguments {
+//         arg("AROUTER_MODULE_NAME", project.name)
+//     }
+// }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
 val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
@@ -264,7 +264,7 @@ dependencies {
     implementation(project(":BleModule"))
 
     implementation(libs.arouter.api)
-    kapt(libs.arouter.compiler) // Re-enabled for production build
+    // kapt(libs.arouter.compiler) // Disabled to resolve kapt conflicts, focus on Shimmer SDK integration
 
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))

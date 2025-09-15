@@ -111,7 +111,7 @@ class MultiModalRecordingService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        gsrRecorder = GSRRecorder(this)
+        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
         sessionManager = SessionManager.getInstance(this)
         gsrRecorder.addListener(gsrListener)
         createNotificationChannel()

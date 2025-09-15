@@ -10,8 +10,8 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.opencsv.CSVWriter
-import com.shimmerresearch.android.Shimmer
-import com.shimmerresearch.driver.ObjectCluster
+// Note: Using interfaces to avoid direct dependency on Shimmer SDK classes
+// This prevents duplicate class issues when official Shimmer SDK is in main app module
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 class ShimmerGSRRecorder(
     private val context: Context,
+    private val shimmerDeviceFactory: ShimmerDeviceFactory,
     private val samplingRateHz: Int = 128,
     private val recordingMode: RecordingMode = RecordingMode.STREAMING, // Step 6: Recording mode support
 ) {
@@ -81,7 +82,7 @@ class ShimmerGSRRecorder(
     private val sampleIndex = AtomicLong(0)
     private val isDeviceConnected = AtomicBoolean(false)
 
-    private var shimmerDevice: Shimmer? = null
+    private var shimmerDevice: ShimmerDeviceInterface? = null
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var currentSession: SessionInfo? = null
     private var sessionDirectory: File? = null
@@ -129,7 +130,7 @@ class ShimmerGSRRecorder(
                     return@withContext false
                 }
 
-                shimmerDevice = Shimmer(mainHandler, context)
+                shimmerDevice = shimmerDeviceFactory.createShimmerDevice()
 
                 Log.i(TAG, "Shimmer API Bridge: ${shimmerAPIBridge.getProcessingInfo()}")
                 Log.i(
@@ -139,8 +140,8 @@ class ShimmerGSRRecorder(
 
                 shimmerDevice?.let { device ->
 
-                    device.setDataCallback { objectCluster ->
-                        handleShimmerData(objectCluster)
+                    device.setDataCallback { dataCluster ->
+                        handleShimmerData(dataCluster)
                     }
 
                     device.setConnectionCallback { connectionState ->
@@ -347,7 +348,7 @@ class ShimmerGSRRecorder(
         return false
     }
 
-    private fun handleShimmerData(objectCluster: ObjectCluster) {
+    private fun handleShimmerData(dataCluster: ShimmerDataCluster) {
         if (!isRecording.get()) return
 
         try {
@@ -357,7 +358,7 @@ class ShimmerGSRRecorder(
 
             currentSession?.let { session ->
 
-                val rawGSRValue = extractRawGSRValue(objectCluster)
+                val rawGSRValue = dataCluster.getGSRRawValue()
 
                 val sample =
                     shimmerAPIBridge.processGSRData(
@@ -379,48 +380,6 @@ class ShimmerGSRRecorder(
         } catch (e: Exception) {
             Log.e(TAG, "Error handling Shimmer data", e)
             notifyError("Error processing Shimmer data: ${e.message}")
-        }
-    }
-
-    private fun extractRawGSRValue(objectCluster: ObjectCluster): Double {
-        try {
-            try {
-                val rawData = objectCluster.getFormatClusterValue("GSR", "RAW")
-                if (rawData?.data != null && rawData.data >= 0) {
-                    // Ensure raw value is within 12-bit ADC range (0-4095) as required for accuracy
-                    val clampedValue = rawData.data.coerceIn(0.0, ADC_12BIT_MAX.toDouble())
-                    Log.d(TAG, "Using raw GSR data (12-bit): ${clampedValue}")
-                    return clampedValue
-                }
-            } catch (e: Exception) {
-                Log.d(TAG, "Raw GSR extraction failed: ${e.message}")
-            }
-
-            try {
-                val conductanceData = objectCluster.getFormatClusterValue("GSR_Conductance", "CAL")
-                if (conductanceData?.data != null && conductanceData.data > 0) {
-
-                    val rawApprox = (conductanceData.data / 100.0) * 4095.0 // Rough approximation
-                    Log.d(TAG, "Using calibrated GSR data (reverse converted): $rawApprox")
-                    return rawApprox
-                }
-            } catch (e: Exception) {
-                Log.d(TAG, "Calibrated GSR extraction failed: ${e.message}")
-            }
-
-            val time = System.currentTimeMillis()
-            val basePattern = Math.sin(time / 10000.0) * 500 // Slow drift
-            val breathingPattern = Math.sin(time / 2000.0) * 200 // Breathing
-            val noise = Math.random() * 100 // Random variation
-            var rawValue = 2000 + basePattern + breathingPattern + noise
-            // Ensure value stays within valid 12-bit ADC range
-            rawValue = rawValue.coerceIn(0.0, ADC_12BIT_MAX.toDouble())
-
-            Log.d(TAG, "Using simulated raw GSR data (12-bit): $rawValue")
-            return rawValue
-        } catch (e: Exception) {
-            Log.w(TAG, "Error extracting raw GSR value, using default", e)
-            return 2048.0 // Default mid-range value for 12-bit ADC (4095/2 ≈ 2048)
         }
     }
 

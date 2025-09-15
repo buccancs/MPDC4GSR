@@ -197,7 +197,7 @@ class EnhancedRecordingService : Service() {
     override fun onBind(intent: Intent?): IBinder = binder
 
     private fun initializeComponents() {
-        gsrRecorder = GSRRecorder(this)
+        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
         sessionManager = SessionManager.getInstance(this)
         networkClient = NetworkClient(this)
         dataStreamingService = DataStreamingService(this, networkClient)

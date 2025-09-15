@@ -23,30 +23,10 @@ class ShimmerAPIBridge private constructor() {
     }
 
     private fun initializeShimmerProcessing() {
-        try {
-
-            val gsrMetricsClass =
-                Class.forName("com.shimmerresearch.biophysicalprocessing.GSRMetrics")
-            val gsrMetricsInstance = gsrMetricsClass.getDeclaredConstructor().newInstance()
-
-            if (gsrMetricsInstance != null) {
-                isOfficialAPIAvailable = true
-                processingMode = "OFFICIAL_SHIMMER_JAR"
-                Log.i(TAG, "Successfully initialized official Shimmer GSR processing from JAR")
-
-                val methods = gsrMetricsClass.declaredMethods
-                Log.d(TAG, "Available GSRMetrics methods: ${methods.size}")
-                methods.take(5).forEach { method ->
-                    Log.d(TAG, "Method: ${method.name}")
-                }
-            }
-        } catch (classNotFoundException: ClassNotFoundException) {
-            Log.w(TAG, "GSRMetrics class not found in JAR, using enhanced fallback processing")
-            setupEnhancedFallback()
-        } catch (exception: Exception) {
-            Log.w(TAG, "Error initializing official Shimmer processing: ${exception.message}")
-            setupEnhancedFallback()
-        }
+        // Note: Official Shimmer processing is now handled by main app module
+        // This component uses fallback processing to avoid duplicate dependencies
+        Log.i(TAG, "Using fallback processing - official Shimmer SDK handled by main app module")
+        setupEnhancedFallback()
     }
 
     private fun setupEnhancedFallback() {

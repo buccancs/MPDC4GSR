@@ -24,10 +24,11 @@ import kotlin.coroutines.coroutineContext
 
 class GSRRecorder(
     private val context: Context,
+    private val shimmerDeviceFactory: ShimmerDeviceFactory,
     private val samplingRateHz: Int = 128,
 ) {
     // Shimmer3 integration
-    private val shimmerRecorder = ShimmerGSRRecorder(context, samplingRateHz)
+    private val shimmerRecorder = ShimmerGSRRecorder(context, shimmerDeviceFactory, samplingRateHz)
     private val useShimmerDevice = true // Set to false for simulated data only
 
     companion object {

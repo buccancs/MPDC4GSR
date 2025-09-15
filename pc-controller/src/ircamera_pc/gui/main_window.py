@@ -316,27 +316,21 @@ class MainWindow(QMainWindow):
     def _setup_network_callbacks(self) -> None:
         """Set up WebSocket server event callbacks - Phase 1 implementation."""
         # WebSocket server handles callbacks through message handlers internally
-        # For now,
-        we
-        'll implement basic device tracking through the server'
-        s
-        client
-        management
+        # For now, we'll implement basic device tracking through the server's client management
+        logger.info("WebSocket server callbacks configured")
 
-    logger.info("WebSocket server callbacks configured")
-
-
-def _setup_system_integration_callbacks(self) -> None:
-    """Set up system integration callbacks and connections."""
-    # Bluetooth manager callbacks
-    if self.bluetooth_manager and self.bluetooth_control_widget:
-        # Connect widget signals to manager methods
-        self.bluetooth_control_widget.scan_requested.connect(
-            lambda: self.bluetooth_manager.start_scanning(continuous=False)
-        )
-        self.bluetooth_control_widget.connect_requested.connect(
-            lambda addr: asyncio.create_task(
-                self.bluetooth_manager.connect_device(addr)
+    def _setup_system_integration_callbacks(self) -> None:
+        """Set up system integration callbacks and connections."""
+        # Bluetooth manager callbacks
+        if self.bluetooth_manager and self.bluetooth_control_widget:
+            # Connect widget signals to manager methods
+            self.bluetooth_control_widget.scan_requested.connect(
+                lambda: self.bluetooth_manager.start_scanning(continuous=False)
+            )
+            self.bluetooth_control_widget.connect_requested.connect(
+                lambda addr: asyncio.create_task(
+                    self.bluetooth_manager.connect_device(addr)
+                )
             )
         )
         self.bluetooth_control_widget.disconnect_requested.connect(

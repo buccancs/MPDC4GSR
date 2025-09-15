@@ -24,12 +24,6 @@ android {
         }
     }
 
-    androidComponents {
-        beforeVariants { variant ->
-            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

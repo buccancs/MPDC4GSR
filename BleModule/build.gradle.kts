@@ -21,13 +21,6 @@ android {
         }
     }
 
-    androidComponents {
-        beforeVariants { variant ->
-
-            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
-        }
-    }
-
     buildFeatures {
         buildConfig = true
     }

@@ -7,7 +7,7 @@ import com.topdon.ble.callback.ScanListener;
 
 
 interface Scanner {
-
+    
     void addScanListener(ScanListener listener);
 
     void removeScanListener(ScanListener listener);

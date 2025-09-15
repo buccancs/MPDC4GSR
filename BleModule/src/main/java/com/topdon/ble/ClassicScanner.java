@@ -13,7 +13,7 @@ import com.topdon.ble.util.BluetoothPermissionUtils;
 class ClassicScanner extends AbstractScanner {
     private static final String TAG = "ClassicScanner";
     private boolean stopQuietly = false;
-
+    
     ClassicScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
         super(easyBle, bluetoothAdapter);
     }

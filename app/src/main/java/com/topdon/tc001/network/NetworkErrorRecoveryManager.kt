@@ -12,14 +12,14 @@ class NetworkErrorRecoveryManager(
     private val networkClient: NetworkClient,
 ) {
     companion object {
-    private const val TAG = "NetworkErrorRecovery"
-    private const val MAX_RECONNECTION_ATTEMPTS = 10
-    private const val INITIAL_RETRY_DELAY_MS = 1000L
-    private const val MAX_RETRY_DELAY_MS = 30000L // 30 seconds
-    private const val HEALTH_CHECK_INTERVAL_MS = 15000L // 15 seconds
-    private const val CONNECTION_TIMEOUT_MS = 10000L
-    private const val RAPID_FAILURE_THRESHOLD = 3
-    private const val RAPID_FAILURE_WINDOW_MS = 60000L // 1 minute
+        private const val TAG = "NetworkErrorRecovery"
+        private const val MAX_RECONNECTION_ATTEMPTS = 10
+        private const val INITIAL_RETRY_DELAY_MS = 1000L
+        private const val MAX_RETRY_DELAY_MS = 30000L // 30 seconds
+        private const val HEALTH_CHECK_INTERVAL_MS = 15000L // 15 seconds
+        private const val CONNECTION_TIMEOUT_MS = 10000L
+        private const val RAPID_FAILURE_THRESHOLD = 3
+        private const val RAPID_FAILURE_WINDOW_MS = 60000L // 1 minute
     }
 
     private val recoveryJob = SupervisorJob()
@@ -64,41 +64,41 @@ class NetworkErrorRecoveryManager(
     private var eventListener: RecoveryEventListener? = null
 
     fun setEventListener(listener: RecoveryEventListener?) {
-    eventListener = listener
+        eventListener = listener
     }
 
 
     fun enableAutoRecovery() {
-    if (isRecoveryActive.get()) {
-    Log.w(TAG, "Auto recovery already enabled")
-    return
-    }
+        if (isRecoveryActive.get()) {
+            Log.w(TAG, "Auto recovery already enabled")
+            return
+        }
 
-    isRecoveryActive.set(true)
-    startHealthMonitoring()
-    Log.i(TAG, "Network error recovery enabled")
+        isRecoveryActive.set(true)
+        startHealthMonitoring()
+        Log.i(TAG, "Network error recovery enabled")
     }
 
 
     fun disableAutoRecovery() {
-    if (!isRecoveryActive.get()) {
-    Log.w(TAG, "Auto recovery not active")
-    return
-    }
+        if (!isRecoveryActive.get()) {
+            Log.w(TAG, "Auto recovery not active")
+            return
+        }
 
-    isRecoveryActive.set(false)
-    stopHealthMonitoring()
-    Log.i(TAG, "Network error recovery disabled")
+        isRecoveryActive.set(false)
+        stopHealthMonitoring()
+        Log.i(TAG, "Network error recovery disabled")
     }
 
 
     suspend fun triggerRecovery(reason: String): Boolean {
-    if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {
-    Log.w(TAG, "Recovery already in progress")
-    return false
-    }
+        if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {
+            Log.w(TAG, "Recovery already in progress")
+            return false
+        }
 
-    return performRecovery(reason)
+        return performRecovery(reason)
     }
 
 
@@ -118,20 +118,20 @@ class NetworkErrorRecoveryManager(
     ) {
         Log.w(TAG, "Network error in $operation: $error")
 
-    if (isRapidFailure()) {
-    eventListener?.onRapidFailureDetected(rapidFailureCount.get())
-    // Delay recovery for rapid failures to avoid overwhelming the network
-    recoveryScope.launch {
-    delay(5000)
-    if (isRecoveryActive.get()) {
-    performRecovery("Rapid failure in $operation: $error")
-    }
-    }
-    } else if (isRecoveryActive.get()) {
-    recoveryScope.launch {
-    performRecovery("Error in $operation: $error")
-    }
-    }
+        if (isRapidFailure()) {
+            eventListener?.onRapidFailureDetected(rapidFailureCount.get())
+            // Delay recovery for rapid failures to avoid overwhelming the network
+            recoveryScope.launch {
+                delay(5000)
+                if (isRecoveryActive.get()) {
+                    performRecovery("Rapid failure in $operation: $error")
+                }
+            }
+        } else if (isRecoveryActive.get()) {
+            recoveryScope.launch {
+                performRecovery("Error in $operation: $error")
+            }
+        }
     }
 
     private fun startHealthMonitoring() {
@@ -159,14 +159,14 @@ class NetworkErrorRecoveryManager(
     }
 
     private fun stopHealthMonitoring() {
-    healthCheckJob?.cancel()
-    healthCheckJob = null
+        healthCheckJob?.cancel()
+        healthCheckJob = null
     }
 
     private suspend fun performHealthCheck(): Boolean {
-    if (!networkClient.isConnected()) {
-    return false
-    }
+        if (!networkClient.isConnected()) {
+            return false
+        }
 
         return try {
             // Send a simple ping message to test connectivity
@@ -176,29 +176,29 @@ class NetworkErrorRecoveryManager(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-    // Use a shorter timeout for health checks
-    withTimeout(5000) {
-    networkClient.sendMeasurementData("health_check", pingMessage)
-    }
-    true
-    } catch (e: Exception) {
-    Log.d(TAG, "Health check failed: ${e.message}")
-    false
-    }
+            // Use a shorter timeout for health checks
+            withTimeout(5000) {
+                networkClient.sendMeasurementData("health_check", pingMessage)
+            }
+            true
+        } catch (e: Exception) {
+            Log.d(TAG, "Health check failed: ${e.message}")
+            false
+        }
     }
 
     private suspend fun performRecovery(reason: String): Boolean {
-    if (reconnectionAttempts.get() >= MAX_RECONNECTION_ATTEMPTS) {
-    Log.e(TAG, "Maximum reconnection attempts reached")
-    eventListener?.onRecoveryFailed("Maximum attempts reached")
-    return false
-    }
+        if (reconnectionAttempts.get() >= MAX_RECONNECTION_ATTEMPTS) {
+            Log.e(TAG, "Maximum reconnection attempts reached")
+            eventListener?.onRecoveryFailed("Maximum attempts reached")
+            return false
+        }
 
-    Log.i(TAG, "Starting connection recovery: $reason")
-    eventListener?.onRecoveryStarted(reason)
+        Log.i(TAG, "Starting connection recovery: $reason")
+        eventListener?.onRecoveryStarted(reason)
 
-    var success = false
-    val maxAttempts = MAX_RECONNECTION_ATTEMPTS
+        var success = false
+        val maxAttempts = MAX_RECONNECTION_ATTEMPTS
 
         while (reconnectionAttempts.get() < maxAttempts && isRecoveryActive.get()) {
             val attempt = reconnectionAttempts.incrementAndGet()
@@ -206,8 +206,15 @@ class NetworkErrorRecoveryManager(
             Log.i(TAG, "Recovery attempt $attempt/$maxAttempts")
             eventListener?.onRecoveryAttempt(attempt, maxAttempts)
 
-    Log.i(TAG, "Recovery attempt $attempt/$maxAttempts")
-    eventListener?.onRecoveryAttempt(attempt, maxAttempts)
+            try {
+                // Try to reconnect to last known good controller
+                val controller = lastKnownGoodController
+                if (controller != null) {
+                    success = attemptReconnection(controller)
+                } else {
+                    // Fallback: try to discover new controllers
+                    success = attemptDiscoveryAndConnect()
+                }
 
                 if (success) {
                     Log.i(TAG, "Recovery successful after $attempt attempts")
@@ -229,30 +236,12 @@ class NetworkErrorRecoveryManager(
             }
         }
 
-    if (success) {
-    Log.i(TAG, "Recovery successful after $attempt attempts")
-    eventListener?.onRecoverySuccess(lastKnownGoodController ?:
-    NetworkClient.ControllerInfo("unknown", 0, "Recovered", emptyList()))
-    reconnectionAttempts.set(0)
-    break
-    } else {
-    val delay = calculateRetryDelay(attempt)
-    Log.d(TAG, "Recovery attempt $attempt failed, retrying in ${delay}ms")
-    delay(delay)
-    }
-    } catch (e: Exception) {
-    Log.e(TAG, "Recovery attempt $attempt failed with exception", e)
-    val delay = calculateRetryDelay(attempt)
-    delay(delay)
-    }
-    }
+        if (!success) {
+            Log.e(TAG, "Connection recovery failed after $maxAttempts attempts")
+            eventListener?.onRecoveryFailed("All attempts exhausted")
+        }
 
-    if (!success) {
-    Log.e(TAG, "Connection recovery failed after $maxAttempts attempts")
-    eventListener?.onRecoveryFailed("All attempts exhausted")
-    }
-
-    return success
+        return success
     }
 
     private suspend fun attemptReconnection(controller: NetworkClient.ControllerInfo): Boolean {
@@ -306,11 +295,11 @@ class NetworkErrorRecoveryManager(
     }
 
     private fun calculateRetryDelay(attempt: Int): Long {
-    // Exponential backoff with jitter
-    val baseDelay = INITIAL_RETRY_DELAY_MS * (1L shl (attempt - 1))
-    val cappedDelay = minOf(baseDelay, MAX_RETRY_DELAY_MS)
-    val jitter = (Math.random() * 0.1 * cappedDelay).toLong()
-    return cappedDelay + jitter
+        // Exponential backoff with jitter
+        val baseDelay = INITIAL_RETRY_DELAY_MS * (1L shl (attempt - 1))
+        val cappedDelay = minOf(baseDelay, MAX_RETRY_DELAY_MS)
+        val jitter = (Math.random() * 0.1 * cappedDelay).toLong()
+        return cappedDelay + jitter
     }
 
     private fun isRapidFailure(): Boolean {
@@ -329,10 +318,10 @@ class NetworkErrorRecoveryManager(
 
 
     fun resetRecoveryState() {
-    reconnectionAttempts.set(0)
-    rapidFailureCount.set(0)
-    lastFailureTime = 0L
-    Log.i(TAG, "Recovery state reset")
+        reconnectionAttempts.set(0)
+        rapidFailureCount.set(0)
+        lastFailureTime = 0L
+        Log.i(TAG, "Recovery state reset")
     }
 
 
@@ -348,34 +337,36 @@ class NetworkErrorRecoveryManager(
 
 
     fun recordLatency(latencyMs: Long) {
-    synchronized(latencyMeasurements) {
-    latencyMeasurements.add(latencyMs)
-    if (latencyMeasurements.size > maxMeasurements) {
-    latencyMeasurements.removeAt(0)
+        synchronized(latencyMeasurements) {
+            latencyMeasurements.add(latencyMs)
+            if (latencyMeasurements.size > maxMeasurements) {
+                latencyMeasurements.removeAt(0)
+            }
+        }
     }
 
 
     fun recordDataTransfer(bytes: Long) {
-    val currentTime = System.currentTimeMillis()
-    if (lastDataTransferTime > 0) {
-    val timeDiff = (currentTime - lastDataTransferTime) / 1000.0 // seconds
-    if (timeDiff > 0) {
-    val throughput = (bytesTransferred + bytes) / 1024.0 / timeDiff // KB/s
-    synchronized(throughputMeasurements) {
-    throughputMeasurements.add(throughput)
-    if (throughputMeasurements.size > maxMeasurements) {
-    throughputMeasurements.removeAt(0)
-    }
-    }
-    bytesTransferred = 0
-    lastDataTransferTime = currentTime
-    } else {
-    bytesTransferred += bytes
-    }
-    } else {
-    bytesTransferred = bytes
-    lastDataTransferTime = currentTime
-    }
+        val currentTime = System.currentTimeMillis()
+        if (lastDataTransferTime > 0) {
+            val timeDiff = (currentTime - lastDataTransferTime) / 1000.0 // seconds
+            if (timeDiff > 0) {
+                val throughput = (bytesTransferred + bytes) / 1024.0 / timeDiff // KB/s
+                synchronized(throughputMeasurements) {
+                    throughputMeasurements.add(throughput)
+                    if (throughputMeasurements.size > maxMeasurements) {
+                        throughputMeasurements.removeAt(0)
+                    }
+                }
+                bytesTransferred = 0
+                lastDataTransferTime = currentTime
+            } else {
+                bytesTransferred += bytes
+            }
+        } else {
+            bytesTransferred = bytes
+            lastDataTransferTime = currentTime
+        }
     }
 
 
@@ -416,9 +407,9 @@ class NetworkErrorRecoveryManager(
 
 
     fun cleanup() {
-    disableAutoRecovery()
-    recoveryJob.cancel()
-    eventListener = null
-    lastKnownGoodController = null
+        disableAutoRecovery()
+        recoveryJob.cancel()
+        eventListener = null
+        lastKnownGoodController = null
     }
 }

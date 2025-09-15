@@ -11,14 +11,14 @@ class UsbBuffer {
     private var mPakagebuffer: ByteArray
 
     constructor(frameSize: Int, headSize: Int, count: Int) {
-    mFrameSize = frameSize
-    mPacketSize = headSize
-    mRingBuffer = RingBuffer(mFrameSize * count)
-    mPakagebuffer = ByteArray(mPacketSize)
+        mFrameSize = frameSize
+        mPacketSize = headSize
+        mRingBuffer = RingBuffer(mFrameSize * count)
+        mPakagebuffer = ByteArray(mPacketSize)
     }
 
     fun setFrameMark(mark1: Int) {
-    this.mark1 = mark1
+        this.mark1 = mark1
     }
 
     fun write(
@@ -60,15 +60,15 @@ class UsbBuffer {
     }
 
     private fun isValidFrameInt(frame: ByteArray): Int {
-    var i = 0
-    while (i < frame.size - 1) {
-    if (getMark(frame, i) == mark1) {
+        var i = 0
+        while (i < frame.size - 1) {
+            if (getMark(frame, i) == mark1) {
 //                Log.d(TAG, "找到参数头...")
-    return i
-    }
-    i += 2
-    }
-    return -1
+                return i
+            }
+            i += 2
+        }
+        return -1
     }
 
     fun readFrame(frame: ByteArray): Boolean {

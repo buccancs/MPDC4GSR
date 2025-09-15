@@ -50,7 +50,7 @@ abstract class AbstractScanner implements Scanner {
         logger = easyBle.getLogger();
         deviceCreator = easyBle.getDeviceCreator();
     }
-
+    
     @Override
     public void addScanListener(ScanListener listener) {
         if (!scanListeners.contains(listener)) {
@@ -193,14 +193,14 @@ abstract class AbstractScanner implements Scanner {
             parseScanResult(device, false);
         } else {
             ScanRecord record = result.getScanRecord();
-            parseScanResult(device, false, result, result.getRssi(), record == null ? null : record.getBytes());
+            parseScanResult(device, false, result, result.getRssi(), record == null ? null : record.getBytes());            
         }
     }
 
     private void parseScanResult(BluetoothDevice device, boolean isConnectedBySys) {
         parseScanResult(device, isConnectedBySys, null, -120, null);
     }
-
+    
     void parseScanResult(BluetoothDevice device, boolean isConnectedBySys, ScanResult result, int rssi, byte[] scanRecord) {
         // Check Bluetooth permissions before accessing device properties
         Context context = EasyBLE.getInstance().getContext();
@@ -299,7 +299,7 @@ abstract class AbstractScanner implements Scanner {
             isScanning = scanning;
         }
     }
-
+    
     @CallSuper
     @Override
     public void stopScan(boolean quietly) {
@@ -343,7 +343,7 @@ abstract class AbstractScanner implements Scanner {
         }
         return false;
     }
-
+    
     @Override
     public void onBluetoothOff() {
         synchronized (this) {

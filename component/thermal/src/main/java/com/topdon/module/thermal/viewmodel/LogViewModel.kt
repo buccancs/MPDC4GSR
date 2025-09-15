@@ -90,9 +90,9 @@ class LogViewModel : BaseViewModel() {
 
 
     suspend fun queryLogThermals(
-    selectTimeType: Int,
-    endLogTime: Long = System.currentTimeMillis(),
-    action: Int,
+        selectTimeType: Int,
+        endLogTime: Long = System.currentTimeMillis(),
+        action: Int,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val userId = SharedManager.getUserId()
@@ -260,9 +260,9 @@ class LogViewModel : BaseViewModel() {
 
 
     suspend fun queryLogVolsByStartTime(
-    type: Int = 3,
-    selectTimeType: Int,
-    endLogTime: Long = System.currentTimeMillis(),
+        type: Int = 3,
+        selectTimeType: Int,
+        endLogTime: Long = System.currentTimeMillis(),
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -292,163 +292,163 @@ class LogViewModel : BaseViewModel() {
 //4 -> startLogTime + 1 * 365 * 24 * 60 * 60 * 1000L //天(1年)
 //                else -> startLogTime + 7200 * 1000L
 
-    1 -> endLogTime - 7200 * 1000L // 秒(2小时)
-    2 -> endLogTime - 7200 * 60 * 1000L // 分(5天)
-    3 -> endLogTime - 7200 * 60 * 60 * 1000L // 时(300天)
-    4 -> endLogTime - 10 * 365 * 24 * 60 * 60 * 1000L // 天(10年)
-    else -> endLogTime - 7200 * 1000L
-    }
-    when (selectTimeType) {
-    1 -> {
-    bean.dataList =
-    AppDatabase.getInstance().thermalDao()
-    .queryByTime(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    type = typeStr,
-    ) as ArrayList<ThermalEntity>
-    bean.maxVol =
-    AppDatabase.getInstance().thermalDao()
-    .queryByTimeMax(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    )
-    bean.minVol =
-    AppDatabase.getInstance().thermalDao()
-    .queryByTimeMin(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    )
-    Log.w("chart", "电压数据:${bean.dataList.size}")
-    }
-    2 -> {
-    val resultList =
-    AppDatabase.getInstance().thermalMinDao()
-    .queryByTime(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    type = typeStr,
-    ) as ArrayList<ThermalMinuteEntity>
-    resultList.forEach {
-    val entity = ThermalEntity()
-    entity.userId = it.userId
-    entity.sn = it.sn
-    entity.thermal = it.thermal
-    entity.thermalMax = it.thermalMax
-    entity.thermalMin = it.thermalMin
-    entity.info = it.info
-    entity.type = it.type
-    entity.createTime = it.createTime
-    bean.dataList.add(entity)
-    }
-    bean.maxVol =
-    AppDatabase.getInstance().thermalMinDao()
-    .queryByTimeMax(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    )
-    bean.minVol =
-    AppDatabase.getInstance().thermalMinDao()
-    .queryByTimeMin(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    )
-    Log.w("chart", "电压数据:${bean.dataList.size}")
-    }
-    3 -> {
-    val resultList =
-    AppDatabase.getInstance().thermalHourDao()
-    .queryByTime(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    type = typeStr,
-    ) as ArrayList<ThermalHourEntity>
-    resultList.forEach {
-    val entity = ThermalEntity()
-    entity.userId = it.userId
-    entity.sn = it.sn
-    entity.thermal = it.thermal
-    entity.thermalMax = it.thermalMax
-    entity.thermalMin = it.thermalMin
-    entity.info = it.info
-    entity.type = it.type
-    entity.createTime = it.createTime
-    bean.dataList.add(entity)
-    }
-    bean.maxVol =
-    AppDatabase.getInstance().thermalHourDao()
-    .queryByTimeMax(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    )
-    bean.minVol =
-    AppDatabase.getInstance().thermalHourDao()
-    .queryByTimeMin(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    )
-    Log.w("chart", "电压数据:${bean.dataList.size}")
-    }
-    4 -> {
-    val resultList =
-    AppDatabase.getInstance().thermalDayDao()
-    .queryByTime(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    type = typeStr,
-    ) as ArrayList<ThermalDayEntity>
-    resultList.forEach {
-    val entity = ThermalEntity()
-    entity.userId = it.userId
-    entity.sn = it.sn
-    entity.thermal = it.thermal
-    entity.thermalMax = it.thermalMax
-    entity.thermalMin = it.thermalMin
-    entity.info = it.info
-    entity.type = it.type
-    entity.createTime = it.createTime
-    bean.dataList.add(entity)
-    }
-    bean.maxVol =
-    AppDatabase.getInstance().thermalDayDao()
-    .queryByTimeMax(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    )
-    bean.minVol =
-    AppDatabase.getInstance().thermalDayDao()
-    .queryByTimeMin(
-    userId = userId,
-    startTime = startLogTime,
-    endTime = endLogTime,
-    )
-    Log.w("chart", "电压数据:${bean.dataList.size}")
-    }
-    }
-    delay(500)
-    resultLiveData.postValue(bean)
-    } catch (e: Exception) {
-    XLog.e("数据查询异常:${e.message}")
-    resultLiveData.postValue(ChartList())
-    }
-    }
+                        1 -> endLogTime - 7200 * 1000L // 秒(2小时)
+                        2 -> endLogTime - 7200 * 60 * 1000L // 分(5天)
+                        3 -> endLogTime - 7200 * 60 * 60 * 1000L // 时(300天)
+                        4 -> endLogTime - 10 * 365 * 24 * 60 * 60 * 1000L // 天(10年)
+                        else -> endLogTime - 7200 * 1000L
+                    }
+                when (selectTimeType) {
+                    1 -> {
+                        bean.dataList =
+                            AppDatabase.getInstance().thermalDao()
+                                .queryByTime(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                    type = typeStr,
+                                ) as ArrayList<ThermalEntity>
+                        bean.maxVol =
+                            AppDatabase.getInstance().thermalDao()
+                                .queryByTimeMax(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                )
+                        bean.minVol =
+                            AppDatabase.getInstance().thermalDao()
+                                .queryByTimeMin(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                )
+                        Log.w("chart", "电压数据:${bean.dataList.size}")
+                    }
+                    2 -> {
+                        val resultList =
+                            AppDatabase.getInstance().thermalMinDao()
+                                .queryByTime(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                    type = typeStr,
+                                ) as ArrayList<ThermalMinuteEntity>
+                        resultList.forEach {
+                            val entity = ThermalEntity()
+                            entity.userId = it.userId
+                            entity.sn = it.sn
+                            entity.thermal = it.thermal
+                            entity.thermalMax = it.thermalMax
+                            entity.thermalMin = it.thermalMin
+                            entity.info = it.info
+                            entity.type = it.type
+                            entity.createTime = it.createTime
+                            bean.dataList.add(entity)
+                        }
+                        bean.maxVol =
+                            AppDatabase.getInstance().thermalMinDao()
+                                .queryByTimeMax(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                )
+                        bean.minVol =
+                            AppDatabase.getInstance().thermalMinDao()
+                                .queryByTimeMin(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                )
+                        Log.w("chart", "电压数据:${bean.dataList.size}")
+                    }
+                    3 -> {
+                        val resultList =
+                            AppDatabase.getInstance().thermalHourDao()
+                                .queryByTime(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                    type = typeStr,
+                                ) as ArrayList<ThermalHourEntity>
+                        resultList.forEach {
+                            val entity = ThermalEntity()
+                            entity.userId = it.userId
+                            entity.sn = it.sn
+                            entity.thermal = it.thermal
+                            entity.thermalMax = it.thermalMax
+                            entity.thermalMin = it.thermalMin
+                            entity.info = it.info
+                            entity.type = it.type
+                            entity.createTime = it.createTime
+                            bean.dataList.add(entity)
+                        }
+                        bean.maxVol =
+                            AppDatabase.getInstance().thermalHourDao()
+                                .queryByTimeMax(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                )
+                        bean.minVol =
+                            AppDatabase.getInstance().thermalHourDao()
+                                .queryByTimeMin(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                )
+                        Log.w("chart", "电压数据:${bean.dataList.size}")
+                    }
+                    4 -> {
+                        val resultList =
+                            AppDatabase.getInstance().thermalDayDao()
+                                .queryByTime(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                    type = typeStr,
+                                ) as ArrayList<ThermalDayEntity>
+                        resultList.forEach {
+                            val entity = ThermalEntity()
+                            entity.userId = it.userId
+                            entity.sn = it.sn
+                            entity.thermal = it.thermal
+                            entity.thermalMax = it.thermalMax
+                            entity.thermalMin = it.thermalMin
+                            entity.info = it.info
+                            entity.type = it.type
+                            entity.createTime = it.createTime
+                            bean.dataList.add(entity)
+                        }
+                        bean.maxVol =
+                            AppDatabase.getInstance().thermalDayDao()
+                                .queryByTimeMax(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                )
+                        bean.minVol =
+                            AppDatabase.getInstance().thermalDayDao()
+                                .queryByTimeMin(
+                                    userId = userId,
+                                    startTime = startLogTime,
+                                    endTime = endLogTime,
+                                )
+                        Log.w("chart", "电压数据:${bean.dataList.size}")
+                    }
+                }
+                delay(500)
+                resultLiveData.postValue(bean)
+            } catch (e: Exception) {
+                XLog.e("数据查询异常:${e.message}")
+                resultLiveData.postValue(ChartList())
+            }
+        }
     }
 
 
     private fun getNewVolData(
-    data: List<ThermalEntity>,
-    type: Int = 2,
+        data: List<ThermalEntity>,
+        type: Int = 2,
     ): ArrayList<ThermalEntity> {
         val newData: ArrayList<ThermalEntity> = arrayListOf()
         var startIndex = 0
@@ -500,10 +500,10 @@ class LogViewModel : BaseViewModel() {
 
 //calculation平均值
     private fun addData(
-    data: List<ThermalEntity>,
-    newData: ArrayList<ThermalEntity>,
-    startIndex: Int,
-    endIndex: Int,
+        data: List<ThermalEntity>,
+        newData: ArrayList<ThermalEntity>,
+        startIndex: Int,
+        endIndex: Int,
     ) {
         val tempVolEntity = data[startIndex]
         var temp = 0f
@@ -738,9 +738,9 @@ class LogViewModel : BaseViewModel() {
 
 
     data class ChartList(
-    var dataList: ArrayList<ThermalEntity> = arrayListOf(),
-    var maxVol: Float = 0f,
-    var minVol: Float = 0f,
-    var action: Int = 0,
+        var dataList: ArrayList<ThermalEntity> = arrayListOf(),
+        var maxVol: Float = 0f,
+        var minVol: Float = 0f,
+        var action: Int = 0,
     )
 }

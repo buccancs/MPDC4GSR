@@ -17,37 +17,37 @@ class BlankDevActivity : BaseBindingActivity<ActivityBlankDevBinding>() {
     override fun initContentLayoutId() = R.layout.activity_blank_dev
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    if (SharedManager.getHasShowClause()) {
-    if (!App.instance.activityNameList.contains(IRMainActivity::class.simpleName)) {
-    NavigationManager.build(RouterConfig.MAIN).navigation(this)
-    if (!SharedManager.isConnectAutoOpen) {
-    NavigationManager.build(RouterConfig.IR_MAIN).navigation(this)
-    }
-    }
-    finish()
-    } else {
-    startActivity(Intent(this, com.topdon.tc001.ClauseActivity::class.java))
-    finish()
-    }
+        super.onCreate(savedInstanceState)
+        if (SharedManager.getHasShowClause()) {
+            if (!App.instance.activityNameList.contains(IRMainActivity::class.simpleName)) {
+                NavigationManager.build(RouterConfig.MAIN).navigation(this)
+                if (!SharedManager.isConnectAutoOpen) {
+                    NavigationManager.build(RouterConfig.IR_MAIN).navigation(this)
+                }
+            }
+            finish()
+        } else {
+            startActivity(Intent(this, com.topdon.tc001.ClauseActivity::class.java))
+            finish()
+        }
     }
 
     fun isActivityExists(
-    context: Context,
-    activityClassName: String,
+        context: Context,
+        activityClassName: String,
     ): Boolean {
-    val activityManager =
-    context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-    ?: return false
-    val tasks = activityManager.getRunningTasks(Int.MAX_VALUE)
-    for (task in tasks) {
-    if (task.topActivity != null && task.topActivity!!.className == activityClassName) {
-    return true
-    }
-    if (task.baseActivity != null && task.baseActivity!!.className == activityClassName) {
-    return true
-    }
-    }
-    return false
+        val activityManager =
+            context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+                ?: return false
+        val tasks = activityManager.getRunningTasks(Int.MAX_VALUE)
+        for (task in tasks) {
+            if (task.topActivity != null && task.topActivity!!.className == activityClassName) {
+                return true
+            }
+            if (task.baseActivity != null && task.baseActivity!!.className == activityClassName) {
+                return true
+            }
+        }
+        return false
     }
 }

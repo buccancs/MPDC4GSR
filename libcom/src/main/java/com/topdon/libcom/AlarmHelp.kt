@@ -134,16 +134,16 @@ class AlarmHelp private constructor(val context: Context) {
     }
 
     private fun stopPlayer() {
-    if (mediaPlayer?.isPlaying == true) {
-    mediaPlayer?.pause()
-    }
+        if (mediaPlayer?.isPlaying == true) {
+            mediaPlayer?.pause()
+        }
     }
 
     private fun startMediaPlayer() {
-    if (mediaPlayer?.isPlaying != true && !isPause) {
-    mediaPlayer?.seekTo(0)
-    mediaPlayer?.start()
-    }
+        if (mediaPlayer?.isPlaying != true && !isPause) {
+            mediaPlayer?.seekTo(0)
+            mediaPlayer?.start()
+        }
     }
 
     fun onDestroy(isSaveSetting: Boolean) {
@@ -162,15 +162,15 @@ class AlarmHelp private constructor(val context: Context) {
     }
 
     fun pause() {
-    mediaPlayer?.let {
-    if (it.isPlaying) {
-    it.pause()
-    isPause = true
-    }
-    }
+        mediaPlayer?.let {
+            if (it.isPlaying) {
+                it.pause()
+                isPause = true
+            }
+        }
     }
 
     fun onResume() {
-    isPause = false
+        isPause = false
     }
 }

@@ -17,10 +17,10 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
 
 
     var isSaveSetting: Boolean = getSPUtils().getBoolean("isSaveSetting", true)
-    set(value) {
-    field = value
-    getSPUtils().put("isSaveSetting", value)
-    }
+        set(value) {
+            field = value
+            getSPUtils().put("isSaveSetting", value)
+        }
 
 
     var isMeasureTempMode: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isMeasureTempMode", true) else true
@@ -69,12 +69,12 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
 
 
     var delayCaptureSecond: Int = if (isSaveSetting) getSPUtils().getInt("delayCaptureSecond", 0) else 0
-    set(value) {
-    field = value
-    if (isSaveSetting) {
-    getSPUtils().put("delayCaptureSecond", value)
-    }
-    }
+        set(value) {
+            field = value
+            if (isSaveSetting) {
+                getSPUtils().put("delayCaptureSecond", value)
+            }
+        }
 
     var fusionType: Int =
         if (isSaveSetting) {
@@ -248,30 +248,30 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
 
 
     var isOpenLowPoint: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenLowPoint", false) else false
-    set(value) {
-    field = value
-    if (isSaveSetting) {
-    getSPUtils().put("isOpenLowPoint", value)
-    }
-    }
+        set(value) {
+            field = value
+            if (isSaveSetting) {
+                getSPUtils().put("isOpenLowPoint", value)
+            }
+        }
 
 
     var aiTraceType: Int = if (isSaveSetting) getSPUtils().getInt("aiTraceType", ObserveBean.TYPE_NONE) else ObserveBean.TYPE_NONE
-    set(value) {
-    field = value
-    if (isSaveSetting) {
-    getSPUtils().put("aiTraceType", value)
-    }
-    }
+        set(value) {
+            field = value
+            if (isSaveSetting) {
+                getSPUtils().put("aiTraceType", value)
+            }
+        }
 
 
     var isOpenTarget: Boolean = if (isSaveSetting) getSPUtils().getBoolean("isOpenTarget", false) else false
-    set(value) {
-    field = value
-    if (isSaveSetting) {
-    getSPUtils().put("isOpenTarget", value)
-    }
-    }
+        set(value) {
+            field = value
+            if (isSaveSetting) {
+                getSPUtils().put("isOpenTarget", value)
+            }
+        }
 
 
     var targetMeasureMode: Int =

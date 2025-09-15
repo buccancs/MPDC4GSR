@@ -6,7 +6,7 @@ import android.content.Context
 object VersionUtils {
 
     fun getCodeStr(context: Context): String {
-    val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
-    return versionName ?: ""
+        val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        return versionName ?: ""
     }
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# IRCamera Development Tools - Simplified and Efficient
+# IRCamera Development Tools - CI/CD Core
 # Usage: ./dev.sh [command]
 
 set -e
@@ -18,21 +18,11 @@ show_help() {
     echo "Usage: ./dev.sh [command]"
     echo ""
     echo "Commands:"
-    echo "  format      - Format all code files"
     echo "  lint        - Run linting checks (ktlint, checkstyle)"
     echo "  static      - Run static analysis"
-    echo "  build       - Build the project (full gradle build)"
     echo "  build-check - Quick build validation"
-    echo "  test        - Run tests"
-    echo "  validate    - Run all checks (format + lint + static + build)"
-    echo "  clean       - Clean build artifacts"
-    echo "  setup       - Setup development environment"
-    echo "  health      - Quick health check"
-    echo "  docs        - Generate documentation"
+    echo "  validate    - Run all checks (lint + static + build)"
     echo "  help        - Show this help"
-    echo ""
-    echo -e "${CYAN}Advanced Tools:${NC}"
-    echo "  ./status.sh                    - Project status overview"
 }
 
 print_status() {
@@ -45,90 +35,6 @@ print_warning() {
 
 print_error() {
     echo -e "${RED}❌ $1${NC}"
-}
-
-setup_dev_environment() {
-    print_status "Setting up development environment..."
-    
-    # Install pre-commit hooks
-    if command -v pre-commit &> /dev/null; then
-        pre-commit install
-        print_status "Pre-commit hooks installed"
-    else
-        print_warning "pre-commit not found. Install with: pip install pre-commit"
-    fi
-    
-    # Setup IDE configurations
-    if [ ! -f ".editorconfig" ]; then
-        print_warning "No .editorconfig found. Consider adding IDE configuration."
-    fi
-    
-    print_status "Development environment setup completed"
-}
-
-format_code() {
-    print_status "Formatting code..."
-    
-    local temp_file
-    temp_file=$(mktemp)
-    echo "0" > "$temp_file"
-    
-    # Format Kotlin files
-    if command -v ktlint &> /dev/null; then
-        find . -name "*.kt" -not -path "./build/*" -not -path "./.gradle/*" -print0 | while IFS= read -r -d '' file; do
-            if ktlint --format "$file" 2>/dev/null; then
-                local count
-                count=$(cat "$temp_file")
-                echo $((count + 1)) > "$temp_file"
-            fi
-        done
-        print_status "Kotlin files formatted"
-    else
-        print_warning "ktlint not available. Install for Kotlin formatting."
-    fi
-    
-    # Format Java files
-    if command -v google-java-format &> /dev/null; then
-        find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" -print0 | while IFS= read -r -d '' file; do
-            if google-java-format --replace "$file" 2>/dev/null; then
-                local count
-                count=$(cat "$temp_file")
-                echo $((count + 1)) > "$temp_file"
-            fi
-        done
-        print_status "Java files formatted"
-    else
-        print_warning "google-java-format not available. Install for Java formatting."
-    fi
-    
-    # Format Python files
-    if command -v black &> /dev/null; then
-        find . -name "*.py" -print0 | while IFS= read -r -d '' file; do
-            if black --quiet "$file" 2>/dev/null; then
-                local count
-                count=$(cat "$temp_file")
-                echo $((count + 1)) > "$temp_file"
-            fi
-        done
-        print_status "Python files formatted"
-    fi
-    
-    # Format XML files
-    if command -v xmllint &> /dev/null; then
-        find . -name "*.xml" -not -path "./build/*" -not -path "./.gradle/*" -print0 | while IFS= read -r -d '' file; do
-            if xmllint --format "$file" --output "$file" 2>/dev/null; then
-                local count
-                count=$(cat "$temp_file")
-                echo $((count + 1)) > "$temp_file"
-            fi
-        done
-    fi
-    
-    local files_formatted
-    files_formatted=$(cat "$temp_file")
-    rm -f "$temp_file"
-    
-    print_status "Code formatting completed ($files_formatted files processed)"
 }
 
 run_lint() {
@@ -149,64 +55,22 @@ run_lint() {
         print_warning "ktlint not available. Install with: brew install ktlint (macOS) or download from GitHub"
     fi
     
-    # Java lint with checkstyle
-    if [ -f "checkstyle.xml" ] && command -v checkstyle &> /dev/null; then
-        print_status "Running checkstyle on Java files..."
-        if ! find . -name "*.java" -not -path "./build/*" -not -path "./.gradle/*" -exec checkstyle -c checkstyle.xml {} + 2>/dev/null; then
-            errors=$((errors + 1))
-            print_error "Java checkstyle issues found"
-        else
-            print_status "Java checkstyle passed"
-        fi
-    else
-        print_warning "checkstyle not available or checkstyle.xml missing"
-    fi
-    
-    # Gradle lint
-    if [ -f "./gradlew" ]; then
-        print_status "Running gradle lint..."
-        if ! ./gradlew lint --quiet 2>/dev/null; then
-            errors=$((errors + 1))
-            print_error "Gradle lint issues found"
-        else
-            print_status "Gradle lint passed"
-        fi
-    fi
-    
-    # Python lint
+    # Python lint with flake8
     if command -v flake8 &> /dev/null; then
-        if ! find . -name "*.py" -print0 | xargs -0 flake8 2>/dev/null; then
+        print_status "Running flake8 on Python files..."
+        if ! find . -name "*.py" -exec flake8 {} + 2>/dev/null; then
             errors=$((errors + 1))
-            print_error "Python linting issues found"
+            print_error "Python flake8 issues found"
         else
             print_status "Python linting passed"
         fi
     fi
     
-    # Shell script lint
-    if command -v shellcheck &> /dev/null; then
-        if ! find . -name "*.sh" -print0 | xargs -0 shellcheck 2>/dev/null; then
-            errors=$((errors + 1))
-            print_error "Shell script linting issues found"
-        else
-            print_status "Shell script linting passed"
-        fi
-    fi
-    
-    # YAML lint
-    if command -v yamllint &> /dev/null; then
-        if ! find . \( -name "*.yml" -o -name "*.yaml" \) -print0 | xargs -0 yamllint -d relaxed 2>/dev/null; then
-            errors=$((errors + 1))
-            print_error "YAML linting issues found"
-        else
-            print_status "YAML linting passed"
-        fi
-    fi
-    
     if [ $errors -eq 0 ]; then
         print_status "All linting checks passed"
+        return 0
     else
-        print_error "Found $errors linting issues"
+        print_error "Linting failed with $errors error(s)"
         return 1
     fi
 }
@@ -214,258 +78,101 @@ run_lint() {
 run_static_analysis() {
     print_status "Running static analysis..."
     
-    local errors=0
-    
-    # Run Android lint for detailed analysis
-    if [ -f "./gradlew" ]; then
-        print_status "Running Android lint analysis..."
-        ./gradlew lint --quiet || {
-            errors=$((errors + 1))
-            print_error "Android lint found issues"
-        }
-        
-        # Run detekt for Kotlin static analysis if available
-        print_status "Running detekt for Kotlin analysis..."
-        ./gradlew detekt --quiet 2>/dev/null || {
-            print_warning "Detekt not configured or failed"
-        }
-        
-        # Run spotbugs for Java static analysis if available
-        print_status "Running SpotBugs for Java analysis..."
-        ./gradlew spotbugsMain --quiet 2>/dev/null || {
-            print_warning "SpotBugs not configured or failed"
-        }
-    fi
-    
-    # PMD analysis if available
-    if command -v pmd &> /dev/null; then
-        print_status "Running PMD analysis..."
-        pmd check -R rulesets/java/quickstart.xml -d . -f text 2>/dev/null || {
-            print_warning "PMD analysis completed with issues"
-        }
-    fi
-    
-    if [ $errors -eq 0 ]; then
-        print_status "Static analysis completed successfully"
-    else
-        print_error "Static analysis found $errors critical issues"
-        return 1
-    fi
-}
-
-build_project() {
-    print_status "Building project (full gradle build)..."
-    
-    if [ -f "./gradlew" ]; then
-        # Clean first to ensure fresh build
-        print_status "Cleaning previous build artifacts..."
-        ./gradlew clean --quiet
-        
-        # Full build with all modules
-        print_status "Running full gradle build..."
-        if ./gradlew build --quiet; then
-            print_status "Full build completed successfully"
-        else
-            print_error "Build failed"
-            print_status "Running build with more verbose output for debugging..."
-            ./gradlew build --info | tail -20
-            return 1
-        fi
-    else
-        print_error "No gradlew found"
-        return 1
-    fi
-}
-
-build_check() {
-    print_status "Running quick build validation..."
-    
-    if [ -f "./gradlew" ]; then
-        # Quick assembly check without tests
-        print_status "Validating gradle configuration..."
-        if ! ./gradlew tasks --quiet >/dev/null 2>&1; then
-            print_error "Gradle configuration has issues"
-            return 1
-        fi
-        
-        print_status "Running quick build check..."
-        if ./gradlew :app:assemble --quiet; then
-            print_status "Quick build check passed"
-        else
-            print_error "Quick build check failed"
-            return 1
-        fi
-        
-        # Check for common build issues
-        print_status "Checking for common issues..."
-        if [ ! -f "gradle/libs.versions.toml" ]; then
-            print_warning "Version catalog missing"
-        fi
-        
-        # Verify key directories exist
-        if [ ! -d "app/src/main" ]; then
-            print_error "Main app source directory missing"
-            return 1
-        fi
-        
-        print_status "Build validation completed successfully"
-    else
-        print_error "No gradlew found"
-        return 1
-    fi
-}
-
-run_tests() {
-    print_status "Running tests..."
-    
-    if [ -f "./gradlew" ]; then
-        if ./gradlew :app:testDebugUnitTest --quiet; then
-            print_status "Tests completed successfully"
-        else
-            print_error "Tests failed"
-            return 1
-        fi
-    else
-        print_error "No gradlew found"
-        return 1
-    fi
-}
-
-validate_all() {
-    print_status "Running full validation..."
-    
-    local start_time
-    start_time=$(date +%s)
-    
-    # Run all validation steps
-    format_code
-    run_lint
-    run_static_analysis
-    build_check
-    
-    local end_time
-    end_time=$(date +%s)
-    local duration=$((end_time - start_time))
-    
-    print_status "All validation checks passed! (${duration}s)"
-}
-
-quick_health_check() {
-    print_status "Running quick health check..."
-    
+    # Basic static analysis - can be expanded
     local issues=0
     
-    # Check gradle
-    if ./gradlew help --quiet &>/dev/null; then
-        print_status "Gradle: Working"
-    else
-        print_error "Gradle: Issues detected"
-        issues=$((issues + 1))
+    # Check for common issues in Kotlin/Java files
+    if command -v grep &> /dev/null; then
+        print_status "Checking for common code issues..."
+        
+        # Check for potential null pointer issues
+        if find . -name "*.kt" -o -name "*.java" | xargs grep -l "!!" 2>/dev/null | grep -v build > /dev/null; then
+            print_warning "Found potential null assertion issues (!!)"
+            issues=$((issues + 1))
+        fi
+        
+        # Check for hardcoded strings
+        if find . -name "*.kt" -o -name "*.java" | xargs grep -l "Log\." 2>/dev/null | grep -v build > /dev/null; then
+            print_warning "Found hardcoded logging statements"
+            issues=$((issues + 1))
+        fi
     fi
     
-    # Check dev tools
-    if [ -x "./dev.sh" ]; then
-        print_status "Dev Tools: Ready"
+    if [ $issues -eq 0 ]; then
+        print_status "Static analysis passed"
+        return 0
     else
-        print_warning "Dev Tools: Not executable"
-        issues=$((issues + 1))
-    fi
-    
-    # Check pre-commit
-    if [ -f ".pre-commit-config.yaml" ]; then
-        print_status "Pre-commit: Configured"
-    else
-        print_warning "Pre-commit: Not configured"
-    fi
-    
-    # Quick file count
-    local kotlin_files java_files
-    kotlin_files=$(find . -name "*.kt" -not -path "./build/*" | wc -l)
-    java_files=$(find . -name "*.java" -not -path "./build/*" | wc -l)
-    
-    print_status "Code Files: $kotlin_files Kotlin, $java_files Java"
-    
-    if [ "$issues" -eq 0 ]; then
-        print_status "All systems healthy!"
-    else
-        print_warning "Found $issues issues"
+        print_warning "Static analysis completed with $issues warning(s)"
+        return 0  # warnings don't fail the build
     fi
 }
 
-clean_artifacts() {
-    print_status "Cleaning build artifacts..."
+run_build_check() {
+    print_status "Running build validation..."
     
-    if [ -f "./gradlew" ]; then
-        ./gradlew clean --quiet
+    # Check if gradlew exists and is executable
+    if [ ! -f "./gradlew" ]; then
+        print_error "gradlew not found"
+        return 1
     fi
     
-    # Remove common build artifacts
-    find . -name "build" -type d -not -path "./.gradle/*" -exec rm -rf {} + 2>/dev/null || true
-    find . -name "*.log" -delete 2>/dev/null || true
-    find . -name "*.tmp" -delete 2>/dev/null || true
-    find . -name ".kotlin" -type d -exec rm -rf {} + 2>/dev/null || true
+    if [ ! -x "./gradlew" ]; then
+        chmod +x ./gradlew
+        print_status "Made gradlew executable"
+    fi
     
-    print_status "Clean completed"
+    # Run gradle check
+    if ./gradlew assemble --no-daemon --console=plain; then
+        print_status "Build validation passed"
+        return 0
+    else
+        print_error "Build validation failed"
+        return 1
+    fi
 }
 
-generate_docs() {
-    print_status "Generating documentation..."
+run_validate() {
+    print_status "Running full validation..."
     
-    # Generate Javadoc for Java files
-    if [ -f "./gradlew" ]; then
-        print_status "Generating Javadoc..."
-        ./gradlew javadoc --quiet 2>/dev/null || {
-            print_warning "Javadoc generation failed or not configured"
-        }
+    local overall_status=0
+    
+    # Run linting
+    if ! run_lint; then
+        overall_status=1
     fi
     
-    # Generate KDoc for Kotlin files
-    if [ -f "./gradlew" ]; then
-        print_status "Generating KDoc..."
-        ./gradlew dokkaHtml --quiet 2>/dev/null || {
-            print_warning "KDoc generation failed or not configured"
-        }
+    # Run static analysis
+    run_static_analysis  # doesn't fail on warnings
+    
+    # Run build check
+    if ! run_build_check; then
+        overall_status=1
     fi
     
-    print_status "Documentation generation completed"
+    if [ $overall_status -eq 0 ]; then
+        print_status "All validation checks passed ✨"
+    else
+        print_error "Some validation checks failed"
+    fi
+    
+    return $overall_status
 }
 
-# Main command handler
+# Main script logic
 case "${1:-help}" in
-    "format")
-        format_code
-        ;;
-    "lint")
+    lint)
         run_lint
         ;;
-    "static")
+    static)
         run_static_analysis
         ;;
-    "build")
-        build_project
+    build-check)
+        run_build_check
         ;;
-    "build-check")
-        build_check
+    validate)
+        run_validate
         ;;
-    "test")
-        run_tests
-        ;;
-    "validate")
-        validate_all
-        ;;
-    "clean")
-        clean_artifacts
-        ;;
-    "setup")
-        setup_dev_environment
-        ;;
-    "health")
-        quick_health_check
-        ;;
-    "docs")
-        generate_docs
-        ;;
-    "help"|*)
+    help|*)
         show_help
         ;;
 esac

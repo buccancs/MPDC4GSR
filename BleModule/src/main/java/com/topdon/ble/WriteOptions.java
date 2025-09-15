@@ -85,7 +85,7 @@ public class WriteOptions {
                     writeType == BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE ||
                     writeType == BluetoothGattCharacteristic.WRITE_TYPE_SIGNED) {
                 this.writeType = writeType;
-            }
+            }            
             return this;
         }
 
@@ -94,7 +94,7 @@ public class WriteOptions {
             useMtuAsPackageSize = true;
             return this;
         }
-
+        
         public WriteOptions build() {
             return new WriteOptions(this);
         }

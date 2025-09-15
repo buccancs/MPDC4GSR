@@ -17,13 +17,13 @@ class EnhancedNetworkClient(
     private val recordingController: RecordingController,
 ) {
     companion object {
-    private const val TAG = "EnhancedNetworkClient"
-    private const val PC_CONTROLLER_PORT = 8080
-    private const val TIME_SYNC_PORT = 8082
-    private const val FILE_TRANSFER_PORT = 8083
-    private const val CONNECTION_TIMEOUT_MS = 10000L
-    private const val HEARTBEAT_INTERVAL_MS = 5000L
-    private const val STATUS_REPORT_INTERVAL_MS = 2000L
+        private const val TAG = "EnhancedNetworkClient"
+        private const val PC_CONTROLLER_PORT = 8080
+        private const val TIME_SYNC_PORT = 8082
+        private const val FILE_TRANSFER_PORT = 8083
+        private const val CONNECTION_TIMEOUT_MS = 10000L
+        private const val HEARTBEAT_INTERVAL_MS = 5000L
+        private const val STATUS_REPORT_INTERVAL_MS = 2000L
     }
 
     // Network connection state
@@ -476,22 +476,22 @@ class EnhancedNetworkClient(
     }
 
     private fun createMessage(messageType: String): JSONObject {
-    return JSONObject().apply {
-    put("message_type", messageType)
-    put("device_id", deviceId)
-    put("timestamp_ns", timeManager.getCurrentTimestampNs())
-    put("local_timestamp", System.currentTimeMillis())
-    }
+        return JSONObject().apply {
+            put("message_type", messageType)
+            put("device_id", deviceId)
+            put("timestamp_ns", timeManager.getCurrentTimestampNs())
+            put("local_timestamp", System.currentTimeMillis())
+        }
     }
 
     private fun getDeviceCapabilities(): JSONObject {
-    return JSONObject().apply {
-    put("recording_coordination", true)
-    put("time_synchronization", true)
-    put("multi_modal_recording", true)
-    put("real_time_monitoring", true)
-    put("error_recovery", true)
-    }
+        return JSONObject().apply {
+            put("recording_coordination", true)
+            put("time_synchronization", true)
+            put("multi_modal_recording", true)
+            put("real_time_monitoring", true)
+            put("error_recovery", true)
+        }
     }
 
     private fun getAvailableSensors(): JSONObject {
@@ -511,15 +511,15 @@ class EnhancedNetworkClient(
     }
 
     private fun getSessionStatistics(): JSONObject {
-    val stats = recordingController.getRecordingStatistics()
-    return JSONObject().apply {
-    put("is_recording", stats.isRecording)
-    put("session_duration_seconds", stats.sessionDurationSeconds)
-    put("active_sensors", stats.activeSensors)
-    put("total_samples", stats.totalSamplesRecorded)
-    put("storage_used_mb", stats.totalStorageUsedMB)
-    put("dropped_samples", stats.totalDroppedSamples)
-    }
+        val stats = recordingController.getRecordingStatistics()
+        return JSONObject().apply {
+            put("is_recording", stats.isRecording)
+            put("session_duration_seconds", stats.sessionDurationSeconds)
+            put("active_sensors", stats.activeSensors)
+            put("total_samples", stats.totalSamplesRecorded)
+            put("storage_used_mb", stats.totalStorageUsedMB)
+            put("dropped_samples", stats.totalDroppedSamples)
+        }
     }
 
     private fun getSensorStatusArray(): JSONObject {
@@ -546,9 +546,9 @@ class EnhancedNetworkClient(
 
 
     suspend fun cleanup() {
-    disconnect()
-    networkScope.cancel()
-    Log.i(TAG, "Enhanced network client cleaned up")
+        disconnect()
+        networkScope.cancel()
+        Log.i(TAG, "Enhanced network client cleaned up")
     }
 
 

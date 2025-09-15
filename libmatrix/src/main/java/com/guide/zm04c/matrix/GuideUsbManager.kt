@@ -24,11 +24,11 @@ class GuideUsbManager {
     private var mEndpointControlIn: UsbEndpoint? = null
 
     companion object {
-    val ADDRESS_ENDPOINT_DATA_IN = 129
-    val ADDRESS_ENDPOINT_CONTROL_OUT = 2
-    val ADDRESS_ENDPOINT_CONTROL_IN = 131
-    val VENDOR_ID = 0x4206
-    val PRODUCT_ID = 0x3702
+        val ADDRESS_ENDPOINT_DATA_IN = 129
+        val ADDRESS_ENDPOINT_CONTROL_OUT = 2
+        val ADDRESS_ENDPOINT_CONTROL_IN = 131
+        val VENDOR_ID = 0x4206
+        val PRODUCT_ID = 0x3702
     }
 
     /*
@@ -40,185 +40,185 @@ class GuideUsbManager {
     private var mNativeGuideCore: NativeGuideCore? = null
 
     constructor(context: Context?, nativeGuideCore: NativeGuideCore?) {
-    mContext = context
-    mNativeGuideCore = nativeGuideCore
+        mContext = context
+        mNativeGuideCore = nativeGuideCore
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     fun connectUsbDevice(): Int {
-    if (mConnectCode == ResultCode.READY_CONNECT_DEVICE) {
-    getUsbDevice()
-    findInterface()
-    val ret = openDevice()
-    if (ret != SUCC_CONNECT_INTERFACE) {
-    return ret
-    }
-    assignEndpoint()
-    }
-    if (mConnectCode != ResultCode.SUCC_FIND_ENDPOINT) {
-    resetUsbDevice()
-    }
-    return mConnectCode
+        if (mConnectCode == ResultCode.READY_CONNECT_DEVICE) {
+            getUsbDevice()
+            findInterface()
+            val ret = openDevice()
+            if (ret != SUCC_CONNECT_INTERFACE) {
+                return ret
+            }
+            assignEndpoint()
+        }
+        if (mConnectCode != ResultCode.SUCC_FIND_ENDPOINT) {
+            resetUsbDevice()
+        }
+        return mConnectCode
     }
 
     fun disconnectUsbDevice() {
-    resetUsbDevice()
-    mConnectCode = ResultCode.READY_CONNECT_DEVICE
+        resetUsbDevice()
+        mConnectCode = ResultCode.READY_CONNECT_DEVICE
     }
 
     fun isUsbValid(): Boolean {
 /*
-    if (mConnection == null || mEndpointDataIn == null || mEndpointControlIn == null || mEndpointControlOut == null) {
-    return false;
-    } else {
-    return true;
-    }
+        if (mConnection == null || mEndpointDataIn == null || mEndpointControlIn == null || mEndpointControlOut == null) {
+            return false;
+        } else {
+            return true;
+        }
 */
-    return true
+        return true
     }
 
     private fun resetUsbDevice() {
-    if (mConnection != null) {
-    mConnection!!.releaseInterface(mUsbInterface)
-    mConnection!!.close()
-    }
-    mUsbManager = null
-    mUsbDevice = null
-    mConnection = null
-    mUsbInterface = null
-    mEndpointDataIn = null
-    mEndpointControlOut = null
-    mEndpointControlIn = null
+        if (mConnection != null) {
+            mConnection!!.releaseInterface(mUsbInterface)
+            mConnection!!.close()
+        }
+        mUsbManager = null
+        mUsbDevice = null
+        mConnection = null
+        mUsbInterface = null
+        mEndpointDataIn = null
+        mEndpointControlOut = null
+        mEndpointControlIn = null
     }
 
     private fun getUsbDevice() {
-    mUsbManager = mContext!!.getSystemService(Context.USB_SERVICE) as UsbManager
-    val deviceList = mUsbManager!!.deviceList
-    if (!deviceList.isEmpty()) {
-    for (device in deviceList.values) {
+        mUsbManager = mContext!!.getSystemService(Context.USB_SERVICE) as UsbManager
+        val deviceList = mUsbManager!!.deviceList
+        if (!deviceList.isEmpty()) {
+            for (device in deviceList.values) {
 //                Log.w(
 //                    "123",
 //                    "device vendorId:" + device.vendorId + ", device productId:" + device.productId
 //                )
-    if (device.vendorId == VENDOR_ID && device.productId == PRODUCT_ID) {
-    mUsbDevice = device
-    mConnectCode = ResultCode.SUCC_FIND_MATCHED_DEVICE
-    break
-    }
-    }
-    if (mUsbDevice == null) {
-    mConnectCode = ResultCode.ERROR_FIND_DEVICE_NOT_MATCH
-    }
-    } else {
-    mConnectCode = ResultCode.ERROR_NOT_FIND_DEVICE
-    }
+                if (device.vendorId == VENDOR_ID && device.productId == PRODUCT_ID) {
+                    mUsbDevice = device
+                    mConnectCode = ResultCode.SUCC_FIND_MATCHED_DEVICE
+                    break
+                }
+            }
+            if (mUsbDevice == null) {
+                mConnectCode = ResultCode.ERROR_FIND_DEVICE_NOT_MATCH
+            }
+        } else {
+            mConnectCode = ResultCode.ERROR_NOT_FIND_DEVICE
+        }
     }
 
 /*
     private void findInterface() {
 
-    if (mUsbDevice != null) {
+        if (mUsbDevice != null) {
 
-    int count = mUsbDevice.getInterfaceCount();
-    if (count == 1) {
-    mUsbInterface = mUsbDevice.getInterface(0);
-    } else {
-    for (int i = 0; i < count; i++) {
-    UsbInterface usbInterface = mUsbDevice.getInterface(i);
-    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
-    if (usbInterface.getEndpointCount() == 2 && usbInterface.getAlternateSetting() == 1) {
-    mUsbInterface = usbInterface;
-    mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE;
-    break;
-    }
-    }
+            int count = mUsbDevice.getInterfaceCount();
+            if (count == 1) {
+                mUsbInterface = mUsbDevice.getInterface(0);
+            } else {
+                for (int i = 0; i < count; i++) {
+                    UsbInterface usbInterface = mUsbDevice.getInterface(i);
+                    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
+                    if (usbInterface.getEndpointCount() == 2 && usbInterface.getAlternateSetting() == 1) {
+                        mUsbInterface = usbInterface;
+                        mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE;
+                        break;
+                    }
+                }
 
-    if (mUsbInterface == null) {
-    mConnectCode = ResultCode.ERROR_NOT_FIND_INTERFACE;
-    }
-    }
-    }
+                if (mUsbInterface == null) {
+                    mConnectCode = ResultCode.ERROR_NOT_FIND_INTERFACE;
+                }
+            }
+        }
     }
 */
 
     /*
     private void findInterface() {
 
-    if (mUsbDevice != null) {
+        if (mUsbDevice != null) {
 
-    int count = mUsbDevice.getInterfaceCount();
-    if (count == 1) {
-    mUsbInterface = mUsbDevice.getInterface(0);
-    } else {
-    for (int i = 0; i < count; i++) {
-    UsbInterface usbInterface = mUsbDevice.getInterface(i);
-    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
-    if (usbInterface.getEndpointCount() == 2 && usbInterface.getAlternateSetting() == 1) {
-    mUsbInterface = usbInterface;
-    mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE;
-    break;
-    }
-    }
+            int count = mUsbDevice.getInterfaceCount();
+            if (count == 1) {
+                mUsbInterface = mUsbDevice.getInterface(0);
+            } else {
+                for (int i = 0; i < count; i++) {
+                    UsbInterface usbInterface = mUsbDevice.getInterface(i);
+                    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
+                    if (usbInterface.getEndpointCount() == 2 && usbInterface.getAlternateSetting() == 1) {
+                        mUsbInterface = usbInterface;
+                        mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE;
+                        break;
+                    }
+                }
 
-    if (mUsbInterface == null) {
-    mConnectCode = ResultCode.ERROR_NOT_FIND_INTERFACE;
-    }
-    }
-    }
+                if (mUsbInterface == null) {
+                    mConnectCode = ResultCode.ERROR_NOT_FIND_INTERFACE;
+                }
+            }
+        }
     }
 */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private fun findInterface() {
-    if (mUsbDevice != null) {
-    val count = mUsbDevice!!.interfaceCount
-    if (count == 1) {
-    mUsbInterface = mUsbDevice!!.getInterface(0)
-    } else {
-    for (i in 0 until count) {
-    val usbInterface = mUsbDevice!!.getInterface(i)
-    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
-    if (usbInterface.endpointCount == 3 && usbInterface.alternateSetting == 0) {
-    mUsbInterface = usbInterface
-    mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE
-    break
-    }
-    }
-    if (mUsbInterface == null) {
-    mConnectCode = ResultCode.ERROR_NOT_FIND_INTERFACE
-    }
-    }
-    }
+        if (mUsbDevice != null) {
+            val count = mUsbDevice!!.interfaceCount
+            if (count == 1) {
+                mUsbInterface = mUsbDevice!!.getInterface(0)
+            } else {
+                for (i in 0 until count) {
+                    val usbInterface = mUsbDevice!!.getInterface(i)
+                    // 根据手上的设备做一些判断，其实这些信息都可以在枚举到设备时打印出来
+                    if (usbInterface.endpointCount == 3 && usbInterface.alternateSetting == 0) {
+                        mUsbInterface = usbInterface
+                        mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE
+                        break
+                    }
+                }
+                if (mUsbInterface == null) {
+                    mConnectCode = ResultCode.ERROR_NOT_FIND_INTERFACE
+                }
+            }
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private fun openDevice(): Int {
-    if (mUsbInterface != null) {
-    mConnection = mUsbManager!!.openDevice(mUsbDevice)
-    return if (mConnection != null) {
-    Logger.d(TAG, "setInterface")
-    mConnection!!.setInterface(mUsbInterface)
-    if (mConnection!!.claimInterface(mUsbInterface, true)) {
-    Logger.d(TAG, "claimInterface true")
-    SUCC_CONNECT_INTERFACE.also { mConnectCode = it }
-    } else {
-    Logger.d(TAG, "claimInterface false")
-    mConnection!!.close()
-    ERROR_CONNECT_DEVICE_FAILD.also { mConnectCode = it }
-    }
-    } else {
-    ResultCode.ERROR_OPEN_DEVICE_FAILD.also { mConnectCode = it }
-    }
-    }
-    return mConnectCode
+        if (mUsbInterface != null) {
+            mConnection = mUsbManager!!.openDevice(mUsbDevice)
+            return if (mConnection != null) {
+                Logger.d(TAG, "setInterface")
+                mConnection!!.setInterface(mUsbInterface)
+                if (mConnection!!.claimInterface(mUsbInterface, true)) {
+                    Logger.d(TAG, "claimInterface true")
+                    SUCC_CONNECT_INTERFACE.also { mConnectCode = it }
+                } else {
+                    Logger.d(TAG, "claimInterface false")
+                    mConnection!!.close()
+                    ERROR_CONNECT_DEVICE_FAILD.also { mConnectCode = it }
+                }
+            } else {
+                ResultCode.ERROR_OPEN_DEVICE_FAILD.also { mConnectCode = it }
+            }
+        }
+        return mConnectCode
     }
 
     private fun assignEndpoint() {
-    if (mUsbInterface != null) {
-    val endpointCount = mUsbInterface!!.endpointCount
-    var usbEndpoint: UsbEndpoint
-    for (i in 0 until endpointCount) {
-    usbEndpoint = mUsbInterface!!.getEndpoint(i)
-    val address = usbEndpoint.address
+        if (mUsbInterface != null) {
+            val endpointCount = mUsbInterface!!.endpointCount
+            var usbEndpoint: UsbEndpoint
+            for (i in 0 until endpointCount) {
+                usbEndpoint = mUsbInterface!!.getEndpoint(i)
+                val address = usbEndpoint.address
 //                Log.w("123", "address:$address")
                 when (address) {
                     ADDRESS_ENDPOINT_DATA_IN -> mEndpointDataIn = usbEndpoint
@@ -247,24 +247,24 @@ class GuideUsbManager {
     }
 
     fun changePalette(i: Int) {
-    val cmd = byteArrayOf(0x11, 0x00)
-    sendUsbCmd(cmd, toByteArray(i))
+        val cmd = byteArrayOf(0x11, 0x00)
+        sendUsbCmd(cmd, toByteArray(i))
     }
 
     fun shutter() {
-    val cmd = byteArrayOf(0x15, 0x00)
-    val data = byteArrayOf(0x00, 0x00, 0x00, 0x00)
-    sendUsbCmd(cmd, data)
+        val cmd = byteArrayOf(0x15, 0x00)
+        val data = byteArrayOf(0x00, 0x00, 0x00, 0x00)
+        sendUsbCmd(cmd, data)
     }
 
     fun nuc() {
-    val cmd = byteArrayOf(0x16, 0x00)
-    val data = byteArrayOf(0x00, 0x00, 0x00, 0x00)
-    sendUsbCmd(cmd, data)
+        val cmd = byteArrayOf(0x16, 0x00)
+        val data = byteArrayOf(0x00, 0x00, 0x00, 0x00)
+        sendUsbCmd(cmd, data)
     }
 
     fun upgrade(data: ByteArray): Boolean {
-    val PAGE_SIZE = 3000
+        val PAGE_SIZE = 3000
 
         // 发送头
         val header = byteArrayOf(0x02)
@@ -322,38 +322,38 @@ class GuideUsbManager {
     }
 
     fun setRange(range: Int) {
-    val cmd = byteArrayOf(0x20, 0x01)
-    sendUsbCmd(cmd, toByteArray(range))
+        val cmd = byteArrayOf(0x20, 0x01)
+        sendUsbCmd(cmd, toByteArray(range))
     }
 
     fun setEmiss(emiss: Int) {
-    val cmd = byteArrayOf(0x21, 0x01)
-    sendUsbCmd(cmd, toByteArray(emiss))
+        val cmd = byteArrayOf(0x21, 0x01)
+        sendUsbCmd(cmd, toByteArray(emiss))
     }
 
     fun setDistance(value: Float) {
-    val cmd = byteArrayOf(0x23, 0x01)
-    val distance = (value * 10).toInt()
-    sendUsbCmd(cmd, toByteArray(distance))
+        val cmd = byteArrayOf(0x23, 0x01)
+        val distance = (value * 10).toInt()
+        sendUsbCmd(cmd, toByteArray(distance))
     }
 
     fun setBright(bright: Int) {
-    val cmd = byteArrayOf(0x00, 0x02)
-    sendUsbCmd(cmd, toByteArray(bright))
+        val cmd = byteArrayOf(0x00, 0x02)
+        sendUsbCmd(cmd, toByteArray(bright))
     }
 
     fun setContrast(contrast: Int) {
-    val cmd = byteArrayOf(0x01, 0x02)
-    sendUsbCmd(cmd, toByteArray(contrast))
+        val cmd = byteArrayOf(0x01, 0x02)
+        sendUsbCmd(cmd, toByteArray(contrast))
     }
 
     private fun toByteArray(i: Int): ByteArray {
-    val data = ByteArray(4)
-    data[0] = (i and 0xFF).toByte()
-    data[1] = (i shr 8 and 0xFF).toByte()
-    data[2] = (i shr 16 and 0xFF).toByte()
-    data[3] = (i shr 24 and 0xFF).toByte()
-    return data
+        val data = ByteArray(4)
+        data[0] = (i and 0xFF).toByte()
+        data[1] = (i shr 8 and 0xFF).toByte()
+        data[2] = (i shr 16 and 0xFF).toByte()
+        data[3] = (i shr 24 and 0xFF).toByte()
+        return data
     }
 
     private fun sendUsbCmd(

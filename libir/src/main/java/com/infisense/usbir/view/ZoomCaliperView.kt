@@ -35,7 +35,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-    initView()
+        initView()
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
@@ -45,17 +45,17 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     )
 
     private fun initView() {
-    inflate(context, R.layout.zoom_bb, this)
-    // Cache view reference instead of repeated findViewById calls
-    mTextureView = findViewById(R.id.camera_texture)
-    lis = ScaleGestureDetector(context, this)
-    originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
-    ?: return // Early return if bitmap is null
+        inflate(context, R.layout.zoom_bb, this)
+        // Cache view reference instead of repeated findViewById calls
+        mTextureView = findViewById(R.id.camera_texture)
+        lis = ScaleGestureDetector(context, this)
+        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
+            ?: return // Early return if bitmap is null
 //        pxBitmapHeight = originalBitmap.height.toFloat()
-    originalBitmapWidth = originalBitmap.width.toFloat()
-    originalBitmapHeight = originalBitmap.height.toFloat()
+        originalBitmapWidth = originalBitmap.width.toFloat()
+        originalBitmapHeight = originalBitmap.height.toFloat()
 //        setCaliperM(50f)
-    onResumeView()
+        onResumeView()
     }
 
     fun setImageSize(
@@ -101,7 +101,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     }
 
     override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
+        super.onDetachedFromWindow()
     }
 
     private var startX = 0f // 记录落点到控件的距离
@@ -243,11 +243,11 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
 //        if (!isCheckChildView){
 //            parentView.requestFocus()
 //        }
-    return canTouch
+        return canTouch
     }
 
     override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
+        super.onAttachedToWindow()
     }
 
     private fun isTouchPointInView(
@@ -280,8 +280,8 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     }
 
     override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
-    isScale = true
-    return true
+        isScale = true
+        return true
     }
 
     override fun onScaleEnd(detector: ScaleGestureDetector) {
@@ -313,13 +313,13 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     val viewY: Float
         get() = mTextureView.y - (viewHeight - mTextureView.height) / 2
     val viewAlpha: Float
-    get() = mTextureView.alpha
+        get() = mTextureView.alpha
     val viewWidth: Float
-    get() = mTextureView.width * scale
+        get() = mTextureView.width * scale
     val viewHeight: Float
-    get() = mTextureView.height * scale
+        get() = mTextureView.height * scale
     val viewScale: Float
-    get() = scale
+        get() = scale
 
     fun setCameraAlpha(alpha: Float)  {
         mTextureView?.alpha = 1 - alpha

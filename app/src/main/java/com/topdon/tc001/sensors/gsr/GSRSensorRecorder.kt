@@ -801,10 +801,10 @@ class GSRSensorRecorder(
     }
 
     private fun calculateStorageUsed(): Double {
-    // Estimate storage based on sample count and data structure
-    val bytesPerSample = 32 // Approximate size of GSR sample data
-    val totalBytes = sampleCount.get() * bytesPerSample
-    return totalBytes / (1024.0 * 1024.0)
+        // Estimate storage based on sample count and data structure
+        val bytesPerSample = 32 // Approximate size of GSR sample data
+        val totalBytes = sampleCount.get() * bytesPerSample
+        return totalBytes / (1024.0 * 1024.0)
     }
 
     private suspend fun emitStatus() {

@@ -55,7 +55,7 @@ public object AnimaUtils {
 
 
     fun getRotateAnimationByCenter(duration: Long): RotateAnimation {
-    return getRotateAnimationByCenter(duration, null)
+        return getRotateAnimationByCenter(duration, null)
     }
 
 
@@ -68,7 +68,7 @@ public object AnimaUtils {
 
 
     val rotateAnimationByCenter: RotateAnimation
-    get() = getRotateAnimationByCenter(DEFAULT_ANIMATION_DURATION, null)
+        get() = getRotateAnimationByCenter(DEFAULT_ANIMATION_DURATION, null)
 
 
     fun getAlphaAnimation(
@@ -77,12 +77,12 @@ public object AnimaUtils {
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
     ): AlphaAnimation {
-    val alphaAnimation = AlphaAnimation(fromAlpha, toAlpha)
-    alphaAnimation.duration = durationMillis
-    if (animationListener != null) {
-    alphaAnimation.setAnimationListener(animationListener)
-    }
-    return alphaAnimation
+        val alphaAnimation = AlphaAnimation(fromAlpha, toAlpha)
+        alphaAnimation.duration = durationMillis
+        if (animationListener != null) {
+            alphaAnimation.setAnimationListener(animationListener)
+        }
+        return alphaAnimation
     }
 
 
@@ -91,7 +91,7 @@ public object AnimaUtils {
         toAlpha: Float,
         durationMillis: Long,
     ): AlphaAnimation {
-    return getAlphaAnimation(fromAlpha, toAlpha, durationMillis, null)
+        return getAlphaAnimation(fromAlpha, toAlpha, durationMillis, null)
     }
 
 
@@ -126,12 +126,12 @@ public object AnimaUtils {
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
     ): AlphaAnimation {
-    return getAlphaAnimation(1.0f, 0.0f, durationMillis, animationListener)
+        return getAlphaAnimation(1.0f, 0.0f, durationMillis, animationListener)
     }
 
 
     fun getHiddenAlphaAnimation(durationMillis: Long): AlphaAnimation {
-    return getHiddenAlphaAnimation(durationMillis, null)
+        return getHiddenAlphaAnimation(durationMillis, null)
     }
 
 
@@ -144,19 +144,19 @@ public object AnimaUtils {
 
 
     val hiddenAlphaAnimation: AlphaAnimation
-    get() = getHiddenAlphaAnimation(DEFAULT_ANIMATION_DURATION, null)
+        get() = getHiddenAlphaAnimation(DEFAULT_ANIMATION_DURATION, null)
 
 
     fun getShowAlphaAnimation(
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
     ): AlphaAnimation {
-    return getAlphaAnimation(0.0f, 1.0f, durationMillis, animationListener)
+        return getAlphaAnimation(0.0f, 1.0f, durationMillis, animationListener)
     }
 
 
     fun getShowAlphaAnimation(durationMillis: Long): AlphaAnimation {
-    return getAlphaAnimation(0.0f, 1.0f, durationMillis, null)
+        return getAlphaAnimation(0.0f, 1.0f, durationMillis, null)
     }
 
 
@@ -171,7 +171,7 @@ public object AnimaUtils {
 
 
     val showAlphaAnimation: AlphaAnimation
-    get() = getAlphaAnimation(0.0f, 1.0f, DEFAULT_ANIMATION_DURATION, null)
+        get() = getAlphaAnimation(0.0f, 1.0f, DEFAULT_ANIMATION_DURATION, null)
 
 
     fun getLessenScaleAnimation(
@@ -194,7 +194,7 @@ public object AnimaUtils {
 
 
     fun getLessenScaleAnimation(durationMillis: Long): ScaleAnimation {
-    return getLessenScaleAnimation(durationMillis, null)
+        return getLessenScaleAnimation(durationMillis, null)
     }
 
 
@@ -226,7 +226,7 @@ public object AnimaUtils {
 
 
     fun getAmplificationAnimation(durationMillis: Long): ScaleAnimation {
-    return getAmplificationAnimation(durationMillis, null)
+        return getAmplificationAnimation(durationMillis, null)
     }
 
 

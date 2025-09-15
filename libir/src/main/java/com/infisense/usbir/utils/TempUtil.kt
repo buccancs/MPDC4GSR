@@ -47,14 +47,14 @@ object TempUtil {
             }
         }
 
-    val tempList: ArrayList<Float> = ArrayList(pointList.size)
-    pointList.forEach {
-    val index = (it.y * width + it.x) * 2
-    val tempInt = (tempArray[index + 1].toInt() shl 8 and 0xff00) or (tempArray[index].toInt() and 0xff)
-    val tempValue = tempInt / 64f - 273.15f
-    tempList.add(tempValue)
-    }
+        val tempList: ArrayList<Float> = ArrayList(pointList.size)
+        pointList.forEach {
+            val index = (it.y * width + it.x) * 2
+            val tempInt = (tempArray[index + 1].toInt() shl 8 and 0xff00) or (tempArray[index].toInt() and 0xff)
+            val tempValue = tempInt / 64f - 273.15f
+            tempList.add(tempValue)
+        }
 
-    return tempList
+        return tempList
     }
 }

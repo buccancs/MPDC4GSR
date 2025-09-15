@@ -11,44 +11,39 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogColorSelectBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
-    * 仅拾取颜色的弹框.
-    *
-    * Created by LCG on 2024/2/2.
-    */
+
+
 class ColorSelectDialog(
     context: Context,
     @ColorInt private var color: Int,
 ) : Dialog(context, R.style.InfoDialog) {
-    /**
-    * 颜色值拾取事件监听.
-    */
+
     var onPickListener: ((color: Int) -> Unit)? = null
 
     private lateinit var binding: DialogColorSelectBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setCancelable(true)
-    setCanceledOnTouchOutside(true)
+        super.onCreate(savedInstanceState)
+        setCancelable(true)
+        setCanceledOnTouchOutside(true)
 
-    binding = DialogColorSelectBinding.inflate(LayoutInflater.from(context))
-    setContentView(binding.root)
+        binding = DialogColorSelectBinding.inflate(LayoutInflater.from(context))
+        setContentView(binding.root)
 
-    binding.colorSelectView.selectColor(color)
-    binding.colorSelectView.onSelectListener = {
-    color = it
-    }
-    binding.tvSave.setOnClickListener {
-    dismiss()
-    onPickListener?.invoke(color)
-    }
+        binding.colorSelectView.selectColor(color)
+        binding.colorSelectView.onSelectListener = {
+            color = it
+        }
+        binding.tvSave.setOnClickListener {
+            dismiss()
+            onPickListener?.invoke(color)
+        }
 
-    window?.let {
-    val layoutParams = it.attributes
-    layoutParams.width = ScreenUtil.getScreenWidth(context) - SizeUtils.dp2px(36f)
-    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-    it.attributes = layoutParams
-    }
+        window?.let {
+            val layoutParams = it.attributes
+            layoutParams.width = ScreenUtil.getScreenWidth(context) - SizeUtils.dp2px(36f)
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            it.attributes = layoutParams
+        }
     }
 }

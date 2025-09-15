@@ -10,18 +10,18 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 class SessionExportActivity : BaseBindingActivity<ActivitySessionExportBinding>() {
     companion object {
-    private const val EXTRA_SESSION_ID = "session_id"
+        private const val EXTRA_SESSION_ID = "session_id"
 
-    fun startActivity(
-    context: Context,
-    sessionId: String,
-    ) {
-    val intent =
-    Intent(context, SessionExportActivity::class.java).apply {
-    putExtra(EXTRA_SESSION_ID, sessionId)
-    }
-    context.startActivity(intent)
-    }
+        fun startActivity(
+            context: Context,
+            sessionId: String,
+        ) {
+            val intent =
+                Intent(context, SessionExportActivity::class.java).apply {
+                    putExtra(EXTRA_SESSION_ID, sessionId)
+                }
+            context.startActivity(intent)
+        }
     }
 
     override fun initContentLayoutId() = R.layout.activity_session_export
@@ -41,19 +41,12 @@ class SessionExportActivity : BaseBindingActivity<ActivitySessionExportBinding>(
             textSize = 16f
         }
 
-    // Set the content programmatically
-    binding.root.apply {
-    text = "Session Export\n\nSession ID: $sessionId\n\nExport Options:\n• CSV Format\n• JSON Format\n• Research-grade metadata\n• Synchronized timestamps\n\nExport functionality coming soon..."
-    setPadding(32, 32, 32, 32)
-    textSize = 16f
-    }
-
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    supportActionBar?.title = "Export Session"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Export Session"
     }
 
     override fun onSupportNavigateUp(): Boolean {
-    onBackPressed()
-    return true
+        onBackPressed()
+        return true
     }
 }

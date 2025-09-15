@@ -25,42 +25,42 @@ data class CustomPseudoBean(
     var isUseGray: Boolean = true, // true-自定义渲染使用灰度渐变 false-自定义渲染使用等色
 ) : Parcelable {
     companion object {
-    fun loadFromShared(isTC007: Boolean = false): CustomPseudoBean {
-    val json = if (isTC007) SharedManager.getTC0007CustomPseudo() else SharedManager.getCustomPseudo()
-    return if (json.isNotEmpty()) {
-    Gson().fromJson(json, CustomPseudoBean::class.java)
-    } else {
-    CustomPseudoBean()
-    }
-    }
+        fun loadFromShared(isTC007: Boolean = false): CustomPseudoBean {
+            val json = if (isTC007) SharedManager.getTC0007CustomPseudo() else SharedManager.getCustomPseudo()
+            return if (json.isNotEmpty()) {
+                Gson().fromJson(json, CustomPseudoBean::class.java)
+            } else {
+                CustomPseudoBean()
+            }
+        }
 
         fun toCustomPseudoBean(byteArray: ByteArray): CustomPseudoBean {
             val buffer: ByteBuffer = ByteBuffer.wrap(byteArray)
 
-    var colors: IntArray? = null
-    var zAltitudes: IntArray? = null
-    var places: FloatArray? = null
-    val colorSize: Int = byteArray[0].toInt() and 0xff
-    if (colorSize > 0) {
-    colors = IntArray(colorSize)
-    zAltitudes = IntArray(colorSize)
-    places = FloatArray(colorSize)
+            var colors: IntArray? = null
+            var zAltitudes: IntArray? = null
+            var places: FloatArray? = null
+            val colorSize: Int = byteArray[0].toInt() and 0xff
+            if (colorSize > 0) {
+                colors = IntArray(colorSize)
+                zAltitudes = IntArray(colorSize)
+                places = FloatArray(colorSize)
 
-    buffer.position(2)
-    for (i in colors.indices) {
-    colors[i] = buffer.getInt()
-    }
+                buffer.position(2)
+                for (i in colors.indices) {
+                    colors[i] = buffer.getInt()
+                }
 
-    buffer.position(2 + 7 * 4)
-    for (i in zAltitudes.indices) {
-    zAltitudes[i] = buffer.get().toInt() and 0xff
-    }
+                buffer.position(2 + 7 * 4)
+                for (i in zAltitudes.indices) {
+                    zAltitudes[i] = buffer.get().toInt() and 0xff
+                }
 
-    buffer.position(2 + 7 * 4 + 7)
-    for (i in places.indices) {
-    places[i] = buffer.getFloat()
-    }
-    }
+                buffer.position(2 + 7 * 4 + 7)
+                for (i in places.indices) {
+                    places[i] = buffer.getFloat()
+                }
+            }
 
             buffer.position(2 + 7 * 4 + 7 + 7 * 4)
             val isUseCustomPseudo = buffer.get() == 1.toByte()
@@ -101,11 +101,11 @@ data class CustomPseudoBean(
     }
 
     fun saveToShared(isTC007: Boolean = false) {
-    if (isTC007) {
-    SharedManager.saveTC007CustomPseudo(Gson().toJson(this))
-    } else {
-    SharedManager.saveCustomPseudo(Gson().toJson(this))
-    }
+        if (isTC007) {
+            SharedManager.saveTC007CustomPseudo(Gson().toJson(this))
+        } else {
+            SharedManager.saveCustomPseudo(Gson().toJson(this))
+        }
     }
 
     fun getColorList(isTC007: Boolean = false): IntArray? {
@@ -148,43 +148,43 @@ data class CustomPseudoBean(
     }
 
     fun getCustomZAltitudes(): IntArray {
-    if (zAltitudes == null) {
-    zAltitudes = intArrayOf(0, 0, 0)
-    }
-    return zAltitudes!!
+        if (zAltitudes == null) {
+            zAltitudes = intArrayOf(0, 0, 0)
+        }
+        return zAltitudes!!
     }
 
     fun getCustomPlaces(): FloatArray {
-    if (places == null) {
-    places = floatArrayOf(0f, 0.5f, 1f)
-    }
-    return places!!
+        if (places == null) {
+            places = floatArrayOf(0f, 0.5f, 1f)
+        }
+        return places!!
     }
 
     fun toByteArray(): ByteArray {
-    val buffer: ByteBuffer = ByteBuffer.allocate(92)
+        val buffer: ByteBuffer = ByteBuffer.allocate(92)
 
-    val colors: IntArray = getCustomColors()
+        val colors: IntArray = getCustomColors()
 
         buffer.put(colors.size.toByte()) // colorSize
         buffer.put(selectIndex.toByte())
 
-    for (color in colors) {
-    buffer.putInt(color)
-    }
-    buffer.position(2 + 7 * 4)
+        for (color in colors) {
+            buffer.putInt(color)
+        }
+        buffer.position(2 + 7 * 4)
 
-    val zAltitudes: IntArray = getCustomZAltitudes()
-    for (zAltitude in zAltitudes) {
-    buffer.put(zAltitude.toByte())
-    }
-    buffer.position(2 + 7 * 4 + 7)
+        val zAltitudes: IntArray = getCustomZAltitudes()
+        for (zAltitude in zAltitudes) {
+            buffer.put(zAltitude.toByte())
+        }
+        buffer.position(2 + 7 * 4 + 7)
 
-    val places: FloatArray = getCustomPlaces()
-    for (place in places) {
-    buffer.putFloat(place)
-    }
-    buffer.position(2 + 7 * 4 + 7 + 7 * 4)
+        val places: FloatArray = getCustomPlaces()
+        for (place in places) {
+            buffer.putFloat(place)
+        }
+        buffer.position(2 + 7 * 4 + 7 + 7 * 4)
 
         buffer
             .put(if (isUseCustomPseudo) 1.toByte() else 0.toByte())
@@ -197,6 +197,6 @@ data class CustomPseudoBean(
             .putInt(customRecommendIndex)
             .put(if (isUseGray) 0.toByte() else 1.toByte())
 
-    return buffer.array()
+        return buffer.array()
     }
 }

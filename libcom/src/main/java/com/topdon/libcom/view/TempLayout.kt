@@ -27,7 +27,7 @@ class TempLayout : LinearLayout {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-    initView()
+        initView()
     }
 
     var animatorAlpha = 1f
@@ -42,8 +42,8 @@ class TempLayout : LinearLayout {
         alphaAnimator?.addUpdateListener {
             animatorAlpha = it.getAnimatedValue("alpha") as Float
 //            Log.w("透明值进度","$animatorAlpha")
-    }
-    alphaAnimator?.repeatCount = ValueAnimator.INFINITE
+        }
+        alphaAnimator?.repeatCount = ValueAnimator.INFINITE
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
@@ -112,6 +112,6 @@ class TempLayout : LinearLayout {
     }
 
     fun startAlphaBreathAnimation() {
-    alphaAnimator?.start()
+        alphaAnimator?.start()
     }
 }

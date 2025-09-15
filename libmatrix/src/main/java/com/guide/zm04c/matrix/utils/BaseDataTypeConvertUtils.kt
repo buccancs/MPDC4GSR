@@ -12,19 +12,19 @@ class BaseDataTypeConvertUtils private constructor() {
         private val TAG = BaseDataTypeConvertUtils::class.java.simpleName
         private var df: DecimalFormat? = null
 
-    fun convertShort2LittleEndianByteArr(value: Short): ByteArray {
-    val shortByteArray = ByteArray(2)
-    shortByteArray[0] = (value and 0xff).toByte()
-    shortByteArray[1] = (value.toInt() ushr 8 and 0xff).toByte()
-    return shortByteArray
-    }
+        fun convertShort2LittleEndianByteArr(value: Short): ByteArray {
+            val shortByteArray = ByteArray(2)
+            shortByteArray[0] = (value and 0xff).toByte()
+            shortByteArray[1] = (value.toInt() ushr 8 and 0xff).toByte()
+            return shortByteArray
+        }
 
-    fun convertShort2BigEndianByteArr(value: Short): ByteArray {
-    val shortByteArray = ByteArray(2)
-    shortByteArray[0] = (value.toInt() ushr 8 and 0xff).toByte()
-    shortByteArray[1] = (value and 0xff).toByte()
-    return shortByteArray
-    }
+        fun convertShort2BigEndianByteArr(value: Short): ByteArray {
+            val shortByteArray = ByteArray(2)
+            shortByteArray[0] = (value.toInt() ushr 8 and 0xff).toByte()
+            shortByteArray[1] = (value and 0xff).toByte()
+            return shortByteArray
+        }
 
         private fun convertShortArr2ByteArr(
             valueArr: ShortArray,
@@ -39,30 +39,30 @@ class BaseDataTypeConvertUtils private constructor() {
             return valueByteArr
         }
 
-    fun convertShortArr2LittleEndianByteArr(valueArr: ShortArray): ByteArray {
-    return convertShortArr2ByteArr(valueArr, ::convertShort2LittleEndianByteArr)
-    }
+        fun convertShortArr2LittleEndianByteArr(valueArr: ShortArray): ByteArray {
+            return convertShortArr2ByteArr(valueArr, ::convertShort2LittleEndianByteArr)
+        }
 
-    fun convertShortArr2BigEndianByteArr(valueArr: ShortArray): ByteArray {
-    return convertShortArr2ByteArr(valueArr, ::convertShort2BigEndianByteArr)
-    }
+        fun convertShortArr2BigEndianByteArr(valueArr: ShortArray): ByteArray {
+            return convertShortArr2ByteArr(valueArr, ::convertShort2BigEndianByteArr)
+        }
 
-    fun byteArr2HexString(src: ByteArray): String? {
-    val stringBuilder = StringBuilder()
-    for (i in src.indices) {
-    val b = src[i].toInt() and 0xFF
-    val h = Integer.toHexString(b)
-    if (h.length < 2) {
-    stringBuilder.append(0)
-    }
-    stringBuilder.append(h)
-    }
-    return stringBuilder.toString()
-    }
+        fun byteArr2HexString(src: ByteArray): String? {
+            val stringBuilder = StringBuilder()
+            for (i in src.indices) {
+                val b = src[i].toInt() and 0xFF
+                val h = Integer.toHexString(b)
+                if (h.length < 2) {
+                    stringBuilder.append(0)
+                }
+                stringBuilder.append(h)
+            }
+            return stringBuilder.toString()
+        }
 
-    fun convertFloatWith2Decimals(value: Float): Float {
-    return (value * 100).toInt() / 100.0f
-    }
+        fun convertFloatWith2Decimals(value: Float): Float {
+            return (value * 100).toInt() / 100.0f
+        }
 
 
         fun float2StrWithOneDecimal(number: Float): String {
@@ -110,6 +110,6 @@ class BaseDataTypeConvertUtils private constructor() {
     }
 
     init {
-    throw AssertionError("cannot be instantiated")
+        throw AssertionError("cannot be instantiated")
     }
 }

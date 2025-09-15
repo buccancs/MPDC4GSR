@@ -33,7 +33,7 @@ class CaliperImageView : AppCompatImageView {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-    initView()
+        initView()
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
@@ -44,10 +44,10 @@ class CaliperImageView : AppCompatImageView {
 
 
     private fun initView() {
-    originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
-    originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
-    originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
-    visibility = View.GONE
+        originalBitmap = (androidx.core.content.ContextCompat.getDrawable(context, R.drawable.svg_ic_target_horizontal_person_green) as? BitmapDrawable)?.bitmap
+        originalBitmapWidth = originalBitmap?.width?.toFloat() ?: 0f
+        originalBitmapHeight = originalBitmap?.height?.toFloat() ?: 0f
+        visibility = View.GONE
     }
 
     fun setImageSize(
@@ -111,30 +111,30 @@ class CaliperImageView : AppCompatImageView {
     private val downTime: Long = 0
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-    super.onTouchEvent(event)
-    if (this.isEnabled) {
-    when (event.getAction()) {
-    MotionEvent.ACTION_DOWN -> {
-    downX = event.getX()
-    downY = event.getY()
-    }
-    MotionEvent.ACTION_MOVE -> {
-    val xDistance: Float = event.getX() - downX
-    val yDistance: Float = event.getY() - downY
-    if (xDistance != 0f && yDistance != 0f) {
-    l = (left + xDistance).toInt()
-    r = (right + xDistance).toInt()
-    t = (top + yDistance).toInt()
-    b = (bottom + yDistance).toInt()
-    layout(l, t, r, b)
-    }
-    }
-    MotionEvent.ACTION_UP -> isPressed = false
-    MotionEvent.ACTION_CANCEL -> isPressed = false
-    else -> {}
-    }
-    return true
-    }
-    return false
+        super.onTouchEvent(event)
+        if (this.isEnabled) {
+            when (event.getAction()) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.getX()
+                    downY = event.getY()
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val xDistance: Float = event.getX() - downX
+                    val yDistance: Float = event.getY() - downY
+                    if (xDistance != 0f && yDistance != 0f) {
+                        l = (left + xDistance).toInt()
+                        r = (right + xDistance).toInt()
+                        t = (top + yDistance).toInt()
+                        b = (bottom + yDistance).toInt()
+                        layout(l, t, r, b)
+                    }
+                }
+                MotionEvent.ACTION_UP -> isPressed = false
+                MotionEvent.ACTION_CANCEL -> isPressed = false
+                else -> {}
+            }
+            return true
+        }
+        return false
     }
 }

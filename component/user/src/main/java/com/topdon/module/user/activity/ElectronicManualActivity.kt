@@ -31,6 +31,8 @@ class ElectronicManualActivity : BaseActivity() {
 
         val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) // 0-电子说明书 1-FAQ
 
+        titleView.setTitleText(if (productType == Constants.SETTING_BOOK) RCore.string.electronic_manual else RCore.string.app_question)
+
         val adapter = MyAdapter(productType == 1)
         adapter.onPickListener = { isTS001 ->
             if (isTS001) {
@@ -60,6 +62,7 @@ class ElectronicManualActivity : BaseActivity() {
 
     private class MyAdapter(private val isFAQ: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var onPickListener: ((isTS001: Boolean) -> Unit)? = null
+
         private val optionList: ArrayList<String> = ArrayList(2)
 
         init {

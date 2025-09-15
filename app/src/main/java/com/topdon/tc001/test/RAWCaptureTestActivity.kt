@@ -31,9 +31,9 @@ class RAWCaptureTestActivity : AppCompatActivity() {
     }
 
     private fun setupSwitchListeners() {
-    binding.enableRawCaptureSwitch.setOnCheckedChangeListener { _, isChecked ->
-    binding.rawFrameRateSpinner.isEnabled = isChecked
-    binding.rawFrameRateSpinner.alpha = if (isChecked) 1.0f else 0.5f
-    }
+        binding.enableRawCaptureSwitch.setOnCheckedChangeListener { _, isChecked ->
+            binding.rawFrameRateSpinner.isEnabled = isChecked
+            binding.rawFrameRateSpinner.alpha = if (isChecked) 1.0f else 0.5f
+        }
     }
 }

@@ -19,12 +19,14 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipPreviewBinding
 import com.topdon.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
 import kotlin.collections.ArrayList
-import com.topdon.lib.ui.R as UiR
+
+
 
 class TipPreviewDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
@@ -45,144 +47,145 @@ class TipPreviewDialog : DialogFragment() {
     private var timer: Timer? = Timer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return super.onCreateDialog(savedInstanceState)
+        return super.onCreateDialog(savedInstanceState)
     }
 
     override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
-    _binding = DialogTipPreviewBinding.inflate(inflater, container, false)
-    return binding.root
+        _binding = DialogTipPreviewBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?,
+        view: View,
+        savedInstanceState: Bundle?,
     ) {
-    super.onViewCreated(view, savedInstanceState)
-    titleList =
-    arrayListOf(
-    getString(R.string.preview_step_1),
-    getString(R.string.preview_step_2),
-    )
+        super.onViewCreated(view, savedInstanceState)
+        titleList =
+            arrayListOf(
+                getString(R.string.preview_step_1),
+                getString(R.string.preview_step_2),
+            )
 
-    // Initialize views using binding
-    checkBox = binding.dialogTipCheck
-    imgClose = binding.imgClose
-    viewPager = binding.viewPager
-    tvContent = binding.tvContent
-    indicateView = binding.indicateView
+        // Initialize views using binding
+        checkBox = binding.dialogTipCheck
+        imgClose = binding.imgClose
+        viewPager = binding.viewPager
+        tvContent = binding.tvContent
+        indicateView = binding.indicateView
 
-    val adapter = PageAdapter(childFragmentManager)
-    indicateView.itemCount = adapter.count
-    viewPager.adapter = adapter
-    checkBox.setOnCheckedChangeListener { _, isChecked ->
-    hasCheck = isChecked
-    }
-    imgClose.setOnClickListener {
-    closeEvent?.invoke(hasCheck)
-    dismiss()
-    }
-    binding.tvIKnow.setOnClickListener {
-    closeEvent?.invoke(hasCheck)
-    dismiss()
-    }
-    updateIndex(0)
-    viewPager.addOnPageChangeListener(
-    object : ViewPager.OnPageChangeListener {
-    override fun onPageScrolled(
-    position: Int,
-    positionOffset: Float,
-    positionOffsetPixels: Int,
-    ) {
+        val adapter = PageAdapter(childFragmentManager)
+        indicateView.itemCount = adapter.count
+        viewPager.adapter = adapter
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            hasCheck = isChecked
+        }
+        imgClose.setOnClickListener {
+            closeEvent?.invoke(hasCheck)
+            dismiss()
+        }
+        binding.tvIKnow.setOnClickListener {
+            closeEvent?.invoke(hasCheck)
+            dismiss()
+        }
+        updateIndex(0)
+        viewPager.addOnPageChangeListener(
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int,
+                ) {
+                }
+
+                override fun onPageSelected(position: Int) {
+                    updateIndex(position)
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+                }
+            },
+        )
     }
 
-    override fun onPageSelected(position: Int) {
-    updateIndex(position)
-    }
 
-    override fun onPageScrollStateChanged(state: Int) {
-    }
-    },
-    )
-    }
-
-    fun updateIndex(position: Int)  {
-    if (index == position)
-    {
-    return
-    }
-    indicateView.currentIndex = position
-    viewPager.setCurrentItem(position, true)
-    tvContent.text = titleList[position]
-    index = position
+    fun updateIndex(position: Int) {
+        if (index == position) {
+            return
+        }
+        indicateView.currentIndex = position
+        viewPager.setCurrentItem(position, true)
+        tvContent.text = titleList[position]
+        index = position
     }
 
     override fun onDestroy() {
-    super.onDestroy()
-    timer?.cancel()
-    timer = null
+        super.onDestroy()
+        timer?.cancel()
+        timer = null
     }
 
     override fun onResume() {
-    super.onResume()
-    val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
-    params.width = -1
-    params.height = -1
-    dialog?.window?.attributes = params as WindowManager.LayoutParams
-    dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        super.onResume()
+        val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
+        params.width = -1
+        params.height = -1
+        dialog?.window?.attributes = params as WindowManager.LayoutParams
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
-    timer?.cancel()
-    timer = null
-    dis?.dispose()
+        super.onDestroyView()
+        _binding = null
+        timer?.cancel()
+        timer = null
+        dis?.dispose()
     }
 
     override fun show(
-    manager: FragmentManager,
-    tag: String?,
+        manager: FragmentManager,
+        tag: String?,
     ) {
-    try {
-    super.show(manager, tag)
-    } catch (e: Exception) {
-    e.printStackTrace()
-    }
+        try {
+            super.show(manager, tag)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     companion object {
-    fun newInstance(): TipPreviewDialog {
-    return TipPreviewDialog()
-    }
+
+        fun newInstance(): TipPreviewDialog {
+            return TipPreviewDialog()
+        }
     }
 
     @Suppress("DEPRECATION")
     inner class PageAdapter(fragmentManager: FragmentManager) :
-    FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-    override fun getCount(): Int {
-    return pageCount
-    }
+        FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        override fun getCount(): Int {
+            return pageCount
+        }
 
-    override fun getItem(position: Int): Fragment {
-    return when (position) {
-    0 -> {
-    PageFragment.newInstance(UiR.drawable.preview_step_1)
-    }
-    1 -> {
-    PageFragment.newInstance(UiR.drawable.preview_step_2)
-    }
-    else -> {
-    PageFragment.newInstance(UiR.drawable.preview_step_3)
-    }
-    }
-    }
+        override fun getItem(position: Int): Fragment {
+            return when (position) {
+                0 -> {
+                    PageFragment.newInstance(UiR.drawable.preview_step_1)
+                }
+                1 -> {
+                    PageFragment.newInstance(UiR.drawable.preview_step_2)
+                }
+                else -> {
+                    PageFragment.newInstance(UiR.drawable.preview_step_3)
+                }
+            }
+        }
     }
 }

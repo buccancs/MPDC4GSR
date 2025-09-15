@@ -48,19 +48,19 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     override fun initContentLayoutId(): Int = R.layout.fragment_main
 
     override fun initView(savedInstanceState: Bundle?) {
-    adapter = MyAdapter()
-    binding.tvConnectDevice.setOnClickListener(this)
-    binding.ivAdd.setOnClickListener(this)
+        adapter = MyAdapter()
+        binding.tvConnectDevice.setOnClickListener(this)
+        binding.ivAdd.setOnClickListener(this)
 
-    // GSR Multi-modal Recording Access (long press on titles for research features)
-    binding.tvNoDeviceTitle.setOnLongClickListener {
-    showGSROptions()
-    true
-    }
-    binding.tvHasDeviceTitle.setOnLongClickListener {
-    showGSROptions()
-    true
-    }
+        // GSR Multi-modal Recording Access (long press on titles for research features)
+        binding.tvNoDeviceTitle.setOnLongClickListener {
+            showGSROptions()
+            true
+        }
+        binding.tvHasDeviceTitle.setOnLongClickListener {
+            showGSROptions()
+            true
+        }
 
         // Add prominent GSR access button for research features
         binding.fabGsrRecording.setOnClickListener {
@@ -121,102 +121,102 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             popup.show(view)
         }
 
-    binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-    binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
 
-    if (WebSocketProxy.getInstance().isTC007Connect()) {
-    lifecycleScope.launch {
-    val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-    if (batteryInfo != null) {
-    adapter.tc007Battery = batteryInfo
-    }
-    }
-    }
-    viewLifecycleOwner.lifecycle.addObserver(
-    object : DefaultLifecycleObserver {
-    override fun onResume(owner: LifecycleOwner) {
-    // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
-    if (WebSocketProxy.getInstance().isConnected()) {
-    NetWorkUtils.switchNetwork(true)
-    }
-    }
-    },
-    )
+        if (WebSocketProxy.getInstance().isTC007Connect()) {
+            lifecycleScope.launch {
+                val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
+                if (batteryInfo != null) {
+                    adapter.tc007Battery = batteryInfo
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onResume(owner: LifecycleOwner) {
+                    // 要是当前已连接 TS004、TC007，切到流量上，不然登录注册意见反馈那些没网
+                    if (WebSocketProxy.getInstance().isConnected()) {
+                        NetWorkUtils.switchNetwork(true)
+                    }
+                }
+            },
+        )
     }
 
     override fun onResume() {
-    super.onResume()
-    refresh()
-    adapter?.notifyDataSetChanged()
+        super.onResume()
+        refresh()
+        adapter?.notifyDataSetChanged()
     }
 
     private fun refresh() {
-    val hasAnyDevice = SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
-    binding.clHasDevice.isVisible = hasAnyDevice
-    binding.clNoDevice.isVisible = !hasAnyDevice
-    adapter.hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
-    adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
-    adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
-    adapter.notifyDataSetChanged()
+        val hasAnyDevice = SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
+        binding.clHasDevice.isVisible = hasAnyDevice
+        binding.clNoDevice.isVisible = !hasAnyDevice
+        adapter.hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
+        adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
+        adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
+        adapter.notifyDataSetChanged()
     }
 
     override fun connected() {
-    adapter.hasConnectLine = true
-    SharedManager.hasTcLine = true
-    refresh()
+        adapter.hasConnectLine = true
+        SharedManager.hasTcLine = true
+        refresh()
     }
 
     override fun disConnected() {
-    adapter.hasConnectLine = false
+        adapter.hasConnectLine = false
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
-    if (isTS004) {
-    SharedManager.hasTS004 = true
-    adapter.hasConnectTS004 = true
-    } else {
-    SharedManager.hasTC007 = true
-    adapter.hasConnectTC007 = true
-    lifecycleScope.launch {
-    val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-    if (batteryInfo != null) {
-    adapter.tc007Battery = batteryInfo
-    }
-    }
-    }
+        if (isTS004) {
+            SharedManager.hasTS004 = true
+            adapter.hasConnectTS004 = true
+        } else {
+            SharedManager.hasTC007 = true
+            adapter.hasConnectTC007 = true
+            lifecycleScope.launch {
+                val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
+                if (batteryInfo != null) {
+                    adapter.tc007Battery = batteryInfo
+                }
+            }
+        }
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
-    if (isTS004) {
-    adapter.hasConnectTS004 = false
-    } else {
-    adapter.hasConnectTC007 = false
-    }
+        if (isTS004) {
+            adapter.hasConnectTS004 = false
+        } else {
+            adapter.hasConnectTC007 = false
+        }
     }
 
     override fun onClick(v: View?) {
-    when (v) {
-    binding.tvConnectDevice, binding.ivAdd -> { // 添加设备
-    startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
+        when (v) {
+            binding.tvConnectDevice, binding.ivAdd -> { // 添加设备
+                startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
 //                NavigationManager.getInstance().build(RoutePath.UsbIrModule.PAGE_IR_MAIN_ACTIVITY)
 //                    .navigation()
 //                startActivity(Intent(requireContext(), IRThermalLiteActivity::class.java))
-    }
-    }
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
-    if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) { // 心跳
-    if (!adapter.hasConnectTC007) { // 当前连接的不是 TC007
-    return
-    }
-    try {
-    val battery: JSONObject = JSONObject(event.text).getJSONObject("battery")
-    adapter.tc007Battery = BatteryInfo(battery.getString("status"), battery.getString("remaining"))
-    } catch (_: Exception) {
-    }
-    }
+        if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) { // 心跳
+            if (!adapter.hasConnectTC007) { // 当前连接的不是 TC007
+                return
+            }
+            try {
+                val battery: JSONObject = JSONObject(event.text).getJSONObject("battery")
+                adapter.tc007Battery = BatteryInfo(battery.getString("status"), battery.getString("remaining"))
+            } catch (_: Exception) {
+            }
+        }
     }
 
     private class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
@@ -503,8 +503,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     }
 
     enum class ConnectType {
-    LINE,
-    TS004,
-    TC007,
+        LINE,
+        TS004,
+        TC007,
     }
 }

@@ -8,9 +8,9 @@ import com.topdon.menu.databinding.ItemMenuBinding
 
 internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.ViewHolder>() {
     companion object {
-    private const val VIEW_TYPE_DEFAULT = 0
-    private const val VIEW_TYPE_FIRST = 1
-    private const val VIEW_TYPE_LAST = 2
+        private const val VIEW_TYPE_DEFAULT = 0
+        private const val VIEW_TYPE_FIRST = 1
+        private const val VIEW_TYPE_LAST = 2
     }
 
     override fun getItemViewType(position: Int): Int =

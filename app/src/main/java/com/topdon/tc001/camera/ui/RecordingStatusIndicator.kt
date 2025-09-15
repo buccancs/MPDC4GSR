@@ -14,24 +14,24 @@ import com.csl.irCamera.R
 class RecordingStatusIndicator
     @JvmOverloads
     constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0,
     ) : LinearLayout(context, attrs, defStyleAttr) {
-    private val statusIcon: ImageView
-    private val statusText: TextView
-    private val durationText: TextView
-    private val sensorsText: TextView
+        private val statusIcon: ImageView
+        private val statusText: TextView
+        private val durationText: TextView
+        private val sensorsText: TextView
 
-    private var isRecording = false
-    private var startTime = 0L
-    private var sessionId = ""
-    private var activeSensors = emptySet<SensorSelectionDialog.SensorType>()
+        private var isRecording = false
+        private var startTime = 0L
+        private var sessionId = ""
+        private var activeSensors = emptySet<SensorSelectionDialog.SensorType>()
 
-    init {
-    orientation = VERTICAL
-    setPadding(16, 8, 16, 8)
-    gravity = Gravity.CENTER
+        init {
+            orientation = VERTICAL
+            setPadding(16, 8, 16, 8)
+            gravity = Gravity.CENTER
 
             // Recording status icon
             statusIcon =

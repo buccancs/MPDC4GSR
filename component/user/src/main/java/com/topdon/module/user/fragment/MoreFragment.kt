@@ -90,16 +90,23 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 //根据 2024/5/23 评审会结论，TC007没有多少需要恢复出厂的configuration，产品决定砍掉
         settingReset.isVisible = false
 
-    //根据 2024/5/23 评审会结论，TC007没有多少需要恢复出厂的配置，产品决定砍掉
-    settingReset.isVisible = false
+        settingVersion.isVisible = isTC007 && Build.VERSION.SDK_INT >= 29
+        settingDeviceInformation.isVisible = isTC007
+        settingItemDual.isVisible = !isTC007 && DeviceTools.isTC001PlusConnect()
 
-    settingVersion.isVisible = isTC007 && Build.VERSION.SDK_INT >= 29
-    settingDeviceInformation.isVisible = isTC007
-    settingItemDual.isVisible = !isTC007 && DeviceTools.isTC001PlusConnect()
+        if (isTC007) {
+            refresh07Connect(WebSocketProxy.getInstance().isTC007Connect())
+        }
 
-    if (isTC007) {
-    refresh07Connect(WebSocketProxy.getInstance().isTC007Connect())
-    }
+        val settingItemAutoShow = requireView().findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.setting_item_auto_show)
+        settingItemAutoShow.isChecked = if (isTC007) SharedManager.isConnect07AutoOpen else SharedManager.isConnectAutoOpen
+        settingItemAutoShow.setOnCheckedChangeListener { _, isChecked ->
+            if (isTC007) {
+                SharedManager.isConnect07AutoOpen = isChecked
+            } else {
+                SharedManager.isConnectAutoOpen = isChecked
+            }
+        }
 
         settingItemConfigSelect.isChecked = if (isTC007) WifiSaveSettingUtil.isSaveSetting else SaveSettingUtil.isSaveSetting
         settingItemConfigSelect.setOnCheckedChangeListener { _, isChecked ->
@@ -153,23 +160,23 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun connected() {
-    settingItemDual.isVisible = !isTC007 && DeviceTools.isTC001PlusConnect()
+        settingItemDual.isVisible = !isTC007 && DeviceTools.isTC001PlusConnect()
     }
 
     override fun disConnected() {
-    settingItemDual.isVisible = false
+        settingItemDual.isVisible = false
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
-    if (!isTS004 && isTC007) {
-    refresh07Connect(true)
-    }
+        if (!isTS004 && isTC007) {
+            refresh07Connect(true)
+        }
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
-    if (!isTS004 && isTC007) {
-    refresh07Connect(false)
-    }
+        if (!isTS004 && isTC007) {
+            refresh07Connect(false)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -223,24 +230,24 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
 
     private fun refresh07Connect(isConnect: Boolean) {
-    settingDeviceInformation.isRightArrowVisible = isConnect
-    settingDeviceInformation.setRightTextId(if (isConnect) 0 else RCore.string.app_no_connect)
-    settingReset.isRightArrowVisible = isConnect
-    settingReset.setRightTextId(if (isConnect) 0 else RCore.string.app_no_connect)
-    tvRightText.isVisible = isConnect
+        settingDeviceInformation.isRightArrowVisible = isConnect
+        settingDeviceInformation.setRightTextId(if (isConnect) 0 else RCore.string.app_no_connect)
+        settingReset.isRightArrowVisible = isConnect
+        settingReset.setRightTextId(if (isConnect) 0 else RCore.string.app_no_connect)
+        tvRightText.isVisible = isConnect
 
-    if (isConnect) {
-    lifecycleScope.launch {
-    val productBean: ProductBean? = TC007Repository.getProductInfo()
-    if (productBean == null) {
-    TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
-    } else {
-    itemSettingBottomText.text = getString(RCore.string.setting_firmware_update_version) + "V" + productBean.getVersionStr()
-    }
-    }
-    } else {
-    itemSettingBottomText.setText(RCore.string.setting_firmware_update_version)
-    }
+        if (isConnect) {
+            lifecycleScope.launch {
+                val productBean: ProductBean? = TC007Repository.getProductInfo()
+                if (productBean == null) {
+                    TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
+                } else {
+                    itemSettingBottomText.text = getString(RCore.string.setting_firmware_update_version) + "V" + productBean.getVersionStr()
+                }
+            }
+        } else {
+            itemSettingBottomText.setText(RCore.string.setting_firmware_update_version)
+        }
     }
 
 
@@ -271,9 +278,9 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
 
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
-    lifecycleScope.launch {
-    val progressDialog = DownloadProDialog(requireContext())
-    progressDialog.show()
+        lifecycleScope.launch {
+            val progressDialog = DownloadProDialog(requireContext())
+            progressDialog.show()
 
             val file = File(requireContext().getExternalFilesDir("firmware"), "TC007${firmwareData.version}.zip")
             val isSuccess =
@@ -290,10 +297,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun installFirmware(file: File) {
-    lifecycleScope.launch {
-    XLog.d("TC007 固件升级 - 开始安装固件升级包")
-    val installDialog = FirmwareInstallDialog(requireContext())
-    installDialog.show()
+        lifecycleScope.launch {
+            XLog.d("TC007 固件升级 - 开始安装固件升级包")
+            val installDialog = FirmwareInstallDialog(requireContext())
+            installDialog.show()
 
             val isSuccess = TC007Repository.updateFirmware(file)
             installDialog.dismiss()
@@ -318,58 +325,58 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun showReInstallDialog(file: File) {
-    val dialog = ConfirmSelectDialog(requireContext())
-    dialog.setShowIcon(true)
-    dialog.setTitleRes(RCore.string.ts004_install_tips)
-    dialog.setCancelText(RCore.string.ts004_install_cancel)
-    dialog.setConfirmText(RCore.string.ts004_install_continue)
-    dialog.onConfirmClickListener = {
-    installFirmware(file)
-    }
-    dialog.show()
+        val dialog = ConfirmSelectDialog(requireContext())
+        dialog.setShowIcon(true)
+        dialog.setTitleRes(RCore.string.ts004_install_tips)
+        dialog.setCancelText(RCore.string.ts004_install_cancel)
+        dialog.setConfirmText(RCore.string.ts004_install_continue)
+        dialog.onConfirmClickListener = {
+            installFirmware(file)
+        }
+        dialog.show()
     }
 
     private fun showReDownloadDialog(firmwareData: FirmwareViewModel.FirmwareData) {
-    val dialog = ConfirmSelectDialog(requireContext())
-    dialog.setShowIcon(true)
-    dialog.setTitleRes(RCore.string.ts004_download_tips)
-    dialog.setCancelText(RCore.string.ts004_download_cancel)
-    dialog.setConfirmText(RCore.string.ts004_download_continue)
-    dialog.onConfirmClickListener = {
-    downloadFirmware(firmwareData)
-    }
-    dialog.show()
+        val dialog = ConfirmSelectDialog(requireContext())
+        dialog.setShowIcon(true)
+        dialog.setTitleRes(RCore.string.ts004_download_tips)
+        dialog.setCancelText(RCore.string.ts004_download_cancel)
+        dialog.setConfirmText(RCore.string.ts004_download_continue)
+        dialog.onConfirmClickListener = {
+            downloadFirmware(firmwareData)
+        }
+        dialog.show()
     }
 
     private fun restoreFactory() {
-    TipDialog.Builder(requireContext())
-    .setTitleMessage(getString(RCore.string.ts004_reset_tip1, "TC007"))
-    .setMessage(getString(RCore.string.ts004_reset_tip2))
-    .setPositiveListener(RCore.string.app_ok) {
-    resetAll()
-    }
-    .setCancelListener(RCore.string.app_cancel) {
-    }
-    .setCanceled(true)
-    .create().show()
+        TipDialog.Builder(requireContext())
+            .setTitleMessage(getString(RCore.string.ts004_reset_tip1, "TC007"))
+            .setMessage(getString(RCore.string.ts004_reset_tip2))
+            .setPositiveListener(RCore.string.app_ok) {
+                resetAll()
+            }
+            .setCancelListener(RCore.string.app_cancel) {
+            }
+            .setCanceled(true)
+            .create().show()
     }
 
     private fun resetAll() {
-    showLoadingDialog(RCore.string.ts004_reset_tip3)
-    lifecycleScope.launch {
-    val isSuccess = TC007Repository.resetToFactory()
-    if (isSuccess) {
-    XLog.d("TC007 恢复出厂设置成功，即将断开连接")
-    TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
-    (requireActivity().application as BaseApplication).disconnectWebSocket()
-    EventBus.getDefault().post(TS004ResetEvent())
-    NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(requireContext())
-    requireActivity().finish()
-    } else {
-    TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
-    }
-    delay(500)
-    dismissLoadingDialog()
-    }
+        showLoadingDialog(RCore.string.ts004_reset_tip3)
+        lifecycleScope.launch {
+            val isSuccess = TC007Repository.resetToFactory()
+            if (isSuccess) {
+                XLog.d("TC007 恢复出厂设置成功，即将断开连接")
+                TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
+                (requireActivity().application as BaseApplication).disconnectWebSocket()
+                EventBus.getDefault().post(TS004ResetEvent())
+                NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(requireContext())
+                requireActivity().finish()
+            } else {
+                TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
+            }
+            delay(500)
+            dismissLoadingDialog()
+        }
     }
 }

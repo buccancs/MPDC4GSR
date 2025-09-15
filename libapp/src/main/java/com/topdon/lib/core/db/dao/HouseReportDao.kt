@@ -10,53 +10,47 @@ import com.topdon.lib.core.db.entity.DirReport
 import com.topdon.lib.core.db.entity.HouseReport
 import com.topdon.lib.core.db.entity.ItemReport
 
-/**
-    * 房屋检测-报告 DAO。
-    *
-    * Created by LCG on 2024/8/19.
-    */
+
 @Dao
 abstract class HouseReportDao {
-    /**
-    * 插入指定的房屋检测报告.
-    */
+    
     @Transaction
     open fun insert(houseReport: HouseReport): Long {
-    houseReport.id = insertReport(houseReport)
-    for (dir in houseReport.dirList) {
-    dir.parentId = houseReport.id
-    dir.id = insertDir(dir)
+        houseReport.id = insertReport(houseReport)
+        for (dir in houseReport.dirList) {
+            dir.parentId = houseReport.id
+            dir.id = insertDir(dir)
 
-    for (item in dir.itemList) {
-    item.parentId = dir.id
-    item.id = insertItem(item)
-    }
-    }
-    return houseReport.id
+            for (item in dir.itemList) {
+                item.parentId = dir.id
+                item.id = insertItem(item)
+            }
+        }
+        return houseReport.id
     }
 
     open fun queryAllReport(): List<HouseReport> {
-    val reportList: List<HouseReport> = queryAll()
-    for (report in reportList) {
-    val dirList: List<DirReport> = queryDirList(report.id)
-    for (dir in dirList) {
-    dir.itemList = ArrayList(queryItemList(dir.id))
-    }
-    report.dirList = ArrayList(dirList)
-    }
-    return reportList
+        val reportList: List<HouseReport> = queryAll()
+        for (report in reportList) {
+            val dirList: List<DirReport> = queryDirList(report.id)
+            for (dir in dirList) {
+                dir.itemList = ArrayList(queryItemList(dir.id))
+            }
+            report.dirList = ArrayList(dirList)
+        }
+        return reportList
     }
 
     @Transaction
     open fun queryById(id: Long): HouseReport? {
-    val houseReport: HouseReport = queryReportById(id) ?: return null
-    val dirList: List<DirReport> = queryDirList(id)
-    for (dir in dirList) {
-    val itemList: List<ItemReport> = queryItemList(dir.id)
-    dir.itemList = ArrayList(itemList)
-    }
-    houseReport.dirList = ArrayList(dirList)
-    return houseReport
+        val houseReport: HouseReport = queryReportById(id) ?: return null
+        val dirList: List<DirReport> = queryDirList(id)
+        for (dir in dirList) {
+            val itemList: List<ItemReport> = queryItemList(dir.id)
+            dir.itemList = ArrayList(itemList)
+        }
+        houseReport.dirList = ArrayList(dirList)
+        return houseReport
     }
 
     @Insert

@@ -82,59 +82,59 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_pseudo_set
 
     override fun initView() {
-    // Initialize views - migrated from synthetic views
-    etMaxTemp = findViewById(R.id.et_max_temp)
-    etMinTemp = findViewById(R.id.et_min_temp)
-    tvMaxTempUnit = findViewById<TextView>(R.id.tv_max_temp_unit)
-    tvMinTempUnit = findViewById<TextView>(R.id.tv_min_temp_unit)
-    pseudoPickView = findViewById<PseudoPickView>(R.id.pseudo_pick_view)
-    colorSelectView = findViewById<ColorSelectView>(R.id.color_select_view)
-    ivCustomAdd = findViewById<ImageView>(R.id.iv_custom_add)
-    ivCustomDel = findViewById<ImageView>(R.id.iv_custom_del)
-    viewCustomColor1 = findViewById(R.id.view_custom_color1)
-    viewCustomColor2 = findViewById(R.id.view_custom_color2)
-    viewCustomColor3 = findViewById(R.id.view_custom_color3)
-    viewCustomColor4 = findViewById(R.id.view_custom_color4)
-    viewCustomColor5 = findViewById(R.id.view_custom_color5)
-    viewCustomColor6 = findViewById(R.id.view_custom_color6)
-    viewRecommendColor1 = findViewById(R.id.view_recommend_color1)
-    viewRecommendColor2 = findViewById(R.id.view_recommend_color2)
-    viewRecommendColor3 = findViewById(R.id.view_recommend_color3)
-    viewRecommendColor4 = findViewById(R.id.view_recommend_color4)
-    viewRecommendColor5 = findViewById(R.id.view_recommend_color5)
-    viewRecommendBgColor1 = findViewById(R.id.view_recommend_bg_color1)
-    viewRecommendBgColor2 = findViewById(R.id.view_recommend_bg_color2)
-    viewRecommendBgColor3 = findViewById(R.id.view_recommend_bg_color3)
-    viewRecommendBgColor4 = findViewById(R.id.view_recommend_bg_color4)
-    viewRecommendBgColor5 = findViewById(R.id.view_recommend_bg_color5)
-    tvRecommendColor1 = findViewById(R.id.tv_recommend_color1)
-    tvRecommendColor2 = findViewById(R.id.tv_recommend_color2)
-    tvRecommendColor3 = findViewById(R.id.tv_recommend_color3)
-    tvRecommendColor4 = findViewById(R.id.tv_recommend_color4)
-    tvRecommendColor5 = findViewById(R.id.tv_recommend_color5)
-    clDynamic = findViewById(R.id.cl_dynamic)
-    clCustom = findViewById(R.id.cl_custom)
-    clCustomContent = findViewById(R.id.cl_custom_content)
-    clColorCustom = findViewById(R.id.cl_color_custom)
-    clColorRecommend = findViewById(R.id.cl_color_recommend)
-    clOverGrey = findViewById(R.id.cl_over_grey)
-    clOverColor = findViewById(R.id.cl_over_color)
-    tvColorCustom = findViewById(R.id.tv_color_custom)
-    tvColorRecommend = findViewById(R.id.tv_color_recommend)
-    tvConfirm = findViewById(R.id.tv_confirm)
-    tvCancel = findViewById(R.id.tv_cancel)
-    ivDynamic = findViewById(R.id.iv_dynamic)
-    ivCustom = findViewById(R.id.iv_custom)
-    tvDynamicTitle = findViewById(R.id.tv_dynamic_title)
-    tvCustomTitle = findViewById(R.id.tv_custom_title)
-    ivOverGreySelect = findViewById(R.id.iv_over_grey_select)
-    ivOverColorSelect = findViewById(R.id.iv_over_color_select)
-    tvOverGrey = findViewById(R.id.tv_over_grey)
-    tvOverColor = findViewById(R.id.tv_over_color)
+        // Initialize views - migrated from synthetic views
+        etMaxTemp = findViewById(R.id.et_max_temp)
+        etMinTemp = findViewById(R.id.et_min_temp)
+        tvMaxTempUnit = findViewById<TextView>(R.id.tv_max_temp_unit)
+        tvMinTempUnit = findViewById<TextView>(R.id.tv_min_temp_unit)
+        pseudoPickView = findViewById<PseudoPickView>(R.id.pseudo_pick_view)
+        colorSelectView = findViewById<ColorSelectView>(R.id.color_select_view)
+        ivCustomAdd = findViewById<ImageView>(R.id.iv_custom_add)
+        ivCustomDel = findViewById<ImageView>(R.id.iv_custom_del)
+        viewCustomColor1 = findViewById(R.id.view_custom_color1)
+        viewCustomColor2 = findViewById(R.id.view_custom_color2)
+        viewCustomColor3 = findViewById(R.id.view_custom_color3)
+        viewCustomColor4 = findViewById(R.id.view_custom_color4)
+        viewCustomColor5 = findViewById(R.id.view_custom_color5)
+        viewCustomColor6 = findViewById(R.id.view_custom_color6)
+        viewRecommendColor1 = findViewById(R.id.view_recommend_color1)
+        viewRecommendColor2 = findViewById(R.id.view_recommend_color2)
+        viewRecommendColor3 = findViewById(R.id.view_recommend_color3)
+        viewRecommendColor4 = findViewById(R.id.view_recommend_color4)
+        viewRecommendColor5 = findViewById(R.id.view_recommend_color5)
+        viewRecommendBgColor1 = findViewById(R.id.view_recommend_bg_color1)
+        viewRecommendBgColor2 = findViewById(R.id.view_recommend_bg_color2)
+        viewRecommendBgColor3 = findViewById(R.id.view_recommend_bg_color3)
+        viewRecommendBgColor4 = findViewById(R.id.view_recommend_bg_color4)
+        viewRecommendBgColor5 = findViewById(R.id.view_recommend_bg_color5)
+        tvRecommendColor1 = findViewById(R.id.tv_recommend_color1)
+        tvRecommendColor2 = findViewById(R.id.tv_recommend_color2)
+        tvRecommendColor3 = findViewById(R.id.tv_recommend_color3)
+        tvRecommendColor4 = findViewById(R.id.tv_recommend_color4)
+        tvRecommendColor5 = findViewById(R.id.tv_recommend_color5)
+        clDynamic = findViewById(R.id.cl_dynamic)
+        clCustom = findViewById(R.id.cl_custom)
+        clCustomContent = findViewById(R.id.cl_custom_content)
+        clColorCustom = findViewById(R.id.cl_color_custom)
+        clColorRecommend = findViewById(R.id.cl_color_recommend)
+        clOverGrey = findViewById(R.id.cl_over_grey)
+        clOverColor = findViewById(R.id.cl_over_color)
+        tvColorCustom = findViewById(R.id.tv_color_custom)
+        tvColorRecommend = findViewById(R.id.tv_color_recommend)
+        tvConfirm = findViewById(R.id.tv_confirm)
+        tvCancel = findViewById(R.id.tv_cancel)
+        ivDynamic = findViewById(R.id.iv_dynamic)
+        ivCustom = findViewById(R.id.iv_custom)
+        tvDynamicTitle = findViewById(R.id.tv_dynamic_title)
+        tvCustomTitle = findViewById(R.id.tv_custom_title)
+        ivOverGreySelect = findViewById(R.id.iv_over_grey_select)
+        ivOverColorSelect = findViewById(R.id.iv_over_color_select)
+        tvOverGrey = findViewById(R.id.tv_over_grey)
+        tvOverColor = findViewById(R.id.tv_over_color)
 
-    val isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-    customPseudoBean = intent.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN) ?: CustomPseudoBean.loadFromShared(isTC007)
-    switchDynamicCustom(customPseudoBean.isUseCustomPseudo)
+        val isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
+        customPseudoBean = intent.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN) ?: CustomPseudoBean.loadFromShared(isTC007)
+        switchDynamicCustom(customPseudoBean.isUseCustomPseudo)
 
 //loadtemperatureconfiguration
         etMaxTemp.setText(UnitTools.showNoUnit(customPseudoBean.maxTemp))
@@ -142,7 +142,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         tvMaxTempUnit.text = UnitTools.showUnit()
         tvMinTempUnit.text = UnitTools.showUnit()
 
-    switchColorType(customPseudoBean.isColorCustom)
+        switchColorType(customPseudoBean.isColorCustom)
 
 //load自定义颜色configuration
         pseudoPickView.onSelectChangeListener = {
@@ -175,7 +175,7 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         viewRecommendColor5.background = buildRectDrawableArray(ColorRecommend.colorList5)
         switchRecommendColorIndex(customPseudoBean.customRecommendIndex)
 
-    switchUseGray(customPseudoBean.isUseGray)
+        switchUseGray(customPseudoBean.isUseGray)
 
         clDynamic.setOnClickListener(this)
         clCustom.setOnClickListener(this)
@@ -199,18 +199,18 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
         tvConfirm.setOnClickListener(this)
         tvCancel.setOnClickListener(this)
 
-    colorSelectView.onSelectListener = {
-    reset6CustomColor()
-    when (it) {
-    0xff0000ff.toInt() -> viewCustomColor1.isSelected = true
-    0xffff0000.toInt() -> viewCustomColor2.isSelected = true
-    0xff00ff00.toInt() -> viewCustomColor3.isSelected = true
-    0xffffff00.toInt() -> viewCustomColor4.isSelected = true
-    0xff000000.toInt() -> viewCustomColor5.isSelected = true
-    0xffffffff.toInt() -> viewCustomColor6.isSelected = true
-    }
-    pseudoPickView.refreshColor(it)
-    }
+        colorSelectView.onSelectListener = {
+            reset6CustomColor()
+            when (it) {
+                0xff0000ff.toInt() -> viewCustomColor1.isSelected = true
+                0xffff0000.toInt() -> viewCustomColor2.isSelected = true
+                0xff00ff00.toInt() -> viewCustomColor3.isSelected = true
+                0xffffff00.toInt() -> viewCustomColor4.isSelected = true
+                0xff000000.toInt() -> viewCustomColor5.isSelected = true
+                0xffffffff.toInt() -> viewCustomColor6.isSelected = true
+            }
+            pseudoPickView.refreshColor(it)
+        }
     }
 
     override fun initData() {
@@ -368,72 +368,72 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
 
 
     private fun switchColorType(isToCustom: Boolean) {
-    customPseudoBean.isColorCustom = isToCustom
-    clColorCustom.isVisible = isToCustom
-    clColorRecommend.isVisible = !isToCustom
-    tvColorCustom.setTextColor(if (isToCustom) 0xffffba42.toInt() else 0xffffffff.toInt())
-    tvColorRecommend.setTextColor(if (isToCustom) 0xffffffff.toInt() else 0xffffba42.toInt())
-    tvColorCustom.setBackgroundResource(if (isToCustom) RCore.drawable.bg_corners50_solid_2a183e_stroke_theme else 0)
-    tvColorRecommend.setBackgroundResource(if (isToCustom) 0 else RCore.drawable.bg_corners50_solid_2a183e_stroke_theme)
+        customPseudoBean.isColorCustom = isToCustom
+        clColorCustom.isVisible = isToCustom
+        clColorRecommend.isVisible = !isToCustom
+        tvColorCustom.setTextColor(if (isToCustom) 0xffffba42.toInt() else 0xffffffff.toInt())
+        tvColorRecommend.setTextColor(if (isToCustom) 0xffffffff.toInt() else 0xffffba42.toInt())
+        tvColorCustom.setBackgroundResource(if (isToCustom) RCore.drawable.bg_corners50_solid_2a183e_stroke_theme else 0)
+        tvColorRecommend.setBackgroundResource(if (isToCustom) 0 else RCore.drawable.bg_corners50_solid_2a183e_stroke_theme)
     }
 
 
     private fun reset6CustomColor() {
-    viewCustomColor1.isSelected = false
-    viewCustomColor2.isSelected = false
-    viewCustomColor3.isSelected = false
-    viewCustomColor4.isSelected = false
-    viewCustomColor5.isSelected = false
-    viewCustomColor6.isSelected = false
+        viewCustomColor1.isSelected = false
+        viewCustomColor2.isSelected = false
+        viewCustomColor3.isSelected = false
+        viewCustomColor4.isSelected = false
+        viewCustomColor5.isSelected = false
+        viewCustomColor6.isSelected = false
     }
 
 
     private fun switchRecommendColorIndex(index: Int) {
-    when (customPseudoBean.customRecommendIndex) {
-    0 -> {
-    tvRecommendColor1.setTextColor(0x80ffffff.toInt())
-    viewRecommendBgColor1.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
-    }
-    1 -> {
-    tvRecommendColor2.setTextColor(0x80ffffff.toInt())
-    viewRecommendBgColor2.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
-    }
-    2 -> {
-    tvRecommendColor3.setTextColor(0x80ffffff.toInt())
-    viewRecommendBgColor3.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
-    }
-    3 -> {
-    tvRecommendColor4.setTextColor(0x80ffffff.toInt())
-    viewRecommendBgColor4.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
-    }
-    4 -> {
-    tvRecommendColor5.setTextColor(0x80ffffff.toInt())
-    viewRecommendBgColor5.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
-    }
-    }
-    when (index) {
-    0 -> {
-    tvRecommendColor1.setTextColor(0xffffba42.toInt())
-    viewRecommendBgColor1.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
-    }
-    1 -> {
-    tvRecommendColor2.setTextColor(0xffffba42.toInt())
-    viewRecommendBgColor2.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
-    }
-    2 -> {
-    tvRecommendColor3.setTextColor(0xffffba42.toInt())
-    viewRecommendBgColor3.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
-    }
-    3 -> {
-    tvRecommendColor4.setTextColor(0xffffba42.toInt())
-    viewRecommendBgColor4.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
-    }
-    4 -> {
-    tvRecommendColor5.setTextColor(0xffffba42.toInt())
-    viewRecommendBgColor5.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
-    }
-    }
-    customPseudoBean.customRecommendIndex = index
+        when (customPseudoBean.customRecommendIndex) {
+            0 -> {
+                tvRecommendColor1.setTextColor(0x80ffffff.toInt())
+                viewRecommendBgColor1.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
+            }
+            1 -> {
+                tvRecommendColor2.setTextColor(0x80ffffff.toInt())
+                viewRecommendBgColor2.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
+            }
+            2 -> {
+                tvRecommendColor3.setTextColor(0x80ffffff.toInt())
+                viewRecommendBgColor3.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
+            }
+            3 -> {
+                tvRecommendColor4.setTextColor(0x80ffffff.toInt())
+                viewRecommendBgColor4.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
+            }
+            4 -> {
+                tvRecommendColor5.setTextColor(0x80ffffff.toInt())
+                viewRecommendBgColor5.setBackgroundResource(RCore.drawable.bg_corners04_stroke_30_ff)
+            }
+        }
+        when (index) {
+            0 -> {
+                tvRecommendColor1.setTextColor(0xffffba42.toInt())
+                viewRecommendBgColor1.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
+            }
+            1 -> {
+                tvRecommendColor2.setTextColor(0xffffba42.toInt())
+                viewRecommendBgColor2.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
+            }
+            2 -> {
+                tvRecommendColor3.setTextColor(0xffffba42.toInt())
+                viewRecommendBgColor3.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
+            }
+            3 -> {
+                tvRecommendColor4.setTextColor(0xffffba42.toInt())
+                viewRecommendBgColor4.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
+            }
+            4 -> {
+                tvRecommendColor5.setTextColor(0xffffba42.toInt())
+                viewRecommendBgColor5.setBackgroundResource(RCore.drawable.bg_corners04_stroke_2dp_ffba42)
+            }
+        }
+        customPseudoBean.customRecommendIndex = index
     }
 
     private fun switchUseGray(isUseGray: Boolean) {
@@ -451,11 +451,11 @@ class PseudoSetActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun buildRectDrawableArray(color: IntArray): GradientDrawable {
-    val drawable = GradientDrawable()
-    drawable.shape = GradientDrawable.RECTANGLE
-    drawable.cornerRadius = SizeUtils.dp2px(4f).toFloat()
-    drawable.colors = color
-    drawable.orientation = GradientDrawable.Orientation.LEFT_RIGHT
-    return drawable
+        val drawable = GradientDrawable()
+        drawable.shape = GradientDrawable.RECTANGLE
+        drawable.cornerRadius = SizeUtils.dp2px(4f).toFloat()
+        drawable.colors = color
+        drawable.orientation = GradientDrawable.Orientation.LEFT_RIGHT
+        return drawable
     }
 }

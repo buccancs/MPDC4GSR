@@ -35,25 +35,25 @@ class IRImageHelp {
         customMaxTemp: Float,
         customMinTemp: Float,
     ) {
-    if (colorList == null) {
-    this.isUseGray = true
-    } else {
-    this.isUseGray = isUseGray
-    }
-    this.colorList = colorList
-    this.places = places
-    if (colorList != null) {
-    this.customMaxTemp = customMaxTemp
-    this.customMinTemp = customMinTemp
-    val maxColor = colorList[colorList.size - 1]
-    val minColor = colorList[0]
-    this.maxRGB[0] = maxColor shr 16 and 0xFF
-    this.maxRGB[1] = maxColor shr 8 and 0xFF
-    this.maxRGB[2] = maxColor and 0xFF
-    this.minRGB[0] = minColor shr 16 and 0xFF
-    this.minRGB[1] = minColor shr 8 and 0xFF
-    this.minRGB[2] = minColor and 0xFF
-    }
+        if (colorList == null) {
+            this.isUseGray = true
+        } else {
+            this.isUseGray = isUseGray
+        }
+        this.colorList = colorList
+        this.places = places
+        if (colorList != null) {
+            this.customMaxTemp = customMaxTemp
+            this.customMinTemp = customMinTemp
+            val maxColor = colorList[colorList.size - 1]
+            val minColor = colorList[0]
+            this.maxRGB[0] = maxColor shr 16 and 0xFF
+            this.maxRGB[1] = maxColor shr 8 and 0xFF
+            this.maxRGB[2] = maxColor and 0xFF
+            this.minRGB[0] = minColor shr 16 and 0xFF
+            this.minRGB[1] = minColor shr 8 and 0xFF
+            this.minRGB[2] = minColor and 0xFF
+        }
     }
 
 

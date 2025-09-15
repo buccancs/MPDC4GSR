@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentHashMap
 
 class ZeroconfDiscoveryService(private val context: Context) {
     companion object {
-    private const val TAG = "ZeroconfDiscovery"
-    private const val SERVICE_TYPE = "_ircamera._tcp."
-    private const val SERVICE_NAME = "IRCamera-Device"
-    private const val DISCOVERY_TIMEOUT = 30000L // 30 seconds
+        private const val TAG = "ZeroconfDiscovery"
+        private const val SERVICE_TYPE = "_ircamera._tcp."
+        private const val SERVICE_NAME = "IRCamera-Device"
+        private const val DISCOVERY_TIMEOUT = 30000L // 30 seconds
     }
 
     private val nsdManager: NsdManager by lazy {
-    context.getSystemService(Context.NSD_SERVICE) as NsdManager
+        context.getSystemService(Context.NSD_SERVICE) as NsdManager
     }
 
     private val discoveredServices = ConcurrentHashMap<String, NsdServiceInfo>()
@@ -42,7 +42,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
     private var serviceListener: ServiceDiscoveryListener? = null
 
     fun setServiceListener(listener: ServiceDiscoveryListener?) {
-    serviceListener = listener
+        serviceListener = listener
     }
 
 
@@ -68,16 +68,16 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
 
     fun stopDiscovery() {
-    if (!isDiscovering) return
+        if (!isDiscovering) return
 
-    try {
-    discoveryListener?.let { nsdManager.stopServiceDiscovery(it) }
-    isDiscovering = false
-    discoveredServices.clear()
-    Log.i(TAG, "Stopped service discovery")
-    } catch (e: Exception) {
-    Log.e(TAG, "Error stopping discovery", e)
-    }
+        try {
+            discoveryListener?.let { nsdManager.stopServiceDiscovery(it) }
+            isDiscovering = false
+            discoveredServices.clear()
+            Log.i(TAG, "Stopped service discovery")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error stopping discovery", e)
+        }
     }
 
 
@@ -115,15 +115,15 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
 
     fun unregisterService() {
-    if (!isRegistered) return
+        if (!isRegistered) return
 
-    try {
-    registrationListener?.let { nsdManager.unregisterService(it) }
-    isRegistered = false
-    Log.i(TAG, "Unregistered service")
-    } catch (e: Exception) {
-    Log.e(TAG, "Error unregistering service", e)
-    }
+        try {
+            registrationListener?.let { nsdManager.unregisterService(it) }
+            isRegistered = false
+            Log.i(TAG, "Unregistered service")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error unregistering service", e)
+        }
     }
 
 
@@ -153,10 +153,10 @@ class ZeroconfDiscoveryService(private val context: Context) {
     }
 
     private fun createDiscoveryListener(): NsdManager.DiscoveryListener {
-    return object : NsdManager.DiscoveryListener {
-    override fun onDiscoveryStarted(regType: String) {
-    Log.d(TAG, "Service discovery started: $regType")
-    }
+        return object : NsdManager.DiscoveryListener {
+            override fun onDiscoveryStarted(regType: String) {
+                Log.d(TAG, "Service discovery started: $regType")
+            }
 
             override fun onServiceFound(service: NsdServiceInfo) {
                 Log.d(TAG, "Service discovery success: ${service.serviceName}")
@@ -166,20 +166,20 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     return
                 }
 
-    // Don't discover our own service
-    if (service.serviceName.startsWith(SERVICE_NAME)) {
-    return
-    }
+                // Resolve the service to get detailed information
+                nsdManager.resolveService(service, createResolveListener())
+            }
 
-    // Resolve the service to get detailed information
-    nsdManager.resolveService(service, createResolveListener())
-    }
+            override fun onServiceLost(service: NsdServiceInfo) {
+                Log.i(TAG, "Service lost: ${service.serviceName}")
+                discoveredServices.remove(service.serviceName)
+                serviceListener?.onServiceLost(service.serviceName)
+            }
 
-    override fun onServiceLost(service: NsdServiceInfo) {
-    Log.i(TAG, "Service lost: ${service.serviceName}")
-    discoveredServices.remove(service.serviceName)
-    serviceListener?.onServiceLost(service.serviceName)
-    }
+            override fun onDiscoveryStopped(serviceType: String) {
+                Log.i(TAG, "Discovery stopped: $serviceType")
+                isDiscovering = false
+            }
 
             override fun onStartDiscoveryFailed(
                 serviceType: String,
@@ -242,12 +242,12 @@ class ZeroconfDiscoveryService(private val context: Context) {
     }
 
     private fun createRegistrationListener(): NsdManager.RegistrationListener {
-    return object : NsdManager.RegistrationListener {
-    override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {
-    Log.i(TAG, "Service registered: ${serviceInfo.serviceName}")
-    isRegistered = true
-    serviceListener?.onServiceRegistered(serviceInfo.serviceName)
-    }
+        return object : NsdManager.RegistrationListener {
+            override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {
+                Log.i(TAG, "Service registered: ${serviceInfo.serviceName}")
+                isRegistered = true
+                serviceListener?.onServiceRegistered(serviceInfo.serviceName)
+            }
 
             override fun onRegistrationFailed(
                 serviceInfo: NsdServiceInfo,
@@ -258,10 +258,10 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 serviceListener?.onDiscoveryError(errorCode, "Registration failed")
             }
 
-    override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {
-    Log.i(TAG, "Service unregistered: ${serviceInfo.serviceName}")
-    isRegistered = false
-    }
+            override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {
+                Log.i(TAG, "Service unregistered: ${serviceInfo.serviceName}")
+                isRegistered = false
+            }
 
             override fun onUnregistrationFailed(
                 serviceInfo: NsdServiceInfo,
@@ -275,11 +275,11 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
 
     fun cleanup() {
-    stopDiscovery()
-    unregisterService()
-    discoveredServices.clear()
-    serviceListener = null
-    discoveryListener = null
-    registrationListener = null
+        stopDiscovery()
+        unregisterService()
+        discoveredServices.clear()
+        serviceListener = null
+        discoveryListener = null
+        registrationListener = null
     }
 }

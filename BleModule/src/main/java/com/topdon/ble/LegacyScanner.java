@@ -58,7 +58,7 @@ class LegacyScanner extends AbstractScanner implements BluetoothAdapter.LeScanCa
     }
 
     @Override
-    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {        
         parseScanResult(device, false, null, rssi, scanRecord);
     }
 

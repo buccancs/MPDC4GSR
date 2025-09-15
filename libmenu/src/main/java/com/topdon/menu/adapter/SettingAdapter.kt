@@ -16,12 +16,12 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
 
 
     var rotateAngle: Int = 270
-    set(value) {
-    if (field != value) {
-    field = value
-    setSelected(SettingType.ROTATE, value != 270)
-    }
-    }
+        set(value) {
+            if (field != value) {
+                field = value
+                setSelected(SettingType.ROTATE, value != 270)
+            }
+        }
 
 
     fun setSelected(
@@ -92,17 +92,17 @@ internal class SettingAdapter(menuType: MenuType = MenuType.SINGLE_LIGHT, isObse
 //            data.isSelected = !data.isSelected
 //            holder.binding.ivIcon.isSelected = data.isSelected
 //            holder.binding.tvText.isSelected = data.isSelected
-    onSettingListener?.invoke(data.settingType, data.isSelected)
-    }
+            onSettingListener?.invoke(data.settingType, data.isSelected)
+        }
     }
 
     override fun getItemCount(): Int = dataList.size
 
 
     data class Data(
-    @StringRes val stringId: Int,
-    @DrawableRes val drawableId: Int,
-    val settingType: SettingType,
-    var isSelected: Boolean = false,
+        @StringRes val stringId: Int,
+        @DrawableRes val drawableId: Int,
+        val settingType: SettingType,
+        var isSelected: Boolean = false,
     )
 }

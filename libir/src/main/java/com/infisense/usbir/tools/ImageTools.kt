@@ -144,10 +144,10 @@ object ImageTools {
     }
 
     private fun readTempValue(bytes: ByteArray): Float {
-    val data: ByteArray = bytes.descBytes()
-    val scale = 16
-    val tempInt = data.bytesToInt() / 4
-    return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
+        val data: ByteArray = bytes.descBytes()
+        val scale = 16
+        val tempInt = data.bytesToInt() / 4
+        return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
 
 //    // RGBA 转 bitmap
@@ -196,10 +196,10 @@ object ImageTools {
         @ColorInt maxColor: Int = 0,
         @ColorInt minColor: Int = 0,
     ) {
-    if (max < min) {
-    return
-    }
-    dualReplaceColor(imageBytes, tempBytes, max, min, maxColor, minColor)
+        if (max < min) {
+            return
+        }
+        dualReplaceColor(imageBytes, tempBytes, max, min, maxColor, minColor)
     }
 
 

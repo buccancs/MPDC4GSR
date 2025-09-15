@@ -5,13 +5,13 @@ import java.util.*
 object ByteUtils {
 
     fun byteToInt(bytes: ByteArray): Int {
-    var count = 0
-    var b = 0
-    for (i in bytes.size - 1 downTo 0) {
-    b = bytes[i].toInt().and(0xff)
-    count += b shl (8 * (bytes.size - i - 1))
-    }
-    return count
+        var count = 0
+        var b = 0
+        for (i in bytes.size - 1 downTo 0) {
+            b = bytes[i].toInt().and(0xff)
+            count += b shl (8 * (bytes.size - i - 1))
+        }
+        return count
     }
 
 

@@ -42,17 +42,17 @@ class MenuSecondView : FrameLayout {
 
 
     fun selectPosition(position: Int) {
-    binding.cameraMenuView.isVisible = position == 0 || position == 10
-    binding.recyclerFence.isVisible = position == 1
-    binding.recyclerTwoLight.isVisible = position == 2
-    binding.recyclerColor.isVisible = position == 3 || position == 12
-    binding.recyclerSettingTe.isVisible = position == 4
-    binding.recyclerTempLevel.isVisible = position == 5
+        binding.cameraMenuView.isVisible = position == 0 || position == 10
+        binding.recyclerFence.isVisible = position == 1
+        binding.recyclerTwoLight.isVisible = position == 2
+        binding.recyclerColor.isVisible = position == 3 || position == 12
+        binding.recyclerSettingTe.isVisible = position == 4
+        binding.recyclerTempLevel.isVisible = position == 5
 
-    binding.recyclerTempSource.isVisible = position == 11
-    binding.recyclerTarget.isVisible = position == 13
-    binding.recyclerTempPoint.isVisible = position == 14
-    binding.recyclerSettingOb.isVisible = position == 15
+        binding.recyclerTempSource.isVisible = position == 11
+        binding.recyclerTarget.isVisible = position == 13
+        binding.recyclerTempPoint.isVisible = position == 14
+        binding.recyclerSettingOb.isVisible = position == 15
     }
 
     // *********************************************  Public Properties  *********************************************
@@ -95,10 +95,10 @@ class MenuSecondView : FrameLayout {
 
 
     var onTempLevelListener: ((code: Int) -> Unit)?
-    get() = tempLevelAdapter.onTempLevelListener
-    set(value) {
-    tempLevelAdapter.onTempLevelListener = value
-    }
+        get() = tempLevelAdapter.onTempLevelListener
+        set(value) {
+            tempLevelAdapter.onTempLevelListener = value
+        }
 
 
     var onTempSourceListener: ((code: Int) -> Unit)?
@@ -116,10 +116,10 @@ class MenuSecondView : FrameLayout {
 
 
     var onTempPointListener: ((type: TempPointType, isSelected: Boolean) -> Unit)?
-    get() = tempPointAdapter.onTempPointListener
-    set(value) {
-    tempPointAdapter.onTempPointListener = value
-    }
+        get() = tempPointAdapter.onTempPointListener
+        set(value) {
+            tempPointAdapter.onTempPointListener = value
+        }
 
 
     private val fenceAdapter: FenceAdapter
@@ -171,17 +171,17 @@ class MenuSecondView : FrameLayout {
             }
         typedArray.recycle()
 
-    if (isInEditMode) {
-    binding = ViewMenuSecondBinding.inflate(LayoutInflater.from(context), this, true)
-    fenceAdapter = FenceAdapter(menuType)
-    twoLightAdapter = TwoLightAdapter(menuType)
-    settingTeAdapter = SettingAdapter(menuType)
-    tempLevelAdapter = TempLevelAdapter(menuType)
-    } else {
-    // Initialize view binding - replaces findViewById calls
-    binding = ViewMenuSecondBinding.inflate(LayoutInflater.from(context), this, true)
+        if (isInEditMode) {
+            binding = ViewMenuSecondBinding.inflate(LayoutInflater.from(context), this, true)
+            fenceAdapter = FenceAdapter(menuType)
+            twoLightAdapter = TwoLightAdapter(menuType)
+            settingTeAdapter = SettingAdapter(menuType)
+            tempLevelAdapter = TempLevelAdapter(menuType)
+        } else {
+            // Initialize view binding - replaces findViewById calls
+            binding = ViewMenuSecondBinding.inflate(LayoutInflater.from(context), this, true)
 
-    refreshImg(GalleryRepository.DirType.LINE)
+            refreshImg(GalleryRepository.DirType.LINE)
 
             // Initialize Temperature measurement mode - Menu 2 - Point/Line/Area menu
             fenceAdapter = FenceAdapter(menuType)
@@ -243,8 +243,8 @@ class MenuSecondView : FrameLayout {
 
 
     fun updateCameraModel() {
-    binding.cameraMenuView.canSwitchMode = true
-    binding.cameraMenuView.setToNormal()
+        binding.cameraMenuView.canSwitchMode = true
+        binding.cameraMenuView.setToNormal()
     }
 
     fun refreshImg(type: GalleryRepository.DirType = GalleryRepository.DirType.LINE) {
@@ -259,31 +259,31 @@ class MenuSecondView : FrameLayout {
 
 
     fun setToRecord(isDelay: Boolean) {
-    binding.cameraMenuView.canSwitchMode = false
-    binding.cameraMenuView.setToRecord(isDelay)
+        binding.cameraMenuView.canSwitchMode = false
+        binding.cameraMenuView.setToRecord(isDelay)
     }
 
 
     fun setToCamera() {
-    binding.cameraMenuView.setToRecord(false)
+        binding.cameraMenuView.setToRecord(false)
     }
 
     // *****************************************  temperature measurement模式-menu2-point/line/area  *****************************************
 
 
     var fenceSelectType: FenceType?
-    get() = fenceAdapter.selectType
-    set(value) {
-    fenceAdapter.selectType = value
-    }
+        get() = fenceAdapter.selectType
+        set(value) {
+            fenceAdapter.selectType = value
+        }
 
     // *****************************************  temperature measurement模式-menu3-dual light  *****************************************
 
     var twoLightType: TwoLightType
-    get() = twoLightAdapter.twoLightType
-    set(value) {
-    twoLightAdapter.twoLightType = value
-    }
+        get() = twoLightAdapter.twoLightType
+        set(value) {
+            twoLightAdapter.twoLightType = value
+        }
 
 
     fun setTwoLightSelected(
@@ -297,7 +297,7 @@ class MenuSecondView : FrameLayout {
 
 
     fun setPseudoColor(code: Int) {
-    colorAdapter.selectCode = code
+        colorAdapter.selectCode = code
     }
 
     // **********************************  temperature measurement模式-menu5-settings or observation模式-menu6-settings  **********************************
@@ -313,8 +313,8 @@ class MenuSecondView : FrameLayout {
 
 
     fun setSettingRotate(rotateAngle: Int) {
-    settingTeAdapter.rotateAngle = rotateAngle
-    settingObAdapter.rotateAngle = rotateAngle
+        settingTeAdapter.rotateAngle = rotateAngle
+        settingObAdapter.rotateAngle = rotateAngle
     }
 
     // *****************************************  temperature measurement模式-menu6-high/low temperature档  *****************************************
@@ -328,14 +328,14 @@ class MenuSecondView : FrameLayout {
 
 
     fun setTempLevel(code: Int) {
-    tempLevelAdapter.selectCode = code
+        tempLevelAdapter.selectCode = code
     }
 
     // *****************************************  observation模式-menu2-high/low temperature源  *****************************************
 
 
     fun setTempSource(code: Int) {
-    tempSourceAdapter.selectCode = code
+        tempSourceAdapter.selectCode = code
     }
 
     // *****************************************  observation模式-menu4-target  *****************************************
@@ -350,7 +350,7 @@ class MenuSecondView : FrameLayout {
 
 
     fun setTargetMode(modeCode: Int) {
-    targetAdapter.setTargetMode(modeCode)
+        targetAdapter.setTargetMode(modeCode)
     }
 
     // *****************************************  observation模式-menu5-high/low temperature点  *****************************************
@@ -365,6 +365,6 @@ class MenuSecondView : FrameLayout {
 
 
     fun clearTempPointSelect() {
-    tempPointAdapter.clearAllSelect()
+        tempPointAdapter.clearAllSelect()
     }
 }

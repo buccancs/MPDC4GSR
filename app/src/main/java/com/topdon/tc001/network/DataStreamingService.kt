@@ -15,12 +15,12 @@ class DataStreamingService(
     private val networkClient: NetworkClient,
 ) {
     companion object {
-    private const val TAG = "DataStreamingService"
-    private const val BATCH_SIZE = 50 // Number of samples per batch
-    private const val BATCH_TIMEOUT_MS = 100L // Maximum time to wait for batch completion
-    private const val MAX_QUEUE_SIZE = 5000 // Maximum queue size to prevent memory issues
-    private const val RETRY_ATTEMPTS = 3
-    private const val RETRY_DELAY_MS = 500L
+        private const val TAG = "DataStreamingService"
+        private const val BATCH_SIZE = 50 // Number of samples per batch
+        private const val BATCH_TIMEOUT_MS = 100L // Maximum time to wait for batch completion
+        private const val MAX_QUEUE_SIZE = 5000 // Maximum queue size to prevent memory issues
+        private const val RETRY_ATTEMPTS = 3
+        private const val RETRY_DELAY_MS = 500L
     }
 
     private val streamingJob = SupervisorJob()
@@ -74,7 +74,7 @@ class DataStreamingService(
     private var eventListener: StreamingEventListener? = null
 
     fun setEventListener(listener: StreamingEventListener?) {
-    eventListener = listener
+        eventListener = listener
     }
 
 
@@ -156,45 +156,45 @@ class DataStreamingService(
 
 
     fun queueGSRSample(sample: GSRSample) {
-    if (!isStreaming.get()) return
+        if (!isStreaming.get()) return
 
-    if (gsrQueue.size >= MAX_QUEUE_SIZE) {
-    // Drop oldest samples to prevent memory overflow
-    val dropped = minOf(BATCH_SIZE, gsrQueue.size / 2)
-    repeat(dropped) { gsrQueue.poll() }
-    eventListener?.onQueueFull("GSR", dropped)
-    Log.w(TAG, "GSR queue full, dropped $dropped samples")
-    }
+        if (gsrQueue.size >= MAX_QUEUE_SIZE) {
+            // Drop oldest samples to prevent memory overflow
+            val dropped = minOf(BATCH_SIZE, gsrQueue.size / 2)
+            repeat(dropped) { gsrQueue.poll() }
+            eventListener?.onQueueFull("GSR", dropped)
+            Log.w(TAG, "GSR queue full, dropped $dropped samples")
+        }
 
-    gsrQueue.offer(sample)
+        gsrQueue.offer(sample)
     }
 
 
     fun queueThermalSample(sample: ThermalSample) {
-    if (!isStreaming.get()) return
+        if (!isStreaming.get()) return
 
-    if (thermalQueue.size >= MAX_QUEUE_SIZE) {
-    val dropped = minOf(BATCH_SIZE, thermalQueue.size / 2)
-    repeat(dropped) { thermalQueue.poll() }
-    eventListener?.onQueueFull("Thermal", dropped)
-    Log.w(TAG, "Thermal queue full, dropped $dropped samples")
-    }
+        if (thermalQueue.size >= MAX_QUEUE_SIZE) {
+            val dropped = minOf(BATCH_SIZE, thermalQueue.size / 2)
+            repeat(dropped) { thermalQueue.poll() }
+            eventListener?.onQueueFull("Thermal", dropped)
+            Log.w(TAG, "Thermal queue full, dropped $dropped samples")
+        }
 
-    thermalQueue.offer(sample)
+        thermalQueue.offer(sample)
     }
 
 
     fun queueVideoMetadata(metadata: VideoMetadata) {
-    if (!isStreaming.get()) return
+        if (!isStreaming.get()) return
 
-    if (videoMetadataQueue.size >= MAX_QUEUE_SIZE) {
-    val dropped = minOf(BATCH_SIZE, videoMetadataQueue.size / 2)
-    repeat(dropped) { videoMetadataQueue.poll() }
-    eventListener?.onQueueFull("VideoMetadata", dropped)
-    Log.w(TAG, "Video metadata queue full, dropped $dropped samples")
-    }
+        if (videoMetadataQueue.size >= MAX_QUEUE_SIZE) {
+            val dropped = minOf(BATCH_SIZE, videoMetadataQueue.size / 2)
+            repeat(dropped) { videoMetadataQueue.poll() }
+            eventListener?.onQueueFull("VideoMetadata", dropped)
+            Log.w(TAG, "Video metadata queue full, dropped $dropped samples")
+        }
 
-    videoMetadataQueue.offer(metadata)
+        videoMetadataQueue.offer(metadata)
     }
 
     private fun startBatchingProcess() {
@@ -231,45 +231,45 @@ class DataStreamingService(
     }
 
     private suspend fun sendGSRBatch() {
-    val batch = mutableListOf<GSRSample>()
-    repeat(minOf(BATCH_SIZE, gsrQueue.size)) {
-    gsrQueue.poll()?.let { batch.add(it) }
-    }
+        val batch = mutableListOf<GSRSample>()
+        repeat(minOf(BATCH_SIZE, gsrQueue.size)) {
+            gsrQueue.poll()?.let { batch.add(it) }
+        }
 
-    if (batch.isNotEmpty()) {
-    val batchData = createGSRBatchJson(batch)
-    if (sendBatchWithRetry(batchData, "gsr")) {
-    eventListener?.onBatchSent(batch.size, "GSR")
-    }
-    }
+        if (batch.isNotEmpty()) {
+            val batchData = createGSRBatchJson(batch)
+            if (sendBatchWithRetry(batchData, "gsr")) {
+                eventListener?.onBatchSent(batch.size, "GSR")
+            }
+        }
     }
 
     private suspend fun sendThermalBatch() {
-    val batch = mutableListOf<ThermalSample>()
-    repeat(minOf(BATCH_SIZE, thermalQueue.size)) {
-    thermalQueue.poll()?.let { batch.add(it) }
-    }
+        val batch = mutableListOf<ThermalSample>()
+        repeat(minOf(BATCH_SIZE, thermalQueue.size)) {
+            thermalQueue.poll()?.let { batch.add(it) }
+        }
 
-    if (batch.isNotEmpty()) {
-    val batchData = createThermalBatchJson(batch)
-    if (sendBatchWithRetry(batchData, "thermal")) {
-    eventListener?.onBatchSent(batch.size, "Thermal")
-    }
-    }
+        if (batch.isNotEmpty()) {
+            val batchData = createThermalBatchJson(batch)
+            if (sendBatchWithRetry(batchData, "thermal")) {
+                eventListener?.onBatchSent(batch.size, "Thermal")
+            }
+        }
     }
 
     private suspend fun sendVideoMetadataBatch() {
-    val batch = mutableListOf<VideoMetadata>()
-    repeat(minOf(BATCH_SIZE, videoMetadataQueue.size)) {
-    videoMetadataQueue.poll()?.let { batch.add(it) }
-    }
+        val batch = mutableListOf<VideoMetadata>()
+        repeat(minOf(BATCH_SIZE, videoMetadataQueue.size)) {
+            videoMetadataQueue.poll()?.let { batch.add(it) }
+        }
 
-    if (batch.isNotEmpty()) {
-    val batchData = createVideoMetadataBatchJson(batch)
-    if (sendBatchWithRetry(batchData, "video_metadata")) {
-    eventListener?.onBatchSent(batch.size, "VideoMetadata")
-    }
-    }
+        if (batch.isNotEmpty()) {
+            val batchData = createVideoMetadataBatchJson(batch)
+            if (sendBatchWithRetry(batchData, "video_metadata")) {
+                eventListener?.onBatchSent(batch.size, "VideoMetadata")
+            }
+        }
     }
 
     private suspend fun sendBatchWithRetry(
@@ -314,12 +314,12 @@ class DataStreamingService(
             samplesArray.put(sampleJson)
         }
 
-    return JSONObject().apply {
-    put("data_type", "gsr_batch")
-    put("batch_size", samples.size)
-    put("samples", samplesArray)
-    put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
-    }
+        return JSONObject().apply {
+            put("data_type", "gsr_batch")
+            put("batch_size", samples.size)
+            put("samples", samplesArray)
+            put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
+        }
     }
 
     private fun createThermalBatchJson(samples: List<ThermalSample>): JSONObject {
@@ -337,12 +337,12 @@ class DataStreamingService(
             samplesArray.put(sampleJson)
         }
 
-    return JSONObject().apply {
-    put("data_type", "thermal_batch")
-    put("batch_size", samples.size)
-    put("samples", samplesArray)
-    put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
-    }
+        return JSONObject().apply {
+            put("data_type", "thermal_batch")
+            put("batch_size", samples.size)
+            put("samples", samplesArray)
+            put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
+        }
     }
 
     private fun createVideoMetadataBatchJson(samples: List<VideoMetadata>): JSONObject {
@@ -359,35 +359,35 @@ class DataStreamingService(
             samplesArray.put(sampleJson)
         }
 
-    return JSONObject().apply {
-    put("data_type", "video_metadata_batch")
-    put("batch_size", samples.size)
-    put("samples", samplesArray)
-    put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
-    }
+        return JSONObject().apply {
+            put("data_type", "video_metadata_batch")
+            put("batch_size", samples.size)
+            put("samples", samplesArray)
+            put("synchronized_timestamp", networkClient.getSynchronizedTimestamp())
+        }
     }
 
     private suspend fun sendRemainingData() {
-    // Send any remaining GSR data
-    while (gsrQueue.isNotEmpty()) {
-    sendGSRBatch()
-    }
+        // Send any remaining GSR data
+        while (gsrQueue.isNotEmpty()) {
+            sendGSRBatch()
+        }
 
-    // Send any remaining thermal data
-    while (thermalQueue.isNotEmpty()) {
-    sendThermalBatch()
-    }
+        // Send any remaining thermal data
+        while (thermalQueue.isNotEmpty()) {
+            sendThermalBatch()
+        }
 
-    // Send any remaining video metadata
-    while (videoMetadataQueue.isNotEmpty()) {
-    sendVideoMetadataBatch()
-    }
+        // Send any remaining video metadata
+        while (videoMetadataQueue.isNotEmpty()) {
+            sendVideoMetadataBatch()
+        }
     }
 
     private fun clearQueues() {
-    gsrQueue.clear()
-    thermalQueue.clear()
-    videoMetadataQueue.clear()
+        gsrQueue.clear()
+        thermalQueue.clear()
+        videoMetadataQueue.clear()
     }
 
 
@@ -404,14 +404,14 @@ class DataStreamingService(
 
 
     fun cleanup() {
-    runBlocking {
-    // Stop streaming and wait for completion before canceling job
-    if (isStreaming.get()) {
-    stopStreaming()
-    }
-    }
-    streamingJob.cancel()
-    clearQueues()
-    eventListener = null
+        runBlocking {
+            // Stop streaming and wait for completion before canceling job
+            if (isStreaming.get()) {
+                stopStreaming()
+            }
+        }
+        streamingJob.cancel()
+        clearQueues()
+        eventListener = null
     }
 }

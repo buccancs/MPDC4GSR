@@ -45,18 +45,18 @@ class ThermalEntity {
     var updateTime: Long = 0
 
     override fun toString(): String {
-    return "ThermalEntity(id=$id, thermalId='$thermalId', userId='$userId', thermal=$thermal, thermalMax=$thermalMax, thermalMin=$thermalMin, sn='$sn', info='$info', type='$type', startTime=$startTime, createTime=$createTime, updateTime=$updateTime)"
+        return "ThermalEntity(id=$id, thermalId='$thermalId', userId='$userId', thermal=$thermal, thermalMax=$thermalMax, thermalMin=$thermalMin, sn='$sn', info='$info', type='$type', startTime=$startTime, createTime=$createTime, updateTime=$updateTime)"
     }
 
     fun getTime(): String {
-    return TimeTool.reportTime(createTime)
+        return TimeTool.reportTime(createTime)
     }
 
     fun getMaxTemp(): Float {
-    return thermalMax
+        return thermalMax
     }
 
     fun getMinTemp(): Float {
-    return thermalMin
+        return thermalMin
     }
 }

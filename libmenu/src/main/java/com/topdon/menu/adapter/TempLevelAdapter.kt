@@ -12,21 +12,21 @@ import com.topdon.menu.constant.MenuType
 internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
 
     var isUnitF = false
-    set(value) {
-    if (field != value) {
-    field = value
-    notifyDataSetChanged()
-    }
-    }
+        set(value) {
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
 
 
     var selectCode: Int = 1
-    set(value) {
-    if (field != value) {
-    field = value
-    notifyDataSetChanged()
-    }
-    }
+        set(value) {
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
 
 
     var onTempLevelListener: ((code: Int) -> Unit)? = null
@@ -34,13 +34,13 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
     private val dataList: ArrayList<Data> = ArrayList(6)
 
     init {
-    dataList.add(Data(R.string.thermal_normal_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(-20, 150), 1))
-    if (menuType == MenuType.Lite) {
-    dataList.add(Data(R.string.thermal_high_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(150, 450), 0))
-    } else {
-    dataList.add(Data(R.string.thermal_high_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(150, 550), 0))
-    }
-    dataList.add(Data(R.string.thermal_automatic, MenuR.drawable.selector_menu2_temp_level_2, code = -1))
+        dataList.add(Data(R.string.thermal_normal_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(-20, 150), 1))
+        if (menuType == MenuType.Lite) {
+            dataList.add(Data(R.string.thermal_high_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(150, 450), 0))
+        } else {
+            dataList.add(Data(R.string.thermal_high_temperature, MenuR.drawable.selector_menu2_temp_level_1, IntRange(150, 550), 0))
+        }
+        dataList.add(Data(R.string.thermal_automatic, MenuR.drawable.selector_menu2_temp_level_2, code = -1))
     }
 
     override fun onBindViewHolder(

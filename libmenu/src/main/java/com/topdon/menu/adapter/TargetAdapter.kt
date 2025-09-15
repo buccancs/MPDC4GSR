@@ -68,17 +68,17 @@ internal class TargetAdapter : BaseMenuAdapter() {
 //            data.isSelected = !data.isSelected
 //            holder.binding.ivIcon.isSelected = data.isSelected
 //            holder.binding.tvText.isSelected = data.isSelected
-    onTargetListener?.invoke(data.targetType)
-    }
+            onTargetListener?.invoke(data.targetType)
+        }
     }
 
     override fun getItemCount(): Int = dataArray.size
 
 
     data class Data(
-    @StringRes val stringId: Int,
-    @DrawableRes var drawableId: Int,
-    val targetType: TargetType,
-    var isSelected: Boolean = false,
+        @StringRes val stringId: Int,
+        @DrawableRes var drawableId: Int,
+        val targetType: TargetType,
+        var isSelected: Boolean = false,
     )
 }

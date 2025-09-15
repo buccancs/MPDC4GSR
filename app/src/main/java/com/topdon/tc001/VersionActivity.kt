@@ -57,28 +57,28 @@ class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnCl
     }
 
     override fun onResume() {
-    super.onResume()
-    SharedManager.setBaseHost(UrlConstant.BASE_URL)
+        super.onResume()
+        SharedManager.setBaseHost(UrlConstant.BASE_URL)
     }
 
     override fun onClick(v: View?) {
-    when (v) {
-    binding.versionStatementPrivateTxt -> {
-    NavigationManager.build(RouterConfig.POLICY)
-    .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
-    .navigation(this)
-    }
-    binding.versionStatementPolicyTxt -> {
-    NavigationManager.build(RouterConfig.POLICY)
-    .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
-    .navigation(this)
-    }
-    binding.versionStatementCopyrightTxt -> {
-    NavigationManager.build(RouterConfig.POLICY)
-    .withInt(PolicyActivity.KEY_THEME_TYPE, 3)
-    .navigation(this)
-    }
-    }
+        when (v) {
+            binding.versionStatementPrivateTxt -> {
+                NavigationManager.build(RouterConfig.POLICY)
+                    .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
+                    .navigation(this)
+            }
+            binding.versionStatementPolicyTxt -> {
+                NavigationManager.build(RouterConfig.POLICY)
+                    .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
+                    .navigation(this)
+            }
+            binding.versionStatementCopyrightTxt -> {
+                NavigationManager.build(RouterConfig.POLICY)
+                    .withInt(PolicyActivity.KEY_THEME_TYPE, 3)
+                    .navigation(this)
+            }
+        }
     }
 
     private var appVersionUtil: AppVersionUtil? = null

@@ -4,106 +4,118 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 
-/**
-    * @author: CaiSongL
-    * @date: 2023/4/1 14:44
-    */
+
+
+
+
 class RecyclerViewProxy(val layoutManager: RecyclerView.LayoutManager) {
+
     fun attachView(view: View?) {
-    layoutManager.attachView(view!!)
+        layoutManager.attachView(view!!)
     }
+
 
     fun detachView(view: View?) {
-    layoutManager.detachView(view!!)
+        layoutManager.detachView(view!!)
     }
+
 
     fun detachAndScrapView(
-    view: View?,
-    recycler: RecyclerView.Recycler?,
+        view: View?,
+        recycler: RecyclerView.Recycler?,
     ) {
-    layoutManager.detachAndScrapView(view!!, recycler!!)
+        layoutManager.detachAndScrapView(view!!, recycler!!)
     }
+
 
     fun detachAndScrapAttachedViews(recycler: RecyclerView.Recycler?) {
-    layoutManager.detachAndScrapAttachedViews(recycler!!)
+        layoutManager.detachAndScrapAttachedViews(recycler!!)
     }
+
 
     fun recycleView(
-    view: View?,
-    recycler: RecyclerView.Recycler,
+        view: View?,
+        recycler: RecyclerView.Recycler,
     ) {
-    recycler.recycleView(view!!)
+        recycler.recycleView(view!!)
     }
 
+
     fun removeAndRecycleAllViews(recycler: RecyclerView.Recycler?) {
-    layoutManager.removeAndRecycleAllViews(recycler!!)
+        layoutManager.removeAndRecycleAllViews(recycler!!)
     }
 
     val childCount: Int
-    get() = layoutManager.childCount
+        get() = layoutManager.childCount
     val itemCount: Int
-    get() = layoutManager.itemCount
+        get() = layoutManager.itemCount
 
     fun getMeasuredChildForAdapterPosition(
-    position: Int,
-    recycler: RecyclerView.Recycler,
+        position: Int,
+        recycler: RecyclerView.Recycler,
     ): View {
-    val view = recycler.getViewForPosition(position)
-    layoutManager.addView(view)
-    layoutManager.measureChildWithMargins(view, 0, 0)
-    return view
+        val view = recycler.getViewForPosition(position)
+        layoutManager.addView(view)
+        layoutManager.measureChildWithMargins(view, 0, 0)
+        return view
     }
 
+
     fun layoutDecoratedWithMargins(
-    v: View?,
-    left: Int,
-    top: Int,
-    right: Int,
-    bottom: Int,
+        v: View?,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
     ) {
-    layoutManager.layoutDecoratedWithMargins(v!!, left, top, right, bottom)
+        layoutManager.layoutDecoratedWithMargins(v!!, left, top, right, bottom)
     }
 
     fun getChildAt(index: Int): View? {
-    return layoutManager.getChildAt(index)
+        return layoutManager.getChildAt(index)
     }
 
     fun getPosition(view: View?): Int {
-    return layoutManager.getPosition(view!!)
+        return layoutManager.getPosition(view!!)
     }
 
     fun getMeasuredWidthWithMargin(child: View): Int {
-    val lp = child.layoutParams as MarginLayoutParams
-    return layoutManager.getDecoratedMeasuredWidth(child) + lp.leftMargin + lp.rightMargin
+        val lp = child.layoutParams as MarginLayoutParams
+        return layoutManager.getDecoratedMeasuredWidth(child) + lp.leftMargin + lp.rightMargin
     }
 
     fun getMeasuredHeightWithMargin(child: View): Int {
-    val lp = child.layoutParams as MarginLayoutParams
-    return layoutManager.getDecoratedMeasuredHeight(child) + lp.topMargin + lp.bottomMargin
+        val lp = child.layoutParams as MarginLayoutParams
+        return layoutManager.getDecoratedMeasuredHeight(child) + lp.topMargin + lp.bottomMargin
     }
 
     val width: Int
-    get() = layoutManager.width
+        get() = layoutManager.width
     val height: Int
-    get() = layoutManager.height
+        get() = layoutManager.height
+
 
     fun offsetChildrenHorizontal(amount: Int) {
-    layoutManager.offsetChildrenHorizontal(amount)
+        layoutManager.offsetChildrenHorizontal(amount)
     }
+
 
     fun offsetChildrenVertical(amount: Int) {
-    layoutManager.offsetChildrenVertical(amount)
+        layoutManager.offsetChildrenVertical(amount)
     }
+
 
     fun requestLayout() {
-    layoutManager.requestLayout()
+        layoutManager.requestLayout()
     }
+
 
     fun startSmoothScroll(smoothScroller: RecyclerView.SmoothScroller?) {
-    layoutManager.startSmoothScroll(smoothScroller)
+        layoutManager.startSmoothScroll(smoothScroller)
     }
 
+
     fun removeAllViews() {
-    layoutManager.removeAllViews()
+        layoutManager.removeAllViews()
     }
 }

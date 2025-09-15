@@ -17,7 +17,7 @@ public class DatabaseContext extends ContextWrapper {
     
     public DatabaseContext(Context base, @NonNull File dbDir) {
         super(base);
-        Objects.requireNonNull(dbDir, "dbDir is null");
+        Objects.requireNonNull(dbDir, "dbDir is null");   
         this.dbDir = dbDir;
     }
 
@@ -25,7 +25,7 @@ public class DatabaseContext extends ContextWrapper {
     public File getDatabasePath(String name) {
         if (!dbDir.exists()) {
             dbDir.mkdirs();
-        }
+        }        
         return new File(dbDir, name);
     }
 

@@ -17,10 +17,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.ui.databinding.DialogTipGuideBinding
 import com.topdon.lib.ui.widget.IndicateView
 import kotlin.collections.ArrayList
-import com.topdon.lib.ui.R as UiR
+
+
 
 class TipGuideDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
@@ -39,141 +41,143 @@ class TipGuideDialog : DialogFragment() {
     private var index: Int = -1
 
     override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
-    _binding = DialogTipGuideBinding.inflate(inflater, container, false)
-    return binding.root
+        _binding = DialogTipGuideBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?,
+        view: View,
+        savedInstanceState: Bundle?,
     ) {
-    super.onViewCreated(view, savedInstanceState)
-    titleList =
-    arrayListOf(
-    getString(R.string.target_tips_step_1),
-    getString(R.string.target_tips_step_2),
-    getString(R.string.target_tips_step_3),
-    getString(R.string.target_tips_step_4),
-    )
-    imgList =
-    arrayListOf(
-    UiR.drawable.target_guide_pic_1,
-    UiR.drawable.target_guide_pic_2,
-    UiR.drawable.target_guide_pic_3,
-    UiR.drawable.target_guide_pic_4,
-    )
+        super.onViewCreated(view, savedInstanceState)
+        titleList =
+            arrayListOf(
+                getString(R.string.target_tips_step_1),
+                getString(R.string.target_tips_step_2),
+                getString(R.string.target_tips_step_3),
+                getString(R.string.target_tips_step_4),
+            )
+        imgList =
+            arrayListOf(
+                UiR.drawable.target_guide_pic_1,
+                UiR.drawable.target_guide_pic_2,
+                UiR.drawable.target_guide_pic_3,
+                UiR.drawable.target_guide_pic_4,
+            )
 
-    // Initialize views using binding
-    viewPager = binding.viewPager
-    tvContent1 = binding.tvContent1
-    tvContent2 = binding.tvContent2
-    tvContent3 = binding.tvContent3
-    indicateView = binding.indicateView
-    ivTarget = binding.ivTarget
+        // Initialize views using binding
+        viewPager = binding.viewPager
+        tvContent1 = binding.tvContent1
+        tvContent2 = binding.tvContent2
+        tvContent3 = binding.tvContent3
+        indicateView = binding.indicateView
+        ivTarget = binding.ivTarget
 
-    val adapter = PageAdapter(childFragmentManager, imgList)
-    indicateView.itemCount = adapter.count
-    viewPager.adapter = adapter
-    binding.tvIKnow.setOnClickListener {
-    closeEvent?.invoke(true)
-    dismiss()
-    }
-    updateIndex(0)
-    viewPager.addOnPageChangeListener(
-    object : ViewPager.OnPageChangeListener {
-    override fun onPageScrolled(
-    position: Int,
-    positionOffset: Float,
-    positionOffsetPixels: Int,
-    ) {
+        val adapter = PageAdapter(childFragmentManager, imgList)
+        indicateView.itemCount = adapter.count
+        viewPager.adapter = adapter
+        binding.tvIKnow.setOnClickListener {
+            closeEvent?.invoke(true)
+            dismiss()
+        }
+        updateIndex(0)
+        viewPager.addOnPageChangeListener(
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int,
+                ) {
+                }
+
+                override fun onPageSelected(position: Int) {
+                    updateIndex(position)
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+                }
+            },
+        )
     }
 
-    override fun onPageSelected(position: Int) {
-    updateIndex(position)
-    }
-
-    override fun onPageScrollStateChanged(state: Int) {
-    }
-    },
-    )
-    }
 
     fun updateIndex(position: Int) {
-    if (index == position) {
-    return
-    }
-    indicateView.currentIndex = position
-    viewPager.setCurrentItem(position, true)
-    when (position) {
-    0 -> {
-    tvContent1.visibility = View.VISIBLE
-    tvContent3.visibility = View.VISIBLE
-    ivTarget.visibility = View.GONE
-    }
+        if (index == position) {
+            return
+        }
+        indicateView.currentIndex = position
+        viewPager.setCurrentItem(position, true)
+        when (position) {
+            0 -> {
+                tvContent1.visibility = View.VISIBLE
+                tvContent3.visibility = View.VISIBLE
+                ivTarget.visibility = View.GONE
+            }
 
-    2 -> {
-    tvContent1.visibility = View.GONE
-    tvContent3.visibility = View.GONE
-    ivTarget.visibility = View.VISIBLE
-    }
+            2 -> {
+                tvContent1.visibility = View.GONE
+                tvContent3.visibility = View.GONE
+                ivTarget.visibility = View.VISIBLE
+            }
 
-    else -> {
-    tvContent1.visibility = View.GONE
-    tvContent3.visibility = View.GONE
-    ivTarget.visibility = View.GONE
-    }
-    }
-    tvContent2.text = titleList[position]
-    index = position
+            else -> {
+                tvContent1.visibility = View.GONE
+                tvContent3.visibility = View.GONE
+                ivTarget.visibility = View.GONE
+            }
+        }
+        tvContent2.text = titleList[position]
+        index = position
     }
 
     override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onResume() {
-    super.onResume()
-    val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
-    params.width = -1
-    params.height = -1
-    dialog?.window?.attributes = params as WindowManager.LayoutParams
-    dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        super.onResume()
+        val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
+        params.width = -1
+        params.height = -1
+        dialog?.window?.attributes = params as WindowManager.LayoutParams
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     override fun show(
-    manager: FragmentManager,
-    tag: String?,
+        manager: FragmentManager,
+        tag: String?,
     ) {
-    try {
-    super.show(manager, tag)
-    } catch (e: Exception) {
-    e.printStackTrace()
-    }
+        try {
+            super.show(manager, tag)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     companion object {
-    fun newInstance(): TipGuideDialog {
-    return TipGuideDialog()
-    }
+
+        fun newInstance(): TipGuideDialog {
+            return TipGuideDialog()
+        }
     }
 
     @Suppress("DEPRECATION")
     inner class PageAdapter(
-    fragmentManager: FragmentManager,
-    private val imgResList: ArrayList<Int>,
+        fragmentManager: FragmentManager,
+        private val imgResList: ArrayList<Int>,
     ) :
-    FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-    override fun getCount(): Int {
-    return imgResList.size
-    }
+        FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        override fun getCount(): Int {
+            return imgResList.size
+        }
 
-    override fun getItem(position: Int): Fragment {
-    return PageFragment.newInstance(imgResList[position])
-    }
+        override fun getItem(position: Int): Fragment {
+            return PageFragment.newInstance(imgResList[position])
+        }
     }
 }

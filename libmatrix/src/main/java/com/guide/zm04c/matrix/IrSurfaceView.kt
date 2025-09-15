@@ -29,25 +29,25 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
     private var mCtx: Context? = null
 
     constructor(context: Context) : super(context) {
-    mCtx = context
-    init()
+        mCtx = context
+        init()
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-    mCtx = context
-    init()
+        mCtx = context
+        init()
     }
 
     private fun init() {
-    mHolder = holder // 获得SurfaceHolder对象
-    mHolder?.addCallback(this) // 为SurfaceView添加状态监听
-    mHolder?.setFormat(PixelFormat.TRANSPARENT)
-    p.alpha = 0xff
-    mMatrix.setScale(1.0f, 1.0f)
+        mHolder = holder // 获得SurfaceHolder对象
+        mHolder?.addCallback(this) // 为SurfaceView添加状态监听
+        mHolder?.setFormat(PixelFormat.TRANSPARENT)
+        p.alpha = 0xff
+        mMatrix.setScale(1.0f, 1.0f)
     }
 
     fun setIsLockImage(isLock: Boolean) {
-    isLockImage = isLock
+        isLockImage = isLock
     }
 
 //    fun setMatrix(scale: Float, x: Float, y: Float) {
@@ -101,10 +101,10 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 return@doDraw
             }
 
-    mCanvas = mHolder?.lockCanvas() // 获得画布对象，开始对画布画图
+            mCanvas = mHolder?.lockCanvas() // 获得画布对象，开始对画布画图
 
-    try {
-    mCanvas?.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+            try {
+                mCanvas?.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 //                mCanvas?.drawBitmap(bitmap, mMatrix, p)
                 if (openLut) {
                     mColorMatrixEnhance.setSaturation(saturation * 0.01f * 2.5f + 1f) // 对比度
@@ -172,22 +172,22 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     fun setOpenLut() {
 //        openLut = !openLut
-    openLut = true
+        openLut = true
     }
 
 
     fun setSaturationValue(saturation: Int) {
-    this.saturation = saturation
+        this.saturation = saturation
     }
 
     fun getSaturationValue(): Int {
-    return saturation
+        return saturation
     }
 
     fun setAlpha(alpha: Int) {
-    if (alpha in 0..255) {
-    p?.alpha = alpha
-    }
+        if (alpha in 0..255) {
+            p?.alpha = alpha
+        }
     }
 
 
@@ -211,17 +211,17 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-    synchronized(this) {
-    isPrepare = false
-    Logger.d(TAG, "holder destroyed")
-    }
+        synchronized(this) {
+            isPrepare = false
+            Logger.d(TAG, "holder destroyed")
+        }
     }
 
     companion object {
-    private val TAG = "IrSurfaceView"
+        private val TAG = "IrSurfaceView"
     }
 
     interface IfrCamOpenOverCallback {
-    fun onSurfaceCreated()
+        fun onSurfaceCreated()
     }
 }

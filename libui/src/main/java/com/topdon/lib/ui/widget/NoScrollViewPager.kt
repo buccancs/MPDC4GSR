@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.viewpager.widget.ViewPager
 
+
+
 class NoScrollViewPager : ViewPager {
     private var isCanScroll = false
 
@@ -14,15 +16,15 @@ class NoScrollViewPager : ViewPager {
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-    return isCanScroll && super.onInterceptTouchEvent(ev)
+        return isCanScroll && super.onInterceptTouchEvent(ev)
     }
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
-    return isCanScroll && super.onTouchEvent(ev)
+        return isCanScroll && super.onTouchEvent(ev)
     }
 
     override fun setCurrentItem(item: Int) {
-    // 去除切换时动画
-    super.setCurrentItem(item, false)
+        
+        super.setCurrentItem(item, false)
     }
 }

@@ -11,19 +11,19 @@ class RingBuffer {
 
     
     constructor(size: Int) {
-    byteArray = ByteArray(size)
+        byteArray = ByteArray(size)
     }
 
     
     constructor(buffer: ByteArray) {
-    byteArray = buffer
+        byteArray = buffer
     }
 
     
     constructor(buffer: ByteArray, tail: Int, length: Int) {
-    byteArray = buffer
-    mReadPositon = tail
-    mUnReadLength = length
+        byteArray = buffer
+        mReadPositon = tail
+        mUnReadLength = length
     }
 
     
@@ -52,10 +52,10 @@ class RingBuffer {
                 System.arraycopy(buffer!!, offset, byteArray, head, toWrite)
             }
 
-    // writing increases the length
-    synchronized(this) { mUnReadLength += toWrite }
-    }
-    return toWrite
+            // writing increases the length
+            synchronized(this) { mUnReadLength += toWrite }
+        }
+        return toWrite
     }
 
     
@@ -81,62 +81,62 @@ class RingBuffer {
             System.arraycopy(byteArray, mReadPositon, buffer, offset, toRead)
         }
 
-    // reading moves the tail and decreases the length
-    synchronized(this) {
-    mReadPositon = (mReadPositon + toRead) % byteArray.size
-    mUnReadLength -= toRead
-    }
-    return toRead
+        // reading moves the tail and decreases the length
+        synchronized(this) {
+            mReadPositon = (mReadPositon + toRead) % byteArray.size
+            mUnReadLength -= toRead
+        }
+        return toRead
     }
 
     // 向前移动length个字节
     fun moveForward(length: Int): Int {
-    synchronized(this) {
-    mReadPositon = (mReadPositon + length) % byteArray.size
-    mUnReadLength -= length
-    }
-    return length
+        synchronized(this) {
+            mReadPositon = (mReadPositon + length) % byteArray.size
+            mUnReadLength -= length
+        }
+        return length
     }
 
     // 向后移动length个字节
     fun moveBack(length: Int): Int {
-    synchronized(this) {
-    if (mReadPositon > length) {
-    mReadPositon -= length
-    } else {
-    mReadPositon = mReadPositon - length + byteArray.size
-    }
-    mUnReadLength += length
-    }
-    return length
+        synchronized(this) {
+            if (mReadPositon > length) {
+                mReadPositon -= length
+            } else {
+                mReadPositon = mReadPositon - length + byteArray.size
+            }
+            mUnReadLength += length
+        }
+        return length
     }
 
     
     fun getUnReadLength(): Int {
-    return mUnReadLength
+        return mUnReadLength
     }
 
     
     fun getMaxLength(): Int {
-    return byteArray.size
+        return byteArray.size
     }
 
     
     fun getFreeSpace(): Int {
-    return byteArray.size - mUnReadLength
+        return byteArray.size - mUnReadLength
     }
 
     
     fun getByteArray(): ByteArray? {
-    return byteArray
+        return byteArray
     }
 
     
     fun getReadPositon(): Int {
-    return mReadPositon
+        return mReadPositon
     }
 
     override fun toString(): String {
-    return "RingBuffer(byteArray=${byteArray.contentToString()}, mReadPositon=$mReadPositon, mUnReadLength=$mUnReadLength)"
+        return "RingBuffer(byteArray=${byteArray.contentToString()}, mReadPositon=$mReadPositon, mUnReadLength=$mUnReadLength)"
     }
 }

@@ -74,8 +74,8 @@ class ColorView : View {
             }
         setMeasuredDimension(width, height)
 
-    refreshShader()
-    triangleDrawable.setBounds((width - triangleSize) / 2, barHeight + margin, (width - triangleSize) / 2 + triangleSize, height)
+        refreshShader()
+        triangleDrawable.setBounds((width - triangleSize) / 2, barHeight + margin, (width - triangleSize) / 2 + triangleSize, height)
     }
 
     override fun onDraw(canvas: Canvas) {

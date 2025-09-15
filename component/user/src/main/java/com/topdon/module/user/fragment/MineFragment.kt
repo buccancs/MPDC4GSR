@@ -102,17 +102,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         settingItemUnit.setOnClickListener(this) // 温度单温
         dragCustomerView.setOnClickListener(this)
 
-    ivWinter.setOnClickListener(this)
-    settingItemVersion.setOnClickListener(this)
-    settingItemClear.setOnClickListener(this)
-    settingUserLay.setOnClickListener(this)
-    settingUserImgNight.setOnClickListener(this)
-    settingUserText.setOnClickListener(this)
-    settingElectronicManual.setOnClickListener(this)
-    settingFaq.setOnClickListener(this)
-    settingFeedback.setOnClickListener(this)
-    settingItemUnit.setOnClickListener(this)//温度单温
-    dragCustomerView.setOnClickListener(this)
+        viewWinterPoint.isVisible = !SharedManager.hasClickWinter
 
         if (BaseApplication.instance.isDomestic()) { // 国内版
             // Language selection removed - English only
@@ -135,21 +125,21 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updatePDF(event: PDFEvent) {
-    isNeedRefreshLogin = true
+        isNeedRefreshLogin = true
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWinterClick(event: WinterClickEvent) {
-    viewWinterPoint.isVisible = false
+        viewWinterPoint.isVisible = false
     }
 
     override fun onResume() {
-    super.onResume()
-    changeLoginStyle()
-    if (isNeedRefreshLogin) {
-    isNeedRefreshLogin = false
-    checkLoginResult()
-    }
+        super.onResume()
+        changeLoginStyle()
+        if (isNeedRefreshLogin) {
+            isNeedRefreshLogin = false
+            checkLoginResult()
+        }
     }
 
     // Language picker removed - English only app
@@ -224,15 +214,15 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             }
             dragCustomerView -> { // 客服
 //                ActivityUtil.goSystemCustomer(requireContext())
-    val sn = SharedManager.getDeviceSn()
-    // ZohoSalesIQ functionality disabled - dependency not available
-    if (!TextUtils.isEmpty(sn)) {
-    // ZohoSalesIQ.Visitor.addInfo("SN", sn)
-    }
-    // ZohoSalesIQ.Visitor.addInfo("Model", "Topinfrared")
-    // ZohoSalesIQ.Chat.show()
-    }
-    }
+                val sn = SharedManager.getDeviceSn()
+                // ZohoSalesIQ functionality disabled - dependency not available
+                if (!TextUtils.isEmpty(sn)) {
+                    // ZohoSalesIQ.Visitor.addInfo("SN", sn)
+                }
+                // ZohoSalesIQ.Visitor.addInfo("Model", "Topinfrared")
+                // ZohoSalesIQ.Chat.show()
+            }
+        }
     }
 
     private fun loginAction() {

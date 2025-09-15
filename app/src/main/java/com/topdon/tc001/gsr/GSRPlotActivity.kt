@@ -34,12 +34,12 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     }
 
     private fun loadPlotData() {
-    plotData = intent.getSerializableExtra("plot_data") as GSRDataViewActivity.GSRPlotData
+        plotData = intent.getSerializableExtra("plot_data") as GSRDataViewActivity.GSRPlotData
     }
 
     private fun setupCharts() {
-    setupGSRChart()
-    setupPPGChart()
+        setupGSRChart()
+        setupPPGChart()
     }
 
     private fun setupGSRChart() {
@@ -220,9 +220,9 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     }
 
     private fun calculateStandardDeviation(values: List<Double>): Double {
-    val mean = values.average()
-    val variance = values.map { (it - mean) * (it - mean) }.average()
-    return kotlin.math.sqrt(variance)
+        val mean = values.average()
+        val variance = values.map { (it - mean) * (it - mean) }.average()
+        return kotlin.math.sqrt(variance)
     }
 
     private fun formatDuration(seconds: Double): String {
@@ -232,10 +232,13 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-    android.R.id.home -> {
-    onBackPressedDispatcher.onBackPressed()
-    true
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 

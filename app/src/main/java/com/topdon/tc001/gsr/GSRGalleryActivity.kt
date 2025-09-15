@@ -15,11 +15,11 @@ import com.topdon.lib.core.tools.PermissionTool
 
 class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
     companion object {
-    private const val TAG = "GSRGalleryActivity"
+        private const val TAG = "GSRGalleryActivity"
 
-    fun startActivity(context: Context) {
-    context.startActivity(Intent(context, GSRGalleryActivity::class.java))
-    }
+        fun startActivity(context: Context) {
+            context.startActivity(Intent(context, GSRGalleryActivity::class.java))
+        }
     }
 
     override fun initContentLayoutId() = R.layout.activity_gsr_gallery
@@ -46,56 +46,56 @@ class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
 
-    initView()
-    requestPermissions()
+        initView()
+        requestPermissions()
     }
 
     private fun initView() {
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    supportActionBar?.title = "GSR Recording Gallery"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "GSR Recording Gallery"
 
-    binding.gsrGalleryViewpager.adapter = ViewAdapter(this, supportFragmentManager)
-    binding.gsrGalleryTab.setupWithViewPager(binding.gsrGalleryViewpager)
+        binding.gsrGalleryViewpager.adapter = ViewAdapter(this, supportFragmentManager)
+        binding.gsrGalleryTab.setupWithViewPager(binding.gsrGalleryViewpager)
     }
 
     private fun requestPermissions() {
-    PermissionTool.requestFile(this) {
-    // Permission granted, gallery can now access media files
-    }
+        PermissionTool.requestFile(this) {
+            // Permission granted, gallery can now access media files
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-    onBackPressedDispatcher.onBackPressed()
-    return true
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 
     inner class ViewAdapter : FragmentStatePagerAdapter {
-    private var titles: Array<String> = arrayOf()
+        private var titles: Array<String> = arrayOf()
 
-    constructor(context: Context, fm: FragmentManager) : super(
-    fm,
-    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
-    ) {
-    titles = arrayOf("GSR Data", "Videos", "RAW Images", "Sessions")
-    }
+        constructor(context: Context, fm: FragmentManager) : super(
+            fm,
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
+        ) {
+            titles = arrayOf("GSR Data", "Videos", "RAW Images", "Sessions")
+        }
 
-    override fun getCount(): Int {
-    return titles.size
-    }
+        override fun getCount(): Int {
+            return titles.size
+        }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-    return titles[position]
-    }
+        override fun getPageTitle(position: Int): CharSequence? {
+            return titles[position]
+        }
 
-    override fun getItem(position: Int): Fragment {
-    return when (position) {
-    0 -> GSRDataFragment()
-    1 -> GSRVideoFragment()
-    2 -> GSRRawImageFragment()
-    else -> GSRSessionFragment()
-    }
-    }
+        override fun getItem(position: Int): Fragment {
+            return when (position) {
+                0 -> GSRDataFragment()
+                1 -> GSRVideoFragment()
+                2 -> GSRRawImageFragment()
+                else -> GSRSessionFragment()
+            }
+        }
     }
 }

@@ -35,8 +35,8 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     override fun initContentLayoutId() = R.layout.activity_policy
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
-    super.onCreate(savedInstanceState)
-    initView()
+        super.onCreate(savedInstanceState)
+        initView()
     }
 
     private fun initView() {
@@ -70,164 +70,165 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     }
 
     private fun observeHtmlData() {
-    // Since we're not using ViewModel anymore, we'll directly load the data
-    // This is a simplified version - in a real scenario you'd want proper MVVM
+        // Since we're not using ViewModel anymore, we'll directly load the data
+        // This is a simplified version - in a real scenario you'd want proper MVVM
     }
 
     override fun onDestroy() {
-    super.onDestroy()
-    mHandler.removeCallbacksAndMessages(null)
+        super.onDestroy()
+        mHandler.removeCallbacksAndMessages(null)
     }
 
 
     private fun delayShowWebView() {
-    lifecycleScope.launch(Dispatchers.IO) {
-    delay(200)
-    launch(Dispatchers.Main) {
-    binding.policyWeb.visibility = android.view.View.VISIBLE
-    }
-    }
+        lifecycleScope.launch(Dispatchers.IO) {
+            delay(200)
+            launch(Dispatchers.Main) {
+                binding.policyWeb.visibility = android.view.View.VISIBLE
+            }
+        }
     }
 
     private fun initData() {
-    if (keyUseType == 0) {
-    showLoadingDialog()
-    // Load data directly since we removed ViewModel
-    loadDefaultContent()
+        if (keyUseType == 0) {
+            showLoadingDialog()
+            // Load data directly since we removed ViewModel
+            loadDefaultContent()
+        }
     }
 
     private fun loadDefaultContent() {
-    // Load the appropriate content based on theme type
-    loadHttp(binding.policyWeb)
-    delayShowWebView()
+        // Load the appropriate content based on theme type
+        loadHttp(binding.policyWeb)
+        delayShowWebView()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWeb(url: String) {
-    binding.policyWeb.visibility = android.view.View.INVISIBLE
-    val webSettings: android.webkit.WebSettings = binding.policyWeb.settings
-    webSettings.javaScriptEnabled = true // 设置支持javascript
+        binding.policyWeb.visibility = android.view.View.INVISIBLE
+        val webSettings: android.webkit.WebSettings = binding.policyWeb.settings
+        webSettings.javaScriptEnabled = true // 设置支持javascript
 
-    binding.policyWeb.webViewClient =
-    object : android.webkit.WebViewClient() {
-    override fun shouldOverrideUrlLoading(
-    view: android.webkit.WebView,
-    url: String,
-    ): Boolean {
-    view.loadUrl(url)
-    return true
-    }
+        binding.policyWeb.webViewClient =
+            object : android.webkit.WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: android.webkit.WebView,
+                    url: String,
+                ): Boolean {
+                    view.loadUrl(url)
+                    return true
+                }
 
-    override fun onPageFinished(
-    view: android.webkit.WebView?,
-    url: String?,
-    ) {
-    super.onPageFinished(view, url)
-    Log.w("123", "onPageFinished url: $url")
-    }
-    }
+                override fun onPageFinished(
+                    view: android.webkit.WebView?,
+                    url: String?,
+                ) {
+                    super.onPageFinished(view, url)
+                    Log.w("123", "onPageFinished url: $url")
+                }
+            }
 
-    binding.policyWeb.webChromeClient =
-    object : android.webkit.WebChromeClient() {
-    override fun onProgressChanged(
-    view: android.webkit.WebView,
-    newProgress: Int,
-    ) {
-    super.onProgressChanged(view, newProgress)
-    }
+        binding.policyWeb.webChromeClient =
+            object : android.webkit.WebChromeClient() {
+                override fun onProgressChanged(
+                    view: android.webkit.WebView,
+                    newProgress: Int,
+                ) {
+                    super.onProgressChanged(view, newProgress)
+                }
 
-    override fun onReceivedTitle(
-    view: android.webkit.WebView?,
-    title: String?,
-    ) {
-    super.onReceivedTitle(view, title)
-    if (title!!.contains("404") && reloadCount > 0) {
-    loadHttp(view!!)
-    delayShowWebView()
-    } else {
-    mHandler.postDelayed({
-    binding.policyWeb.visibility = android.view.View.VISIBLE
-    }, 200)
-    }
-    }
-    }
+                override fun onReceivedTitle(
+                    view: android.webkit.WebView?,
+                    title: String?,
+                ) {
+                    super.onReceivedTitle(view, title)
+                    if (title!!.contains("404") && reloadCount > 0) {
+                        loadHttp(view!!)
+                        delayShowWebView()
+                    } else {
+                        mHandler.postDelayed({
+                            binding.policyWeb.visibility = android.view.View.VISIBLE
+                        }, 200)
+                    }
+                }
+            }
 
-    binding.policyWeb.settings.defaultTextEncodingName = "utf-8"
-    binding.policyWeb.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
+        binding.policyWeb.settings.defaultTextEncodingName = "utf-8"
+        binding.policyWeb.loadDataWithBaseURL(null, url, "text/html", "utf-8", null)
     }
 
 
     fun getHtmlData(
-    htmlBody: String,
-    fontColor: String,
-    backgroundColor: String,
+        htmlBody: String,
+        fontColor: String,
+        backgroundColor: String,
     ): String {
-    val head =
-    "<head>" +
-    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
-    "<style>img{max-width: 100%; width:100%; height:auto;}video{max-width: 100%; width:100%; height:auto;}*{margin:0px;}body{font-size:16px;color: $fontColor; background-color: $backgroundColor;}</style>" + "</head>"
-    return "<html>$head<body>$htmlBody</body></html>"
+        val head =
+            "<head>" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
+                "<style>img{max-width: 100%; width:100%; height:auto;}video{max-width: 100%; width:100%; height:auto;}*{margin:0px;}body{font-size:16px;color: $fontColor; background-color: $backgroundColor;}</style>" + "</head>"
+        return "<html>$head<body>$htmlBody</body></html>"
     }
 
     private fun httpErrorTip(
-    text: String,
-    requestUrl: String,
+        text: String,
+        requestUrl: String,
     ) {
-    XLog.w("声明接口异常,打开默认链接")
-    loadHttp(binding.policyWeb)
-    delayShowWebView()
+        XLog.w("声明接口异常,打开默认链接")
+        loadHttp(binding.policyWeb)
+        delayShowWebView()
     }
 
     fun loadHttpWhenNotInit(view: android.webkit.WebView) {
-    reloadCount--
-    when (themeType) {
-    1 -> {
-    // 用户服务协议
-    view.loadUrl(
-    "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=21",
-    )
-    }
+        reloadCount--
+        when (themeType) {
+            1 -> {
+                // 用户服务协议
+                view.loadUrl(
+                    "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=21",
+                )
+            }
 
-    2 -> {
-    // 隐私政策
-    view.loadUrl(
-    "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=22",
-    )
-    }
+            2 -> {
+                // 隐私政策
+                view.loadUrl(
+                    "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?softCode=${BaseApplication.instance.getSoftWareCode()}&language=1&type=22",
+                )
+            }
 
-    3 -> {
-    // 第三方组件
-    view.loadUrl("file:///android_asset/web/third_statement.html")
-    }
-    }
+            3 -> {
+                // 第三方组件
+                view.loadUrl("file:///android_asset/web/third_statement.html")
+            }
+        }
     }
 
 
     fun loadHttp(view: android.webkit.WebView) {
-    reloadCount--
-    when (themeType) {
-    1 -> {
-    if (BaseApplication.instance.isDomestic()) {
-    view.loadUrl("file:///android_asset/web/services_agreement_default_inside_china.html")
-    } else {
-    // 用户服务协议
-    view.loadUrl("file:///android_asset/web/services_agreement_default.html")
-    }
-    }
+        reloadCount--
+        when (themeType) {
+            1 -> {
+                if (BaseApplication.instance.isDomestic()) {
+                    view.loadUrl("file:///android_asset/web/services_agreement_default_inside_china.html")
+                } else {
+                    // 用户服务协议
+                    view.loadUrl("file:///android_asset/web/services_agreement_default.html")
+                }
+            }
 
-    2 -> {
-    if (BaseApplication.instance.isDomestic()) {
-    view.loadUrl("file:///android_asset/web/privacy_default_inside_china.html")
-    } else {
-    // 隐私政策
-    view.loadUrl("file:///android_asset/web/privacy_default.html")
-    }
-    }
+            2 -> {
+                if (BaseApplication.instance.isDomestic()) {
+                    view.loadUrl("file:///android_asset/web/privacy_default_inside_china.html")
+                } else {
+                    // 隐私政策
+                    view.loadUrl("file:///android_asset/web/privacy_default.html")
+                }
+            }
 
-    3 -> {
-    // 第三方组件
-    view.loadUrl("file:///android_asset/web/third_statement.html")
-    }
-    }
+            3 -> {
+                // 第三方组件
+                view.loadUrl("file:///android_asset/web/third_statement.html")
+            }
+        }
     }
 }

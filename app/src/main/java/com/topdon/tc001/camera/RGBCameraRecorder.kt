@@ -40,8 +40,8 @@ class RGBCameraRecorder(
     }
 
     enum class CameraFacing(val displayName: String) {
-    BACK("Back Camera"),
-    FRONT("Front Camera"),
+        BACK("Back Camera"),
+        FRONT("Front Camera"),
     }
 
     // Legacy data classes for backward compatibility

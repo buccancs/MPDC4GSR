@@ -45,30 +45,30 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initData() {
-    getDeviceDetails()
+        getDeviceDetails()
     }
 
     private fun getDeviceDetails() {
-    lifecycleScope.launch {
-    if (isTC007) {
-    val productBean: ProductBean? = TC007Repository.getProductInfo()
-    if (productBean == null) {
-    TToast.shortToast(this@DeviceDetailsActivity, RCore.string.operation_failed_tips)
-    } else {
-    tvSnValue.text = productBean.ProductSN
-    tvDeviceModelValue.text = productBean.ProductName
-    }
-    } else {
-    val deviceDetailsBean = TS004Repository.getDeviceInfo()
-    if (deviceDetailsBean?.isSuccess()!!) {
-    TLog.d("ts004-->response", "${deviceDetailsBean.data}")
-    tvSnValue.text = deviceDetailsBean.data!!.sn
-    tvDeviceModelValue.text = deviceDetailsBean.data!!.model
-    } else {
-    TToast.shortToast(this@DeviceDetailsActivity, RCore.string.operation_failed_tips)
-    }
-    }
-    }
+        lifecycleScope.launch {
+            if (isTC007) {
+                val productBean: ProductBean? = TC007Repository.getProductInfo()
+                if (productBean == null) {
+                    TToast.shortToast(this@DeviceDetailsActivity, RCore.string.operation_failed_tips)
+                } else {
+                    tvSnValue.text = productBean.ProductSN
+                    tvDeviceModelValue.text = productBean.ProductName
+                }
+            } else {
+                val deviceDetailsBean = TS004Repository.getDeviceInfo()
+                if (deviceDetailsBean?.isSuccess()!!) {
+                    TLog.d("ts004-->response", "${deviceDetailsBean.data}")
+                    tvSnValue.text = deviceDetailsBean.data!!.sn
+                    tvDeviceModelValue.text = deviceDetailsBean.data!!.model
+                } else {
+                    TToast.shortToast(this@DeviceDetailsActivity, RCore.string.operation_failed_tips)
+                }
+            }
+        }
     }
 
     override fun onClick(v: View?) {

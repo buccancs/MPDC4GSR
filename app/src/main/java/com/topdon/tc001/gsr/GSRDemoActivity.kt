@@ -20,12 +20,12 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     companion object {
-    private const val TAG = "GSRDemoActivity"
+        private const val TAG = "GSRDemoActivity"
 
-    fun start(context: Context) {
-    val intent = Intent(context, GSRDemoActivity::class.java)
-    context.startActivity(intent)
-    }
+        fun start(context: Context) {
+            val intent = Intent(context, GSRDemoActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 
     override fun initContentLayoutId() = R.layout.activity_gsr_demo
@@ -36,14 +36,14 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     private var lastSample: GSRSample? = null
 
     private val gsrListener =
-    object : GSRRecorder.GSRRecordingListener {
-    override fun onRecordingStarted(sessionInfo: SessionInfo) {
-    runOnUiThread {
-    isRecording = true
-    updateButtonStates()
-    binding.statusText.text = "Recording started: ${sessionInfo.sessionId}"
-    }
-    }
+        object : GSRRecorder.GSRRecordingListener {
+            override fun onRecordingStarted(sessionInfo: SessionInfo) {
+                runOnUiThread {
+                    isRecording = true
+                    updateButtonStates()
+                    binding.statusText.text = "Recording started: ${sessionInfo.sessionId}"
+                }
+            }
 
             override fun onRecordingStopped(sessionInfo: SessionInfo) {
                 runOnUiThread {
@@ -60,48 +60,48 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
                 }
             }
 
-    override fun onSampleRecorded(sample: GSRSample) {
-    lastSample = sample
+            override fun onSampleRecorded(sample: GSRSample) {
+                lastSample = sample
 
-    // Update display every 32 samples (4 times per second at 128Hz)
-    if (sample.sampleIndex % 32 == 0L) {
-    runOnUiThread {
-    binding.dataText.text =
-    buildString {
-    append("Latest Sample #${sample.sampleIndex}:\n")
-    append("Conductance: ${"%.3f".format(sample.conductance)} µS\n")
-    append("Resistance: ${"%.3f".format(sample.resistance)} kΩ\n")
-    append("Timestamp: ${TimeUtil.formatTimestamp(sample.timestamp)}\n")
-    append("Rate: 128 Hz\n\n")
+                // Update display every 32 samples (4 times per second at 128Hz)
+                if (sample.sampleIndex % 32 == 0L) {
+                    runOnUiThread {
+                        binding.dataText.text =
+                            buildString {
+                                append("Latest Sample #${sample.sampleIndex}:\n")
+                                append("Conductance: ${"%.3f".format(sample.conductance)} µS\n")
+                                append("Resistance: ${"%.3f".format(sample.resistance)} kΩ\n")
+                                append("Timestamp: ${TimeUtil.formatTimestamp(sample.timestamp)}\n")
+                                append("Rate: 128 Hz\n\n")
 
-    val duration =
-    (
-    System.currentTimeMillis() -
-    (gsrRecorder.getCurrentSession()?.startTime ?: System.currentTimeMillis())
-    ) / 1000
-    append("Recording Duration: ${duration}s")
-    }
-    }
-    }
-    }
+                                val duration =
+                                    (
+                                        System.currentTimeMillis() -
+                                            (gsrRecorder.getCurrentSession()?.startTime ?: System.currentTimeMillis())
+                                    ) / 1000
+                                append("Recording Duration: ${duration}s")
+                            }
+                    }
+                }
+            }
 
-    override fun onSyncMarkAdded(syncMark: SyncMark) {
-    runOnUiThread {
-    Toast.makeText(
-    this@GSRDemoActivity,
-    "Sync Event: ${syncMark.eventType}",
-    Toast.LENGTH_SHORT,
-    ).show()
-    }
-    }
+            override fun onSyncMarkAdded(syncMark: SyncMark) {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@GSRDemoActivity,
+                        "Sync Event: ${syncMark.eventType}",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
 
-    override fun onError(error: String) {
-    runOnUiThread {
-    binding.statusText.text = "Error: $error"
-    Toast.makeText(this@GSRDemoActivity, error, Toast.LENGTH_LONG).show()
-    }
-    }
-    }
+            override fun onError(error: String) {
+                runOnUiThread {
+                    binding.statusText.text = "Error: $error"
+                    Toast.makeText(this@GSRDemoActivity, error, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,60 +114,60 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
         binding.stopButton.setOnClickListener { stopRecording() }
         binding.syncButton.setOnClickListener { triggerSyncEvent() }
 
-    gsrRecorder = GSRRecorder(this)
-    gsrRecorder.addListener(gsrListener)
-    updateButtonStates()
+        gsrRecorder = GSRRecorder(this)
+        gsrRecorder.addListener(gsrListener)
+        updateButtonStates()
     }
 
     private fun startRecording() {
-    val sessionId = TimeUtil.generateSessionId("GSRDemo")
+        val sessionId = TimeUtil.generateSessionId("GSRDemo")
 
-    lifecycleScope.launch {
-    val success = gsrRecorder.startRecording(sessionId, "demo_participant", "GSR_Demo_Study")
+        lifecycleScope.launch {
+            val success = gsrRecorder.startRecording(sessionId, "demo_participant", "GSR_Demo_Study")
 
-    if (success) {
-    Toast.makeText(this@GSRDemoActivity, "GSR recording started", Toast.LENGTH_SHORT).show()
-    } else {
-    Toast.makeText(this@GSRDemoActivity, "Failed to start recording", Toast.LENGTH_LONG).show()
-    }
-    }
+            if (success) {
+                Toast.makeText(this@GSRDemoActivity, "GSR recording started", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@GSRDemoActivity, "Failed to start recording", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun stopRecording() {
-    gsrRecorder.stopRecording()
+        gsrRecorder.stopRecording()
     }
 
     private fun triggerSyncEvent() {
-    val metadata =
-    mapOf(
-    "trigger" to "manual",
-    "timestamp" to TimeUtil.formatTimestamp(System.currentTimeMillis()),
-    )
+        val metadata =
+            mapOf(
+                "trigger" to "manual",
+                "timestamp" to TimeUtil.formatTimestamp(System.currentTimeMillis()),
+            )
 
-    lifecycleScope.launch {
-    val metadataJson = com.google.gson.Gson().toJson(metadata)
-    val success = gsrRecorder.addSyncMark("DEMO_SYNC_EVENT", metadataJson)
+        lifecycleScope.launch {
+            val metadataJson = com.google.gson.Gson().toJson(metadata)
+            val success = gsrRecorder.addSyncMark("DEMO_SYNC_EVENT", metadataJson)
 
-    if (success) {
-    // Success feedback is handled in the listener
-    Log.d(TAG, "Demo sync event triggered successfully")
-    } else {
-    Log.w(TAG, "Failed to trigger demo sync event")
-    }
-    }
+            if (success) {
+                // Success feedback is handled in the listener
+                Log.d(TAG, "Demo sync event triggered successfully")
+            } else {
+                Log.w(TAG, "Failed to trigger demo sync event")
+            }
+        }
     }
 
     private fun updateButtonStates() {
-    binding.startButton.isEnabled = !isRecording
-    binding.stopButton.isEnabled = isRecording
-    binding.syncButton.isEnabled = isRecording
+        binding.startButton.isEnabled = !isRecording
+        binding.stopButton.isEnabled = isRecording
+        binding.syncButton.isEnabled = isRecording
     }
 
     override fun onDestroy() {
-    super.onDestroy()
-    gsrRecorder.removeListener(gsrListener)
-    if (isRecording) {
-    gsrRecorder.stopRecording()
-    }
+        super.onDestroy()
+        gsrRecorder.removeListener(gsrListener)
+        if (isRecording) {
+            gsrRecorder.stopRecording()
+        }
     }
 }

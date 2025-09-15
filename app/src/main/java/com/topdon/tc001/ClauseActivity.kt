@@ -32,19 +32,19 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     override fun initContentLayoutId() = R.layout.activity_clause
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    initView()
+        super.onCreate(savedInstanceState)
+        initView()
     }
 
     private fun initView() {
-    dialog =
-    TipProgressDialog.Builder(this)
-    .setMessage(LibCoreR.string.tip_loading)
-    .setCanceleable(false)
-    .create()
+        dialog =
+            TipProgressDialog.Builder(this)
+                .setMessage(LibCoreR.string.tip_loading)
+                .setCanceleable(false)
+                .create()
 
-    val year = Calendar.getInstance().get(Calendar.YEAR)
-    binding.clauseYearTxt.text = getString(R.string.version_year, "2023-$year")
+        val year = Calendar.getInstance().get(Calendar.YEAR)
+        binding.clauseYearTxt.text = getString(R.string.version_year, "2023-$year")
 
         binding.clauseAgreeBtn.setOnClickListener {
             confirmInitApp()
@@ -100,39 +100,39 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             }
         }
 
-    if (BaseApplication.instance.isDomestic()) {
-    binding.tvPrivacy.text = "    ${getString(R.string.privacy_agreement_tips_new, CommUtils.getAppName())}"
-    binding.tvPrivacy.visibility = android.view.View.VISIBLE
-    binding.tvPrivacy.movementMethod = ScrollingMovementMethod.getInstance()
-    }
-    binding.tvWelcome.text = getString(R.string.welcome_use_app, CommUtils.getAppName())
-    binding.tvVersion.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
-    binding.clauseName.text = CommUtils.getAppName()
+        if (BaseApplication.instance.isDomestic()) {
+            binding.tvPrivacy.text = "    ${getString(R.string.privacy_agreement_tips_new, CommUtils.getAppName())}"
+            binding.tvPrivacy.visibility = android.view.View.VISIBLE
+            binding.tvPrivacy.movementMethod = ScrollingMovementMethod.getInstance()
+        }
+        binding.tvWelcome.text = getString(R.string.welcome_use_app, CommUtils.getAppName())
+        binding.tvVersion.text = "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+        binding.clauseName.text = CommUtils.getAppName()
     }
 
     private fun confirmInitApp() {
-    lifecycleScope.launch {
-    showLoading()
-    // 初始化
-    App.delayInit()
-    async(Dispatchers.IO) {
-    // 等待1000ms 初始化结束
-    delay(1000)
-    return@async
-    }.await().let {
-    NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
-    SharedManager.setHasShowClause(true)
-    dismissLoading()
-    finish()
-    }
-    }
+        lifecycleScope.launch {
+            showLoading()
+            // 初始化
+            App.delayInit()
+            async(Dispatchers.IO) {
+                // 等待1000ms 初始化结束
+                delay(1000)
+                return@async
+            }.await().let {
+                NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
+                SharedManager.setHasShowClause(true)
+                dismissLoading()
+                finish()
+            }
+        }
     }
 
     private fun showLoading() {
-    dialog.show()
+        dialog.show()
     }
 
     private fun dismissLoading() {
-    dialog.dismiss()
+        dialog.dismiss()
     }
 }

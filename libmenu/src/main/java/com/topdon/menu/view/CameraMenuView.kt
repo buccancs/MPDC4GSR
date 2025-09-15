@@ -41,43 +41,43 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
 
 
     var isVideoMode: Boolean
-    get() = binding.viewPager2.currentItem == 1
-    set(value) {
-    binding.viewPager2.currentItem = if (value) 1 else 0
-    }
+        get() = binding.viewPager2.currentItem == 1
+        set(value) {
+            binding.viewPager2.currentItem = if (value) 1 else 0
+        }
 
 
     var canSwitchMode: Boolean
-    get() = binding.viewPager2.isUserInputEnabled
-    set(value) {
-    binding.viewPager2.isUserInputEnabled = value
-    binding.tvPhoto.isVisible = value
-    binding.tvVideo.isVisible = value
-    }
+        get() = binding.viewPager2.isUserInputEnabled
+        set(value) {
+            binding.viewPager2.isUserInputEnabled = value
+            binding.tvPhoto.isVisible = value
+            binding.tvVideo.isVisible = value
+        }
 
 
     var onCameraClickListener: ((actionCode: Int) -> Unit)? = null
 
 
     fun setToNormal() {
-    if (isVideoMode) {
-    binding.ivAction.setImageResource(MenuR.drawable.svg_camera_video_normal)
-    } else {
-    binding.ivAction.setImageResource(MenuR.drawable.svg_camera_photo_normal)
-    }
+        if (isVideoMode) {
+            binding.ivAction.setImageResource(MenuR.drawable.svg_camera_video_normal)
+        } else {
+            binding.ivAction.setImageResource(MenuR.drawable.svg_camera_photo_normal)
+        }
     }
 
 
     fun setToRecord(isDelay: Boolean) {
-    if (isVideoMode) {
-    binding.ivAction.setImageResource(MenuR.drawable.svg_camera_video_record)
-    } else {
-    if (isDelay) {
-    binding.ivAction.setImageResource(MenuR.drawable.svg_camera_photo_record_delay)
-    } else {
-    binding.ivAction.setImageResource(MenuR.drawable.svg_camera_photo_record_at_once)
-    }
-    }
+        if (isVideoMode) {
+            binding.ivAction.setImageResource(MenuR.drawable.svg_camera_video_record)
+        } else {
+            if (isDelay) {
+                binding.ivAction.setImageResource(MenuR.drawable.svg_camera_photo_record_delay)
+            } else {
+                binding.ivAction.setImageResource(MenuR.drawable.svg_camera_photo_record_at_once)
+            }
+        }
     }
 
 
@@ -114,20 +114,20 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         } else {
             binding = ViewCameraMenuBinding.inflate(LayoutInflater.from(context), this, true)
 
-    binding.viewPager2.adapter = MenuCameraAdapter()
-    binding.viewPager2.registerOnPageChangeCallback(MyOnPageChangeCallback())
+            binding.viewPager2.adapter = MenuCameraAdapter()
+            binding.viewPager2.registerOnPageChangeCallback(MyOnPageChangeCallback())
 
-    binding.ivAction.setOnClickListener(this)
-    binding.ivGallery.setOnClickListener(this)
-    binding.ivMore.setOnClickListener(this)
-    binding.tvPhoto.setOnClickListener(this)
-    binding.tvVideo.setOnClickListener(this)
-    }
+            binding.ivAction.setOnClickListener(this)
+            binding.ivGallery.setOnClickListener(this)
+            binding.ivMore.setOnClickListener(this)
+            binding.tvPhoto.setOnClickListener(this)
+            binding.tvVideo.setOnClickListener(this)
+        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-    binding.viewPager2.dispatchTouchEvent(ev)
-    return super.dispatchTouchEvent(ev)
+        binding.viewPager2.dispatchTouchEvent(ev)
+        return super.dispatchTouchEvent(ev)
     }
 
 
@@ -203,7 +203,7 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
         ) {
         }
 
-    override fun getItemCount(): Int = 2
+        override fun getItemCount(): Int = 2
 
 
 

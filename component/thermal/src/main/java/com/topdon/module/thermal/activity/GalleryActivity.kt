@@ -42,45 +42,45 @@ class GalleryActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_gallery
 
     override fun initView() {
-    // Use findViewById instead of synthetic views for Kotlin 2.1.0 compatibility
-    val galleryViewPager = findViewById<ViewPager>(R.id.gallery_viewpager)
-    val galleryTab = findViewById<TabLayout>(R.id.gallery_tab)
+        // Use findViewById instead of synthetic views for Kotlin 2.1.0 compatibility
+        val galleryViewPager = findViewById<ViewPager>(R.id.gallery_viewpager)
+        val galleryTab = findViewById<TabLayout>(R.id.gallery_tab)
 
-    galleryViewPager.adapter = ViewAdapter(this, supportFragmentManager)
-    galleryTab.setupWithViewPager(galleryViewPager)
+        galleryViewPager.adapter = ViewAdapter(this, supportFragmentManager)
+        galleryTab.setupWithViewPager(galleryViewPager)
 
-    // Request media permissions using modern PermissionTool
-    PermissionTool.requestFile(this) {
-    // Permission granted, gallery can now access media files
-    }
+        // Request media permissions using modern PermissionTool
+        PermissionTool.requestFile(this) {
+            // Permission granted, gallery can now access media files
+        }
     }
 
     override fun initData() {
     }
 
     inner class ViewAdapter : FragmentStatePagerAdapter {
-    private var titles: Array<String> = arrayOf()
+        private var titles: Array<String> = arrayOf()
 
-    constructor (context: Context, fm: FragmentManager) : super(
-    fm,
-    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
-    ) {
-    titles = arrayOf("图片", "视频")
-    }
+        constructor (context: Context, fm: FragmentManager) : super(
+            fm,
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
+        ) {
+            titles = arrayOf("图片", "视频")
+        }
 
-    override fun getCount(): Int {
-    return titles.size
-    }
+        override fun getCount(): Int {
+            return titles.size
+        }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-    return titles[position]
-    }
+        override fun getPageTitle(position: Int): CharSequence? {
+            return titles[position]
+        }
 
-    override fun getItem(position: Int): Fragment {
-    return when (position) {
-    0 -> GalleryPictureFragment()
-    else -> GalleryVideoFragment()
-    }
-    }
+        override fun getItem(position: Int): Fragment {
+            return when (position) {
+                0 -> GalleryPictureFragment()
+                else -> GalleryVideoFragment()
+            }
+        }
     }
 }

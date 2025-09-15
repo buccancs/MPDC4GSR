@@ -35,8 +35,8 @@ import java.util.*
 class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrationBinding>() {
 
     companion object {
-    private const val TAG = "HubSpokeIntegration"
-    private const val DEFAULT_PC_CONTROLLER_PORT = 8080
+        private const val TAG = "HubSpokeIntegration"
+        private const val DEFAULT_PC_CONTROLLER_PORT = 8080
     }
 
     override fun initContentLayoutId(): Int = R.layout.activity_hub_spoke_integration
@@ -68,27 +68,22 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             updateUI()
         }
 
-    Log.i(TAG, "Connected to RecordingService")
-    setupRecordingMonitoring()
-    updateUI()
-    }
-
-    override fun onServiceDisconnected(name: ComponentName?) {
-    recordingService = null
-    isServiceBound = false
-    Log.i(TAG, "Disconnected from RecordingService")
-    }
+        override fun onServiceDisconnected(name: ComponentName?) {
+            recordingService = null
+            isServiceBound = false
+            Log.i(TAG, "Disconnected from RecordingService")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    initializeViews()
-    initializeComponents()
-    setupClickListeners()
-    bindToRecordingService()
-
-    updateUI()
+        super.onCreate(savedInstanceState)
+        
+        initializeViews()
+        initializeComponents()
+        setupClickListeners()
+        bindToRecordingService()
+        
+        updateUI()
     }
 
     override fun onDestroy() {
@@ -110,10 +105,10 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     }
 
     private fun initializeViews() {
-    // Set default session directory using binding
-    val timestamp = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
-    val defaultSessionDir = "${getExternalFilesDir(null)}/hub_spoke_sessions/session_$timestamp"
-    binding.sessionDirectoryEditText.setText(defaultSessionDir)
+        // Set default session directory using binding
+        val timestamp = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
+        val defaultSessionDir = "${getExternalFilesDir(null)}/hub_spoke_sessions/session_$timestamp"
+        binding.sessionDirectoryEditText.setText(defaultSessionDir)
     }
 
     private fun initializeComponents() {
@@ -289,30 +284,30 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     }
 
     private fun setupClickListeners() {
-    binding.connectButton.setOnClickListener {
-    connectToPCController()
-    }
-
-    binding.disconnectButton.setOnClickListener {
-    disconnectFromPCController()
-    }
-
-    binding.startRecordingButton.setOnClickListener {
-    startCoordinatedRecording()
-    }
-
-    binding.stopRecordingButton.setOnClickListener {
-    stopCoordinatedRecording()
-    }
-
-    binding.addSyncMarkerButton.setOnClickListener {
-    addSyncMarker()
-    }
+        binding.connectButton.setOnClickListener {
+            connectToPCController()
+        }
+        
+        binding.disconnectButton.setOnClickListener {
+            disconnectFromPCController()
+        }
+        
+        binding.startRecordingButton.setOnClickListener {
+            startCoordinatedRecording()
+        }
+        
+        binding.stopRecordingButton.setOnClickListener {
+            stopCoordinatedRecording()
+        }
+        
+        binding.addSyncMarkerButton.setOnClickListener {
+            addSyncMarker()
+        }
     }
 
     private fun bindToRecordingService() {
-    val intent = Intent(this, RecordingService::class.java)
-    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        val intent = Intent(this, RecordingService::class.java)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     private fun connectToPCController() {
@@ -494,40 +489,40 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     }
 
     private fun setupRecordingMonitoring() {
-    if (!::recordingController.isInitialized) return
-
-    // Monitor recording state
-    recordingController.recordingStateFlow
-    .onEach { state ->
-    runOnUiThread {
-    when (state) {
-    RecordingState.STARTING -> binding.statusTextView.text = "Starting sensors..."
-    RecordingState.RECORDING -> binding.statusTextView.text = "Recording in progress"
-    RecordingState.STOPPING -> binding.statusTextView.text = "Stopping sensors..."
-    RecordingState.STOPPED -> binding.statusTextView.text = "Recording stopped"
-    RecordingState.ERROR -> binding.statusTextView.text = "Recording error"
-    }
-    updateUI()
-    }
-    }
-    .launchIn(lifecycleScope)
-
-    // Monitor sensor status
-    recordingController.sensorStatusFlow
-    .onEach { statusList ->
-    runOnUiThread {
-    val statusText = buildString {
-    statusList.forEach { status ->
-    append("${status.sensorType}: ")
-    append(if (status.isRecording) "Recording" else "Stopped")
-    append(" (${status.samplesRecorded} samples, ")
-    append("${String.format("%.1f", status.storageUsedMB)}MB)\n")
-    }
-    }
-    binding.sensorStatusTextView.text = statusText.trim()
-    }
-    }
-    .launchIn(lifecycleScope)
+        if (!::recordingController.isInitialized) return
+        
+        // Monitor recording state
+        recordingController.recordingStateFlow
+            .onEach { state ->
+                runOnUiThread {
+                    when (state) {
+                        RecordingState.STARTING -> binding.statusTextView.text = "Starting sensors..."
+                        RecordingState.RECORDING -> binding.statusTextView.text = "Recording in progress"
+                        RecordingState.STOPPING -> binding.statusTextView.text = "Stopping sensors..."
+                        RecordingState.STOPPED -> binding.statusTextView.text = "Recording stopped"
+                        RecordingState.ERROR -> binding.statusTextView.text = "Recording error"
+                    }
+                    updateUI()
+                }
+            }
+            .launchIn(lifecycleScope)
+        
+        // Monitor sensor status
+        recordingController.sensorStatusFlow
+            .onEach { statusList ->
+                runOnUiThread {
+                    val statusText = buildString {
+                        statusList.forEach { status ->
+                            append("${status.sensorType}: ")
+                            append(if (status.isRecording) "Recording" else "Stopped")
+                            append(" (${status.samplesRecorded} samples, ")
+                            append("${String.format("%.1f", status.storageUsedMB)}MB)\n")
+                        }
+                    }
+                    binding.sensorStatusTextView.text = statusText.trim()
+                }
+            }
+            .launchIn(lifecycleScope)
     }
 
     private fun setupNetworkMonitoring() {

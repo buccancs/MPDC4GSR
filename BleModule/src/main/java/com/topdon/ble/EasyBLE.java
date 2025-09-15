@@ -148,7 +148,7 @@ public class EasyBLE {
         return deviceCreator;
     }
 
-    Observable getObservable() {
+    Observable getObservable() {        
         return observable;
     }
 
@@ -190,7 +190,7 @@ public class EasyBLE {
             String action = intent.getAction();
             if (action != null) {
                 switch (action) {
-                    case BluetoothAdapter.ACTION_STATE_CHANGED: //蓝牙开关状态变化
+                    case BluetoothAdapter.ACTION_STATE_CHANGED: //蓝牙开关状态变化 
                         if (bluetoothAdapter != null) {
                             //通知观察者蓝牙状态
                             observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
@@ -232,13 +232,13 @@ public class EasyBLE {
                             Bundle extras = intent.getExtras();
                             if (extras != null) {
                                 rssi = extras.getShort(BluetoothDevice.EXTRA_RSSI);
-                            }
+                            }                            
                             ((ClassicScanner) scanner).parseScanResult(device, false, null, rssi, null);
                         }
-                        break;
+                        break;    
                 }
             }
-            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) { //蓝牙开关状态变化
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) { //蓝牙开关状态变化 
                 if (bluetoothAdapter != null) {
                     //通知观察者蓝牙状态
                     observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
@@ -289,7 +289,7 @@ public class EasyBLE {
             filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
             filter.addAction(BluetoothDevice.ACTION_FOUND);
             application.registerReceiver(broadcastReceiver, filter);
-        }
+        }        
         isInitialized = true;
     }
 
@@ -368,7 +368,7 @@ public class EasyBLE {
             observable.notifyObservers(info);
         }
     }
-
+    
     //检查并实例化搜索器
     private void checkAndInstanceScanner() {
         if (scanner == null) {
@@ -389,7 +389,7 @@ public class EasyBLE {
                     }
                 }
             }
-        }
+        }        
     }
     
 

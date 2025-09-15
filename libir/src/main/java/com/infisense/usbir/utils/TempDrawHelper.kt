@@ -42,10 +42,10 @@ class TempDrawHelper {
 
 
     var textSize: Int
-    get() = textPaint.textSize.toInt()
-    set(value) {
-    textPaint.textSize = value.toFloat()
-    }
+        get() = textPaint.textSize.toInt()
+        set(value) {
+            textPaint.textSize = value.toFloat()
+        }
 
 
     var textColor: Int
@@ -69,12 +69,12 @@ class TempDrawHelper {
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
-    linePaint.strokeWidth = SizeUtils.dp2px(1f).toFloat()
-    linePaint.color = Color.WHITE
+        linePaint.strokeWidth = SizeUtils.dp2px(1f).toFloat()
+        linePaint.color = Color.WHITE
 
-    bluePaint.color = Color.BLUE
+        bluePaint.color = Color.BLUE
 
-    redPaint.color = Color.RED
+        redPaint.color = Color.RED
 
         textPaint.textSize = SizeUtils.sp2px(14f).toFloat()
         textPaint.color = Color.WHITE
@@ -155,7 +155,7 @@ class TempDrawHelper {
             textY = y + TEMP_TEXT_OFFSET / 2 + textFontTop
         }
 
-    canvas.drawText(text, textX, textY, textPaint)
+        canvas.drawText(text, textX, textY, textPaint)
     }
 
 
@@ -172,19 +172,19 @@ class TempDrawHelper {
         val textWidth: Float = textPaint.measureText("A")
         val textHeight: Float = -fontMetrics.top
 
-    val minX: Int = min(startX, stopX)
-    val maxX: Int = max(startX, stopX)
-    val leftX: Float = (minX - textWidth).coerceAtLeast(0f)
-    val rightX: Float = maxX.toFloat().coerceAtMost(width - textWidth)
+        val minX: Int = min(startX, stopX)
+        val maxX: Int = max(startX, stopX)
+        val leftX: Float = (minX - textWidth).coerceAtLeast(0f)
+        val rightX: Float = maxX.toFloat().coerceAtMost(width - textWidth)
 
-    val minY: Int = min(startY, stopY)
-    val maxY: Int = max(startY, stopY)
-    val topY: Float = (minY - (-fontMetrics.top + fontMetrics.ascent)).coerceAtLeast(textHeight)
-    val bottomY: Float = (maxY + textHeight).coerceAtMost(height.toFloat())
+        val minY: Int = min(startY, stopY)
+        val maxY: Int = max(startY, stopY)
+        val topY: Float = (minY - (-fontMetrics.top + fontMetrics.ascent)).coerceAtLeast(textHeight)
+        val bottomY: Float = (maxY + textHeight).coerceAtMost(height.toFloat())
 
-    val k: Float = (startY - stopY).toFloat() / (startX - stopX)
-    canvas.drawText("A", leftX, if (k >= 0) topY else bottomY, textPaint)
-    canvas.drawText("B", rightX, if (k >= 0) bottomY else topY, textPaint)
+        val k: Float = (startY - stopY).toFloat() / (startX - stopX)
+        canvas.drawText("A", leftX, if (k >= 0) topY else bottomY, textPaint)
+        canvas.drawText("B", rightX, if (k >= 0) bottomY else topY, textPaint)
     }
 
 
@@ -199,8 +199,8 @@ class TempDrawHelper {
         val textWidth: Float = textPaint.measureText(name)
         val textHeight: Float = -textPaint.getFontMetrics().top
 
-    var textX = x - textWidth / 2
-    var textY = y + POINT_SIZE / 2 + textHeight
+        var textX = x - textWidth / 2
+        var textY = y + POINT_SIZE / 2 + textHeight
 
         if (textX < 0) { // x超出左边界
             textX = 0f
@@ -232,8 +232,8 @@ class TempDrawHelper {
         val centerY: Int = top + (bottom - top) / 2
         val offset: Float = (-fontMetrics.ascent + fontMetrics.descent) / 2 - fontMetrics.descent
 
-    var textX: Float = centerX - textWidth / 2
-    var textY: Float = centerY + offset
+        var textX: Float = centerX - textWidth / 2
+        var textY: Float = centerY + offset
 
         if (textX < 0) { // x超出左边界
             textX = 0f

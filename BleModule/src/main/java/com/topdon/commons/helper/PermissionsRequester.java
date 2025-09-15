@@ -21,7 +21,7 @@ public class PermissionsRequester {
     private static final int PERMISSION_REQUEST_CODE = 10;
     private static final int REQUEST_CODE_WRITE_SETTINGS = 11;
     private static final int REQUEST_CODE_UNKNOWN_APP_SOURCES = 12;
-
+    
     private final List<String> allPermissions = new ArrayList<>();
     private final List<String> refusedPermissions = new ArrayList<>();
     private Callback callback;
@@ -32,11 +32,11 @@ public class PermissionsRequester {
     public PermissionsRequester(@NonNull Activity activity) {
         this.activity = activity;
     }
-
+    
     public PermissionsRequester(@NonNull Fragment fragment) {
         this.fragment = fragment;
     }
-
+    
     public void setCallback(Callback callback) {
         this.callback = callback;
     }
@@ -55,7 +55,7 @@ public class PermissionsRequester {
     public boolean hasPermissions(@NonNull List<String> permissions) {
         return checkPermissions(permissions, true);
     }
-
+    
     @SuppressWarnings("all")
     private boolean checkPermissions(List<String> permissions, boolean onlyCheck) {
         Context context = activity != null ? activity : fragment.getContext();
@@ -154,7 +154,7 @@ public class PermissionsRequester {
             checking = false;
         }
     }
-
+    
     public interface Callback {
 
         void onRequestResult(List<String> refusedPermissions);

@@ -138,27 +138,27 @@ class GuideInterface {
     }
 
     private fun stopUsbBufferWriteThread() {
-    if (mUsbBufferWriteThread != null) {
-    mWriteThreadFlag = false
-    try {
-    mUsbBufferWriteThread!!.join()
-    } catch (e: InterruptedException) {
-    e.printStackTrace()
-    }
-    mUsbBufferWriteThread = null
-    }
+        if (mUsbBufferWriteThread != null) {
+            mWriteThreadFlag = false
+            try {
+                mUsbBufferWriteThread!!.join()
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            mUsbBufferWriteThread = null
+        }
     }
 
     private fun stopUsbBufferReadThread() {
-    if (mUsbBufferReadThread != null) {
-    mReadThreadFlag = false
-    try {
-    mUsbBufferReadThread!!.join()
-    } catch (e: InterruptedException) {
-    e.printStackTrace()
-    }
-    mUsbBufferReadThread = null
-    }
+        if (mUsbBufferReadThread != null) {
+            mReadThreadFlag = false
+            try {
+                mUsbBufferReadThread!!.join()
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            mUsbBufferReadThread = null
+        }
     }
 
     private fun getParam(
@@ -201,93 +201,93 @@ class GuideInterface {
     }
 
     fun exit() {
-    stopUsbBufferWriteThread()
-    stopUsbBufferReadThread()
-    if (mGuideUsbManager != null) {
-    mGuideUsbManager!!.disconnectUsbDevice()
-    mGuideUsbManager = null
-    }
-    if (mNativeGuideCore != null) {
-    mNativeGuideCore = null
-    }
+        stopUsbBufferWriteThread()
+        stopUsbBufferReadThread()
+        if (mGuideUsbManager != null) {
+            mGuideUsbManager!!.disconnectUsbDevice()
+            mGuideUsbManager = null
+        }
+        if (mNativeGuideCore != null) {
+            mNativeGuideCore = null
+        }
     }
 
     fun shutter() {
-    if (mGuideUsbManager == null) {
-    return
-    }
-    mGuideUsbManager!!.shutter()
+        if (mGuideUsbManager == null) {
+            return
+        }
+        mGuideUsbManager!!.shutter()
     }
 
     fun nuc() {
-    if (mGuideUsbManager == null) {
-    return
-    }
-    mGuideUsbManager!!.nuc()
+        if (mGuideUsbManager == null) {
+            return
+        }
+        mGuideUsbManager!!.nuc()
     }
 
     fun changePalette(i: Int) {
-    Log.d(TAG, "changePalette() called with: i = [$i]")
-    if (mGuideUsbManager == null) {
-    return
-    }
-    if (i < 0 || i > 9) {
-    return
-    }
-    mGuideUsbManager!!.changePalette(i)
+        Log.d(TAG, "changePalette() called with: i = [$i]")
+        if (mGuideUsbManager == null) {
+            return
+        }
+        if (i < 0 || i > 9) {
+            return
+        }
+        mGuideUsbManager!!.changePalette(i)
     }
 
     fun setDistance(distance: Float) {
-    if (mGuideUsbManager == null) {
-    return
-    }
-    mGuideUsbManager!!.setDistance(distance)
+        if (mGuideUsbManager == null) {
+            return
+        }
+        mGuideUsbManager!!.setDistance(distance)
     }
 
     fun getDistance(): Float {
-    if (mNativeGuideCore == null) {
-    return (-1).toFloat()
-    }
-    val PARAM_INDEX_DISTANCE = 163
-    return getParam(PARAM_INDEX_DISTANCE * 2, 1, 0) * 1.0f / 10
+        if (mNativeGuideCore == null) {
+            return (-1).toFloat()
+        }
+        val PARAM_INDEX_DISTANCE = 163
+        return getParam(PARAM_INDEX_DISTANCE * 2, 1, 0) * 1.0f / 10
     }
 
 
     fun setBright(bright: Int) {
-    if (mGuideUsbManager == null) {
-    return
-    }
-    if (bright < 0 || bright > 100) {
-    return
-    }
-    mGuideUsbManager!!.setBright(bright)
+        if (mGuideUsbManager == null) {
+            return
+        }
+        if (bright < 0 || bright > 100) {
+            return
+        }
+        mGuideUsbManager!!.setBright(bright)
     }
 
     fun getBright(): Int {
-    if (mNativeGuideCore == null) {
-    return -1
-    }
-    val PARAM_INDEX_BRIGHT = 164
-    return getParam(PARAM_INDEX_BRIGHT * 2, 1, 0).toInt()
+        if (mNativeGuideCore == null) {
+            return -1
+        }
+        val PARAM_INDEX_BRIGHT = 164
+        return getParam(PARAM_INDEX_BRIGHT * 2, 1, 0).toInt()
     }
 
 
     fun setContrast(contrast: Int) {
-    if (mGuideUsbManager == null) {
-    return
-    }
-    if (contrast < 0 || contrast > 100) {
-    return
-    }
-    mGuideUsbManager!!.setContrast(contrast)
+        if (mGuideUsbManager == null) {
+            return
+        }
+        if (contrast < 0 || contrast > 100) {
+            return
+        }
+        mGuideUsbManager!!.setContrast(contrast)
     }
 
     fun getContrast(): Int {
-    if (mNativeGuideCore == null) {
-    return -1
-    }
-    val PARAM_INDEX_CONTRAST = 164
-    return getParam(PARAM_INDEX_CONTRAST * 2, 2, 1).toInt()
+        if (mNativeGuideCore == null) {
+            return -1
+        }
+        val PARAM_INDEX_CONTRAST = 164
+        return getParam(PARAM_INDEX_CONTRAST * 2, 2, 1).toInt()
     }
 
     //    int count = 0;
@@ -300,13 +300,13 @@ class GuideInterface {
         }
         mNativeGuideCore!!.yuv2Bitmap(bitmap!!, yuv!!)
 /*
-    long time = System.currentTimeMillis();
-    count++;
-    if(count >= 1000 && count< 1030) {
-    FileUtils.Companion.saveFile(mFrame, "/sdcard/frame/" + time + ".raw", false);
-    FileUtils.Companion.saveFile(mYuv, "/sdcard/yuv/" + time + ".yuv", false);
-    FileUtils.Companion.saveBitmap2JpegFile(bitmap, "/sdcard/yuv/" + time + ".jpg");
-    }
+        long time = System.currentTimeMillis();
+        count++;
+        if(count >= 1000 && count< 1030) {
+            FileUtils.Companion.saveFile(mFrame, "/sdcard/frame/" + time + ".raw", false);
+            FileUtils.Companion.saveFile(mYuv, "/sdcard/yuv/" + time + ".yuv", false);
+            FileUtils.Companion.saveBitmap2JpegFile(bitmap, "/sdcard/yuv/" + time + ".jpg");
+        }
 */
     }
 
@@ -321,114 +321,114 @@ class GuideInterface {
     }
 
     fun setRange(range: Int) {
-    if (mGuideUsbManager == null) {
-    return
-    }
-    mGuideUsbManager!!.setRange(range)
+        if (mGuideUsbManager == null) {
+            return
+        }
+        mGuideUsbManager!!.setRange(range)
     }
 
     fun setEmiss(emiss: Int) {
-    if (mGuideUsbManager == null) {
-    return
-    }
-    if (emiss < 1 || emiss > 99) {
-    return
-    }
-    mGuideUsbManager!!.setEmiss(emiss)
+        if (mGuideUsbManager == null) {
+            return
+        }
+        if (emiss < 1 || emiss > 99) {
+            return
+        }
+        mGuideUsbManager!!.setEmiss(emiss)
     }
 
     fun getEmiss(): Int {
-    if (mNativeGuideCore == null) {
-    return -1
-    }
-    val PARAM_INDEX_EMISS = 162
-    return getParam(PARAM_INDEX_EMISS * 2, 1, 0).toInt()
+        if (mNativeGuideCore == null) {
+            return -1
+        }
+        val PARAM_INDEX_EMISS = 162
+        return getParam(PARAM_INDEX_EMISS * 2, 1, 0).toInt()
     }
 
     fun getFirmwareVersion(): String? {
-    val PARAM_INDEX_ASIC_MAIN_VERSION = 32
-    val DOT = "."
-    val bytes = getParam(PARAM_INDEX_ASIC_MAIN_VERSION * 2, 6)
-    val mainVersion =
-    (bytes[1] and 0xFF.toByte()).toInt().shl(8) or ((bytes[0] and 0xFF.toByte()).toInt())
-    val mainVersion1: Int = (mainVersion and 0xFFFF).shr(12)
-    val mainVersion2: Int = (mainVersion and 0x0FC0).shr(6)
-    val mainVersion3: Int = mainVersion and 0x003F
-    val asicVersion = StringBuilder()
-    1.shr(2)
-    asicVersion.append(mainVersion1)
-    .append(DOT)
-    .append(mainVersion2)
-    .append(DOT)
-    .append(mainVersion3)
-    .append(DOT)
-    .append(HexDump.toHexString(bytes[3]))
-    .append(HexDump.toHexString(bytes[2]))
-    .append(HexDump.toHexString(bytes[5]))
-    .append(HexDump.toHexString(bytes[4]))
-    return asicVersion.toString()
+        val PARAM_INDEX_ASIC_MAIN_VERSION = 32
+        val DOT = "."
+        val bytes = getParam(PARAM_INDEX_ASIC_MAIN_VERSION * 2, 6)
+        val mainVersion =
+            (bytes[1] and 0xFF.toByte()).toInt().shl(8) or ((bytes[0] and 0xFF.toByte()).toInt())
+        val mainVersion1: Int = (mainVersion and 0xFFFF).shr(12)
+        val mainVersion2: Int = (mainVersion and 0x0FC0).shr(6)
+        val mainVersion3: Int = mainVersion and 0x003F
+        val asicVersion = StringBuilder()
+        1.shr(2)
+        asicVersion.append(mainVersion1)
+            .append(DOT)
+            .append(mainVersion2)
+            .append(DOT)
+            .append(mainVersion3)
+            .append(DOT)
+            .append(HexDump.toHexString(bytes[3]))
+            .append(HexDump.toHexString(bytes[2]))
+            .append(HexDump.toHexString(bytes[5]))
+            .append(HexDump.toHexString(bytes[4]))
+        return asicVersion.toString()
     }
 
     fun getSN(): String {
-    val PARAM_INDEX_SN = 39
-    val bytes = getParam(PARAM_INDEX_SN * 2, 15)
-    return String(bytes, StandardCharsets.US_ASCII)
+        val PARAM_INDEX_SN = 39
+        val bytes = getParam(PARAM_INDEX_SN * 2, 15)
+        return String(bytes, StandardCharsets.US_ASCII)
     }
 
     fun getId(): String {
-    val PARAM_INDEX_ID = 192
-    val bytes = getParam(PARAM_INDEX_ID * 2, 17)
-    return String(bytes, StandardCharsets.US_ASCII)
+        val PARAM_INDEX_ID = 192
+        val bytes = getParam(PARAM_INDEX_ID * 2, 17)
+        return String(bytes, StandardCharsets.US_ASCII)
     }
 
     fun getShutterStatus(): Int {
-    val PARAM_INDEX_SHUTTER_STATUS = 12
-    return getParam(PARAM_INDEX_SHUTTER_STATUS * 2, 1, 0).toInt()
+        val PARAM_INDEX_SHUTTER_STATUS = 12
+        return getParam(PARAM_INDEX_SHUTTER_STATUS * 2, 1, 0).toInt()
     }
 
     fun getImageStatus(): Int {
-    val PARAM_INDEX_IMAGE_STATUS = 13
-    return getParam(PARAM_INDEX_IMAGE_STATUS * 2, 1, 0).toInt()
+        val PARAM_INDEX_IMAGE_STATUS = 13
+        return getParam(PARAM_INDEX_IMAGE_STATUS * 2, 1, 0).toInt()
     }
 
     fun upgrade(path: String?): FirmwareUpgradeResultCode? {
-    if (mGuideUsbManager == null) {
-    return FirmwareUpgradeResultCode.USB_DEVICE_ERROR
-    }
-    if (TextUtils.isEmpty(path)) {
-    return FirmwareUpgradeResultCode.FILE_ERROR
-    }
-    val file = File(path)
-    if (!file.exists()) {
-    return FirmwareUpgradeResultCode.FILE_NOT_EXISTS
-    }
-    if (!mGuideUsbManager!!.isUsbValid()) {
-    return FirmwareUpgradeResultCode.USB_DEVICE_ERROR
-    }
-    val bos = ByteArrayOutputStream(file.length().toInt())
-    var `in`: BufferedInputStream? = null
-    try {
-    `in` = BufferedInputStream(FileInputStream(file))
-    val bufSize = 1024
-    val buffer = ByteArray(bufSize)
-    var len = 0
-    while (-1 != `in`.read(buffer, 0, bufSize).also { len = it }) {
-    bos.write(buffer, 0, len)
-    }
-    } catch (e: Exception) {
-    try {
-    `in`!!.close()
-    bos.close()
-    } catch (ex: Exception) {
-    ex.printStackTrace()
-    }
-    return FirmwareUpgradeResultCode.FILE_READ_ERROR
-    }
-    val allData = bos.toByteArray()
-    return if (mGuideUsbManager!!.upgrade(allData)) {
-    FirmwareUpgradeResultCode.SUCCESS
-    } else {
-    FirmwareUpgradeResultCode.FILE_WRITE_ERROR
-    }
+        if (mGuideUsbManager == null) {
+            return FirmwareUpgradeResultCode.USB_DEVICE_ERROR
+        }
+        if (TextUtils.isEmpty(path)) {
+            return FirmwareUpgradeResultCode.FILE_ERROR
+        }
+        val file = File(path)
+        if (!file.exists()) {
+            return FirmwareUpgradeResultCode.FILE_NOT_EXISTS
+        }
+        if (!mGuideUsbManager!!.isUsbValid()) {
+            return FirmwareUpgradeResultCode.USB_DEVICE_ERROR
+        }
+        val bos = ByteArrayOutputStream(file.length().toInt())
+        var `in`: BufferedInputStream? = null
+        try {
+            `in` = BufferedInputStream(FileInputStream(file))
+            val bufSize = 1024
+            val buffer = ByteArray(bufSize)
+            var len = 0
+            while (-1 != `in`.read(buffer, 0, bufSize).also { len = it }) {
+                bos.write(buffer, 0, len)
+            }
+        } catch (e: Exception) {
+            try {
+                `in`!!.close()
+                bos.close()
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+            return FirmwareUpgradeResultCode.FILE_READ_ERROR
+        }
+        val allData = bos.toByteArray()
+        return if (mGuideUsbManager!!.upgrade(allData)) {
+            FirmwareUpgradeResultCode.SUCCESS
+        } else {
+            FirmwareUpgradeResultCode.FILE_WRITE_ERROR
+        }
     }
 }

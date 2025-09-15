@@ -20,9 +20,9 @@ class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
     override fun initContentLayoutId() = R.layout.activity_pdf
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
-    super.onCreate(savedInstanceState)
-    initView()
-    initData()
+        super.onCreate(savedInstanceState)
+        initView()
+        initData()
     }
 
     private fun initView() {
@@ -47,43 +47,43 @@ class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
     }
 
     private fun initData() {
-    val tc001File = File(getExternalFilesDir("pdf")!!, "TC001.pdf")
-    if (!tc001File.exists()) {
-    copyBigDataToSD("TC001.pdf", tc001File)
-    }
+        val tc001File = File(getExternalFilesDir("pdf")!!, "TC001.pdf")
+        if (!tc001File.exists()) {
+            copyBigDataToSD("TC001.pdf", tc001File)
+        }
 
-    val tc004File = File(getExternalFilesDir("pdf")!!, "TS004.pdf")
-    if (!tc004File.exists()) {
-    copyBigDataToSD("TS004.pdf", tc004File)
-    }
+        val tc004File = File(getExternalFilesDir("pdf")!!, "TS004.pdf")
+        if (!tc004File.exists()) {
+            copyBigDataToSD("TS004.pdf", tc004File)
+        }
     }
 
     override fun onResume() {
-    super.onResume()
-    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        super.onResume()
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onPause() {
-    super.onPause()
-    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        super.onPause()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     // 复制assets文件
     @Throws(IOException::class)
     private fun copyBigDataToSD(
-    assetsName: String,
-    targetFile: File,
+        assetsName: String,
+        targetFile: File,
     ) {
-    val myOutput: OutputStream = FileOutputStream(targetFile)
-    val myInput = assets.open(assetsName)
-    val buffer = ByteArray(1024)
-    var length: Int = myInput.read(buffer)
-    while (length > 0) {
-    myOutput.write(buffer, 0, length)
-    length = myInput.read(buffer)
-    }
-    myOutput.flush()
-    myInput.close()
-    myOutput.close()
+        val myOutput: OutputStream = FileOutputStream(targetFile)
+        val myInput = assets.open(assetsName)
+        val buffer = ByteArray(1024)
+        var length: Int = myInput.read(buffer)
+        while (length > 0) {
+            myOutput.write(buffer, 0, length)
+            length = myInput.read(buffer)
+        }
+        myOutput.flush()
+        myInput.close()
+        myOutput.close()
     }
 }

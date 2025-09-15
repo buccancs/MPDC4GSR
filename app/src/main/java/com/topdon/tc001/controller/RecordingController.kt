@@ -19,37 +19,37 @@ class RecordingController(
     private val lifecycleOwner: LifecycleOwner
 ) {
     companion object {
-    private const val TAG = "RecordingController"
-    private const val SYNC_MARKER_DISTRIBUTION_DELAY_MS = 50L
-    private const val STATUS_UPDATE_INTERVAL_MS = 1000L
-    private const val ERROR_RECOVERY_DELAY_MS = 2000L
+        private const val TAG = "RecordingController"
+        private const val SYNC_MARKER_DISTRIBUTION_DELAY_MS = 50L
+        private const val STATUS_UPDATE_INTERVAL_MS = 1000L
+        private const val ERROR_RECOVERY_DELAY_MS = 2000L
     }
 
     // Sensor recorders
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
-
+    
     // Recording state
     private var _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
-
+    
     private var currentSessionDirectory: String? = null
     private var recordingStartTime: Long = 0
-
+    
     // Coroutine management
     private val controllerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var statusMonitoringJob: Job? = null
     private var errorMonitoringJob: Job? = null
-
+    
     // Data flows
     private val _recordingStateFlow = MutableStateFlow(RecordingState.STOPPED)
     val recordingStateFlow: StateFlow<RecordingState> = _recordingStateFlow.asStateFlow()
-
+    
     private val _sensorStatusFlow = MutableSharedFlow<List<RecordingStatus>>()
     val sensorStatusFlow: SharedFlow<List<RecordingStatus>> = _sensorStatusFlow.asSharedFlow()
-
+    
     private val _errorFlow = MutableSharedFlow<RecordingControllerError>()
     val errorFlow: SharedFlow<RecordingControllerError> = _errorFlow.asSharedFlow()
-
+    
     private val _syncEventFlow = MutableSharedFlow<SyncEvent>()
     val syncEventFlow: SharedFlow<SyncEvent> = _syncEventFlow.asSharedFlow()
 
@@ -314,43 +314,43 @@ class RecordingController(
 
 
     suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String> = emptyMap()) {
-    controllerScope.launch {
-    try {
-    Log.i(TAG, "Distributing sync marker: $markerType at $timestampNs")
-
-    // Distribute sync marker to all active sensors
-    val syncJobs = sensorRecorders.values.map { sensor ->
-    async {
-    try {
-    sensor.addSyncMarker(markerType, timestampNs, metadata)
-    sensor.sensorId to true
-    } catch (e: Exception) {
-    Log.w(TAG, "Failed to add sync marker to ${sensor.sensorId}", e)
-    sensor.sensorId to false
-    }
-    }
-    }
-
-    val syncResults = syncJobs.awaitAll()
-    val successfulSyncs = syncResults.count { it.second }
-    val totalSensors = syncResults.size
-
-    // Emit sync event
-    val syncEvent = SyncEvent(
-    markerType = markerType,
-    timestampNs = timestampNs,
-    metadata = metadata,
-    successfulSensors = successfulSyncs,
-    totalSensors = totalSensors
-    )
-    _syncEventFlow.emit(syncEvent)
-
-    Log.i(TAG, "Sync marker distributed: $successfulSyncs/$totalSensors sensors")
-
-    } catch (e: Exception) {
-    Log.e(TAG, "Failed to distribute sync marker", e)
-    }
-    }
+        controllerScope.launch {
+            try {
+                Log.i(TAG, "Distributing sync marker: $markerType at $timestampNs")
+                
+                // Distribute sync marker to all active sensors
+                val syncJobs = sensorRecorders.values.map { sensor ->
+                    async {
+                        try {
+                            sensor.addSyncMarker(markerType, timestampNs, metadata)
+                            sensor.sensorId to true
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to add sync marker to ${sensor.sensorId}", e)
+                            sensor.sensorId to false
+                        }
+                    }
+                }
+                
+                val syncResults = syncJobs.awaitAll()
+                val successfulSyncs = syncResults.count { it.second }
+                val totalSensors = syncResults.size
+                
+                // Emit sync event
+                val syncEvent = SyncEvent(
+                    markerType = markerType,
+                    timestampNs = timestampNs,
+                    metadata = metadata,
+                    successfulSensors = successfulSyncs,
+                    totalSensors = totalSensors
+                )
+                _syncEventFlow.emit(syncEvent)
+                
+                Log.i(TAG, "Sync marker distributed: $successfulSyncs/$totalSensors sensors")
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to distribute sync marker", e)
+            }
+        }
     }
 
 
@@ -412,36 +412,36 @@ class RecordingController(
 
 
     fun getRecordingStatistics(): RecordingStatistics {
-    val sensorStats = sensorRecorders.values.map { it.getRecordingStats() }
-    val totalSamples = sensorStats.sumOf { it.totalSamplesRecorded }
-    val totalStorage = sensorStats.sumOf { it.storageUsedMB }
-    val totalDropped = sensorStats.sumOf { it.droppedSamples }
-
-    val sessionDuration = if (recordingStartTime > 0) {
-    (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-    } else 0.0
-
-    return RecordingStatistics(
-    isRecording = _isRecording.get(),
-    sessionDurationSeconds = sessionDuration,
-    activeSensors = sensorRecorders.size,
-    totalSamplesRecorded = totalSamples,
-    totalStorageUsedMB = totalStorage,
-    totalDroppedSamples = totalDropped,
-    sensorStatistics = sensorStats
-    )
+        val sensorStats = sensorRecorders.values.map { it.getRecordingStats() }
+        val totalSamples = sensorStats.sumOf { it.totalSamplesRecorded }
+        val totalStorage = sensorStats.sumOf { it.storageUsedMB }
+        val totalDropped = sensorStats.sumOf { it.droppedSamples }
+        
+        val sessionDuration = if (recordingStartTime > 0) {
+            (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
+        } else 0.0
+        
+        return RecordingStatistics(
+            isRecording = _isRecording.get(),
+            sessionDurationSeconds = sessionDuration,
+            activeSensors = sensorRecorders.size,
+            totalSamplesRecorded = totalSamples,
+            totalStorageUsedMB = totalStorage,
+            totalDroppedSamples = totalDropped,
+            sensorStatistics = sensorStats
+        )
     }
 
 
     fun getAvailableSensors(): List<SensorInfo> {
-    return sensorRecorders.values.map { sensor ->
-    SensorInfo(
-    sensorId = sensor.sensorId,
-    sensorType = sensor.sensorType,
-    isRecording = sensor.isRecording,
-    samplingRate = sensor.samplingRate
-    )
-    }
+        return sensorRecorders.values.map { sensor ->
+            SensorInfo(
+                sensorId = sensor.sensorId,
+                sensorType = sensor.sensorType,
+                isRecording = sensor.isRecording,
+                samplingRate = sensor.samplingRate
+            )
+        }
     }
 
 
@@ -477,99 +477,99 @@ class RecordingController(
 
 
     suspend fun cleanup() {
-    withContext(Dispatchers.IO) {
-    try {
-    Log.i(TAG, "Cleaning up recording controller")
-
-    // Stop recording if active
-    if (_isRecording.get()) {
-    stopRecording()
-    }
-
-    // Stop monitoring
-    statusMonitoringJob?.cancel()
-    errorMonitoringJob?.cancel()
-
-    // Cleanup all sensors
-    val cleanupJobs = sensorRecorders.values.map { sensor ->
-    async {
-    try {
-    sensor.cleanup()
-    Log.d(TAG, "Sensor ${sensor.sensorId} cleaned up")
-    } catch (e: Exception) {
-    Log.w(TAG, "Failed to cleanup sensor ${sensor.sensorId}", e)
-    }
-    }
-    }
-
-    cleanupJobs.awaitAll()
-    sensorRecorders.clear()
-
-    // Cancel controller scope
-    controllerScope.cancel()
-
-    Log.i(TAG, "Recording controller cleanup complete")
-
-    } catch (e: Exception) {
-    Log.e(TAG, "Error during cleanup", e)
-    }
-    }
+        withContext(Dispatchers.IO) {
+            try {
+                Log.i(TAG, "Cleaning up recording controller")
+                
+                // Stop recording if active
+                if (_isRecording.get()) {
+                    stopRecording()
+                }
+                
+                // Stop monitoring
+                statusMonitoringJob?.cancel()
+                errorMonitoringJob?.cancel()
+                
+                // Cleanup all sensors
+                val cleanupJobs = sensorRecorders.values.map { sensor ->
+                    async {
+                        try {
+                            sensor.cleanup()
+                            Log.d(TAG, "Sensor ${sensor.sensorId} cleaned up")
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to cleanup sensor ${sensor.sensorId}", e)
+                        }
+                    }
+                }
+                
+                cleanupJobs.awaitAll()
+                sensorRecorders.clear()
+                
+                // Cancel controller scope
+                controllerScope.cancel()
+                
+                Log.i(TAG, "Recording controller cleanup complete")
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during cleanup", e)
+            }
+        }
     }
 
     private fun startMonitoring() {
-    // Start status monitoring
-    statusMonitoringJob = controllerScope.launch {
-    while (isActive) {
-    try {
-    val statusList = sensorRecorders.values.map { sensor ->
-    sensor.getRecordingStats().let { stats ->
-    RecordingStatus(
-    sensorId = stats.sensorId,
-    sensorType = stats.sensorType,
-    isRecording = sensor.isRecording,
-    samplesRecorded = stats.totalSamplesRecorded,
-    currentDataRate = stats.averageDataRate,
-    storageUsedMB = stats.storageUsedMB,
-    timestampNs = System.nanoTime()
-    )
-    }
-    }
-
-    _sensorStatusFlow.emit(statusList)
-
-    } catch (e: Exception) {
-    Log.w(TAG, "Status monitoring error", e)
-    }
-
-    delay(STATUS_UPDATE_INTERVAL_MS)
-    }
-    }
-
-    // Start error monitoring
-    errorMonitoringJob = controllerScope.launch {
-    sensorRecorders.values.forEach { sensor ->
-    launch {
-    sensor.getErrorFlow().collect { sensorError ->
-    Log.w(TAG, "Sensor error: ${sensorError.sensorId} - ${sensorError.errorMessage}")
-
-    val controllerError = RecordingControllerError(
-    errorType = "SENSOR_ERROR",
-    message = sensorError.errorMessage,
-    sensorId = sensorError.sensorId,
-    isRecoverable = sensorError.isRecoverable,
-    originalError = sensorError
-    )
-
-    emitError(controllerError)
-
-    // Attempt recovery for recoverable errors
-    if (sensorError.isRecoverable) {
-    attemptErrorRecovery(sensor, sensorError)
-    }
-    }
-    }
-    }
-    }
+        // Start status monitoring
+        statusMonitoringJob = controllerScope.launch {
+            while (isActive) {
+                try {
+                    val statusList = sensorRecorders.values.map { sensor ->
+                        sensor.getRecordingStats().let { stats ->
+                            RecordingStatus(
+                                sensorId = stats.sensorId,
+                                sensorType = stats.sensorType,
+                                isRecording = sensor.isRecording,
+                                samplesRecorded = stats.totalSamplesRecorded,
+                                currentDataRate = stats.averageDataRate,
+                                storageUsedMB = stats.storageUsedMB,
+                                timestampNs = System.nanoTime()
+                            )
+                        }
+                    }
+                    
+                    _sensorStatusFlow.emit(statusList)
+                    
+                } catch (e: Exception) {
+                    Log.w(TAG, "Status monitoring error", e)
+                }
+                
+                delay(STATUS_UPDATE_INTERVAL_MS)
+            }
+        }
+        
+        // Start error monitoring
+        errorMonitoringJob = controllerScope.launch {
+            sensorRecorders.values.forEach { sensor ->
+                launch {
+                    sensor.getErrorFlow().collect { sensorError ->
+                        Log.w(TAG, "Sensor error: ${sensorError.sensorId} - ${sensorError.errorMessage}")
+                        
+                        val controllerError = RecordingControllerError(
+                            errorType = "SENSOR_ERROR",
+                            message = sensorError.errorMessage,
+                            sensorId = sensorError.sensorId,
+                            isRecoverable = sensorError.isRecoverable,
+                            originalError = sensorError
+                        )
+                        
+                        emitError(controllerError)
+                        
+                        // Attempt recovery for recoverable errors
+                        if (sensorError.isRecoverable) {
+                            attemptErrorRecovery(sensor, sensorError)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private suspend fun attemptErrorRecovery(sensor: SensorRecorder, error: SensorError) {
@@ -666,7 +666,7 @@ class RecordingController(
     }
 
     private suspend fun emitError(error: RecordingControllerError) {
-    _errorFlow.emit(error)
+        _errorFlow.emit(error)
     }
 }
 

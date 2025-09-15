@@ -8,10 +8,10 @@ import com.topdon.lib.core.utils.ByteUtils.descBytes
 
 object BitmapTools {
     private fun readTempValue(bytes: ByteArray): Float {
-    val data: ByteArray = bytes.descBytes()
-    val scale = 16
-    val tempInt = data.bytesToInt() / 4
-    return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
+        val data: ByteArray = bytes.descBytes()
+        val scale = 16
+        val tempInt = data.bytesToInt() / 4
+        return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
 
     fun replaceBitmapColor(

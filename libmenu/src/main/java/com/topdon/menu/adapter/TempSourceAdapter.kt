@@ -11,12 +11,12 @@ import com.topdon.menu.R as MenuR
 internal class TempSourceAdapter : BaseMenuAdapter() {
 
     var selectCode: Int = -1
-    set(value) {
-    if (field != value) {
-    field = value
-    notifyDataSetChanged()
-    }
-    }
+        set(value) {
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
 
 
     var onTempSourceListener: ((code: Int) -> Unit)? = null

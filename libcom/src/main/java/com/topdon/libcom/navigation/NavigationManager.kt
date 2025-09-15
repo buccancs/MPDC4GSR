@@ -12,8 +12,8 @@ import com.topdon.lib.core.tools.DeviceTools
 object NavigationManager {
 
     class NavigationBuilder(private val route: String) {
-    private val extras = Bundle()
-    private var requestCode: Int? = null
+        private val extras = Bundle()
+        private var requestCode: Int? = null
 
         fun withString(
             key: String,
@@ -73,7 +73,7 @@ object NavigationManager {
 
 
     fun build(route: String): NavigationBuilder {
-    return NavigationBuilder(route)
+        return NavigationBuilder(route)
     }
 
 
@@ -175,10 +175,10 @@ object NavigationManager {
 
 
     private fun getClassByName(className: String): Class<*> {
-    return try {
-    Class.forName(className)
-    } catch (e: ClassNotFoundException) {
-    throw IllegalArgumentException("Activity class not found: $className", e)
-    }
+        return try {
+            Class.forName(className)
+        } catch (e: ClassNotFoundException) {
+            throw IllegalArgumentException("Activity class not found: $className", e)
+        }
     }
 }

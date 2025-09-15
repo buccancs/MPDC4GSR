@@ -170,14 +170,14 @@ class PseudoPickView : View {
             }
         }
 
-    sourceColors = sourceColors.add(addIndex, addColor)
-    zAltitudes = zAltitudes.add(addIndex, calculateZAltitude(0.75f))
-    places = places.add(addIndex, 0.75f)
-    selectIndex = addIndex
-    refreshActualColors()
-    barPaint.shader = LinearGradient(barRect.left, 0f, barRect.right, 0f, actualColors, places, Shader.TileMode.CLAMP)
-    invalidate()
-    onSelectChangeListener?.invoke(selectIndex)
+        sourceColors = sourceColors.add(addIndex, addColor)
+        zAltitudes = zAltitudes.add(addIndex, calculateZAltitude(0.75f))
+        places = places.add(addIndex, 0.75f)
+        selectIndex = addIndex
+        refreshActualColors()
+        barPaint.shader = LinearGradient(barRect.left, 0f, barRect.right, 0f, actualColors, places, Shader.TileMode.CLAMP)
+        invalidate()
+        onSelectChangeListener?.invoke(selectIndex)
     }
 
 
@@ -189,19 +189,19 @@ class PseudoPickView : View {
             return
         }
 
-    sourceColors = sourceColors.removeAt(selectIndex)
-    zAltitudes = zAltitudes.removeAt(selectIndex)
-    places = places.removeAt(selectIndex)
-    selectIndex = 0
-    for (i in zAltitudes.indices) {
-    if (zAltitudes[i] >= zAltitudes[selectIndex]) {
-    selectIndex = i
-    }
-    }
-    refreshActualColors()
-    barPaint.shader = LinearGradient(barRect.left, 0f, barRect.right, 0f, actualColors, places, Shader.TileMode.CLAMP)
-    invalidate()
-    onSelectChangeListener?.invoke(selectIndex)
+        sourceColors = sourceColors.removeAt(selectIndex)
+        zAltitudes = zAltitudes.removeAt(selectIndex)
+        places = places.removeAt(selectIndex)
+        selectIndex = 0
+        for (i in zAltitudes.indices) {
+            if (zAltitudes[i] >= zAltitudes[selectIndex]) {
+                selectIndex = i
+            }
+        }
+        refreshActualColors()
+        barPaint.shader = LinearGradient(barRect.left, 0f, barRect.right, 0f, actualColors, places, Shader.TileMode.CLAMP)
+        invalidate()
+        onSelectChangeListener?.invoke(selectIndex)
     }
 
 
@@ -220,27 +220,27 @@ class PseudoPickView : View {
 
 
     private fun refreshActualColors() {
-    if (actualColors.size != sourceColors.size) {
-    actualColors = IntArray(sourceColors.size)
-    }
-    System.arraycopy(sourceColors, 0, actualColors, 0, sourceColors.size)
-    for (i in places.size - 1 downTo 1) {
-    if (places[i - 1] == places[i]) {
-    actualColors[i - 1] = actualColors[i]
-    }
-    }
+        if (actualColors.size != sourceColors.size) {
+            actualColors = IntArray(sourceColors.size)
+        }
+        System.arraycopy(sourceColors, 0, actualColors, 0, sourceColors.size)
+        for (i in places.size - 1 downTo 1) {
+            if (places[i - 1] == places[i]) {
+                actualColors[i - 1] = actualColors[i]
+            }
+        }
     }
 
 
     private fun calculateZAltitude(place: Float): Int {
-    var result = 0
-    val gap: Float = selectRadius * 2 / barRect.width()
-    for (i in places.indices) {
-    if (abs(places[i] - place) <= gap) {
-    result = result.coerceAtLeast(zAltitudes[i] + 1)
-    }
-    }
-    return result
+        var result = 0
+        val gap: Float = selectRadius * 2 / barRect.width()
+        for (i in places.indices) {
+            if (abs(places[i] - place) <= gap) {
+                result = result.coerceAtLeast(zAltitudes[i] + 1)
+            }
+        }
+        return result
     }
 
 
@@ -276,9 +276,9 @@ class PseudoPickView : View {
         val barRadius = SizeUtils.dp2px(4f).toFloat()
         canvas.drawRoundRect(barRect.left, 0f, barRect.right, barRect.bottom, barRadius, barRadius, barPaint)
 
-    canvas.translate(0f, barRect.bottom + SizeUtils.dp2px(2f))
-    val strokeWidth: Float = SizeUtils.dp2px(1.5f).toFloat()
-    val circleRadius: Float = (selectRadius - strokeWidth * 2).toInt().toFloat()
+        canvas.translate(0f, barRect.bottom + SizeUtils.dp2px(2f))
+        val strokeWidth: Float = SizeUtils.dp2px(1.5f).toFloat()
+        val circleRadius: Float = (selectRadius - strokeWidth * 2).toInt().toFloat()
 
         var minZAltitude = 0
         var maxZAltitude = 0
@@ -298,16 +298,16 @@ class PseudoPickView : View {
                         canvas.drawCircle(x, y, selectRadius - strokeWidth, circlePaint)
                     }
 
-    circlePaint.color = actualColors[i]
-    canvas.drawCircle(x, y, circleRadius, circlePaint)
+                    circlePaint.color = actualColors[i]
+                    canvas.drawCircle(x, y, circleRadius, circlePaint)
 
-    canvas.save()
-    canvas.translate(x - selectNotDrawable.bounds.width() / 2, 0f)
-    (if (i == selectIndex) selectYesDrawable else selectNotDrawable).draw(canvas)
-    canvas.restore()
-    }
-    }
-    }
+                    canvas.save()
+                    canvas.translate(x - selectNotDrawable.bounds.width() / 2, 0f)
+                    (if (i == selectIndex) selectYesDrawable else selectNotDrawable).draw(canvas)
+                    canvas.restore()
+                }
+            }
+        }
     }
 
 
@@ -321,14 +321,14 @@ class PseudoPickView : View {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-    if (event == null) {
-    return false
-    }
-    when (event.action) {
-    MotionEvent.ACTION_DOWN -> {
-    handleTouch = false
-    canDrag = false
-    downX = event.x.toInt()
+        if (event == null) {
+            return false
+        }
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                handleTouch = false
+                canDrag = false
+                downX = event.x.toInt()
 
 //找出点击范围内altitude最高的圆形color block index
                 var targetIndex = -1

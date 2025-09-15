@@ -29,10 +29,10 @@ internal class TempPointAdapter : BaseMenuAdapter() {
 
 
     fun clearAllSelect() {
-    for (data in dataArray) {
-    data.isSelected = false
-    }
-    notifyDataSetChanged()
+        for (data in dataArray) {
+            data.isSelected = false
+        }
+        notifyDataSetChanged()
     }
 
     private val dataArray: Array<Data> =
@@ -81,9 +81,9 @@ internal class TempPointAdapter : BaseMenuAdapter() {
 
 
     data class Data(
-    @StringRes val stringId: Int,
-    @DrawableRes val drawableId: Int,
-    val tempPointType: TempPointType,
-    var isSelected: Boolean = false,
+        @StringRes val stringId: Int,
+        @DrawableRes val drawableId: Int,
+        val tempPointType: TempPointType,
+        var isSelected: Boolean = false,
     )
 }

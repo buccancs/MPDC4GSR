@@ -120,10 +120,10 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
 
 
     data class Data(
-    @StringRes val stringId: Int,
-    @DrawableRes val drawableId: Int,
-    val twoLightType: TwoLightType,
-    val isSingle: Boolean,
-    var isSelected: Boolean = false,
+        @StringRes val stringId: Int,
+        @DrawableRes val drawableId: Int,
+        val twoLightType: TwoLightType,
+        val isSingle: Boolean,
+        var isSelected: Boolean = false,
     )
 }

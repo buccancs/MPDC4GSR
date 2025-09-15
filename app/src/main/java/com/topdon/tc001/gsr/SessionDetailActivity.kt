@@ -10,18 +10,18 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 
 class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>() {
     companion object {
-    private const val EXTRA_SESSION_ID = "session_id"
+        private const val EXTRA_SESSION_ID = "session_id"
 
-    fun startActivity(
-    context: Context,
-    sessionId: String,
-    ) {
-    val intent =
-    Intent(context, SessionDetailActivity::class.java).apply {
-    putExtra(EXTRA_SESSION_ID, sessionId)
-    }
-    context.startActivity(intent)
-    }
+        fun startActivity(
+            context: Context,
+            sessionId: String,
+        ) {
+            val intent =
+                Intent(context, SessionDetailActivity::class.java).apply {
+                    putExtra(EXTRA_SESSION_ID, sessionId)
+                }
+            context.startActivity(intent)
+        }
     }
 
     override fun initContentLayoutId() = R.layout.activity_session_detail
@@ -41,19 +41,12 @@ class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>(
             textSize = 16f
         }
 
-    // Set the content programmatically since we don't have a complex layout
-    binding.root.apply {
-    text = "Session Details\n\nSession ID: $sessionId\n\nDetailed session analysis coming soon..."
-    setPadding(32, 32, 32, 32)
-    textSize = 16f
-    }
-
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    supportActionBar?.title = "Session Details"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Session Details"
     }
 
     override fun onSupportNavigateUp(): Boolean {
-    onBackPressed()
-    return true
+        onBackPressed()
+        return true
     }
 }

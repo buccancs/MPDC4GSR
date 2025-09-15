@@ -82,7 +82,9 @@
           }
         ],
         "primaryKey": {
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "autoGenerate": true
         },
         "indices": [],
@@ -172,7 +174,9 @@
           }
         ],
         "primaryKey": {
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "autoGenerate": true
         },
         "indices": [],
@@ -286,7 +290,9 @@
           }
         ],
         "primaryKey": {
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "autoGenerate": true
         },
         "indices": [],
@@ -340,14 +346,18 @@
           }
         ],
         "primaryKey": {
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "autoGenerate": true
         },
         "indices": [
           {
             "name": "index_DirDetect_parentId",
             "unique": false,
-            "columnNames": ["parentId"],
+            "columnNames": [
+              "parentId"
+            ],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_DirDetect_parentId` ON `${TABLE_NAME}` (`parentId`)"
           }
         ],
@@ -356,8 +366,12 @@
             "table": "HouseDetect",
             "onDelete": "CASCADE",
             "onUpdate": "CASCADE",
-            "columns": ["parentId"],
-            "referencedColumns": ["id"]
+            "columns": [
+              "parentId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
           }
         ]
       },
@@ -409,14 +423,18 @@
           }
         ],
         "primaryKey": {
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "autoGenerate": true
         },
         "indices": [
           {
             "name": "index_DirReport_parentId",
             "unique": false,
-            "columnNames": ["parentId"],
+            "columnNames": [
+              "parentId"
+            ],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_DirReport_parentId` ON `${TABLE_NAME}` (`parentId`)"
           }
         ],
@@ -425,8 +443,12 @@
             "table": "HouseReport",
             "onDelete": "CASCADE",
             "onUpdate": "CASCADE",
-            "columns": ["parentId"],
-            "referencedColumns": ["id"]
+            "columns": [
+              "parentId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
           }
         ]
       },
@@ -496,14 +518,18 @@
           }
         ],
         "primaryKey": {
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "autoGenerate": true
         },
         "indices": [
           {
             "name": "index_ItemDetect_parentId",
             "unique": false,
-            "columnNames": ["parentId"],
+            "columnNames": [
+              "parentId"
+            ],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_ItemDetect_parentId` ON `${TABLE_NAME}` (`parentId`)"
           }
         ],
@@ -512,8 +538,12 @@
             "table": "DirDetect",
             "onDelete": "CASCADE",
             "onUpdate": "CASCADE",
-            "columns": ["parentId"],
-            "referencedColumns": ["id"]
+            "columns": [
+              "parentId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
           }
         ]
       },
@@ -583,14 +613,18 @@
           }
         ],
         "primaryKey": {
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "autoGenerate": true
         },
         "indices": [
           {
             "name": "index_ItemReport_parentId",
             "unique": false,
-            "columnNames": ["parentId"],
+            "columnNames": [
+              "parentId"
+            ],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_ItemReport_parentId` ON `${TABLE_NAME}` (`parentId`)"
           }
         ],
@@ -599,8 +633,12 @@
             "table": "DirReport",
             "onDelete": "CASCADE",
             "onUpdate": "CASCADE",
-            "columns": ["parentId"],
-            "referencedColumns": ["id"]
+            "columns": [
+              "parentId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
           }
         ]
       }

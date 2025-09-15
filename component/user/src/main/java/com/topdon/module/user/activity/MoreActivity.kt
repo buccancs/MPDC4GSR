@@ -73,7 +73,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initData() {
-    updateVersion()
+        updateVersion()
 
         firmwareViewModel.firmwareDataLD.observe(this) {
             tvUpgradePoint.isVisible = it != null
@@ -160,10 +160,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
 
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
-    lifecycleScope.launch {
-    XLog.d("TS004 固件升级 - 开始下载固件升级包")
-    val progressDialog = DownloadProDialog(this@MoreActivity)
-    progressDialog.show()
+        lifecycleScope.launch {
+            XLog.d("TS004 固件升级 - 开始下载固件升级包")
+            val progressDialog = DownloadProDialog(this@MoreActivity)
+            progressDialog.show()
 
             val file = FileConfig.getFirmwareFile("TS004${firmwareData.version}.zip")
             val isSuccess =
@@ -182,90 +182,90 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun installFirmware(file: File) {
-    lifecycleScope.launch {
-    XLog.d("TS004 固件升级 - 开始安装固件升级包")
-    val installDialog = FirmwareInstallDialog(this@MoreActivity)
-    installDialog.show()
+        lifecycleScope.launch {
+            XLog.d("TS004 固件升级 - 开始安装固件升级包")
+            val installDialog = FirmwareInstallDialog(this@MoreActivity)
+            installDialog.show()
 
-    val isSuccess = TS004Repository.updateFirmware(file)
-    installDialog.dismiss()
-    if (isSuccess) {
-    XLog.d("TS004 固件升级 - 固件升级包发送往 TS004 成功，即将断开连接")
-    (application as BaseApplication).disconnectWebSocket()
-    NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(this@MoreActivity)
-    finish()
-    } else {
-    XLog.w("TS004 固件升级 - 固件升级包发送往 TS004 失败!")
-    showReInstallDialog(file)
-    }
-    }
+            val isSuccess = TS004Repository.updateFirmware(file)
+            installDialog.dismiss()
+            if (isSuccess) {
+                XLog.d("TS004 固件升级 - 固件升级包发送往 TS004 成功，即将断开连接")
+                (application as BaseApplication).disconnectWebSocket()
+                NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(this@MoreActivity)
+                finish()
+            } else {
+                XLog.w("TS004 固件升级 - 固件升级包发送往 TS004 失败!")
+                showReInstallDialog(file)
+            }
+        }
     }
 
     private fun showReInstallDialog(file: File) {
-    val dialog = ConfirmSelectDialog(this)
-    dialog.setShowIcon(true)
-    dialog.setTitleRes(RCore.string.ts004_install_tips)
-    dialog.setCancelText(RCore.string.ts004_install_cancel)
-    dialog.setConfirmText(RCore.string.ts004_install_continue)
-    dialog.onConfirmClickListener = {
-    installFirmware(file)
-    }
-    dialog.show()
+        val dialog = ConfirmSelectDialog(this)
+        dialog.setShowIcon(true)
+        dialog.setTitleRes(RCore.string.ts004_install_tips)
+        dialog.setCancelText(RCore.string.ts004_install_cancel)
+        dialog.setConfirmText(RCore.string.ts004_install_continue)
+        dialog.onConfirmClickListener = {
+            installFirmware(file)
+        }
+        dialog.show()
     }
 
     private fun showReDownloadDialog(firmwareData: FirmwareViewModel.FirmwareData) {
-    val dialog = ConfirmSelectDialog(this)
-    dialog.setShowIcon(true)
-    dialog.setTitleRes(RCore.string.ts004_download_tips)
-    dialog.setCancelText(RCore.string.ts004_download_cancel)
-    dialog.setConfirmText(RCore.string.ts004_download_continue)
-    dialog.onConfirmClickListener = {
-    downloadFirmware(firmwareData)
-    }
-    dialog.show()
+        val dialog = ConfirmSelectDialog(this)
+        dialog.setShowIcon(true)
+        dialog.setTitleRes(RCore.string.ts004_download_tips)
+        dialog.setCancelText(RCore.string.ts004_download_cancel)
+        dialog.setConfirmText(RCore.string.ts004_download_continue)
+        dialog.onConfirmClickListener = {
+            downloadFirmware(firmwareData)
+        }
+        dialog.show()
     }
 
     private fun updateVersion() {
-    lifecycleScope.launch {
-    val versionBean = TS004Repository.getVersion()
-    if (versionBean?.isSuccess() == true) {
-    itemSettingBottomText.text = getString(RCore.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
-    } else {
-    TToast.shortToast(this@MoreActivity, RCore.string.operation_failed_tips)
-    }
-    }
+        lifecycleScope.launch {
+            val versionBean = TS004Repository.getVersion()
+            if (versionBean?.isSuccess() == true) {
+                itemSettingBottomText.text = getString(RCore.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
+            } else {
+                TToast.shortToast(this@MoreActivity, RCore.string.operation_failed_tips)
+            }
+        }
     }
 
     private fun restoreFactory() {
-    TipDialog.Builder(this)
-    .setTitleMessage(getString(RCore.string.ts004_reset_tip1, "TS004"))
-    .setMessage(getString(RCore.string.ts004_reset_tip2))
-    .setPositiveListener(RCore.string.app_ok) {
-    resetAll()
-    }
-    .setCancelListener(RCore.string.app_cancel) {
-    }
-    .setCanceled(true)
-    .create().show()
+        TipDialog.Builder(this)
+            .setTitleMessage(getString(RCore.string.ts004_reset_tip1, "TS004"))
+            .setMessage(getString(RCore.string.ts004_reset_tip2))
+            .setPositiveListener(RCore.string.app_ok) {
+                resetAll()
+            }
+            .setCancelListener(RCore.string.app_cancel) {
+            }
+            .setCanceled(true)
+            .create().show()
     }
 
     private fun resetAll() {
-    showLoadingDialog(RCore.string.ts004_reset_tip3)
-    lifecycleScope.launch {
-    XLog.i("准备调用恢复出厂设置接口")
-    val isSuccess = TS004Repository.getResetAll()
-    XLog.i("恢复出厂设置接口调用 ${if (isSuccess) "成功" else "失败"}")
-    if (isSuccess) {
-    TToast.shortToast(this@MoreActivity, RCore.string.ts004_reset_tip4)
-    (application as BaseApplication).disconnectWebSocket()
-    EventBus.getDefault().post(TS004ResetEvent())
-    NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(this@MoreActivity)
-    finish()
-    } else {
-    TToast.shortToast(this@MoreActivity, RCore.string.operation_failed_tips)
-    }
-    delay(500)
-    dismissLoadingDialog()
-    }
+        showLoadingDialog(RCore.string.ts004_reset_tip3)
+        lifecycleScope.launch {
+            XLog.i("准备调用恢复出厂设置接口")
+            val isSuccess = TS004Repository.getResetAll()
+            XLog.i("恢复出厂设置接口调用 ${if (isSuccess) "成功" else "失败"}")
+            if (isSuccess) {
+                TToast.shortToast(this@MoreActivity, RCore.string.ts004_reset_tip4)
+                (application as BaseApplication).disconnectWebSocket()
+                EventBus.getDefault().post(TS004ResetEvent())
+                NavigationManager.getInstance().build(RouterConfig.MAIN).navigation(this@MoreActivity)
+                finish()
+            } else {
+                TToast.shortToast(this@MoreActivity, RCore.string.operation_failed_tips)
+            }
+            delay(500)
+            dismissLoadingDialog()
+        }
     }
 }

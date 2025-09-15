@@ -8,10 +8,10 @@ class Resp<T> {
     var data: T? = null
 
     fun isSuccess(): Boolean {
-    return TextUtils.equals(code, "0")
+        return TextUtils.equals(code, "0")
     }
 
     override fun toString(): String {
-    return "Resp(code='$code', msg='$msg', data=$data)"
+        return "Resp(code='$code', msg='$msg', data=$data)"
     }
 }

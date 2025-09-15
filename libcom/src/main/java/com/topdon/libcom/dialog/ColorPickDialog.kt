@@ -30,32 +30,32 @@ class ColorPickDialog(
     private val rootView: View = LayoutInflater.from(context).inflate(R.layout.dialog_color_pick, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setCancelable(true)
-    setCanceledOnTouchOutside(true)
-    setContentView(rootView)
+        super.onCreate(savedInstanceState)
+        setCancelable(true)
+        setCanceledOnTouchOutside(true)
+        setContentView(rootView)
 
-    window?.let {
-    val layoutParams = it.attributes
-    layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.9).toInt()
-    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-    it.attributes = layoutParams
-    }
+        window?.let {
+            val layoutParams = it.attributes
+            layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.9).toInt()
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            it.attributes = layoutParams
+        }
 
-    val activeTrackColor =
-    ColorUtils.setColorAlpha(ContextCompat.getColor(context, R.color.we_read_theme_color), 0.1f)
-    val iconTintColor =
-    ColorUtils.setColorAlpha(ContextCompat.getColor(context, R.color.we_read_theme_color), 0.7f)
+        val activeTrackColor =
+            ColorUtils.setColorAlpha(ContextCompat.getColor(context, R.color.we_read_theme_color), 0.1f)
+        val iconTintColor =
+            ColorUtils.setColorAlpha(ContextCompat.getColor(context, R.color.we_read_theme_color), 0.7f)
 
-    when (color) {
-    0xff0000ff.toInt() -> rootView.findViewById<View>(R.id.view_color1).isSelected = true
-    0xffff0000.toInt() -> rootView.findViewById<View>(R.id.view_color2).isSelected = true
-    0xff00ff00.toInt() -> rootView.findViewById<View>(R.id.view_color3).isSelected = true
-    0xffffff00.toInt() -> rootView.findViewById<View>(R.id.view_color4).isSelected = true
-    0xff000000.toInt() -> rootView.findViewById<View>(R.id.view_color5).isSelected = true
-    0xffffffff.toInt() -> rootView.findViewById<View>(R.id.view_color6).isSelected = true
-    else -> rootView.findViewById<ColorSelectView>(R.id.color_select_view).selectColor(color)
-    }
+        when (color) {
+            0xff0000ff.toInt() -> rootView.findViewById<View>(R.id.view_color1).isSelected = true
+            0xffff0000.toInt() -> rootView.findViewById<View>(R.id.view_color2).isSelected = true
+            0xff00ff00.toInt() -> rootView.findViewById<View>(R.id.view_color3).isSelected = true
+            0xffffff00.toInt() -> rootView.findViewById<View>(R.id.view_color4).isSelected = true
+            0xff000000.toInt() -> rootView.findViewById<View>(R.id.view_color5).isSelected = true
+            0xffffffff.toInt() -> rootView.findViewById<View>(R.id.view_color6).isSelected = true
+            else -> rootView.findViewById<ColorSelectView>(R.id.color_select_view).selectColor(color)
+        }
 
         rootView.findViewById<ColorSelectView>(R.id.color_select_view).onSelectListener = {
             unSelect6Color()
@@ -142,60 +142,60 @@ class ColorPickDialog(
     }
 
     override fun onClick(v: View?) {
-    when (v) {
-    rootView.findViewById<View>(R.id.rl_close) -> dismiss()
+        when (v) {
+            rootView.findViewById<View>(R.id.rl_close) -> dismiss()
 
             rootView.findViewById<View>(R.id.tv_save) -> { // 保存
                 dismiss()
                 onPickListener?.invoke(color, textSize)
             }
 
-    rootView.findViewById<View>(R.id.view_color1) -> {
-    unSelect6Color()
-    rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
-    rootView.findViewById<View>(R.id.view_color1).isSelected = true
-    color = 0xff0000ff.toInt()
-    }
-    rootView.findViewById<View>(R.id.view_color2) -> {
-    unSelect6Color()
-    rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
-    rootView.findViewById<View>(R.id.view_color2).isSelected = true
-    color = 0xffff0000.toInt()
-    }
-    rootView.findViewById<View>(R.id.view_color3) -> {
-    unSelect6Color()
-    rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
-    rootView.findViewById<View>(R.id.view_color3).isSelected = true
-    color = 0xff00ff00.toInt()
-    }
-    rootView.findViewById<View>(R.id.view_color4) -> {
-    unSelect6Color()
-    rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
-    rootView.findViewById<View>(R.id.view_color4).isSelected = true
-    color = 0xffffff00.toInt()
-    }
-    rootView.findViewById<View>(R.id.view_color5) -> {
-    unSelect6Color()
-    rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
-    rootView.findViewById<View>(R.id.view_color5).isSelected = true
-    color = 0xff000000.toInt()
-    }
-    rootView.findViewById<View>(R.id.view_color6) -> {
-    unSelect6Color()
-    rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
-    rootView.findViewById<View>(R.id.view_color6).isSelected = true
-    color = 0xffffffff.toInt()
-    }
-    }
+            rootView.findViewById<View>(R.id.view_color1) -> {
+                unSelect6Color()
+                rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
+                rootView.findViewById<View>(R.id.view_color1).isSelected = true
+                color = 0xff0000ff.toInt()
+            }
+            rootView.findViewById<View>(R.id.view_color2) -> {
+                unSelect6Color()
+                rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
+                rootView.findViewById<View>(R.id.view_color2).isSelected = true
+                color = 0xffff0000.toInt()
+            }
+            rootView.findViewById<View>(R.id.view_color3) -> {
+                unSelect6Color()
+                rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
+                rootView.findViewById<View>(R.id.view_color3).isSelected = true
+                color = 0xff00ff00.toInt()
+            }
+            rootView.findViewById<View>(R.id.view_color4) -> {
+                unSelect6Color()
+                rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
+                rootView.findViewById<View>(R.id.view_color4).isSelected = true
+                color = 0xffffff00.toInt()
+            }
+            rootView.findViewById<View>(R.id.view_color5) -> {
+                unSelect6Color()
+                rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
+                rootView.findViewById<View>(R.id.view_color5).isSelected = true
+                color = 0xff000000.toInt()
+            }
+            rootView.findViewById<View>(R.id.view_color6) -> {
+                unSelect6Color()
+                rootView.findViewById<ColorSelectView>(R.id.color_select_view).reset()
+                rootView.findViewById<View>(R.id.view_color6).isSelected = true
+                color = 0xffffffff.toInt()
+            }
+        }
     }
 
 
     private fun unSelect6Color() {
-    rootView.findViewById<View>(R.id.view_color1).isSelected = false
-    rootView.findViewById<View>(R.id.view_color2).isSelected = false
-    rootView.findViewById<View>(R.id.view_color3).isSelected = false
-    rootView.findViewById<View>(R.id.view_color4).isSelected = false
-    rootView.findViewById<View>(R.id.view_color5).isSelected = false
-    rootView.findViewById<View>(R.id.view_color6).isSelected = false
+        rootView.findViewById<View>(R.id.view_color1).isSelected = false
+        rootView.findViewById<View>(R.id.view_color2).isSelected = false
+        rootView.findViewById<View>(R.id.view_color3).isSelected = false
+        rootView.findViewById<View>(R.id.view_color4).isSelected = false
+        rootView.findViewById<View>(R.id.view_color5).isSelected = false
+        rootView.findViewById<View>(R.id.view_color6).isSelected = false
     }
 }

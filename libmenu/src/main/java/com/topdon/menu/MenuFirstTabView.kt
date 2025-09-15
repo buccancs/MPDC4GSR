@@ -13,17 +13,17 @@ import com.topdon.menu.databinding.ViewMenuFirstTabBinding
 class MenuFirstTabView : FrameLayout, View.OnClickListener {
 
     var selectPosition = -1
-    set(value) {
-    if (field != value) {
-    field = value
-    binding.ivMenu1.isSelected = value == 0
-    binding.ivMenu2.isSelected = value == 1
-    binding.ivMenu3.isSelected = value == 2
-    binding.ivMenu4.isSelected = value == 3
-    binding.ivMenu5.isSelected = value == 4
-    binding.ivMenu6.isSelected = value == 5
-    }
-    }
+        set(value) {
+            if (field != value) {
+                field = value
+                binding.ivMenu1.isSelected = value == 0
+                binding.ivMenu2.isSelected = value == 1
+                binding.ivMenu3.isSelected = value == 2
+                binding.ivMenu4.isSelected = value == 3
+                binding.ivMenu5.isSelected = value == 4
+                binding.ivMenu6.isSelected = value == 5
+            }
+        }
 
 
     var isObserveMode = false
@@ -64,25 +64,25 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
         } else {
             binding = ViewMenuFirstTabBinding.inflate(LayoutInflater.from(context), this, true)
 
-    selectPosition = 0
-    binding.clMenu1.setOnClickListener(this)
-    binding.clMenu2.setOnClickListener(this)
-    binding.clMenu3.setOnClickListener(this)
-    binding.clMenu4.setOnClickListener(this)
-    binding.clMenu5.setOnClickListener(this)
-    binding.clMenu6.setOnClickListener(this)
-    }
+            selectPosition = 0
+            binding.clMenu1.setOnClickListener(this)
+            binding.clMenu2.setOnClickListener(this)
+            binding.clMenu3.setOnClickListener(this)
+            binding.clMenu4.setOnClickListener(this)
+            binding.clMenu5.setOnClickListener(this)
+            binding.clMenu6.setOnClickListener(this)
+        }
     }
 
     override fun onClick(v: View?) {
-    when (v) {
-    binding.clMenu1 -> selectPosition = 0
-    binding.clMenu2 -> selectPosition = 1
-    binding.clMenu3 -> selectPosition = 2
-    binding.clMenu4 -> selectPosition = 3
-    binding.clMenu5 -> selectPosition = 4
-    binding.clMenu6 -> selectPosition = 5
-    }
-    onTabClickListener?.invoke(this)
+        when (v) {
+            binding.clMenu1 -> selectPosition = 0
+            binding.clMenu2 -> selectPosition = 1
+            binding.clMenu3 -> selectPosition = 2
+            binding.clMenu4 -> selectPosition = 3
+            binding.clMenu5 -> selectPosition = 4
+            binding.clMenu6 -> selectPosition = 5
+        }
+        onTabClickListener?.invoke(this)
     }
 }

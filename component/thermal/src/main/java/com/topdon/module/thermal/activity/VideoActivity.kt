@@ -17,7 +17,7 @@ import com.topdon.lib.core.R as LibR
 
 class VideoActivity : BaseActivity() {
     companion object {
-    const val KEY_PATH = "video_path"
+        const val KEY_PATH = "video_path"
     }
 
     var videoPath = ""
@@ -25,36 +25,36 @@ class VideoActivity : BaseActivity() {
     override fun initContentView() = R.layout.activity_video
 
     override fun initView() {
-    // Set toolbar title
-    val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
-    toolbar?.title = getString(R.string.video)
+        // Set toolbar title
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+        toolbar?.title = getString(R.string.video)
 
-    BarUtils.setNavBarColor(this, ContextCompat.getColor(this, LibR.color.black))
-    if (intent.hasExtra(KEY_PATH)) {
-    videoPath = intent.getStringExtra(KEY_PATH)!!
-    }
-    previewVideo(videoPath)
+        BarUtils.setNavBarColor(this, ContextCompat.getColor(this, LibR.color.black))
+        if (intent.hasExtra(KEY_PATH)) {
+            videoPath = intent.getStringExtra(KEY_PATH)!!
+        }
+        previewVideo(videoPath)
     }
 
     override fun initData() {
     }
 
     private fun previewVideo(path: String) {
-    Log.w("123", "打开文件:$path")
-    val file = File(path.replace("//", "/"))
-    Log.i("123", "打开文件file:$file")
-    val uri: Uri =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-    val authority = "$packageName.fileprovider"
-    FileProvider.getUriForFile(this, authority, file)
-    } else {
-    Uri.fromFile(file)
-    }
-    Log.w("123", "打开文件uri:$uri")
-    val videoView = findViewById<VideoView>(R.id.video_play)
-    videoView.setVideoURI(uri)
-    videoView.setMediaController(MediaController(this))
-    videoView.start()
-    videoView.requestFocus()
+        Log.w("123", "打开文件:$path")
+        val file = File(path.replace("//", "/"))
+        Log.i("123", "打开文件file:$file")
+        val uri: Uri =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val authority = "$packageName.fileprovider"
+                FileProvider.getUriForFile(this, authority, file)
+            } else {
+                Uri.fromFile(file)
+            }
+        Log.w("123", "打开文件uri:$uri")
+        val videoView = findViewById<VideoView>(R.id.video_play)
+        videoView.setVideoURI(uri)
+        videoView.setMediaController(MediaController(this))
+        videoView.start()
+        videoView.requestFocus()
     }
 }

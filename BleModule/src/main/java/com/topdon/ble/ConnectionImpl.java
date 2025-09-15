@@ -770,7 +770,7 @@ class ConnectionImpl implements Connection, ScanListener {
                             connection.executeNextRequest();
                         }
                         break;
-                    case MSG_CONNECT://连接
+                    case MSG_CONNECT://连接   
                         if (connection.bluetoothAdapter.isEnabled()) {
                             connection.doConnect();
                         }

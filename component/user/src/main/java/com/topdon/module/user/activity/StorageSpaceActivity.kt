@@ -65,51 +65,51 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
     override fun initContentView() = R.layout.activity_storage_space
 
     override fun initView() {
-    // Initialize views - migrated from synthetic views
-    tvFormatStorage = findViewById(R.id.tv_format_storage)
-    tvProgressValue = findViewById(R.id.tv_progress_value)
-    tvUsedValue = findViewById(R.id.tv_used_value)
-    tvUsed = findViewById(R.id.tv_used)
-    tvTotalValue = findViewById(R.id.tv_total_value)
-    tvTotal = findViewById(R.id.tv_total)
-    listStoragePhoto = findViewById(R.id.list_storage_photo)
-    listStorageVideo = findViewById(R.id.list_storage_video)
-    listStorageSystem = findViewById(R.id.list_storage_system)
-    customViewProgress = findViewById(R.id.custom_view_progress)
+        // Initialize views - migrated from synthetic views
+        tvFormatStorage = findViewById(R.id.tv_format_storage)
+        tvProgressValue = findViewById(R.id.tv_progress_value)
+        tvUsedValue = findViewById(R.id.tv_used_value)
+        tvUsed = findViewById(R.id.tv_used)
+        tvTotalValue = findViewById(R.id.tv_total_value)
+        tvTotal = findViewById(R.id.tv_total)
+        listStoragePhoto = findViewById(R.id.list_storage_photo)
+        listStorageVideo = findViewById(R.id.list_storage_video)
+        listStorageSystem = findViewById(R.id.list_storage_system)
+        customViewProgress = findViewById(R.id.custom_view_progress)
 
-    tvFormatStorage.setOnClickListener(this)
+        tvFormatStorage.setOnClickListener(this)
     }
 
     @SuppressLint("SetTextI18n")
     override fun initData() {
-    lifecycleScope.launch {
-    val freeSpaceBean = TS004Repository.getFreeSpace()
-    if (freeSpaceBean == null) {
-    TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
-    } else {
-    TLog.d("ts004", "║ response :$freeSpaceBean")
+        lifecycleScope.launch {
+            val freeSpaceBean = TS004Repository.getFreeSpace()
+            if (freeSpaceBean == null) {
+                TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
+            } else {
+                TLog.d("ts004", "║ response :$freeSpaceBean")
 
-    tvProgressValue.text = "${(freeSpaceBean.hasUseSize() * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1)}"
+                tvProgressValue.text = "${(freeSpaceBean.hasUseSize() * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1)}"
 
-    tvUsedValue.text = formatFileSize(freeSpaceBean.hasUseSize())
-    tvUsed.text = getUnit(freeSpaceBean.hasUseSize())
-    tvTotalValue.text = " / " + formatFileSize(freeSpaceBean.total)
-    tvTotal.text = getUnit(freeSpaceBean.total)
+                tvUsedValue.text = formatFileSize(freeSpaceBean.hasUseSize())
+                tvUsed.text = getUnit(freeSpaceBean.hasUseSize())
+                tvTotalValue.text = " / " + formatFileSize(freeSpaceBean.total)
+                tvTotal.text = getUnit(freeSpaceBean.total)
 
-    listStoragePhoto.setRightText(formatFileSize(freeSpaceBean.image_size) + getUnit(freeSpaceBean.image_size))
-    listStorageVideo.setRightText(formatFileSize(freeSpaceBean.video_size) + getUnit(freeSpaceBean.video_size))
-    listStorageSystem.setRightText(formatFileSize(freeSpaceBean.system) + getUnit(freeSpaceBean.system))
+                listStoragePhoto.setRightText(formatFileSize(freeSpaceBean.image_size) + getUnit(freeSpaceBean.image_size))
+                listStorageVideo.setRightText(formatFileSize(freeSpaceBean.video_size) + getUnit(freeSpaceBean.video_size))
+                listStorageSystem.setRightText(formatFileSize(freeSpaceBean.system) + getUnit(freeSpaceBean.system))
 
-    val systemPercent = (freeSpaceBean.system * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
-    val imagePercent = (freeSpaceBean.image_size * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
-    val videoPercent = (freeSpaceBean.video_size * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
-    val colorList = arrayListOf<ColorsBean>()
-    colorList.add(ColorsBean(0, systemPercent, 0xff8d98a9.toInt()))
-    colorList.add(ColorsBean(systemPercent, systemPercent + imagePercent, 0xff019dff.toInt()))
-    colorList.add(ColorsBean(systemPercent + imagePercent, systemPercent + imagePercent + videoPercent, 0xff70e297.toInt()))
-    customViewProgress.setSegmentPart(colorList)
-    }
-    }
+                val systemPercent = (freeSpaceBean.system * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
+                val imagePercent = (freeSpaceBean.image_size * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
+                val videoPercent = (freeSpaceBean.video_size * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1).coerceAtMost(98)
+                val colorList = arrayListOf<ColorsBean>()
+                colorList.add(ColorsBean(0, systemPercent, 0xff8d98a9.toInt()))
+                colorList.add(ColorsBean(systemPercent, systemPercent + imagePercent, 0xff019dff.toInt()))
+                colorList.add(ColorsBean(systemPercent + imagePercent, systemPercent + imagePercent + videoPercent, 0xff70e297.toInt()))
+                customViewProgress.setSegmentPart(colorList)
+            }
+        }
     }
 
     override fun onClick(v: View?) {

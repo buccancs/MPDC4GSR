@@ -25,18 +25,18 @@ import java.util.*
 
 class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     companion object {
-    private const val EXTRA_FILE_PATH = "file_path"
+        private const val EXTRA_FILE_PATH = "file_path"
 
-    fun startActivity(
-    context: Context,
-    filePath: String,
-    ) {
-    val intent =
-    Intent(context, GSRDataViewActivity::class.java).apply {
-    putExtra(EXTRA_FILE_PATH, filePath)
-    }
-    context.startActivity(intent)
-    }
+        fun startActivity(
+            context: Context,
+            filePath: String,
+        ) {
+            val intent =
+                Intent(context, GSRDataViewActivity::class.java).apply {
+                    putExtra(EXTRA_FILE_PATH, filePath)
+                }
+            context.startActivity(intent)
+        }
     }
 
     private lateinit var filePath: String
@@ -46,11 +46,11 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     private val gsrDataPoints = mutableListOf<GSRDataPoint>()
 
     data class GSRDataRow(
-    val timestamp: String,
-    val gsrValue: Double,
-    val resistance: Double,
-    val conductance: Double,
-    val rowNumber: Int,
+        val timestamp: String,
+        val gsrValue: Double,
+        val resistance: Double,
+        val conductance: Double,
+        val rowNumber: Int,
     )
 
     // Extended data point for export functionality
@@ -73,62 +73,59 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         file = File(filePath)
 
-    filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
-    file = File(filePath)
+        if (!file.exists()) {
+            finish()
+            return
+        }
 
-    if (!file.exists()) {
-    finish()
-    return
-    }
-
-    setupUI()
-    loadGSRData()
+        setupUI()
+        loadGSRData()
     }
 
     private fun setupUI() {
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    supportActionBar?.title = file.name
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = file.name
 
-    // Use view binding instead of findViewById
-    adapter = GSRDataRowAdapter(dataRows)
-    binding.dataRecyclerView.layoutManager = LinearLayoutManager(this)
-    binding.dataRecyclerView.adapter = adapter
+        // Use view binding instead of findViewById
+        adapter = GSRDataRowAdapter(dataRows)
+        binding.dataRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.dataRecyclerView.adapter = adapter
 
-    // Display basic file info
-    val fileSize =
-    if (file.length() >= 1024 * 1024) {
-    "%.1f MB".format(file.length() / (1024.0 * 1024.0))
-    } else {
-    "%.1f KB".format(file.length() / 1024.0)
-    }
+        // Display basic file info
+        val fileSize =
+            if (file.length() >= 1024 * 1024) {
+                "%.1f MB".format(file.length() / (1024.0 * 1024.0))
+            } else {
+                "%.1f KB".format(file.length() / 1024.0)
+            }
 
-    binding.fileInfoText.text =
-    """
-    File: ${file.name}
-    Size: $fileSize
-    Path: ${file.absolutePath}
-    Modified: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date(file.lastModified()))}
-    """.trimIndent()
+        binding.fileInfoText.text =
+            """
+            File: ${file.name}
+            Size: $fileSize
+            Path: ${file.absolutePath}
+            Modified: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date(file.lastModified()))}
+            """.trimIndent()
     }
 
     private fun loadGSRData() {
-    lifecycleScope.launch(Dispatchers.IO) {
-    try {
-    val lines = file.readLines()
-    val headerLine = lines.firstOrNull() ?: ""
-    val dataLines = lines.drop(1)
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val lines = file.readLines()
+                val headerLine = lines.firstOrNull() ?: ""
+                val dataLines = lines.drop(1)
 
-    val rows =
-    dataLines.mapIndexed { index, line ->
-    parseGSRDataRow(line, index + 2) // +2 because we skip header and 0-based index
-    }.filterNotNull()
+                val rows =
+                    dataLines.mapIndexed { index, line ->
+                        parseGSRDataRow(line, index + 2) // +2 because we skip header and 0-based index
+                    }.filterNotNull()
 
-    val statistics = calculateStatistics(rows)
+                val statistics = calculateStatistics(rows)
 
-    withContext(Dispatchers.Main) {
-    dataRows.clear()
-    dataRows.addAll(rows)
-    adapter.notifyDataSetChanged()
+                withContext(Dispatchers.Main) {
+                    dataRows.clear()
+                    dataRows.addAll(rows)
+                    adapter.notifyDataSetChanged()
 
                     binding.statisticsText.text =
                         """
@@ -162,93 +159,93 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     }
 
     private fun parseGSRDataRow(
-    line: String,
-    rowNumber: Int,
+        line: String,
+        rowNumber: Int,
     ): GSRDataRow? {
-    return try {
-    val parts = line.split(",")
-    if (parts.size >= 4) {
-    GSRDataRow(
-    timestamp = parts[0].trim(),
-    gsrValue = parts[1].trim().toDouble(),
-    resistance = parts[2].trim().toDouble(),
-    conductance = parts[3].trim().toDouble(),
-    rowNumber = rowNumber,
-    )
-    } else {
-    null
-    }
-    } catch (e: Exception) {
-    null
-    }
+        return try {
+            val parts = line.split(",")
+            if (parts.size >= 4) {
+                GSRDataRow(
+                    timestamp = parts[0].trim(),
+                    gsrValue = parts[1].trim().toDouble(),
+                    resistance = parts[2].trim().toDouble(),
+                    conductance = parts[3].trim().toDouble(),
+                    rowNumber = rowNumber,
+                )
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private fun calculateStatistics(rows: List<GSRDataRow>): GSRStatistics {
-    if (rows.isEmpty()) {
-    return GSRStatistics(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-    }
+        if (rows.isEmpty()) {
+            return GSRStatistics(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        }
 
-    val gsrValues = rows.map { it.gsrValue }
-    val resistanceValues = rows.map { it.resistance }
+        val gsrValues = rows.map { it.gsrValue }
+        val resistanceValues = rows.map { it.resistance }
 
-    val gsrMean = gsrValues.average()
-    val resistanceMean = resistanceValues.average()
+        val gsrMean = gsrValues.average()
+        val resistanceMean = resistanceValues.average()
 
-    val gsrVariance = gsrValues.map { (it - gsrMean) * (it - gsrMean) }.average()
-    val gsrStdDev = kotlin.math.sqrt(gsrVariance)
+        val gsrVariance = gsrValues.map { (it - gsrMean) * (it - gsrMean) }.average()
+        val gsrStdDev = kotlin.math.sqrt(gsrVariance)
 
-    return GSRStatistics(
-    gsrMin = gsrValues.minOrNull() ?: 0.0,
-    gsrMax = gsrValues.maxOrNull() ?: 0.0,
-    gsrMean = gsrMean,
-    gsrStdDev = gsrStdDev,
-    resistanceMin = resistanceValues.minOrNull() ?: 0.0,
-    resistanceMax = resistanceValues.maxOrNull() ?: 0.0,
-    resistanceMean = resistanceMean,
-    )
+        return GSRStatistics(
+            gsrMin = gsrValues.minOrNull() ?: 0.0,
+            gsrMax = gsrValues.maxOrNull() ?: 0.0,
+            gsrMean = gsrMean,
+            gsrStdDev = gsrStdDev,
+            resistanceMin = resistanceValues.minOrNull() ?: 0.0,
+            resistanceMax = resistanceValues.maxOrNull() ?: 0.0,
+            resistanceMean = resistanceMean,
+        )
     }
 
     data class GSRStatistics(
-    val gsrMin: Double,
-    val gsrMax: Double,
-    val gsrMean: Double,
-    val gsrStdDev: Double,
-    val resistanceMin: Double,
-    val resistanceMax: Double,
-    val resistanceMean: Double,
+        val gsrMin: Double,
+        val gsrMax: Double,
+        val gsrMean: Double,
+        val gsrStdDev: Double,
+        val resistanceMin: Double,
+        val resistanceMax: Double,
+        val resistanceMean: Double,
     )
 
     private fun formatDuration(seconds: Long): String {
-    val minutes = seconds / 60
-    val remainingSeconds = seconds % 60
-    return "%d:%02d".format(minutes, remainingSeconds)
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return "%d:%02d".format(minutes, remainingSeconds)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-    menuInflater.inflate(R.menu.gsr_data_view_menu, menu)
-    return true
+        menuInflater.inflate(R.menu.gsr_data_view_menu, menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-    android.R.id.home -> {
-    onBackPressedDispatcher.onBackPressed()
-    true
-    }
-    R.id.action_export -> {
-    exportData()
-    true
-    }
-    R.id.action_share -> {
-    shareData()
-    true
-    }
-    R.id.action_plot -> {
-    plotData()
-    true
-    }
-    else -> super.onOptionsItemSelected(item)
-    }
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                true
+            }
+            R.id.action_export -> {
+                exportData()
+                true
+            }
+            R.id.action_share -> {
+                shareData()
+                true
+            }
+            R.id.action_plot -> {
+                plotData()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun exportData() {
@@ -514,28 +511,28 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     }
 
     private fun openExportFolder(directory: File) {
-    try {
-    val intent = Intent(Intent.ACTION_VIEW)
-    intent.setDataAndType(android.net.Uri.fromFile(directory), "resource/folder")
-    if (intent.resolveActivityInfo(packageManager, 0) != null) {
-    startActivity(intent)
-    } else {
-    Toast.makeText(this, "No file manager found", Toast.LENGTH_SHORT).show()
-    }
-    } catch (e: Exception) {
-    Toast.makeText(this, "Could not open folder: ${e.message}", Toast.LENGTH_SHORT).show()
-    }
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(android.net.Uri.fromFile(directory), "resource/folder")
+            if (intent.resolveActivityInfo(packageManager, 0) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "No file manager found", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Could not open folder: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun shareData() {
-    val shareIntent =
-    Intent().apply {
-    action = Intent.ACTION_SEND
-    putExtra(Intent.EXTRA_TEXT, "GSR Data from ${file.name}")
-    putExtra(Intent.EXTRA_STREAM, android.net.Uri.fromFile(file))
-    type = "text/csv"
-    }
-    startActivity(Intent.createChooser(shareIntent, "Share GSR Data"))
+        val shareIntent =
+            Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "GSR Data from ${file.name}")
+                putExtra(Intent.EXTRA_STREAM, android.net.Uri.fromFile(file))
+                type = "text/csv"
+            }
+        startActivity(Intent.createChooser(shareIntent, "Share GSR Data"))
     }
 
     private fun plotData() {
@@ -699,17 +696,17 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
     // Helper functions for data analysis
     private fun normalizeGSRValue(gsrValue: Float): Double {
-    // Normalize GSR value to 0-1 range based on typical physiological range
-    val minGSR = 0.1 // Minimum typical GSR in µS
-    val maxGSR = 50.0 // Maximum typical GSR in µS
-    return ((gsrValue - minGSR) / (maxGSR - minGSR)).coerceIn(0.0, 1.0)
+        // Normalize GSR value to 0-1 range based on typical physiological range
+        val minGSR = 0.1 // Minimum typical GSR in µS
+        val maxGSR = 50.0 // Maximum typical GSR in µS
+        return ((gsrValue - minGSR) / (maxGSR - minGSR)).coerceIn(0.0, 1.0)
     }
 
     private fun normalizePPGValue(ppgValue: Int): Double {
-    // Normalize PPG value based on typical ADC range
-    val minPPG = 0
-    val maxPPG = 4095 // 12-bit ADC range
-    return (ppgValue.toDouble() / maxPPG).coerceIn(0.0, 1.0)
+        // Normalize PPG value based on typical ADC range
+        val minPPG = 0
+        val maxPPG = 4095 // 12-bit ADC range
+        return (ppgValue.toDouble() / maxPPG).coerceIn(0.0, 1.0)
     }
 
     private fun calculateDataQuality(
@@ -787,7 +784,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     }
 
     private fun getDeviceInfo(): String {
-    return "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL} (Android ${android.os.Build.VERSION.RELEASE})"
+        return "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL} (Android ${android.os.Build.VERSION.RELEASE})"
     }
 
 

@@ -15,8 +15,10 @@ import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import com.topdon.lib.ui.R as UiR
 
+
+
 class CountDownView : View {
-    // 圆环颜色
+    // 圆环color
     private var mRingColor = 0
 
     // 圆环宽度
@@ -46,9 +48,7 @@ class CountDownView : View {
 
     private var valueAnimator: ValueAnimator? = null
 
-    /**
-    * 监听事件
-    */
+
     private var mListener: OnCountDownListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -56,158 +56,152 @@ class CountDownView : View {
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-    context,
-    attrs,
-    defStyleAttr,
+        context,
+        attrs,
+        defStyleAttr,
     ) {
-    val ta = context.obtainStyledAttributes(attrs, UiR.styleable.CountDownView)
-    for (i in 0 until ta.indexCount) {
-    when (ta.getIndex(i)) {
-    UiR.styleable.CountDownView_ringColor ->
-    mRingColor =
-    ta.getColor(
-    UiR.styleable.CountDownView_ringColor,
-    ContextCompat.getColor(context, UiR.color.colorAccent),
-    )
-    UiR.styleable.CountDownView_ringWidth ->
-    mRingWidth =
-    ta.getDimensionPixelSize(
-    UiR.styleable.CountDownView_ringWidth,
-    40,
-    )
-    UiR.styleable.CountDownView_progressTextSize ->
-    mRingProgressTextSize =
-    ta.getDimensionPixelSize(
-    UiR.styleable.CountDownView_progressTextSize,
-    20,
-    )
-    UiR.styleable.CountDownView_progressTextColor ->
-    mProgressTextColor =
-    ta.getColor(
-    UiR.styleable.CountDownView_progressTextColor,
-    ContextCompat.getColor(context, UiR.color.colorAccent),
-    )
-    UiR.styleable.CountDownView_countdownTime ->
-    mCountdownTime =
-    ta.getInteger(
-    UiR.styleable.CountDownView_countdownTime,
-    60,
-    )
-    UiR.styleable.CountDownView_progressText ->
-    mRingText =
-    ta.getString(UiR.styleable.CountDownView_progressText)
-    }
-    }
-    ta.recycle()
-    mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    mPaint.isAntiAlias = true
-    mTextPaint = Paint()
-    this.setWillNotDraw(false)
+        val ta = context.obtainStyledAttributes(attrs, UiR.styleable.CountDownView)
+        for (i in 0 until ta.indexCount) {
+            when (ta.getIndex(i)) {
+                UiR.styleable.CountDownView_ringColor ->
+                    mRingColor =
+                        ta.getColor(
+                            UiR.styleable.CountDownView_ringColor,
+                            ContextCompat.getColor(context, UiR.color.colorAccent),
+                        )
+                UiR.styleable.CountDownView_ringWidth ->
+                    mRingWidth =
+                        ta.getDimensionPixelSize(
+                            UiR.styleable.CountDownView_ringWidth,
+                            40,
+                        )
+                UiR.styleable.CountDownView_progressTextSize ->
+                    mRingProgressTextSize =
+                        ta.getDimensionPixelSize(
+                            UiR.styleable.CountDownView_progressTextSize,
+                            20,
+                        )
+                UiR.styleable.CountDownView_progressTextColor ->
+                    mProgressTextColor =
+                        ta.getColor(
+                            UiR.styleable.CountDownView_progressTextColor,
+                            ContextCompat.getColor(context, UiR.color.colorAccent),
+                        )
+                UiR.styleable.CountDownView_countdownTime ->
+                    mCountdownTime =
+                        ta.getInteger(
+                            UiR.styleable.CountDownView_countdownTime,
+                            60,
+                        )
+                UiR.styleable.CountDownView_progressText ->
+                    mRingText =
+                        ta.getString(UiR.styleable.CountDownView_progressText)
+            }
+        }
+        ta.recycle()
+        mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        mPaint.isAntiAlias = true
+        mTextPaint = Paint()
+        this.setWillNotDraw(false)
     }
 
     @SuppressLint("DrawAllocation")
     override fun onLayout(
-    changed: Boolean,
-    left: Int,
-    top: Int,
-    right: Int,
-    bottom: Int,
+        changed: Boolean,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
     ) {
-    super.onLayout(changed, left, top, right, bottom)
-    mWidth = measuredWidth
-    mHeight = measuredHeight
-    mRectF =
-    RectF(
-    0 + mRingWidth / 2f,
-    0 + mRingWidth / 2f,
-    mWidth - mRingWidth / 2f,
-    mHeight - mRingWidth / 2f,
-    )
+        super.onLayout(changed, left, top, right, bottom)
+        mWidth = measuredWidth
+        mHeight = measuredHeight
+        mRectF =
+            RectF(
+                0 + mRingWidth / 2f,
+                0 + mRingWidth / 2f,
+                mWidth - mRingWidth / 2f,
+                mHeight - mRingWidth / 2f,
+            )
     }
 
-    /**
-    * 设置倒计时间 单位秒
-    */
+
     fun setCountdownTime(mCountdownTime: Int) {
-    this.mCountdownTime = mCountdownTime
-    mRingText = mCountdownTime.toString()
-    invalidate()
+        this.mCountdownTime = mCountdownTime
+        mRingText = mCountdownTime.toString()
+        invalidate()
     }
 
-    /**
-    * 动画
-    */
+
     private fun getValueAnimator(countdownTime: Long): ValueAnimator? {
-    val valueAnimator = ValueAnimator.ofFloat(0f, 100f)
-    valueAnimator.duration = countdownTime
-    valueAnimator.interpolator = LinearInterpolator()
-    valueAnimator.repeatCount = 0
-    return valueAnimator
+        val valueAnimator = ValueAnimator.ofFloat(0f, 100f)
+        valueAnimator.duration = countdownTime
+        valueAnimator.interpolator = LinearInterpolator()
+        valueAnimator.repeatCount = 0
+        return valueAnimator
     }
 
     override fun onDraw(canvas: Canvas) {
-    super.onDraw(canvas)
-    // 绘制圆环
-    mPaint.color = mRingColor
-    mPaint.style = Paint.Style.FILL
-    mPaint.strokeWidth = mRingWidth.toFloat()
-    canvas.drawArc(mRectF!!, -90f, mCurrentProgress - 360, false, mPaint)
-    val font = Typeface.DEFAULT_BOLD
-    // 绘制文本
-    mTextPaint.isAntiAlias = true
-    mTextPaint.textAlign = Paint.Align.CENTER
-    mTextPaint.typeface = font
-    // 倒数计数文本(5 4 3 2 1)
-    // val text: String = (mCountdownTime - (mCurrentProgress / 360f * mCountdownTime)).toInt().toString()
+        super.onDraw(canvas)
+        // 绘制圆环
+        mPaint.color = mRingColor
+        mPaint.style = Paint.Style.FILL
+        mPaint.strokeWidth = mRingWidth.toFloat()
+        canvas.drawArc(mRectF!!, -90f, mCurrentProgress - 360, false, mPaint)
+        val font = Typeface.DEFAULT_BOLD
+        // 绘制文本
+        mTextPaint.isAntiAlias = true
+        mTextPaint.textAlign = Paint.Align.CENTER
+        mTextPaint.typeface = font
+        // 倒数计数文本(5 4 3 2 1)
+        // val text: String = (mCountdownTime - (mCurrentProgress / 360f * mCountdownTime)).toInt().toString()
 
-    mTextPaint.textSize = mRingProgressTextSize.toFloat()
-    mTextPaint.color = mProgressTextColor
+        mTextPaint.textSize = mRingProgressTextSize.toFloat()
+        mTextPaint.color = mProgressTextColor
 
-    // 文字居中显示
-    val fontMetrics = mTextPaint.fontMetricsInt
-    val baseline =
-    ((mRectF!!.bottom + mRectF!!.top - fontMetrics.bottom - fontMetrics.top) / 2).toInt()
-    canvas.drawText(mRingText!!, mRectF!!.centerX(), baseline.toFloat(), mTextPaint)
+        // 文字居中显示
+        val fontMetrics = mTextPaint.fontMetricsInt
+        val baseline =
+            ((mRectF!!.bottom + mRectF!!.top - fontMetrics.bottom - fontMetrics.top) / 2).toInt()
+        canvas.drawText(mRingText!!, mRectF!!.centerX(), baseline.toFloat(), mTextPaint)
     }
 
-    /**
-    * 开始倒计时
-    */
+
     fun startCountDown() {
-    valueAnimator = getValueAnimator((mCountdownTime * 1000).toLong())
-    valueAnimator!!.addUpdateListener { animation ->
-    val i = animation.animatedValue.toString().toFloat()
-    mCurrentProgress = (360 * (i / 100f))
-    invalidate()
-    }
-    valueAnimator!!.start()
-    valueAnimator!!.addListener(
-    object : AnimatorListenerAdapter() {
-    override fun onAnimationEnd(animation: Animator) {
-    super.onAnimationEnd(animation)
-    // 倒计时结束回调
-    if (mListener != null) {
-    mListener!!.countDownFinished()
-    }
-    }
-    },
-    )
+        valueAnimator = getValueAnimator((mCountdownTime * 1000).toLong())
+        valueAnimator!!.addUpdateListener { animation ->
+            val i = animation.animatedValue.toString().toFloat()
+            mCurrentProgress = (360 * (i / 100f))
+            invalidate()
+        }
+        valueAnimator!!.start()
+        valueAnimator!!.addListener(
+            object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    // 倒计时结束回调
+                    if (mListener != null) {
+                        mListener!!.countDownFinished()
+                    }
+                }
+            },
+        )
     }
 
-    /**
-    * 停止倒计时
-    */
+
     fun stopCountDown() {
-    if (valueAnimator!!.isRunning) {
-    valueAnimator!!.cancel()
-    }
+        if (valueAnimator!!.isRunning) {
+            valueAnimator!!.cancel()
+        }
     }
 
     fun setOnCountDownListener(mListener: OnCountDownListener) {
-    this.mListener = mListener
+        this.mListener = mListener
     }
 
+
+
     interface OnCountDownListener {
-    fun countDownFinished()
+        fun countDownFinished()
     }
 }

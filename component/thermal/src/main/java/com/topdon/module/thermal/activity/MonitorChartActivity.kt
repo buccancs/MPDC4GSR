@@ -61,9 +61,9 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     override fun initContentView() = R.layout.activity_monitor_chart
 
     override fun initView() {
-    // Set toolbar title
-    val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
-    toolbar?.title = getString(R.string.main_thermal_motion)
+        // Set toolbar title
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+        toolbar?.title = getString(R.string.main_thermal_motion)
 
         selectType = intent.getIntExtra("type", 3)
         selectIndex = intent.getIntegerArrayListExtra("select")!!
@@ -94,28 +94,28 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     override fun onResume() {
-    super.onResume()
-    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        super.onResume()
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onPause() {
-    super.onPause()
-    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        super.onPause()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onDestroy() {
-    super.onDestroy()
-    onIrVideoStop()
+        super.onDestroy()
+        onIrVideoStop()
     }
 
     override fun onClick(v: View?) {
-    when (v) {
-    }
+        when (v) {
+        }
     }
 
     private fun initRecycler() {
-    val monitorChartTimeRecycler = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.monitor_chart_time_recycler)
-    val monitorChartSettingRecycler = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.monitor_chart_setting_recycler)
+        val monitorChartTimeRecycler = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.monitor_chart_time_recycler)
+        val monitorChartSettingRecycler = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.monitor_chart_setting_recycler)
 
         monitorChartTimeRecycler.layoutManager = GridLayoutManager(this, 4)
         monitorChartTimeRecycler.adapter = timeAdapter
@@ -150,13 +150,13 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         recordTask = null
                     }
 //                canUpdate = false
-    Log.w("123", "select:$time")
-    adapter.setCheck(index)
-    timeMillis = time * 1000L
-    pointIndex = startIndex - defaultCount
-    recordThermal() // 开始记录
-    }
-    }
+                    Log.w("123", "select:$time")
+                    adapter.setCheck(index)
+                    timeMillis = time * 1000L
+                    pointIndex = startIndex - defaultCount
+                    recordThermal() // 开始记录
+                }
+            }
     }
 
     val defaultCount = 20 // 默认显示10个数
@@ -201,7 +201,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 }
             }
 
-    })
+        })
 
         if (ret == 5) {
             Log.w("123", "视频流开启完成")
@@ -217,18 +217,18 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
 
 
     private fun onIrVideoStop() {
-    // Temporarily disabled - guide interface not available
-    /*
-    mIsIrVideoStart = if (!mIsIrVideoStart) {
-    Log.w("123", "视频流已停止")
-    return
-    } else {
-    false
-    }
-    mGuideInterface!!.exit()
-    mGuideInterface = null
-    Log.w("123", "视频流停止完成")
-    */
+        // Temporarily disabled - guide interface not available
+        /*
+        mIsIrVideoStart = if (!mIsIrVideoStart) {
+            Log.w("123", "视频流已停止")
+            return
+        } else {
+            false
+        }
+        mGuideInterface!!.exit()
+        mGuideInterface = null
+        Log.w("123", "视频流停止完成")
+         */
     }
 
     var isRecord = false
@@ -241,34 +241,34 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
 
 
     private fun recordThermal() {
-    recordTask =
-    lifecycleScope.launch(Dispatchers.IO) {
-    isRecord = true
-    startTime = System.currentTimeMillis()
-    var time = 0L
-    while (isRecord) {
-    if (canUpdate) {
-    val entity = ThermalEntity()
-    entity.userId = SharedManager.getUserId()
-    entity.thermalId = thermalId
-    entity.thermal = NumberTools.to02f(bean.centerTemp)
-    entity.thermalMax = NumberTools.to02f(bean.maxTemp)
-    entity.thermalMin = NumberTools.to02f(bean.minTemp)
-    entity.type = type
-    entity.startTime = startTime
-    entity.createTime = System.currentTimeMillis()
-    AppDatabase.getInstance().thermalDao().insert(entity)
-    time++
-    launch(Dispatchers.Main) {
-    updateChart()
-    }
-    delay(timeMillis)
-    } else {
-    Log.w("123", "当前不可更新")
-    }
-    }
-    Log.w("123", "停止记录, 数据量:$time")
-    }
+        recordTask =
+            lifecycleScope.launch(Dispatchers.IO) {
+                isRecord = true
+                startTime = System.currentTimeMillis()
+                var time = 0L
+                while (isRecord) {
+                    if (canUpdate) {
+                        val entity = ThermalEntity()
+                        entity.userId = SharedManager.getUserId()
+                        entity.thermalId = thermalId
+                        entity.thermal = NumberTools.to02f(bean.centerTemp)
+                        entity.thermalMax = NumberTools.to02f(bean.maxTemp)
+                        entity.thermalMin = NumberTools.to02f(bean.minTemp)
+                        entity.type = type
+                        entity.startTime = startTime
+                        entity.createTime = System.currentTimeMillis()
+                        AppDatabase.getInstance().thermalDao().insert(entity)
+                        time++
+                        launch(Dispatchers.Main) {
+                            updateChart()
+                        }
+                        delay(timeMillis)
+                    } else {
+                        Log.w("123", "当前不可更新")
+                    }
+                }
+                Log.w("123", "停止记录, 数据量:$time")
+            }
     }
 
     // MPChart
@@ -435,21 +435,21 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     }
                 }
 
-    lineData.notifyDataChanged()
-    chart.notifyDataSetChanged()
-    chart.setVisibleXRangeMinimum(getMinimum()) // 设置显示X轴区间大小
-    chart.setVisibleXRangeMaximum(getMaximum()) // 设置显示X轴区间大小
-    chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false) // true保证有刻度数量不变
-    chart.moveViewToX(chart.xChartMax) // 移动到最右端
-    if (volDataSet.entryCount == 20) {
-    chart.zoom(100f, 1f, chart.xChartMax, 0f)
-    }
-    return@synchronized
-    } catch (e: Exception) {
-    Log.e("123", "添加数据时异常:${e.message}")
-    return@synchronized
-    }
-    }
+                lineData.notifyDataChanged()
+                chart.notifyDataSetChanged()
+                chart.setVisibleXRangeMinimum(getMinimum()) // 设置显示X轴区间大小
+                chart.setVisibleXRangeMaximum(getMaximum()) // 设置显示X轴区间大小
+                chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false) // true保证有刻度数量不变
+                chart.moveViewToX(chart.xChartMax) // 移动到最右端
+                if (volDataSet.entryCount == 20) {
+                    chart.zoom(100f, 1f, chart.xChartMax, 0f)
+                }
+                return@synchronized
+            } catch (e: Exception) {
+                Log.e("123", "添加数据时异常:${e.message}")
+                return@synchronized
+            }
+        }
     }
 
     private val fillColor by lazy { ContextCompat.getDrawable(this, R.drawable.bg_chart_fill2) }
@@ -461,40 +461,40 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
 
 
     private fun createSet(label: String): LineDataSet {
-    val set = LineDataSet(null, label)
+        val set = LineDataSet(null, label)
 //        set.mode = LineDataSet.Mode.LINEAR
         set.mode = LineDataSet.Mode.CUBIC_BEZIER
         set.setDrawFilled(false)
 //set.fillDrawable = fillColor//set填充颜色渐变
         set.axisDependency = YAxis.AxisDependency.LEFT
 
-    when (label) {
-    "red" -> {
-    set.color = lineRed // 曲线颜色
-    set.circleHoleColor = lineRed // 坐标内部颜色
-    }
-    "blue" -> {
-    set.color = lineBlue // 曲线颜色
-    set.circleHoleColor = lineBlue // 坐标内部颜色
-    }
-    else -> {
-    set.color = lineGreen // 曲线颜色
-    set.circleHoleColor = lineGreen // 坐标内部颜色
-    }
-    }
+        when (label) {
+            "red" -> {
+                set.color = lineRed // 曲线颜色
+                set.circleHoleColor = lineRed // 坐标内部颜色
+            }
+            "blue" -> {
+                set.color = lineBlue // 曲线颜色
+                set.circleHoleColor = lineBlue // 坐标内部颜色
+            }
+            else -> {
+                set.color = lineGreen // 曲线颜色
+                set.circleHoleColor = lineGreen // 坐标内部颜色
+            }
+        }
 
-    set.setCircleColor(whiteColors) // 坐标颜色
-    set.circleHoleRadius = 4f // 坐标点内部半径
-    set.circleRadius = 5f // 坐标点外部半径
-    set.valueTextColor = Color.WHITE
-    set.lineWidth = 2f
-    set.fillAlpha = 200
-    set.valueTextSize = 10f
-    set.setDrawValues(false) // 设置是否显示坐标值文本
-    set.isHighlightEnabled = true // 允许辅助线
-    set.setDrawHorizontalHighlightIndicator(false) // 水平辅助线关闭
-    set.enableDashedHighlightLine(8f, 8f, 0f) // 辅助虚线
-    return set
+        set.setCircleColor(whiteColors) // 坐标颜色
+        set.circleHoleRadius = 4f // 坐标点内部半径
+        set.circleRadius = 5f // 坐标点外部半径
+        set.valueTextColor = Color.WHITE
+        set.lineWidth = 2f
+        set.fillAlpha = 200
+        set.valueTextSize = 10f
+        set.setDrawValues(false) // 设置是否显示坐标值文本
+        set.isHighlightEnabled = true // 允许辅助线
+        set.setDrawHorizontalHighlightIndicator(false) // 水平辅助线关闭
+        set.enableDashedHighlightLine(8f, 8f, 0f) // 辅助虚线
+        return set
     }
 
 
@@ -503,8 +503,8 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         lifecycleScope.launch(Dispatchers.IO) {
 //dataList.clear()//清空data
 //            dataList = arrayListOf()
-    viewModel.queryLogThermals(selectTimeType = selectTimeType, action = action)
-    }
+            viewModel.queryLogThermals(selectTimeType = selectTimeType, action = action)
+        }
     }
 
     private fun resultVol(bean: LogViewModel.ChartList) {
@@ -619,17 +619,17 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     }
 
     private fun clearEntity(isEmpty: Boolean) {
-    initChart()
-    if (isEmpty) {
-    chart.clear()
-    } else {
-    chart.clearValues()
-    }
+        initChart()
+        if (isEmpty) {
+            chart.clear()
+        } else {
+            chart.clearValues()
+        }
     }
 
     override fun onValueSelected(
-    e: Entry?,
-    h: Highlight?,
+        e: Entry?,
+        h: Highlight?,
     ) {
     }
 
@@ -638,30 +638,30 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
 
 
     private fun getLabCount(count: Int): Int {
-    return when (count) {
-    in 0..2 -> 1
-    in 3..4 -> 2
-    in 5..6 -> 3
-    in 7..9 -> 4
-    else -> 5
-    }
+        return when (count) {
+            in 0..2 -> 1
+            in 3..4 -> 2
+            in 5..6 -> 3
+            in 7..9 -> 4
+            else -> 5
+        }
     }
 
 //getdisplay最小区间
     private fun getMinimum(): Float {
-    val min =
-    when (selectTimeType) {
-    1 -> 1 * 10 * 1000f // 10s
-    2 -> 10 * 60 * 1000f // 10min
-    3 -> 10 * 60 * 60 * 1000f // 10hour
-    4 -> 10 * 24 * 60 * 60 * 1000f // 10day
-    else -> 1 * 10 * 1000f // 10s
-    }
-    return min
+        val min =
+            when (selectTimeType) {
+                1 -> 1 * 10 * 1000f // 10s
+                2 -> 10 * 60 * 1000f // 10min
+                3 -> 10 * 60 * 60 * 1000f // 10hour
+                4 -> 10 * 24 * 60 * 60 * 1000f // 10day
+                else -> 1 * 10 * 1000f // 10s
+            }
+        return min
     }
 
 //getdisplay最大区间，以最小区间的50倍
     private fun getMaximum(): Float {
-    return getMinimum() * 50f
+        return getMinimum() * 50f
     }
 }

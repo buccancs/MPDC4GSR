@@ -47,14 +47,14 @@ class TimeManager(
 
 
     fun getCurrentTimestampNs(): Long {
-    val monotonicTime = SystemClock.elapsedRealtimeNanos()
-    val offset = clockOffsetNs.get()
-    return monotonicTime + offset
+        val monotonicTime = SystemClock.elapsedRealtimeNanos()
+        val offset = clockOffsetNs.get()
+        return monotonicTime + offset
     }
 
 
     fun getCurrentTimestampMs(): Long {
-    return getCurrentTimestampNs() / 1_000_000
+        return getCurrentTimestampNs() / 1_000_000
     }
 
 
@@ -179,36 +179,24 @@ class TimeManager(
                     val outputStream = socket.getOutputStream()
                     val inputStream = socket.getInputStream()
 
-                    // Create enhanced time sync request message
+                    // Create time sync request message
                     val requestJson =
                         """
                         {
-                            "message_type": "time_sync_request",
-                            "client_timestamp": $localTime,
-                            "device_id": "android_${android.os.Build.MODEL.replace(" ", "_")}",
+                            "type": "time_sync_request",
+                            "client_send_time": $localTime,
                             "session_id": "${UUID.randomUUID()}"
                         }
                         """.trimIndent()
 
-                    // Send request to PC Controller with length prefix as expected by server
-                    val requestBytes = requestJson.toByteArray(Charsets.UTF_8)
-                    val lengthBytes = java.nio.ByteBuffer.allocate(4).putInt(requestBytes.size).array()
-                    
-                    outputStream.write(lengthBytes)
-                    outputStream.write(requestBytes)
+                    // Send request to PC Controller
+                    outputStream.write(requestJson.toByteArray(Charsets.UTF_8))
                     outputStream.flush()
 
-                    // Read response from PC Controller with length prefix
-                    // First read 4-byte length header
-                    val lengthBuffer = ByteArray(4)
-                    inputStream.read(lengthBuffer, 0, 4)
-                    
-                    val responseLength = java.nio.ByteBuffer.wrap(lengthBuffer).getInt()
-                    
-                    // Then read the actual response data
-                    val responseBuffer = ByteArray(responseLength)
-                    inputStream.read(responseBuffer, 0, responseLength)
-                    val responseStr = String(responseBuffer, Charsets.UTF_8)
+                    // Read response from PC Controller
+                    val buffer = ByteArray(1024)
+                    val bytesRead = inputStream.read(buffer)
+                    val responseStr = String(buffer, 0, bytesRead, Charsets.UTF_8)
 
                     // Parse JSON response
                     val response = parseTimeSyncResponse(responseStr)
@@ -227,29 +215,8 @@ class TimeManager(
 
     private fun parseTimeSyncResponse(responseJson: String): TimeSyncResponse? {
         return try {
-            // Parse enhanced JSON response from PC Controller
-            // Expected format: {"message_type": "time_sync_response", "server_receive_time": ..., "server_send_time": ...}
-            
-            // Use proper JSON parsing for robustness
-            var serverReceiveTime: Long? = null
-            var serverSendTime: Long? = null
-
-            try {
-                val json = org.json.JSONObject(responseJson)
-                if (json.has("server_receive_time") && json.has("server_send_time")) {
-                    Log.d(TAG, "Enhanced time sync protocol response received from PC Controller")
-                    serverReceiveTime = json.getLong("server_receive_time")
-                    serverSendTime = json.getLong("server_send_time")
-                    return TimeSyncResponse(
-                        pcReceiveTime = serverReceiveTime,
-                        pcSendTime = serverSendTime,
-                    )
-                }
-            } catch (e: org.json.JSONException) {
-                Log.w(TAG, "Could not parse as JSON, will attempt legacy parsing: $e")
-            }
-            
-            // Fallback to legacy protocol for compatibility
+            // Parse real JSON response from PC Controller
+            // Expected format: {"pc_receive_time": ..., "pc_send_time": ...}
             val lines = responseJson.split(",")
             var pcReceiveTime: Long? = null
             var pcSendTime: Long? = null
@@ -262,15 +229,6 @@ class TimeManager(
                     line.contains("pc_send_time") -> {
                         pcSendTime = line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
-                    // Also check for server_timestamp as fallback
-                    line.contains("server_timestamp") && pcReceiveTime == null -> {
-                        pcReceiveTime = line.substringAfter(":").trim()
-                            .removeSuffix("}")
-                            .removeSuffix(",")
-                            .toLongOrNull()
-                        // Don't set pcSendTime = pcReceiveTime as this breaks NTP calculations
-                        // Leave pcSendTime as null to indicate incomplete sync data
-                    }
                 }
             }
 
@@ -280,7 +238,7 @@ class TimeManager(
                     pcSendTime = pcSendTime,
                 )
             } else {
-                Log.w(TAG, "Invalid time sync response format from PC Controller: $responseJson")
+                Log.w(TAG, "Invalid time sync response format from PC Controller")
                 null
             }
         } catch (e: Exception) {
@@ -312,13 +270,13 @@ class TimeManager(
     }
 
     private fun isNetworkAvailable(): Boolean {
-    return try {
-    val network = connectivityManager.activeNetwork
-    val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
-    networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-    } catch (e: Exception) {
-    false
-    }
+        return try {
+            val network = connectivityManager.activeNetwork
+            val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+            networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+        } catch (e: Exception) {
+            false
+        }
     }
 
 
@@ -380,10 +338,10 @@ class TimeManager(
 
 
     fun cleanup() {
-    driftMonitoringJob?.cancel()
-    syncScope.cancel()
-    isTimeSynced = false
-    Log.i(TAG, "TimeManager cleaned up")
+        driftMonitoringJob?.cancel()
+        syncScope.cancel()
+        isTimeSynced = false
+        Log.i(TAG, "TimeManager cleaned up")
     }
 }
 

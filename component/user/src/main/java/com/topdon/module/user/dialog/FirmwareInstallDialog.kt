@@ -15,16 +15,16 @@ class FirmwareInstallDialog(context: Context) : Dialog(context, LibAppR.style.Tr
     private val rootView: View = LayoutInflater.from(context).inflate(R.layout.dialog_firmware_install, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setCancelable(false)
-    setCanceledOnTouchOutside(false)
-    setContentView(rootView)
+        super.onCreate(savedInstanceState)
+        setCancelable(false)
+        setCanceledOnTouchOutside(false)
+        setContentView(rootView)
 
-    window?.let {
-    val layoutParams = it.attributes
-    layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.3).toInt()
-    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-    it.attributes = layoutParams
-    }
+        window?.let {
+            val layoutParams = it.attributes
+            layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.3).toInt()
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            it.attributes = layoutParams
+        }
     }
 }

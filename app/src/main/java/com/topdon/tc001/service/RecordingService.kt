@@ -155,21 +155,21 @@ class RecordingService : LifecycleService() {
     )
 
     inner class RecordingServiceBinder : Binder() {
-    fun getService(): RecordingService = this@RecordingService
-    fun getRecordingController(): RecordingController = recordingController
-    fun getNetworkServer(): NetworkServer = networkServer
-    fun isConnectedToPC(): Boolean = isConnectedToPC
-    fun getServerStatus(): String {
+        fun getService(): RecordingService = this@RecordingService
+        fun getRecordingController(): RecordingController = recordingController
+        fun getNetworkServer(): NetworkServer = networkServer
+        fun isConnectedToPC(): Boolean = isConnectedToPC
+        fun getServerStatus(): String {
             return if (isServerRunning.get()) {
                 "Running on port $SERVER_PORT (${activeConnections.size} clients)"
             } else {
                 "Stopped"
             }
         }
-    fun getConnectedClients(): List<String> {
+        fun getConnectedClients(): List<String> {
             return activeConnections.keys.toList()
         }
-    fun getNetworkClient(): NetworkClient? = if (isNetworkInitialized) networkClient else null
+        fun getNetworkClient(): NetworkClient? = if (isNetworkInitialized) networkClient else null
     }
 
     override fun onCreate() {
@@ -1555,18 +1555,6 @@ class RecordingService : LifecycleService() {
             .build()
     }
 
-    fun getServerStatus(): String {
-        return if (isServerRunning.get()) {
-            "Running on port $SERVER_PORT (${activeConnections.size} clients)"
-        } else {
-            "Stopped"
-        }
-    }
-
-    fun getConnectedClients(): List<String> {
-        return activeConnections.keys.toList()
-    }
-
     private fun createNotificationChannel() {
     override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
                                             Log.i(
@@ -1593,49 +1581,6 @@ class RecordingService : LifecycleService() {
                                                 }
                                             }
                                         }
-
-    override fun onConnected(controller: NetworkClient.ControllerInfo) {
-                                            Log.i(
-                                                TAG,
-                                                "Connected to PC Controller: ${controller.deviceName}"
-                                            )
-                                            updateNotification("Connected to PC Controller")
-                                        }
-
-    override fun onDisconnected(reason: String) {
-                                            Log.i(TAG, "Disconnected from PC Controller: $reason")
-                                            updateNotification("Disconnected from PC Controller")
-                                        }
-
-    override fun onRemoteMeasurementRequest(sessionInfo: com.topdon.gsr.model.SessionInfo) {
-                                            Log.i(TAG, "Received remote measurement request")
-
-                                        }
-
-    override fun onSyncFlash(durationMs: Int) {
-                                            Log.i(TAG, "Sync flash request: ${durationMs}ms")
-
-                                        }
-
-    override fun onTimeSynchronized(offsetNanoseconds: Long) {
-                                            Log.i(
-                                                TAG,
-                                                "Time synchronized with PC Controller (offset: ${offsetNanoseconds}ns)"
-                                            )
-                                        }
-
-    override fun onDataStreamingStarted() {
-                                            Log.i(TAG, "Data streaming started")
-                                        }
-
-    override fun onDataStreamingStopped() {
-                                            Log.i(TAG, "Data streaming stopped")
-                                        }
-
-    override fun onError(operation: String, error: String) {
-        Log.e(TAG, "Network error in $operation: $error")
-        updateNotification("Network error: $operation")
-    }
 
     fun startNetworkDiscovery() {
         lifecycleScope.launch {
@@ -1830,18 +1775,6 @@ class RecordingService : LifecycleService() {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build()
-    }
-
-    fun getServerStatus(): String {
-        return if (isServerRunning.get()) {
-            "Running on port $SERVER_PORT (${activeConnections.size} clients)"
-        } else {
-            "Stopped"
-        }
-    }
-
-    fun getConnectedClients(): List<String> {
-        return activeConnections.keys.toList()
     }
 
     private suspend fun initializeNetworkClient(): Boolean {

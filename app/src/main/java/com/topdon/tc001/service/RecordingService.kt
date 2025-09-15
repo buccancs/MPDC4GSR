@@ -1633,16 +1633,14 @@ class RecordingService : LifecycleService() {
                                         }
 
     override fun onError(operation: String, error: String) {
-                                            Log.e(TAG, "Network error in $operation: $error")
-                                            updateNotification("Network error: $operation")
-                                        }
-                                    })
-                                }
+        Log.e(TAG, "Network error in $operation: $error")
+        updateNotification("Network error: $operation")
+    }
 
     fun startNetworkDiscovery() {
-                                    lifecycleScope.launch {
-                                        try {
-                                            networkClient.startDiscovery { success ->
+        lifecycleScope.launch {
+            try {
+                networkClient.startDiscovery { success ->
                                                 if (success) {
                                                     Log.i(
                                                         TAG,
@@ -1799,11 +1797,7 @@ class RecordingService : LifecycleService() {
                                             }
                                         })
                                     } catch (e: Exception) {
-                                        Log.e(TAG, "Error unregistering NSD service", e)
-                                    }
-                                }
-                            }
-                        }
+                        Log.e(TAG, "Error unregistering NSD service", e)
                     }
                 }
             }

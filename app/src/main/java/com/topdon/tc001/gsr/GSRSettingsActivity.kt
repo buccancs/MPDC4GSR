@@ -434,9 +434,8 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             }
         }
 
-        binding.checkPermissionsButton?.setOnClickListener {
-            checkAndRequestPermissions()
-        }
+        // Check permissions on activity start
+        checkAndRequestPermissions()
     }
 
     private fun initializeGSRSensorRecorder() {

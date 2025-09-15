@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -455,7 +456,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         .navigation(requireContext())
                 }
             }
-            .setNegativeListener("GSR Demo") {
+            .setNeutralListener("GSR Demo") {
                 // GSR Demo
                 NavigationManager.getInstance()
                     .build(RouterConfig.GSR_DEMO)
@@ -491,7 +492,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             startActivity(intent)
         } catch (e: Exception) {
 
-            TToast.show("Launching dual-mode camera integration example...")
+            Toast.makeText(requireContext(), "Launching dual-mode camera integration example...", Toast.LENGTH_SHORT).show()
 
             showDualModeIntegrationExample()
         }

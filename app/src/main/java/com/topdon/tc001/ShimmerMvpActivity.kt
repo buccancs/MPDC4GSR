@@ -351,8 +351,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             val timestamp = System.currentTimeMillis()
             
             // Extract GSR data from ObjectCluster using proper Shimmer SDK methods
-            val gsrRawData = objectCluster.getFormatClusterValue(Shimmer.CHANNEL_TYPE.CAL, "GSR")
-            val rawValue = gsrRawData?.data?.toInt() ?: 2048 // Default to middle 12-bit range if null
+            val gsrRawData = objectCluster.getFormatClusterValue("CAL", "GSR")
+            val rawValue = (gsrRawData as? Double)?.toInt() ?: 2048 // Default to middle 12-bit range if null
             
             // Calculate GSR value in microsiemens using proper 12-bit ADC conversion (0-4095 range)
             val gsrValue = if (rawValue > 0 && rawValue <= 4095) {

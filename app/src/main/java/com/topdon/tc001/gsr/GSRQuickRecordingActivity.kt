@@ -164,20 +164,25 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         binding.viewSessionsButton.setOnClickListener {
             // Navigate to session manager
             try {
-                SessionManagerActivity.start(this)
+                val intent = Intent(this, SessionManagerActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Fallback to GSR Demo if SessionManagerActivity not available
-                GSRDemoActivity.start(this)
+                val intent = Intent(this, GSRDemoActivity::class.java)
+                startActivity(intent)
             }
         }
 
         binding.gsrSettingsButton.setOnClickListener {
             // Navigate to GSR settings
             try {
-                GSRSettingsActivity.start(this)
+                val intent = Intent(this, GSRSettingsActivity::class.java)
+                startActivity(intent)
             } catch (e: Exception) {
                 // Fallback to Multi-modal recording if GSRSettingsActivity not available
-                MultiModalRecordingActivity.start(this)
+                val intent = Intent(this, MultiModalRecordingActivity::class.java)
+                startActivity(intent)
+            }
             }
         }
     }

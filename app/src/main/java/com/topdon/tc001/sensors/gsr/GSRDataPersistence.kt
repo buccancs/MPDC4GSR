@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.io.File
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -72,8 +71,7 @@ class GSRDataPersistence(
     }
 
     private fun createSessionDirectory(): File {
-        // Use SessionDirectoryManager for consistent directory structure
-        val sessionDirectoryManager = SessionDirectoryManager(context)
+        // Use standard directory structure for consistency
         val baseDir = File(context.getExternalFilesDir(null), "sessions")
         val sessionDir = File(baseDir, sessionId)
         val shimmerDir = File(sessionDir, "Shimmer")

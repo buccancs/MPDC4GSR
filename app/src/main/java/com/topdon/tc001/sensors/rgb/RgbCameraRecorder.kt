@@ -7,7 +7,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.opencsv.CSVWriter
 import com.topdon.tc001.sensors.*
 import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.util.CSVBufferedWriter
@@ -15,7 +14,6 @@ import com.topdon.tc001.util.SessionDirectoryManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
-import java.io.FileWriter
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
@@ -237,11 +235,15 @@ class RgbCameraRecorder(
     }
 
     private fun setupOutputFiles() {
-
-        val timestamp = System.currentTimeMillis()
-        videoFile = File(sessionDirectory, "rgb_video_${timestamp}.mp4")
-
-        csvFile = File(sessionDirectory, "rgb_timestamps_${timestamp}.csv")
+        // Use standard directory structure
+        val rgbDir = File(sessionDirectory, "RGB")
+        if (!rgbDir.exists()) {
+            rgbDir.mkdirs()
+        }
+        
+        // Use standard file names from SessionDirectoryManager
+        videoFile = File(rgbDir, SessionDirectoryManager.RGB_VIDEO_FILE)
+        csvFile = File(rgbDir, "rgb_timestamps.csv")
     }
 
     @androidx.annotation.OptIn(androidx.camera.video.ExperimentalPersistentRecording::class)

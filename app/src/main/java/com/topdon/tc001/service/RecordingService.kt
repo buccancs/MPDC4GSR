@@ -215,17 +215,26 @@ class RecordingService : LifecycleService() {
         ) {
             lifecycleScope.launch {
                 try {
+                    Log.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
+                    
+                    // Initialize sensors with enhanced error handling
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
+                    
+                    // Service is considered initialized if at least one sensor is available
                     isInitialized = sensorsSuccess
                     isNetworkInitialized = networkSuccess
 
                     if (sensorsSuccess) {
-                        Log.i(TAG, "Recording service initialized successfully")
+                        Log.i(TAG, "Recording service initialized successfully with ${recordingController.getAvailableSensors().size} sensors")
                         structuredLogger.log(
                             StructuredLogger.LogLevel.INFO,
                             "RecordingService",
-                            "service_initialized"
+                            "service_initialized",
+                            mapOf(
+                                "available_sensors" to recordingController.getAvailableSensors().map { it.sensorId },
+                                "sensor_count" to recordingController.getAvailableSensors().size
+                            )
                         )
                         setupStatusMonitoring()
                         setupNetworkServer()
@@ -244,10 +253,13 @@ class RecordingService : LifecycleService() {
                             )
                         }
                     } else {
+                        Log.e(TAG, "No sensors could be initialized - service cannot operate")
                         structuredLogger.log(
                             StructuredLogger.LogLevel.ERROR,
                             "RecordingService",
-                            "initialization_failed"
+                            "initialization_failed",
+                            mapOf("reason" to "no_sensors_available")
+                        )
                         )
                         stopSelf()
                     }
@@ -376,6 +388,12 @@ class RecordingService : LifecycleService() {
     private fun startRecordingSession(sessionDirectory: String) {
         if (!isInitialized) {
             Log.e(TAG, "Service not initialized, cannot start recording")
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RecordingService", 
+                "recording_start_failed",
+                mapOf("reason" to "service_not_initialized")
+            )
             return
         }
 
@@ -389,24 +407,60 @@ class RecordingService : LifecycleService() {
                 currentSessionDirectory = sessionDirectory
                 recordingStartTime = System.nanoTime()
 
-                startForeground(
-                    NOTIFICATION_ID,
-                    createRecordingNotification("Starting recording...")
+                Log.i(TAG, "Starting recording session: $sessionDirectory")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "RecordingService",
+                    "recording_session_start",
+                    mapOf(
+                        "session_directory" to sessionDirectory,
+                        "available_sensors" to recordingController.getAvailableSensors().map { it.sensorId }
+                    )
                 )
 
-                val success = recordingController.startRecording(sessionDirectory)
+                startForeground(
+                    NOTIFICATION_ID,
+                    createRecordingNotification("Starting recording session...")
+                )
+
+                // Use the enhanced session start method
+                val success = recordingController.startSession(sessionDirectory)
 
                 if (success) {
-                    Log.i(TAG, "Recording session started: $sessionDirectory")
-                    updateNotification("Recording in progress")
+                    val activeSensors = recordingController.getActiveSensorCount()
+                    val totalSensors = recordingController.getAvailableSensors().size
+                    Log.i(TAG, "Recording session started successfully with $activeSensors/$totalSensors sensors")
+                    updateNotification("Recording: $activeSensors sensors active")
+                    
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.INFO,
+                        "RecordingService",
+                        "recording_session_started",
+                        mapOf(
+                            "active_sensors" to activeSensors,
+                            "total_sensors" to totalSensors,
+                            "session_directory" to sessionDirectory
+                        )
+                    )
                 } else {
                     Log.e(TAG, "Failed to start recording session")
                     updateNotification("Recording failed to start")
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.ERROR,
+                        "RecordingService",
+                        "recording_session_start_failed"
+                    )
                     stopRecordingSession()
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting recording session", e)
                 updateNotification("Recording error occurred")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "RecordingService",
+                    "recording_session_start_exception",
+                    mapOf("error" to (e.message ?: "Unknown error"))
+                )
                 stopRecordingSession()
             }
         }
@@ -415,23 +469,42 @@ class RecordingService : LifecycleService() {
     private fun stopRecordingSession() {
         lifecycleScope.launch {
             try {
-                updateNotification("Stopping recording...")
-                val success = recordingController.stopRecording()
+                updateNotification("Stopping recording session...")
+                Log.i(TAG, "Stopping recording session")
+
+                // Use the enhanced session stop method
+                val success = recordingController.stopSession()
 
                 if (success) {
                     val sessionDuration = if (recordingStartTime > 0) {
                         (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
                     } else 0.0
 
-                    Log.i(TAG, "Recording session stopped (duration: ${sessionDuration}s)")
+                    Log.i(TAG, "Recording session stopped successfully (duration: ${String.format("%.1f", sessionDuration)}s)")
                     updateNotification(
                         "Recording completed (${String.format("%.1f", sessionDuration)}s)"
                     )
+                    
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.INFO,
+                        "RecordingService",
+                        "recording_session_stopped",
+                        mapOf(
+                            "session_duration_seconds" to sessionDuration,
+                            "session_directory" to (currentSessionDirectory ?: "unknown")
+                        )
+                    )
+                    
                     delay(2000)
                     stopForeground(true)
                 } else {
                     Log.e(TAG, "Failed to stop recording session cleanly")
                     updateNotification("Recording stop failed")
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.ERROR,
+                        "RecordingService",
+                        "recording_session_stop_failed"
+                    )
                 }
 
                 currentSessionDirectory = null
@@ -444,6 +517,12 @@ class RecordingService : LifecycleService() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping recording session", e)
                 updateNotification("Recording stop error")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "RecordingService",
+                    "recording_session_stop_exception",
+                    mapOf("error" to (e.message ?: "Unknown error"))
+                )
             }
         }
     }

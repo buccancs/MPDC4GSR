@@ -94,8 +94,9 @@ class PermissionController(
 
     /**
      * Centralized method to ensure all required permissions are granted before starting a session.
-     * This sequences the system prompts and handles user responses gracefully.
-     * 
+     * This groups required permissions logically and requests them together in a single system prompt,
+     * rather than truly sequencing prompts one-by-one. Handles user responses gracefully.
+     *
      * @param callback Called with (success, deniedPermissions) when permission check completes
      */
     fun ensureAll(callback: (Boolean, List<String>) -> Unit) {

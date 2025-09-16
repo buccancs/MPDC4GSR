@@ -14,7 +14,7 @@ import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
 import com.topdon.tc001.util.SessionDirectoryManager
 import com.topdon.tc001.util.SessionDirectory
-import com.topdon.tc001.util.SessionMetadata
+import com.topdon.tc001.data.SessionMetadata
 import com.topdon.tc001.util.StorageStatus
 
 import kotlinx.coroutines.CoroutineScope
@@ -226,25 +226,28 @@ class RecordingController(
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 
                 // Create session metadata
-                val metadata = SessionMetadata(
-                    startTime = System.currentTimeMillis(),
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
+                
+                // Create the util.SessionMetadata for SessionDirectoryManager (legacy compatibility)
+                val utilMetadata = com.topdon.tc001.util.SessionMetadata(
+                    startTime = sessionMetadata!!.sessionStartTimestampMs,
                     enabledSensors = enabledSensors,
                     participantId = participantId,
                     studyName = studyName
                 )
-                sessionDirectoryManager.createSessionMetadata(sessionDir, metadata)
+                sessionDirectoryManager.createSessionMetadata(sessionDir, utilMetadata)
 
-                currentSessionDirectory = sessionDirectory
+                currentSessionDirectory = sessionDir
                 
                 // Capture common timestamp reference for all sensors
-                sessionStartTimestampMs = System.currentTimeMillis()
-                sessionStartTimestampNs = System.nanoTime()
+                sessionStartTimestampMs = sessionMetadata!!.sessionStartTimestampMs
+                sessionStartTimestampNs = sessionMetadata!!.sessionStartMonotonicNs
                 recordingStartTime = sessionStartTimestampNs
 
                 Log.i(TAG, "Session reference timestamps: ${sessionStartTimestampMs}ms, ${sessionStartTimestampNs}ns")
 
                 // Create session metadata file with reference timing
-                createSessionMetadata(sessionDir)
+                createSessionMetadata(sessionDir.rootDir)
 
                 // Clear previous active recorder tracking
                 activeRecorders.clear()
@@ -256,7 +259,7 @@ class RecordingController(
                             Log.i(TAG, "Starting sensor: $sensorName")
                             
                             // Create sensor-specific subdirectory  
-                            val sensorDir = File(sessionDir, sensorName.lowercase())
+                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
                             sensorDir.mkdirs()
                             
                             val success = sensor.startRecording(sensorDir.absolutePath)
@@ -415,8 +418,11 @@ class RecordingController(
 
                 currentSessionDirectory = sessionDirWrapper
                 recordingStartTime = System.nanoTime()
+                
+                // Create session metadata for timing synchronization
+                sessionMetadata = SessionMetadata.createSessionStart(sessionDir.name)
 
-                Log.i(TAG, "Session created: $finalSessionId")
+                Log.i(TAG, "Session created: ${sessionDir.name}")
                 Log.i(TAG, "Session start time: ${sessionMetadata!!.sessionStartIso}")
                 Log.i(TAG, "Wall clock: ${sessionMetadata!!.sessionStartTimestampMs}ms")
                 Log.i(TAG, "Monotonic: ${sessionMetadata!!.sessionStartMonotonicNs}ns")
@@ -542,11 +548,6 @@ class RecordingController(
                 false
             }
         }
-    }
-
-    // Legacy method for backward compatibility
-    suspend fun startRecording(sessionDirectory: String): Boolean {
-        return startSession(sessionDirectory)
     }
 
     suspend fun stopSession(): Boolean {
@@ -995,27 +996,6 @@ class RecordingController(
             warnings = warnings,
             checkedAt = System.currentTimeMillis()
         )
-    }
-
-    private fun createSessionMetadata(sessionDir: File) {
-        try {
-            val metadataFile = File(sessionDir, "session_metadata.json")
-            val metadata = mapOf(
-                "session_id" to sessionDir.name,
-                "start_timestamp_ms" to sessionStartTimestampMs,
-                "start_timestamp_ns" to sessionStartTimestampNs,
-                "available_sensors" to sensorRecorders.keys.toList(),
-                "expected_sensors" to listOf("RGB", "Thermal", "Shimmer"),
-                "recording_controller_version" to "2.0.0",
-                "created_at" to java.time.Instant.now().toString()
-            )
-            
-            val jsonString = org.json.JSONObject(metadata).toString(2)
-            metadataFile.writeText(jsonString)
-            Log.i(TAG, "Session metadata created: ${metadataFile.absolutePath}")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to create session metadata", e)
-        }
     }
 
     private fun updateSessionMetadata(sessionDir: File, stopResults: Map<String, Boolean>) {

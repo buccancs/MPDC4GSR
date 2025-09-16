@@ -15,7 +15,6 @@ The script expects to find the following files in the session directory:
 - rgb_video_*.mp4: RGB video file (timing derived from metadata)
 
 Author: IRCamera Synchronization System
-Date: 2024
 """
 
 import json

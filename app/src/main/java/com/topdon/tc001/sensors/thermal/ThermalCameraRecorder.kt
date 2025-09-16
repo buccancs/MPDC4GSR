@@ -422,8 +422,8 @@ class ThermalCameraRecorder(
                                 if (currentBitmap != null && !currentBitmap.isRecycled) {
                                     // Create a copy for thread safety
                                     val bitmapCopy = currentBitmap.copy(currentBitmap.config, false)
-                                    val testFrame = generateTestThermalFrame()
-                                    previewCallback?.onThermalFrame(bitmapCopy, testFrame)
+                                    val thermalData = extractThermalDataFromBitmap(bitmapCopy, System.nanoTime(), frameCount.get())
+                                    previewCallback?.onThermalFrame(bitmapCopy, thermalData)
                                 }
                             }
                         }

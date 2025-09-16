@@ -397,23 +397,27 @@ class ThermalCameraRecorder(
                 iruvctc?.setIFrameCallBackListener(object : com.infisense.usbir.camera.IRUVCTC.IFrameCallBackListener {
                     override fun updateData() {
                         // This is called when thermal data is available
-                        if (_isRecording.get()) {
-                            recordingScope.launch {
-                                // Generate simulated thermal frame since we can't access the real data directly
-                                // In a real implementation, you would access the thermal data from IRUVCTC
-                                generateSimulatedThermalFrame()
-                            }
-                        }
-                        
-                        // Generate preview even when not recording
-                        if (previewCallback != null) {
-                            recordingScope.launch {
-                                val testFrame = generateTestThermalFrame()
-                                if (testFrame != null) {
-                                    val bitmap = generateThermalPreviewBitmap(testFrame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
-                                    previewCallback?.onThermalFrame(bitmap, testFrame)
+                        try {
+                            // Retrieve real thermal data from IRUVCTC SDK
+                            // Example: get temperature array and bitmap from SDK
+                            val tempArray: FloatArray? = iruvctc?.getTempArray()
+                            val bitmap: Bitmap? = iruvctc?.getBitmap()
+
+                            if (_isRecording.get() && tempArray != null) {
+                                recordingScope.launch {
+                                    // Process and record the real thermal frame
+                                    processThermalFrame(tempArray)
                                 }
                             }
+
+                            // Generate preview even when not recording
+                            if (previewCallback != null && tempArray != null && bitmap != null) {
+                                recordingScope.launch {
+                                    previewCallback?.onThermalFrame(bitmap, tempArray)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error retrieving thermal data from IRUVCTC: ${e.message}", e)
                         }
                     }
                 })

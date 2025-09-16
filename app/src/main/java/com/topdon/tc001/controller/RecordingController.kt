@@ -210,17 +210,32 @@ class RecordingController(
                     } else {
                         " (Returned false)"
                     }
-                    Log.w(TAG, "Sensor $sensorId failed to start$errorDetails")
-                    emitError(
-                        RecordingControllerError(
-                            errorType = "SENSOR_START_FAILED",
-                            message = "Failed to start sensor: $sensorId$errorDetails",
-                            sensorId = sensorId,
-                            isRecoverable = true
+                    
+                    // Special handling for GSR sensor - don't treat as critical failure
+                    if (sensorId.contains("gsr", ignoreCase = true)) {
+                        Log.w(TAG, "GSR sensor $sensorId failed to start$errorDetails - session will continue without GSR data")
+                        emitError(
+                            RecordingControllerError(
+                                errorType = "GSR_SENSOR_UNAVAILABLE",
+                                message = "GSR sensor unavailable: $sensorId$errorDetails - check device pairing and proximity",
+                                sensorId = sensorId,
+                                isRecoverable = true
+                            )
                         )
-                    )
+                    } else {
+                        Log.w(TAG, "Sensor $sensorId failed to start$errorDetails")
+                        emitError(
+                            RecordingControllerError(
+                                errorType = "SENSOR_START_FAILED",
+                                message = "Failed to start sensor: $sensorId$errorDetails",
+                                sensorId = sensorId,
+                                isRecoverable = true
+                            )
+                        )
+                    }
                 }
 
+                // Allow session to start even if some sensors fail (graceful degradation)
                 if (successfulStarts.isNotEmpty()) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
@@ -231,9 +246,16 @@ class RecordingController(
                     val successCount = successfulStarts.size
                     val failedCount = failedStarts.size
 
+                    val gsrFailed = failedStarts.any { it.first.contains("gsr", ignoreCase = true) }
+                    val statusMessage = if (gsrFailed && successCount > 0) {
+                        "Multi-modal recording started with $successCount/$totalSensors sensors (GSR unavailable - check Shimmer device)"
+                    } else {
+                        "Multi-modal recording started with $successCount/$totalSensors sensors"
+                    }
+
                     Log.i(
                         TAG,
-                        "Multi-modal recording started with $successCount/$totalSensors sensors " +
+                        "$statusMessage " +
                                 "(successful: ${successfulStarts.map { it.first }}, " +
                                 "failed: ${failedStarts.map { it.first }})"
                     )

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.tc001.R
 // import com.topdon.tc001.databinding.ActivityShimmerConfigBinding
+import android.view.LayoutInflater
 import com.topdon.tc001.sensors.unified.ShimmerDeviceManager
 import com.topdon.tc001.sensors.unified.model.DeviceInfo
 import kotlinx.coroutines.flow.collectLatest
@@ -73,9 +74,8 @@ class ShimmerConfigActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: Use View.inflate or setContentView with layout resource when DataBinding is available
-        // binding = ActivityShimmerConfigBinding.inflate(layoutInflater)
-        // setContentView(binding.root)
+        
+        // Use efficient view inflation without DataBinding for better performance
         setContentView(R.layout.activity_shimmer_config)
         
         setupUI()
@@ -83,44 +83,67 @@ class ShimmerConfigActivity : AppCompatActivity() {
     }
     
     private fun setupUI() {
-        // TODO: Replace with DataBinding references when available
-        // Set up toolbar
-        // setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Shimmer GSR Configuration"
-        
-        // Set up RecyclerView for discovered devices
-        deviceAdapter = ShimmerDeviceAdapter { device ->
-            onDeviceSelected(device)
-        }
-        
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewDevices)
-        recyclerView?.apply {
-            layoutManager = LinearLayoutManager(this@ShimmerConfigActivity)
-            adapter = deviceAdapter
-        }
-        
-        // Set up button listeners
-        findViewById<android.widget.Button>(R.id.buttonScan)?.setOnClickListener {
-            if (isScanning) {
-                stopDeviceScanning()
-            } else {
-                startDeviceScanning()
-            }
-        }
-        
-        findViewById<android.widget.Button>(R.id.buttonTestConnection)?.setOnClickListener {
-            testSelectedDeviceConnection()
-        }
-        
-        findViewById<android.widget.Button>(R.id.buttonDisconnect)?.setOnClickListener {
-            disconnectCurrentDevice()
-        }
+        // Efficient UI setup with direct view references
+        setupToolbar()
+        setupRecyclerView()  
+        setupButtonListeners()
         
         // Initial UI state
         updateUI("Ready to scan for Shimmer devices")
         updateScanButton(false)
         updateConnectionStatus(null)
+    }
+    
+    private fun setupToolbar() {
+        // Set up toolbar with support for navigation
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Shimmer GSR Configuration"
+    }
+    
+    private fun setupRecyclerView() {
+        // Set up RecyclerView for discovered devices
+        deviceAdapter = ShimmerDeviceAdapter { device ->
+            onDeviceSelected(device)
+        }
+        
+        findViewById<RecyclerView>(R.id.recyclerViewDevices)?.apply {
+            layoutManager = LinearLayoutManager(this@ShimmerConfigActivity)
+            adapter = deviceAdapter
+        }
+    }
+    
+    private fun setupButtonListeners() {
+        // Set up button listeners with proper error handling
+        findViewById<android.widget.Button>(R.id.buttonScan)?.setOnClickListener {
+            try {
+                if (isScanning) {
+                    stopDeviceScanning()
+                } else {
+                    startDeviceScanning()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error handling scan button click", e)
+                Toast.makeText(this, "Scan operation failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
+        findViewById<android.widget.Button>(R.id.buttonTestConnection)?.setOnClickListener {
+            try {
+                testSelectedDeviceConnection()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error handling test connection button click", e)
+                Toast.makeText(this, "Connection test failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
+        findViewById<android.widget.Button>(R.id.buttonDisconnect)?.setOnClickListener {
+            try {
+                disconnectCurrentDevice()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error handling disconnect button click", e)
+                Toast.makeText(this, "Disconnect operation failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     
     private fun checkPermissionsAndInitialize() {

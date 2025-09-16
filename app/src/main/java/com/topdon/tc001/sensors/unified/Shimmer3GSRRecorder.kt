@@ -335,7 +335,7 @@ class Shimmer3GSRRecorder(
                 csvWriter?.write("# GSR Range: Auto (${GSR_RANGE_AUTO})\n")
                 csvWriter?.write("# Started: ${dateFormat.format(Date())}\n")
                 csvWriter?.write("START_RECORD @ ${System.currentTimeMillis()}\n")
-                csvWriter?.write("timestamp_ns,timestamp_iso,gsr_microsiemens,gsr_raw_adc,ppg_raw,quality_score,connection_rssi\n")
+                csvWriter?.write("timestamp_ns,timestamp_iso,gsr_microsiemens,gsr_raw_adc,ppg_raw,quality_score,connection_rssi,data_source\n")
                 csvWriter?.flush()
 
                 // Reset counters
@@ -424,8 +424,8 @@ class Shimmer3GSRRecorder(
                 gsrDataFlow.emit(sample)
             }
 
-            // Write to CSV file
-            csvWriter?.write("${timestamp},${timestampIso},${gsrMicrosiemens},${gsrRaw},${ppgRaw},${qualityScore},-50\n")
+            // Write to CSV file with real data marker
+            csvWriter?.write("${timestamp},${timestampIso},${gsrMicrosiemens},${gsrRaw},${ppgRaw},${qualityScore},-50,SHIMMER_SDK\n")
             
             val currentSample = recordedSamples.incrementAndGet()
             
@@ -502,42 +502,54 @@ class Shimmer3GSRRecorder(
 
     /**
      * Set up data processing callback for Shimmer streaming
-     * This is the critical missing piece that processes incoming data
+     * Implements real Shimmer SDK callback integration for ObjectCluster data processing
      */
     private fun setupDataProcessingCallback(shimmer: Shimmer) {
         try {
-            // Use reflection to set up the data callback since the API may vary
-            // This is a more robust approach for different Shimmer SDK versions
-            
-            // Try to set up the callback using common Shimmer API patterns
             Log.i(TAG, "Setting up Shimmer data processing callback for GSR streaming")
             
-            // Start a coroutine to simulate data processing until we have the actual callback
-            // In a real implementation, this would be replaced by shimmer.setDataCallback() or similar
+            // Set up the actual Shimmer data callback using the official SDK
+            shimmer.setDataProcessing(object : com.shimmerresearch.driver.CallbackObject {
+                override fun newObjectCluster(objectCluster: ObjectCluster) {
+                    // Process real ObjectCluster data from Shimmer device
+                    processObjectCluster(objectCluster)
+                }
+            })
+            
+            Log.i(TAG, "Shimmer data processing callback successfully configured")
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to set up Shimmer SDK callback, falling back to polling mode", e)
+            
+            // Fallback: Use polling mode if callback setup fails
             recordingJob = lifecycleOwner.lifecycleScope.launch {
                 var sampleCounter = 0
                 while (_isRecording.get() && isActive) {
-                    // Simulate GSR data for now - this should be replaced with actual callback
-                    if (sampleCounter % 8 == 0) { // Simulate 128Hz / 8 = ~16Hz for testing
-                        val simulatedRawValue = (1000..3000).random() // Simulate 12-bit ADC range
-                        val timestamp = System.nanoTime()
-                        
-                        processSimulatedGSRData(simulatedRawValue, timestamp)
+                    try {
+                        // Try to get the latest data from Shimmer
+                        val latestData = shimmer.getLatestReceivedObjectCluster()
+                        if (latestData != null) {
+                            processObjectCluster(latestData)
+                        } else if (sampleCounter % 64 == 0) { // Every ~0.5 seconds at 128Hz
+                            // Generate fallback data if no real data available
+                            val simulatedRawValue = (1000..3000).random()
+                            val timestamp = System.nanoTime()
+                            processSimulatedGSRData(simulatedRawValue, timestamp)
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error polling Shimmer data: ${e.message}")
                     }
                     
                     sampleCounter++
                     delay(1000 / 128) // Approximately 128Hz sampling
                 }
             }
-            
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to set up data processing callback", e)
         }
     }
     
     /**
-     * Process simulated GSR data - this should be replaced with actual ObjectCluster processing
-     * TODO: Replace with actual shimmer.setDataCallback() when Shimmer SDK is properly integrated
+     * Process simulated GSR data - fallback method when real Shimmer data unavailable
+     * Used only when Shimmer SDK callback fails or device not properly connected
      */
     private fun processSimulatedGSRData(rawValue: Int, timestamp: Long) {
         if (!_isRecording.get()) return
@@ -548,14 +560,14 @@ class Shimmer3GSRRecorder(
             // Calculate GSR in microsiemens using the proper formula
             val gsrMicrosiemens = calculateGSRMicrosiemens(rawValue)
             
-            // Create GSR sample
+            // Create GSR sample with simulation marker
             val sample = GSRSample(
                 timestamp = timestamp,
                 timestampIso = timestampIso,
                 gsrMicrosiemens = gsrMicrosiemens,
                 gsrRaw = rawValue,
                 ppgRaw = 0, // PPG not available in simulation
-                qualityScore = calculateQualityScore(rawValue, timestamp),
+                qualityScore = calculateQualityScore(rawValue, timestamp) * 0.5, // Reduced quality for simulated data
                 connectionRssi = -50 // Simulated RSSI
             )
             
@@ -564,8 +576,8 @@ class Shimmer3GSRRecorder(
                 gsrDataFlow.emit(sample)
             }
             
-            // Write to CSV file
-            csvWriter?.write("${timestamp},${timestampIso},${gsrMicrosiemens},${rawValue},0,${sample.qualityScore},-50\n")
+            // Write to CSV file with simulation marker
+            csvWriter?.write("${timestamp},${timestampIso},${gsrMicrosiemens},${rawValue},0,${sample.qualityScore},-50,SIMULATED\n")
             
             // Flush periodically for data safety
             val currentSample = recordedSamples.incrementAndGet()
@@ -574,7 +586,7 @@ class Shimmer3GSRRecorder(
             }
             
             if (currentSample % 128 == 0L) { // Log every second at 128Hz
-                Log.d(TAG, "GSR sample #${currentSample}: ${gsrMicrosiemens}μS (raw: $rawValue)")
+                Log.d(TAG, "GSR sample #${currentSample}: ${gsrMicrosiemens}μS (raw: $rawValue) [SIMULATED]")
             }
             
         } catch (e: Exception) {
@@ -658,6 +670,34 @@ class Shimmer3GSRRecorder(
         } else {
             0
         }
+    }
+
+    suspend fun getConnectionStatus(): String {
+        return when {
+            connectedShimmer != null -> "Connected to ${selectedDevice?.name ?: "Shimmer Device"}"
+            deviceManager != null -> "Device manager ready - not connected"
+            else -> "Not initialized"
+        }
+    }
+    
+    suspend fun getRecordingStatistics(): Map<String, Any> {
+        return mapOf(
+            "isRecording" to _isRecording.get(),
+            "samplesRecorded" to recordedSamples.get(),
+            "recordingDurationMs" to getRecordingDurationMs(),
+            "connectionStatus" to getConnectionStatus(),
+            "deviceInfo" to (selectedDevice?.let { 
+                mapOf(
+                    "name" to it.name,
+                    "address" to it.address,
+                    "rssi" to it.rssi,
+                    "isGSRCapable" to it.isGSRCapable
+                )
+            } ?: "No device selected"),
+            "csvFile" to (sessionDirectory?.let { File(it, "shimmer3_gsr_data.csv").absolutePath } ?: "Not recording"),
+            "lastSampleTime" to lastSampleTime,
+            "connectionQuality" to _connectionQuality.value
+        )
     }
 
     // SensorRecorder interface implementations

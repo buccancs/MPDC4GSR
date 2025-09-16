@@ -18,7 +18,6 @@ import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.service.ShimmerGSRRecorder
-import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.tc001.sensors.SensorRecorder
 import com.topdon.tc001.sensors.RecordingStatus
 import com.topdon.tc001.sensors.SensorError

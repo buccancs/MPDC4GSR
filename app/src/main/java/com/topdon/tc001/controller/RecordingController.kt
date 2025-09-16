@@ -552,10 +552,12 @@ class RecordingController(
     fun getStatusReport(): String {
         val summary = getSensorStatusSummary()
         return buildString {
-            appendLine("=== Recording Controller Status ===")
+            appendLine("=== Enhanced Recording Controller Status ===")
             appendLine("Session State: ${summary.sessionState}")
             appendLine("Sensors: ${summary.totalSensorsRecording}/${summary.totalSensorsInitialized} recording")
             appendLine("Status: ${summary.statusMessage}")
+            appendLine("Session Directory: ${currentSessionDirectory ?: "None"}")
+            appendLine("Active Recorders: ${activeRecorders.size}")
             appendLine()
             appendLine("Individual Sensors:")
             summary.sensors.forEach { sensor ->
@@ -564,7 +566,8 @@ class RecordingController(
                     sensor.isInitialized -> "🟡 READY"
                     else -> "❌ FAILED"
                 }
-                appendLine("  ${sensor.sensorType}: $status")
+                val activeStatus = if (activeRecorders.containsKey(sensor.sensorId)) " (ACTIVE)" else ""
+                appendLine("  ${sensor.sensorType}: $status$activeStatus")
             }
             if (_isRecording.get()) {
                 val stats = getRecordingStatistics()
@@ -573,7 +576,17 @@ class RecordingController(
                 appendLine("  Duration: ${String.format("%.1f", stats.sessionDurationSeconds)}s")
                 appendLine("  Total Samples: ${stats.totalSamplesRecorded}")
                 appendLine("  Storage Used: ${String.format("%.2f", stats.totalStorageUsedMB)}MB")
+                if (sessionStartTimestampMs > 0) {
+                    appendLine("  Session Start: ${sessionStartTimestampMs}ms")
+                    appendLine("  Reference Timestamp: ${sessionStartTimestampNs}ns")
+                }
             }
+            appendLine()
+            appendLine("Fault Tolerance Status:")
+            appendLine("  Partial Start: ENABLED")
+            appendLine("  Mid-Session Recovery: ENABLED") 
+            appendLine("  Smart Cleanup: ENABLED")
+            appendLine("  Session Metadata: ${if (currentSessionDirectory != null) "ACTIVE" else "INACTIVE"}")
         }
     }
 
@@ -636,6 +649,81 @@ class RecordingController(
 
     fun getActiveSensorCount(): Int {
         return sensorRecorders.values.count { it.isRecording }
+    }
+
+    /**
+     * Provides comprehensive session diagnostics for debugging and monitoring
+     */
+    fun getSessionDiagnostics(): SessionDiagnostics {
+        val currentTime = System.currentTimeMillis()
+        val sessionDuration = if (sessionStartTimestampMs > 0) {
+            currentTime - sessionStartTimestampMs
+        } else 0L
+
+        return SessionDiagnostics(
+            isRecording = _isRecording.get(),
+            sessionState = _recordingStateFlow.value,
+            sessionDirectory = currentSessionDirectory,
+            sessionDurationMs = sessionDuration,
+            sessionStartTimestamp = sessionStartTimestampMs,
+            referenceTimestampNs = sessionStartTimestampNs,
+            totalSensorsConfigured = 3, // RGB, Thermal, GSR
+            totalSensorsInitialized = sensorRecorders.size,
+            totalSensorsActive = activeRecorders.size,
+            activeSensorNames = activeRecorders.keys.toList(),
+            availableSensorNames = sensorRecorders.keys.toList(),
+            faultToleranceEnabled = true,
+            partialStartCapable = true,
+            midSessionRecoveryEnabled = true,
+            smartCleanupEnabled = true,
+            lastError = null // Could be enhanced to track last controller error
+        )
+    }
+
+    /**
+     * Validates current session state and reports any inconsistencies
+     */
+    fun validateSessionState(): SessionValidationResult {
+        val issues = mutableListOf<String>()
+        val warnings = mutableListOf<String>()
+
+        // Check for state inconsistencies
+        if (_isRecording.get() && activeRecorders.isEmpty()) {
+            issues.add("Recording flag is true but no active recorders found")
+        }
+
+        if (!_isRecording.get() && activeRecorders.isNotEmpty()) {
+            issues.add("Recording flag is false but active recorders exist")
+        }
+
+        if (_isRecording.get() && currentSessionDirectory == null) {
+            issues.add("Recording is active but no session directory set")
+        }
+
+        if (_isRecording.get() && sessionStartTimestampMs == 0L) {
+            warnings.add("Recording is active but session start timestamp not set")
+        }
+
+        // Check sensor state consistency
+        val recordingSensors = sensorRecorders.values.count { it.isRecording }
+        if (recordingSensors != activeRecorders.size) {
+            warnings.add("Mismatch between active recorders (${ activeRecorders.size}) and recording sensors ($recordingSensors)")
+        }
+
+        // Check metadata file existence
+        if (_isRecording.get() && currentSessionDirectory != null) {
+            val metadataFile = File(currentSessionDirectory!!, "session_metadata.json")
+            if (!metadataFile.exists()) {
+                warnings.add("Session metadata file not found")
+            }
+        }
+
+        return SessionValidationResult(
+            isValid = issues.isEmpty(),
+            issues = issues,
+            warnings = warnings,
+            checkedAt = System.currentTimeMillis()
+        )
     }
 
     private fun createSessionMetadata(sessionDir: File) {
@@ -1009,5 +1097,62 @@ data class SensorStatusSummary(
             totalSensorsRecording > 0 -> "Partial recording: $totalSensorsRecording/$totalSensorsInitialized sensors active"
             totalSensorsInitialized > 0 -> "Sensors ready but not recording"
             else -> "No sensors available"
+        }
+}
+
+/**
+ * Comprehensive session diagnostics for enhanced monitoring and debugging
+ */
+data class SessionDiagnostics(
+    val isRecording: Boolean,
+    val sessionState: RecordingState,
+    val sessionDirectory: String?,
+    val sessionDurationMs: Long,
+    val sessionStartTimestamp: Long,
+    val referenceTimestampNs: Long,
+    val totalSensorsConfigured: Int,
+    val totalSensorsInitialized: Int,
+    val totalSensorsActive: Int,
+    val activeSensorNames: List<String>,
+    val availableSensorNames: List<String>,
+    val faultToleranceEnabled: Boolean,
+    val partialStartCapable: Boolean,
+    val midSessionRecoveryEnabled: Boolean,
+    val smartCleanupEnabled: Boolean,
+    val lastError: String?
+) {
+    val sessionHealthScore: Double
+        get() = when {
+            !isRecording -> 0.0
+            totalSensorsActive == 0 -> 0.0
+            totalSensorsConfigured == 0 -> 1.0
+            else -> totalSensorsActive.toDouble() / totalSensorsConfigured.toDouble()
+        }
+
+    val statusSummary: String
+        get() = when {
+            !isRecording -> "Idle"
+            totalSensorsActive == totalSensorsConfigured -> "Full recording (${totalSensorsActive} sensors)"
+            totalSensorsActive > 0 -> "Partial recording (${totalSensorsActive}/${totalSensorsConfigured} sensors)"
+            else -> "Recording failed (no active sensors)"
+        }
+}
+
+/**
+ * Result of session state validation
+ */
+data class SessionValidationResult(
+    val isValid: Boolean,
+    val issues: List<String>,
+    val warnings: List<String>,
+    val checkedAt: Long
+) {
+    val hasIssues: Boolean get() = issues.isNotEmpty()
+    val hasWarnings: Boolean get() = warnings.isNotEmpty()
+    val summary: String
+        get() = when {
+            isValid && !hasWarnings -> "Session state is valid"
+            isValid && hasWarnings -> "Session state is valid with ${warnings.size} warnings"
+            else -> "Session state has ${issues.size} issues"
         }
 }

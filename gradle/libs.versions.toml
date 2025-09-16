@@ -149,7 +149,7 @@ testUiautomator = "2.2.0"
 robolectric = "4.10.3"
 mockwebserver = "4.11.0"
 benchmark = "1.2.2"
-truth = "1.1.4"
+truth = "1.4.5"
 javafaker = "1.0.2"
 testCore = "1.5.0"
 

@@ -3,7 +3,8 @@ package com.topdon.tc001.sensors.thermal
 import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import android.util.Log
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.energy.iruvc.uvc.UVCCamera
 import com.infisense.usbir.camera.IRUVCTC
 import com.opencsv.CSVWriter
@@ -90,6 +91,17 @@ class ThermalCameraRecorder(
     private var ambientTemperature = 25.0 // Default ambient temp in Celsius
     private var emissivity = 0.95 // Default emissivity
     private var reflectedTemperature = 23.0 // Default reflected temperature
+
+    // Thermal preview callback interface
+    interface ThermalPreviewCallback {
+        fun onThermalFrame(bitmap: Bitmap?, temperatureData: ThermalFrameData?)
+    }
+    
+    private var previewCallback: ThermalPreviewCallback? = null
+    
+    fun setThermalPreviewCallback(callback: ThermalPreviewCallback?) {
+        this.previewCallback = callback
+    }
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         try {
@@ -305,13 +317,73 @@ class ThermalCameraRecorder(
                     "Initializing real thermal camera with USB device: ${device.productName}"
                 )
 
+                // Initialize IRUVCTC (Topdon thermal camera SDK)
+                val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
+                    override fun onConnectComplete() {
+                        Log.i(TAG, "Thermal camera connected successfully")
+                        isIRCameraConnected = true
+                        
+                        recordingScope.launch {
+                            emitStatus()
+                        }
+                    }
+                    
+                    override fun onConnectError(error: String?) {
+                        Log.e(TAG, "Thermal camera connection error: $error")
+                        isIRCameraConnected = false
+                        isSimulationMode = true
+                        
+                        recordingScope.launch {
+                            emitError(
+                                ErrorType.DEVICE_ERROR,
+                                "Thermal camera connection failed: $error"
+                            )
+                        }
+                    }
+                }
 
+                val usbMonitorCallback = object : com.infisense.usbir.utils.USBMonitorCallback {
+                    override fun onAttach() {
+                        Log.d(TAG, "USB thermal camera attached")
+                    }
+                    
+                    override fun onGranted() {
+                        Log.d(TAG, "USB thermal camera permission granted")
+                    }
+                }
 
+                // Create IRUVCTC instance for thermal camera
+                val syncBitmap = com.energy.iruvc.utils.SynchronizedBitmap()
+                iruvctc = IRUVCTC(
+                    IR_CAMERA_WIDTH,
+                    IR_CAMERA_HEIGHT,
+                    context,
+                    syncBitmap,
+                    com.energy.iruvc.utils.CommonParams.DataFlowMode.IR_TEMP,
+                    connectCallback,
+                    usbMonitorCallback
+                )
 
-                isIRCameraConnected = true
-                isSimulationMode = false
+                // Set up frame callback for thermal data processing
+                iruvctc?.setIFrameCallBackListener(object : com.infisense.usbir.camera.IRUVCTC.IFrameCallBackListener {
+                    override fun onFrameCallback(
+                        imageData: ByteArray?,
+                        temperatureData: ByteArray?,
+                        width: Int,
+                        height: Int
+                    ) {
+                        if (_isRecording.get() && temperatureData != null) {
+                            processRealIRFrame(imageData, temperatureData, width, height)
+                        }
+                    }
+                })
 
-                Log.i(TAG, "Real thermal camera connection established")
+                Log.i(TAG, "IRUVCTC thermal camera initialized")
+                
+                // Register USB monitoring
+                iruvctc?.registerUSB()
+                
+                Log.i(TAG, "Real thermal camera initialization completed")
                 return@withContext true
 
             } catch (e: Exception) {
@@ -343,7 +415,7 @@ class ThermalCameraRecorder(
         height: Int
     ) {
         try {
-            if (temperature == null || !_isRecording.get()) {
+            if (temperature == null) {
                 return
             }
 
@@ -353,13 +425,25 @@ class ThermalCameraRecorder(
 
                 val thermalData = processRealThermalData(temperature, width, height)
 
-                saveRealIRThermalData(
-                    timestamp = timestamp,
-                    frameNumber = frameNumber,
-                    thermalData = thermalData
-                )
+                // Save thermal data if recording
+                if (_isRecording.get()) {
+                    saveRealIRThermalData(
+                        timestamp = timestamp,
+                        frameNumber = frameNumber,
+                        thermalData = thermalData
+                    )
+                }
 
-                emitStatus()
+                // Generate thermal preview bitmap for UI
+                val previewBitmap = generateThermalPreviewBitmap(thermalData, width, height)
+                
+                // Notify preview callback
+                previewCallback?.onThermalFrame(previewBitmap, thermalData)
+
+                // Update status periodically
+                if (frameNumber % 10 == 0L) {
+                    emitStatus()
+                }
             }
 
         } catch (e: Exception) {
@@ -480,6 +564,58 @@ class ThermalCameraRecorder(
         val emissivity: Float,
         val reflectedTemperature: Float
     )
+
+    private fun generateThermalPreviewBitmap(
+        thermalData: ThermalFrameData,
+        width: Int,
+        height: Int
+    ): Bitmap? {
+        return try {
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val pixels = IntArray(width * height)
+            
+            val tempRange = thermalData.maxTemperature - thermalData.minTemperature
+            val safeRange = if (tempRange > 0.1f) tempRange else 1.0f
+            
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    val temp = thermalData.temperatureMatrix[y][x]
+                    
+                    // Normalize temperature to 0-255 range
+                    val normalized = ((temp - thermalData.minTemperature) / safeRange * 255).toInt()
+                        .coerceIn(0, 255)
+                    
+                    // Create thermal color mapping (cold=blue, hot=red)
+                    val color = when {
+                        normalized < 85 -> {
+                            // Cold: Blue to Cyan
+                            val ratio = normalized / 85f
+                            android.graphics.Color.rgb(0, (ratio * 255).toInt(), 255)
+                        }
+                        normalized < 170 -> {
+                            // Medium: Cyan to Yellow
+                            val ratio = (normalized - 85) / 85f
+                            android.graphics.Color.rgb((ratio * 255).toInt(), 255, (255 * (1 - ratio)).toInt())
+                        }
+                        else -> {
+                            // Hot: Yellow to Red
+                            val ratio = (normalized - 170) / 85f
+                            android.graphics.Color.rgb(255, (255 * (1 - ratio)).toInt(), 0)
+                        }
+                    }
+                    
+                    pixels[y * width + x] = color
+                }
+            }
+            
+            bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+            bitmap
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to generate thermal preview bitmap", e)
+            null
+        }
+    }
 
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         withContext(Dispatchers.IO) {
@@ -743,11 +879,12 @@ class ThermalCameraRecorder(
 
     private suspend fun startRealIRCameraRecording(irCamera: IRUVCTC): Boolean {
         return try {
-
-
-            Log.i(TAG, "Starting real IR camera recording using existing IRUVCTC implementation")
-
-
+            Log.i(TAG, "Starting real IR camera recording using IRUVCTC")
+            
+            // Start preview to begin receiving frames
+            irCamera.startPreview()
+            
+            Log.i(TAG, "IRUVCTC preview started successfully")
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start real IR camera recording", e)
@@ -800,11 +937,12 @@ class ThermalCameraRecorder(
 
     private suspend fun stopRealIRCameraRecording(irCamera: IRUVCTC): Boolean {
         return try {
-
-
-            Log.i(TAG, "Stopping real IR camera recording using existing IRUVCTC implementation")
-
-
+            Log.i(TAG, "Stopping real IR camera recording using IRUVCTC")
+            
+            // Stop preview to stop receiving frames
+            irCamera.stopPreview()
+            
+            Log.i(TAG, "IRUVCTC preview stopped successfully")
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop real IR camera recording", e)
@@ -922,6 +1060,16 @@ class ThermalCameraRecorder(
                 EventBus.getDefault().unregister(this@ThermalCameraRecorder)
             }
 
+            // Clean up IRUVCTC resources
+            iruvctc?.let { camera ->
+                try {
+                    camera.stopPreview()
+                    camera.unregisterUSB()
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error during IRUVCTC cleanup", e)
+                }
+            }
+            
             iruvctc = null
             uvcCamera = null
             isIRCameraConnected = false
@@ -949,44 +1097,68 @@ class ThermalCameraRecorder(
                 val connectedDevice = event.device
                 if (connectedDevice != null) {
 
-                    if (connectedDevice.isTcTsDevice()) {
-                        Log.i(
-                            TAG,
-                            "Thermal camera device connected with permission: ${connectedDevice.productName}"
-                        )
+                        if (connectedDevice.isTcTsDevice()) {
+                            Log.i(
+                                TAG,
+                                "Thermal camera device reconnected with permission: ${connectedDevice.productName}"
+                            )
 
-                        recordingScope.launch {
-                            val previousDevice = thermalCameraDevice
-                            thermalCameraDevice = connectedDevice
-                            hasUsbPermission = true // Event only fired if permission is granted
+                            recordingScope.launch {
+                                val previousDevice = thermalCameraDevice
+                                thermalCameraDevice = connectedDevice
+                                hasUsbPermission = true // Event only fired if permission is granted
 
-                            val success = initializeRealThermalCamera(connectedDevice)
+                                val success = initializeRealThermalCamera(connectedDevice)
 
-                            if (success) {
-                                isSimulationMode = false
-                                Log.i(
-                                    TAG,
-                                    "Successfully switched to real thermal camera from device connect event"
-                                )
-                                emitStatus()
-                            } else {
-                                Log.w(
-                                    TAG,
-                                    "Failed to initialize thermal camera from device connect event"
-                                )
-                                thermalCameraDevice = previousDevice
-                                isSimulationMode = true
+                                if (success) {
+                                    isSimulationMode = false
+                                    Log.i(
+                                        TAG,
+                                        "Successfully switched to real thermal camera from device reconnect event"
+                                    )
+                                    
+                                    // If currently recording, restart real camera streaming
+                                    if (_isRecording.get()) {
+                                        val irCamera = iruvctc
+                                        if (irCamera != null) {
+                                            val startSuccess = startRealIRCameraRecording(irCamera)
+                                            if (startSuccess) {
+                                                Log.i(TAG, "Resumed real thermal recording after reconnect")
+                                            } else {
+                                                Log.w(TAG, "Failed to resume real thermal recording, staying in simulation")
+                                                isSimulationMode = true
+                                            }
+                                        }
+                                    }
+                                    
+                                    emitStatus()
+                                } else {
+                                    Log.w(
+                                        TAG,
+                                        "Failed to initialize thermal camera from device reconnect event"
+                                    )
+                                    thermalCameraDevice = previousDevice
+                                    isSimulationMode = true
+                                }
                             }
                         }
-                    }
                 }
             } else {
-
+                // USB device detached - handle hot-plug removal
                 val disconnectedDevice = thermalCameraDevice
                 if (disconnectedDevice != null) {
                     Log.w(TAG, "Thermal camera device disconnected, switching to simulation mode")
 
                     recordingScope.launch {
+                        // Stop real camera streaming gracefully
+                        if (isIRCameraConnected && iruvctc != null) {
+                            try {
+                                iruvctc?.stopPreview()
+                                Log.i(TAG, "Stopped thermal camera preview due to disconnect")
+                            } catch (e: Exception) {
+                                Log.w(TAG, "Error stopping preview on disconnect", e)
+                            }
+                        }
 
                         isSimulationMode = true
                         isIRCameraConnected = false
@@ -998,6 +1170,7 @@ class ThermalCameraRecorder(
                                 TAG,
                                 "Continuing recording in simulation mode after device disconnect"
                             )
+                            // Continue recording in simulation mode
                             startSimulatedThermalRecording()
                         }
 

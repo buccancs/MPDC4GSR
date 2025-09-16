@@ -5,8 +5,6 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.util.Log
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import com.energy.iruvc.uvc.UVCCamera
 import com.infisense.usbir.camera.IRUVCTC
 import com.opencsv.CSVWriter
 import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
@@ -679,9 +677,10 @@ class ThermalCameraRecorder(
             if (bitmap == null || networkServer == null) return
 
             // Convert bitmap to JPEG bytes for efficient network transmission
-            val outputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, outputStream) // 75% quality for balance of size/quality
-            val imageBytes = outputStream.toByteArray()
+            val imageBytes = ByteArrayOutputStream().use { outputStream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 75, outputStream) // 75% quality for balance of size/quality
+                outputStream.toByteArray()
+            }
             val base64Image = Base64.getEncoder().encodeToString(imageBytes)
 
             // Create JSON message with thermal data and image
@@ -692,10 +691,10 @@ class ThermalCameraRecorder(
                 put("timestamp_ms", System.currentTimeMillis())
                 put("width", thermalResolution.first)
                 put("height", thermalResolution.second)
-                put("min_temp_c", String.format("%.2f", thermalData.minTemperature))
-                put("max_temp_c", String.format("%.2f", thermalData.maxTemperature))
-                put("avg_temp_c", String.format("%.2f", thermalData.avgTemperature))
-                put("center_temp_c", String.format("%.2f", thermalData.centerTemperature))
+                put("min_temp_c", "%.2f".format(thermalData.minTemperature))
+                put("max_temp_c", "%.2f".format(thermalData.maxTemperature))
+                put("avg_temp_c", "%.2f".format(thermalData.avgTemperature))
+                put("center_temp_c", "%.2f".format(thermalData.centerTemperature))
                 put("image_jpeg_base64", base64Image)
                 put("simulation_mode", isSimulationMode)
             }

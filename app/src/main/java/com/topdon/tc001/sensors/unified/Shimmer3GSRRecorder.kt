@@ -343,7 +343,7 @@ class Shimmer3GSRRecorder(
                 recordingStartTime = System.nanoTime()
 
                 // Start Shimmer streaming with proper configuration
-                val shimmerDevice = connectedShimmer!!
+                val shimmerDevice = connectedShimmer ?: return@withContext false
                 
                 // Configure GSR sensor before starting
                 try {

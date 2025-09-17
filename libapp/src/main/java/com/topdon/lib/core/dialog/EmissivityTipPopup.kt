@@ -1,5 +1,4 @@
 package com.topdon.lib.core.dialog
-
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -18,11 +17,8 @@ import com.topdon.lib.core.databinding.LayoutPopupTipEmissivityBinding
 import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
-
-
 class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
     private lateinit var binding: LayoutPopupTipEmissivityBinding
-
     private var text: String = ""
     private var radiation: Float = 0f
     private var distance: Float = 0f
@@ -33,23 +29,19 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
     private var messageText: TextView? = null
     private var checkBox: CheckBox? = null
     private var closeEvent: ((check: Boolean) -> Unit)? = null
-
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = LayoutPopupTipEmissivityBinding.inflate(inflater)
         view = binding.root
     }
-
     fun setTitle(title: String): EmissivityTipPopup {
         titleText?.text = title
         return this
     }
-
     fun setMessage(message: String): EmissivityTipPopup {
         messageText?.text = message
         return this
     }
-
     fun setDataBean(
         environment: Float,
         distance: Float,
@@ -62,18 +54,15 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
         this.text = text
         return this
     }
-
     fun setCancelListener(event: ((check: Boolean) -> Unit)?): EmissivityTipPopup {
         this.closeEvent = event
         return this
     }
-
     fun build(): PopupWindow {
         if (popupWindow == null) {
             binding.tvEnvironmentTitle.text =
                 context.getString(R.string.thermal_config_environment) + ":"
             binding.tvDistanceTitle.text = context.getString(R.string.thermal_config_distance) + ":"
-
             binding.tvTitle.visibility = View.GONE
             if (text.isNotEmpty()) {
                 binding.tvEmissivityMaterials.text = text
@@ -100,7 +89,7 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
                 isFocusable = true
                 isOutsideTouchable = true
                 isTouchable = true
-                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 必要时可以替换为其他Drawable
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) 
             }
             binding.dialogTipSuccessBtn.setOnClickListener {
                 NavigationManager.build(RouterConfig.IR_SETTING)
@@ -109,14 +98,11 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
                 dismiss()
             }
         }
-
         return popupWindow!!
     }
-
     fun show(anchorView: View) {
         popupWindow?.showAtLocation(anchorView, Gravity.CENTER, -SizeUtils.dp2px(10f), 0)
     }
-
     fun dismiss() {
         popupWindow?.dismiss()
         closeEvent?.invoke(checkBox?.isChecked ?: false)

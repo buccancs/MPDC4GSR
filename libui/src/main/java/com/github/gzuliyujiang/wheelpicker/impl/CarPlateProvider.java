@@ -1,43 +1,23 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
-
 package com.github.gzuliyujiang.wheelpicker.impl;
-
 import androidx.annotation.NonNull;
-
 import com.github.gzuliyujiang.wheelpicker.contract.LinkageProvider;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 public class CarPlateProvider implements LinkageProvider {
     private static final String[] ABBREVIATIONS = {
             "京", "津", "冀", "晋", "蒙", "辽", "吉", "黑", "沪",
             "苏", "浙", "皖", "闽", "赣", "鲁", "豫", "鄂", "湘",
             "粤", "桂", "琼", "渝", "川", "贵", "云", "藏", "陕",
             "甘", "青", "宁", "新"};
-
     @Override
     public boolean firstLevelVisible() {
         return true;
     }
-
     @Override
     public boolean thirdLevelVisible() {
         return false;
     }
-
     @NonNull
     @Override
     public List<String> provideFirstData() {
@@ -45,7 +25,6 @@ public class CarPlateProvider implements LinkageProvider {
         Collections.addAll(provinces, ABBREVIATIONS);
         return provinces;
     }
-
     @NonNull
     @Override
     public List<String> linkageSecondData(int firstIndex) {
@@ -207,7 +186,6 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("I");
                 break;
             case "云":
-
                 letters.add("A-V");
                 for (char i = 'A'; i <= 'S'; i++) {
                     letters.add(String.valueOf(i));
@@ -226,13 +204,11 @@ public class CarPlateProvider implements LinkageProvider {
         }
         return letters;
     }
-
     @NonNull
     @Override
     public List<?> linkageThirdData(int firstIndex, int secondIndex) {
         return new ArrayList<>();
     }
-
     @Override
     public int findFirstIndex(Object firstValue) {
         if (firstValue == null) {
@@ -246,7 +222,6 @@ public class CarPlateProvider implements LinkageProvider {
         }
         return INDEX_NO_FOUND;
     }
-
     @Override
     public int findSecondIndex(int firstIndex, Object secondValue) {
         if (secondValue == null) {
@@ -261,10 +236,8 @@ public class CarPlateProvider implements LinkageProvider {
         }
         return INDEX_NO_FOUND;
     }
-
     @Override
     public int findThirdIndex(int firstIndex, int secondIndex, Object thirdValue) {
         return 0;
     }
-
 }

@@ -1,5 +1,4 @@
 package com.guide.zm04c.matrix
-
 enum class FirmwareUpgradeResultCode(private var msg: String?, private var code: Int) {
     SUCCESS("Success", 0),
     FILE_ERROR("File path is null", 1),
@@ -11,19 +10,15 @@ enum class FirmwareUpgradeResultCode(private var msg: String?, private var code:
     INVALID_FILE_ERROR("Upgrade file is invalid", 8),
     FILE_WRITE_ERROR("Write upgrade file error", 9),
     ;
-
     fun getMsg(): String? {
         return msg
     }
-
     fun setMsg(msg: String?) {
         this.msg = msg
     }
-
     fun getCode(): Int {
         return code
     }
-
     fun setCode(code: Int) {
         this.code = code
     }

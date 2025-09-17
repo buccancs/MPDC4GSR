@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.fragment
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -31,14 +30,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Calendar
 import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
-
 class IRMonitorHistoryFragment : Fragment() {
     private val adapter = MyAdapter(ArrayList())
-
     private val viewModel: IRMonitorViewModel by viewModels()
-
     private lateinit var recyclerView: AndroidRecyclerView
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,16 +42,13 @@ class IRMonitorHistoryFragment : Fragment() {
         EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_ir_monitor_history, container)
     }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-
         recyclerView = view.findViewById(R.id.recycler_view)
-
         adapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         adapter.onItemClickListener = {
             val record: ThermalDao.Record = adapter.data[it]
@@ -107,33 +99,26 @@ class IRMonitorHistoryFragment : Fragment() {
             }
         }
     }
-
     override fun onResume() {
         super.onResume()
         viewModel.queryRecordList()
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         EventBus.getDefault().unregister(this)
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMonitorCreate(event: MonitorCreateEvent) {
         viewModel.queryRecordList()
     }
-
     private class MyAdapter(dataList: MutableList<ThermalDao.Record>?) :
         BaseQuickAdapter<
                 ThermalDao.Record,
                 BaseViewHolder,
                 >(R.layout.item_monitory_history, dataList),
         LoadMoreModule {
-
         var onItemClickListener: ((position: Int) -> Unit)? = null
-
         var onItemLongClickListener: ((position: Int) -> Unit)? = null
-
         override fun convert(
             holder: BaseViewHolder,
             item: ThermalDao.Record,
@@ -145,7 +130,6 @@ class IRMonitorHistoryFragment : Fragment() {
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH) + 1
             val day = calendar.get(Calendar.DAY_OF_MONTH)
-
             val groupTitle = holder.itemView.findViewById<View>(R.id.group_title)
             val viewLineTop = holder.itemView.findViewById<View>(R.id.view_line_top)
             val tvDate = holder.itemView.findViewById<View>(R.id.tv_date)
@@ -153,7 +137,6 @@ class IRMonitorHistoryFragment : Fragment() {
             val tvDuration = holder.itemView.findViewById<View>(R.id.tv_duration)
             val tvType = holder.itemView.findViewById<View>(R.id.tv_type)
             val viewContentBg = holder.itemView.findViewById<View>(R.id.view_content_bg)
-
             if (item.showTitle || position == 0 || data.size == 1) {
                 groupTitle?.isVisible = true
                 viewLineTop?.isVisible = false
@@ -165,7 +148,6 @@ class IRMonitorHistoryFragment : Fragment() {
                 groupTitle?.isVisible = beforeMonth != month && beforeYear != year
                 viewLineTop?.isVisible = beforeMonth != month && beforeYear != year
             }
-
             (tvDate as? android.widget.TextView)?.text = "$year-$month"
             (tvTime as? android.widget.TextView)?.text = "$month-$day"
             (tvDuration as? android.widget.TextView)?.text =
@@ -175,7 +157,6 @@ class IRMonitorHistoryFragment : Fragment() {
                 "line" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_line)
                 "fence" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_rect)
             }
-
             viewContentBg?.setOnClickListener {
                 if (position != AndroidRecyclerView.NO_POSITION) {
                     onItemClickListener?.invoke(position)

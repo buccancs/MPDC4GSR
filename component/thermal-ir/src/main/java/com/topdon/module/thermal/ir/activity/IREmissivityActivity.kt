@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -14,49 +13,33 @@ import com.topdon.lib.ui.widget.MyItemDecoration
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.view.EmissivityView
 import com.topdon.lib.core.R as LibR
-
-/**
-
- *
- * Created by LCG on 2024/10/14.
- */
-
 class IREmissivityActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_emissivity
-
     override fun initView() {
         val dataArray: Array<ItemBean> = buildDataArray()
         val tvTitle = findViewById<TextView>(R.id.tv_title)
         val emissivityView = findViewById<EmissivityView>(R.id.emissivity_view)
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val clTitle = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_title)
-
         tvTitle.text = dataArray[0].name
         emissivityView.refreshText(dataArray[0].buildTextList(this))
-
         val itemDecoration = MyItemDecoration(this)
         itemDecoration.wholeBottom = 20f
-
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = MyAdapter(this, dataArray)
         recyclerView.addItemDecoration(itemDecoration)
         recyclerView.addOnScrollListener(MyOnScrollListener(clTitle, layoutManager, dataArray))
     }
-
     override fun initData() {
     }
-
     private class MyOnScrollListener(
         val titleView: View,
         val layoutManager: LinearLayoutManager,
         val dataArray: Array<ItemBean>
     ) : RecyclerView.OnScrollListener() {
-
         private var currentPosition: Int = 0
-
         private val tvTitle: TextView = titleView.findViewById(R.id.tv_title)
-
         override fun onScrolled(
             recyclerView: RecyclerView,
             dx: Int,
@@ -69,13 +52,11 @@ class IREmissivityActivity : BaseActivity() {
             if (seeFirstPosition == currentPosition) {
                 return
             }
-
-            if (dataArray[seeFirstPosition].isTitle) { // 往上顶，将下一目录的标题顶到顶部了
+            if (dataArray[seeFirstPosition].isTitle) { 
                 currentPosition = seeFirstPosition
                 tvTitle.text = dataArray[currentPosition].name
                 titleView.translationY = 0f
             } else {
-
                 val seeLastPosition = layoutManager.findLastVisibleItemPosition()
                 var nextTitlePosition = -1
                 for (i in seeFirstPosition..seeLastPosition) {
@@ -85,7 +66,6 @@ class IREmissivityActivity : BaseActivity() {
                     }
                 }
                 if (nextTitlePosition < 0) {
-
                     currentPosition = findTitlePosition(seeFirstPosition)
                     tvTitle.text = dataArray[currentPosition].name
                     titleView.translationY = 0f
@@ -102,7 +82,6 @@ class IREmissivityActivity : BaseActivity() {
                 }
             }
         }
-
         private fun findTitlePosition(position: Int): Int {
             for (i in position downTo 0) {
                 if (dataArray[i].isTitle) {
@@ -112,27 +91,24 @@ class IREmissivityActivity : BaseActivity() {
             return 0
         }
     }
-
     private class MyAdapter(val context: Context, val dataArray: Array<ItemBean>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         override fun getItemViewType(position: Int): Int = if (dataArray[position].isTitle) 0 else 1
-
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
-            return if (viewType == 0) { // 标题
+            return if (viewType == 0) { 
                 TitleViewHolder(
                     LayoutInflater.from(context)
                         .inflate(R.layout.item_ir_emissivity_title, parent, false)
                 )
-            } else { // 内容
+            } else { 
                 val emissivityView = EmissivityView(context)
                 emissivityView.setPadding(SizeUtils.dp2px(12f), 0, SizeUtils.dp2px(12f), 0)
                 ValueViewHolder(emissivityView)
             }
         }
-
         override fun onBindViewHolder(
             holder: RecyclerView.ViewHolder,
             position: Int,
@@ -149,23 +125,11 @@ class IREmissivityActivity : BaseActivity() {
                 holder.emissivityView.refreshText(itemBean.buildTextList(context))
             }
         }
-
         override fun getItemCount(): Int = dataArray.size
-
         private class TitleViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
-
         private class ValueViewHolder(val emissivityView: EmissivityView) :
             RecyclerView.ViewHolder(emissivityView)
     }
-
-    /**
-
-
-
-
-
-
-     */
     private data class ItemBean(
         val isTitle: Boolean = false,
         val name: String,
@@ -174,7 +138,6 @@ class IREmissivityActivity : BaseActivity() {
         val emStr: String? = null,
     ) {
         private var textList: ArrayList<String> = ArrayList(3)
-
         fun buildTextList(context: Context): ArrayList<String> {
             if (textList.isEmpty()) {
                 if (isTitle) {
@@ -206,12 +169,9 @@ class IREmissivityActivity : BaseActivity() {
             return textList
         }
     }
-
     private fun buildDataArray(): Array<ItemBean> =
         arrayOf(
-
             ItemBean(true, getString(LibR.string.material_metal)),
-
             ItemBean(name = getString(LibR.string.material_aluminum)),
             ItemBean(
                 name = getString(LibR.string.material_polished_aluminum),
@@ -235,7 +195,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 600,
                 emStr = "0.30～0.40"
             ),
-
             ItemBean(name = getString(LibR.string.material_brass)),
             ItemBean(
                 name = getString(LibR.string.material_bronze_mirror),
@@ -248,7 +207,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 600,
                 emStr = "0.59～0.61"
             ),
-
             ItemBean(name = getString(LibR.string.material_chromium)),
             ItemBean(
                 name = getString(LibR.string.material_polished_chromium),
@@ -256,7 +214,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 1090,
                 emStr = "0.08～0.36"
             ),
-
             ItemBean(name = getString(LibR.string.material_copper)),
             ItemBean(
                 name = getString(LibR.string.material_bronze_mirror_1),
@@ -280,7 +237,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 1280,
                 emStr = "0.16～0.13"
             ),
-
             ItemBean(name = getString(LibR.string.material_gold)),
             ItemBean(
                 name = getString(LibR.string.material_golden_mirror),
@@ -288,7 +244,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 630,
                 emStr = "0.02"
             ),
-
             ItemBean(name = getString(LibR.string.material_iron)),
             ItemBean(
                 name = getString(LibR.string.material_polished_cast_iron),
@@ -354,7 +309,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 1680,
                 emStr = "0.42～0.45"
             ),
-
             ItemBean(name = getString(LibR.string.material_steel)),
             ItemBean(name = getString(LibR.string.material_steel_1, UnitTools.showWithUnit(600f))),
             ItemBean(
@@ -374,7 +328,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 1650,
                 emStr = "0.42～0.53"
             ),
-
             ItemBean(name = getString(LibR.string.material_lead)),
             ItemBean(
                 name = getString(LibR.string.material_pure_lead),
@@ -388,7 +341,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 300,
                 emStr = "0.20～0.45"
             ),
-
             ItemBean(name = getString(LibR.string.material_magnesium)),
             ItemBean(
                 name = getString(LibR.string.material_magnesium_oxide),
@@ -396,7 +348,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 825,
                 emStr = "0.55～0.20"
             ),
-
             ItemBean(name = getString(LibR.string.material_mercury)),
             ItemBean(
                 name = getString(LibR.string.material_mercury),
@@ -404,7 +355,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 100,
                 emStr = "0.09～0.12"
             ),
-
             ItemBean(name = getString(LibR.string.material_nickel)),
             ItemBean(
                 name = getString(LibR.string.material_plating_polished_nickel),
@@ -434,7 +384,6 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 1255,
                 emStr = "0.59～0.86"
             ),
-
             ItemBean(name = getString(LibR.string.material_nickel_alloy)),
             ItemBean(
                 name = getString(LibR.string.material_nickel_chromium_alloy_line),
@@ -454,14 +403,12 @@ class IREmissivityActivity : BaseActivity() {
                 maxTemp = 500,
                 emStr = "0.95～0.98",
             ),
-
             ItemBean(name = getString(LibR.string.material_silver)),
             ItemBean(
                 name = getString(LibR.string.material_polished_silver),
                 minTemp = 100,
                 emStr = "0.05"
             ),
-
             ItemBean(name = getString(LibR.string.material_stainless_steel)),
             ItemBean(
                 name = getString(LibR.string.material_eight_stainless_steel),
@@ -470,14 +417,12 @@ class IREmissivityActivity : BaseActivity() {
             ),
             ItemBean(name = "304（8Cr,18Ni）", minTemp = 215, maxTemp = 490, emStr = "0.44～0.36"),
             ItemBean(name = "310（25Cr,20Ni）", minTemp = 215, maxTemp = 520, emStr = "0.90～0.97"),
-
             ItemBean(name = getString(LibR.string.material_tin)),
             ItemBean(
                 name = getString(LibR.string.material_commercial_tin),
                 minTemp = 100,
                 emStr = "0.07"
             ),
-
             ItemBean(name = getString(LibR.string.material_zinc)),
             ItemBean(
                 name = getString(
@@ -495,7 +440,6 @@ class IREmissivityActivity : BaseActivity() {
                 minTemp = 25,
                 emStr = "0.28"
             ),
-
             ItemBean(true, getString(LibR.string.material_nonMetal)),
             ItemBean(name = getString(LibR.string.material_brick), minTemp = 1100, emStr = "0.75"),
             ItemBean(
@@ -544,7 +488,6 @@ class IREmissivityActivity : BaseActivity() {
             ItemBean(name = getString(LibR.string.material_coil), emStr = "0.87"),
             ItemBean(name = getString(LibR.string.material_enamel_product), emStr = "0.9"),
             ItemBean(name = getString(LibR.string.material_enamel_pattern), emStr = "0.83～0.95"),
-
             ItemBean(name = getString(LibR.string.material_capacitor)),
             ItemBean(
                 name = getString(LibR.string.material_rotating_capacitor),
@@ -561,7 +504,6 @@ class IREmissivityActivity : BaseActivity() {
                 emStr = "0.90～0.93"
             ),
             ItemBean(name = getString(LibR.string.material_glass_capacitor), emStr = "0.91～0.92"),
-
             ItemBean(name = getString(LibR.string.material_semiconductor)),
             ItemBean(
                 name = getString(LibR.string.material_crystal_tube_plastic_seal),
@@ -572,7 +514,6 @@ class IREmissivityActivity : BaseActivity() {
                 emStr = "0.30～0.40"
             ),
             ItemBean(name = getString(LibR.string.material_diode), emStr = "0.89～0.90"),
-
             ItemBean(name = getString(LibR.string.material_transmission_coil)),
             ItemBean(
                 name = getString(LibR.string.material_pulse_transmission_coil),
@@ -583,7 +524,6 @@ class IREmissivityActivity : BaseActivity() {
                 emStr = "0.88～0.93"
             ),
             ItemBean(name = getString(LibR.string.material_top_coil), emStr = "0.91～0.92"),
-
             ItemBean(name = getString(LibR.string.material_electronic)),
             ItemBean(name = getString(LibR.string.material_epoxy_glass_board), emStr = "0.86"),
             ItemBean(name = getString(LibR.string.material_epoxy_phenol_board), emStr = "0.8"),

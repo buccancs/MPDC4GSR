@@ -1,5 +1,4 @@
 package com.topdon.tc001
-
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
@@ -15,24 +14,19 @@ import com.csl.irCamera.databinding.ActivityMoreHelpBinding
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.utils.Constants
-
 class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
     private var connectionType: Int = 0
     private lateinit var wifiManager: WifiManager
-
     override fun initContentLayoutId(): Int = R.layout.activity_more_help
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
         initData()
     }
-
     private fun initView() {
         initIntent()
         wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
     }
-
     private fun initIntent() {
         connectionType = intent.getIntExtra(Constants.SETTING_CONNECTION_TYPE, 0)
         if (connectionType == Constants.SETTING_CONNECTION) {
@@ -62,16 +56,14 @@ class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
             binding.ivTvSetting.text = spannable
         }
     }
-
     private fun initData() {
         binding.ivTvSetting.setOnClickListener {
             startWifiList()
         }
     }
-
     private fun startWifiList() {
         if (wifiManager.isWifiEnabled) {
-            if (Build.VERSION.SDK_INT < 29) { // 低于 Android10
+            if (Build.VERSION.SDK_INT < 29) { 
                 wifiManager.isWifiEnabled = true
             } else {
                 var wifiIntent = Intent(Settings.Panel.ACTION_WIFI)
@@ -89,7 +81,7 @@ class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
                 .setTitleMessage(getString(R.string.app_tip))
                 .setMessage(R.string.ts004_wlan_tips)
                 .setPositiveListener(R.string.app_open) {
-                    if (Build.VERSION.SDK_INT < 29) { // 低于 Android10
+                    if (Build.VERSION.SDK_INT < 29) { 
                         wifiManager.isWifiEnabled = true
                     } else {
                         var wifiIntent = Intent(Settings.Panel.ACTION_WIFI)

@@ -1,7 +1,5 @@
 package com.topdon.lib.core.bean;
-
 import java.util.List;
-
 public class HouseRepPreviewBean {
     public String housePhoto;
     public String houseAddress;

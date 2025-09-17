@@ -1,8 +1,6 @@
 package com.topdon.tc001.utils;
-
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.topdon.lms.sdk.LMS.SUCCESS;
-
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +9,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ZipUtils;
 import com.csl.irCamera.R;
@@ -29,33 +26,27 @@ import com.topdon.lms.sdk.xutils.common.Callback;
 import com.topdon.lms.sdk.xutils.common.task.PriorityExecutor;
 import com.topdon.lms.sdk.xutils.http.RequestParams;
 import com.topdon.tc001.tools.VersionTools;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
-
 public class AppVersionUtil {
     private Context mContext;
-    private DownloadCompleteReceiver completeReceiver; // Declare download completion broadcast receiver
+    private DownloadCompleteReceiver completeReceiver; 
     private DownloadManager dowanloadmanager = null;
     private DotIsShowListener dotIsShowListener = null;
-    private String fileName = "";//文件名称
-    private Long mDownloadId = 0l;//下载id
-
+    private String fileName = "";
+    private Long mDownloadId = 0l;
     public AppVersionUtil(Context context, DotIsShowListener dotIsShow) {
         this.mContext = context;
         this.dotIsShowListener = dotIsShow;
     }
-
     public void checkVersion(boolean isShowDialog) {
         if (dowanloadmanager == null) {
             dowanloadmanager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
         }
-
         if (!NetworkUtil.isConnected(mContext)) {
             TToast.shortToast(mContext, com.topdon.lms.sdk.R.string.lms_setting_http_error);
             return;
@@ -68,7 +59,6 @@ public class AppVersionUtil {
                     if (appInfoBean.getVersionCode() > getDealVersionCode()) {
                         if (isShowDialog) {
                             String information = "";
-
                             if (appInfoBean.softConfigOtherTypeVOList != null) {
                                 for (AppInfoBean.UpdateDescription updateDescription : appInfoBean.softConfigOtherTypeVOList) {
                                     if (updateDescription.descType == 3) {
@@ -94,11 +84,9 @@ public class AppVersionUtil {
             }
         });
     }
-
     private float getDealVersionCode() {
         return AppUtil.getVersionCode(mContext) / 10;
     }
-
     private void showNewVersionDialog(AppInfoBean bean) {
         String information = "";
         if (bean.softConfigOtherTypeVOList != null) {
@@ -109,7 +97,6 @@ public class AppVersionUtil {
             }
         }
         if (Integer.parseInt(bean.forcedUpgradeFlag) == 1) {
-
             new TipDialog.Builder(mContext)
                     .setMessage(information)
                     .setTitleMessage(mContext.getString(R.string.updata_new_version_update))
@@ -147,49 +134,40 @@ public class AppVersionUtil {
                     .setCancelListener(R.string.app_cancel, new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            SharedManager.INSTANCE.setVersionCheckDate(System.currentTimeMillis());//刷新版本提示时间
+                            SharedManager.INSTANCE.setVersionCheckDate(System.currentTimeMillis());
                             return null;
                         }
                     })
                     .create().show();
         }
     }
-
     private void startDownload(String url) {
         completeReceiver = new DownloadCompleteReceiver();
-
-
         IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         if (Build.VERSION.SDK_INT < 33) {
             mContext.registerReceiver(completeReceiver, intentFilter);
         } else {
             mContext.registerReceiver(completeReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
         }
-
-        Uri uri = Uri.parse(url); // 根据下载地址构建一个Uri对象
-        DownloadManager.Request down = new DownloadManager.Request(uri); // 创建一个下载请求对象，指定从哪里下载文件
-        down.setTitle(mContext.getString(R.string.tips_download_information)); // 设置任务标题
-        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); // 设置任务描述
-
+        Uri uri = Uri.parse(url); 
+        DownloadManager.Request down = new DownloadManager.Request(uri); 
+        down.setTitle(mContext.getString(R.string.tips_download_information)); 
+        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); 
         down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-
         down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
         fileName = "topinfrared" + System.currentTimeMillis() + ".zip";
         down.setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS, fileName);
         DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
-
-        mDownloadId = downloadManager.enqueue(down); // 把下载请求对象加入到下载队列
+        mDownloadId = downloadManager.enqueue(down); 
         VersionTools.INSTANCE.setMDownloadId(mDownloadId);
     }
-
     public void installApk() {
         mDownloadId = 0l;
         VersionTools.INSTANCE.setMDownloadId(0l);
         mContext.unregisterReceiver(completeReceiver);
         try {
             File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地文件
+            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
             List<File> files = ZipUtils.unzipFile(file, localFile);
             if (files != null && files.size() != 0) {
                 AppUtil.installApp(mContext, files.get(0));
@@ -200,7 +178,6 @@ public class AppVersionUtil {
             e.printStackTrace();
         }
     }
-
     public void showUpdateDialog(Context context, String url, String content, int forcedUpgradeFlag) {
         LmsUpdateDialog.Build.INSTANCE.setContentStr(content)
                 .setUpgradeFlag(forcedUpgradeFlag)
@@ -209,15 +186,12 @@ public class AppVersionUtil {
                     return null;
                 })
                 .setCancelEvent(() -> {
-
                     return null;
                 }).build(context);
     }
-
     public void download(String url) {
         RequestParams params = new RequestParams();
         try {
-
             String[] splitUrl = url.split("\\?");
             String[] urlParams = splitUrl[1].split("&");
             String[] params1 = urlParams[0].split("=");
@@ -238,55 +212,47 @@ public class AppVersionUtil {
         params.setAutoResume(true);
         params.setExecutor(new PriorityExecutor(3, true));
         params.setUri(url);
-
         com.topdon.lms.sdk.xutils.x.http().get(params, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
                 XLog.e("bcf", "onWaiting");
             }
-
             @Override
             public void onStarted() {
                 XLog.e("bcf", "onStarted");
             }
-
             @Override
             public void onLoading(long total, long current, boolean isDownloading) {
                 XLog.w("bcf", "onLoading： " + current + "/" + total);
                 int progress = (int) (current * 100 / total);
                 LmsUpdateDialog.Build.INSTANCE.setProgressNum(progress / 100f);
             }
-
             @Override
             public void onSuccess(File result) {
                 XLog.e("bcf", "onSuccess,start install apk");
                 LmsUpdateDialog.Build.INSTANCE.dismiss();
                 installApkNew();
             }
-
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
                 XLog.e("bcf", "onError " + ex.getMessage());
             }
-
             @Override
             public void onCancelled(CancelledException cex) {
                 cex.printStackTrace();
                 XLog.e("bcf", "onCancelled " + cex.getMessage());
             }
-
             @Override
             public void onFinished() {
                 XLog.e("bcf", "onFinished");
             }
         });
     }
-
     public void installApkNew() {
         try {
             File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地文件
+            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
             List<File> files = ZipUtils.unzipFile(file, localFile);
             if (files != null && files.size() != 0) {
                 AppUtil.installApp(mContext, files.get(0));
@@ -297,23 +263,17 @@ public class AppVersionUtil {
             e.printStackTrace();
         }
     }
-
     public interface DotIsShowListener {
         void isShow(boolean show);
-
         void version(String version);
     }
-
     private class DownloadCompleteReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE))   // 下载完毕
+            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE))   
             {
-
                 installApk();
             }
         }
     }
-
 }

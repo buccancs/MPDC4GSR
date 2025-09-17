@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.fence
-
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -10,25 +9,18 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
-
-
 class FenceView : View {
     var listener: CallBack? = null
-
     private val mPaint by lazy { Paint() }
-    private val rect: Rect = Rect(0, 0, 0, 0) // 手动绘制矩形
-    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } // 线宽度
-
+    private val rect: Rect = Rect(0, 0, 0, 0) 
+    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } 
     constructor (context: Context) : super(context)
-
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
-
     constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(
         context,
         attrs,
         defStyle,
     )
-
     init {
         mPaint.color = Color.WHITE
         mPaint.isAntiAlias = true
@@ -36,24 +28,15 @@ class FenceView : View {
         mPaint.strokeWidth = strokeWidth
         mPaint.alpha = 255
     }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-
-
-
-
-
         canvas.drawRect(rect, mPaint)
     }
-
     var mX = 0f
     var mY = 0f
     var old = Rect(0, 0, 0, 0)
     var startPoint = intArrayOf(0, 0)
     var endPoint = intArrayOf(0, 0)
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         mX = event.x
         mY = event.y
@@ -61,7 +44,7 @@ class FenceView : View {
             MotionEvent.ACTION_DOWN -> {
                 rect.right += strokeWidth.toInt()
                 rect.bottom += strokeWidth.toInt()
-                invalidate() // Invalidate entire view
+                invalidate() 
                 rect.left = mX.toInt()
                 rect.top = mY.toInt()
                 rect.right = rect.left
@@ -69,7 +52,6 @@ class FenceView : View {
                 startPoint[0] = mX.toInt()
                 startPoint[1] = mY.toInt()
             }
-
             MotionEvent.ACTION_UP -> {
                 var x = mX.toInt()
                 var y = mY.toInt()
@@ -79,7 +61,6 @@ class FenceView : View {
                 if (y > bottom) {
                     y = bottom - 1
                 }
-
                 if (x < left) {
                     x = left + 1
                 }
@@ -88,7 +69,6 @@ class FenceView : View {
                 }
                 endPoint[0] = x
                 endPoint[1] = y
-
                 old =
                     Rect(
                         rect.left,
@@ -99,10 +79,9 @@ class FenceView : View {
                 rect.right = x
                 rect.bottom = y
                 old.union(x, y)
-                invalidate() // Invalidate entire view
+                invalidate() 
                 result()
             }
-
             MotionEvent.ACTION_MOVE -> {
                 old =
                     Rect(
@@ -114,16 +93,14 @@ class FenceView : View {
                 rect.right = mX.toInt()
                 rect.bottom = mY.toInt()
                 old.union(mX.toInt(), mY.toInt())
-                invalidate() // Invalidate entire view
+                invalidate() 
             }
         }
         return true
     }
-
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         val point2 = intArrayOf(endPoint[0], endPoint[1])
-
         for (i in 0..1) {
             if (startPoint[i] > endPoint[i]) {
                 point1[i] = endPoint[i]
@@ -139,7 +116,6 @@ class FenceView : View {
             listener!!.callback(point1, point2, intArrayOf(width, height))
         }
     }
-
     fun clear() {
         startPoint = intArrayOf(0, 0)
         endPoint = intArrayOf(0, 0)
@@ -150,10 +126,7 @@ class FenceView : View {
         result()
         invalidate()
     }
-
-
     interface CallBack {
-
         fun callback(
             startPoint: IntArray,
             endPoint: IntArray,

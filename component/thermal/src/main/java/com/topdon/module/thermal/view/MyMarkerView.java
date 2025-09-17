@@ -1,9 +1,7 @@
 package com.topdon.module.thermal.view;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.TextView;
-
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -14,24 +12,19 @@ import com.topdon.lib.core.db.entity.ThermalEntity;
 import com.topdon.lib.core.tools.NumberTools;
 import com.topdon.lib.core.tools.TimeTool;
 import com.topdon.module.thermal.R;
-
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {
-
     private final TextView tvContent;
     private final TextView timeText;
-
     public MyMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
         tvContent = findViewById(R.id.tvContent);
         timeText = findViewById(R.id.time_text);
     }
-
-
     @SuppressLint("DefaultLocale")
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        int index = highlight.getDataIndex();//曲线序号
+        int index = highlight.getDataIndex();
         ThermalEntity data = (ThermalEntity) e.getData();
         if (e instanceof CandleEntry) {
             CandleEntry ce = (CandleEntry) e;
@@ -55,7 +48,6 @@ public class MyMarkerView extends MarkerView {
         }
         super.refreshContent(e, highlight);
     }
-
     @Override
     public MPPointF getOffset() {
         return new MPPointF(-(getWidth() / 2f), -getHeight());

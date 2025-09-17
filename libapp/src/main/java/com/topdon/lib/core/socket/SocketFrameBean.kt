@@ -1,7 +1,5 @@
 package com.topdon.lib.core.socket
-
 data class SocketFrameBean(
-
     val isMaxShow: Boolean,
     val isMinShow: Boolean,
     val isCenterShow: Boolean,
@@ -17,7 +15,6 @@ data class SocketFrameBean(
     val isMaxWarn: Boolean,
     val isMinWarn: Boolean,
     val isCenterWarn: Boolean,
-
     val isP1Show: Boolean,
     val p1X: Int,
     val p1Y: Int,
@@ -39,7 +36,6 @@ data class SocketFrameBean(
     val isP3MaxWarn: Boolean,
     val isP3MinWarn: Boolean,
     val isP3CenterWarn: Boolean,
-
     val isL1Show: Boolean,
     val l1StartX: Int,
     val l1StartY: Int,
@@ -85,7 +81,6 @@ data class SocketFrameBean(
     val isL3MaxWarn: Boolean,
     val isL3MinWarn: Boolean,
     val isL3CenterWarn: Boolean,
-
     val isR1Show: Boolean,
     val r1StartX: Int,
     val r1StartY: Int,
@@ -260,17 +255,13 @@ data class SocketFrameBean(
         isR3MinWarn = byteArray[251].toInt() and 0xff == 1,
         isR3CenterWarn = byteArray[252].toInt() and 0xff == 1,
     )
-
     companion object {
         private fun Boolean.openText(): String = if (this) "开启" else "关闭"
-
         private fun Int.toCStr(): String =
             "${this / 10}${if (this % 10 == 0) "" else ".${this % 10}"}°C"
     }
-
     override fun toString(): String {
         val stringBuilder = StringBuilder()
-
         if (isMaxShow) {
             stringBuilder.append("高温点 ($maxX, $maxY) 温度${maxValue.toCStr()} 报警${isMaxWarn.openText()}\n")
         }
@@ -280,7 +271,6 @@ data class SocketFrameBean(
         if (isCenterShow) {
             stringBuilder.append("中心点 ($centerX, $centerY) 温度${centerValue.toCStr()} 报警${isCenterWarn.openText()}\n")
         }
-
         if (isP1Show) {
             stringBuilder.append("点1 ($p1X, $p1Y) 温度${p1Value.toCStr()}\n")
         }
@@ -290,7 +280,6 @@ data class SocketFrameBean(
         if (isP3Show) {
             stringBuilder.append("点3 ($p3X, $p3Y) 温度${p3Value.toCStr()}\n")
         }
-
         if (isL1Show) {
             stringBuilder.append("线1 ($l1StartX, $l1StartY)-($l1EndX, $l1EndY) ")
             stringBuilder.append("最低温${l1MinValue.toCStr()}($l1MinX, $l1MinY) 最高温${l1MaxValue.toCStr()}($l1MaxX, $l1MaxY) ")
@@ -306,7 +295,6 @@ data class SocketFrameBean(
             stringBuilder.append("最低温${l3MinValue.toCStr()}($l3MinX, $l3MinY) 最高温${l3MaxValue.toCStr()}($l3MaxX, $l3MaxY) ")
             stringBuilder.append("平均温${l3AveValue.toCStr()}\n")
         }
-
         if (isR1Show) {
             stringBuilder.append("面1 ($r1StartX, $r1StartY)-($r1EndX, $r1EndY) ")
             stringBuilder.append("最低温${r1MinValue.toCStr()}($r1MinX, $r1MinY) 最高温${r1MaxValue.toCStr()}($r1MaxX, $r1MaxY) ")

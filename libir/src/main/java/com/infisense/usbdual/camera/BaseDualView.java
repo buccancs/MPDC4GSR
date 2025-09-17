@@ -1,26 +1,21 @@
 package com.infisense.usbdual.camera;
-
 import com.energy.iruvc.dual.DualUVCCamera;
 import com.infisense.usbdual.Const;
-
 import java.util.ArrayList;
-
 public abstract class BaseDualView {
-
     public DualUVCCamera dualUVCCamera;
-    public byte[] vlData;//原始visible light数据
+    public byte[] vlData;
     public byte[] vlARGBData;
     protected ArrayList<OnFrameCallback> onFrameCallbacks;
     protected int fusionLength;
     protected int irSize;
     protected int vlSize;
     protected int remapTempSize;
-    protected byte[] remapTempData;//裁剪后的温度数据
-    protected byte[] mixData;//fusion数据
-    protected byte[] normalTempData;//原始温度数据
+    protected byte[] remapTempData;
+    protected byte[] mixData;
+    protected byte[] normalTempData;
     protected byte[] mixDataRotate;
-    protected byte[] irData;//原始infrared数据
-
+    protected byte[] irData;
     public BaseDualView() {
         onFrameCallbacks = new ArrayList<>();
         fusionLength = Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 4;
@@ -34,15 +29,12 @@ public abstract class BaseDualView {
         vlData = new byte[vlSize];
         vlARGBData = new byte[fusionLength];
     }
-
     public void addFrameCallback(OnFrameCallback onFrameCallback) {
         onFrameCallbacks.add(onFrameCallback);
     }
-
     public void removeFrameCallback(OnFrameCallback onFrameCallback) {
         onFrameCallbacks.remove(onFrameCallback);
     }
-
     public interface OnFrameCallback {
         void onFame(byte[] mixData, byte[] remapTempData, double fpsText);
     }

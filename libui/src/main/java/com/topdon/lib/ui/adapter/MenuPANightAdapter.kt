@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.ScreenUtils
@@ -8,16 +7,13 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
-
 @Deprecated("旧的dual lightmenu，已重构过了")
-
 class MenuPANightAdapter(
     data: MutableList<ColorBean>,
     layoutId: Int,
     private val isDual: Boolean,
 ) : BaseQuickAdapter<ColorBean, BaseViewHolder>(layoutId, data) {
     var listener: ((index: Int) -> Unit)? = null
-
     override fun convert(
         holder: BaseViewHolder,
         item: ColorBean,

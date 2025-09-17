@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.view
-
 import android.content.Context
 import android.graphics.Canvas
 import android.os.Handler
@@ -14,7 +13,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.blankj.utilcode.util.SizeUtils
 import java.util.Timer
 import java.util.TimerTask
-
 public class TimeDownView : AppCompatTextView {
     private var timer: Timer? = null
     private var downTimerTask: DownTimerTask? = null
@@ -24,7 +22,6 @@ public class TimeDownView : AppCompatTextView {
     private var delayMills: Long = 0
     private var animationSet: AnimationSet? = null
     var isRunning = false
-
     private fun init() {
         if (animationSet == null) {
             animationSet = AnimationSet(true)
@@ -35,7 +32,6 @@ public class TimeDownView : AppCompatTextView {
         gravity = Gravity.CENTER
         textSize = SizeUtils.sp2px(30f).toFloat()
     }
-
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
@@ -45,16 +41,9 @@ public class TimeDownView : AppCompatTextView {
     ) {
         init()
     }
-
-    /**
-
-     *
-     * @param seconds
-     */
     fun downSecond(seconds: Int) {
         downSecond(seconds, true)
     }
-
     fun downSecond(
         seconds: Int,
         openAnimation: Boolean,
@@ -70,15 +59,6 @@ public class TimeDownView : AppCompatTextView {
             downTime(seconds, 1, 0, 1000, openAnimation)
         }
     }
-
-    /**
-
-     *
-
-
-
-
-     */
     fun downTime(
         downCount: Int,
         lastDown: Int,
@@ -97,7 +77,6 @@ public class TimeDownView : AppCompatTextView {
         downTimerTask = DownTimerTask()
         timer?.schedule(downTimerTask, delayMills, intervalMills)
     }
-
     override fun setVisibility(visibility: Int) {
         super.setVisibility(visibility)
         if (GONE == visibility) {
@@ -106,26 +85,23 @@ public class TimeDownView : AppCompatTextView {
             timer = null
         }
     }
-
     override fun onDraw(canvas: Canvas) {
         if (drawTextFlag == DRAW_TEXT_NO) {
             return
         }
         super.onDraw(canvas)
     }
-
     fun cancel() {
         animationSet?.cancel()
         downTimerTask?.cancel()
         timer?.cancel()
         drawTextFlag = DRAW_TEXT_NO
-        invalidate() // 刷新一下
+        invalidate() 
         visibility = GONE
         downTimerTask = null
         timer = null
         isRunning = false
     }
-
     private inner class DownTimerTask : TimerTask() {
         override fun run() {
             if (downCount >= lastDown - 1) {
@@ -135,31 +111,18 @@ public class TimeDownView : AppCompatTextView {
             }
         }
     }
-
     interface DownTimeWatcher {
         fun onTime(num: Int)
-
         fun onLastTime(num: Int)
-
         fun onLastTimeFinish(num: Int)
     }
-
     var onTimeListener: ((time: Int) -> Unit)? = null
-
     var onFinishListener: (() -> Unit)? = null
-
     var downTimeWatcher: DownTimeWatcher? = null
-
-    /**
-
-     * @param downTimeWatcher
-     */
     fun setOnTimeDownListener(downTimeWatcher: DownTimeWatcher?) {
         this.downTimeWatcher = downTimeWatcher
     }
-
     private var downHandler: DownHandler? = null
-
     private inner class DownHandler : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
@@ -168,23 +131,19 @@ public class TimeDownView : AppCompatTextView {
                     downTimeWatcher!!.onTime(downCount)
                 }
                 onTimeListener?.invoke(downCount)
-
                 if (downCount >= lastDown - 1) {
-                    drawTextFlag = DRAW_TEXT_YES // 默认绘制
-
+                    drawTextFlag = DRAW_TEXT_YES 
                     if (downCount >= lastDown) {
                         text = downCount.toString() + ""
                         startDefaultAnimate()
                         if (downCount == lastDown && downTimeWatcher != null) {
                             downTimeWatcher!!.onLastTime(downCount)
                         }
-                    } else if (downCount == lastDown - 1) { // 若lastDown为0，downCount == -1时是倒计时真正结束之时。
-
-
+                    } else if (downCount == lastDown - 1) { 
                         if (afterDownDimissFlag == AFTER_LAST_TIME_DIMISS) {
                             drawTextFlag = DRAW_TEXT_NO
                         }
-                        invalidate() // 刷新一下
+                        invalidate() 
                         isRunning = false
                         downTimerTask == null
                         timer?.cancel()
@@ -196,41 +155,31 @@ public class TimeDownView : AppCompatTextView {
                     }
                     downCount--
                 }
-
             }
         }
     }
-
     private val DRAW_TEXT_YES = 1
     private val DRAW_TEXT_NO = 0
-
     private var drawTextFlag = DRAW_TEXT_YES
     private val AFTER_LAST_TIME_DIMISS = 1
     private val AFTER_LAST_TIME_NODIMISS = 0
-
     private var afterDownDimissFlag = AFTER_LAST_TIME_DIMISS
-
     fun setAfterDownNoDimiss() {
         afterDownDimissFlag = AFTER_LAST_TIME_NODIMISS
     }
-
     fun setAferDownDimiss() {
         afterDownDimissFlag = AFTER_LAST_TIME_DIMISS
     }
-
     var startDefaultAnimFlag = true
-
     fun closeDefaultAnimate() {
         animationSet?.reset()
         startDefaultAnimFlag = false
     }
-
     private fun startDefaultAnimate() {
         if (startDefaultAnimFlag) {
             animation?.start()
         }
     }
-
     private fun initDefaultAnimate() {
         if (animationSet == null) {
             animationSet = AnimationSet(true)
@@ -249,7 +198,6 @@ public class TimeDownView : AppCompatTextView {
         scaleAnimation.duration = intervalMills
         val alphaAnimation = AlphaAnimation(1f, 0.3f)
         alphaAnimation.duration = intervalMills
-
         animationSet!!.addAnimation(scaleAnimation)
         animationSet!!.addAnimation(alphaAnimation)
         animationSet!!.interpolator = AccelerateInterpolator()

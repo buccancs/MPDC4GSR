@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,9 @@ import com.topdon.lib.ui.config.CameraHelp
 import com.topdon.menu.constant.TargetType
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
-
 @Deprecated("旧的targetmenu，已重构过了")
-
 class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
-
     fun setSelected(
         targetType: TargetType,
         isSelected: Boolean,
@@ -34,7 +30,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         }
         notifyDataSetChanged()
     }
-
     private val secondBean =
         arrayListOf(
             ColorBean(
@@ -47,7 +42,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 context.getString(R.string.main_tab_first_target),
                 CameraHelp.TYPE_SET_TARGET_MODE,
             ),
-
             ColorBean(
                 MenuR.drawable.selector_menu2_target_3_color,
                 context.getString(R.string.main_tab_second_target_color),
@@ -64,7 +58,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                 CameraHelp.TYPE_SET_TARGET_HELP,
             ),
         )
-
     fun upCurrentMeasureMode(measureMode: Int) {
         secondBean.clear()
         when (measureMode) {
@@ -77,7 +70,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
-
             ObserveBean.TYPE_MEASURE_SHEEP -> {
                 secondBean.add(
                     ColorBean(
@@ -87,7 +79,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
-
             ObserveBean.TYPE_MEASURE_DOG -> {
                 secondBean.add(
                     ColorBean(
@@ -97,7 +88,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     ),
                 )
             }
-
             ObserveBean.TYPE_MEASURE_BIRD -> {
                 secondBean.add(
                     ColorBean(
@@ -138,7 +128,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         )
         notifyDataSetChanged()
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -147,7 +136,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             .inflate(UiR.layout.ui_item_menu_second_view, parent, false)
         return ItemView(view)
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -156,7 +144,6 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
             val bean = secondBean[position]
             holder.name.text = bean.name
             holder.img.setImageResource(bean.res)
-
             holder.img.isSelected = bean.isSelect
             if (bean.isSelect) {
                 holder.name.setTextColor(ContextCompat.getColor(context, UiR.color.white))
@@ -168,32 +155,24 @@ class MenuTargetAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
                     )
                 )
             }
-
             holder.lay.setOnClickListener {
                 listener?.invoke(bean.code)
                 notifyDataSetChanged()
             }
         }
     }
-
     override fun getItemCount(): Int {
         return secondBean.size
     }
-
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)
-
         init {
-
-
             itemView.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-
-
         }
     }
 }

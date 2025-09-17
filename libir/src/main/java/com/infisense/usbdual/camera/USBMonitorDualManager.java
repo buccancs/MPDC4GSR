@@ -1,9 +1,7 @@
 package com.infisense.usbdual.camera;
-
 import android.hardware.usb.UsbDevice;
 import android.os.SystemClock;
 import android.util.Log;
-
 import com.blankj.utilcode.util.Utils;
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder;
 import com.energy.iruvc.ircmd.IRCMD;
@@ -16,12 +14,9 @@ import com.energy.iruvc.uvc.UVCCamera;
 import com.energy.iruvc.uvc.UVCType;
 import com.infisense.usbdual.Const;
 import com.infisense.usbdual.inf.OnUSBConnectListener;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class USBMonitorDualManager {
-
     public static final String TAG = "USBMonitorDualManager";
     private static USBMonitorDualManager mInstance;
     private USBMonitor mUSBMonitor;
@@ -33,43 +28,34 @@ public class USBMonitorDualManager {
     private boolean mIrOpened;
     private boolean mVlOpened;
     private IFrameCallback mVlIFrameCallback;
-
     private USBMonitorDualManager() {
     }
-
     public static synchronized USBMonitorDualManager getInstance() {
         if (mInstance == null) {
             mInstance = new USBMonitorDualManager();
         }
         return mInstance;
     }
-
     public void addOnUSBConnectListener(OnUSBConnectListener onUSBConnectListener) {
         mOnUSBConnectListeners.add(onUSBConnectListener);
     }
-
     public void removeOnUSBConnectListener(OnUSBConnectListener onUSBConnectListener) {
         mOnUSBConnectListeners.remove(onUSBConnectListener);
     }
-
     public void init(int irPid, int irFPS, int irWidth, int irHeight, float irBandWith,
                      int vlPid, int vlFPS, int vlWidth, int vlHeight, float vlBandWith, IFrameCallback frameCallback) {
         this.mVlIFrameCallback = frameCallback;
         if (mUSBMonitor == null) {
             mUSBMonitor = new USBMonitor(Utils.getApp(),
                     new USBMonitor.OnDeviceConnectListener() {
-
-
                         @Override
                         public void onAttach(UsbDevice device) {
                             Log.w(TAG, "USBMonitor-onAttach-getProductId = " + device.getProductId());
-
                             mUSBMonitor.requestPermission(device);
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onAttach(device);
                             }
                         }
-
                         @Override
                         public void onGranted(UsbDevice usbDevice, boolean granted) {
                             Log.d(TAG, "USBMonitor-onGranted");
@@ -77,8 +63,6 @@ public class USBMonitorDualManager {
                                 onUSBConnectListener.onGranted(usbDevice, granted);
                             }
                         }
-
-
                         @Override
                         public void onDettach(UsbDevice device) {
                             Log.d(TAG, "USBMonitor-onDettach");
@@ -86,10 +70,7 @@ public class USBMonitorDualManager {
                             for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                 onUSBConnectListener.onDettach(device);
                             }
-
                         }
-
-
                         @Override
                         public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock,
                                               boolean createNew) {
@@ -101,15 +82,12 @@ public class USBMonitorDualManager {
                             if (!mVlOpened) {
                                 openVlUVCCamera(vlPid, vlWidth, vlHeight, vlFPS, vlBandWith, device, ctrlBlock);
                             }
-
                             if (mIrOpened && mVlOpened) {
                                 for (OnUSBConnectListener onUSBConnectListener : mOnUSBConnectListeners) {
                                     onUSBConnectListener.onConnect(device, ctrlBlock, createNew);
                                 }
                             }
                         }
-
-
                         @Override
                         public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                             Log.w(TAG, "USBMonitor-onDisconnect");
@@ -118,7 +96,6 @@ public class USBMonitorDualManager {
                                 onUSBConnectListener.onDisconnect(device, ctrlBlock);
                             }
                         }
-
                         @Override
                         public void onCancel(UsbDevice device) {
                             Log.d(TAG, "USBMonitor-onCancel");
@@ -129,21 +106,17 @@ public class USBMonitorDualManager {
                         }
                     });
         }
-
     }
-
     public void registerUSB() {
         if (mUSBMonitor != null) {
             mUSBMonitor.register();
         }
     }
-
     public void unregisterUSB() {
         if (mUSBMonitor != null) {
             mUSBMonitor.unregister();
         }
     }
-
     private void openIrUVCCamera(int pid, int irWidth, int irHeight, int irFps, float irBandWidth, UsbDevice device, USBMonitor.UsbControlBlock controlBlock) {
         Log.w(TAG, "USBMonitor-openIrUVCCamera 1 " + device.getProductId());
         synchronized (mSyncs) {
@@ -151,7 +124,6 @@ public class USBMonitorDualManager {
                 return;
             }
             Log.w(TAG, "USBMonitor-openIrUVCCamera " + device.getProductId());
-
             if (mIrUvcCamera == null) {
                 ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
                 mIrUvcCamera = concreateUVCBuilder
@@ -159,23 +131,16 @@ public class USBMonitorDualManager {
                         .build();
                 mIrUvcCamera.setDefaultBandwidth(irBandWidth);
                 mIrUvcCamera.setDefaultPreviewMaxFps(irFps);
-
                 mIrUvcCamera.openUVCCamera(controlBlock);
-
-
                 initIRCMD();
                 mIrUvcCamera.setUSBPreviewSize(irWidth, irHeight);
                 mIrUvcCamera.onStartPreview();
                 mIrOpened = true;
                 Log.w(TAG, "USBMonitor-openIrUVCCamera complete" + device.getProductId());
-
             }
         }
-
     }
-
     public void initIRCMD() {
-
         if (mIrUvcCamera != null) {
             ConcreteIRCMDBuilder concreteIRCMDBuilder = new ConcreteIRCMDBuilder();
             mIrcmd = concreteIRCMDBuilder
@@ -187,29 +152,22 @@ public class USBMonitorDualManager {
             }
         }
     }
-
     private void openVlUVCCamera(int pid, int vlWidth, int vlHeight, int vlFps, float vlBandWidth, UsbDevice device, USBMonitor.UsbControlBlock controlBlock) {
         synchronized (mSyncs) {
             Log.w(TAG, "USBMonitor-openVlUVCCamera 1" + device.getProductId());
-
             if (device.getProductId() != pid) {
                 return;
             }
             Log.w(TAG, "USBMonitor-openVlUVCCamera " + device.getProductId());
-
             if (mVlUvcCamera == null) {
                 ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
                 mVlUvcCamera = concreateUVCBuilder
                         .setUVCType(UVCType.USB_UVC)
                         .build();
-
                 mVlUvcCamera.setDefaultPreviewMode(CommonParams.FRAMEFORMATType.FRAME_FORMAT_MJPEG);
                 mVlUvcCamera.setDefaultBandwidth(vlBandWidth);
                 mVlUvcCamera.setDefaultPreviewMaxFps(vlFps);
-
                 mVlUvcCamera.openUVCCamera(controlBlock);
-
-
                 mVlUvcCamera.setUSBPreviewSize(vlWidth, vlHeight);
                 if (mVlIFrameCallback != null) {
                     mVlUvcCamera.setFrameCallback(mVlIFrameCallback);
@@ -220,7 +178,6 @@ public class USBMonitorDualManager {
             }
         }
     }
-
     public void stopIrUVCCamera() {
         Log.i(TAG, "stopIrUVCCamera");
         if (mIrUvcCamera != null) {
@@ -231,7 +188,6 @@ public class USBMonitorDualManager {
             mIrOpened = false;
         }
     }
-
     public void stopVlUVCCamera() {
         Log.i(TAG, "stopVlUVCCamera");
         if (mVlUvcCamera != null) {
@@ -242,19 +198,15 @@ public class USBMonitorDualManager {
             mVlOpened = false;
         }
     }
-
     public IRCMD getIrcmd() {
         return mIrcmd;
     }
-
     public UVCCamera getIrUvcCamera() {
         return mIrUvcCamera;
     }
-
     public UVCCamera getVlUvcCamera() {
         return mVlUvcCamera;
     }
-
     public void onRelease() {
         mVlIFrameCallback = null;
         mUSBMonitor = null;

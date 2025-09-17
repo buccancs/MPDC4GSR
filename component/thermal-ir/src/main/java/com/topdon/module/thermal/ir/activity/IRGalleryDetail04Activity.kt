@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.media.MediaScannerConnection
@@ -39,32 +38,19 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.topdon.lib.core.R as LibR
 import com.topdon.lib.ui.R as UiR
-
-
 class IRGalleryDetail04Activity : BaseActivity() {
-    /**
-
-
-     */
     private var isRemote = false
-
     private var position = 0
-
     private lateinit var dataList: ArrayList<GalleryBean>
-
     override fun initContentView() = R.layout.activity_ir_gallery_detail_04
-
     @SuppressLint("SetTextI18n")
     override fun initView() {
         isRemote = intent.getBooleanExtra("isRemote", false)
         position = intent.getIntExtra("position", 0)
         dataList = intent.getParcelableArrayListExtra("list")!!
-
         val titleView = findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view)
         titleView.setTitleText("${position + 1}/${dataList.size}")
-
-        findViewById<ConstraintLayout>(R.id.cl_bottom).isVisible = isRemote // 查看远端时底部才有3个按钮
-
+        findViewById<ConstraintLayout>(R.id.cl_bottom).isVisible = isRemote 
         if (!isRemote) {
             titleView.setRightDrawable(UiR.drawable.ic_toolbar_info_svg)
             titleView.setRight2Drawable(UiR.drawable.ic_toolbar_share_svg)
@@ -73,9 +59,7 @@ class IRGalleryDetail04Activity : BaseActivity() {
             titleView.setRight2ClickListener { actionShare() }
             titleView.setRight3ClickListener { actionDelete() }
         }
-
         initViewPager()
-
         findViewById<ConstraintLayout>(R.id.cl_download).setOnClickListener {
             actionDownload(false)
         }
@@ -90,10 +74,8 @@ class IRGalleryDetail04Activity : BaseActivity() {
             actionDelete()
         }
     }
-
     override fun initData() {
     }
-
     @SuppressLint("SetTextI18n")
     private fun initViewPager() {
         val irGalleryViewpager = findViewById<ViewPager2>(R.id.ir_gallery_viewpager)
@@ -111,7 +93,6 @@ class IRGalleryDetail04Activity : BaseActivity() {
         )
         irGalleryViewpager?.setCurrentItem(position, false)
     }
-
     private fun actionInfo() {
         try {
             val data = dataList[position]
@@ -120,7 +101,6 @@ class IRGalleryDetail04Activity : BaseActivity() {
             val length = exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)
             val whStr = "${width}x$length"
             val sizeStr = FileTools.getFileSize(data.path)
-
             val str = StringBuilder()
             str.append(getString(LibR.string.detail_date)).append("\n")
             str.append(TimeTool.showDateType(data.timeMillis)).append("\n\n")
@@ -133,7 +113,6 @@ class IRGalleryDetail04Activity : BaseActivity() {
             ToastTools.showShort(LibR.string.status_error_load_fail)
         }
     }
-
     private fun actionShare() {
         val data = dataList[position]
         val uri = FileTools.getUri(File(FileConfig.ts004GalleryDir, data.name))
@@ -143,7 +122,6 @@ class IRGalleryDetail04Activity : BaseActivity() {
         shareIntent.type = "image/jpeg"
         startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
     }
-
     private fun actionDelete() {
         ConfirmSelectDialog(this).run {
             setTitleRes(LibR.string.tip_delete)
@@ -155,13 +133,11 @@ class IRGalleryDetail04Activity : BaseActivity() {
             show()
         }
     }
-
     private fun deleteFile(isDelLocal: Boolean) {
         val data = dataList[position]
         if (isRemote) {
             lifecycleScope.launch {
                 showCameraLoading()
-
                 val isSuccess = TS004Repository.deleteFiles(arrayOf(data.id))
                 if (isSuccess) {
                     if (isDelLocal) {
@@ -173,7 +149,6 @@ class IRGalleryDetail04Activity : BaseActivity() {
                             null
                         )
                     }
-
                     dismissCameraLoading()
                     ToastTools.showShort(LibR.string.test_results_delete_success)
                     EventBus.getDefault().post(GalleryDelEvent())
@@ -209,7 +184,6 @@ class IRGalleryDetail04Activity : BaseActivity() {
             }
         }
     }
-
     private fun actionDownload(isToShare: Boolean) {
         val data = dataList[position]
         if (data.hasDownload) {
@@ -233,7 +207,6 @@ class IRGalleryDetail04Activity : BaseActivity() {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                     return false
                 }
-
                 override fun onResourceReady(
                     resource: File?,
                     model: Any?,
@@ -263,12 +236,10 @@ class IRGalleryDetail04Activity : BaseActivity() {
             },
         ).preload()
     }
-
     inner class GalleryViewPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         override fun getItemCount(): Int {
             return dataList.size
         }
-
         override fun createFragment(position: Int): Fragment {
             val fragment = GalleryFragment()
             val bundle = Bundle()

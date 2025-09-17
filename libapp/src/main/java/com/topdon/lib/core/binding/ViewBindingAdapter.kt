@@ -1,5 +1,4 @@
 package com.topdon.lib.core.binding
-
 import android.content.res.TypedArray
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -9,9 +8,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.databinding.BindingAdapter
 import com.blankj.utilcode.util.SizeUtils
-
 object ViewBindingAdapter {
-
     @JvmStatic
     @BindingAdapter("bgEffect")
     fun setBgEffect(
@@ -40,20 +37,18 @@ object ViewBindingAdapter {
                     drawableList.add(effectDrawable)
                 }
             } else {
-                if (drawableList.size == layerCount) { // 本来就没有 hint
+                if (drawableList.size == layerCount) { 
                     return
                 }
-                if (drawableList.isEmpty()) { // 只有1个且为 hint，移除
+                if (drawableList.isEmpty()) { 
                     view.background = null
                     return
                 }
             }
-
             if (drawableList.size == 1) {
                 view.background = drawableList[0]
                 return
             }
-
             val newDrawable = LayerDrawable(drawableList.toArray(arrayOf()))
             if (drawableList.size == 2 && drawableList[0] is GradientDrawable) {
                 oldDrawable.setId(0, android.R.id.content)
@@ -67,7 +62,6 @@ object ViewBindingAdapter {
                 view.context.obtainStyledAttributes(intArrayOf(android.R.attr.selectableItemBackground))
             val effectDrawable: Drawable? = typedArray.getDrawable(0)
             typedArray.recycle()
-
             val newDrawable = LayerDrawable(
                 if (oldDrawable == null) arrayOf(effectDrawable) else arrayOf(
                     oldDrawable,
@@ -81,7 +75,6 @@ object ViewBindingAdapter {
             view.background = newDrawable
         }
     }
-
     @JvmStatic
     @BindingAdapter("bgColor")
     fun setBgColor(
@@ -92,7 +85,6 @@ object ViewBindingAdapter {
         gradientDrawable.setColor(color)
         view.background = buildEffectDrawable(view, gradientDrawable)
     }
-
     @JvmStatic
     @BindingAdapter(
         value = ["bgCorners", "bgCornersLT", "bgCornersRT", "bgCornersLB", "bgCornersRB"],
@@ -126,7 +118,6 @@ object ViewBindingAdapter {
         gradientDrawable.cornerRadii = radii
         view.background = buildEffectDrawable(view, gradientDrawable)
     }
-
     @JvmStatic
     @BindingAdapter(value = ["bgStrokeWidth", "bgStrokeColor"], requireAll = false)
     fun setBgStroke(
@@ -138,7 +129,6 @@ object ViewBindingAdapter {
         gradientDrawable.setStroke(SizeUtils.dp2px(width.toFloat()), color)
         view.background = buildEffectDrawable(view, gradientDrawable)
     }
-
     @JvmStatic
     @BindingAdapter(value = ["bgStartColor", "bgCenterColor", "bgEndColor"], requireAll = false)
     fun setBgGradientColor(
@@ -156,7 +146,6 @@ object ViewBindingAdapter {
             )
         view.background = buildEffectDrawable(view, gradientDrawable)
     }
-
     @JvmStatic
     @BindingAdapter(value = ["bgAngle", "bgRadius", "bgCenterX", "bgCenterY"], requireAll = false)
     fun setBgGradient(
@@ -183,7 +172,6 @@ object ViewBindingAdapter {
         }
         view.background = buildEffectDrawable(view, gradientDrawable)
     }
-
     @JvmStatic
     private fun getOrientation(angle: Int): GradientDrawable.Orientation {
         return when ((angle % 360 + 360) % 360) {
@@ -198,9 +186,7 @@ object ViewBindingAdapter {
             else -> GradientDrawable.Orientation.LEFT_RIGHT
         }
     }
-
     @JvmStatic
-
     private fun buildGradientDrawable(view: View): GradientDrawable {
         val oldDrawable: Drawable? = view.background
         if (oldDrawable is GradientDrawable) {
@@ -219,9 +205,7 @@ object ViewBindingAdapter {
         }
         return GradientDrawable()
     }
-
     @JvmStatic
-
     private fun buildEffectDrawable(
         view: View,
         bgDrawable: GradientDrawable,

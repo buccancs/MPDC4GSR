@@ -1,18 +1,4 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
-
 package com.github.gzuliyujiang.dialog;
-
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.PixelFormat;
@@ -23,24 +9,18 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
-
 import com.topdon.lib.ui.R;
-
 public abstract class BottomDialog extends BaseDialog {
     protected View maskView;
-
     public BottomDialog(@NonNull Activity activity) {
         super(activity, R.style.DialogTheme_Sheet);
     }
-
     public BottomDialog(@NonNull Activity activity, @StyleRes int themeResId) {
         super(activity, themeResId);
     }
-
     @Override
     public void onInit(@Nullable Bundle savedInstanceState) {
         super.onInit(savedInstanceState);
@@ -49,7 +29,6 @@ public abstract class BottomDialog extends BaseDialog {
         setWidth(activity.getResources().getDisplayMetrics().widthPixels);
         setGravity(Gravity.BOTTOM);
     }
-
     @Override
     public void onShow(DialogInterface dialog) {
         super.onShow(dialog);
@@ -57,17 +36,12 @@ public abstract class BottomDialog extends BaseDialog {
             addMaskView();
         }
     }
-
     protected boolean enableMaskView() {
         return true;
     }
-
     protected void addMaskView() {
-
         try {
-
             getWindow().setDimAmount(0);
-
             WindowManager.LayoutParams params = new WindowManager.LayoutParams();
             params.width = WindowManager.LayoutParams.MATCH_PARENT;
             Point screenRealSize = new Point();
@@ -76,7 +50,6 @@ public abstract class BottomDialog extends BaseDialog {
             params.height = screenRealSize.y - activity.getResources().getDimensionPixelSize(navBarIdentifier);
             params.gravity = Gravity.TOP;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-
                 params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             }
             params.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
@@ -100,13 +73,11 @@ public abstract class BottomDialog extends BaseDialog {
             DialogLog.print(e);
         }
     }
-
     @Override
     public void onDismiss(DialogInterface dialog) {
         removeMaskView();
         super.onDismiss(dialog);
     }
-
     protected void removeMaskView() {
         if (maskView == null) {
             DialogLog.print("mask view is null");
@@ -119,5 +90,4 @@ public abstract class BottomDialog extends BaseDialog {
             DialogLog.print(e);
         }
     }
-
 }

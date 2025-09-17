@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.adapter
-
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,17 +9,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.module.thermal.R
-
 class GalleryAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
-
     var datas = arrayListOf<String>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -29,7 +25,6 @@ class GalleryAdapter(val context: Context) :
             LayoutInflater.from(parent.context).inflate(R.layout.item_gallery, parent, false)
         return ItemView(view)
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -49,22 +44,18 @@ class GalleryAdapter(val context: Context) :
             )
         }
     }
-
     override fun getItemCount(): Int {
         return datas.size
     }
-
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lay = itemView.findViewById<ConstraintLayout>(R.id.item_gallery_lay)
         val img = itemView.findViewById<ImageView>(R.id.item_gallery_img)
     }
-
     interface OnItemClickListener {
         fun onClick(
             index: Int,
             path: String,
         )
-
         fun onLongClick(
             index: Int,
             path: String,

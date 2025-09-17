@@ -1,9 +1,6 @@
 package com.example.thermal_lite.camera.task;
-
 import android.util.Log;
-
 import java.util.concurrent.ArrayBlockingQueue;
-
 public class DeviceControlWorker {
     private static final String TAG = "DeviceControlWorker";
     private Thread mThread;
@@ -11,13 +8,11 @@ public class DeviceControlWorker {
     private DeviceState mDeviceState = DeviceState.NONE;
     private IDeviceConnectListener mDeviceControlCallback;
     private boolean isStartPreviewing = false;
-
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             BaseTask task;
             DeviceState previousState;
-
             try {
                 while (!Thread.currentThread().isInterrupted()) {
                     Log.d(TAG, "DeviceControlWorker run");
@@ -39,11 +34,9 @@ public class DeviceControlWorker {
                     }
                     task.run();
                     mEventQueue.poll();
-
                     mDeviceState = task.getDeviceState();
                     Log.d(TAG, "DeviceControlWorker do state : " + mDeviceState);
                     if (mDeviceControlCallback != null) {
-
                         if (mDeviceState != previousState) {
                             if (mDeviceState == DeviceState.OPEN) {
                                 mDeviceControlCallback.onConnected();
@@ -63,7 +56,6 @@ public class DeviceControlWorker {
             }
         }
     };
-
     public void startWork() {
         Log.d(TAG, "startWork");
         if (mThread == null) {
@@ -71,13 +63,11 @@ public class DeviceControlWorker {
             mThread.start();
         }
     }
-
     public void stopWork() {
         Log.d(TAG, "stopWork");
         if (mThread != null) {
             try {
                 mThread.interrupt();
-
                 mThread = null;
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
@@ -85,7 +75,6 @@ public class DeviceControlWorker {
             }
         }
     }
-
     public void addTask(BaseTask task) {
         synchronized (mEventQueue) {
             if (mEventQueue.size() < 2) {
@@ -104,20 +93,16 @@ public class DeviceControlWorker {
             mEventQueue.notify();
         }
     }
-
     public void setDeviceControlCallback(IDeviceConnectListener mDeviceControlCallback) {
         this.mDeviceControlCallback = mDeviceControlCallback;
     }
-
     public void release() {
         mDeviceControlCallback = null;
         stopWork();
     }
-
     public DeviceState getDeviceState() {
         return mDeviceState;
     }
-
     public boolean isStartPreviewing() {
         return isStartPreviewing;
     }

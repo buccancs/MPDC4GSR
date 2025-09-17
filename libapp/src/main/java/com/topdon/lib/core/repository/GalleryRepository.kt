@@ -1,5 +1,4 @@
 package com.topdon.lib.core.repository
-
 import android.content.ContentResolver
 import android.media.MediaScannerConnection
 import android.provider.MediaStore
@@ -16,7 +15,6 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
-
 object GalleryRepository {
     enum class DirType {
         LINE,
@@ -24,7 +22,6 @@ object GalleryRepository {
         TS004_LOCALE,
         TS004_REMOTE,
     }
-
     private fun copySourDir(
         sourceDir: File,
         targetDir: File,
@@ -43,7 +40,6 @@ object GalleryRepository {
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }
-
             fileList?.forEach {
                 val path = sourceDir.absolutePath + File.separator + it.name
                 copyPictureFile(path, targetDir.absolutePath + File.separator + it.name)
@@ -53,7 +49,6 @@ object GalleryRepository {
             false
         }
     }
-
     private fun copyPictureFile(
         oldPath: String,
         newPath: String,
@@ -73,7 +68,6 @@ object GalleryRepository {
             false
         }
     }
-
     fun readLatest(dirType: DirType): String {
         var firstPath = ""
         try {
@@ -82,7 +76,6 @@ object GalleryRepository {
             val dirFile = File(path)
             if (dirFile.isDirectory) {
                 val files = dirFile.listFiles()!!
-
                 files.sortByDescending {
                     it.lastModified()
                 }
@@ -97,7 +90,6 @@ object GalleryRepository {
         }
         return firstPath
     }
-
     suspend fun loadByPage(
         isVideo: Boolean,
         dirType: DirType,
@@ -133,11 +125,9 @@ object GalleryRepository {
                     XLog.e("读取图库失败: ${e.message}")
                 }
             }
-
             return@withContext resultList
         }
     }
-
     suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> =
         withContext(Dispatchers.IO) {
             val resultList: ArrayList<GalleryBean> = ArrayList()
@@ -156,7 +146,6 @@ object GalleryRepository {
             }
             return@withContext resultList
         }
-
     private fun loadAllLocale(
         isVideo: Boolean,
         dirType: DirType,
@@ -186,28 +175,23 @@ object GalleryRepository {
         if (files.isNullOrEmpty()) {
             files = loadAllLocaleByMediaStore(dirType)
         }
-
         val resultList: ArrayList<File> = ArrayList(files.size)
         files.forEach {
             if (it.name.endsWith(if (isVideo) "MP4" else "JPG", true)) {
                 resultList.add(it)
             }
         }
-
         resultList.sortByDescending {
             it.lastModified()
         }
         return resultList
     }
-
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
         val tc001Files: MutableList<File> = ArrayList()
-
         val projection =
             arrayOf(
                 MediaStore.Images.Media.DATA,
             )
-
         val selection = MediaStore.Images.Media.DATA + " LIKE ?"
         val path =
             when (dirType) {
@@ -216,9 +200,7 @@ object GalleryRepository {
                 else -> "%DCIM/TS004%"
             }
         val selectionArgs = arrayOf(path)
-
         val contentResolver: ContentResolver = Utils.getApp().contentResolver
-
         val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cursor =
             contentResolver.query(

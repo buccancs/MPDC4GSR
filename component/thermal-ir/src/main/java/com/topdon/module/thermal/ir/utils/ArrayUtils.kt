@@ -1,10 +1,5 @@
 package com.topdon.module.thermal.ir.utils
-
 object ArrayUtils {
-    /**
-
-
-     */
     fun getMaxIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -17,11 +12,6 @@ object ArrayUtils {
             }
         return index
     }
-
-    /**
-
-
-     */
     fun getMinIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -34,11 +24,6 @@ object ArrayUtils {
             }
         return index
     }
-
-    /**
-
-
-     */
     fun matrixRotate(
         srcData: FloatArray,
         rotateType: Int = 0,
@@ -50,13 +35,11 @@ object ArrayUtils {
             else -> srcData
         }
     }
-
     private fun getMaxIndex(
         data: FloatArray,
         selectIndexList: ArrayList<Int> = arrayListOf(),
     ): Int {
         if (selectIndexList.size == 0) {
-
             var maxIndex = 0
             for (i in 1 until data.size - 1) {
                 if (data[i] > data[maxIndex]) {
@@ -78,7 +61,6 @@ object ArrayUtils {
             return selectIndexList[maxIndex]
         }
     }
-
     private fun getMinIndex(
         data: FloatArray,
         selectIndexList: ArrayList<Int> = arrayListOf(),
@@ -111,11 +93,6 @@ object ArrayUtils {
             return selectIndexList[minIndex]
         }
     }
-
-    /**
-
-
-     */
     private fun getRotateMaxIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -145,11 +122,6 @@ object ArrayUtils {
             return selectIndexList[maxIndex]
         }
     }
-
-    /**
-
-
-     */
     private fun getRotateMinIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -185,7 +157,6 @@ object ArrayUtils {
             return selectIndexList[minIndex]
         }
     }
-
     private fun matrixRotate90(srcData: FloatArray): FloatArray {
         val row = 192
         val column = 256
@@ -198,7 +169,7 @@ object ArrayUtils {
         val destMatrix = Array(column) { FloatArray(row) }
         for (x in 0 until column) {
             for (y in 0 until row) {
-                destMatrix[x][y] = srcMatrix[row - 1 - y][x] // 矩阵旋转90度
+                destMatrix[x][y] = srcMatrix[row - 1 - y][x] 
             }
         }
         val data = FloatArray(srcData.size)
@@ -209,7 +180,6 @@ object ArrayUtils {
         }
         return data
     }
-
     private fun matrixRotate180(srcData: FloatArray): FloatArray {
         val row = 192
         val column = 256
@@ -222,7 +192,7 @@ object ArrayUtils {
         val destMatrix = Array(row) { FloatArray(column) }
         for (x in 0 until row) {
             for (y in 0 until column) {
-                destMatrix[x][y] = srcMatrix[row - 1 - x][column - 1 - y] // 矩阵旋转180度
+                destMatrix[x][y] = srcMatrix[row - 1 - x][column - 1 - y] 
             }
         }
         val data = FloatArray(srcData.size)
@@ -233,24 +203,19 @@ object ArrayUtils {
         }
         return data
     }
-
-    /**
-
-
-     */
     private fun matrixRotate270(srcData: FloatArray): FloatArray {
         val row = 192
         val column = 256
-        val srcMatrix = Array(row) { FloatArray(column) } // 源矩阵
+        val srcMatrix = Array(row) { FloatArray(column) } 
         for (i in 0 until row) {
             for (j in 0 until column) {
                 srcMatrix[i][j] = srcData[i * column + j]
             }
         }
-        val destMatrix = Array(column) { FloatArray(row) } // 目标矩阵
+        val destMatrix = Array(column) { FloatArray(row) } 
         for (x in 0 until column) {
             for (y in 0 until row) {
-                destMatrix[x][y] = srcMatrix[y][column - 1 - x] // 矩阵旋转270度
+                destMatrix[x][y] = srcMatrix[y][column - 1 - x] 
             }
         }
         val data = FloatArray(srcData.size)

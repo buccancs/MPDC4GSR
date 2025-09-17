@@ -1,5 +1,4 @@
 package com.topdon.tc001.service
-
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -51,18 +50,14 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
-
 class RecordingService : LifecycleService() {
-
     companion object {
         private const val TAG = "RecordingService"
         private const val NOTIFICATION_ID = 1001
         private const val CHANNEL_ID = "recording_service_channel"
-
         private const val SERVER_PORT = 8080
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Android"
-
         const val ACTION_START_RECORDING = "com.topdon.tc001.START_RECORDING"
         const val ACTION_STOP_RECORDING = "com.topdon.tc001.STOP_RECORDING"
         const val ACTION_ADD_SYNC_MARKER = "com.topdon.tc001.ADD_SYNC_MARKER"
@@ -71,13 +66,11 @@ class RecordingService : LifecycleService() {
         const val ACTION_CONNECT_PC = "com.topdon.tc001.CONNECT_PC"
         const val ACTION_DISCONNECT_PC = "com.topdon.tc001.DISCONNECT_PC"
         const val ACTION_START_DISCOVERY = "com.topdon.tc001.START_DISCOVERY"
-
         const val EXTRA_SESSION_DIRECTORY = "session_directory"
         const val EXTRA_MARKER_TYPE = "marker_type"
         const val EXTRA_TIMESTAMP_NS = "timestamp_ns"
         const val EXTRA_PC_IP = "pc_ip"
         const val EXTRA_PC_PORT = "pc_port"
-
         fun startRecording(context: Context, sessionDirectory: String) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_START_RECORDING
@@ -85,28 +78,24 @@ class RecordingService : LifecycleService() {
             }
             context.startForegroundService(intent)
         }
-
         fun stopRecording(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_STOP_RECORDING
             }
             context.startService(intent)
         }
-
         fun startServer(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_START_SERVER
             }
             context.startForegroundService(intent)
         }
-
         fun stopServer(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_STOP_SERVER
             }
             context.startService(intent)
         }
-
         fun addSyncMarker(context: Context, markerType: String, timestampNs: Long) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_ADD_SYNC_MARKER
@@ -115,7 +104,6 @@ class RecordingService : LifecycleService() {
             }
             context.startService(intent)
         }
-
         fun connectToPC(context: Context, ipAddress: String, port: Int = 8080) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_CONNECT_PC
@@ -124,14 +112,12 @@ class RecordingService : LifecycleService() {
             }
             context.startService(intent)
         }
-
         fun disconnectFromPC(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_DISCONNECT_PC
             }
             context.startService(intent)
         }
-
         fun startDiscovery(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_START_DISCOVERY
@@ -139,36 +125,27 @@ class RecordingService : LifecycleService() {
             context.startService(intent)
         }
     }
-
     private val binder = RecordingServiceBinder()
-
     private lateinit var recordingController: RecordingController
     private var isInitialized = false
-
     private lateinit var networkClient: NetworkClient
     private lateinit var networkServer: NetworkServer
     private lateinit var previewStreamer: PreviewStreamer
     private lateinit var previewDataAdapter: PreviewDataAdapter
     private var isNetworkInitialized = false
     private var isConnectedToPC = false
-
     private var currentSessionDirectory: String? = null
     private var recordingStartTime: Long = 0
-
     private lateinit var notificationManager: NotificationManager
-
     private var serverSocket: ServerSocket? = null
     private var isServerRunning = AtomicBoolean(false)
     private var serverJob: Job? = null
     private val activeConnections = ConcurrentHashMap<String, ClientConnection>()
-
     private var nsdManager: NsdManager? = null
     private var nsdServiceInfo: NsdServiceInfo? = null
     private var isServiceRegistered = false
-
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
-
     private data class ClientConnection(
         val socket: Socket,
         val clientId: String,
@@ -176,7 +153,6 @@ class RecordingService : LifecycleService() {
         val outputStream: DataOutputStream,
         val job: Job
     )
-
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
         fun getRecordingController(): RecordingController = recordingController
@@ -191,30 +167,23 @@ class RecordingService : LifecycleService() {
                 "Stopped"
             }
         }
-
         fun getConnectedClients(): List<String> {
             return activeConnections.keys.toList()
         }
-
         fun getNetworkClient(): NetworkClient? = if (isNetworkInitialized) networkClient else null
     }
-
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "RecordingService created")
-
         initializePhase0Baseline()
-
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
-
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
         recordingController = RecordingController(this, this)
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
         previewStreamer = PreviewStreamer(networkServer)
         previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
-
         crashSafeSupervisor.registerJob(
             id = "recording_service_init",
             name = "RecordingService Initialization",
@@ -224,15 +193,10 @@ class RecordingService : LifecycleService() {
             lifecycleScope.launch {
                 try {
                     Log.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
-                    
-                    // Initialize sensors with enhanced error handling
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
-                    
-                    // Service is considered initialized if at least one sensor is available
                     isInitialized = sensorsSuccess
                     isNetworkInitialized = networkSuccess
-
                     if (sensorsSuccess) {
                         Log.i(TAG, "Recording service initialized successfully with ${recordingController.getAvailableSensors().size} sensors")
                         structuredLogger.log(
@@ -246,11 +210,9 @@ class RecordingService : LifecycleService() {
                         )
                         setupStatusMonitoring()
                         setupNetworkServer()
-
                         if (FeatureFlags.MDNS_ENABLE) {
                             startServerSocket()
                         }
-
                         if (networkSuccess) {
                             Log.i(TAG, "Network client initialized successfully")
                             startNetworkDiscovery()
@@ -283,14 +245,12 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private fun initializePhase0Baseline() {
         try {
             FeatureFlags.initialize(this)
             structuredLogger = StructuredLogger.getInstance(this)
             crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
             crashSafeSupervisor.initialize()
-
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
                 "RecordingService",
@@ -304,10 +264,8 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Failed to initialize Phase 0 baseline in service", e)
         }
     }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-
         when (intent?.action) {
             ACTION_START_RECORDING -> {
                 val sessionDirectory = intent.getStringExtra(EXTRA_SESSION_DIRECTORY)
@@ -317,7 +275,6 @@ class RecordingService : LifecycleService() {
                     Log.e(TAG, "No session directory provided for recording")
                 }
             }
-
             ACTION_STOP_RECORDING -> stopRecordingSession()
             ACTION_START_SERVER -> startServerSocket()
             ACTION_STOP_SERVER -> stopServerSocket()
@@ -328,7 +285,6 @@ class RecordingService : LifecycleService() {
                     addSyncMarker(markerType, timestampNs)
                 }
             }
-
             ACTION_CONNECT_PC -> {
                 val ipAddress = intent.getStringExtra(EXTRA_PC_IP)
                 val port = intent.getIntExtra(EXTRA_PC_PORT, 8080)
@@ -336,18 +292,15 @@ class RecordingService : LifecycleService() {
                     connectToPC(ipAddress, port)
                 }
             }
-
             ACTION_DISCONNECT_PC -> disconnectFromPC()
             ACTION_START_DISCOVERY -> startPCDiscovery()
         }
         return START_STICKY
     }
-
     override fun onBind(intent: Intent): IBinder {
         super.onBind(intent)
         return binder
     }
-
     override fun onDestroy() {
         super.onDestroy()
         structuredLogger.log(
@@ -363,11 +316,9 @@ class RecordingService : LifecycleService() {
             if (isNetworkInitialized) {
                 networkClient.disconnect()
             }
-            // Cleanup preview streamer
             if (::previewStreamer.isInitialized) {
                 previewStreamer.cleanup()
             }
-            // Cleanup preview data adapter
             if (::previewDataAdapter.isInitialized) {
                 previewDataAdapter.cleanup()
             }
@@ -385,7 +336,6 @@ class RecordingService : LifecycleService() {
         }
         Log.i(TAG, "RecordingService destroyed")
     }
-
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -399,7 +349,6 @@ class RecordingService : LifecycleService() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
     private fun startRecordingSession(sessionDirectory: String) {
         if (!isInitialized) {
             Log.e(TAG, "Service not initialized, cannot start recording")
@@ -411,17 +360,14 @@ class RecordingService : LifecycleService() {
             )
             return
         }
-
         lifecycleScope.launch {
             try {
                 val sessionDir = File(sessionDirectory)
                 if (!sessionDir.exists()) {
                     sessionDir.mkdirs()
                 }
-
                 currentSessionDirectory = sessionDirectory
                 recordingStartTime = System.nanoTime()
-
                 Log.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
@@ -432,21 +378,16 @@ class RecordingService : LifecycleService() {
                         "available_sensors" to recordingController.getAvailableSensors().map { it.sensorId }
                     )
                 )
-
                 startForeground(
                     NOTIFICATION_ID,
                     createRecordingNotification("Starting recording session...")
                 )
-
-                // Use the enhanced session start method
                 val success = recordingController.startSession(sessionDirectory)
-
                 if (success) {
                     val activeSensors = recordingController.getActiveSensorCount()
                     val totalSensors = recordingController.getAvailableSensors().size
                     Log.i(TAG, "Recording session started successfully with $activeSensors/$totalSensors sensors")
                     updateNotification("Recording: $activeSensors sensors active")
-                    
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -480,26 +421,20 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private fun stopRecordingSession() {
         lifecycleScope.launch {
             try {
                 updateNotification("Stopping recording session...")
                 Log.i(TAG, "Stopping recording session")
-
-                // Use the enhanced session stop method
                 val success = recordingController.stopSession()
-
                 if (success) {
                     val sessionDuration = if (recordingStartTime > 0) {
                         (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
                     } else 0.0
-
                     Log.i(TAG, "Recording session stopped successfully (duration: ${String.format("%.1f", sessionDuration)}s)")
                     updateNotification(
                         "Recording completed (${String.format("%.1f", sessionDuration)}s)"
                     )
-                    
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -509,7 +444,6 @@ class RecordingService : LifecycleService() {
                             "session_directory" to (currentSessionDirectory ?: "unknown")
                         )
                     )
-                    
                     delay(2000)
                     stopForeground(true)
                 } else {
@@ -521,11 +455,8 @@ class RecordingService : LifecycleService() {
                         "recording_session_stop_failed"
                     )
                 }
-
                 currentSessionDirectory = null
                 recordingStartTime = 0
-
-                // If the server is not running independently, stop the service.
                 if (!isServerRunning.get()) {
                     stopSelf()
                 }
@@ -541,15 +472,13 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private fun addSyncMarker(markerType: String, timestampNs: Long) {
         lifecycleScope.launch {
             try {
                 recordingController.addSyncMarker(markerType, timestampNs)
                 Log.i(TAG, "Sync marker added: $markerType")
-
                 if (recordingController.isRecording) {
-                    val originalText = "Recording in progress" // Or get the current text
+                    val originalText = "Recording in progress" 
                     updateNotification("Sync marker: $markerType")
                     delay(1000)
                     updateNotification(originalText)
@@ -559,7 +488,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private fun setupStatusMonitoring() {
         recordingController.recordingStateFlow
             .onEach { state ->
@@ -572,13 +500,11 @@ class RecordingService : LifecycleService() {
                 }
             }
             .launchIn(lifecycleScope)
-
         recordingController.sensorStatusFlow
             .onEach { statusList ->
                 val activeSensors = statusList.count { it.isRecording }
                 val totalSamples = statusList.sumOf { it.samplesRecorded }
                 val totalStorage = statusList.sumOf { it.storageUsedMB }
-
                 if (activeSensors > 0) {
                     val statusText = "Recording: $activeSensors sensors, " +
                             "${totalSamples} samples, " +
@@ -587,7 +513,6 @@ class RecordingService : LifecycleService() {
                 }
             }
             .launchIn(lifecycleScope)
-
         recordingController.errorFlow
             .onEach { error ->
                 Log.w(TAG, "Recording controller error: ${error.message}")
@@ -604,7 +529,6 @@ class RecordingService : LifecycleService() {
             }
             .launchIn(lifecycleScope)
     }
-
     private fun createRecordingNotification(contentText: String): Notification {
         val stopIntent = Intent(this, RecordingService::class.java).apply {
             action = ACTION_STOP_RECORDING
@@ -613,7 +537,6 @@ class RecordingService : LifecycleService() {
             this, 0, stopIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("IRCamera Recording")
             .setContentText(contentText)
@@ -628,15 +551,13 @@ class RecordingService : LifecycleService() {
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build()
     }
-
     private fun updateNotification(contentText: String) {
         try {
-            // Only update notification if the service is in a state that requires one
             if (isServiceForeground()) {
                 val notification = when {
                     recordingController.isRecording -> createRecordingNotification(contentText)
                     isServerRunning.get() -> createServerNotification(contentText)
-                    else -> null // Should not happen if isServiceForeground is true
+                    else -> null 
                 }
                 notification?.let { notificationManager.notify(NOTIFICATION_ID, it) }
             }
@@ -644,11 +565,8 @@ class RecordingService : LifecycleService() {
             Log.w(TAG, "Failed to update notification", e)
         }
     }
-
     fun getRecordingController(): RecordingController = recordingController
-
     fun isInitialized(): Boolean = isInitialized
-
     fun getCurrentSession(): SessionInfo? {
         return currentSessionDirectory?.let { directory ->
             SessionInfo(
@@ -657,7 +575,6 @@ class RecordingService : LifecycleService() {
             )
         }
     }
-
     private fun startServerSocket() {
         if (isServerRunning.get()) {
             structuredLogger.logServerEvent(
@@ -666,7 +583,6 @@ class RecordingService : LifecycleService() {
             )
             return
         }
-
         crashSafeSupervisor.registerJob(
             id = "server_socket",
             name = "Server Socket",
@@ -696,7 +612,6 @@ class RecordingService : LifecycleService() {
             runServerSocketSupervised(stopToken)
         }
     }
-
     private suspend fun runServerSocketSupervised(stopToken: CrashSafeSupervisor.StopToken) {
         try {
             serverSocket = ServerSocket(SERVER_PORT)
@@ -762,12 +677,10 @@ class RecordingService : LifecycleService() {
             cleanupServerSocket()
         }
     }
-
     private fun cleanupServerSocket() {
         isServerRunning.set(false)
         serverJob?.cancel()
         serverJob = null
-
         activeConnections.values.forEach { connection ->
             try {
                 connection.job.cancel()
@@ -781,7 +694,6 @@ class RecordingService : LifecycleService() {
             }
         }
         activeConnections.clear()
-
         try {
             serverSocket?.close()
         } catch (e: Exception) {
@@ -795,7 +707,6 @@ class RecordingService : LifecycleService() {
         unregisterNsdService()
         structuredLogger.logServerEvent("server_socket_cleanup_completed")
     }
-
     private fun stopServerSocket() {
         if (!isServerRunning.get()) {
             structuredLogger.logServerEvent("server_not_running")
@@ -806,7 +717,6 @@ class RecordingService : LifecycleService() {
         cleanupServerSocket()
         structuredLogger.logServerEvent("server_socket_stopped")
     }
-
     private fun startAcceptLoop() {
         serverJob = lifecycleScope.launch(Dispatchers.IO) {
             while (isServerRunning.get() && isActive) {
@@ -836,13 +746,11 @@ class RecordingService : LifecycleService() {
             Log.i(TAG, "Accept loop terminated")
         }
     }
-
     private suspend fun handleNewClientConnection(clientSocket: Socket, clientId: String) {
         try {
-            clientSocket.soTimeout = 30000 // 30 second timeout
+            clientSocket.soTimeout = 30000 
             val inputStream = DataInputStream(clientSocket.getInputStream())
             val outputStream = DataOutputStream(clientSocket.getOutputStream())
-
             val clientJob = lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     handleClientMessages(clientId, inputStream, outputStream)
@@ -878,7 +786,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private suspend fun handleClientMessages(
         clientId: String,
         inputStream: DataInputStream,
@@ -887,7 +794,7 @@ class RecordingService : LifecycleService() {
         while (isServerRunning.get() && currentCoroutineContext().isActive) {
             try {
                 val messageLength = inputStream.readInt()
-                if (messageLength > 1024 * 1024) { // 1MB limit
+                if (messageLength > 1024 * 1024) { 
                     Log.w(TAG, "Message too large from $clientId: $messageLength bytes")
                     break
                 }
@@ -906,7 +813,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private suspend fun initializeNetworkClient(): Boolean {
         return try {
             val success = networkClient.initialize()
@@ -922,7 +828,6 @@ class RecordingService : LifecycleService() {
             false
         }
     }
-
     private fun setupNetworkCommandHandlers() {
         try {
             networkClient.setMessageHandler("start_recording") { message ->
@@ -944,9 +849,7 @@ class RecordingService : LifecycleService() {
             Log.w(TAG, "Network client message handlers setup failed: ${e.message}")
         }
     }
-
     fun getNetworkClient(): NetworkClient = networkClient
-
     private fun setupNetworkServer() {
         lifecycleScope.launch {
             try {
@@ -963,33 +866,28 @@ class RecordingService : LifecycleService() {
                 updateNotification("Network server error: ${e.message}")
             }
         }
-
         lifecycleScope.launch {
             networkServer.connectionStateFlow.collect { connected ->
                 isConnectedToPC = connected
                 if (connected) {
                     Log.i(TAG, "PC Controller connected to network server")
                     updateNotification("PC Controller connected")
-                    // Start preview streaming when PC connects
                     previewStreamer.startStreaming()
                     previewDataAdapter.startDataPolling()
                 } else {
                     Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
                     updateNotification("Listening for PC Controller on port 8080")
-                    // Stop preview streaming when PC disconnects
                     previewDataAdapter.stopDataPolling()
                     previewStreamer.stopStreaming()
                 }
             }
         }
-
         lifecycleScope.launch {
             networkServer.messageFlow.collect { message ->
                 handlePCCommand(message)
             }
         }
     }
-
     private fun connectToPC(ipAddress: String, port: Int) {
         lifecycleScope.launch {
             try {
@@ -1012,7 +910,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private fun disconnectFromPC() {
         lifecycleScope.launch {
             try {
@@ -1028,7 +925,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private suspend fun processClientMessage(
         clientId: String,
         message: JSONObject,
@@ -1036,7 +932,6 @@ class RecordingService : LifecycleService() {
     ) {
         val messageType = message.optString("message_type")
         val messageId = message.optString("msg_id", "unknown")
-
         structuredLogger.logProtocolMessage(
             "message_received", messageId, clientId,
             mapOf(
@@ -1080,7 +975,6 @@ class RecordingService : LifecycleService() {
                         sendError(outputStream, handshakeResult.error ?: "Handshake failed")
                     }
                 }
-
                 "session_start" -> {
                     val sessionId =
                         message.optString("session_id", "remote_${System.currentTimeMillis()}")
@@ -1103,7 +997,6 @@ class RecordingService : LifecycleService() {
                         })
                     sendMessage(outputStream, ackMessage)
                 }
-
                 "session_stop" -> {
                     structuredLogger.logSessionEvent(
                         "remote_session_stop_request", "current", mapOf("client_id" to clientId)
@@ -1119,7 +1012,6 @@ class RecordingService : LifecycleService() {
                         })
                     sendMessage(outputStream, ackMessage)
                 }
-
                 "sync_flash" -> {
                     val durationMs = message.optInt("duration_ms", 100)
                     structuredLogger.log(
@@ -1137,7 +1029,6 @@ class RecordingService : LifecycleService() {
                         })
                     sendMessage(outputStream, ackMessage)
                 }
-
                 "status_request" -> {
                     structuredLogger.logProtocolMessage(
                         "status_request_received",
@@ -1146,7 +1037,6 @@ class RecordingService : LifecycleService() {
                     )
                     sendStatusResponse(outputStream)
                 }
-
                 "heartbeat" -> {
                     structuredLogger.logProtocolMessage(
                         "heartbeat_received", messageId, clientId,
@@ -1160,7 +1050,6 @@ class RecordingService : LifecycleService() {
                         })
                     sendMessage(outputStream, ackMessage)
                 }
-
                 else -> {
                     structuredLogger.logProtocolMessage(
                         "unknown_message_type",
@@ -1192,7 +1081,6 @@ class RecordingService : LifecycleService() {
             sendMessage(outputStream, errorMessage)
         }
     }
-
     private suspend fun sendAck(
         outputStream: DataOutputStream,
         messageType: String,
@@ -1206,7 +1094,6 @@ class RecordingService : LifecycleService() {
         }
         sendMessage(outputStream, ackMessage)
     }
-
     private suspend fun sendError(outputStream: DataOutputStream, error: String) {
         val errorMessage = JSONObject().apply {
             put("message_type", "error")
@@ -1215,7 +1102,6 @@ class RecordingService : LifecycleService() {
         }
         sendMessage(outputStream, errorMessage)
     }
-
     private suspend fun sendStatusResponse(outputStream: DataOutputStream) {
         val statusMessage = JSONObject().apply {
             put("message_type", "status_response")
@@ -1233,7 +1119,6 @@ class RecordingService : LifecycleService() {
         }
         sendMessage(outputStream, statusMessage)
     }
-
     private suspend fun sendKeepAlive(outputStream: DataOutputStream) {
         val keepAliveMessage = JSONObject().apply {
             put("message_type", "keepalive")
@@ -1241,7 +1126,6 @@ class RecordingService : LifecycleService() {
         }
         sendMessage(outputStream, keepAliveMessage)
     }
-
     private suspend fun sendMessage(
         outputStream: DataOutputStream,
         message: JSONObject
@@ -1275,7 +1159,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private fun startPCDiscovery() {
         lifecycleScope.launch {
             try {
@@ -1290,7 +1173,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     private suspend fun handlePCCommand(message: JSONObject) {
         try {
             val messageType = message.optString("message_type")
@@ -1309,7 +1191,6 @@ class RecordingService : LifecycleService() {
                             })
                         })
                 }
-
                 "session_start_command" -> {
                     val sessionDirectory = message.optString("session_directory")
                     if (sessionDirectory.isNotEmpty()) {
@@ -1326,7 +1207,6 @@ class RecordingService : LifecycleService() {
                             })
                     }
                 }
-
                 "session_stop_command" -> {
                     Log.i(TAG, "Received remote stop command from PC")
                     stopRecordingSession()
@@ -1336,7 +1216,6 @@ class RecordingService : LifecycleService() {
                             put("status", "stopped")
                         })
                 }
-
                 "sync_marker_command" -> {
                     val markerType = message.optString("marker_type")
                     val timestampNs = message.optLong("timestamp_ns", System.nanoTime())
@@ -1351,19 +1230,16 @@ class RecordingService : LifecycleService() {
                             })
                     }
                 }
-
                 "ping" -> {
                     Log.d(TAG, "Received ping from PC Controller")
                     sendResponseToPC("pong", JSONObject().apply {
                         put("timestamp_ns", System.nanoTime())
                     })
                 }
-
                 "status_request" -> {
                     Log.d(TAG, "PC Controller requested status")
                     sendStatusToPC()
                 }
-
                 "start_preview_streaming" -> {
                     Log.i(TAG, "PC Controller requested to start preview streaming")
                     lifecycleScope.launch {
@@ -1374,7 +1250,6 @@ class RecordingService : LifecycleService() {
                         })
                     }
                 }
-
                 "stop_preview_streaming" -> {
                     Log.i(TAG, "PC Controller requested to stop preview streaming")
                     lifecycleScope.launch {
@@ -1385,7 +1260,6 @@ class RecordingService : LifecycleService() {
                         })
                     }
                 }
-
                 "configure_preview_streaming" -> {
                     Log.i(TAG, "PC Controller requested to configure preview streaming")
                     val frameInterval = message.optLong("frame_interval_ms", 1000L)
@@ -1393,7 +1267,6 @@ class RecordingService : LifecycleService() {
                     val previewWidth = message.optInt("preview_width", 320)
                     val previewHeight = message.optInt("preview_height", 240)
                     val jpegQuality = message.optInt("jpeg_quality", 70)
-                    
                     previewStreamer.configure(frameInterval, sensorInterval, previewWidth, previewHeight, jpegQuality)
                     sendResponseToPC("preview_config_response", JSONObject().apply {
                         put("status", "configured")
@@ -1404,7 +1277,6 @@ class RecordingService : LifecycleService() {
                         put("jpeg_quality", jpegQuality)
                     })
                 }
-
                 else -> {
                     Log.w(TAG, "Unknown command from PC Controller: $messageType")
                     sendResponseToPC("error", JSONObject().apply {
@@ -1419,12 +1291,9 @@ class RecordingService : LifecycleService() {
             })
         }
     }
-
     private fun isServiceForeground(): Boolean {
-        // The service is considered "foreground" if it's actively recording or if the server is running.
         return recordingController.isRecording || isServerRunning.get()
     }
-
     private fun createServerNotification(contentText: String): Notification {
         val stopIntent = Intent(this, RecordingService::class.java).apply {
             action = ACTION_STOP_SERVER
@@ -1433,7 +1302,6 @@ class RecordingService : LifecycleService() {
             this, 1, stopIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("IRCamera Server")
             .setContentText(contentText)
@@ -1448,7 +1316,6 @@ class RecordingService : LifecycleService() {
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .build()
     }
-
     fun startNetworkDiscovery() {
         lifecycleScope.launch {
             try {
@@ -1464,7 +1331,6 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     fun handleStartRecordingCommand(message: JSONObject) {
         lifecycleScope.launch {
             try {
@@ -1493,13 +1359,9 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-
     fun performSyncFlash(durationMs: Int) {
-        // This is a placeholder for the actual flash logic.
-        // For now, it just adds a sync marker.
         this.addSyncMarker("pc_sync_flash", System.nanoTime())
     }
-
     fun registerNsdService() {
         if (isServiceRegistered) {
             Log.i(TAG, "NSD service already registered")
@@ -1520,14 +1382,12 @@ class RecordingService : LifecycleService() {
                         nsdServiceInfo = registeredServiceInfo
                         isServiceRegistered = true
                     }
-
                     override fun onRegistrationFailed(
                         failedServiceInfo: NsdServiceInfo?,
                         errorCode: Int
                     ) {
                         Log.e(TAG, "NSD service registration failed: $errorCode")
                     }
-
                     override fun onServiceUnregistered(unregisteredServiceInfo: NsdServiceInfo?) {
                         Log.i(
                             TAG,
@@ -1535,7 +1395,6 @@ class RecordingService : LifecycleService() {
                         )
                         isServiceRegistered = false
                     }
-
                     override fun onUnregistrationFailed(
                         failedServiceInfo: NsdServiceInfo?,
                         errorCode: Int
@@ -1547,7 +1406,6 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error registering NSD service", e)
         }
     }
-
     fun unregisterNsdService() {
         if (!isServiceRegistered || nsdServiceInfo == null) {
             return
@@ -1561,7 +1419,6 @@ class RecordingService : LifecycleService() {
                     isServiceRegistered = false
                     nsdServiceInfo = null
                 }
-
                 override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
                     Log.e(TAG, "NSD service unregistration failed: $errorCode")
                 }
@@ -1570,7 +1427,6 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error unregistering NSD service", e)
         }
     }
-
     private suspend fun sendResponseToPC(
         messageType: String,
         data: JSONObject = JSONObject()
@@ -1596,7 +1452,6 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error sending response to PC", e)
         }
     }
-
     private suspend fun sendStatusToPC() {
         try {
             val statusData = JSONObject().apply {
@@ -1613,7 +1468,6 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error sending status to PC", e)
         }
     }
-
     private fun handleQueryStatusCommand(message: JSONObject) {
         try {
             Log.d(TAG, "Handling query status command")
@@ -1624,7 +1478,6 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error handling query status command", e)
         }
     }
-
     private fun handleSyncFlashCommand(message: JSONObject) {
         try {
             val durationMs = message.optInt("duration_ms", 100)
@@ -1640,7 +1493,6 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error handling sync flash command", e)
         }
     }
-
     private fun handleQueryCapabilitiesCommand(message: JSONObject) {
         try {
             Log.d(TAG, "Handling query capabilities command")
@@ -1667,13 +1519,12 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Error handling query capabilities command", e)
         }
     }
-
     private fun handleStopRecordingCommand(message: JSONObject) {
         try {
             Log.d(TAG, "Handling stop recording command")
             lifecycleScope.launch {
                 if (recordingController.isRecording) {
-                    stopRecordingSession() // Changed from recordingController.stopRecording() to use the service method
+                    stopRecordingSession() 
                     sendResponseToPC("stop_recording_response", JSONObject().apply {
                         put("status", "stopped")
                         put("session_directory", currentSessionDirectory ?: "")

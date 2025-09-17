@@ -1,19 +1,15 @@
 package com.topdon.commons.poster;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
-
 public class PosterDispatcher {
     private final ThreadMode defaultMode;
     private final Poster backgroundPoster;
     private final Poster mainThreadPoster;
     private final ExecutorService executorService;
     private final Poster asyncPoster;
-
     public PosterDispatcher(@NonNull ExecutorService executorService, @NonNull ThreadMode defaultMode) {
         this.defaultMode = defaultMode;
         this.executorService = executorService;
@@ -21,21 +17,17 @@ public class PosterDispatcher {
         mainThreadPoster = new MainThreadPoster();
         asyncPoster = new AsyncPoster(executorService);
     }
-
     public ThreadMode getDefaultMode() {
         return defaultMode;
     }
-
     public ExecutorService getExecutorService() {
         return executorService;
     }
-
     public void clearTasks() {
         backgroundPoster.clear();
         mainThreadPoster.clear();
         asyncPoster.clear();
     }
-
     public void post(@Nullable Method method, @NonNull Runnable runnable) {
         if (method != null) {
             RunOn annotation = method.getAnnotation(RunOn.class);
@@ -46,7 +38,6 @@ public class PosterDispatcher {
             post(mode, runnable);
         }
     }
-
     public void post(@NonNull ThreadMode mode, @NonNull Runnable runnable) {
         if (mode == ThreadMode.UNSPECIFIED) {
             mode = defaultMode;
@@ -66,7 +57,6 @@ public class PosterDispatcher {
                 break;
         }
     }
-
     public void post(@NonNull Object owner, @NonNull String methodName, @NonNull String tag,
                      @Nullable MethodInfo.Parameter... parameters) {
         Class<?>[] classes = new Class[0];
@@ -113,7 +103,6 @@ public class PosterDispatcher {
         } catch (Exception ignore) {
         }
     }
-
     private boolean equalParamTypes(Class<?>[] params1, Class<?>[] params2) {
         if (params1.length == params2.length) {
             for (int i = 0; i < params1.length; i++) {
@@ -124,11 +113,9 @@ public class PosterDispatcher {
         }
         return false;
     }
-
     public void post(@NonNull final Object owner, @NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         post(owner, methodName, "", parameters);
     }
-
     public void post(@NonNull Object owner, @NonNull MethodInfo methodInfo) {
         post(owner, methodInfo.getName(), methodInfo.getTag(), methodInfo.getParameters());
     }

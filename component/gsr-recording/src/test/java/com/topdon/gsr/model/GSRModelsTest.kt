@@ -1,11 +1,9 @@
 package com.topdon.gsr.model
-
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-
 class GSRModelsTest {
     @Test
     fun testGSRSampleCreation() {
@@ -13,9 +11,7 @@ class GSRModelsTest {
         val utcTimestamp = timestamp + 1000
         val sampleIndex = 42L
         val sessionId = "test_session"
-
         val sample = GSRSample.createSimulated(timestamp, utcTimestamp, sampleIndex, sessionId)
-
         assertEquals(timestamp, sample.timestamp)
         assertEquals(utcTimestamp, sample.utcTimestamp)
         assertEquals(sampleIndex, sample.sampleIndex)
@@ -23,7 +19,6 @@ class GSRModelsTest {
         assertTrue("Conductance should be positive", sample.conductance > 0)
         assertTrue("Resistance should be positive", sample.resistance > 0)
     }
-
     @Test
     fun testGSRSampleToCsvRow() {
         val sample =
@@ -36,36 +31,30 @@ class GSRModelsTest {
                 sampleIndex = 100L,
                 sessionId = "test_session",
             )
-
         val csvRow = sample.toCsvRow()
-
-        assertEquals(7, csvRow.size) // Updated to expect 7 fields (includes rawValue)
+        assertEquals(7, csvRow.size) 
         assertEquals("1234567890", csvRow[0])
         assertEquals("1234567891", csvRow[1])
         assertEquals("12.345678", csvRow[2])
         assertEquals("80.987654", csvRow[3])
-        assertEquals("2048", csvRow[4]) // rawValue field
-        assertEquals("100", csvRow[5]) // sampleIndex field
-        assertEquals("test_session", csvRow[6]) // sessionId field
+        assertEquals("2048", csvRow[4]) 
+        assertEquals("100", csvRow[5]) 
+        assertEquals("test_session", csvRow[6]) 
     }
-
     @Test
     fun testSessionInfo() {
         val sessionId = "test_session"
         val startTime = System.currentTimeMillis()
         val session = SessionInfo(sessionId = sessionId, startTime = startTime)
-
         assertEquals(sessionId, session.sessionId)
         assertEquals(startTime, session.startTime)
         assertNull(session.endTime)
         assertTrue(session.isActive())
-        assertTrue(session.getDurationMs() >= 0) // Allow 0 or positive duration
-
+        assertTrue(session.getDurationMs() >= 0) 
         session.endTime = startTime + 5000
         assertFalse(session.isActive())
         assertEquals(5000L, session.getDurationMs())
     }
-
     @Test
     fun testSyncMark() {
         val timestamp = System.currentTimeMillis()
@@ -73,7 +62,6 @@ class GSRModelsTest {
         val eventType = "THERMAL_CAPTURE"
         val sessionId = "test_session"
         val metadata = mapOf("camera" to "thermal", "frame" to "123")
-
         val syncMark =
             SyncMark(
                 timestamp = timestamp,
@@ -82,13 +70,11 @@ class GSRModelsTest {
                 sessionId = sessionId,
                 metadata = metadata,
             )
-
         assertEquals(timestamp, syncMark.timestamp)
         assertEquals(utcTimestamp, syncMark.utcTimestamp)
         assertEquals(eventType, syncMark.eventType)
         assertEquals(sessionId, syncMark.sessionId)
         assertEquals(metadata, syncMark.metadata)
-
         val csvRow = syncMark.toCsvRow()
         assertEquals(5, csvRow.size)
         assertEquals(timestamp.toString(), csvRow[0])
@@ -98,7 +84,6 @@ class GSRModelsTest {
         assertTrue(csvRow[4].contains("camera=thermal"))
         assertTrue(csvRow[4].contains("frame=123"))
     }
-
     @Test
     fun testSyncMarkEmptyMetadata() {
         val syncMark =
@@ -108,8 +93,7 @@ class GSRModelsTest {
                 eventType = "TEST",
                 sessionId = "test",
             )
-
         val csvRow = syncMark.toCsvRow()
-        assertEquals("", csvRow[4]) // Empty metadata
+        assertEquals("", csvRow[4]) 
     }
 }

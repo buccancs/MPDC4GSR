@@ -1,9 +1,6 @@
 package com.topdon.lib.ui.core
-
 import android.view.View
 import androidx.annotation.IntDef
-
-
 class Pivot(
     @get:Axis
     @param:Axis val axis: Int,
@@ -26,7 +23,6 @@ class Pivot(
             }
         }
     }
-
     enum class X {
         LEFT {
             override fun create(): Pivot {
@@ -43,10 +39,8 @@ class Pivot(
                 return Pivot(AXIS_X, PIVOT_MAX)
             }
         }, ;
-
         abstract fun create(): Pivot
     }
-
     enum class Y {
         TOP {
             override fun create(): Pivot {
@@ -63,14 +57,11 @@ class Pivot(
                 return Pivot(AXIS_Y, PIVOT_MAX)
             }
         }, ;
-
         abstract fun create(): Pivot
     }
-
     @IntDef(AXIS_X, AXIS_Y)
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     annotation class Axis
-
     companion object {
         const val AXIS_X = 0
         const val AXIS_Y = 1

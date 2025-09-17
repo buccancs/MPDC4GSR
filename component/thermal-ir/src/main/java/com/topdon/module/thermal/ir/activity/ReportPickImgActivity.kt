@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -33,56 +32,29 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import com.topdon.lib.core.R as LibR
 import com.topdon.lib.ui.R as UiR
-
-/**
-
- *
-
-
-
-
-
- */
-
 class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
-    /**
-
-
-     */
     private var isTC007 = false
-
     private val viewModel: IRGalleryViewModel by viewModels()
-
     private val adapter = GalleryAdapter()
-
     private lateinit var titleView: com.topdon.lib.core.view.TitleView
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var groupBottom: androidx.constraintlayout.widget.Group
     private lateinit var irGalleryRecycler: androidx.recyclerview.widget.RecyclerView
-
     override fun initContentView() = R.layout.activity_report_pick_img
-
     override fun initView() {
-
         titleView = findViewById(R.id.title_view)
         clShare = findViewById(R.id.cl_share)
         clDelete = findViewById(R.id.cl_delete)
         groupBottom = findViewById(R.id.group_bottom)
         irGalleryRecycler = findViewById(R.id.ir_gallery_recycler)
-
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-
         titleView.setRightDrawable(UiR.drawable.ic_toolbar_check_svg)
         titleView.setRightClickListener { setEditMode(true) }
-
         initRecycler()
-
         clShare.setOnClickListener(this)
         clDelete.setOnClickListener(this)
-
         showLoadingDialog()
-
         viewModel.showListLD.observe(this) {
             adapter.refreshList(it)
             dismissLoadingDialog()
@@ -108,15 +80,12 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         }
         viewModel.queryAllReportImg(if (isTC007) DirType.TC007 else DirType.LINE)
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onReportCreate(event: ReportCreateEvent) {
         finish()
     }
-
     override fun initData() {
     }
-
     override fun onBackPressed() {
         if (adapter.isEditMode) {
             setEditMode(false)
@@ -124,7 +93,6 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             super.onBackPressed()
         }
     }
-
     private fun setEditMode(isEditMode: Boolean) {
         adapter.isEditMode = isEditMode
         groupBottom.isVisible = isEditMode
@@ -133,7 +101,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                 R.string.app_gallery
             ),
         )
-        titleView.setLeftDrawable(if (isEditMode) 0 else 0) // Note: Add appropriate drawables for edit mode states
+        titleView.setLeftDrawable(if (isEditMode) 0 else 0) 
         titleView.setLeftClickListener {
             if (isEditMode) {
                 setEditMode(false)
@@ -151,23 +119,19 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
     override fun onClick(v: View?) {
         when (v) {
             clShare -> {
                 shareImage()
             }
-
             clDelete -> {
                 deleteImage()
             }
         }
     }
-
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(this, spanCount)
-
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -176,12 +140,10 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             }
         irGalleryRecycler.adapter = adapter
         irGalleryRecycler.layoutManager = gridLayoutManager
-
         adapter.onLongEditListener = {
-
             groupBottom.isVisible = true
             titleView.setTitleText(getString(R.string.chosen_item, adapter.selectList.size))
-            titleView.setLeftDrawable(0) // Note: Add appropriate drawable for cancel/back action
+            titleView.setLeftDrawable(0) 
             titleView.setLeftClickListener {
                 setEditMode(false)
             }
@@ -191,7 +153,6 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                 adapter.selectAll()
             }
         }
-
         adapter.selectCallback = {
             titleView.setTitleText(getString(R.string.chosen_item, it.size))
         }
@@ -206,7 +167,6 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                         .withBoolean(ExtraKeyConfig.IS_PICK_REPORT_IMG, true)
                         .withBoolean(IS_REPORT_FIRST, false)
                         .withString(ExtraKeyConfig.FILE_ABSOLUTE_PATH, irPath)
-
                 intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)?.let {
                     navigation.withParcelable(ExtraKeyConfig.REPORT_INFO, it)
                 }
@@ -218,14 +178,12 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                     ?.let {
                         navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
                     }
-
                 navigation.navigation(this)
             } else {
                 ToastTools.showShort(R.string.album_report_on_edit)
             }
         }
     }
-
     private fun deleteImage() {
         val deleteList = adapter.buildSelectList()
         if (deleteList.size > 0) {
@@ -244,7 +202,6 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             ToastTools.showShort(getString(R.string.tip_least_select))
         }
     }
-
     private fun shareImage() {
         val data = adapter.buildSelectList()
         if (data.size == 0) {

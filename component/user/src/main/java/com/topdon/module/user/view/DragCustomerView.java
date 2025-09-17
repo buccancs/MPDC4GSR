@@ -1,13 +1,10 @@
 package com.topdon.module.user.view;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.topdon.lib.core.utils.ScreenUtil;
-
 public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageView {
     float mDownX;
     float mDownY;
@@ -17,22 +14,18 @@ public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageVi
     private int mScreenHeight;
     private Context mContext;
     private boolean isDrag = false;
-
     public DragCustomerView(Context context) {
         super(context);
         this.mContext = context;
     }
-
     public DragCustomerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
     }
-
     public DragCustomerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
     }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -43,7 +36,6 @@ public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageVi
             mScreenHeight = ScreenUtil.getScreenHeight(getContext()) - BarUtils.getStatusBarHeight() - BarUtils.getNavBarHeight() - SizeUtils.dp2px(62f);
         }
     }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {

@@ -1,5 +1,4 @@
 package com.topdon.tc001.gsr
-
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -11,18 +10,14 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrGalleryBinding
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.tools.PermissionTool
-
 class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
     companion object {
         private const val TAG = "GSRGalleryActivity"
-
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRGalleryActivity::class.java))
         }
     }
-
     override fun initContentLayoutId() = R.layout.activity_gsr_gallery
-
     private val permissionList by lazy {
         if (applicationContext.applicationInfo.targetSdkVersion >= 34) {
             listOf(
@@ -43,51 +38,39 @@ class GSRGalleryActivity : BaseBindingActivity<ActivityGsrGalleryBinding>() {
             )
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initView()
         requestPermissions()
     }
-
     private fun initView() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Recording Gallery"
-
         binding.gsrGalleryViewpager.adapter = ViewAdapter(this, supportFragmentManager)
         binding.gsrGalleryTab.setupWithViewPager(binding.gsrGalleryViewpager)
     }
-
     private fun requestPermissions() {
         PermissionTool.requestFile(this) {
-
         }
     }
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
     }
-
     inner class ViewAdapter : FragmentStatePagerAdapter {
         private var titles: Array<String> = arrayOf()
-
         constructor(context: Context, fm: FragmentManager) : super(
             fm,
             BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
         ) {
             titles = arrayOf("GSR Data", "Videos", "RAW Images", "Sessions")
         }
-
         override fun getCount(): Int {
             return titles.size
         }
-
         override fun getPageTitle(position: Int): CharSequence? {
             return titles[position]
         }
-
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> GSRDataFragment()

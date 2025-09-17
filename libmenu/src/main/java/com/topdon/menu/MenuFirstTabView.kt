@@ -1,15 +1,11 @@
 package com.topdon.menu
-
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.topdon.menu.databinding.ViewMenuFirstTabBinding
-
-
 class MenuFirstTabView : FrameLayout, View.OnClickListener {
-
     var selectPosition = -1
         set(value) {
             if (field != value) {
@@ -22,7 +18,6 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
                 binding.ivMenu6.isSelected = value == 5
             }
         }
-
     var isObserveMode = false
         set(value) {
             if (field != value) {
@@ -39,22 +34,16 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
                 selectPosition = 0
             }
         }
-
     var onTabClickListener: ((v: MenuFirstTabView) -> Unit)? = null
-
     private lateinit var binding: ViewMenuFirstTabBinding
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
         defStyleAttr,
         0
     )
-
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -70,7 +59,6 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
             LayoutInflater.from(context).inflate(R.layout.view_menu_first_tab, this, true)
         } else {
             binding = ViewMenuFirstTabBinding.inflate(LayoutInflater.from(context), this, true)
-
             selectPosition = 0
             binding.clMenu1.setOnClickListener(this)
             binding.clMenu2.setOnClickListener(this)
@@ -80,7 +68,6 @@ class MenuFirstTabView : FrameLayout, View.OnClickListener {
             binding.clMenu6.setOnClickListener(this)
         }
     }
-
     override fun onClick(v: View?) {
         when (v) {
             binding.clMenu1 -> selectPosition = 0

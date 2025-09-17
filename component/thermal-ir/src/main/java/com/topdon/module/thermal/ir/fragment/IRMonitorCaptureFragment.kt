@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.fragment
-
 import android.content.Intent
 import android.view.View
 import android.widget.ImageView
@@ -15,31 +14,20 @@ import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lib.core.tools.ToastTools
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRMonitorActivity
-
 class IRMonitorCaptureFragment : BaseFragment() {
-    /**
-
-
-     */
     private var isTC007 = false
-
     private lateinit var animationView: LottieAnimationView
     private lateinit var viewStart: View
     private lateinit var ivIcon: ImageView
     private lateinit var tvStart: TextView
-
     override fun initContentView(): Int = R.layout.fragment_ir_monitor_capture
-
     override fun initView() {
         isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
-
         animationView = requireView().findViewById(R.id.animation_view)
         viewStart = requireView().findViewById(R.id.view_start)
         ivIcon = requireView().findViewById(R.id.iv_icon)
         tvStart = requireView().findViewById(R.id.tv_start)
-
         animationView.setAnimation(if (isTC007) "TC007AnimationJSON.json" else "TDAnimationJSON.json")
-
         viewStart.setOnClickListener {
             if (isTC007) {
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
@@ -64,47 +52,39 @@ class IRMonitorCaptureFragment : BaseFragment() {
                 }
             }
         }
-
         refreshUI(
             if (isTC007) WebSocketProxy.getInstance().isTC007Connect() else DeviceTools.isConnect()
         )
     }
-
     override fun onResume() {
         super.onResume()
         refreshUI(
             if (isTC007) WebSocketProxy.getInstance().isTC007Connect() else DeviceTools.isConnect()
         )
     }
-
     override fun initData() {
     }
-
     private fun refreshUI(isConnect: Boolean) {
         animationView.isVisible = !isConnect
         ivIcon.isVisible = isConnect
         viewStart.isVisible = isConnect
         tvStart.isVisible = isConnect
     }
-
     override fun connected() {
         if (!isTC007) {
             refreshUI(true)
         }
     }
-
     override fun disConnected() {
         if (!isTC007) {
             refreshUI(false)
         }
     }
-
     override fun onSocketConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
             refreshUI(true)
         }
     }
-
     override fun onSocketDisConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
             refreshUI(false)

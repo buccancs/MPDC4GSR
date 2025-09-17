@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.video.media;
-
 import static android.media.MediaCodec.CONFIGURE_FLAG_ENCODE;
 import static android.media.MediaCodec.INFO_OUTPUT_FORMAT_CHANGED;
 import static android.media.MediaCodec.INFO_TRY_AGAIN_LATER;
@@ -12,7 +11,6 @@ import static android.media.MediaFormat.KEY_I_FRAME_INTERVAL;
 import static android.media.MediaFormat.MIMETYPE_AUDIO_AAC;
 import static android.media.MediaFormat.MIMETYPE_VIDEO_AVC;
 import static android.media.MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
-
 import android.graphics.Bitmap;
 import android.media.MediaCodec;
 import android.media.MediaCodec.BufferInfo;
@@ -21,21 +19,16 @@ import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.os.Build;
 import android.util.Log;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
 public class MP4Encoder extends Encoder {
-
-    private static final int BIT_RATE = 600000;//码率2000000
-    private static final int FRAME_RATE = 20;//帧数
+    private static final int BIT_RATE = 600000;
+    private static final int FRAME_RATE = 20;
     private static final int I_FRAME_INTERVAL = 5;
     private static final long ONE_SEC = 1000000;
     private static final String TAG = MP4Encoder.class.getSimpleName();
     private static final int TIMEOUT_US = 10000;
     private int addedFrameCount;
-
-
     private MediaCodec audioCodec;
     private int audioTrackIndex;
     private BufferInfo bufferInfo;
@@ -46,15 +39,12 @@ public class MP4Encoder extends Encoder {
     private int trackCount = 0;
     private MediaCodec videoCodec;
     private int videoTrackIndex;
-
     private static long getPresentationTimeUsec(int frameIndex) {
         return (((long) frameIndex) * ONE_SEC) / 20;
     }
-
     @Override
     protected void onInit() {
     }
-
     @Override
     protected void onStart() {
         isStarted = true;
@@ -89,7 +79,6 @@ public class MP4Encoder extends Encoder {
             throw new RuntimeException("MediaMuxer creation failed", ioe);
         }
     }
-
     @Override
     protected void onStop() {
         if (isStarted) {
@@ -120,7 +109,6 @@ public class MP4Encoder extends Encoder {
             isStarted = false;
         }
     }
-
     @Override
     protected void onAddFrame(Bitmap bitmap) {
         if (!isStarted) {
@@ -130,7 +118,6 @@ public class MP4Encoder extends Encoder {
         } else {
             int inputBufIndex = videoCodec.dequeueInputBuffer(TIMEOUT_US);
             if (inputBufIndex >= 0) {
-
                 byte[] input = EncodeYuvTools.INSTANCE.getNV12(bitmap.getWidth(), bitmap.getHeight(), bitmap, getColorFormat());
                 ByteBuffer inputBuffer = videoCodec.getInputBuffer(inputBufIndex);
                 inputBuffer.clear();
@@ -140,8 +127,6 @@ public class MP4Encoder extends Encoder {
             }
             int audioInputBufferIndex = audioCodec.dequeueInputBuffer(TIMEOUT_US);
             if (audioInputBufferIndex >= -1) {
-
-
             }
             addedFrameCount++;
             while (addedFrameCount > encodedFrameCount) {
@@ -149,13 +134,10 @@ public class MP4Encoder extends Encoder {
             }
         }
     }
-
     private void encode() {
         encodeVideo();
         encodeAudio();
-
     }
-
     private void encodeAudio() {
         int audioStatus = audioCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);
         Log.i(TAG, "Audio encoderStatus = " + audioStatus + ", presentationTimeUs = "
@@ -184,7 +166,6 @@ public class MP4Encoder extends Encoder {
             }
         }
     }
-
     private void encodeVideo() {
         int encoderStatus = videoCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);
         Log.i(TAG, "Video encoderStatus = " + encoderStatus + ", presentationTimeUs = "
@@ -215,10 +196,6 @@ public class MP4Encoder extends Encoder {
             Log.i(TAG, "encoderOutputBuffer " + encoderStatus + " was null");
         }
     }
-
-    /**
-     *
-     */
     private int getColorFormat() {
         if ("GOOGLE".equalsIgnoreCase(Build.BRAND) && "PIXEL 4".equalsIgnoreCase(Build.MODEL)) {
             return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar;
@@ -226,5 +203,4 @@ public class MP4Encoder extends Encoder {
             return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar;
         }
     }
-
 }

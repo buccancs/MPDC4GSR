@@ -1,5 +1,4 @@
 package com.topdon.menu.adapter
-
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -7,28 +6,22 @@ import com.topdon.lib.core.R
 import com.topdon.menu.constant.FenceType
 import com.topdon.menu.constant.MenuType
 import com.topdon.menu.R as MenuR
-
 @SuppressLint("NotifyDataSetChanged")
 internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
-
     var selectType: FenceType? = null
         set(value) {
             when (value) {
                 FenceType.FULL -> isFullSelect = true
                 FenceType.DEL -> isFullSelect = false
-                else -> { // 点、线、面、趋势图，不会影响全图state
+                else -> { 
                 }
             }
             field = value
             notifyDataSetChanged()
         }
-
     private var isFullSelect: Boolean = false
-
     var onFenceListener: ((fenceType: FenceType, isSelected: Boolean) -> Unit)? = null
-
     private val dataList: ArrayList<Data> = ArrayList(6)
-
     init {
         dataList.add(
             Data(
@@ -58,7 +51,7 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
                 FenceType.FULL
             )
         )
-        if (menuType != MenuType.GALLERY_EDIT) { // 2D编辑的menu没有趋势图
+        if (menuType != MenuType.GALLERY_EDIT) { 
             dataList.add(
                 Data(
                     R.string.thermal_trend,
@@ -75,7 +68,6 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
             )
         )
     }
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -106,9 +98,7 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
             }
         }
     }
-
     override fun getItemCount(): Int = dataList.size
-
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

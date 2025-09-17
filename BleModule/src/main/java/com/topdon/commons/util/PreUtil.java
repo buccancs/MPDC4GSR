@@ -1,18 +1,15 @@
 package com.topdon.commons.util;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
-
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
-
 public class PreUtil {
     private static String SHARE_NAME = "ad900_data";
     private static PreUtil instance;
@@ -20,20 +17,16 @@ public class PreUtil {
     private final String SHARED_PREFS = "/shared_prefs";
     private WeakReference<Context> mContext;
     private SharedPreferences preferences;
-
     private PreUtil(Context context) {
         this(context, SHARE_NAME);
     }
-
     private PreUtil(Context context, String shareName) {
         mContext = new WeakReference<>(context);
         preferences = context.getSharedPreferences(shareName, Context.MODE_PRIVATE);
     }
-
     public static PreUtil getInstance(Context context) {
         return getInstance(context, SHARE_NAME);
     }
-
     public static PreUtil getInstance(Context context,
                                       String shareName) {
         if (instance == null) {
@@ -45,7 +38,6 @@ public class PreUtil {
         }
         return instance;
     }
-
     public void put(String key, boolean value) {
         Editor edit = preferences.edit();
         if (edit != null) {
@@ -56,7 +48,6 @@ public class PreUtil {
             edit.commit();
         }
     }
-
     public void put(String key, String value) {
         Editor edit = preferences.edit();
         if (edit != null) {
@@ -67,7 +58,6 @@ public class PreUtil {
             edit.commit();
         }
     }
-
     public void put(String key, int value) {
         Editor edit = preferences.edit();
         if (edit != null) {
@@ -78,7 +68,6 @@ public class PreUtil {
             edit.commit();
         }
     }
-
     public void put(String key, float value) {
         Editor edit = preferences.edit();
         if (edit != null) {
@@ -89,7 +78,6 @@ public class PreUtil {
             edit.commit();
         }
     }
-
     public void put(String key, long value) {
         Editor edit = preferences.edit();
         if (edit != null) {
@@ -100,7 +88,6 @@ public class PreUtil {
             edit.commit();
         }
     }
-
     public void put(String key, Set<String> value) {
         Editor edit = preferences.edit();
         if (edit != null) {
@@ -111,7 +98,6 @@ public class PreUtil {
             edit.commit();
         }
     }
-
     @SuppressWarnings("rawtypes")
     public <T> void put(T t) {
         try {
@@ -120,7 +106,6 @@ public class PreUtil {
             String saveValue = "";
             Editor edit = preferences.edit();
             Class cls = t.getClass();
-
             if (edit != null) {
                 Method[] methods = cls.getDeclaredMethods();
                 for (Method method : methods) {
@@ -145,49 +130,42 @@ public class PreUtil {
             e.printStackTrace();
         }
     }
-
     public String get(String key) {
         if (!TextUtils.isEmpty(key)) {
             key = key.toLowerCase();
         }
         return preferences.getString(key, "");
     }
-
     public String get(String key, String defValue) {
         if (!TextUtils.isEmpty(key)) {
             key = key.toLowerCase();
         }
         return preferences.getString(key, defValue);
     }
-
     public boolean get(String key, boolean defValue) {
         if (!TextUtils.isEmpty(key)) {
             key = key.toLowerCase();
         }
         return preferences.getBoolean(key, defValue);
     }
-
     public int get(String key, int defValue) {
         if (!TextUtils.isEmpty(key)) {
             key = key.toLowerCase();
         }
         return preferences.getInt(key, defValue);
     }
-
     public float get(String key, float defValue) {
         if (!TextUtils.isEmpty(key)) {
             key = key.toLowerCase();
         }
         return preferences.getFloat(key, defValue);
     }
-
     public long get(String key, long defValue) {
         if (!TextUtils.isEmpty(key)) {
             key = key.toLowerCase();
         }
         return preferences.getLong(key, defValue);
     }
-
     @SuppressLint("NewApi")
     public Set<String> get(String key, Set<String> defValue) {
         if (!TextUtils.isEmpty(key)) {
@@ -195,7 +173,6 @@ public class PreUtil {
         }
         return preferences.getStringSet(key, defValue);
     }
-
     @SuppressLint("CommitPrefEdits")
     public void put(String key, Object defaultObj) {
         if (defaultObj instanceof String) {
@@ -211,7 +188,6 @@ public class PreUtil {
         }
         preferences.edit().commit();
     }
-
     public Object get(String key, Object defaultObj) {
         if (defaultObj instanceof String) {
             return preferences.getString(key, (String) defaultObj);
@@ -226,7 +202,6 @@ public class PreUtil {
         }
         return null;
     }
-
     public <T> Object get(Class<T> cls) {
         Object obj = null;
         String fieldName = "";
@@ -249,7 +224,6 @@ public class PreUtil {
         }
         return obj;
     }
-
     public void clearAll() {
         try {
             String fileName = SHARE_NAME + ".xml";
@@ -262,5 +236,4 @@ public class PreUtil {
             e.printStackTrace();
         }
     }
-
 }

@@ -1,36 +1,17 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
-
 package com.github.gzuliyujiang.wheelpicker;
-
 import android.app.Activity;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
-
 import com.github.gzuliyujiang.dialog.DialogLog;
 import com.github.gzuliyujiang.wheelpicker.entity.ConstellationEntity;
 import com.github.gzuliyujiang.wheelpicker.entity.DateEntity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 @SuppressWarnings("WeakerAccess")
 public class ConstellationPicker extends OptionPicker {
     public static String JSON = "[{\"id\":0,\"name\":\"不限\",\"startDate\":\"\",\"endDate\":\"\",\"english\":\"Unlimited\"},\n" +
@@ -47,20 +28,16 @@ public class ConstellationPicker extends OptionPicker {
             "{\"id\":11,\"name\":\"水瓶座\",\"startDate\":\"1-20\",\"endDate\":\"2-18\",\"english\":\"Aquarius\"},\n" +
             "{\"id\":12,\"name\":\"双鱼座\",\"startDate\":\"2-19\",\"endDate\":\"3-20\",\"english\":\"Pisces\"}]";
     private boolean includeUnlimited = false;
-
     public ConstellationPicker(Activity activity) {
         super(activity);
     }
-
     public ConstellationPicker(@NonNull Activity activity, @StyleRes int themeResId) {
         super(activity, themeResId);
     }
-
     public void setIncludeUnlimited(boolean includeUnlimited) {
         this.includeUnlimited = includeUnlimited;
         setData(provideData());
     }
-
     @Override
     public void setDefaultValue(Object item) {
         if (item instanceof String) {
@@ -69,25 +46,21 @@ public class ConstellationPicker extends OptionPicker {
             super.setDefaultValue(item);
         }
     }
-
     public void setDefaultValueById(String id) {
         ConstellationEntity entity = new ConstellationEntity();
         entity.setId(id);
         super.setDefaultValue(entity);
     }
-
     public void setDefaultValueByName(String name) {
         ConstellationEntity entity = new ConstellationEntity();
         entity.setName(name);
         super.setDefaultValue(entity);
     }
-
     public void setDefaultValueByDate(DateEntity date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date.toTimeInMillis());
         setDefaultValueByDate(calendar.getTime());
     }
-
     public void setDefaultValueByDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -137,13 +110,11 @@ public class ConstellationPicker extends OptionPicker {
         }
         setDefaultValueByName(name);
     }
-
     public void setDefaultValueByEnglish(String english) {
         ConstellationEntity entity = new ConstellationEntity();
         entity.setEnglish(english);
         super.setDefaultValue(entity);
     }
-
     @Override
     protected List<?> provideData() {
         ArrayList<ConstellationEntity> data = new ArrayList<>();
@@ -167,5 +138,4 @@ public class ConstellationPicker extends OptionPicker {
         }
         return data;
     }
-
 }

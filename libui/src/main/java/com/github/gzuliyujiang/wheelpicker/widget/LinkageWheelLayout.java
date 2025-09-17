@@ -1,26 +1,10 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
-
 package com.github.gzuliyujiang.wheelpicker.widget;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-
 import com.github.gzuliyujiang.wheelpicker.contract.LinkageProvider;
 import com.github.gzuliyujiang.wheelpicker.contract.OnLinkageSelectedListener;
 import com.github.gzuliyujiang.wheelview.annotation.CurtainCorner;
@@ -29,10 +13,8 @@ import com.github.gzuliyujiang.wheelview.annotation.ScrollState;
 import com.github.gzuliyujiang.wheelview.contract.WheelFormatter;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
 import com.topdon.lib.ui.R;
-
 import java.util.Arrays;
 import java.util.List;
-
 @SuppressWarnings("unused")
 public class LinkageWheelLayout extends BaseWheelLayout {
     private WheelView firstWheelView, secondWheelView, thirdWheelView;
@@ -42,38 +24,30 @@ public class LinkageWheelLayout extends BaseWheelLayout {
     private int firstIndex, secondIndex, thirdIndex;
     private LinkageProvider dataProvider;
     private OnLinkageSelectedListener onLinkageSelectedListener;
-
     public LinkageWheelLayout(Context context) {
         super(context);
     }
-
     public LinkageWheelLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
     public LinkageWheelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
     public LinkageWheelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
-
     @Override
     protected int provideLayoutRes() {
         return R.layout.wheel_picker_linkage;
     }
-
     @Override
     protected int[] provideStyleableRes() {
         return R.styleable.LinkageWheelLayout;
     }
-
     @Override
     protected List<WheelView> provideWheelViews() {
         return Arrays.asList(firstWheelView, secondWheelView, thirdWheelView);
     }
-
     @Override
     protected void onInit(@NonNull Context context) {
         firstWheelView = findViewById(R.id.wheel_picker_linkage_first_wheel);
@@ -84,7 +58,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
         thirdLabelView = findViewById(R.id.wheel_picker_linkage_third_label);
         loadingView = findViewById(R.id.wheel_picker_linkage_loading);
     }
-
     @Override
     protected void onAttributeSet(@NonNull Context context, @NonNull TypedArray typedArray) {
         float density = context.getResources().getDisplayMetrics().density;
@@ -119,7 +92,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
         String thirdLabel = typedArray.getString(R.styleable.LinkageWheelLayout_wheel_thirdLabel);
         setLabel(firstLabel, secondLabel, thirdLabel);
     }
-
     @Override
     public void onWheelSelected(WheelView view, int position) {
         int id = view.getId();
@@ -144,7 +116,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
             selectedCallback();
         }
     }
-
     @Override
     public void onWheelScrollStateChanged(WheelView view, @ScrollState int state) {
         int id = view.getId();
@@ -163,7 +134,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
             secondWheelView.setEnabled(state == ScrollState.IDLE);
         }
     }
-
     public void setData(@NonNull LinkageProvider provider) {
         setFirstVisible(provider.firstLevelVisible());
         setThirdVisible(provider.thirdLevelVisible());
@@ -181,7 +151,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
         changeSecondData();
         changeThirdData();
     }
-
     public void setDefaultValue(Object first, Object second, Object third) {
         if (dataProvider != null) {
             firstIndex = dataProvider.findFirstIndex(first);
@@ -196,31 +165,25 @@ public class LinkageWheelLayout extends BaseWheelLayout {
             this.thirdValue = third;
         }
     }
-
     public void setFormatter(WheelFormatter first, WheelFormatter second, WheelFormatter third) {
         firstWheelView.setFormatter(first);
         secondWheelView.setFormatter(second);
         thirdWheelView.setFormatter(third);
     }
-
     public void setLabel(CharSequence first, CharSequence second, CharSequence third) {
         firstLabelView.setText(first);
         secondLabelView.setText(second);
         thirdLabelView.setText(third);
     }
-
     public void showLoading() {
         loadingView.setVisibility(VISIBLE);
     }
-
     public void hideLoading() {
         loadingView.setVisibility(GONE);
     }
-
     public void setOnLinkageSelectedListener(OnLinkageSelectedListener onLinkageSelectedListener) {
         this.onLinkageSelectedListener = onLinkageSelectedListener;
     }
-
     public void setFirstVisible(boolean visible) {
         if (visible) {
             firstWheelView.setVisibility(VISIBLE);
@@ -230,7 +193,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
             firstLabelView.setVisibility(GONE);
         }
     }
-
     public void setThirdVisible(boolean visible) {
         if (visible) {
             thirdWheelView.setVisibility(VISIBLE);
@@ -240,7 +202,6 @@ public class LinkageWheelLayout extends BaseWheelLayout {
             thirdLabelView.setVisibility(GONE);
         }
     }
-
     private void selectedCallback() {
         if (onLinkageSelectedListener == null) {
             return;
@@ -255,17 +216,14 @@ public class LinkageWheelLayout extends BaseWheelLayout {
             }
         });
     }
-
     private void changeFirstData() {
         firstWheelView.setData(dataProvider.provideFirstData());
         firstWheelView.setDefaultPosition(firstIndex);
     }
-
     private void changeSecondData() {
         secondWheelView.setData(dataProvider.linkageSecondData(firstIndex));
         secondWheelView.setDefaultPosition(secondIndex);
     }
-
     private void changeThirdData() {
         if (!dataProvider.thirdLevelVisible()) {
             return;
@@ -273,33 +231,25 @@ public class LinkageWheelLayout extends BaseWheelLayout {
         thirdWheelView.setData(dataProvider.linkageThirdData(firstIndex, secondIndex));
         thirdWheelView.setDefaultPosition(thirdIndex);
     }
-
     public final WheelView getFirstWheelView() {
         return firstWheelView;
     }
-
     public final WheelView getSecondWheelView() {
         return secondWheelView;
     }
-
     public final WheelView getThirdWheelView() {
         return thirdWheelView;
     }
-
     public final TextView getFirstLabelView() {
         return firstLabelView;
     }
-
     public final TextView getSecondLabelView() {
         return secondLabelView;
     }
-
     public final TextView getThirdLabelView() {
         return thirdLabelView;
     }
-
     public final ProgressBar getLoadingView() {
         return loadingView;
     }
-
 }

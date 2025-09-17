@@ -1,17 +1,12 @@
 package com.topdon.lib.ui.dialog;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.topdon.lib.core.ktbase.BaseFragment;
 import com.topdon.lib.ui.R;
-
 public class PageFragment extends BaseFragment {
-
     public static PageFragment newInstance(int res) {
         PageFragment fragmentFirst = new PageFragment();
         Bundle bundle = new Bundle();
@@ -19,7 +14,6 @@ public class PageFragment extends BaseFragment {
         fragmentFirst.setArguments(bundle);
         return fragmentFirst;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -27,18 +21,14 @@ public class PageFragment extends BaseFragment {
         int res = getArguments().getInt("res");
         imageView.setImageResource(res);
     }
-
     @Override
     public int initContentView() {
         return R.layout.fragment_page;
     }
-
     @Override
     public void initView() {
     }
-
     @Override
     public void initData() {
-
     }
 }

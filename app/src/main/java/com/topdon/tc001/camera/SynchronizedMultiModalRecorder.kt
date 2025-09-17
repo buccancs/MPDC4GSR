@@ -1,5 +1,4 @@
 package com.topdon.tc001.camera
-
 import android.content.Context
 import android.util.Log
 import android.view.TextureView
@@ -9,7 +8,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
-
 class SynchronizedMultiModalRecorder(
     private val context: Context,
     private val thermalRecorder: EnhancedThermalRecorder,
@@ -18,11 +16,9 @@ class SynchronizedMultiModalRecorder(
     companion object {
         private const val TAG = "SynchronizedRecorder"
     }
-
     private var rgbCameraRecorder: RGBCameraRecorder? = null
     private var currentSessionId: String? = null
     private var isRecording = false
-
     data class RecordingSession(
         val sessionId: String,
         val startTimestamp: Long,
@@ -33,31 +29,25 @@ class SynchronizedMultiModalRecorder(
         val syncMarksFile: File? = null,
         val sessionMetadata: File? = null,
     )
-
     var onRecordingStarted: ((RecordingSession) -> Unit)? = null
     var onRecordingStopped: ((RecordingSession) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
-
     fun initialize() {
         rgbCameraRecorder =
             RGBCameraRecorder(context, rgbTextureView).apply {
                 initialize()
-
                 onRecordingStarted = {
                     Log.d(TAG, "RGB recording started")
                 }
-
                 onRecordingStopped = { videoFile ->
                     Log.d(TAG, "RGB recording stopped: ${videoFile?.toString()}")
                 }
-
                 onError = { error ->
                     Log.e(TAG, "RGB camera error: $error")
                     this@SynchronizedMultiModalRecorder.onError?.invoke("RGB Camera: $error")
                 }
             }
     }
-
     fun startSynchronizedRecording(
         sessionId: String? = null,
         rgbSettings: RGBCameraRecorder.RecordingSettings = RGBCameraRecorder.RecordingSettings(),
@@ -66,18 +56,14 @@ class SynchronizedMultiModalRecorder(
             Log.w(TAG, "Already recording")
             return false
         }
-
         try {
-
             val unifiedSessionId = sessionId ?: TimeUtil.generateSessionId("MultiModal")
             val synchronizedTimestamp = TimeUtil.getSynchronizedTimestamp()
             currentSessionId = unifiedSessionId
-
             Log.i(
                 TAG,
                 "Starting synchronized multi-modal recording with unified timestamp: $synchronizedTimestamp"
             )
-
             var gsrStarted = false
             GlobalScope.launch {
                 gsrStarted = thermalRecorder.startRecording(unifiedSessionId, null, true)
@@ -85,7 +71,6 @@ class SynchronizedMultiModalRecorder(
                     Log.w(TAG, "GSR recording failed to start, continuing with thermal+RGB only")
                 }
             }
-
             rgbCameraRecorder?.updateSettings(rgbSettings)
             val rgbStarted =
                 runBlocking { rgbCameraRecorder?.startRecording(unifiedSessionId) } ?: false
@@ -96,7 +81,6 @@ class SynchronizedMultiModalRecorder(
                 }
                 return false
             }
-
             thermalRecorder.triggerSyncEvent(
                 "MULTIMODAL_START",
                 mapOf(
@@ -109,41 +93,32 @@ class SynchronizedMultiModalRecorder(
                     "recording_mode" to "synchronized_trimodal",
                 ),
             )
-
             isRecording = true
-
             val session =
                 RecordingSession(
                     sessionId = unifiedSessionId,
                     startTimestamp = synchronizedTimestamp,
                     rgbVideoFile = rgbCameraRecorder?.getCurrentVideoFile(),
                 )
-
             onRecordingStarted?.invoke(session)
-
             Log.i(TAG, "Synchronized multi-modal recording started successfully: $unifiedSessionId")
             return true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start synchronized recording", e)
             onError?.invoke("Failed to start synchronized recording: ${e.message}")
-
             cleanup()
             return false
         }
     }
-
     fun stopSynchronizedRecording(): RecordingSession? {
         if (!isRecording || currentSessionId == null) {
             Log.w(TAG, "Not currently recording")
             return null
         }
-
         try {
             val stopTimestamp = TimeUtil.getSynchronizedTimestamp()
             val sessionId = currentSessionId!!
-
             Log.i(TAG, "Stopping synchronized multi-modal recording at timestamp: $stopTimestamp")
-
             thermalRecorder.triggerSyncEvent(
                 "MULTIMODAL_STOP",
                 mapOf(
@@ -153,18 +128,15 @@ class SynchronizedMultiModalRecorder(
                     "stop_reason" to "user_initiated",
                 ),
             )
-
             val gsrSession = thermalRecorder.stopRecording()
             val rgbVideoFile = runBlocking { rgbCameraRecorder?.stopRecording() }
-
             isRecording = false
-
             val finalSession =
                 RecordingSession(
                     sessionId = sessionId,
                     startTimestamp = gsrSession?.startTime ?: System.currentTimeMillis(),
                     endTimestamp = stopTimestamp,
-                    rgbVideoFile = null, // Boolean return type doesn't match File expected
+                    rgbVideoFile = null, 
                     gsrDataFile = gsrSession?.let {
                         File(
                             thermalRecorder.getSessionDirectory(),
@@ -184,16 +156,13 @@ class SynchronizedMultiModalRecorder(
                         )
                     },
                 )
-
             currentSessionId = null
             onRecordingStopped?.invoke(finalSession)
-
             Log.i(TAG, "Synchronized multi-modal recording completed: $sessionId")
             Log.i(
                 TAG,
                 "Session files: RGB=${if (rgbVideoFile == true) "completed" else "failed"}, GSR=${gsrSession?.sampleCount} samples"
             )
-
             return finalSession
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop synchronized recording", e)
@@ -202,13 +171,11 @@ class SynchronizedMultiModalRecorder(
             return null
         }
     }
-
     fun addSyncEvent(
         eventName: String,
         metadata: Map<String, String> = emptyMap(),
     ) {
         if (!isRecording) return
-
         val timestamp = TimeUtil.getSynchronizedTimestamp()
         val eventData =
             metadata.toMutableMap().apply {
@@ -217,12 +184,9 @@ class SynchronizedMultiModalRecorder(
                 put("session_id", currentSessionId ?: "unknown")
                 put("timing_source", "samsung_s22_ground_truth")
             }
-
         thermalRecorder.triggerSyncEvent("CROSS_MODAL_EVENT_$eventName", eventData)
-
         Log.d(TAG, "Added synchronized event: $eventName at timestamp $timestamp")
     }
-
     fun switchRGBCamera(): RGBCameraRecorder.CameraFacing? {
         val currentFacing = rgbCameraRecorder?.getCurrentCameraFacing()
         val newFacing =
@@ -231,14 +195,11 @@ class SynchronizedMultiModalRecorder(
             } else {
                 RGBCameraRecorder.CameraFacing.BACK
             }
-
         val success = runBlocking { rgbCameraRecorder?.switchCamera(newFacing) ?: false }
         return if (success) newFacing else currentFacing
     }
-
     fun updateRGBSettings(settings: RGBCameraRecorder.RecordingSettings) {
         rgbCameraRecorder?.updateSettings(settings)
-
         if (isRecording) {
             addSyncEvent(
                 "RGB_SETTINGS_CHANGED",
@@ -250,10 +211,8 @@ class SynchronizedMultiModalRecorder(
             )
         }
     }
-
     fun setRGBFlash(enabled: Boolean) {
         runBlocking { rgbCameraRecorder?.setFlashEnabled(enabled) }
-
         if (isRecording) {
             addSyncEvent(
                 "RGB_FLASH_TOGGLE",
@@ -263,55 +222,39 @@ class SynchronizedMultiModalRecorder(
             )
         }
     }
-
     fun pauseRGBRecording() {
         runBlocking { rgbCameraRecorder?.pauseRecording() }
-
         if (isRecording) {
             addSyncEvent("RGB_RECORDING_PAUSED")
         }
     }
-
     fun resumeRGBRecording() {
         runBlocking { rgbCameraRecorder?.resumeRecording() }
-
         if (isRecording) {
             addSyncEvent("RGB_RECORDING_RESUMED")
         }
     }
-
     fun isRecording() = isRecording
-
     fun getCurrentSessionId() = currentSessionId
-
     fun getCurrentRGBSettings() = rgbCameraRecorder?.getCurrentSettings()
-
     fun getRGBCameraFacing() = rgbCameraRecorder?.getCurrentCameraFacing()
-
     fun getAvailableRGBCameras() = rgbCameraRecorder?.getAvailableCameraFacing() ?: emptyList()
-
     fun getSupportedRGBResolutions() = rgbCameraRecorder?.getSupportedResolutions() ?: emptyList()
-
     fun getSessionDirectory(): File? {
         return thermalRecorder.getSessionDirectory()
     }
-
     fun cleanup() {
         if (isRecording) {
             stopSynchronizedRecording()
         }
-
         rgbCameraRecorder?.cleanup()
         thermalRecorder.cleanup()
-
         currentSessionId = null
         isRecording = false
     }
-
     fun createThermalRGBSession(thermalVideoFile: File): RecordingSession? {
         val sessionId = currentSessionId ?: return null
         val sessionDir = getSessionDirectory() ?: return null
-
         return RecordingSession(
             sessionId = sessionId,
             startTimestamp = System.currentTimeMillis(),
@@ -322,7 +265,6 @@ class SynchronizedMultiModalRecorder(
             sessionMetadata = File(sessionDir, "session_metadata.json"),
         )
     }
-
     fun generateSessionMetadata(): Map<String, Any> {
         return mapOf(
             "session_id" to (currentSessionId ?: "unknown"),
@@ -354,15 +296,14 @@ class SynchronizedMultiModalRecorder(
             "api_level" to android.os.Build.VERSION.SDK_INT,
         )
     }
-
     private fun detectSamsungS22Processor(): String {
         val deviceModel = android.os.Build.MODEL
         return when {
-            deviceModel.contains("SM-S901E") -> "Exynos_2200" // International
-            deviceModel.contains("SM-S901U") -> "Snapdragon_8_Gen_1" // US
-            deviceModel.contains("SM-S901W") -> "Snapdragon_8_Gen_1" // Canada
-            deviceModel.contains("SM-S901N") -> "Snapdragon_8_Gen_1" // Korea
-            deviceModel.contains("SM-S901") -> "Samsung_S22_Generic" // Generic S22
+            deviceModel.contains("SM-S901E") -> "Exynos_2200" 
+            deviceModel.contains("SM-S901U") -> "Snapdragon_8_Gen_1" 
+            deviceModel.contains("SM-S901W") -> "Snapdragon_8_Gen_1" 
+            deviceModel.contains("SM-S901N") -> "Snapdragon_8_Gen_1" 
+            deviceModel.contains("SM-S901") -> "Samsung_S22_Generic" 
             else -> "Unknown_Device"
         }
     }

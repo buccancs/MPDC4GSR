@@ -1,5 +1,4 @@
 package com.topdon.lib.core.dialog
-
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
@@ -12,20 +11,14 @@ import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipBinding
-
-
 class TipDialog : Dialog {
     constructor(context: Context) : super(context)
-
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
-
     @Deprecated("This method is deprecated")
     override fun onBackPressed() {
     }
-
     class Builder(private val context: Context) {
         var dialog: TipDialog? = null
-
         private var message: String? = null
         private var titleMessage: String? = null
         private var positiveStr: String? = null
@@ -34,31 +27,26 @@ class TipDialog : Dialog {
         private var cancelEvent: (() -> Unit)? = null
         private var canceled = false
         private var isShowRestartTips = false
-
         fun setTitleMessage(message: String): Builder {
             this.titleMessage = message
             return this
         }
-
         fun setMessage(message: String): Builder {
             this.message = message
             return this
         }
-
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
             this.message = context.getString(message)
             return this
         }
-
         fun setPositiveListener(
             @StringRes strRes: Int,
             event: (() -> Unit)? = null,
         ): Builder {
             return setPositiveListener(context.getString(strRes), event)
         }
-
         fun setPositiveListener(
             str: String,
             event: (() -> Unit)? = null,
@@ -67,14 +55,12 @@ class TipDialog : Dialog {
             this.positiveEvent = event
             return this
         }
-
         fun setCancelListener(
             @StringRes strRes: Int,
             event: (() -> Unit)? = null,
         ): Builder {
             return setCancelListener(context.getString(strRes), event)
         }
-
         fun setCancelListener(
             str: String,
             event: (() -> Unit)? = null,
@@ -83,26 +69,21 @@ class TipDialog : Dialog {
             this.cancelEvent = event
             return this
         }
-
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
         }
-
         fun setShowRestartTops(isShowRestartTips: Boolean): Builder {
             this.isShowRestartTips = isShowRestartTips
             return this
         }
-
         fun dismiss() {
             this.dialog!!.dismiss()
         }
-
         fun create(): TipDialog {
             if (dialog == null) {
                 dialog = TipDialog(context, R.style.InfoDialog)
             }
-
             val binding = DialogTipBinding.inflate(LayoutInflater.from(context))
             dialog!!.addContentView(
                 binding.root,
@@ -112,9 +93,8 @@ class TipDialog : Dialog {
                 context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             val widthPixels = context.resources.displayMetrics.widthPixels
             val lp = dialog!!.window!!.attributes
-            lp.width = (widthPixels * if (isPortrait) 0.85 else 0.35).toInt() // 设置宽度
+            lp.width = (widthPixels * if (isPortrait) 0.85 else 0.35).toInt() 
             dialog!!.window!!.attributes = lp
-
             dialog!!.setCanceledOnTouchOutside(canceled)
             binding.dialogTipSuccessBtn.setOnClickListener {
                 dismiss()
@@ -124,7 +104,6 @@ class TipDialog : Dialog {
                 dismiss()
                 cancelEvent?.invoke()
             }
-
             if (positiveStr != null) {
                 binding.dialogTipSuccessBtn.text = positiveStr
             }
@@ -137,23 +116,19 @@ class TipDialog : Dialog {
                 binding.dialogTipCancelBtn.visibility = View.GONE
                 binding.dialogTipCancelBtn.text = ""
             }
-
             if (message != null) {
                 binding.dialogTipMsgText.visibility = View.VISIBLE
                 binding.dialogTipMsgText.setText(message, TextView.BufferType.NORMAL)
             } else {
                 binding.dialogTipMsgText.visibility = View.GONE
             }
-
             if (titleMessage != null) {
                 binding.dialogTipTitleMsgText.visibility = View.VISIBLE
                 binding.dialogTipTitleMsgText.setText(titleMessage, TextView.BufferType.NORMAL)
             } else {
                 binding.dialogTipTitleMsgText.visibility = View.GONE
             }
-
             binding.tvRestartTips.isVisible = isShowRestartTips
-
             dialog!!.setContentView(binding.root)
             return dialog as TipDialog
         }

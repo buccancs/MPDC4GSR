@@ -1,38 +1,18 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
-
 package com.github.gzuliyujiang.wheelview.widget;
-
 import android.content.Context;
 import android.util.AttributeSet;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class NumberWheelView extends WheelView {
-
     public NumberWheelView(Context context) {
         super(context);
     }
-
     public NumberWheelView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
     public NumberWheelView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
     @Override
     protected List<?> generatePreviewData() {
         List<Integer> data = new ArrayList<>();
@@ -41,7 +21,6 @@ public class NumberWheelView extends WheelView {
         }
         return data;
     }
-
     @Deprecated
     @Override
     public void setData(List<?> data) {
@@ -51,11 +30,9 @@ public class NumberWheelView extends WheelView {
             throw new UnsupportedOperationException("Use setRange instead");
         }
     }
-
     public void setRange(int min, int max, int step) {
         int minValue = Math.min(min, max);
         int maxValue = Math.max(min, max);
-
         int capacity = (maxValue - minValue) / step;
         List<Integer> data = new ArrayList<>(capacity);
         for (int i = minValue; i <= maxValue; i = i + step) {
@@ -63,11 +40,9 @@ public class NumberWheelView extends WheelView {
         }
         super.setData(data);
     }
-
     public void setRange(float min, float max, float step) {
         float minValue = Math.min(min, max);
         float maxValue = Math.max(min, max);
-
         int capacity = (int) ((maxValue - minValue) / step);
         List<Float> data = new ArrayList<>(capacity);
         for (float i = minValue; i <= maxValue; i = i + step) {
@@ -75,5 +50,4 @@ public class NumberWheelView extends WheelView {
         }
         super.setData(data);
     }
-
 }

@@ -1,7 +1,5 @@
 package com.infisense.usbdual.camera;
-
 import static com.infisense.usbdual.camera.IFrameData.FRAME_LEN;
-
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -9,7 +7,6 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
-
 import com.energy.commonlibrary.view.SurfaceNativeWindow;
 import com.energy.iruvc.dual.ConcreateDualBuilder;
 import com.energy.iruvc.dual.DualType;
@@ -25,19 +22,16 @@ import com.energy.iruvc.utils.IIRFrameCallback;
 import com.energy.iruvc.uvc.UVCCamera;
 import com.infisense.usbdual.Const;
 import com.infisense.usbir.utils.OpencvTools;
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Locale;
-
 public class DualViewWithExternalCameraCommonApi extends BaseDualView {
-
     public static final int MULTIPLE = 2;
     private final String TAG = "DualViewWithExternalCameraCommonApi";
     private final IFrameCallback iFrameCallback;
     private final IIRFrameCallback irFrameCallback;
-    private final byte[] amplifyMixRotateArray;//fusion的数据 640 * MULTIPLE * 480 * MULTIPLE
-    private final byte[] amplifyIRRotateArray;//单infrared的数据 256 * MULTIPLE * 192 * MULTIPLE
+    private final byte[] amplifyMixRotateArray;
+    private final byte[] amplifyIRRotateArray;
     public SurfaceView cameraview;
     public boolean isRun = true;
     public int count = 0;
@@ -48,9 +42,9 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
     public Bitmap supIROlyNoFusionBitmap;
     public Bitmap supMixBitmap;
     public Bitmap supIROlyBitmap;
-    public byte[] frameData = new byte[FRAME_LEN];//原始全部数据
+    public byte[] frameData = new byte[FRAME_LEN];
     public byte[] frameIrAndTempData = new byte[192 * 256 * 4];
-    public int rotate = 180; //镜头颠倒了，所以初始颠倒个180度
+    public int rotate = 180; 
     private DualUVCCamera dualUVCCamera;
     private long timestart = 0;
     private double fps = 0;
@@ -65,13 +59,12 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
     private Surface mSurface;
     private DualCameraParams.FusionType mCurrentFusionType;
     private boolean firstFrame = false;
-    private byte[] irRGBAData;//原始infrared数据 192 *256
-    private byte[] preIrData;//预处理infrared原始数据 192 *256 * 2
-    private byte[] preTempData;//预处理温度原始数据 192 *256 * 2
-    private byte[] preIrARGBData;//预处理后infraredARGB数据 192 * 256 * 4
+    private byte[] irRGBAData;
+    private byte[] preIrData;
+    private byte[] preTempData;
+    private byte[] preIrARGBData;
     private volatile boolean isOpenAmplify = false;
     private boolean saveData = false;
-
     public DualViewWithExternalCameraCommonApi(SurfaceView cameraview, UVCCamera irUVCCamera,
                                                CommonParams.DataFlowMode dataFlowMode,
                                                int irCameraWidth, int irCameraHeight, int vlCameraWidth, int vlCameraHeight,
@@ -100,7 +93,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         amplifyMixRotateArray = new byte[fusionLength * MULTIPLE * MULTIPLE];
         amplifyIRRotateArray = new byte[irData.length * MULTIPLE * MULTIPLE];
         this.irFrameCallback = irFrameCallback;
-
         this.isUseIRISP = isUseIRISP;
         this.cameraview = cameraview;
         bitmap = Bitmap.createBitmap(dualCameraWidth, dualCameraHeight, Bitmap.Config.ARGB_8888);
@@ -110,11 +102,9 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                 irCameraHeight, Bitmap.Config.ARGB_8888);
         supMixBitmap = Bitmap.createBitmap(Const.DUAL_WIDTH * MULTIPLE,
                 Const.DUAL_HEIGHT * MULTIPLE, Bitmap.Config.ARGB_8888);
-
         ConcreateDualBuilder concreateDualBuilder = new ConcreateDualBuilder();
         dualUVCCamera = concreateDualBuilder
                 .setDualType(DualType.USB_DUAL)
-
                 .setIRSize(Const.IR_WIDTH, Const.IR_HEIGHT)
                 .setVLSize(Const.VL_WIDTH, Const.VL_HEIGHT)
                 .setDualSize(Const.DUAL_HEIGHT, Const.DUAL_WIDTH)
@@ -122,7 +112,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                 .setPreviewCameraStyle(CommonParams.PreviewCameraStyle.EXTERNAL_CAMERA)
                 .setDeviceStyle(CommonParams.DeviceStyle.ALL_IN_ONE)
                 .setUseDualGPU(false)
-
                 .setMultiThreadHandleDualEnable(false)
                 .build();
         DualCameraParams.TypeLoadParameters rotateT = DualCameraParams.TypeLoadParameters.ROTATE_0;
@@ -138,32 +127,26 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         dualUVCCamera.setImageRotate(rotateT);
         dualUVCCamera.addIrUVCCamera(irUVCCamera);
         mSurfaceNativeWindow = new SurfaceNativeWindow();
-
-        gain_switch_param.above_pixel_prop = 0.1f;    //用于high -> low gain,设备像素总面积的百分比
-        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); //用于high -> low gain,高gain向低gainswitch的触发温度
-        gain_switch_param.below_pixel_prop = 0.95f;   //用于low -> high gain,设备像素总面积的百分比
-        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);//用于low -> high gain,低gain向高gainswitch的触发温度
-        auto_gain_switch_info.switch_frame_cnt = 5 * 15; //continuous满足触发条件帧数超过该阈值会触发自动gainswitch(假设出图速度为15帧每秒，则5 * 15大概为5秒)
-        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;//触发自动gainswitch之后，会间隔该阈值的帧数不进行gainswitch监测(假设出图速度为15帧每秒，则7 * 15大概为7秒)
-
-        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); //低gain下触发防灼烧的温度
-        int high_gain_over_temp_data = (int) ((110 + 273.15) * 16 * 4); //高gain下触发防灼烧的温度
-        float pixel_above_prop = 0.02f;//设备像素总面积的百分比
-        int switch_frame_cnt = 7 * 15;//continuous满足触发条件超过该阈值会触发防灼烧(假设出图速度为15帧每秒，则7 * 15大概为7秒)
-        int close_frame_cnt = 10 * 15;//触发防灼烧之后，经过该阈值的帧数之后会解除防灼烧(假设出图速度为15帧每秒，则10 * 15大概为10秒)
-
+        gain_switch_param.above_pixel_prop = 0.1f;    
+        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); 
+        gain_switch_param.below_pixel_prop = 0.95f;   
+        gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);
+        auto_gain_switch_info.switch_frame_cnt = 5 * 15; 
+        auto_gain_switch_info.waiting_frame_cnt = 7 * 15;
+        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); 
+        int high_gain_over_temp_data = (int) ((110 + 273.15) * 16 * 4); 
+        float pixel_above_prop = 0.02f;
+        int switch_frame_cnt = 7 * 15;
+        int close_frame_cnt = 10 * 15;
         LibIRProcess.ImageRes_t imageRes = new LibIRProcess.ImageRes_t();
         imageRes.height = (char) (192);
         imageRes.width = (char) 256;
-
         irRGBAData = new byte[irSize * 4];
-        preIrData = new byte[irSize * 2];//预处理infrared原始数据 192 *256 * 2
-        preTempData = new byte[irSize * 2];//预处理温度原始数据 192 *256 * 2
+        preIrData = new byte[irSize * 2];
+        preTempData = new byte[irSize * 2];
         preIrARGBData = new byte[irSize * 2 * 2];
-        ;//预处理后infraredARGB数据 192 * 256 * 4
+        ;
         iFrameCallback = new IFrameCallback() {
-
-
             @Override
             public void onFrame(byte[] frame) {
                 if (frame.length == 1) {
@@ -173,7 +156,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                     Log.d(TAG, "RESTART_USB");
                     return;
                 }
-
                 count++;
                 if (count == 100) {
                     count = 0;
@@ -189,17 +171,12 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                 System.arraycopy(frame, 0, mixData, 0, fusionLength);
                 System.arraycopy(frame, fusionLength, irData, 0, irSize * 2);
                 System.arraycopy(frame, fusionLength + irSize * 2, normalTempData, 0, irSize * 2);
-
                 System.arraycopy(frame, fusionLength + irSize * 4, remapTempData, 0,
                         Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 2);
-
                 System.arraycopy(frame, fusionLength + irSize * 4 + Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 2, vlData,
                         0, vlSize);
-                System.arraycopy(frame, 0, frameData, 0, FRAME_LEN); //无损数据
-
+                System.arraycopy(frame, 0, frameData, 0, FRAME_LEN); 
                 System.arraycopy(frame, dualCameraWidth * dualCameraHeight * 4, frameIrAndTempData, 0, frameIrAndTempData.length);
-
-
                 if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
                     for (OnFrameCallback onFrameCallback : onFrameCallbacks) {
                         onFrameCallback.onFame(mixData, normalTempData, fps);
@@ -209,9 +186,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                         onFrameCallback.onFame(mixData, remapTempData, fps);
                     }
                 }
-
                 mSurface = cameraview.getHolder().getSurface();
-
                 if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
                     LibIRParse.converyArrayYuv422ToARGB(irData, Const.IR_WIDTH * Const.IR_HEIGHT, irRGBAData);
                     if (isOpenAmplify) {
@@ -247,15 +222,12 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                         }
                     }
                 }
-
                 if (!isUseIRISP && !firstFrame) {
                     firstFrame = true;
                     if (handler != null) {
                         handler.sendEmptyMessage(Const.HIDE_LOADING);
                     }
                 }
-
-
                 if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
                     System.arraycopy(frame, fusionLength + irSize * 2, normalTempData, 0, irSize * 2);
                     if (auto_gain_switch && auto_gain_switch_running) {
@@ -267,7 +239,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                                         auto_gain_switch_running = false;
                                         resetAutoGainInfo();
                                     }
-
                                     @Override
                                     public void onAutoGainSwitchResult(CommonParams.PropTPDParamsValue.GAINSELStatus gainselStatus, int result) {
                                         Log.d(TAG, "onAutoGainSwitchResult = " + gainselStatus.getValue() + "  result" +
@@ -276,7 +247,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                                     }
                                 });
                     }
-
                     if (auto_over_protect) {
                         USBMonitorManager.getInstance().getIrcmd().avoidOverexposure(false, gainStatus,
                                 normalTempData, imageRes, low_gain_over_temp_data, high_gain_over_temp_data,
@@ -288,62 +258,49 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                                 });
                     }
                 }
-
             }
         };
     }
-
     public boolean isOpenAmplify() {
         return isOpenAmplify;
     }
-
     public void setOpenAmplify(boolean openAmplify) {
         isOpenAmplify = openAmplify;
     }
-
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
-
     public void resetAutoGainInfo() {
         auto_gain_switch_info.switched_flag = 0;
         auto_gain_switch_info.cur_switched_cnt = 0;
         auto_gain_switch_info.cur_detected_low_cnt = 0;
         auto_gain_switch_info.cur_detected_high_cnt = 0;
     }
-
     public void startPreview() {
-
         switchIrPreDataHandleEnable(true);
         dualUVCCamera.setFrameCallback(iFrameCallback);
         dualUVCCamera.onStartPreview();
         firstFrame = false;
     }
-
     public DualUVCCamera getDualUVCCamera() {
         return dualUVCCamera;
     }
-
     public void stopPreview() {
         dualUVCCamera.setFrameCallback(null);
         dualUVCCamera.onStopPreview();
         SystemClock.sleep(200);
         dualUVCCamera.onDestroy();
     }
-
     public void switchIrPreDataHandleEnable(boolean enable) {
         dualUVCCamera.setIrDataPreHandleEnable(enable);
         dualUVCCamera.setIrFrameCallback(enable ? irFrameCallback : null);
     }
-
     public byte[] getRemapTempData() {
         return remapTempData;
     }
-
     public Bitmap getScaledBitmap() {
         if (isOpenAmplify) {
             if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
-
                 supIROlyNoFusionBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(amplifyIRRotateArray, 0,
                         supIROlyNoFusionBitmap.getWidth() * supIROlyNoFusionBitmap.getHeight() * 4));
                 mScaledBitmap = Bitmap.createScaledBitmap(supIROlyNoFusionBitmap,
@@ -365,15 +322,12 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         }
         return mScaledBitmap;
     }
-
     public void saveData() {
         saveData = true;
     }
-
     public void setGainStatus(CommonParams.GainStatus gainStatus) {
         this.gainStatus = gainStatus;
     }
-
     public void setCurrentFusionType(DualCameraParams.FusionType currentFusionType) {
         this.mCurrentFusionType = currentFusionType;
         if (dualUVCCamera != null) {

@@ -1,5 +1,4 @@
 package com.topdon.menu.adapter
-
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -7,12 +6,9 @@ import com.topdon.lib.core.R
 import com.topdon.menu.constant.MenuType
 import com.topdon.menu.constant.TwoLightType
 import com.topdon.menu.R as MenuR
-
 @SuppressLint("NotifyDataSetChanged")
 internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter() {
-
     var onTwoLightListener: ((twoLightType: TwoLightType, isSelected: Boolean) -> Unit)? = null
-
     var twoLightType: TwoLightType
         get() {
             for (data in dataList) {
@@ -32,7 +28,6 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             for (data in dataList) {
                 if (data.isSingle) {
                     if (menuType == MenuType.TC007 && value == TwoLightType.TWO_LIGHT_1) {
-
                         data.isSelected = data.twoLightType == TwoLightType.TWO_LIGHT_2
                     } else {
                         data.isSelected = data.twoLightType == value
@@ -41,18 +36,17 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             }
             notifyDataSetChanged()
         }
-
     fun setSelected(
         twoLightType: TwoLightType,
         isSelected: Boolean,
     ) {
-        if (twoLightType == TwoLightType.TWO_LIGHT_1 || twoLightType == TwoLightType.TWO_LIGHT_2) { // dual light1, dual light2
+        if (twoLightType == TwoLightType.TWO_LIGHT_1 || twoLightType == TwoLightType.TWO_LIGHT_2) { 
             return
         }
-        if (twoLightType == TwoLightType.IR || twoLightType == TwoLightType.LIGHT) { // single infrared, visible light
+        if (twoLightType == TwoLightType.IR || twoLightType == TwoLightType.LIGHT) { 
             return
         }
-        if (menuType == MenuType.TC007 && twoLightType == TwoLightType.P_IN_P) { // picture-in-picture in TC007
+        if (menuType == MenuType.TC007 && twoLightType == TwoLightType.P_IN_P) { 
             return
         }
         for (data in dataList) {
@@ -62,9 +56,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
         }
         notifyDataSetChanged()
     }
-
     private val dataList: ArrayList<Data> = ArrayList(7)
-
     init {
         if (menuType == MenuType.DOUBLE_LIGHT || menuType == MenuType.TC007) {
             if (menuType == MenuType.DOUBLE_LIGHT) {
@@ -136,7 +128,6 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             )
         )
     }
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -147,8 +138,8 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
         holder.binding.ivIcon.isSelected = data.isSelected
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
-            if (data.isSingle) { // single selection
-                if (!data.isSelected) { // repeated clicks ignored in single selection mode
+            if (data.isSingle) { 
+                if (!data.isSelected) { 
                     twoLightType = data.twoLightType
                     onTwoLightListener?.invoke(data.twoLightType, true)
                 }
@@ -160,10 +151,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             }
         }
     }
-
     override fun getItemCount(): Int = dataList.size
-
-
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

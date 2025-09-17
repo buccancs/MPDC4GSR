@@ -1,5 +1,4 @@
 package com.topdon.lib.core.tools
-
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
@@ -7,14 +6,12 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.Utils
 import java.io.File
-
 object FileTools {
     fun getFileSize(path: String): String {
         var str = ""
         try {
             val file = File(path)
             var len = file.length()
-
             if (len < 1024) {
                 str = "${len}Byte"
             } else if (len < 1024 * 1024) {
@@ -27,12 +24,10 @@ object FileTools {
         }
         return str
     }
-
     fun getUri(file: File): Uri {
         val authority = "${Utils.getApp().packageName}.fileprovider"
         return FileProvider.getUriForFile(Utils.getApp(), authority, file)
     }
-
     fun getImagePathFromURI(path: String): Uri? {
         val cr: ContentResolver = Utils.getApp().contentResolver
         val buffer = StringBuffer()
@@ -58,7 +53,7 @@ object FileTools {
             cur.moveToNext()
         }
         return if (index != 0) {
-            Uri.parse("content://media/external/images/media/$index")
+            Uri.parse("content:
         } else {
             null
         }

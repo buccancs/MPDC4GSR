@@ -1,11 +1,8 @@
 package com.topdon.lib.core.utils
-
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
-
-
 object CommUtils {
     fun getAppName(): String {
         var msg = ""

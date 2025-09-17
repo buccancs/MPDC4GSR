@@ -1,17 +1,13 @@
 package com.topdon.menu.adapter
-
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
 import com.topdon.menu.constant.TempPointType
 import com.topdon.menu.R as MenuR
-
 @SuppressLint("NotifyDataSetChanged")
 internal class TempPointAdapter : BaseMenuAdapter() {
-
     var onTempPointListener: ((type: TempPointType, isSelected: Boolean) -> Unit)? = null
-
     fun setSelected(
         tempPointType: TempPointType,
         isSelected: Boolean,
@@ -24,14 +20,12 @@ internal class TempPointAdapter : BaseMenuAdapter() {
             }
         }
     }
-
     fun clearAllSelect() {
         for (data in dataArray) {
             data.isSelected = false
         }
         notifyDataSetChanged()
     }
-
     private val dataArray: Array<Data> =
         arrayOf(
             Data(
@@ -46,7 +40,6 @@ internal class TempPointAdapter : BaseMenuAdapter() {
             ),
             Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, TempPointType.DELETE),
         )
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -58,7 +51,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
             if (data.tempPointType == TempPointType.DELETE) {
-                if (!data.isSelected) { // selected时再次删除没卵用，未selected时才处理
+                if (!data.isSelected) { 
                     for (temp in dataArray) {
                         temp.isSelected = temp.tempPointType == TempPointType.DELETE
                     }
@@ -69,7 +62,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
                 data.isSelected = !data.isSelected
                 holder.binding.ivIcon.isSelected = data.isSelected
                 holder.binding.tvText.isSelected = data.isSelected
-                if (data.isSelected) { // selected高温点、低温点时要把“删除”设为未selected；取消selected时不耦合删除
+                if (data.isSelected) { 
                     for (i in dataArray.indices) {
                         if (dataArray[i].tempPointType == TempPointType.DELETE && dataArray[i].isSelected) {
                             dataArray[i].isSelected = false
@@ -81,9 +74,7 @@ internal class TempPointAdapter : BaseMenuAdapter() {
             }
         }
     }
-
     override fun getItemCount(): Int = dataArray.size
-
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.core.R
 import com.topdon.lib.ui.R as UiR
-
-
 @Deprecated("热成像-menu-capture已重构，不需要这个类了")
 class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapter.ViewHolder>() {
     val data: List<String> =
@@ -18,14 +15,11 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
             context.getString(R.string.person_headshot_camera),
             context.getString(R.string.app_video),
         )
-
     private var parentRecycler: RecyclerView? = null
-
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         parentRecycler = recyclerView
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -34,28 +28,23 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
         val v = inflater.inflate(UiR.layout.item_weak, parent, false)
         return ViewHolder(v)
     }
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
     ) {
         holder?.textView?.text = data[position]
     }
-
     override fun getItemCount(): Int {
         return data.size
     }
-
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         val textView: TextView
-
         init {
             textView = itemView.findViewById<View>(UiR.id.name) as TextView
             itemView.findViewById<View>(UiR.id.container).setOnClickListener(this)
         }
-
         fun showText() {
             textView.pivotX = (textView.width / 2).toFloat()
             textView.pivotY = (textView.height / 2).toFloat()
@@ -67,7 +56,6 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
                 .scaleY(1.1f).setDuration(100)
                 .start()
         }
-
         fun hideText() {
             textView.setTextColor(
                 ContextCompat.getColor(
@@ -75,12 +63,10 @@ class CameraItemAdapter(context: Context) : RecyclerView.Adapter<CameraItemAdapt
                     UiR.color.ui_main_custom_color
                 )
             )
-
             textView.animate().scaleX(1f).scaleY(1f)
                 .setDuration(100)
                 .start()
         }
-
         override fun onClick(v: View) {
             parentRecycler!!.smoothScrollToPosition(bindingAdapterPosition)
         }

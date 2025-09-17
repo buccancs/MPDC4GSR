@@ -1,26 +1,19 @@
 package com.topdon.lib.core.utils
-
 import java.util.Locale
 import java.util.UUID
-
 @OptIn(ExperimentalUnsignedTypes::class)
 object ByteUtils {
-
     fun ByteArray.toHexString(separator: String = " ") =
         asUByteArray().joinToString(separator) {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
         }
-
     fun ByteArray.toHexMd5String() =
         asUByteArray().joinToString(":") {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
         }
-
     fun String.hexStringToByteArray() =
         ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
-
     fun UUID.getTag() = toString().substring(4, 8)
-
     fun ByteArray.bytesToInt() =
         run {
             var total = 0
@@ -30,7 +23,6 @@ object ByteUtils {
             }
             total
         }
-
     fun ByteArray.bytesToLong() =
         run {
             var total = 0L
@@ -40,7 +32,6 @@ object ByteUtils {
             }
             total
         }
-
     fun Int.toBytes(size: Int) =
         run {
             var data = byteArrayOf()
@@ -49,7 +40,6 @@ object ByteUtils {
             }
             data
         }
-
     fun String.toBytes(size: Int) =
         run {
             val data = ByteArray(size)
@@ -61,7 +51,6 @@ object ByteUtils {
             }
             return@run data
         }
-
     fun Long.toBytes(size: Int) =
         run {
             var data = byteArrayOf()
@@ -70,13 +59,11 @@ object ByteUtils {
             }
             data
         }
-
     fun Int.getIndex(index: Int): Int =
         run {
             val a = this % (1 shl (index * 4))
             return a shr ((index - 1) * 4)
         }
-
     fun ByteArray.descBytes() =
         run {
             var data = byteArrayOf()
@@ -85,7 +72,6 @@ object ByteUtils {
             }
             return@run data
         }
-
     fun bigBytesToInt(vararg bytes: Byte): Int {
         val byteCount = bytes.size.coerceAtMost(4)
         var result = 0
@@ -94,7 +80,6 @@ object ByteUtils {
         }
         return result
     }
-
     fun Float.toLittleBytes(): ByteArray {
         val result = ByteArray(4)
         val floatBit: Int = java.lang.Float.floatToIntBits(this)

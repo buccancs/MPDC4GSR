@@ -1,7 +1,5 @@
 @file:Suppress("DEPRECATION")
-
 package com.topdon.lib.ui.dialog
-
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -24,8 +22,6 @@ import com.topdon.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
 import com.topdon.lib.ui.R as UiR
-
-
 class TipPreviewDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private var dis: Disposable? = null
@@ -34,7 +30,6 @@ class TipPreviewDialog : DialogFragment() {
     private var hasCheck = false
     private var _binding: DialogTipPreviewBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var tvContent: TextView
     private lateinit var checkBox: CheckBox
     private lateinit var imgClose: ImageView
@@ -43,15 +38,12 @@ class TipPreviewDialog : DialogFragment() {
     private var index: Int = -1
     private val pageCount = 2
     private var timer: Timer? = Timer()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState)
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,7 +52,6 @@ class TipPreviewDialog : DialogFragment() {
         _binding = DialogTipPreviewBinding.inflate(inflater, container, false)
         return binding.root
     }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -71,13 +62,11 @@ class TipPreviewDialog : DialogFragment() {
                 getString(R.string.preview_step_1),
                 getString(R.string.preview_step_2),
             )
-
         checkBox = binding.dialogTipCheck
         imgClose = binding.imgClose
         viewPager = binding.viewPager
         tvContent = binding.tvContent
         indicateView = binding.indicateView
-
         val adapter = PageAdapter(childFragmentManager)
         indicateView.itemCount = adapter.count
         viewPager.adapter = adapter
@@ -101,17 +90,14 @@ class TipPreviewDialog : DialogFragment() {
                     positionOffsetPixels: Int,
                 ) {
                 }
-
                 override fun onPageSelected(position: Int) {
                     updateIndex(position)
                 }
-
                 override fun onPageScrollStateChanged(state: Int) {
                 }
             },
         )
     }
-
     fun updateIndex(position: Int) {
         if (index == position) {
             return
@@ -121,13 +107,11 @@ class TipPreviewDialog : DialogFragment() {
         tvContent.text = titleList[position]
         index = position
     }
-
     override fun onDestroy() {
         super.onDestroy()
         timer?.cancel()
         timer = null
     }
-
     override fun onResume() {
         super.onResume()
         val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
@@ -136,7 +120,6 @@ class TipPreviewDialog : DialogFragment() {
         dialog?.window?.attributes = params as WindowManager.LayoutParams
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -144,7 +127,6 @@ class TipPreviewDialog : DialogFragment() {
         timer = null
         dis?.dispose()
     }
-
     override fun show(
         manager: FragmentManager,
         tag: String?,
@@ -155,31 +137,25 @@ class TipPreviewDialog : DialogFragment() {
             e.printStackTrace()
         }
     }
-
     companion object {
-
         fun newInstance(): TipPreviewDialog {
             return TipPreviewDialog()
         }
     }
-
     @Suppress("DEPRECATION")
     inner class PageAdapter(fragmentManager: FragmentManager) :
         FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
             return pageCount
         }
-
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_1)
                 }
-
                 1 -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_2)
                 }
-
                 else -> {
                     PageFragment.newInstance(UiR.drawable.preview_step_3)
                 }

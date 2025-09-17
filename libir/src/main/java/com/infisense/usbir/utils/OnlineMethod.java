@@ -1,5 +1,4 @@
 package com.infisense.usbir.utils;
-
 import static org.opencv.core.Core.NORM_MINMAX;
 import static org.opencv.core.Core.normalize;
 import static org.opencv.core.CvType.CV_64FC1;
@@ -18,11 +17,9 @@ import static org.opencv.imgproc.Imgproc.drawContours;
 import static org.opencv.imgproc.Imgproc.findContours;
 import static org.opencv.imgproc.Imgproc.rectangle;
 import static org.opencv.imgproc.Imgproc.threshold;
-
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.util.Log;
-
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -31,30 +28,22 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 public class OnlineMethod {
-
     static {
-
         System.loadLibrary("opencv_java4");
     }
-
     public static Mat draw_high_temp_edge(byte[] image, byte[] temperature, double high_t, int color_h, int type) throws IOException {
         double[] temp = new double[256 * 192];
         int t = 0;
-
         for (int i = 0; i < temperature.length; i++) {
             if (i % 2 == 0) {
                 int value = (int) (temperature[i + 1] << 8) + (int) (temperature[i]);
                 double divid = 16.0;
                 double g = (value / 4.0) / divid - 273.15;
-
                 temp[t] = g;
-
                 t++;
             }
         }
@@ -69,19 +58,13 @@ public class OnlineMethod {
         tem = new Mat(192, 256, CV_64FC1);
         tem.put(0, 0, temp);
         tem.convertTo(tem, CV_8UC1);
-
-
         Mat thres_gray = new Mat();
-
-
         threshold(tem, thres_gray, high_t, 255, THRESH_BINARY);
-
         List<MatOfPoint> cnts = new ArrayList<MatOfPoint>();
         Mat hierarchy = new Mat();
         findContours(thres_gray, cnts, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
         MatOfPoint2f approxCurve = new MatOfPoint2f();
         List<Rect> rects = new ArrayList<Rect>();
-
         String B = Integer.toString(color_h & 255, 2);
         int b = Integer.parseInt(B, 2);
         int gc = color_h >> 8;
@@ -103,28 +86,19 @@ public class OnlineMethod {
                 } else {
                     rectangle(im, rect.tl(), rect.br(), color, 1, 8, 0);
                 }
-
             }
-
         }
-
-
         return im;
-
     }
-
     public static Mat draw_temp_edge(Mat src, byte[] temperature, double low_t, int color_l, int type) throws IOException {
         double[] temp = new double[256 * 192];
         int t = 0;
-
         for (int i = 0; i < temperature.length; i++) {
             if (i % 2 == 0) {
                 int value = (int) (temperature[i + 1] << 8) + (int) (temperature[i]);
                 double divid = 16.0;
                 double g = (value / 4.0) / divid - 273.15;
-
                 temp[t] = g;
-
                 t++;
             }
         }
@@ -132,7 +106,6 @@ public class OnlineMethod {
         tem = new Mat(192, 256, CV_64FC1);
         tem.put(0, 0, temp);
         tem.convertTo(tem, CV_8UC1);
-
         Mat thres_gray = new Mat();
         threshold(tem, thres_gray, low_t, 255, 4);
         List<MatOfPoint> cnts = new ArrayList<MatOfPoint>();
@@ -154,7 +127,6 @@ public class OnlineMethod {
             approxPolyDP(contour2f, approxCurve, 0, true);
             MatOfPoint points = new MatOfPoint(approxCurve.toArray());
             Rect rect = boundingRect(points);
-
             double area = contourArea(points);
             if (area > 300) {
                 if (type == 1) {
@@ -167,7 +139,6 @@ public class OnlineMethod {
         MatOfByte matOfByte = new MatOfByte();
         return src;
     }
-
     public static Bitmap adjustPhotoRotation(Bitmap bm, final int orientationDegree) {
         Matrix m = new Matrix();
         m.setRotate(orientationDegree, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
@@ -177,9 +148,7 @@ public class OnlineMethod {
         } catch (OutOfMemoryError ex) {
         }
         return null;
-
     }
-
     public static byte[] draw_edge_from_temp_reigon_byte(byte[] image, byte[] temperature, int row, int col, double high_t, double low_t, int color_h, int color_l, int type) throws IOException {
         Mat src = draw_high_temp_edge(image, temperature, high_t, color_h, type);
         Mat mat = draw_temp_edge(src, temperature, low_t, color_l, type);
@@ -189,7 +158,6 @@ public class OnlineMethod {
         byte[] bytes = new byte[192 * 256 * 4];
         return bytes;
     }
-
     public static Mat draw_edge_from_temp_reigon(byte[] image, byte[] temperature, int row, int col, double high_t, double low_t, int color_h, int color_l, int type) throws IOException {
         Mat src = draw_high_temp_edge(image, temperature, high_t, color_h, type);
         Mat mat = draw_temp_edge(src, temperature, low_t, color_l, type);
@@ -198,7 +166,6 @@ public class OnlineMethod {
         Utils.matToBitmap(mat, dstBitmap);
         return draw_temp_edge(src, temperature, low_t, color_l, type);
     }
-
     public static Bitmap draw_edge_from_temp_reigon_bitmap(byte[] image, byte[] temperature, int row, int col, double high_t, double low_t, int color_h, int color_l, int type) throws IOException {
         Mat src = draw_high_temp_edge(image, temperature, high_t, color_h, type);
         Mat mat = draw_temp_edge(src, temperature, low_t, color_l, type);
@@ -208,5 +175,4 @@ public class OnlineMethod {
         Utils.matToBitmap(mat, dstBitmap);
         return dstBitmap;
     }
-
 }

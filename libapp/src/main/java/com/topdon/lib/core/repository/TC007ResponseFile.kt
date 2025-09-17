@@ -1,9 +1,6 @@
 package com.topdon.lib.core.repository
-
 import android.graphics.Point
 import android.graphics.Rect
-
-
 data class TC007Response<T>(
     val Code: Int,
     val Message: String?,
@@ -11,10 +8,8 @@ data class TC007Response<T>(
     val Detail: String?,
     val Data: T?,
 ) {
-
     fun isSuccess(): Boolean = Code == 200
 }
-
 data class ProductBean(
     val ProductName: String,
     val ProductPN: String,
@@ -25,19 +20,16 @@ data class ProductBean(
     fun getVersionStr(): String =
         "${SoftwareVersion?.Major ?: "-"}.${SoftwareVersion?.Minor ?: "-"}${SoftwareVersion?.Build ?: "-"}"
 }
-
 data class Version07Bean(
     val Major: String?,
     val Minor: String?,
     val Build: String?,
 )
-
 data class BatteryInfo(
     val Status: String?,
     val Remaining: String?,
 ) {
     fun isCharging(): Boolean = Status == "Charging"
-
     fun getBattery(): Int? =
         try {
             Remaining?.toInt()
@@ -45,13 +37,11 @@ data class BatteryInfo(
             null
         }
 }
-
 data class TC07UpgradeStatus(
     val Status: Int,
     val Percent: Int,
     val Code: Int,
 )
-
 data class EnvAttr(
     val Fps: Int,
     val Level: Int,
@@ -59,12 +49,10 @@ data class EnvAttr(
     val TempUnit: Int,
     val DistanceUnit: Int,
 )
-
 data class FrameParam(
     var Enable: Boolean,
     val TempRule: TempRule,
 )
-
 data class TempRule(
     val AlarmRule: Int,
     val ThresholdTemp: Int,
@@ -72,28 +60,22 @@ data class TempRule(
     val ToleranceTemp: Int,
     val TempRise: TempRise,
 )
-
 data class TempRise(
     var Enable: Boolean,
     var TRTemp: Int,
     var TRTime: Int,
     var TRNum: Int,
 )
-
 data class TempFrameParam(
     val FrameHigh: FrameParam,
     val FrameLow: FrameParam,
     val FrameCenter: FrameParam,
 ) {
-
 }
-
 internal data class PointParam(val X: Int, val Y: Int) {
     constructor(point: Point?) : this(point?.x ?: 0, point?.y ?: 0)
 }
-
 internal data class TargetParam(val Enable: Boolean)
-
 internal data class TempPointParam(
     val Enable: Boolean,
     val ID: Int,
@@ -109,7 +91,6 @@ internal data class TempPointParam(
         Target = TargetParam(true),
     )
 }
-
 internal data class TempLineParam(
     val Enable: Boolean,
     val ID: Int,
@@ -124,10 +105,8 @@ internal data class TempLineParam(
         Line = LineParam(PointParam(start), PointParam(end)),
         Target = TargetParam(true),
     )
-
     data class LineParam(val Point0: PointParam, val Point1: PointParam)
 }
-
 internal data class TempRectParam(
     val Enable: Boolean,
     val ID: Int,
@@ -142,7 +121,6 @@ internal data class TempRectParam(
         Rectangle = RectParam(rect),
         Target = TargetParam(true),
     )
-
     data class RectParam(
         val Point0: PointParam,
         val Point1: PointParam,
@@ -157,36 +135,30 @@ internal data class TempRectParam(
         )
     }
 }
-
 data class PhotoBean(
     val DCFile: String?,
     val IRFile: String?,
 )
-
 data class AttributeBean(
     var Fps: Int?,
     var Level: Int?,
     var TempUnit: Int?,
     var DistanceUnit: Int?,
 )
-
 data class WifiAttributeBean(
     var Ratio: Int? = null,
     var X: Int? = null,
     var Y: Int? = null,
 )
-
 data class PalleteBean(
     val palleteMode: Int,
     var stander: Stander? = null,
     var custom: Custom? = null,
 )
-
 data class Stander(
     var palleteNo: Int = 0,
     val threshold: List<Int>,
 )
-
 data class Custom(
     var customMode: Int,
     var highThreshold: Int,
@@ -195,34 +167,29 @@ data class Custom(
     var middleColor: CustomColor,
     var lowColor: CustomColor,
 )
-
 data class CustomColor(
     var red: Int,
     var green: Int,
     var blue: Int,
 )
-
 data class Param(
-    var brightness: Int = 50, // 亮度, 0-100, 默认50
-    var contrast: Int = 50, // 对比度, 0-100, 默认50
-    var saturation: Int = 50, // 饱和度, 0-100, 默认50
-    var sharpness: Int = 50, // 锐度, 0-100, 默认50
-    var flipMode: Int = 0, // 翻转, 0:正常, 1:水平翻转 2:垂直翻转 3:180度翻转
+    var brightness: Int = 50, 
+    var contrast: Int = 50, 
+    var saturation: Int = 50, 
+    var sharpness: Int = 50, 
+    var flipMode: Int = 0, 
 )
-
 data class Isotherm(
     val color: Long,
     val size: Int,
 )
-
 data class IsothermColor(
     val red: Int,
     val green: Int,
     val blue: Int,
 )
-
 data class IsothermC(
-    val mode: Int, // 0：关，1：阈值上，2：阈值下，3：区间内
+    val mode: Int, 
     val highThreshold: Int,
     val lowThreshold: Int,
     var greaterThreshold: Int = 0,

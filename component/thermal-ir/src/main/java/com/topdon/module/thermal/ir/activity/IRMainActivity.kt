@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
@@ -43,40 +42,21 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibR
-
-/**
-
- *
-
-
- *
- * Created by LCG on 2024/4/18.
- */
-
 class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMainBinding
-
-    /**
-
-
-     */
     private var isTC007 = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityIrMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
     }
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         initView()
     }
-
     private fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-
         binding.viewPage.offscreenPageLimit = 5
         binding.viewPage.isUserInputEnabled = false
         binding.viewPage.adapter = ViewPagerAdapter(this, isTC007)
@@ -88,19 +68,14 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             },
         )
         binding.viewPage.setCurrentItem(2, false)
-
         binding.clIconMonitor.setOnClickListener(this)
         binding.clIconGallery.setOnClickListener(this)
-
         binding.clIconReport.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
-
         showGuideDialog()
     }
-
     override fun onResume() {
         super.onResume()
-
         if (isTC007) {
             if (WebSocketProxy.getInstance().isTC007Connect()) {
                 NetWorkUtils.switchNetwork(false)
@@ -123,46 +98,37 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
     private fun initData() {
     }
-
     private fun connected() {
         if (!isTC007) {
             binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
         }
     }
-
     private fun disConnected() {
         if (!isTC007) {
             binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
         }
     }
-
     private fun onSocketConnected(isTS004: Boolean) {
         if (!isTS004 && isTC007) {
             binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
         }
     }
-
     private fun onSocketDisConnected(isTS004: Boolean) {
         if (!isTS004 && isTC007) {
             binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
         }
     }
-
     override fun onClick(v: View?) {
         when (v) {
-            binding.clIconMonitor -> { // 监控
+            binding.clIconMonitor -> { 
                 binding.viewPage.setCurrentItem(0, false)
             }
-
-            binding.clIconGallery -> { // 图库
+            binding.clIconGallery -> { 
                 checkStoragePermission()
             }
-
-
-            binding.clIconReport -> { // 报告
+            binding.clIconReport -> { 
                 if (LMS.getInstance().isLogin) {
                     binding.viewPage.setCurrentItem(3, false)
                 } else {
@@ -174,17 +140,11 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
-
-            binding.clIconMine -> { // 我的
+            binding.clIconMine -> { 
                 binding.viewPage.setCurrentItem(4, false)
             }
         }
     }
-
-    /**
-
-
-     */
     private fun refreshTabSelect(index: Int) {
         binding.ivIconMonitor.isSelected = false
         binding.tvIconMonitor.isSelected = false
@@ -199,35 +159,29 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.ivIconMonitor.isSelected = true
                 binding.tvIconMonitor.isSelected = true
             }
-
             1 -> {
                 binding.ivIconGallery.isSelected = true
                 binding.tvIconGallery.isSelected = true
             }
-
             3 -> {
                 binding.ivIconReport.isSelected = true
                 binding.tvIconReport.isSelected = true
             }
-
             4 -> {
                 binding.ivIconMine.isSelected = true
                 binding.tvIconMine.isSelected = true
             }
         }
     }
-
     private fun showGuideDialog() {
-        if (SharedManager.homeGuideStep == 0) { // 已看过或不再提示
+        if (SharedManager.homeGuideStep == 0) { 
             return
         }
-
         when (SharedManager.homeGuideStep) {
             1 -> binding.viewPage.setCurrentItem(0, false)
             2 -> binding.viewPage.setCurrentItem(4, false)
             3 -> binding.viewPage.setCurrentItem(2, false)
         }
-
         val guideDialog = HomeGuideDialog(this, SharedManager.homeGuideStep)
         guideDialog.onNextClickListener = {
             when (it) {
@@ -241,7 +195,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     SharedManager.homeGuideStep = 2
                 }
-
                 2 -> {
                     binding.viewPage.setCurrentItem(2, false)
                     if (Build.VERSION.SDK_INT < 31) {
@@ -252,7 +205,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     SharedManager.homeGuideStep = 3
                 }
-
                 3 -> {
                     SharedManager.homeGuideStep = 0
                 }
@@ -267,7 +219,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         guideDialog.show()
-
         if (Build.VERSION.SDK_INT >= 31) {
             window?.decorView?.setRenderEffect(
                 RenderEffect.createBlurEffect(
@@ -278,14 +229,11 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             )
         } else {
             lifecycleScope.launch {
-
-
                 delay(100)
                 guideDialog.blurBg(binding.clRoot)
             }
         }
     }
-
     private fun checkStoragePermission() {
         val permissionList: List<String> =
             if (this.applicationInfo.targetSdkVersion >= 34) {
@@ -309,7 +257,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
             }
-
         if (!XXPermissions.isGranted(this, permissionList)) {
             if (BaseApplication.instance.isDomestic()) {
                 TipDialog.Builder(this)
@@ -331,7 +278,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             initStoragePermission(permissionList)
         }
     }
-
     private fun initStoragePermission(permissionList: List<String>) {
         if (PermissionUtils.isVisualUser()) {
             binding.viewPage.setCurrentItem(1, false)
@@ -349,13 +295,11 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                             binding.viewPage.setCurrentItem(1, false)
                         }
                     }
-
                     override fun onDenied(
                         permissions: MutableList<String>,
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-
                             TipDialog.Builder(this@IRMainActivity)
                                 .setTitleMessage(getString(LibR.string.app_tip))
                                 .setMessage(getString(LibR.string.app_album_content))
@@ -371,13 +315,11 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 },
             )
     }
-
     private class ViewPagerAdapter(val activity: FragmentActivity, val isTC007: Boolean) :
         FragmentStateAdapter(activity) {
         override fun getItemCount() = 5
-
         override fun createFragment(position: Int): Fragment {
-            if (position == 1) { // 图库
+            if (position == 1) { 
                 return IRGalleryTabFragment().apply {
                     arguments =
                         Bundle().also {

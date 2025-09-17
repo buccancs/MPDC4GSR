@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.fragment
-
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,43 +19,22 @@ import com.topdon.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
-
-/**
-
- *
-
-
-
-
- *
- * Created by chenggeng.lin on 2023/11/14.
- */
 class IRGalleryTabFragment : BaseFragment() {
-
     private var hasBackIcon = false
-
     private var canSwitchDir = true
-
     private var currentDirType = DirType.LINE
-
     private val viewModel: IRGalleryTabViewModel by activityViewModels()
-
     private var viewPagerAdapter: ViewPagerAdapter? = null
-
     private lateinit var titleView: TitleView
     private lateinit var tvTitleDir: MyTextView
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
-
     override fun initContentView(): Int = R.layout.fragment_gallery_tab
-
     override fun initView() {
-
         titleView = requireView().findViewById(R.id.title_view)
         tvTitleDir = requireView().findViewById(R.id.tv_title_dir)
         tabLayout = requireView().findViewById(R.id.tab_layout)
         viewPager2 = requireView().findViewById(R.id.view_pager2)
-
         hasBackIcon = arguments?.getBoolean(ExtraKeyConfig.HAS_BACK_ICON, false) ?: false
         canSwitchDir = arguments?.getBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, false) ?: false
         currentDirType =
@@ -66,7 +44,6 @@ class IRGalleryTabFragment : BaseFragment() {
                 DirType.TC007.ordinal -> DirType.TC007
                 else -> DirType.LINE
             }
-
         tvTitleDir.text =
             when (currentDirType) {
                 DirType.LINE -> getString(R.string.tc_has_line_device)
@@ -88,13 +65,12 @@ class IRGalleryTabFragment : BaseFragment() {
             }
             popup.show(tvTitleDir)
         }
-
         titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))
         titleView.setLeftDrawable(if (hasBackIcon) R.drawable.ic_back_white_svg else 0)
         titleView.setLeftClickListener {
-            if (viewModel.isEditModeLD.value == true) { // 当前为编辑状态，退出编辑
+            if (viewModel.isEditModeLD.value == true) { 
                 viewModel.isEditModeLD.value = false
-            } else { // 当前为非编辑状态，退出页面
+            } else { 
                 if (hasBackIcon) {
                     requireActivity().finish()
                 }
@@ -102,19 +78,17 @@ class IRGalleryTabFragment : BaseFragment() {
         }
         titleView.setRightDrawable(UiR.drawable.ic_toolbar_check_svg)
         titleView.setRightClickListener {
-            if (viewModel.isEditModeLD.value == true) { // 当前为编辑状态，全选
+            if (viewModel.isEditModeLD.value == true) { 
                 viewModel.selectAllIndex.value = viewPager2.currentItem
-            } else { // 当前为非编辑状态，进入编辑
+            } else { 
                 viewModel.isEditModeLD.value = true
             }
         }
-
         viewPagerAdapter = ViewPagerAdapter(this)
         viewPager2.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.setText(if (position == 0) R.string.album_menu_Photos else R.string.app_video)
         }.attach()
-
         viewModel.isEditModeLD.observe(viewLifecycleOwner) { isEditMode ->
             if (isEditMode) {
                 titleView.setLeftDrawable(LibCoreR.drawable.svg_x_cc)
@@ -148,13 +122,10 @@ class IRGalleryTabFragment : BaseFragment() {
             }
         }
     }
-
     override fun initData() {
     }
-
     private inner class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         override fun getItemCount() = 2
-
         override fun createFragment(position: Int): Fragment {
             val bundle = Bundle()
             bundle.putBoolean(ExtraKeyConfig.IS_VIDEO, position == 1)

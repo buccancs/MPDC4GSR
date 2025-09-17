@@ -1,5 +1,4 @@
 package com.topdon.lib.core.tools
-
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -18,14 +17,10 @@ import androidx.annotation.Px
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import java.lang.ref.WeakReference
-
 class SpanBuilder : SpannableStringBuilder {
     constructor() : super()
-
     constructor(text: CharSequence) : super(text)
-
     constructor(text: CharSequence, start: Int, end: Int) : super(text, start, end)
-
     fun appendDrawable(
         context: Context,
         @DrawableRes resourceId: Int,
@@ -43,12 +38,11 @@ class SpanBuilder : SpannableStringBuilder {
         this.append(" ")
         return this
     }
-
     fun appendColor(
         text: CharSequence,
         @ColorInt color: Int,
     ): SpanBuilder {
-        if (text.isEmpty()) { // 搞个空字符串过来干嘛
+        if (text.isEmpty()) { 
             return this
         }
         val oldLength = this.length
@@ -61,13 +55,12 @@ class SpanBuilder : SpannableStringBuilder {
         )
         return this
     }
-
     fun appendColorAndClick(
         text: CharSequence,
         @ColorInt color: Int,
         listener: OnClickListener,
     ): SpanBuilder {
-        if (text.isEmpty()) { // 搞个空字符串过来干嘛
+        if (text.isEmpty()) { 
             return this
         }
         val oldLength = this.length
@@ -80,7 +73,6 @@ class SpanBuilder : SpannableStringBuilder {
         )
         return this
     }
-
     fun appendColorAndClick(
         context: Context,
         @StringRes resId: Int,
@@ -100,7 +92,6 @@ class SpanBuilder : SpannableStringBuilder {
         )
         return this
     }
-
     private class MyClickSpan(
         val listener: OnClickListener,
         val color: Int,
@@ -110,25 +101,21 @@ class SpanBuilder : SpannableStringBuilder {
             ds.color = color
             ds.isUnderlineText = hasUnderLine
         }
-
         override fun onClick(widget: View) {
             listener.onClick(widget)
         }
     }
-
     private class MyImageSpan(
         val context: Context,
         @DrawableRes val resourceId: Int,
         @Px val wantHeight: Int,
     ) : ReplacementSpan() {
         private var weakReference: WeakReference<Drawable>? = null
-
         fun getCachedDrawable(): Drawable {
             val weakDrawable = weakReference?.get()
             if (weakDrawable != null) {
                 return weakDrawable
             }
-
             val drawable: Drawable = ContextCompat.getDrawable(context, resourceId)!!
             drawable.setBounds(
                 0,
@@ -137,10 +124,8 @@ class SpanBuilder : SpannableStringBuilder {
                 wantHeight
             )
             weakReference = WeakReference(drawable)
-
             return drawable
         }
-
         override fun getSize(
             paint: Paint,
             text: CharSequence?,
@@ -157,7 +142,6 @@ class SpanBuilder : SpannableStringBuilder {
             }
             return rect.right
         }
-
         override fun draw(
             canvas: Canvas,
             text: CharSequence?,

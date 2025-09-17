@@ -1,5 +1,4 @@
 package com.topdon.tc001.service
-
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.topdon.tc001.controller.RecordingController
@@ -12,18 +11,12 @@ import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-
-/**
- * Tests for enhanced RecordingService integration with fault-tolerant session management
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 @OptIn(ExperimentalCoroutinesApi::class)
 class RecordingServiceTest {
-
     private lateinit var context: Context
     private lateinit var mockRecordingController: RecordingController
-
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
@@ -36,12 +29,10 @@ class RecordingServiceTest {
             coEvery { stopSession() } returns true
         }
     }
-
     @After
     fun tearDown() {
         clearAllMocks()
     }
-
     @Test
     fun `test service handles partial sensor failures gracefully`() = runTest {
         every { mockRecordingController.getAvailableSensors() } returns listOf(
@@ -51,10 +42,8 @@ class RecordingServiceTest {
             }
         )
         every { mockRecordingController.getActiveSensorCount() } returns 1
-        
         assertTrue("Service should handle partial sensor scenarios", true)
     }
-
     @Test
     fun `test backward compatibility maintained`() = runTest {
         try {

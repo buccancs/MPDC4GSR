@@ -1,5 +1,4 @@
 package com.topdon.pseudo.view
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -17,19 +16,6 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.pseudo.R
 import kotlin.math.abs
-
-/**
-
- *
-
-
-
-
-
-
- *
- * Created by LCG on 2024/10/15.
- */
 class PseudoPickView : View {
     companion object {
         @CheckResult
@@ -43,7 +29,6 @@ class PseudoPickView : View {
             System.arraycopy(this, index, newArray, index + 1, this.size - index)
             return newArray
         }
-
         @CheckResult
         private fun FloatArray.add(
             index: Int,
@@ -55,7 +40,6 @@ class PseudoPickView : View {
             System.arraycopy(this, index, newArray, index + 1, this.size - index)
             return newArray
         }
-
         @CheckResult
         private fun IntArray.removeAt(index: Int): IntArray {
             val newArray = IntArray(this.size - 1)
@@ -63,7 +47,6 @@ class PseudoPickView : View {
             System.arraycopy(this, index + 1, newArray, index, this.size - index - 1)
             return newArray
         }
-
         @CheckResult
         private fun FloatArray.removeAt(index: Int): FloatArray {
             val newArray = FloatArray(this.size - 1)
@@ -72,45 +55,26 @@ class PseudoPickView : View {
             return newArray
         }
     }
-
     private val barPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-
     private val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-
     private val selectYesDrawable: Drawable
-
     private val selectNotDrawable: Drawable
-
     var onSelectChangeListener: ((selectIndex: Int) -> Unit)? = null
-
     var selectIndex = 0
-
-    /**
-
-
-
-     */
     var sourceColors: IntArray =
         intArrayOf(0xff0000ff.toInt(), 0xffff0000.toInt(), 0xffffff00.toInt())
-
     var actualColors: IntArray =
         intArrayOf(0xff0000ff.toInt(), 0xffff0000.toInt(), 0xffffff00.toInt())
-
     var zAltitudes: IntArray = intArrayOf(0, 0, 0)
-
     var places: FloatArray = floatArrayOf(0f, 0.5f, 1f)
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
         defStyleAttr,
         0
     )
-
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -129,14 +93,6 @@ class PseudoPickView : View {
         selectYesDrawable.setBounds(0, 0, SizeUtils.dp2px(16f), SizeUtils.dp2px(10f))
         selectNotDrawable.setBounds(0, 0, SizeUtils.dp2px(16f), SizeUtils.dp2px(10f))
     }
-
-    /**
-
-
-
-
-
-     */
     fun reset(
         selectIndex: Int,
         colors: IntArray,
@@ -160,7 +116,6 @@ class PseudoPickView : View {
         invalidate()
         onSelectChangeListener?.invoke(selectIndex)
     }
-
     fun refreshColor(
         @ColorInt color: Int,
     ) {
@@ -178,11 +133,9 @@ class PseudoPickView : View {
         )
         invalidate()
     }
-
     private var addCount = 0
-
     fun add() {
-        if (sourceColors.size >= 7) { // 最多7个圆形色块
+        if (sourceColors.size >= 7) { 
             return
         }
         addCount++
@@ -208,7 +161,6 @@ class PseudoPickView : View {
                 break
             }
         }
-
         sourceColors = sourceColors.add(addIndex, addColor)
         zAltitudes = zAltitudes.add(addIndex, calculateZAltitude(0.75f))
         places = places.add(addIndex, 0.75f)
@@ -226,15 +178,13 @@ class PseudoPickView : View {
         invalidate()
         onSelectChangeListener?.invoke(selectIndex)
     }
-
     fun del() {
         if (sourceColors.size <= 3) {
             return
         }
-        if (isCurrentOnlyLimit()) { // 仅有的最左最右不允许删除
+        if (isCurrentOnlyLimit()) { 
             return
         }
-
         sourceColors = sourceColors.removeAt(selectIndex)
         zAltitudes = zAltitudes.removeAt(selectIndex)
         places = places.removeAt(selectIndex)
@@ -257,10 +207,9 @@ class PseudoPickView : View {
         invalidate()
         onSelectChangeListener?.invoke(selectIndex)
     }
-
     fun isCurrentOnlyLimit(): Boolean {
         val place: Float = places[selectIndex]
-        if (place == 0f || place == 1f) { // 是最左或最右，接下来看看是不是唯一
+        if (place == 0f || place == 1f) { 
             for (i in places.indices) {
                 if (i != selectIndex && places[i] == place) {
                     return false
@@ -270,7 +219,6 @@ class PseudoPickView : View {
         }
         return false
     }
-
     private fun refreshActualColors() {
         if (actualColors.size != sourceColors.size) {
             actualColors = IntArray(sourceColors.size)
@@ -282,7 +230,6 @@ class PseudoPickView : View {
             }
         }
     }
-
     private fun calculateZAltitude(place: Float): Int {
         var result = 0
         val gap: Float = selectRadius * 2 / barRect.width()
@@ -293,11 +240,8 @@ class PseudoPickView : View {
         }
         return result
     }
-
     private val barRect = RectF()
-
     private val selectRadius: Int = SizeUtils.dp2px(12f)
-
     @SuppressLint("DrawAllocation")
     override fun onMeasure(
         widthMeasureSpec: Int,
@@ -319,16 +263,12 @@ class PseudoPickView : View {
             places,
             Shader.TileMode.CLAMP
         )
-
         val wantHeight: Int = barRect.height()
             .toInt() + SizeUtils.dp2px(2f) + selectNotDrawable.bounds.height() + selectRadius * 2
-
         setMeasuredDimension(widthSize, wantHeight)
     }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         val barRadius = SizeUtils.dp2px(4f).toFloat()
         canvas.drawRoundRect(
             barRect.left,
@@ -339,11 +279,9 @@ class PseudoPickView : View {
             barRadius,
             barPaint
         )
-
         canvas.translate(0f, barRect.bottom + SizeUtils.dp2px(2f))
         val strokeWidth: Float = SizeUtils.dp2px(1.5f).toFloat()
         val circleRadius: Float = (selectRadius - strokeWidth * 2).toInt().toFloat()
-
         var minZAltitude = 0
         var maxZAltitude = 0
         for (altitude in zAltitudes) {
@@ -361,10 +299,8 @@ class PseudoPickView : View {
                         circlePaint.color = 0xff16131e.toInt()
                         canvas.drawCircle(x, y, selectRadius - strokeWidth, circlePaint)
                     }
-
                     circlePaint.color = actualColors[i]
                     canvas.drawCircle(x, y, circleRadius, circlePaint)
-
                     canvas.save()
                     canvas.translate(x - selectNotDrawable.bounds.width() / 2, 0f)
                     (if (i == selectIndex) selectYesDrawable else selectNotDrawable).draw(canvas)
@@ -373,13 +309,9 @@ class PseudoPickView : View {
             }
         }
     }
-
     private var downX = 0
-
     private var handleTouch = false
-
     private var canDrag = false
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) {
@@ -390,11 +322,10 @@ class PseudoPickView : View {
                 handleTouch = false
                 canDrag = false
                 downX = event.x.toInt()
-
                 var targetIndex = -1
                 for (i in places.indices) {
                     val centerX: Int = (barRect.left + barRect.width() * places[i]).toInt()
-                    if (downX >= centerX - selectRadius && downX <= centerX + selectRadius) { // 在该圆形色块范围内
+                    if (downX >= centerX - selectRadius && downX <= centerX + selectRadius) { 
                         if (targetIndex == -1) {
                             targetIndex = i
                             continue
@@ -413,20 +344,19 @@ class PseudoPickView : View {
                     onSelectChangeListener?.invoke(selectIndex)
                 }
             }
-
             MotionEvent.ACTION_MOVE -> {
                 val x = event.x.coerceAtLeast(barRect.left).coerceAtMost(barRect.right).toInt()
                 if (canDrag) {
                     parent.requestDisallowInterceptTouchEvent(true)
                     val oldPlace: Float = places[selectIndex]
                     val newPlace: Float = (x - barRect.left) / barRect.width()
-                    if (newPlace == oldPlace) { // 没变化，不用往下处理了
+                    if (newPlace == oldPlace) { 
                         return handleTouch
                     }
                     val currentColor: Int = sourceColors[selectIndex]
                     val oldIndex: Int = selectIndex
                     var newIndex: Int = selectIndex
-                    if (oldPlace < newPlace) { // 从左往右移
+                    if (oldPlace < newPlace) { 
                         for (i in places.indices) {
                             if (places[i] <= newPlace) {
                                 newIndex = i
@@ -434,7 +364,7 @@ class PseudoPickView : View {
                                 break
                             }
                         }
-                    } else { // 从右往左移
+                    } else { 
                         for (i in places.size - 1 downTo 0) {
                             val place = places[i]
                             if (place > newPlace) {

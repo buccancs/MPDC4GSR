@@ -1,5 +1,4 @@
 package com.topdon.tc001.utils
-
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -18,7 +17,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.abs
-
 class TimeManager(
     private val context: Context,
 ) {
@@ -28,42 +26,30 @@ class TimeManager(
         private const val SYNC_RETRY_COUNT = 3
         private const val SYNC_QUALITY_THRESHOLD_MS = 5.0
         private const val DRIFT_MONITORING_INTERVAL_MS = 30000L
-
-        // Singleton instance
         @Volatile
         private var INSTANCE: TimeManager? = null
-
         fun getInstance(context: Context): TimeManager {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: TimeManager(context.applicationContext).also { INSTANCE = it }
             }
         }
     }
-
-    // Time synchronization state
-    private var clockOffsetNs = AtomicLong(0) // Offset to align with PC Controller
+    private var clockOffsetNs = AtomicLong(0) 
     private var lastSyncTimestamp = AtomicLong(0)
     private var syncQualityMs = AtomicLong(Long.MAX_VALUE)
     private var isTimeSynced = false
-
-    // Network connectivity
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    // Monitoring
     private val syncScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var driftMonitoringJob: Job? = null
-
     fun getCurrentTimestampNs(): Long {
         val monotonicTime = SystemClock.elapsedRealtimeNanos()
         val offset = clockOffsetNs.get()
         return monotonicTime + offset
     }
-
     fun getCurrentTimestampMs(): Long {
         return getCurrentTimestampNs() / 1_000_000
     }
-
     suspend fun synchronizeWithPC(
         pcControllerAddress: String,
         port: Int = 8082,
@@ -74,52 +60,38 @@ class TimeManager(
                     TAG,
                     "Starting time synchronization with PC Controller: $pcControllerAddress:$port"
                 )
-
                 if (!isNetworkAvailable()) {
                     Log.w(TAG, "Network not available for time synchronization")
                     return@withContext false
                 }
-
                 var bestOffset: Long? = null
                 var bestRtt = Long.MAX_VALUE
                 var successCount = 0
-
-                // Perform multiple sync rounds for accuracy
                 repeat(SYNC_RETRY_COUNT) { attempt ->
                     try {
                         val syncResult = performTimeSyncRound(pcControllerAddress, port)
                         if (syncResult != null) {
                             successCount++
-
-                            // Use the measurement with the lowest RTT for best accuracy
                             if (syncResult.roundTripTimeNs < bestRtt) {
                                 bestRtt = syncResult.roundTripTimeNs
                                 bestOffset = syncResult.clockOffsetNs
                             }
-
                             Log.d(
                                 TAG,
                                 "Sync round ${attempt + 1}: offset=${syncResult.clockOffsetNs}ns, RTT=${syncResult.roundTripTimeNs / 1_000_000}ms",
                             )
                         }
-
-                        // Brief delay between rounds
                         delay(100)
                     } catch (e: Exception) {
                         Log.w(TAG, "Sync round ${attempt + 1} failed", e)
                     }
                 }
-
                 if (bestOffset != null && successCount > 0) {
-                    // Apply the best clock offset
                     clockOffsetNs.set(bestOffset!!)
                     lastSyncTimestamp.set(getCurrentTimestampNs())
                     syncQualityMs.set(bestRtt / 1_000_000)
                     isTimeSynced = true
-
-                    // Start drift monitoring
                     startDriftMonitoring()
-
                     Log.i(
                         TAG,
                         "Time synchronization successful: offset=${bestOffset}ns, quality=${bestRtt / 1_000_000}ms"
@@ -138,31 +110,21 @@ class TimeManager(
             }
         }
     }
-
     private suspend fun performTimeSyncRound(
         pcAddress: String,
         port: Int,
     ): TimeSyncResult? {
         return withTimeoutOrNull(SYNC_TIMEOUT_MS) {
             try {
-                // Record local time before request
                 val t1 = SystemClock.elapsedRealtimeNanos()
-
-                // Send sync request to PC Controller
                 val syncResponse = sendTimeSyncRequest(pcAddress, port, t1)
-
-                // Record local time after response
                 val t4 = SystemClock.elapsedRealtimeNanos()
-
                 if (syncResponse != null) {
-                    // Calculate clock offset using NTP algorithm
                     val t2 = syncResponse.pcReceiveTime
                     val t3 = syncResponse.pcSendTime
-
                     val roundTripTime = (t4 - t1)
                     val networkDelay = roundTripTime / 2
                     val clockOffset = ((t2 - t1) + (t3 - t4)) / 2
-
                     TimeSyncResult(
                         clockOffsetNs = clockOffset,
                         roundTripTimeNs = roundTripTime,
@@ -177,24 +139,18 @@ class TimeManager(
             }
         }
     }
-
     private suspend fun sendTimeSyncRequest(
         pcAddress: String,
         port: Int,
         localTime: Long,
     ): TimeSyncResponse? {
-        // Real network communication with PC Controller using TCP socket
         return try {
             withContext(Dispatchers.IO) {
-                // Create TCP socket connection to PC Controller
                 val socket = java.net.Socket()
                 socket.connect(java.net.InetSocketAddress(pcAddress, port), SYNC_TIMEOUT_MS.toInt())
-
                 try {
                     val outputStream = socket.getOutputStream()
                     val inputStream = socket.getInputStream()
-
-                    // Create enhanced time sync request message
                     val requestJson =
                         """
                         {
@@ -204,31 +160,19 @@ class TimeManager(
                             "session_id": "${UUID.randomUUID()}"
                         }
                         """.trimIndent()
-
-                    // Send request to PC Controller with length prefix as expected by server
                     val requestBytes = requestJson.toByteArray(Charsets.UTF_8)
                     val lengthBytes =
                         java.nio.ByteBuffer.allocate(4).putInt(requestBytes.size).array()
-
                     outputStream.write(lengthBytes)
                     outputStream.write(requestBytes)
                     outputStream.flush()
-
-                    // Read response from PC Controller with length prefix
-                    // First read 4-byte length header
                     val lengthBuffer = ByteArray(4)
                     inputStream.read(lengthBuffer, 0, 4)
-
                     val responseLength = java.nio.ByteBuffer.wrap(lengthBuffer).getInt()
-
-                    // Then read the actual response data
                     val responseBuffer = ByteArray(responseLength)
                     inputStream.read(responseBuffer, 0, responseLength)
                     val responseStr = String(responseBuffer, Charsets.UTF_8)
-
-                    // Parse JSON response
                     val response = parseTimeSyncResponse(responseStr)
-
                     Log.d(TAG, "Real time sync response received from PC Controller")
                     response
                 } finally {
@@ -240,16 +184,10 @@ class TimeManager(
             null
         }
     }
-
     private fun parseTimeSyncResponse(responseJson: String): TimeSyncResponse? {
         return try {
-            // Parse enhanced JSON response from PC Controller
-            // Expected format: {"message_type": "time_sync_response", "server_receive_time": ..., "server_send_time": ...}
-
-            // Use proper JSON parsing for robustness
             var serverReceiveTime: Long? = null
             var serverSendTime: Long? = null
-
             try {
                 val json = org.json.JSONObject(responseJson)
                 if (json.has("server_receive_time") && json.has("server_send_time")) {
@@ -264,35 +202,27 @@ class TimeManager(
             } catch (e: org.json.JSONException) {
                 Log.w(TAG, "Could not parse as JSON, will attempt legacy parsing: $e")
             }
-
-            // Fallback to legacy protocol for compatibility
             val lines = responseJson.split(",")
             var pcReceiveTime: Long? = null
             var pcSendTime: Long? = null
-
             for (line in lines) {
                 when {
                     line.contains("pc_receive_time") -> {
                         pcReceiveTime =
                             line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
-
                     line.contains("pc_send_time") -> {
                         pcSendTime =
                             line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
-                    // Also check for server_timestamp as fallback
                     line.contains("server_timestamp") && pcReceiveTime == null -> {
                         pcReceiveTime = line.substringAfter(":").trim()
                             .removeSuffix("}")
                             .removeSuffix(",")
                             .toLongOrNull()
-                        // Don't set pcSendTime = pcReceiveTime as this breaks NTP calculations
-                        // Leave pcSendTime as null to indicate incomplete sync data
                     }
                 }
             }
-
             if (pcReceiveTime != null && pcSendTime != null) {
                 TimeSyncResponse(
                     pcReceiveTime = pcReceiveTime,
@@ -307,25 +237,20 @@ class TimeManager(
             null
         }
     }
-
     private fun startDriftMonitoring() {
         driftMonitoringJob?.cancel()
         driftMonitoringJob =
             syncScope.launch {
                 while (isActive && isTimeSynced) {
                     delay(DRIFT_MONITORING_INTERVAL_MS)
-
                     try {
-                        // Check if resync is needed based on time since last sync
                         val timeSinceSync =
                             (getCurrentTimestampNs() - lastSyncTimestamp.get()) / 1_000_000
-
-                        if (timeSinceSync > 300_000) { // 5 minutes
+                        if (timeSinceSync > 300_000) { 
                             Log.i(
                                 TAG,
                                 "Clock drift monitoring: time since last sync = ${timeSinceSync}ms"
                             )
-                            // Could trigger automatic resync here if needed
                         }
                     } catch (e: Exception) {
                         Log.w(TAG, "Drift monitoring error", e)
@@ -333,7 +258,6 @@ class TimeManager(
                 }
             }
     }
-
     private fun isNetworkAvailable(): Boolean {
         return try {
             val network = connectivityManager.activeNetwork
@@ -343,7 +267,6 @@ class TimeManager(
             false
         }
     }
-
     fun getSyncQuality(): SyncQuality {
         val qualityMs = syncQualityMs.get()
         val timeSinceSync =
@@ -352,7 +275,6 @@ class TimeManager(
             } else {
                 Long.MAX_VALUE
             }
-
         val quality =
             when {
                 !isTimeSynced -> SyncQualityLevel.NOT_SYNCED
@@ -361,7 +283,6 @@ class TimeManager(
                 qualityMs <= SYNC_QUALITY_THRESHOLD_MS * 4 -> SyncQualityLevel.FAIR
                 else -> SyncQualityLevel.POOR
             }
-
         return SyncQuality(
             level = quality,
             offsetNs = clockOffsetNs.get(),
@@ -370,7 +291,6 @@ class TimeManager(
             isSynced = isTimeSynced,
         )
     }
-
     fun createSyncMarker(markerType: String): SyncMarker {
         val timestamp = getCurrentTimestampNs()
         return SyncMarker(
@@ -380,14 +300,12 @@ class TimeManager(
             syncQuality = getSyncQuality(),
         )
     }
-
     fun calculateTimeDifferenceNs(
         timestamp1: Long,
         timestamp2: Long,
     ): Long {
         return abs(timestamp2 - timestamp1)
     }
-
     fun areTimestampsSynchronized(
         timestamp1: Long,
         timestamp2: Long,
@@ -396,7 +314,6 @@ class TimeManager(
         val differenceMs = calculateTimeDifferenceNs(timestamp1, timestamp2) / 1_000_000.0
         return differenceMs <= toleranceMs
     }
-
     fun cleanup() {
         driftMonitoringJob?.cancel()
         syncScope.cancel()
@@ -404,26 +321,22 @@ class TimeManager(
         Log.i(TAG, "TimeManager cleaned up")
     }
 }
-
 private data class TimeSyncResult(
     val clockOffsetNs: Long,
     val roundTripTimeNs: Long,
     val networkDelayNs: Long,
 )
-
 private data class TimeSyncResponse(
     val pcReceiveTime: Long,
     val pcSendTime: Long,
 )
-
 enum class SyncQualityLevel {
     NOT_SYNCED,
-    EXCELLENT, // < 5ms
-    GOOD, // 5-10ms
-    FAIR, // 10-20ms
-    POOR, // > 20ms
+    EXCELLENT, 
+    GOOD, 
+    FAIR, 
+    POOR, 
 }
-
 data class SyncQuality(
     val level: SyncQualityLevel,
     val offsetNs: Long,
@@ -431,7 +344,6 @@ data class SyncQuality(
     val timeSinceSyncMs: Long?,
     val isSynced: Boolean,
 )
-
 data class SyncMarker(
     val markerType: String,
     val timestampNs: Long,

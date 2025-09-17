@@ -1,5 +1,4 @@
 package com.jaygoo.widget;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -8,15 +7,10 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
-
 import androidx.annotation.IntDef;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
 public class VerticalRangeSeekBar extends DefRangeSeekBar {
-
-
     public final static int TEXT_DIRECTION_VERTICAL = 1;
     public final static int TEXT_DIRECTION_HORIZONTAL = 2;
     public final static int DIRECTION_LEFT = 1;
@@ -24,17 +18,14 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
     private int orientation = DIRECTION_LEFT;
     private int tickMarkDirection = TEXT_DIRECTION_VERTICAL;
     private int maxTickMarkWidth;
-
     public VerticalRangeSeekBar(Context context) {
         this(context, null);
     }
-
     public VerticalRangeSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttrs(attrs);
         initSeekBar(attrs);
     }
-
     private void initAttrs(AttributeSet attrs) {
         try {
             TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.VerticalRangeSeekBar);
@@ -45,29 +36,19 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
             e.printStackTrace();
         }
     }
-
     protected void initSeekBar(AttributeSet attrs) {
         leftSB = new VerticalSeekBar(this, attrs, true);
         rightSB = new VerticalSeekBar(this, attrs, false);
         rightSB.setVisible(getSeekBarMode() != SEEKBAR_MODE_SINGLE);
     }
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(h, w, oldh, oldw);
     }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        /*
-         * onMeasure传入的widthMeasureSpec和heightMeasureSpec不是一般的尺寸数值，而是将模式和尺寸组合在一起的数值
-         * MeasureSpec.EXACTLY 是精确尺寸
-         * MeasureSpec.AT_MOST 是最大尺寸
-         * MeasureSpec.UNSPECIFIED 是未指定尺寸
-         */
-
         if (widthMode == MeasureSpec.EXACTLY) {
             widthSize = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY);
         } else if (widthMode == MeasureSpec.AT_MOST && getParent() instanceof ViewGroup
@@ -84,7 +65,6 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
         }
         super.onMeasure(widthSize, heightMeasureSpec);
     }
-
     @Override
     protected void onDraw(Canvas canvas) {
         if (orientation == DIRECTION_LEFT) {
@@ -96,7 +76,6 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
         }
         super.onDraw(canvas);
     }
-
     @Override
     protected void onDrawTickMark(Canvas canvas, Paint paint) {
         if (getTickMarkTextArray() != null) {
@@ -107,7 +86,6 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
                 if (TextUtils.isEmpty(text2Draw)) continue;
                 paint.getTextBounds(text2Draw, 0, text2Draw.length(), tickMarkTextRect);
                 paint.setColor(getTickMarkTextColor());
-
                 float x;
                 if (getTickMarkMode() == TRICK_MARK_MODE_OTHER) {
                     if (getTickMarkGravity() == TICK_MARK_GRAVITY_RIGHT) {
@@ -123,7 +101,6 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
                     if (Utils.compareFloat(num, states[0].value) != -1 && Utils.compareFloat(num, states[1].value) != 1 && (getSeekBarMode() == SEEKBAR_MODE_RANGE)) {
                         paint.setColor(getTickMarkInRangeTextColor());
                     }
-
                     x = getProgressLeft() + getProgressWidth() * (num - getMinProgress()) / (getMaxProgress() - getMinProgress())
                             - tickMarkTextRect.width() / 2f;
                 }
@@ -152,9 +129,7 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
                 }
             }
         }
-
     }
-
     @Override
     protected int getTickMarkRawHeight() {
         if (maxTickMarkWidth > 0) return getTickMarkTextMargin() + maxTickMarkWidth;
@@ -171,19 +146,16 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
         }
         return 0;
     }
-
     @Override
     public void setTickMarkTextSize(int tickMarkTextSize) {
         super.setTickMarkTextSize(tickMarkTextSize);
         maxTickMarkWidth = 0;
     }
-
     @Override
     public void setTickMarkTextArray(CharSequence[] tickMarkTextArray) {
         super.setTickMarkTextArray(tickMarkTextArray);
         maxTickMarkWidth = 0;
     }
-
     @Override
     protected float getEventX(MotionEvent event) {
         if (orientation == DIRECTION_LEFT) {
@@ -192,7 +164,6 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
             return event.getY();
         }
     }
-
     @Override
     protected float getEventY(MotionEvent event) {
         if (orientation == DIRECTION_LEFT) {
@@ -201,36 +172,28 @@ public class VerticalRangeSeekBar extends DefRangeSeekBar {
             return -event.getX() + getWidth();
         }
     }
-
     public VerticalSeekBar getLeftSeekBar() {
         return (VerticalSeekBar) leftSB;
     }
-
     public VerticalSeekBar getRightSeekBar() {
         return (VerticalSeekBar) rightSB;
     }
-
     public int getOrientation() {
         return orientation;
     }
-
     public void setOrientation(@DirectionDef int orientation) {
         this.orientation = orientation;
     }
-
     public int getTickMarkDirection() {
         return tickMarkDirection;
     }
-
     public void setTickMarkDirection(@TextDirectionDef int tickMarkDirection) {
         this.tickMarkDirection = tickMarkDirection;
     }
-
     @IntDef({TEXT_DIRECTION_VERTICAL, TEXT_DIRECTION_HORIZONTAL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TextDirectionDef {
     }
-
     @IntDef({DIRECTION_LEFT, DIRECTION_RIGHT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface DirectionDef {

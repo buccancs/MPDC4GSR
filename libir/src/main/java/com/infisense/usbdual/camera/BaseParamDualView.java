@@ -1,5 +1,4 @@
 package com.infisense.usbdual.camera;
-
 public class BaseParamDualView {
     protected int mIrWidth;
     protected int mIrHeight;
@@ -7,7 +6,6 @@ public class BaseParamDualView {
     protected int mVlHeight;
     protected int mDualWidth;
     protected int mDualHeight;
-
     public BaseParamDualView(int mIrWidth, int mIrHeight, int mVlWidth, int mVlHeight, int mDualWidth, int mDualHeight) {
         this.mIrWidth = mIrWidth;
         this.mIrHeight = mIrHeight;

@@ -1,5 +1,4 @@
 package com.topdon.tc001.camera.ui
-
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-
 class CameraModeSelector
 @JvmOverloads
 constructor(
@@ -32,18 +30,14 @@ constructor(
     private lateinit var modeInfoText: TextView
     private lateinit var performanceWarning: TextView
     private lateinit var switchingProgressBar: ProgressBar
-
     private var cameraRecorder: RGBCameraRecorder? = null
     private var onModeChangeListener: ((RGBCameraRecorder.CameraMode) -> Unit)? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-
     init {
         initView()
     }
-
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.camera_mode_selector, this, true)
-
         modeSegmentedControl = findViewById(R.id.mode_segmented_control)
         rawModeButton = findViewById(R.id.raw_mode_button)
         videoModeButton = findViewById(R.id.video_mode_button)
@@ -51,38 +45,30 @@ constructor(
         modeInfoText = findViewById(R.id.mode_info_text)
         performanceWarning = findViewById(R.id.performance_warning)
         switchingProgressBar = findViewById(R.id.switching_progress_bar)
-
         setupModeButtons()
         setupModeChangeListener()
     }
-
     private fun setupModeButtons() {
         rawModeButton.apply {
             text = "RAW 50MP"
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_camera_raw, 0, 0, 0)
         }
-
         videoModeButton.apply {
             text = "4K Video"
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_videocam, 0, 0, 0)
         }
-
         previewModeButton.apply {
             text = "Preview"
             setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_preview, 0, 0, 0)
         }
-
         previewModeButton.isChecked = true
         updateModeInfo(RGBCameraRecorder.CameraMode.PREVIEW_ONLY)
     }
-
     private fun setupModeChangeListener() {
         modeSegmentedControl.setOnCheckedChangeListener { _, checkedId ->
             if (switchingProgressBar.visibility == VISIBLE) {
-
                 return@setOnCheckedChangeListener
             }
-
             val selectedMode =
                 when (checkedId) {
                     R.id.raw_mode_button -> RGBCameraRecorder.CameraMode.RAW_50MP
@@ -90,46 +76,36 @@ constructor(
                     R.id.preview_mode_button -> RGBCameraRecorder.CameraMode.PREVIEW_ONLY
                     else -> RGBCameraRecorder.CameraMode.PREVIEW_ONLY
                 }
-
             switchToMode(selectedMode)
         }
     }
-
     fun setCameraRecorder(recorder: RGBCameraRecorder) {
         this.cameraRecorder = recorder
         updateAvailableModes()
     }
-
     fun setOnModeChangeListener(listener: (RGBCameraRecorder.CameraMode) -> Unit) {
         this.onModeChangeListener = listener
     }
-
     private fun switchToMode(mode: RGBCameraRecorder.CameraMode) {
         val recorder = cameraRecorder ?: return
-
         if (recorder.getCurrentMode() == mode) {
             updateModeInfo(mode)
             return
         }
-
         if (recorder.isRecording()) {
             showError("Cannot switch modes while recording. Stop recording first.")
             revertToCurrentMode()
             return
         }
-
         if (!recorder.isModeSupported(mode)) {
             showError("${mode.displayName} is not supported on this device.")
             revertToCurrentMode()
             return
         }
-
         showSwitchingProgress(true)
-
         coroutineScope.launch {
             try {
                 val success = recorder.switchMode(mode)
-
                 if (success) {
                     updateModeInfo(mode)
                     onModeChangeListener?.invoke(mode)
@@ -146,25 +122,20 @@ constructor(
             }
         }
     }
-
     private fun updateAvailableModes() {
         val recorder = cameraRecorder ?: return
         val availableModes = recorder.getAvailableModes()
-
         rawModeButton.apply {
             isEnabled = availableModes.contains(RGBCameraRecorder.CameraMode.RAW_50MP)
             alpha = if (isEnabled) 1.0f else 0.5f
         }
-
         videoModeButton.apply {
             isEnabled = availableModes.contains(RGBCameraRecorder.CameraMode.VIDEO_4K)
             alpha = if (isEnabled) 1.0f else 0.5f
         }
-
         val rawSupported = recorder.supportsRawCapture()
         val videoSupported = recorder.supportsVideoRecording()
         val highSpeed60 = recorder.supportsHighSpeed60fps()
-
         val capabilityInfo =
             buildString {
                 if (rawSupported) {
@@ -177,38 +148,32 @@ constructor(
                     if (highSpeed60) append(" @60fps") else append(" @30fps")
                 }
             }
-
         if (capabilityInfo.isNotEmpty()) {
             modeInfoText.text = capabilityInfo
         }
     }
-
     private fun updateModeInfo(mode: RGBCameraRecorder.CameraMode) {
         when (mode) {
             RGBCameraRecorder.CameraMode.RAW_50MP -> {
                 modeInfoText.text = "High-resolution RAW capture\n~15fps streaming, DNG format"
                 showPerformanceWarning("RAW mode uses significant memory and storage")
             }
-
             RGBCameraRecorder.CameraMode.VIDEO_4K -> {
                 val fps =
                     if (cameraRecorder?.supportsHighSpeed60fps() == true) "30-60fps" else "30fps"
                 modeInfoText.text = "4K video recording\n$fps, H.264 encoding"
                 showPerformanceWarning("4K recording may cause device heating")
             }
-
             RGBCameraRecorder.CameraMode.PREVIEW_ONLY -> {
                 modeInfoText.text = "Preview mode only\nLow power consumption"
                 hidePerformanceWarning()
             }
         }
     }
-
     private fun showSwitchingProgress(show: Boolean) {
         switchingProgressBar.visibility = if (show) VISIBLE else GONE
         modeSegmentedControl.isEnabled = !show
     }
-
     private fun showPerformanceWarning(message: String) {
         performanceWarning.text = message
         performanceWarning.visibility = VISIBLE
@@ -219,32 +184,25 @@ constructor(
             )
         )
     }
-
     private fun hidePerformanceWarning() {
         performanceWarning.visibility = GONE
     }
-
     private fun showError(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
-
     private fun showModeChangeSuccess(mode: RGBCameraRecorder.CameraMode) {
         Toast.makeText(context, "Switched to ${mode.displayName}", Toast.LENGTH_SHORT).show()
     }
-
     private fun revertToCurrentMode() {
         val currentMode =
             cameraRecorder?.getCurrentMode() ?: RGBCameraRecorder.CameraMode.PREVIEW_ONLY
-
         when (currentMode) {
             RGBCameraRecorder.CameraMode.RAW_50MP -> rawModeButton.isChecked = true
             RGBCameraRecorder.CameraMode.VIDEO_4K -> videoModeButton.isChecked = true
             RGBCameraRecorder.CameraMode.PREVIEW_ONLY -> previewModeButton.isChecked = true
         }
-
         updateModeInfo(currentMode)
     }
-
     fun getSelectedMode(): RGBCameraRecorder.CameraMode {
         return when (modeSegmentedControl.checkedRadioButtonId) {
             R.id.raw_mode_button -> RGBCameraRecorder.CameraMode.RAW_50MP
@@ -252,7 +210,6 @@ constructor(
             else -> RGBCameraRecorder.CameraMode.PREVIEW_ONLY
         }
     }
-
     fun setMode(mode: RGBCameraRecorder.CameraMode) {
         when (mode) {
             RGBCameraRecorder.CameraMode.RAW_50MP -> rawModeButton.isChecked = true
@@ -261,7 +218,6 @@ constructor(
         }
         updateModeInfo(mode)
     }
-
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         coroutineScope.cancel()

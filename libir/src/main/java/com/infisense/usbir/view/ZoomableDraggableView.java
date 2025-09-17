@@ -1,5 +1,4 @@
 package com.infisense.usbir.view;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,10 +12,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.infisense.usbir.R;
 import com.topdon.lib.core.utils.BitmapUtils;
-
 public class ZoomableDraggableView extends View {
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
@@ -26,7 +23,6 @@ public class ZoomableDraggableView extends View {
     private float maxScaleFactor = 2.0f;
     private float focusX, focusY;
     private float lastX, lastY;
-
     private Bitmap originalBitmap;
     private int imageWidth;
     private int imageHeight;
@@ -36,25 +32,19 @@ public class ZoomableDraggableView extends View {
     private float yscale;
     private float originalBitmapWidth;
     private float originalBitmapHeight;
-
     private float pxBitmapHeight = 150;
-
     private float showBitmapHeightWidth = 0f;
     private float showBitmapHeight = 0f;
     private Paint paint = new Paint();
-
     private Bitmap showBitmap;
-
     public ZoomableDraggableView(Context context) {
         super(context);
         init(context);
     }
-
     public ZoomableDraggableView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
-
     private void init(Context context) {
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
         gestureDetector = new GestureDetector(context, new GestureListener());
@@ -65,7 +55,6 @@ public class ZoomableDraggableView extends View {
         originalBitmapWidth = originalBitmap.getWidth();
         originalBitmapHeight = originalBitmap.getHeight();
     }
-
     public void setImageSize(int imageWidth, int imageHeight) {
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
@@ -81,7 +70,6 @@ public class ZoomableDraggableView extends View {
         showBitmapHeightWidth = pxBitmapHeight * originalBitmapWidth / originalBitmapHeight * xscale;
         showBitmap = BitmapUtils.scaleWithWH(originalBitmap, showBitmapHeightWidth, showBitmapHeight);
     }
-
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
@@ -89,35 +77,27 @@ public class ZoomableDraggableView extends View {
         if (showBitmap != null) {
             canvas.drawBitmap(showBitmap, matrix, paint);
         }
-
         super.onDraw(canvas);
         canvas.restore();
     }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         scaleGestureDetector.onTouchEvent(event);
         gestureDetector.onTouchEvent(event);
         return true;
     }
-
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             scaleFactor *= detector.getScaleFactor();
             scaleFactor = Math.max(minScaleFactor, Math.min(scaleFactor, maxScaleFactor));
-
             focusX = detector.getFocusX();
             focusY = detector.getFocusY();
-
             matrix.setScale(scaleFactor, scaleFactor, focusX, focusY);
-
             invalidate();
-
             return true;
         }
     }
-
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onDown(MotionEvent e) {
@@ -125,22 +105,16 @@ public class ZoomableDraggableView extends View {
             lastY = e.getY();
             return true;
         }
-
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             float deltaX = e2.getX() - lastX;
             float deltaY = e2.getY() - lastY;
-
             lastX = e2.getX();
             lastY = e2.getY();
-
             deltaX /= scaleFactor;
             deltaY /= scaleFactor;
-
             matrix.postTranslate(-deltaX, -deltaY);
-
             invalidate();
-
             return true;
         }
     }

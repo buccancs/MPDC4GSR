@@ -1,12 +1,11 @@
 package com.topdon.gsr.model
-
 data class ResearchTemplate(
     val id: String,
     val name: String,
     val description: String,
     val category: TemplateCategory,
     val sensors: Set<SensorType>,
-    val duration: Long? = null, // milliseconds, null for unlimited
+    val duration: Long? = null, 
     val gsrSamplingRate: Int = 128,
     val videoResolution: VideoResolution = VideoResolution.FULL_HD,
     val videoFrameRate: Int = 30,
@@ -22,32 +21,27 @@ data class ResearchTemplate(
         BEHAVIORAL_ANALYSIS,
         CUSTOM,
     }
-
     enum class SensorType {
         GSR,
         THERMAL_CAMERA,
         RGB_CAMERA,
     }
-
     enum class VideoResolution(val width: Int, val height: Int) {
         SD(720, 480),
         HD(1280, 720),
         FULL_HD(1920, 1080),
         UHD_4K(3840, 2160),
     }
-
     companion object {
-
         val PREDEFINED_TEMPLATES =
             listOf(
-
                 ResearchTemplate(
                     id = "stress_response_basic",
                     name = "Stress Response - Basic",
                     description = "Basic stress response measurement with GSR and thermal imaging for physiological arousal detection",
                     category = TemplateCategory.STRESS_RESPONSE,
                     sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA),
-                    duration = 10 * 60 * 1000L, // 10 minutes
+                    duration = 10 * 60 * 1000L, 
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.HD,
                     metadata =
@@ -68,28 +62,27 @@ data class ResearchTemplate(
                         SensorType.THERMAL_CAMERA,
                         SensorType.RGB_CAMERA
                     ),
-                    duration = 20 * 60 * 1000L, // 20 minutes
+                    duration = 20 * 60 * 1000L, 
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
                     videoFrameRate = 60,
                     metadata =
                         mapOf(
                             "study_type" to "comprehensive_stress",
-                            "baseline_duration" to "300", // 5 minutes
-                            "stress_induction_duration" to "600", // 10 minutes
-                            "recovery_duration" to "300", // 5 minutes
+                            "baseline_duration" to "300", 
+                            "stress_induction_duration" to "600", 
+                            "recovery_duration" to "300", 
                         ),
                     instructions = "Multi-modal stress response study:\n1. Attach GSR sensors\n2. Position thermal and RGB cameras\n3. Record 5min baseline → 10min stress task → 5min recovery",
                     icon = "🔬",
                 ),
-
                 ResearchTemplate(
                     id = "cognitive_load_mental_tasks",
                     name = "Cognitive Load - Mental Tasks",
                     description = "Cognitive workload assessment during mental tasks using GSR and thermal monitoring",
                     category = TemplateCategory.COGNITIVE_LOAD,
                     sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA),
-                    duration = 15 * 60 * 1000L, // 15 minutes
+                    duration = 15 * 60 * 1000L, 
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.HD,
                     metadata =
@@ -111,7 +104,7 @@ data class ResearchTemplate(
                         SensorType.THERMAL_CAMERA,
                         SensorType.RGB_CAMERA
                     ),
-                    duration = 30 * 60 * 1000L, // 30 minutes
+                    duration = 30 * 60 * 1000L, 
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
                     metadata =
@@ -122,14 +115,13 @@ data class ResearchTemplate(
                     instructions = "Learning session with physiological monitoring:\n1. 10min instruction phase\n2. 15min practice phase\n3. 5min assessment phase\nMonitor engagement and cognitive load throughout.",
                     icon = "📚",
                 ),
-
                 ResearchTemplate(
                     id = "emotion_recognition_basic",
                     name = "Emotion Recognition - Basic",
                     description = "Emotion detection using thermal face imaging and GSR responses",
                     category = TemplateCategory.EMOTION_RECOGNITION,
                     sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA),
-                    duration = 12 * 60 * 1000L, // 12 minutes
+                    duration = 12 * 60 * 1000L, 
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
                     videoFrameRate = 30,
@@ -152,7 +144,7 @@ data class ResearchTemplate(
                         SensorType.THERMAL_CAMERA,
                         SensorType.RGB_CAMERA
                     ),
-                    duration = 25 * 60 * 1000L, // 25 minutes
+                    duration = 25 * 60 * 1000L, 
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
                     videoFrameRate = 60,
@@ -165,26 +157,24 @@ data class ResearchTemplate(
                     instructions = "Comprehensive emotion recognition study:\n- RGB: facial expressions\n- Thermal: arousal patterns\n- GSR: autonomic responses\nPresent varied emotional stimuli and record multi-modal responses.",
                     icon = "🎭",
                 ),
-
                 ResearchTemplate(
                     id = "physio_monitoring_baseline",
                     name = "Physiological Monitoring - Baseline",
                     description = "Continuous physiological monitoring for baseline establishment",
                     category = TemplateCategory.PHYSIOLOGICAL_MONITORING,
                     sensors = setOf(SensorType.GSR, SensorType.THERMAL_CAMERA),
-                    duration = 60 * 60 * 1000L, // 60 minutes
+                    duration = 60 * 60 * 1000L, 
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.HD,
                     metadata =
                         mapOf(
                             "study_type" to "baseline_monitoring",
-                            "monitoring_duration" to "3600", // 1 hour
+                            "monitoring_duration" to "3600", 
                             "activity_level" to "resting",
                         ),
                     instructions = "Long-term physiological baseline recording. Participant should remain in comfortable resting position. Monitor for consistent GSR patterns and thermal stability.",
                     icon = "📈",
                 ),
-
                 ResearchTemplate(
                     id = "behavioral_analysis_social",
                     name = "Behavioral Analysis - Social Interaction",
@@ -195,7 +185,7 @@ data class ResearchTemplate(
                         SensorType.THERMAL_CAMERA,
                         SensorType.RGB_CAMERA
                     ),
-                    duration = null, // unlimited
+                    duration = null, 
                     gsrSamplingRate = 128,
                     videoResolution = VideoResolution.FULL_HD,
                     videoFrameRate = 60,
@@ -208,7 +198,6 @@ data class ResearchTemplate(
                     instructions = "Social interaction study with multi-modal monitoring:\n- RGB: behavioral coding\n- Thermal: arousal detection\n- GSR: stress/engagement\nRecord natural conversation or structured interaction tasks.",
                     icon = "👥",
                 ),
-
                 ResearchTemplate(
                     id = "custom_template",
                     name = "Custom Research Template",
@@ -227,15 +216,12 @@ data class ResearchTemplate(
                     icon = "⚙️",
                 ),
             )
-
         fun getTemplatesByCategory(category: TemplateCategory): List<ResearchTemplate> {
             return PREDEFINED_TEMPLATES.filter { it.category == category }
         }
-
         fun getTemplateById(id: String): ResearchTemplate? {
             return PREDEFINED_TEMPLATES.find { it.id == id }
         }
-
         fun getTemplatesWithSensor(sensorType: SensorType): List<ResearchTemplate> {
             return PREDEFINED_TEMPLATES.filter { it.sensors.contains(sensorType) }
         }

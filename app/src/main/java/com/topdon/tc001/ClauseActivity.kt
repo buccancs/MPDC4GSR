@@ -1,5 +1,4 @@
 package com.topdon.tc001
-
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.lifecycleScope
@@ -23,32 +22,25 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import com.topdon.lib.core.R as LibCoreR
-
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog
-
     override fun initContentLayoutId() = R.layout.activity_clause
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
     }
-
     private fun initView() {
         dialog =
             TipProgressDialog.Builder(this)
                 .setMessage(LibCoreR.string.tip_loading)
                 .setCanceleable(false)
                 .create()
-
         val year = Calendar.getInstance().get(Calendar.YEAR)
         binding.clauseYearTxt.text = getString(R.string.version_year, "2023-$year")
-
         binding.clauseAgreeBtn.setOnClickListener {
             confirmInitApp()
         }
         binding.clauseDisagreeBtn.setOnClickListener {
-
             TipDialog.Builder(this)
                 .setMessage(getString(R.string.privacy_tips))
                 .setPositiveListener(R.string.privacy_confirm) {
@@ -65,7 +57,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
-
                 NavigationManager.getInstance()
                     .build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
@@ -77,7 +68,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
-
                 NavigationManager.getInstance()
                     .build(RouterConfig.POLICY)
                     .withInt(PolicyActivity.KEY_THEME_TYPE, 2)
@@ -86,7 +76,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             }
         }
         binding.clauseItem3.setOnClickListener {
-
             if (!NetworkUtil.isConnected(this)) {
                 TToast.shortToast(this, R.string.lms_setting_http_error)
             } else {
@@ -97,7 +86,6 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
                     .navigation(this)
             }
         }
-
         if (BaseApplication.instance.isDomestic()) {
             binding.tvPrivacy.text =
                 "    ${getString(R.string.privacy_agreement_tips_new, CommUtils.getAppName())}"
@@ -109,14 +97,11 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
         binding.clauseName.text = CommUtils.getAppName()
     }
-
     private fun confirmInitApp() {
         lifecycleScope.launch {
             showLoading()
-
             App.delayInit()
             async(Dispatchers.IO) {
-
                 delay(1000)
                 return@async
             }.await().let {
@@ -127,11 +112,9 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
             }
         }
     }
-
     private fun showLoading() {
         dialog.show()
     }
-
     private fun dismissLoading() {
         dialog.dismiss()
     }

@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.content.Intent
 import android.view.View
 import android.view.WindowManager
@@ -29,13 +28,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import com.topdon.lib.core.R as LibR
-
-
 class IRLogMPChartActivity : BaseActivity() {
     private val viewModel: IRMonitorViewModel by viewModels()
-
     private var startTime = 0L
-
     private val permissionList by lazy {
         if (this.applicationInfo.targetSdkVersion >= 34) {
             listOf(
@@ -49,14 +44,11 @@ class IRLogMPChartActivity : BaseActivity() {
             mutableListOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
         }
     }
-
     override fun initContentView() = R.layout.activity_ir_log_mp_chart
-
     override fun initView() {
         startTime = intent.getLongExtra(ExtraKeyConfig.TIME_MILLIS, 0)
         viewModel.detailListLD.observe(this) {
             dismissLoadingDialog()
-
             val isPoint = it?.isNotEmpty() == true && it.first().type == "point"
             findViewById<TextView>(R.id.monitor_current_vol).text =
                 getString(if (isPoint) LibR.string.chart_temperature else LibR.string.chart_temperature_high)
@@ -64,7 +56,6 @@ class IRLogMPChartActivity : BaseActivity() {
                 if (isPoint) View.GONE else View.VISIBLE
             findViewById<ImageView>(R.id.monitor_real_img).visibility =
                 if (isPoint) View.GONE else View.VISIBLE
-
             try {
                 val chartView =
                     findViewById<com.topdon.module.thermal.ir.view.ChartLogView>(R.id.log_chart_time_chart)
@@ -73,7 +64,6 @@ class IRLogMPChartActivity : BaseActivity() {
                 XLog.e("刷新图表异常:${e.message}")
             }
         }
-
         findViewById<View>(R.id.btn_ex)?.setOnClickListener {
             TipDialog.Builder(this)
                 .setMessage(LibR.string.tip_album_temp_exportfile)
@@ -125,13 +115,11 @@ class IRLogMPChartActivity : BaseActivity() {
                                             ToastTools.showShort(LibR.string.scan_ble_tip_authorize)
                                         }
                                     }
-
                                     override fun onDenied(
                                         permissions: MutableList<String>,
                                         doNotAskAgain: Boolean,
                                     ) {
                                         if (doNotAskAgain) {
-
                                             if (BaseApplication.instance.isDomestic()) {
                                                 ToastUtils.showShort(getString(LibR.string.app_storage_content))
                                                 return
@@ -160,15 +148,12 @@ class IRLogMPChartActivity : BaseActivity() {
             getString(LibR.string.temp_export_path) + ": " + FileConfig.excelDir
         viewModel.queryDetail(startTime)
     }
-
     override fun initData() {
     }
-
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
-
     override fun onPause() {
         super.onPause()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

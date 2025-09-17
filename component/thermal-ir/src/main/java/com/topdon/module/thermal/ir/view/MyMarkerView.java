@@ -1,10 +1,8 @@
 package com.topdon.module.thermal.ir.view;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
-
 import com.elvishew.xlog.XLog;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
@@ -16,22 +14,16 @@ import com.topdon.lib.core.db.entity.ThermalEntity;
 import com.topdon.lib.core.tools.TimeTool;
 import com.topdon.lib.core.tools.UnitTools;
 import com.topdon.module.thermal.ir.R;
-
 import java.util.Locale;
-
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {
-
     private final TextView tvContent;
     private final TextView timeText;
-
     public MyMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
         tvContent = findViewById(R.id.tvContent);
         timeText = findViewById(R.id.time_text);
     }
-
-
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
@@ -42,7 +34,7 @@ public class MyMarkerView extends MarkerView {
             } else {
                 if (e.getData() instanceof ThermalEntity) {
                     ThermalEntity data = (ThermalEntity) e.getData();
-                    int index = highlight.getDataIndex();//曲线序号
+                    int index = highlight.getDataIndex();
                     StringBuilder str = new StringBuilder();
                     if (index == 0) {
                         str.append(com.blankj.utilcode.util.Utils.getApp().getString(R.string.chart_temperature) + ": ").append(UnitTools.showC(data.getThermal()));
@@ -65,7 +57,6 @@ public class MyMarkerView extends MarkerView {
         }
         super.refreshContent(e, highlight);
     }
-
     @Override
     public MPPointF getOffset() {
         return new MPPointF(-(getWidth() / 2f), -getHeight());

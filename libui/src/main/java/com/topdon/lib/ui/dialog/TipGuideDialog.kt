@@ -1,7 +1,5 @@
 @file:Suppress("DEPRECATION")
-
 package com.topdon.lib.ui.dialog
-
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -20,16 +18,12 @@ import com.topdon.lib.core.R
 import com.topdon.lib.ui.databinding.DialogTipGuideBinding
 import com.topdon.lib.ui.widget.IndicateView
 import com.topdon.lib.ui.R as UiR
-
-
 class TipGuideDialog : DialogFragment() {
     private lateinit var titleList: ArrayList<String>
     private lateinit var imgList: ArrayList<Int>
     var closeEvent: ((check: Boolean) -> Unit)? = null
-
     private var _binding: DialogTipGuideBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var tvContent1: TextView
     private lateinit var tvContent2: TextView
     private lateinit var tvContent3: TextView
@@ -37,7 +31,6 @@ class TipGuideDialog : DialogFragment() {
     private lateinit var ivTarget: AppCompatImageView
     private lateinit var indicateView: IndicateView
     private var index: Int = -1
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +39,6 @@ class TipGuideDialog : DialogFragment() {
         _binding = DialogTipGuideBinding.inflate(inflater, container, false)
         return binding.root
     }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -66,14 +58,12 @@ class TipGuideDialog : DialogFragment() {
                 UiR.drawable.target_guide_pic_3,
                 UiR.drawable.target_guide_pic_4,
             )
-
         viewPager = binding.viewPager
         tvContent1 = binding.tvContent1
         tvContent2 = binding.tvContent2
         tvContent3 = binding.tvContent3
         indicateView = binding.indicateView
         ivTarget = binding.ivTarget
-
         val adapter = PageAdapter(childFragmentManager, imgList)
         indicateView.itemCount = adapter.count
         viewPager.adapter = adapter
@@ -90,17 +80,14 @@ class TipGuideDialog : DialogFragment() {
                     positionOffsetPixels: Int,
                 ) {
                 }
-
                 override fun onPageSelected(position: Int) {
                     updateIndex(position)
                 }
-
                 override fun onPageScrollStateChanged(state: Int) {
                 }
             },
         )
     }
-
     fun updateIndex(position: Int) {
         if (index == position) {
             return
@@ -113,13 +100,11 @@ class TipGuideDialog : DialogFragment() {
                 tvContent3.visibility = View.VISIBLE
                 ivTarget.visibility = View.GONE
             }
-
             2 -> {
                 tvContent1.visibility = View.GONE
                 tvContent3.visibility = View.GONE
                 ivTarget.visibility = View.VISIBLE
             }
-
             else -> {
                 tvContent1.visibility = View.GONE
                 tvContent3.visibility = View.GONE
@@ -129,12 +114,10 @@ class TipGuideDialog : DialogFragment() {
         tvContent2.text = titleList[position]
         index = position
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
     override fun onResume() {
         super.onResume()
         val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
@@ -143,7 +126,6 @@ class TipGuideDialog : DialogFragment() {
         dialog?.window?.attributes = params as WindowManager.LayoutParams
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
-
     override fun show(
         manager: FragmentManager,
         tag: String?,
@@ -154,14 +136,11 @@ class TipGuideDialog : DialogFragment() {
             e.printStackTrace()
         }
     }
-
     companion object {
-
         fun newInstance(): TipGuideDialog {
             return TipGuideDialog()
         }
     }
-
     @Suppress("DEPRECATION")
     inner class PageAdapter(
         fragmentManager: FragmentManager,
@@ -171,7 +150,6 @@ class TipGuideDialog : DialogFragment() {
         override fun getCount(): Int {
             return imgResList.size
         }
-
         override fun getItem(position: Int): Fragment {
             return PageFragment.newInstance(imgResList[position])
         }

@@ -1,28 +1,20 @@
 package com.topdon.lib.core.viewmodel
-
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.bean.event.VersionUpData
 import com.topdon.lib.core.bean.json.CheckVersionJson
 import com.topdon.lib.core.bean.json.SoftConfigOtherTypeVO
 import com.topdon.lib.core.ktbase.BaseViewModel
 import com.topdon.lib.core.utils.SingleLiveEvent
-
 class VersionViewModel : BaseViewModel() {
     val updateLiveData = SingleLiveEvent<VersionUpData>()
-
     fun checkVersion() {
-
-
     }
-
     private fun updateTip(result: CheckVersionJson) {
-        val isForcedUpgrade = (result.forcedUpgradeFlag?.toInt() ?: 0) == 1 // 1: 强制升级
+        val isForcedUpgrade = (result.forcedUpgradeFlag?.toInt() ?: 0) == 1 
         val description = getDescription(result.softConfigOtherTypeVOList)
         val downPageUrl = result.downloadPageUrl
         val sizeStr = "${result.notUnZipSize}MB"
-
         XLog.i("有版本升级,升级信息: $description, 是否强制升级: $isForcedUpgrade")
-
         val versionUpData =
             VersionUpData(
                 versionNo = result.versionNo ?: "",
@@ -33,7 +25,6 @@ class VersionViewModel : BaseViewModel() {
             )
         updateLiveData.postValue(versionUpData)
     }
-
     private fun getDescription(list: List<SoftConfigOtherTypeVO>?): String {
         list?.forEach {
             if (it.descType == 3) {

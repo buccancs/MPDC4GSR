@@ -1,18 +1,4 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
-
 package com.github.gzuliyujiang.dialog;
-
 import android.app.Activity;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -24,16 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.Dimension;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
-
 import com.topdon.lib.ui.R;
-
 @SuppressWarnings("unused")
 public abstract class ModalDialog extends BottomDialog implements View.OnClickListener {
     protected View headerView;
@@ -43,16 +26,13 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
     protected View topLineView;
     protected View bodyView;
     protected View footerView;
-
     public ModalDialog(@NonNull Activity activity) {
         super(activity, DialogConfig.getDialogStyle() == DialogStyle.Three
                 ? R.style.DialogTheme_Fade : R.style.DialogTheme_Sheet);
     }
-
     public ModalDialog(@NonNull Activity activity, @StyleRes int themeResId) {
         super(activity, themeResId);
     }
-
     @Override
     public void onInit(@Nullable Bundle savedInstanceState) {
         super.onInit(savedInstanceState);
@@ -61,12 +41,10 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
             setGravity(Gravity.CENTER);
         }
     }
-
     @Override
     protected boolean enableMaskView() {
         return DialogConfig.getDialogStyle() != DialogStyle.Three;
     }
-
     @NonNull
     @Override
     protected View createContentView() {
@@ -97,7 +75,6 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
         rootLayout.addView(footerView);
         return rootLayout;
     }
-
     @Nullable
     protected View createHeaderView() {
         switch (DialogConfig.getDialogStyle()) {
@@ -111,7 +88,6 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
                 return View.inflate(activity, R.layout.dialog_header_style_default, null);
         }
     }
-
     @Nullable
     protected View createTopLineView() {
         if (DialogConfig.getDialogStyle() == DialogStyle.Default) {
@@ -122,10 +98,8 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
         }
         return null;
     }
-
     @NonNull
     protected abstract View createBodyView();
-
     @Nullable
     protected View createFooterView() {
         switch (DialogConfig.getDialogStyle()) {
@@ -139,7 +113,6 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
                 return null;
         }
     }
-
     @CallSuper
     @Override
     protected void initView() {
@@ -176,7 +149,6 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
         okView.setOnClickListener(this);
         maybeBuildEllipseButton();
     }
-
     private void maybeBuildEllipseButton() {
         if (DialogConfig.getDialogStyle() != DialogStyle.One && DialogConfig.getDialogStyle() != DialogStyle.Two) {
             return;
@@ -194,17 +166,12 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
             cancelDrawable.setCornerRadius(okView.getResources().getDisplayMetrics().density * 999);
             cancelDrawable.setColor(DialogConfig.getDialogColor().cancelEllipseColor());
             cancelView.setBackground(cancelDrawable);
-
-
         }
         GradientDrawable okDrawable = new GradientDrawable();
         okDrawable.setCornerRadius(okView.getResources().getDisplayMetrics().density * 999);
         okDrawable.setColor(DialogConfig.getDialogColor().okEllipseColor());
         okView.setBackground(okDrawable);
-
-
     }
-
     @Override
     public void setTitle(final @Nullable CharSequence title) {
         if (titleView != null) {
@@ -218,7 +185,6 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
             super.setTitle(title);
         }
     }
-
     @Override
     public void setTitle(final int titleId) {
         if (titleView != null) {
@@ -232,7 +198,6 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
             super.setTitle(titleId);
         }
     }
-
     @CallSuper
     @Override
     public void onClick(View v) {
@@ -247,11 +212,8 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
             dismiss();
         }
     }
-
     protected abstract void onCancel();
-
     protected abstract void onOk();
-
     public final void setBodyWidth(@Dimension(unit = Dimension.DP) @IntRange(from = 50) int bodyWidth) {
         ViewGroup.LayoutParams layoutParams = bodyView.getLayoutParams();
         int width = WRAP_CONTENT;
@@ -261,7 +223,6 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
         layoutParams.width = width;
         bodyView.setLayoutParams(layoutParams);
     }
-
     public final void setBodyHeight(@Dimension(unit = Dimension.DP) @IntRange(from = 50) int bodyHeight) {
         ViewGroup.LayoutParams layoutParams = bodyView.getLayoutParams();
         int height = WRAP_CONTENT;
@@ -271,36 +232,28 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
         layoutParams.height = height;
         bodyView.setLayoutParams(layoutParams);
     }
-
     public final View getHeaderView() {
         if (headerView == null) {
             headerView = new View(activity);
         }
         return headerView;
     }
-
     public final View getTopLineView() {
         return topLineView;
     }
-
     public final View getBodyView() {
         return bodyView;
     }
-
     public final View getFooterView() {
         return footerView;
     }
-
     public final TextView getCancelView() {
         return cancelView;
     }
-
     public final TextView getTitleView() {
         return titleView;
     }
-
     public final TextView getOkView() {
         return okView;
     }
-
 }

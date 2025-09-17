@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.fragment
-
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -41,42 +40,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-
-
 class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
-
     private val titleView: TitleView by lazy { requireView().findViewById(R.id.title_view) }
     private val fragmentPdfRecyclerLay: SmartRefreshLayout by lazy { requireView().findViewById(R.id.fragment_pdf_recycler_lay) }
     private val fragmentPdfRecycler: RecyclerView by lazy { requireView().findViewById(R.id.fragment_pdf_recycler) }
-
-    /**
-
-
-     */
     private var isTC007 = false
-
     private var page = 1
     private var reportAdapter = PDFAdapter(R.layout.item_pdf)
-
     private val loginBroadcastReceiver = LoginBroadcastReceiver()
-
     override fun providerVMClass() = PdfViewModel::class.java
-
     override fun initContentView(): Int {
         return R.layout.fragment_pdf_list
     }
-
     override fun initView() {
         isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
-
         val intentFilter = IntentFilter()
         intentFilter.addAction(Config.ACTION_BROADCAST_LOGIN)
         intentFilter.addAction(Config.ACTION_BROADCAST_LOGOFF)
         LocalBroadcastManager.getInstance(requireContext())
             .registerReceiver(loginBroadcastReceiver, intentFilter)
-
         initRecycler()
-
         viewModel.listData.observe(this) {
             dismissLoadingDialog()
             if (!reportAdapter.hasEmptyView()) {
@@ -92,9 +75,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
             it?.let { data ->
                 val tvEmpty: TextView? = reportAdapter.emptyLayout?.findViewById(R.id.tv_empty)
                 tvEmpty?.setText(if (page == 1 && data.code != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
-
                 if (page == 1) {
-
                     if (data.code == LMS.SUCCESS) {
                         reportAdapter.loadMoreModule.isEnableLoadMore =
                             !data.data?.records.isNullOrEmpty()
@@ -133,18 +114,14 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
             },
         )
     }
-
     private var hasLoadData = false
-
     override fun initData() {
     }
-
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(requireContext())
             .unregisterReceiver(loginBroadcastReceiver)
     }
-
     private inner class LoginBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(
             context: Context?,
@@ -159,7 +136,6 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
             }
         }
     }
-
     private fun initRecycler() {
         reportAdapter.isUseEmpty = true
         reportAdapter.delListener = { item, position ->
@@ -181,7 +157,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                             params.addBodyParameter(
                                 "modelId",
                                 if (isTC007) 1783 else 950
-                            ) // TC001-950, TC002-951, TC003-952 TC007-1783
+                            ) 
                             params.addBodyParameter("testReportIds", arrayOf(item.testReportId))
                             params.addBodyParameter("status", 1)
                             params.addBodyParameter(
@@ -203,10 +179,8 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                                         }
                                         Log.w("删除成功", response.toString())
                                     }
-
                                     override fun onFail(exception: Exception?) {
                                     }
-
                                     override fun onFail(
                                         failMsg: String?,
                                         errorCode: String,
@@ -250,18 +224,14 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
         }
         reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         reportAdapter.loadMoreModule.setOnLoadMoreListener {
-
             viewModel.getReportData(isTC007, ++page)
         }
-
         fragmentPdfRecycler.adapter = reportAdapter
         fragmentPdfRecycler.layoutManager = LinearLayoutManager(requireContext())
         fragmentPdfRecyclerLay.setOnRefreshListener {
-
             page = 1
             viewModel.getReportData(isTC007, page)
         }
-
         fragmentPdfRecyclerLay.setEnableLoadMore(false)
     }
 }

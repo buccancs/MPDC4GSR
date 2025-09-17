@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.tools
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -12,7 +11,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.maning.imagebrowserlibrary.ImageEngine
-
 class GlideImageEngine : ImageEngine {
     override fun loadImage(
         context: Context,
@@ -22,7 +20,6 @@ class GlideImageEngine : ImageEngine {
         customImageView: View,
     ) {
         val option = RequestOptions().centerCrop()
-
         Glide.with(context)
             .asBitmap()
             .load(url)
@@ -31,7 +28,6 @@ class GlideImageEngine : ImageEngine {
             .listener(BitmapRequestListener())
             .into(imageView)
     }
-
     class DrawableRequestListener : RequestListener<Drawable> {
         override fun onLoadFailed(
             e: GlideException?,
@@ -41,7 +37,6 @@ class GlideImageEngine : ImageEngine {
         ): Boolean {
             return false
         }
-
         override fun onResourceReady(
             resource: Drawable?,
             model: Any?,
@@ -52,7 +47,6 @@ class GlideImageEngine : ImageEngine {
             return false
         }
     }
-
     class BitmapRequestListener : RequestListener<Bitmap> {
         override fun onLoadFailed(
             e: GlideException?,
@@ -62,7 +56,6 @@ class GlideImageEngine : ImageEngine {
         ): Boolean {
             return false
         }
-
         override fun onResourceReady(
             resource: Bitmap?,
             model: Any?,

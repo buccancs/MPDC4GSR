@@ -1,10 +1,8 @@
 package com.topdon.lib.core.socket
-
 import android.text.TextUtils
 import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
-
 object SocketCmdUtil {
     fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null
@@ -19,7 +17,6 @@ object SocketCmdUtil {
             return cmdJson
         }
     }
-
     fun getCmdResponse(response: String?): Int? {
         var cmd: Int? = null
         if (TextUtils.isEmpty(response)) return null
@@ -31,7 +28,6 @@ object SocketCmdUtil {
         }
         return cmd
     }
-
     fun getIpResponse(response: String?): String? {
         var ip: String? = null
         if (TextUtils.isEmpty(response)) return null

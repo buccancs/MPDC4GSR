@@ -1,5 +1,4 @@
 package com.topdon.lib.core.ktbase
-
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -30,20 +29,13 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-
 abstract class BaseActivity : AppCompatActivity() {
     val TAG = this.javaClass.simpleName
-
     protected abstract fun initContentView(): Int
-
     protected abstract fun initView()
-
     protected abstract fun initData()
-
     protected var savedInstanceState: Bundle? = null
-
     protected open fun isLockPortrait(): Boolean = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BaseApplication.instance.activitys.add(this)
@@ -51,7 +43,6 @@ abstract class BaseActivity : AppCompatActivity() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-
         if (isLockPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
@@ -62,7 +53,6 @@ abstract class BaseActivity : AppCompatActivity() {
         initData()
         synLogin()
     }
-
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(
             AppLanguageUtils.attachBaseContext(
@@ -71,22 +61,18 @@ abstract class BaseActivity : AppCompatActivity() {
             )
         )
     }
-
     override fun onStart() {
         super.onStart()
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
     }
-
     override fun onResume() {
         super.onResume()
     }
-
     override fun onStop() {
         super.onStop()
     }
-
     override fun onDestroy() {
         cameraDialog?.dismiss()
         super.onDestroy()
@@ -95,7 +81,6 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         BaseApplication.instance.activitys.remove(this)
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getConnectState(event: DeviceConnectEvent) {
         if (event.isConnect) {
@@ -104,13 +89,10 @@ abstract class BaseActivity : AppCompatActivity() {
             disConnected()
         }
     }
-
     protected open fun connected() {
     }
-
     protected open fun disConnected() {
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketConnectState(event: SocketStateEvent) {
         Log.d("onSocketConnectState", "${event.isConnect}")
@@ -120,21 +102,16 @@ abstract class BaseActivity : AppCompatActivity() {
             onSocketDisConnected(event.isTS004)
         }
     }
-
     protected open fun onSocketConnected(isTS004: Boolean) {
     }
-
     protected open fun onSocketDisConnected(isTS004: Boolean) {
     }
-
     private var loadingDialog: LoadingDialog? = null
-
     fun showLoadingDialog(
         @StringRes resId: Int = R.string.tip_loading,
     ) {
         showLoadingDialog(getString(resId))
     }
-
     fun showLoadingDialog(text: CharSequence?) {
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog(this)
@@ -142,13 +119,10 @@ abstract class BaseActivity : AppCompatActivity() {
         loadingDialog?.setTips(text)
         loadingDialog?.show()
     }
-
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
     }
-
     private var cameraDialog: TipCameraProgressDialog? = null
-
     fun showCameraLoading() {
         if (cameraDialog != null && cameraDialog!!.isShowing) {
             return
@@ -164,17 +138,14 @@ abstract class BaseActivity : AppCompatActivity() {
                 cameraDialog?.show()
             }
         } catch (e: Exception) {
-
             Log.e("临时处理方案", e.message.toString())
         }
     }
-
     fun dismissCameraLoading() {
         if (cameraDialog != null && cameraDialog!!.isShowing) {
             cameraDialog?.dismiss()
         }
     }
-
     private fun synLogin() {
         if (this::class.java.simpleName == "MainActivity") {
             LMS.getInstance().syncUserInfo()
@@ -197,15 +168,12 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         } else {
             if (UserInfoManager.getInstance().isLogin()) {
-
                 UserInfoManager.getInstance().logout()
             }
         }
     }
-
     protected class TakePhotoResult : ActivityResultContract<File, File?>() {
         private lateinit var file: File
-
         override fun createIntent(
             context: Context,
             input: File,
@@ -215,7 +183,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             return Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
-
         override fun parseResult(
             resultCode: Int,
             intent: Intent?,

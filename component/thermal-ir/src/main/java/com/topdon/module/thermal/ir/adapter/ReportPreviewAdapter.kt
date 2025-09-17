@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.adapter
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,19 +11,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.CollectionUtils
-
-
 import com.topdon.lib.core.bean.HouseRepPreviewItemBean
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
-
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return position
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -33,7 +28,6 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
             LayoutInflater.from(parent.context).inflate(R.layout.item_report_floor, parent, false),
         )
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -41,12 +35,10 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
         val data = dataList[position]
         if (holder is ItemView) {
             holder.tvFloorNumber.text = data.itemName
-
             holder.rcyReport.layoutManager = LinearLayoutManager(cxt)
             val reportPreviewAdapter =
                 ReportPreviewFloorAdapter(cxt, data.projectItemBeans)
             holder.rcyReport.adapter = reportPreviewAdapter
-
             if (CollectionUtils.isNotEmpty(data.projectItemBeans)) {
                 holder.flyProject.visibility = View.VISIBLE
                 holder.rcyCategory.layoutManager = LinearLayoutManager(cxt)
@@ -56,61 +48,27 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
             } else {
                 holder.flyProject.visibility = View.GONE
             }
-
             if (CollectionUtils.isNotEmpty(data.albumItemBeans)) {
                 holder.llyAlbum.visibility = View.VISIBLE
                 holder.rcyAlbum.layoutManager = GridLayoutManager(cxt, 3)
                 val albumAdapter = ReportPreviewAlbumAdapter(cxt, data.albumItemBeans)
                 holder.rcyAlbum.adapter = albumAdapter
                 albumAdapter.jumpListener = { _, position ->
-
-
                     TToast.shortToast(cxt, "Image detail view disabled - house module removed")
                 }
             } else {
                 holder.llyAlbum.visibility = View.GONE
             }
-
             holder.hsvReport.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
-
-
                 }
                 false
             }
-
-            /*
-            holder.hsvReport.setOnScrollStopListner(object : OnScrollStopListner {
-                override fun onScrollToRightEdge() {
-                    holder.viewCategoryMask.visibility = View.VISIBLE
-                }
-
-                override fun onScrollToMiddle() {
-                    holder.viewCategoryMask.visibility = View.VISIBLE
-                }
-
-                override fun onScrollToLeftEdge() {
-                    holder.viewCategoryMask.visibility = View.GONE
-                }
-
-                override fun onScrollStoped() {
-                }
-
-                override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-                    if (holder.viewCategoryMask.visibility == View.VISIBLE) {
-                        return
-                    }
-                    holder.viewCategoryMask.visibility = View.VISIBLE
-                }
-            })
-             */
-        } // End of if (holder is ItemView) block
+        } 
     }
-
     override fun getItemCount(): Int {
         return dataList.size
     }
-
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvFloorNumber: TextView = itemView.findViewById(R.id.tv_floor_number)
         val rcyReport: RecyclerView = itemView.findViewById(R.id.rcy_report)

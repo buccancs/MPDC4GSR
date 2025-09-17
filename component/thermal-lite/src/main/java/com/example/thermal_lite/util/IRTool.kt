@@ -1,5 +1,4 @@
 package com.example.thermal_lite.util
-
 import android.util.Log
 import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.CommonParams
@@ -10,15 +9,8 @@ import com.example.thermal_lite.camera.CameraPreviewManager
 import com.example.thermal_lite.camera.DeviceIrcmdControlManager
 import com.topdon.lib.core.bean.CameraItemBean
 import kotlinx.coroutines.delay
-
-/**
- * des:
- * author: CaiSongL
- * date: 2024/8/2 16:43
- **/
 object IRTool {
     const val TAG: String = "IRTool"
-
     fun setAutoShutter(isAutoShutter: Boolean) {
         val basicAutoFFCStatusSet: IrcmdError? =
             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
@@ -34,7 +26,6 @@ object IRTool {
             "basicAutoFFCStatusSet=$basicAutoFFCStatusSet",
         )
     }
-
     fun setOneShutter() {
         val basicFFCUpdate = DeviceIrcmdControlManager.getInstance().ircmdEngine?.basicFFCUpdate()
         Log.d(
@@ -42,16 +33,6 @@ object IRTool {
             "basicFFCUpdate=$basicFFCUpdate",
         )
     }
-
-    /**
-     *
-     *
-
-     *
-
-     *
-
-     */
     fun basicGainSet(gainType: Int) {
         if (gainType == CameraItemBean.TYPE_TMP_ZD) {
             CameraPreviewManager.getInstance().setAutoSwitchGainEnable(true)
@@ -69,7 +50,6 @@ object IRTool {
             Log.d(TAG, "basicGainSet=$basicGainSet--$gainType")
         }
     }
-
     fun basicGlobalContrastLevelSet(levelValue: Int) {
         val basicGlobalContrastLevelSetResult =
             DeviceIrcmdControlManager.getInstance().ircmdEngine
@@ -79,14 +59,9 @@ object IRTool {
             "basicGlobalContrastLevelSet=$basicGlobalContrastLevelSetResult",
         )
     }
-
     fun basicImageDetailEnhanceLevelSet(levelValue: Int) {
-
-
     }
-
     fun basicMirrorAndFlipStatusSet(openMirror: Boolean) {
-
         val basicMirrorAndFlipStatusSet =
             DeviceIrcmdControlManager.getInstance().ircmdEngine
                 ?.basicMirrorAndFlipStatusSet(
@@ -98,44 +73,21 @@ object IRTool {
                 )
         Log.d(TAG, "basicGlobalContrastLevelSet=$basicMirrorAndFlipStatusSet")
     }
-
-    /**
-
-     * https://alidocs.dingtalk.com/i/p/QqWXwywDMb9xKG31/docs/14lgGw3P8vL0P2qbu7OR39d5V5daZ90D
-
-
-
-
-
-
-
-
-     * mIrcmdEngine.advRmcoverCaliCancel();
-
-     * mIrcmdEngine.basicSaveData(CommonParams.DeviceDataSaveType.BASIC_SAVE_RMCOVER_DATA);
-     */
     fun onceAuto(): Boolean {
-
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.basicRestoreDefaultData(CommonParams.DeviceRestoreTypeType.BASIC_RESTROE_RMCOVER_DATA)
-
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_DISABLED)
-
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()?.basicFFCUpdate()
-
         val result = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()?.advAutoRmcoverCali()
         Log.d(TAG, "advAutoRmcoverCali=$result")
-
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_ENABLE)
-
         val ircmdError =
             DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                 ?.basicSaveData(CommonParams.DeviceDataSaveType.BASIC_SAVE_RMCOVER_DATA)
         return ircmdError == IrcmdError.IRCMD_SUCCESS
     }
-
     suspend fun autoStart(): Boolean {
         basicGainSet(CameraItemBean.TYPE_TMP_C)
         delay(2000)
@@ -149,7 +101,6 @@ object IRTool {
         XLog.d(TAG, "onceAuto=start")
         return onceAuto()
     }
-
     fun advEnvCorrectSwitchSet(open: Boolean) {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.advEnvCorrectSwitchSet(
@@ -160,33 +111,14 @@ object IRTool {
                 },
             )
     }
-
-    /**
-
-
-     */
     fun advEnvCorrectEMSSet(value: Int) {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             .advEnvCorrectEMSSet(value)
     }
-
-    /**
-
-
-     */
     fun advEnvCorrectTUSet(value: Int) {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.advEnvCorrectTUSet(value)
     }
-
-    /**
-
-     * @param temp Float
-     * @param params_array FloatArray
-
-
-     * @return Float
-     */
     fun temperatureCorrection(
         temp: Float,
         params_array: FloatArray,
@@ -195,7 +127,6 @@ object IRTool {
         basicGainGetValue: Int,
     ): Float {
         var newTemp = temp
-
         try {
             @Suppress("SENSELESS_COMPARISON")
             if (tau_data_H == null || tau_data_L == null) return temp
@@ -217,9 +148,6 @@ object IRTool {
             return newTemp
         }
     }
-
     fun setMode() {
-
-
     }
 }

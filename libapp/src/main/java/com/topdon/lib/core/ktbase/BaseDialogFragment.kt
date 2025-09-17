@@ -1,5 +1,4 @@
 package com.topdon.lib.core.ktbase
-
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -14,30 +13,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import com.topdon.lib.core.R
-
 abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment() {
-
     private var _binding: B? = null
-
     protected val binding: B get() = _binding!!
-
     @LayoutRes
     protected abstract fun initContentLayoutId(): Int
-
     protected abstract fun initView(savedInstanceState: Bundle?)
-
     var isCanceledOnTouchOutSide: Boolean = true
         set(value) {
             field = value
             dialog?.setCanceledOnTouchOutside(value)
         }
-
     protected open fun afterDialogCreate(layoutParams: WindowManager.LayoutParams) {
     }
-
     @StyleRes
     protected open fun getDialogThemeResId(): Int = R.style.base_dialog
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireContext(), getDialogThemeResId())
         dialog.setCancelable(isCancelable)
@@ -49,7 +39,6 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
         }
         return dialog
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,19 +48,16 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
         _binding?.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         initView(savedInstanceState)
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
     fun show(context: Context) {
         if (isAdded) {
             return

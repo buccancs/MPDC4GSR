@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.widget.seekbar;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,18 +11,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
-
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
-
 public class Utils {
-
     private static final String TAG = "RangeSeekBar";
-
     public static void print(String log) {
         Log.d(TAG, log);
     }
-
     public static void print(Object... logs) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Object log : logs) {
@@ -31,7 +25,6 @@ public class Utils {
         }
         Log.d(TAG, stringBuilder.toString());
     }
-
     public static Bitmap drawableToBitmap(Context context, int width, int height, int drawableId) {
         if (context == null || width <= 0 || height <= 0 || drawableId == 0) return null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -40,7 +33,6 @@ public class Utils {
             return Utils.drawableToBitmap(width, height, context.getResources().getDrawable(drawableId));
         }
     }
-
     public static Bitmap drawableToBitmap(int width, int height, Drawable drawable) {
         Bitmap bitmap = null;
         try {
@@ -65,13 +57,11 @@ public class Utils {
         }
         return bitmap;
     }
-
     public static void drawNinePath(Canvas canvas, Bitmap bmp, Rect rect) {
         NinePatch.isNinePatchChunk(bmp.getNinePatchChunk());
         NinePatch patch = new NinePatch(bmp, bmp.getNinePatchChunk(), null);
         patch.draw(canvas, rect);
     }
-
     public static void drawBitmap(Canvas canvas, Paint paint, Bitmap bmp, Rect rect) {
         try {
             if (NinePatch.isNinePatchChunk(bmp.getNinePatchChunk())) {
@@ -82,13 +72,11 @@ public class Utils {
         }
         canvas.drawBitmap(bmp, rect.left, rect.top, paint);
     }
-
     public static int dp2px(Context context, float dpValue) {
         if (context == null || compareFloat(0f, dpValue) == 0) return 0;
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
-
     public static int compareFloat(float a, float b) {
         int ta = Math.round(a * 1000000);
         int tb = Math.round(b * 1000000);
@@ -100,7 +88,6 @@ public class Utils {
             return 0;
         }
     }
-
     public static int compareFloat(float a, float b, int degree) {
         if (Math.abs(a - b) < Math.pow(0.1, degree)) {
             return 0;
@@ -112,7 +99,6 @@ public class Utils {
             }
         }
     }
-
     public static float parseFloat(String s) {
         try {
             return Float.parseFloat(s);
@@ -120,7 +106,6 @@ public class Utils {
             return 0f;
         }
     }
-
     public static Rect measureText(String text, float textSize) {
         Paint paint = new Paint();
         Rect textRect = new Rect();
@@ -129,14 +114,12 @@ public class Utils {
         paint.reset();
         return textRect;
     }
-
     public static boolean verifyBitmap(Bitmap bitmap) {
         if (bitmap == null || bitmap.isRecycled() || bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0) {
             return false;
         }
         return true;
     }
-
     public static int getColor(Context context, @ColorRes int colorId) {
         if (context != null) {
             return ContextCompat.getColor(context.getApplicationContext(), colorId);

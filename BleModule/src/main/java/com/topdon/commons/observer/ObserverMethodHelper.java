@@ -1,8 +1,6 @@
 package com.topdon.commons.observer;
-
 import com.topdon.commons.poster.MethodInfo;
 import com.topdon.commons.poster.Tag;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -11,15 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 class ObserverMethodHelper {
     private static final Map<Class<?>, Map<String, Method>> METHOD_CACHE = new ConcurrentHashMap<>();
     private boolean isObserveAnnotationRequired;
-
     ObserverMethodHelper(boolean isObserveAnnotationRequired) {
         this.isObserveAnnotationRequired = isObserveAnnotationRequired;
     }
-
     private static boolean contains(List<Method> methods, Method method) {
         for (Method m : methods) {
             if (m.getName().equals(method.getName()) && m.getReturnType().equals(method.getReturnType()) &&
@@ -29,7 +24,6 @@ class ObserverMethodHelper {
         }
         return false;
     }
-
     private static boolean equalParamTypes(Class<?>[] params1, Class<?>[] params2) {
         if (params1.length == params2.length) {
             for (int i = 0; i < params1.length; i++) {
@@ -40,11 +34,9 @@ class ObserverMethodHelper {
         }
         return false;
     }
-
     void clearCache() {
         METHOD_CACHE.clear();
     }
-
     Runnable generateRunnable(Observer observer, Method method, MethodInfo info) {
         MethodInfo.Parameter[] parameters = info.getParameters();
         if (parameters == null || parameters.length == 0) {
@@ -70,7 +62,6 @@ class ObserverMethodHelper {
             };
         }
     }
-
     String generateKey(String tag, String name, Class<?>[] paramTypes) {
         StringBuilder sb = new StringBuilder();
         if (tag.isEmpty()) {
@@ -83,7 +74,6 @@ class ObserverMethodHelper {
         }
         return sb.toString();
     }
-
     Map<String, Method> findObserverMethod(Observer observer) {
         Map<String, Method> map = METHOD_CACHE.get(observer.getClass());
         if (map != null) {

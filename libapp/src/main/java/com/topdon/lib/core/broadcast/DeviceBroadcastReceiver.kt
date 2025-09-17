@@ -1,5 +1,4 @@
 package com.topdon.lib.core.broadcast
-
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,15 +9,11 @@ import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
 import com.topdon.lib.core.config.DeviceConfig.isTcTsDevice
 import com.topdon.lib.core.tools.DeviceTools
 import org.greenrobot.eventbus.EventBus
-
 class DeviceBroadcastReceiver : BroadcastReceiver() {
     private val TAG = this.javaClass.simpleName
-
     companion object {
-
         const val ACTION_USB_PERMISSION = "com.topdon.topInfrared.USB_PERMISSION"
     }
-
     override fun onReceive(
         context: Context?,
         intent: Intent?,
@@ -32,14 +27,12 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
             ACTION_USB_PERMISSION -> XLog.v("$TAG ACTION_USB_PERMISSION")
             else -> XLog.v("$TAG ${intent.action}")
         }
-
         if (intent.action == ACTION_USB_PERMISSION) {
-            DeviceTools.isConnect(isSendConnectEvent = true, isAutoRequest = false) // 重新确认usb连接
+            DeviceTools.isConnect(isSendConnectEvent = true, isAutoRequest = false) 
         } else {
             handleUsbEvent(intent)
         }
     }
-
     private fun handleUsbEvent(intent: Intent) {
         val usbDevice: UsbDevice?
         try {
@@ -56,10 +49,10 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
         }
         XLog.v("$TAG usbDevice PRODUCT_ID = ${usbDevice.productId}, VENDOR_ID = ${usbDevice.vendorId}")
         if (usbDevice.isTcTsDevice()) {
-            if (UsbManager.ACTION_USB_DEVICE_ATTACHED == intent.action) { // 已连接
+            if (UsbManager.ACTION_USB_DEVICE_ATTACHED == intent.action) { 
                 DeviceTools.isConnect(isSendConnectEvent = true, isAutoRequest = true)
             }
-            if (UsbManager.ACTION_USB_DEVICE_DETACHED == intent.action) { // 已断开
+            if (UsbManager.ACTION_USB_DEVICE_DETACHED == intent.action) { 
                 EventBus.getDefault().post(DeviceConnectEvent(false, null))
             }
         }

@@ -1,10 +1,8 @@
 package com.topdon.module.thermal.ir.repository
-
 import com.google.gson.Gson
 import com.topdon.lib.core.common.SharedManager
 import com.topdon.module.thermal.ir.bean.DataBean
 import com.topdon.module.thermal.ir.bean.ModelBean
-
 object ConfigRepository {
     fun read(isTC007: Boolean): ModelBean =
         try {
@@ -13,10 +11,8 @@ object ConfigRepository {
                 ModelBean::class.java
             )
         } catch (_: Exception) {
-
             ModelBean(DataBean(id = 0, use = true))
         }
-
     fun update(
         isTC007: Boolean,
         bean: ModelBean,
@@ -27,7 +23,6 @@ object ConfigRepository {
             SharedManager.setIRConfig(Gson().toJson(bean))
         }
     }
-
     fun readConfig(isTC007: Boolean): DataBean {
         val config = read(isTC007)
         if (config.defaultModel.use) {

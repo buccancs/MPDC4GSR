@@ -1,14 +1,11 @@
 package com.topdon.menu.adapter
-
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
 import com.topdon.menu.R as MenuR
-
 @SuppressLint("NotifyDataSetChanged")
 internal class TempSourceAdapter : BaseMenuAdapter() {
-
     var selectCode: Int = -1
         set(value) {
             if (field != value) {
@@ -16,9 +13,7 @@ internal class TempSourceAdapter : BaseMenuAdapter() {
                 notifyDataSetChanged()
             }
         }
-
     var onTempSourceListener: ((code: Int) -> Unit)? = null
-
     private val dataArray: Array<Data> =
         arrayOf(
             Data(
@@ -37,7 +32,6 @@ internal class TempSourceAdapter : BaseMenuAdapter() {
                 2
             ),
         )
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -52,9 +46,7 @@ internal class TempSourceAdapter : BaseMenuAdapter() {
             onTempSourceListener?.invoke(selectCode)
         }
     }
-
     override fun getItemCount(): Int = dataArray.size
-
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

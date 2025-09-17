@@ -1,5 +1,4 @@
 package com.topdon.lib.core.ktbase
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,18 +14,12 @@ import com.topdon.lib.core.dialog.LoadingDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-
 abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
-
     private var _binding: B? = null
-
     protected val binding: B get() = _binding!!
-
     @LayoutRes
     protected abstract fun initContentLayoutId(): Int
-
     protected abstract fun initView(savedInstanceState: Bundle?)
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,7 +30,6 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
         _binding?.executePendingBindings()
         return binding.root
     }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -45,13 +37,11 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
         EventBus.getDefault().register(this)
         initView(savedInstanceState)
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         EventBus.getDefault().unregister(this)
         _binding = null
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUSBLineStateChange(event: DeviceConnectEvent) {
         if (event.isConnect) {
@@ -60,13 +50,10 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
             disConnected()
         }
     }
-
     protected open fun connected() {
     }
-
     protected open fun disConnected() {
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketConnectState(event: SocketStateEvent) {
         if (event.isConnect) {
@@ -75,21 +62,16 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
             onSocketDisConnected(event.isTS004)
         }
     }
-
     protected open fun onSocketConnected(isTS004: Boolean) {
     }
-
     protected open fun onSocketDisConnected(isTS004: Boolean) {
     }
-
     private var loadingDialog: LoadingDialog? = null
-
     fun showLoadingDialog(
         @StringRes resId: Int,
     ) {
         showLoadingDialog(getString(resId))
     }
-
     fun showLoadingDialog(text: CharSequence?) {
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog(requireContext())
@@ -97,7 +79,6 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
         loadingDialog?.setTips(text)
         loadingDialog?.show()
     }
-
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
     }

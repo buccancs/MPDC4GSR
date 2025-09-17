@@ -1,6 +1,4 @@
 package com.topdon.module.user.fragment
-
-
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.text.TextUtils
@@ -50,18 +48,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import com.topdon.lib.core.R as LibAppR
 import com.topdon.lib.core.R as RCore
-
-/**
-
-
-
- *
- * Created by LCG on 2024/4/19.
- */
 class MineFragment : BaseFragment(), View.OnClickListener {
-
     private var isNeedRefreshLogin = false
-
     private lateinit var ivWinter: ImageView
     private lateinit var settingItemVersion: View
     private lateinit var settingItemClear: View
@@ -74,11 +62,8 @@ class MineFragment : BaseFragment(), View.OnClickListener {
     private lateinit var settingItemUnit: View
     private lateinit var dragCustomerView: View
     private lateinit var viewWinterPoint: View
-
     override fun initContentView(): Int = R.layout.fragment_mine
-
     override fun initView() {
-
         ivWinter = requireView().findViewById(R.id.iv_winter)
         settingItemVersion = requireView().findViewById(R.id.setting_item_version)
         settingItemClear = requireView().findViewById(R.id.setting_item_clear)
@@ -91,7 +76,6 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         settingItemUnit = requireView().findViewById(R.id.setting_item_unit)
         dragCustomerView = requireView().findViewById(R.id.drag_customer_view)
         viewWinterPoint = requireView().findViewById(R.id.view_winter_point)
-
         ivWinter.setOnClickListener(this)
         settingItemVersion.setOnClickListener(this)
         settingItemClear.setOnClickListener(this)
@@ -101,19 +85,14 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         settingElectronicManual.setOnClickListener(this)
         settingFaq.setOnClickListener(this)
         settingFeedback.setOnClickListener(this)
-        settingItemUnit.setOnClickListener(this) // 温度单温
+        settingItemUnit.setOnClickListener(this) 
         dragCustomerView.setOnClickListener(this)
-
         viewWinterPoint.isVisible = !SharedManager.hasClickWinter
-
-        if (BaseApplication.instance.isDomestic()) { // 国内版
-
+        if (BaseApplication.instance.isDomestic()) { 
         }
-
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(false)
                     }
@@ -121,20 +100,16 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             },
         )
     }
-
     override fun initData() {
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updatePDF(event: PDFEvent) {
         isNeedRefreshLogin = true
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWinterClick(event: WinterClickEvent) {
         viewWinterPoint.isVisible = false
     }
-
     override fun onResume() {
         super.onResume()
         changeLoginStyle()
@@ -143,28 +118,23 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             checkLoginResult()
         }
     }
-
-
     override fun onClick(v: View?) {
         when (v) {
-            ivWinter -> { // 冬季特辑入口
+            ivWinter -> { 
                 viewWinterPoint.isVisible = false
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
-
                 val url =
-                    if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
-                        "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
-                                "languageId=1" // Fixed to English (languageId=1)
+                    if (UrlConstant.BASE_URL == "https:
+                        "https:
+                                "languageId=1" 
                     } else {
-                        "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
+                        "http:
                     }
-
                 NavigationManager.getInstance().build(RouterConfig.WEB_VIEW)
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
-
             settingUserLay, settingUserImgNight -> {
                 if (UserInfoManager.getInstance().isLogin()) {
                     isNeedRefreshLogin = true
@@ -173,28 +143,24 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     loginAction()
                 }
             }
-
             settingUserText -> {
                 if (!LMS.getInstance().isLogin) {
                     loginAction()
                 }
             }
-
-            settingElectronicManual -> { // 电子说明书
+            settingElectronicManual -> { 
                 NavigationManager.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
                 ).withInt(Constants.SETTING_TYPE, Constants.SETTING_BOOK)
                     .navigation(requireContext())
             }
-
-            settingFaq -> { // FAQ
+            settingFaq -> { 
                 NavigationManager.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
                 ).withInt(Constants.SETTING_TYPE, Constants.SETTING_FAQ)
                     .navigation(requireContext())
             }
-
-            settingFeedback -> { // 意见反馈
+            settingFeedback -> { 
                 if (LMS.getInstance().isLogin) {
                     val devSn = SharedManager.getDeviceSn()
                     FeedBackBean().apply {
@@ -211,47 +177,34 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     loginAction()
                 }
             }
-
-            settingItemUnit -> { // 温度单位
+            settingItemUnit -> { 
                 NavigationManager.getInstance().build(RouterConfig.UNIT)
                     .navigation(requireContext())
             }
-
-            settingItemVersion -> { // 版本
+            settingItemVersion -> { 
                 NavigationManager.getInstance().build(RouterConfig.VERSION)
                     .navigation(requireContext())
             }
-
-            settingItemClear -> { // 清除缓存，实际已隐藏
+            settingItemClear -> { 
                 clearCache()
             }
-
-            dragCustomerView -> { // 客服
-
+            dragCustomerView -> { 
                 val sn = SharedManager.getDeviceSn()
-
                 if (!TextUtils.isEmpty(sn)) {
-
                 }
-
-
             }
         }
     }
-
     private fun loginAction() {
         isNeedRefreshLogin = true
-
         val bgBitmap = BitmapFactory.decodeResource(
             resources,
             LibAppR.mipmap.ic_default_user_head
-        ) // Use available resource from libapp
+        ) 
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
-
     private fun checkLoginResult() {
         if (LMS.getInstance().isLogin) {
-
             LMS.getInstance().getUserInfo { userinfo: CommonBean ->
                 try {
                     val json = userinfo.data
@@ -264,20 +217,17 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                         nickname = infoData.userName,
                         headUrl = infoData.avatar,
                     )
-
                     changeLoginStyle()
                 } catch (e: Exception) {
                     XLog.e(" 登录异常: ${e.message}")
                 }
             }
         } else {
-
             XLog.e(" 登录失败")
             changeLoginStyle()
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // 恢复默认头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) 
         }
     }
-
     private fun changeLoginStyle() {
         if (LMS.getInstance().isLogin) {
             val layoutParams =
@@ -297,7 +247,6 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             val tvEmail = requireView().findViewById<TextView>(R.id.tv_email)
             tvEmail.text = SharedManager.getUsername()
             settingUserLay.visibility = View.VISIBLE
-
             if (settingUserImgNight != null) {
                 GlideLoader.loadCircle(
                     settingUserImgNight,
@@ -324,8 +273,6 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserText.gravity = Gravity.CENTER
             settingUserText.layoutParams = layoutParams
             settingUserText.setText(
-
-
                 context?.getString(RCore.string.app_sign_in) ?: "Sign In",
             )
             val drawable = ContextCompat.getDrawable(requireContext(), R.mipmap.ic_arrow_login)
@@ -334,10 +281,9 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserLay.visibility = View.GONE
             val tvEmail = requireView().findViewById<TextView>(R.id.tv_email)
             tvEmail.text = ""
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // 恢复默认头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) 
         }
     }
-
     private fun clearCache() {
         lifecycleScope.launch {
             showLoadingDialog()

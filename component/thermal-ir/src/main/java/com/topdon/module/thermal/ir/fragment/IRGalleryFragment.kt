@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.fragment
-
 import android.app.Activity
 import android.content.Intent
 import android.media.MediaScannerConnection
@@ -41,37 +40,26 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import com.topdon.lib.core.R as LibR
-
 class IRGalleryFragment : BaseFragment() {
-
     private var currentDirType = DirType.LINE
-
     private val viewModel: IRGalleryViewModel by viewModels()
-
     private val tabViewModel: IRGalleryTabViewModel by activityViewModels()
-
     private val adapter = GalleryAdapter()
-
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var clDownload: View
     private lateinit var clShare: View
     private lateinit var clDelete: View
     private lateinit var clBottom: View
     private lateinit var irGalleryRecycler: RecyclerView
-
     private var isVideo = false
-
     override fun initContentView() = R.layout.fragment_ir_gallery
-
     override fun initView() {
-
         refreshLayout = requireView().findViewById(R.id.refresh_layout)
         clDownload = requireView().findViewById(R.id.cl_download)
         clShare = requireView().findViewById(R.id.cl_share)
         clDelete = requireView().findViewById(R.id.cl_delete)
         clBottom = requireView().findViewById(R.id.cl_bottom)
         irGalleryRecycler = requireView().findViewById(R.id.ir_gallery_recycler)
-
         currentDirType =
             when (arguments?.getInt(ExtraKeyConfig.DIR_TYPE, 0) ?: 0) {
                 DirType.TS004_LOCALE.ordinal -> DirType.TS004_LOCALE
@@ -79,11 +67,8 @@ class IRGalleryFragment : BaseFragment() {
                 DirType.TC007.ordinal -> DirType.TC007
                 else -> DirType.LINE
             }
-
         clDownload.isVisible = currentDirType == DirType.TS004_REMOTE
-
         initRecycler()
-
         clShare.setOnClickListener {
             val selectList = adapter.buildSelectList()
             if (selectList.size == 0) {
@@ -107,7 +92,6 @@ class IRGalleryFragment : BaseFragment() {
             }
             downloadList(selectList, false)
         }
-
         viewModel.pageListLD.observe(this) {
             if (it == null) {
                 TToast.shortToast(requireContext(), LibR.string.operation_failed_tips)
@@ -144,19 +128,15 @@ class IRGalleryFragment : BaseFragment() {
                 adapter.selectAll()
             }
         }
-
         isVideo = arguments?.getBoolean(ExtraKeyConfig.IS_VIDEO) ?: false
     }
-
     override fun initData() {
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun galleryDirChange(event: GalleryDirChangeEvent) {
         currentDirType = event.dirType
         refresh()
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun galleryDownload(event: GalleryDownloadEvent) {
         for (i in adapter.dataList.indices) {
@@ -169,21 +149,17 @@ class IRGalleryFragment : BaseFragment() {
         }
         refresh()
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun galleryAdd(event: GalleryAddEvent) {
         refresh()
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun galleryDel(event: GalleryDelEvent) {
         refresh()
     }
-
     private fun initRecycler() {
         val spanCount = 3
         val gridLayoutManager = GridLayoutManager(requireActivity(), spanCount)
-
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -192,7 +168,6 @@ class IRGalleryFragment : BaseFragment() {
             }
         irGalleryRecycler.adapter = adapter
         irGalleryRecycler.layoutManager = gridLayoutManager
-
         adapter.isTS004Remote = currentDirType == DirType.TS004_REMOTE
         adapter.onLongEditListener = {
             tabViewModel.isEditModeLD.value = true
@@ -217,7 +192,6 @@ class IRGalleryFragment : BaseFragment() {
                         break
                     }
                 }
-
                 if (currentDirType == DirType.LINE || currentDirType == DirType.TC007) {
                     NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_DETAIL_01)
                         .withBoolean(ExtraKeyConfig.IS_TC007, currentDirType == DirType.TC007)
@@ -233,7 +207,6 @@ class IRGalleryFragment : BaseFragment() {
                 }
             }
         }
-
         refreshLayout.setOnRefreshListener {
             refresh()
         }
@@ -241,19 +214,15 @@ class IRGalleryFragment : BaseFragment() {
             viewModel.queryGalleryByPage(isVideo, currentDirType)
         }
         refreshLayout.setEnableScrollContentWhenLoaded(false)
-
         refreshLayout.autoRefresh()
     }
-
     private fun refresh() {
         refreshLayout.setEnableLoadMore(true)
         viewModel.hasLoadPage = 0
         viewModel.queryGalleryByPage(isVideo, currentDirType)
     }
-
     private fun showDeleteDialog() {
         val deleteList = adapter.buildSelectList()
-
         var hasOneDownload = false
         if (currentDirType == DirType.TS004_REMOTE) {
             for (data in deleteList) {
@@ -263,7 +232,6 @@ class IRGalleryFragment : BaseFragment() {
                 }
             }
         }
-
         if (deleteList.size > 0) {
             ConfirmSelectDialog(requireContext()).run {
                 setTitleStr(
@@ -284,7 +252,6 @@ class IRGalleryFragment : BaseFragment() {
             ToastTools.showShort(getString(R.string.tip_least_select))
         }
     }
-
     private fun downloadList(
         downloadList: List<GalleryBean>,
         isShare: Boolean,
@@ -295,7 +262,6 @@ class IRGalleryFragment : BaseFragment() {
                 downloadMap[it.path] = File(FileConfig.ts004GalleryDir, it.name)
             }
         }
-
         if (downloadMap.isEmpty()) {
             if (isShare) {
                 shareImage(downloadList)
@@ -319,7 +285,7 @@ class IRGalleryFragment : BaseFragment() {
                             }
                         }
                     }
-                if (successCount == downloadMap.size) { // 全都下载成功
+                if (successCount == downloadMap.size) { 
                     dismissLoadingDialog()
                     if (isShare) {
                         shareImage(downloadList)
@@ -341,7 +307,6 @@ class IRGalleryFragment : BaseFragment() {
             }
         }
     }
-
     private fun shareImage(shareList: List<GalleryBean>) {
         val shareIntent = Intent()
         if (shareList.size == 1) {

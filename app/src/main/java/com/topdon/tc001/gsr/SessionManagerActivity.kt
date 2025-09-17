@@ -1,5 +1,4 @@
 package com.topdon.tc001.gsr
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -31,48 +30,37 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding>() {
     private lateinit var adapter: SessionAdapter
     private lateinit var sessionManager: SessionManager
     private lateinit var sessionDirectoryManager: SessionDirectoryManager
-
     private val sessions = mutableListOf<SessionInfo>()
     private val filteredSessions = mutableListOf<SessionInfo>()
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Main + job)
-
     companion object {
         private const val TAG = "SessionManagerActivity"
-
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, SessionManagerActivity::class.java))
         }
     }
-
     override fun initContentLayoutId() = R.layout.activity_session_manager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializeViews()
         setupSessionManager()
         setupRecyclerView()
         setupSearchAndFilter()
         loadSessions()
     }
-
     private fun initializeViews() {
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Session Manager"
     }
-
     private fun setupSessionManager() {
         sessionManager = SessionManager.getInstance(this)
         sessionDirectoryManager = SessionDirectoryManager(this)
     }
-
     private fun setupRecyclerView() {
         adapter =
             SessionAdapter(
@@ -82,27 +70,22 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                 onSessionDelete = { session -> confirmDeleteSession(session) },
                 onSessionExport = { session -> exportSession(session) },
             )
-
         binding.sessionsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.sessionsRecyclerView.adapter = adapter
     }
-
     private fun setupSearchAndFilter() {
-
         binding.searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     filterSessions(query)
                     return true
                 }
-
                 override fun onQueryTextChange(newText: String?): Boolean {
                     filterSessions(newText)
                     return true
                 }
             },
         )
-
         val filterOptions = arrayOf("All Sessions", "Recent", "Completed", "With Data")
         val spinnerAdapter =
             ArrayAdapter(
@@ -112,7 +95,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.filterSpinner.adapter = spinnerAdapter
-
         binding.filterSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -123,26 +105,18 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                 ) {
                     filterSessionsByType(position)
                 }
-
                 override fun onNothingSelected(parent: AdapterView<*>) {
-
                 }
             }
     }
-
     private fun loadSessions() {
         showLoading(true)
-
         scope.launch {
             try {
-                // Display storage information
                 displayStorageInfo()
-                
-                // Clean up failed sessions
                 val cleanedSessions = withContext(Dispatchers.IO) {
                     sessionDirectoryManager.cleanupFailedSessions()
                 }
-                
                 if (cleanedSessions.isNotEmpty()) {
                     Log.i(TAG, "Cleaned up ${cleanedSessions.size} failed sessions")
                     Toast.makeText(
@@ -151,20 +125,15 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
                 val loadedSessions =
                     withContext(Dispatchers.IO) {
-
                         val activeSessions = sessionManager.getActiveSessions()
                         val historicalSessions = loadHistoricalSessions()
-
                         (activeSessions + historicalSessions).distinctBy { it.sessionId }
                     }
-
                 sessions.clear()
                 sessions.addAll(loadedSessions.sortedByDescending { it.startTime })
                 filterSessions(binding.searchView.query?.toString())
-
                 Log.i(TAG, "Loaded ${sessions.size} sessions")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load sessions", e)
@@ -174,14 +143,12 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             }
         }
     }
-    
     private suspend fun displayStorageInfo() {
         try {
             val storageStatus = sessionDirectoryManager.checkStorageSpace()
             runOnUiThread {
                 val storageText = "Storage: ${storageStatus.formattedAvailable} available (${100 - storageStatus.usagePercentage}% free)"
                 supportActionBar?.subtitle = storageText
-                
                 if (storageStatus.isLowStorage) {
                     Toast.makeText(
                         this@SessionManagerActivity,
@@ -194,13 +161,10 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             Log.e(TAG, "Failed to get storage info", e)
         }
     }
-
     private suspend fun loadHistoricalSessions(): List<SessionInfo> {
         return withContext(Dispatchers.IO) {
             val historicalSessions = mutableListOf<SessionInfo>()
-
             try {
-
                 val baseDir = File(getExternalFilesDir(null), "recordings")
                 if (baseDir.exists() && baseDir.isDirectory) {
                     baseDir.listFiles()?.forEach { sessionDir ->
@@ -217,21 +181,17 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load historical sessions", e)
             }
-
             historicalSessions
         }
     }
-
     private fun parseSessionFromDirectory(sessionDir: File): SessionInfo {
         val sessionId = sessionDir.name
         val metadataFile = File(sessionDir, "session_metadata.txt")
-
         val sessionInfo =
             SessionInfo(
                 sessionId = sessionId,
                 startTime = sessionDir.lastModified(),
             )
-
         if (metadataFile.exists()) {
             try {
                 metadataFile.readLines().forEach { line ->
@@ -245,7 +205,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                             "endTime" -> sessionInfo.endTime = value.trim().toLongOrNull()
                             "sampleCount" -> sessionInfo.sampleCount =
                                 value.trim().toLongOrNull() ?: 0
-
                             else -> sessionInfo.metadata[key.trim()] = value.trim()
                         }
                     }
@@ -254,17 +213,13 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                 Log.w(TAG, "Failed to parse metadata for session $sessionId", e)
             }
         }
-
         sessionInfo.hasGSRData = File(sessionDir, "gsr_data.csv").exists()
         sessionInfo.hasRGBData = File(sessionDir, "rgb_video.mp4").exists()
         sessionInfo.hasThermalData = File(sessionDir, "thermal_video.mp4").exists()
-
         return sessionInfo
     }
-
     private fun filterSessions(query: String?) {
         filteredSessions.clear()
-
         val filtered =
             if (query.isNullOrEmpty()) {
                 sessions
@@ -275,51 +230,41 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                             session.studyName?.contains(query, ignoreCase = true) == true
                 }
             }
-
         filteredSessions.addAll(filtered)
         adapter.notifyDataSetChanged()
         updateEmptyView()
     }
-
     private fun filterSessionsByType(filterIndex: Int) {
         val baseList =
             if (binding.searchView.query.isNullOrEmpty()) sessions else filteredSessions.toList()
-
         filteredSessions.clear()
-
         val filtered =
             when (filterIndex) {
-                0 -> baseList // All Sessions
-                1 -> baseList.filter { it.isActive() } // Active Sessions
-                2 -> baseList.filter { !it.isActive() } // Completed Sessions
-                3 -> baseList.filter { it.hasGSRData } // With GSR
-                4 -> baseList.filter { it.hasRGBData } // With RGB
-                5 -> baseList.filter { it.hasThermalData } // With Thermal
+                0 -> baseList 
+                1 -> baseList.filter { it.isActive() } 
+                2 -> baseList.filter { !it.isActive() } 
+                3 -> baseList.filter { it.hasGSRData } 
+                4 -> baseList.filter { it.hasRGBData } 
+                5 -> baseList.filter { it.hasThermalData } 
                 else -> baseList
             }
-
         filteredSessions.addAll(filtered)
         adapter.notifyDataSetChanged()
         updateEmptyView()
     }
-
     private fun showLoading(show: Boolean) {
         binding.loadingView.visibility = if (show) View.VISIBLE else View.GONE
         binding.sessionsRecyclerView.visibility = if (show) View.GONE else View.VISIBLE
     }
-
     private fun updateEmptyView() {
         binding.emptyView.visibility = if (filteredSessions.isEmpty()) View.VISIBLE else View.GONE
     }
-
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-
     private fun openSessionDetails(session: SessionInfo) {
         SessionDetailActivity.startActivity(this, session.sessionId)
     }
-
     private fun confirmDeleteSession(session: SessionInfo) {
         AlertDialog.Builder(this)
             .setTitle("Delete Session")
@@ -334,7 +279,6 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             .setNegativeButton("Cancel", null)
             .show()
     }
-
     private fun deleteSession(session: SessionInfo) {
         scope.launch {
             try {
@@ -342,18 +286,14 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                     withContext(Dispatchers.IO) {
                         deleteSessionFiles(session)
                     }
-
                 if (success) {
-
                     if (sessionManager.isSessionActive(session.sessionId)) {
                         sessionManager.completeSession(session.sessionId)
                     }
-
                     sessions.remove(session)
                     filteredSessions.remove(session)
                     adapter.notifyDataSetChanged()
                     updateEmptyView()
-
                     Toast.makeText(
                         this@SessionManagerActivity,
                         "Session deleted successfully",
@@ -369,21 +309,17 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             }
         }
     }
-
     private suspend fun deleteSessionFiles(session: SessionInfo): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-
                 val sessionDir = File(getExternalFilesDir(null), "recordings/${session.sessionId}")
                 if (sessionDir.exists()) {
                     sessionDir.deleteRecursively()
                 }
-
                 val altSessionDir = File(getExternalFilesDir(null), session.sessionId)
                 if (altSessionDir.exists()) {
                     altSessionDir.deleteRecursively()
                 }
-
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to delete session files for ${session.sessionId}", e)
@@ -391,23 +327,18 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             }
         }
     }
-
     private fun exportSession(session: SessionInfo) {
-
         SessionExportActivity.startActivity(this, session.sessionId)
     }
-
     override fun onDestroy() {
         super.onDestroy()
         job.cancel()
     }
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 }
-
 class SessionAdapter(
     private val context: Context,
     private val sessions: List<SessionInfo>,
@@ -416,7 +347,6 @@ class SessionAdapter(
     private val onSessionExport: (SessionInfo) -> Unit,
 ) : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() {
     private val dateFormatter = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-
     class SessionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titleText: TextView = view.findViewById(R.id.session_title)
         val subtitleText: TextView = view.findViewById(R.id.session_subtitle)
@@ -426,7 +356,6 @@ class SessionAdapter(
         val exportButton: ImageButton = view.findViewById(R.id.export_button)
         val cardView: View = view
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -434,19 +363,15 @@ class SessionAdapter(
         val view = LayoutInflater.from(context).inflate(R.layout.item_session, parent, false)
         return SessionViewHolder(view)
     }
-
     override fun onBindViewHolder(
         holder: SessionViewHolder,
         position: Int,
     ) {
         val session = sessions[position]
-
         holder.titleText.text = session.participantId ?: session.sessionId
-
         val studyText = session.studyName ?: "Unnamed Study"
         val dateText = dateFormatter.format(Date(session.startTime))
         holder.subtitleText.text = "$studyText • $dateText"
-
         val statusText =
             if (session.isActive()) {
                 "🟢 Active"
@@ -462,23 +387,19 @@ class SessionAdapter(
                 "⚪ Completed • $duration"
             }
         holder.statusText.text = statusText
-
         val dataTypes = mutableListOf<String>()
         if (session.hasGSRData) dataTypes.add("GSR")
         if (session.hasRGBData) dataTypes.add("RGB")
         if (session.hasThermalData) dataTypes.add("Thermal")
-
         holder.dataTypesText.text =
             if (dataTypes.isNotEmpty()) {
                 "📊 ${dataTypes.joinToString(", ")}"
             } else {
                 "📊 No data files found"
             }
-
         holder.cardView.setOnClickListener { onSessionClick(session) }
         holder.deleteButton.setOnClickListener { onSessionDelete(session) }
         holder.exportButton.setOnClickListener { onSessionExport(session) }
     }
-
     override fun getItemCount(): Int = sessions.size
 }

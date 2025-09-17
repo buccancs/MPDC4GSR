@@ -1,5 +1,4 @@
 package com.topdon.lib.core.bean
-
 data class TargetColorBean(
     val res: Int,
     val name: String,

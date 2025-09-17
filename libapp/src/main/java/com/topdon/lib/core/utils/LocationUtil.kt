@@ -1,5 +1,4 @@
 package com.topdon.lib.core.utils
-
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -16,9 +15,7 @@ import com.hjq.permissions.Permission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
-
 object LocationUtil {
-
     @RequiresPermission(Permission.ACCESS_FINE_LOCATION)
     suspend fun getLastLocationStr(context: Context): String? =
         withContext(Dispatchers.IO) {
@@ -43,22 +40,20 @@ object LocationUtil {
                 }
                 val address = resultList[0]
                 return@withContext (address.adminArea ?: "") + (address.locality
-                    ?: "") + (address.subLocality ?: "") // 省-市-区
+                    ?: "") + (address.subLocality ?: "") 
             } catch (e: Exception) {
                 e.printStackTrace()
                 return@withContext null
             }
         }
-
     fun addBtStateListener(
         activity: ComponentActivity,
         listener: ((isEnable: Boolean) -> Unit),
     ) {
-        if (Build.VERSION.SDK_INT >= 28) { // Android 9及以上版本才有位置信息开关
+        if (Build.VERSION.SDK_INT >= 28) { 
             activity.lifecycle.addObserver(ModeChangeObserver(activity, listener))
         }
     }
-
     @RequiresApi(Build.VERSION_CODES.P)
     private class ModeChangeObserver(
         val context: Context,
@@ -67,16 +62,13 @@ object LocationUtil {
         private val receiver = ModeChangeReceiver()
         private val locationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
         override fun onCreate(owner: LifecycleOwner) {
             context.registerReceiver(receiver, IntentFilter(LocationManager.MODE_CHANGED_ACTION))
         }
-
         override fun onDestroy(owner: LifecycleOwner) {
             context.unregisterReceiver(receiver)
             owner.lifecycle.removeObserver(this)
         }
-
         private inner class ModeChangeReceiver : BroadcastReceiver() {
             override fun onReceive(
                 context: Context?,

@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.dialog
-
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -8,34 +7,26 @@ import android.view.ViewGroup.LayoutParams
 import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogProgressBinding
-
-
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     private val binding: DialogProgressBinding =
         DialogProgressBinding.inflate(LayoutInflater.from(context))
-
     var max: Int = 100
         set(value) {
             binding.progressBar.max = value
             field = value
         }
-
     var progress: Int = 0
         set(value) {
             binding.progressBar.progress = value
             field = value
         }
-
     init {
-
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(false)
         setCanceledOnTouchOutside(false)
         setContentView(binding.root)
-
         window?.let {
             val layoutParams = it.attributes
             layoutParams.width =
@@ -44,7 +35,6 @@ class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
             it.attributes = layoutParams
         }
     }
-
     override fun show() {
         super.show()
         binding.progressBar.max = max

@@ -1,10 +1,7 @@
 package com.topdon.lib.core.tools
-
 import com.elvishew.xlog.XLog
 import java.util.regex.Pattern
-
 object VersionTool {
-
     fun getVersion(str: String): String {
         var versionStr = "1.0"
         if (str.uppercase().contains("V")) {
@@ -16,13 +13,10 @@ object VersionTool {
                 str.toFloat()
                 versionStr = str
             } catch (e: Exception) {
-
             }
         }
-
         return versionStr
     }
-
     fun checkNewVersion(
         serverVersionStr: String,
         localVersionStr: String,
@@ -31,13 +25,11 @@ object VersionTool {
             val serverV = getVersion(serverVersionStr)
             val localV = getVersion(localVersionStr)
             return serverV.toFloat() > localV.toFloat()
-
         } catch (e: Exception) {
             XLog.e("对比固件版本异常: ${e.message}")
             return false
         }
     }
-
     fun checkVersion(
         remoteStr: String,
         localStr: String,

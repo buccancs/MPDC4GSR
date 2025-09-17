@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,23 +9,19 @@ import com.topdon.module.thermal.ir.bean.SelectPositionBean
 import com.topdon.module.thermal.ir.databinding.ActivityIrMonitorBinding
 import com.topdon.module.thermal.ir.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
-
 class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMonitorBinding
-    private var selectIndex: SelectPositionBean? = null // 选取点
-
+    private var selectIndex: SelectPositionBean? = null 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityIrMonitorBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
     }
-
     private fun initView() {
         binding.motionBtn.setOnClickListener(this)
         binding.motionStartBtn.setOnClickListener(this)
     }
-
     override fun onClick(v: View?) {
         when (v) {
             binding.motionBtn -> {
@@ -41,7 +36,6 @@ class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     .create().show()
             }
-
             binding.motionStartBtn -> {
                 if (selectIndex == null) {
                     MonitorSelectDialog.Builder(this)
@@ -57,7 +51,6 @@ class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
                         .create().show()
                     return
                 }
-
                 NavigationManager.getInstance().build(RouterConfig.IR_MONITOR_CHART)
                     .withParcelable("select", selectIndex as android.os.Parcelable)
                     .navigation(this)
@@ -65,16 +58,13 @@ class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
     fun select(selectIndex: SelectPositionBean?) {
         this.selectIndex = selectIndex
     }
-
     private fun updateUI() {
         binding.motionStartBtn.visibility = View.VISIBLE
         binding.motionBtn.visibility = View.GONE
     }
-
     private fun disConnected() {
         finish()
     }

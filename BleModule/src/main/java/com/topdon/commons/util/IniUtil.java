@@ -1,11 +1,8 @@
 package com.topdon.commons.util;
-
 import android.text.TextUtils;
-
 import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +11,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-
 public class IniUtil {
     private static final String LINK = "link";
     private static final String LINK_NAME = "name";
@@ -23,7 +19,6 @@ public class IniUtil {
     private static final String MAINTENANCE = "maintenance";
     private static final String SYSTEM = "system";
     private static String NAME = "Link";
-
     public static String getLink(String path) {
         File file = new File(path + "/Diag.ini");
         if (!file.exists())
@@ -45,20 +40,16 @@ public class IniUtil {
             return "";
         }
     }
-
     public static String getVehicleName(String path) {
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
             return "INI_LOST";
         }
-
         return readFileInfo(path + "/Diag.ini");
     }
-
     private static String readFileInfo(String path) {
         String name = "";
         File file = new File(path);
-
         if (file.isDirectory()) {
             LLog.d("TestFile", "The File doesn't not exist.");
         } else {
@@ -67,7 +58,6 @@ public class IniUtil {
                 InputStreamReader inputreader = new InputStreamReader(instream);
                 BufferedReader buffreader = new BufferedReader(inputreader);
                 String line;
-
                 while ((line = buffreader.readLine()) != null) {
                     LLog.e("TestFile", "ReadTxtFile: " + line);
                     name = line;
@@ -84,8 +74,6 @@ public class IniUtil {
         }
         return name;
     }
-
-
     public static String getVersion(String path, String name) {
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
@@ -109,7 +97,6 @@ public class IniUtil {
             return "";
         }
     }
-
     public static String getName(String language, String path) {
         File file = new File(path + "/Diag.ini");
         Config cfg = new Config();
@@ -126,12 +113,10 @@ public class IniUtil {
                 return "";
             return languageSection.get(language.toLowerCase());
         } catch (Exception e) {
-
             LLog.e("bcf", "INI: error: " + e.getMessage());
         }
         return "";
     }
-
     public static HashMap<String, String> getMaintenance(String path, String name) {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "/Diag.ini");
@@ -283,7 +268,6 @@ public class IniUtil {
             return hashMap;
         }
     }
-
     public static HashMap<String, String> getIniSysTem(String path, String name) {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "/Diag.ini");
@@ -303,7 +287,6 @@ public class IniUtil {
             if (versionSection == null) {
                 return hashMap;
             }
-
             if (!TextUtils.isEmpty(versionSection.get("ecm"))) {
                 hashMap.put("ecm", versionSection.get("ecm"));
             } else hashMap.put("ecm", "0");
@@ -343,7 +326,6 @@ public class IniUtil {
             if (!TextUtils.isEmpty(versionSection.get("bcm"))) {
                 hashMap.put("bcm", versionSection.get("bcm"));
             } else hashMap.put("bcm", "0");
-
             return hashMap;
         } catch (Exception e) {
             e.printStackTrace();

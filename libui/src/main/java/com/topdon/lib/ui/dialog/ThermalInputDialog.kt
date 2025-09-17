@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.dialog
-
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
@@ -30,32 +29,17 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.adapter.ColorSelectAdapter
 import com.topdon.lib.ui.databinding.DialogThermalInputBinding
 import java.math.BigDecimal
-
-/**
- * 提示窗
- * create by fylder on 2018/6/15
- **/
-
-
 class ThermalInputDialog : Dialog {
-    private var action = 100 // 100:初始温度输入界面     201: 温度上限color选择界面   301: 温度下限color选择界面
-
+    private var action = 100 
     constructor(context: Context) : super(context)
-
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
-
     @Deprecated("This method is deprecated")
     override fun onBackPressed() {
     }
-
-
     class Builder {
         var dialog: ThermalInputDialog? = null
-
         private var context: Context? = null
-
         private var listener: ((s: Int) -> Unit)? = null
-
         private var message: Spanned? = null
         private var positiveStr: String? = null
         private var cancelStr: String? = null
@@ -71,7 +55,6 @@ class ThermalInputDialog : Dialog {
         private var min = 0f
         private var maxColor = 0
         private var minColor = 0
-
         private lateinit var messageText: TextView
         private lateinit var successBtn: Button
         private lateinit var cancelBtn: Button
@@ -82,21 +65,17 @@ class ThermalInputDialog : Dialog {
         private lateinit var colorPickerView: ColorPickerView
         private lateinit var recycler: RecyclerView
         private var isIconEdit: Boolean = false
-
         constructor(context: Context) {
             this.context = context
         }
-
         fun setMessage(message: String): Builder {
             this.message = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY)
             return this
         }
-
         fun setMessage(message: Spanned): Builder {
             this.message = message
             return this
         }
-
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
@@ -104,12 +83,10 @@ class ThermalInputDialog : Dialog {
                 HtmlCompat.fromHtml(context!!.getString(message), HtmlCompat.FROM_HTML_MODE_LEGACY)
             return this
         }
-
         fun setIconEdit(isIconEdit: Boolean): Builder {
             this.isIconEdit = isIconEdit
             return this
         }
-
         fun setEditNum(
             max: Float,
             min: Float,
@@ -118,23 +95,19 @@ class ThermalInputDialog : Dialog {
             this.min = min
             return this
         }
-
         fun setNum(
             max: Float,
             min: Float,
         ): Builder {
             if (SharedManager.getTemperature() == 1) {
-
                 this.max = max
                 this.min = min
             } else {
-
                 this.max = UnitTools.toF(max)
                 this.min = UnitTools.toF(min)
             }
             return this
         }
-
         fun setColor(
             @ColorInt maxColor: Int,
             @ColorInt minColor: Int,
@@ -143,7 +116,6 @@ class ThermalInputDialog : Dialog {
             this.minColor = minColor
             return this
         }
-
         @JvmOverloads
         fun setPositiveListener(
             @StringRes strRes: Int,
@@ -151,7 +123,6 @@ class ThermalInputDialog : Dialog {
         ): Builder {
             return setPositiveListener(context!!.getString(strRes), event)
         }
-
         @JvmOverloads
         fun setPositiveListener(
             str: String,
@@ -161,7 +132,6 @@ class ThermalInputDialog : Dialog {
             this.positiveEvent = event
             return this
         }
-
         @JvmOverloads
         fun setCancelListener(
             @StringRes strRes: Int,
@@ -169,7 +139,6 @@ class ThermalInputDialog : Dialog {
         ): Builder {
             return setCancelListener(context!!.getString(strRes), event)
         }
-
         @JvmOverloads
         fun setCancelListener(
             str: String,
@@ -179,29 +148,23 @@ class ThermalInputDialog : Dialog {
             this.cancelEvent = event
             return this
         }
-
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
         }
-
         fun setSaturation(s: Int): Builder {
             this.saturation = s
             return this
         }
-
         fun setListener(event: ((s: Int) -> Unit)? = null): Builder {
             this.listener = event
             return this
         }
-
         fun dismiss() {
             this.dialog!!.dismiss()
         }
-
         private val adapter by lazy { ColorSelectAdapter(context!!) }
         private lateinit var binding: DialogThermalInputBinding
-
         fun create(): ThermalInputDialog {
             if (dialog == null) {
                 dialog = ThermalInputDialog(context!!, R.style.InfoDialog)
@@ -209,7 +172,6 @@ class ThermalInputDialog : Dialog {
             val inflater =
                 context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             binding = DialogThermalInputBinding.inflate(inflater)
-
             messageText = binding.dialogTipMsgText
             successBtn = binding.dialogTipSuccessBtn
             cancelBtn = binding.dialogTipCancelBtn
@@ -219,11 +181,8 @@ class ThermalInputDialog : Dialog {
             downUnit = binding.dialogDownUnitText
             colorPickerView = binding.colorPickerView
             recycler = binding.colorPickerRecycler
-
             binding.colorPickerViewLay.visibility = View.GONE
             binding.dialogInputLay.visibility = View.VISIBLE
-
-
             if (isIconEdit) {
                 binding.dialogUpColor.visibility = View.GONE
                 binding.dialogDownColor.visibility = View.GONE
@@ -232,7 +191,6 @@ class ThermalInputDialog : Dialog {
                 binding.dialogDownColor.visibility = View.VISIBLE
             }
             messageText.text = message
-
             if (maxColor != 0) upColor = maxColor
             if (minColor != 0) downColor = minColor
             upUnit.text = UnitTools.showUnit()
@@ -240,14 +198,12 @@ class ThermalInputDialog : Dialog {
             binding.dialogUpColor.setColorFilter(upColor)
             binding.dialogDownColor.setColorFilter(downColor)
             colorPickerView.setInitialColor(upColor)
-
             recycler.layoutManager = GridLayoutManager(context!!, 6)
             recycler.adapter = adapter
             adapter.listener = { _, color ->
                 selectColor = color
                 colorPickerView.setInitialColor(Color.parseColor("#FFFFFFFF"))
             }
-
             dialog!!.addContentView(
                 binding.root,
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT),
@@ -255,19 +211,15 @@ class ThermalInputDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
                     0.85
                 } else {
-
                     0.35
                 }
             lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt()
             dialog!!.window!!.attributes = lp
-
             dialog!!.setCanceledOnTouchOutside(canceled)
             successBtn.setOnClickListener {
                 if (binding.colorPickerViewLay.isVisible) {
-
                     binding.colorPickerViewLay.visibility = View.GONE
                     binding.dialogInputLay.visibility = View.VISIBLE
                     messageText.text = message
@@ -290,7 +242,6 @@ class ThermalInputDialog : Dialog {
                     ToastTools.showShort(com.topdon.lib.core.R.string.ui_fill_in_the_complete)
                     return@setOnClickListener
                 }
-
                 val upValue = upEdit.text.trim().toString()
                 val downValue = downEdit.text.trim().toString()
                 try {
@@ -306,15 +257,10 @@ class ThermalInputDialog : Dialog {
                     ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
                     return@setOnClickListener
                 }
-
-
-
-
                 if ((upValue.isNotBlank() && downValue.isNotBlank()) && upValue.toFloat() < downValue.toFloat()) {
                     ToastTools.showShort(R.string.tip_input_format)
                     return@setOnClickListener
                 }
-
                 dismiss()
                 if (isIconEdit) {
                     positiveEvent?.invoke(
@@ -325,7 +271,6 @@ class ThermalInputDialog : Dialog {
                     )
                 } else {
                     if (SharedManager.getTemperature() == 1) {
-
                         positiveEvent?.invoke(
                             if (upValue.isBlank()) -273f else upValue.toFloat(),
                             if (downValue.isBlank()) -273f else downValue.toFloat(),
@@ -333,7 +278,6 @@ class ThermalInputDialog : Dialog {
                             downColor,
                         )
                     } else {
-
                         positiveEvent?.invoke(
                             if (upValue.isBlank()) -273f else UnitTools.toC(upValue.toFloat()),
                             if (downValue.isBlank()) -273f else UnitTools.toC(downValue.toFloat()),
@@ -345,7 +289,6 @@ class ThermalInputDialog : Dialog {
             }
             cancelBtn.setOnClickListener {
                 if (binding.colorPickerViewLay.isVisible) {
-
                     binding.colorPickerViewLay.visibility = View.GONE
                     binding.dialogInputLay.visibility = View.VISIBLE
                     messageText.text = message
@@ -376,15 +319,12 @@ class ThermalInputDialog : Dialog {
                         fromUser: Boolean,
                     ) {
                         if ("#${envelope.hexCode}" != "#FFFFFFFF") {
-
                             adapter.selected(-1)
                             selectColor = 0
                         }
                         if (dialog!!.action == 201) {
-
                             upColor = Color.parseColor("#${envelope.hexCode}")
                         } else if (dialog!!.action == 301) {
-
                             downColor = Color.parseColor("#${envelope.hexCode}")
                         }
                     }
@@ -400,10 +340,6 @@ class ThermalInputDialog : Dialog {
             } else {
                 downEdit.setText(NumberTools.scale(min, 1).toString())
             }
-
-
-
-
             if (positiveStr != null) {
                 successBtn.text = positiveStr
             }
@@ -414,7 +350,6 @@ class ThermalInputDialog : Dialog {
                 cancelBtn.visibility = View.GONE
                 cancelBtn.text = ""
             }
-
             if (message != null) {
                 messageText.visibility = View.VISIBLE
                 messageText.setText(message, TextView.BufferType.NORMAL)
@@ -424,7 +359,6 @@ class ThermalInputDialog : Dialog {
             dialog!!.setContentView(binding.root)
             return dialog as ThermalInputDialog
         }
-
         fun sub(
             doubleValA: String?,
             doubleValB: String?,

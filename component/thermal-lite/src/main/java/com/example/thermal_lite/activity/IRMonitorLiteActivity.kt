@@ -1,5 +1,4 @@
 package com.example.thermal_lite.activity
-
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -41,20 +40,16 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.math.BigDecimal
 import java.math.RoundingMode
-
 open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTempListener {
     private lateinit var binding: ActivityIrMonitorLiteBinding
-    private var selectIndex: SelectPositionBean? = null // 选取点
+    private var selectIndex: SelectPositionBean? = null 
     val irMonitorLiteFragment = IRMonitorLiteFragment()
     private val bean = ThermalBean()
     private var selectBean: SelectPositionBean = SelectPositionBean()
-
     override fun initContentView() = R.layout.activity_ir_monitor_lite
-
     override fun initView() {
         binding = ActivityIrMonitorLiteBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.motionBtn.setOnClickListener(
             object : SingleClickListener() {
                 override fun onSingleClick() {
@@ -74,7 +69,6 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
         )
         binding.motionStartBtn.setOnClickListener(this)
     }
-
     private fun startChart() {
         if (selectIndex == null) {
             return
@@ -110,7 +104,6 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                         selectBean.endPosition
                                     )
                                 )
-
                                 else -> irMonitorLiteFragment!!.temperatureView.getRectTemp(
                                     selectBean.getRect()
                                 )
@@ -141,27 +134,22 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                             bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                             bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                             bean.createTime = System.currentTimeMillis()
-                            canUpdate = true // 可以开始更新记录
+                            canUpdate = true 
                         }
                     }
                 }
             }
-
         binding.monitorCurrentVol.text =
             getString(if (selectIndex!!.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
         binding.monitorRealVol.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
         binding.monitorRealImg.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
-        recordThermal() // 开始记录
+        recordThermal() 
     }
-
     private var showTask: Job? = null
-
     private var isRecord = false
-    private var timeMillis = 1000L // 间隔1s
+    private var timeMillis = 1000L 
     private var canUpdate = false
-
     private var recordJob: Job? = null
-
     private fun recordThermal() {
         recordJob =
             lifecycleScope.launch(Dispatchers.IO) {
@@ -206,16 +194,13 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                 XLog.w("停止记录, 数据量:$time")
             }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportFragmentManager.beginTransaction().add(R.id.thermal_fragment, irMonitorLiteFragment)
             .commit()
     }
-
     override fun initData() {
     }
-
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.motion_start_btn -> {
@@ -244,12 +229,10 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                 object :
                                     ViewTreeObserver.OnGlobalLayoutListener {
                                     override fun onGlobalLayout() {
-
                                         binding.thermalFragment.getViewTreeObserver()
                                             .removeOnGlobalLayoutListener(this)
                                         irMonitorLiteFragment?.restTempView()
                                         irMonitorLiteFragment?.addTempLine(selectIndex!!)
-
                                     }
                                 },
                             )
@@ -265,26 +248,21 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
             }
         }
     }
-
     fun select(selectIndex: SelectPositionBean?) {
         this.selectIndex = selectIndex
         XLog.i("绘制的点线面：${Gson().toJson(selectIndex)}")
     }
-
     private fun updateUI() {
         binding.motionStartBtn.visibility = View.VISIBLE
         binding.motionBtn.visibility = View.GONE
     }
-
     override fun disConnected() {
         super.disConnected()
         finish()
     }
-
     var config: DataBean? = null
     val basicGainGetValue = IntArray(1)
     var basicGainGetTime = 0L
-
     override fun tempCorrectByTs(temp: Float?): Float {
         var tempNew = temp
         try {
@@ -298,7 +276,6 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
             ) {
                 return temp!!
             }
-
             if (System.currentTimeMillis() - basicGainGetTime > 5000L) {
                 try {
                     val basicGainGet: IrcmdError? =
@@ -343,14 +320,12 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
             return tempNew ?: 0f
         }
     }
-
     override fun finish() {
         super.finish()
         if (isRecord) {
             EventBus.getDefault().post(MonitorSaveEvent())
         }
     }
-
     override fun onDestroy() {
         super.onDestroy()
         showTask?.cancel()

@@ -1,5 +1,4 @@
 package com.topdon.tc001.gsr
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import com.csl.irCamera.databinding.ItemGsrDataFileBinding
 import com.csl.irCamera.databinding.ItemGsrRawImageFileBinding
 import com.csl.irCamera.databinding.ItemGsrVideoFileBinding
 import java.io.File
-
 class GSRDataAdapter(
     private val dataFiles: List<GSRDataFragment.GSRDataFile>,
     private val onItemClick: (GSRDataFragment.GSRDataFile) -> Unit,
@@ -26,7 +24,6 @@ class GSRDataAdapter(
         val duration = binding.duration
         val createdDate = binding.createdDate
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -39,13 +36,11 @@ class GSRDataAdapter(
             )
         return ViewHolder(binding)
     }
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
     ) {
         val dataFile = dataFiles[position]
-
         holder.fileName.text = dataFile.file.name
         holder.sessionInfo.text =
             "Session: ${dataFile.sessionId} | Participant: ${dataFile.participantId}"
@@ -53,14 +48,11 @@ class GSRDataAdapter(
         holder.sampleCount.text = "${dataFile.sampleCount} samples"
         holder.duration.text = formatDuration(dataFile.duration)
         holder.createdDate.text = dataFile.createdDate
-
         holder.itemView.setOnClickListener {
             onItemClick(dataFile)
         }
     }
-
     override fun getItemCount() = dataFiles.size
-
     private fun formatFileSize(bytes: Long): String {
         return when {
             bytes >= 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
@@ -68,14 +60,12 @@ class GSRDataAdapter(
             else -> "$bytes B"
         }
     }
-
     private fun formatDuration(seconds: Long): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60
         return "%d:%02d".format(minutes, remainingSeconds)
     }
 }
-
 class GSRVideoAdapter(
     private val videoFiles: List<File>,
     private val onItemClick: (File) -> Unit,
@@ -89,7 +79,6 @@ class GSRVideoAdapter(
         val resolution = binding.resolution
         val createdDate = binding.createdDate
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -102,16 +91,13 @@ class GSRVideoAdapter(
             )
         return ViewHolder(binding)
     }
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
     ) {
         val videoFile = videoFiles[position]
-
         holder.fileName.text = videoFile.name
         holder.fileSize.text = formatFileSize(videoFile.length())
-
         val filename = videoFile.nameWithoutExtension
         when {
             filename.contains("4K") -> holder.resolution.text = "4K UHD (3840×2160)"
@@ -119,23 +105,17 @@ class GSRVideoAdapter(
             filename.contains("720") -> holder.resolution.text = "HD (1280×720)"
             else -> holder.resolution.text = "Unknown resolution"
         }
-
         holder.createdDate.text =
             java.text.SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss",
                 java.util.Locale.getDefault(),
             ).format(java.util.Date(videoFile.lastModified()))
-
-
         holder.duration.text = "Duration: Unknown"
-
         holder.itemView.setOnClickListener {
             onItemClick(videoFile)
         }
     }
-
     override fun getItemCount() = videoFiles.size
-
     private fun formatFileSize(bytes: Long): String {
         return when {
             bytes >= 1024 * 1024 * 1024 -> "%.1f GB".format(bytes / (1024.0 * 1024.0 * 1024.0))
@@ -145,7 +125,6 @@ class GSRVideoAdapter(
         }
     }
 }
-
 class GSRRawImageAdapter(
     private val rawImageFiles: List<File>,
     private val onItemClick: (File) -> Unit,
@@ -159,7 +138,6 @@ class GSRRawImageAdapter(
         val captureInfo = binding.captureInfo
         val createdDate = binding.createdDate
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -172,33 +150,26 @@ class GSRRawImageAdapter(
             )
         return ViewHolder(binding)
     }
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
     ) {
         val rawImageFile = rawImageFiles[position]
-
         holder.fileName.text = rawImageFile.name
         holder.fileSize.text = formatFileSize(rawImageFile.length())
-
         val filename = rawImageFile.nameWithoutExtension
-        holder.resolution.text = "4032×3024 (12MP)" // Samsung S22 sensor size
+        holder.resolution.text = "4032×3024 (12MP)" 
         holder.captureInfo.text = "DNG RAW • Level 3"
-
         holder.createdDate.text =
             java.text.SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss",
                 java.util.Locale.getDefault(),
             ).format(java.util.Date(rawImageFile.lastModified()))
-
         holder.itemView.setOnClickListener {
             onItemClick(rawImageFile)
         }
     }
-
     override fun getItemCount() = rawImageFiles.size
-
     private fun formatFileSize(bytes: Long): String {
         return when {
             bytes >= 1024 * 1024 -> "%.1f MB".format(bytes / (1024.0 * 1024.0))
@@ -207,7 +178,6 @@ class GSRRawImageAdapter(
         }
     }
 }
-
 class GSRSessionAdapter(
     private val sessions: List<GSRSessionFragment.GSRSessionInfo>,
     private val onItemClick: (GSRSessionFragment.GSRSessionInfo) -> Unit,
@@ -221,7 +191,6 @@ class GSRSessionAdapter(
         val duration: TextView = view.findViewById(R.id.duration)
         val startTime: TextView = view.findViewById(R.id.start_time)
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -231,38 +200,31 @@ class GSRSessionAdapter(
                 .inflate(R.layout.item_gsr_session, parent, false)
         return ViewHolder(view)
     }
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
     ) {
         val session = sessions[position]
-
         holder.sessionId.text = session.sessionId
         holder.participantInfo.text = "Participant: ${session.participantId}"
         holder.studyInfo.text = "Study: ${session.studyName}"
         holder.startTime.text = session.startTime
         holder.duration.text = formatDuration(session.duration)
-
         val fileCount = mutableListOf<String>()
         if (session.gsrDataFile != null) fileCount.add("GSR Data")
         if (session.videoFile != null) fileCount.add("Video")
         if (session.rawImageCount > 0) fileCount.add("${session.rawImageCount} RAW Images")
-
         holder.fileCount.text =
             if (fileCount.isEmpty()) {
                 "No files"
             } else {
                 fileCount.joinToString(" • ")
             }
-
         holder.itemView.setOnClickListener {
             onItemClick(session)
         }
     }
-
     override fun getItemCount() = sessions.size
-
     private fun formatDuration(seconds: Long): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60

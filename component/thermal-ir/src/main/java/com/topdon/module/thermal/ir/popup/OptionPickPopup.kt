@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.popup
-
 import android.content.Context
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -13,48 +12,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.view.MyTextView
 import com.topdon.module.thermal.ir.R
-
-/**
-
- *
- * Created by LCG on 2024/1/5.
- */
-
 class OptionPickPopup(
     private val context: Context,
     private val strArray: Array<String>,
     private val resIdArray: Array<Int>? = null,
 ) : PopupWindow() {
-
     private val recyclerView: RecyclerView by lazy { contentView.findViewById(R.id.recycler_view) }
-
     companion object {
-
         private const val TEXT_SIZE_SP: Float = 14f
-
         private const val TEXT_PADDING: Float = 7f
     }
-
     var onPickListener: ((position: Int, str: String) -> Unit)? = null
-
     init {
         val textView = TextView(context)
         textView.textSize = TEXT_SIZE_SP
-
         val fontMetrics = textView.paint.fontMetricsInt
-
         val canSeeItem: Int = strArray.size.coerceAtMost(2)
         val itemHeight: Int =
             fontMetrics.bottom - fontMetrics.top + SizeUtils.dp2px(TEXT_PADDING) * 2
         val contentHeight = SizeUtils.dp2px(14f) + itemHeight * canSeeItem
         val contentWidth = (contentHeight * 120f / 81f).toInt()
-
         contentView = LayoutInflater.from(context).inflate(R.layout.popup_option_pick, null)
         width = contentWidth
         height = contentHeight
-
         isOutsideTouchable = true
-
         val adapter = MyAdapter()
         adapter.onItemClickListener = {
             dismiss()
@@ -63,24 +44,21 @@ class OptionPickPopup(
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
-
     fun show(anchor: View) {
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)
-
         val x = locationArray[0] + anchor.width - width + SizeUtils.dp2px(5f)
-
         if (context.resources.displayMetrics.heightPixels - locationArray[1] - anchor.height > height - SizeUtils.dp2px(
                 5f
             )
-        ) { // 在 anchor 底部放得下
+        ) { 
             showAtLocation(
                 anchor,
                 Gravity.NO_GRAVITY,
                 x,
                 locationArray[1] + anchor.height - SizeUtils.dp2px(5f)
             )
-        } else { // 下面放不下就放上面吧
+        } else { 
             showAtLocation(
                 anchor,
                 Gravity.NO_GRAVITY,
@@ -89,11 +67,8 @@ class OptionPickPopup(
             )
         }
     }
-
     private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
-
         var onItemClickListener: ((position: Int) -> Unit)? = null
-
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
@@ -113,7 +88,6 @@ class OptionPickPopup(
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             return ViewHolder(textView)
         }
-
         override fun onBindViewHolder(
             holder: ViewHolder,
             position: Int,
@@ -125,9 +99,7 @@ class OptionPickPopup(
                 holder.textView.setOnlyDrawableStart(0)
             }
         }
-
         override fun getItemCount(): Int = strArray.size
-
         inner class ViewHolder(val textView: MyTextView) : RecyclerView.ViewHolder(textView) {
             init {
                 textView.setOnClickListener {

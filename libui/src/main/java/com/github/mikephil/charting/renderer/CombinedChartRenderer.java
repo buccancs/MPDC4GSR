@@ -1,8 +1,6 @@
 package com.github.mikephil.charting.renderer;
-
 import android.graphics.Canvas;
 import android.util.Log;
-
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -11,36 +9,25 @@ import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
 public class CombinedChartRenderer extends DataRenderer {
-
     protected List<DataRenderer> mRenderers = new ArrayList<DataRenderer>(5);
-
     protected WeakReference<Chart> mChart;
     protected List<Highlight> mHighlightBuffer = new ArrayList<Highlight>();
-
     public CombinedChartRenderer(CombinedChart chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
         mChart = new WeakReference<Chart>(chart);
         createRenderers();
     }
-
     public void createRenderers() {
-
         mRenderers.clear();
-
         CombinedChart chart = (CombinedChart) mChart.get();
         if (chart == null)
             return;
-
         DrawOrder[] orders = chart.getDrawOrder();
-
         for (DrawOrder order : orders) {
-
             switch (order) {
                 case BAR:
                     if (chart.getBarData() != null)
@@ -65,49 +52,36 @@ public class CombinedChartRenderer extends DataRenderer {
             }
         }
     }
-
     @Override
     public void initBuffers() {
-
         for (DataRenderer renderer : mRenderers)
             renderer.initBuffers();
     }
-
     @Override
     public void drawData(Canvas c) {
-
         for (DataRenderer renderer : mRenderers)
             renderer.drawData(c);
     }
-
     @Override
     public void drawValue(Canvas c, String valueText, float x, float y, int color) {
         Log.e("MPAndroidChart", "Erroneous call to drawValue() in CombinedChartRenderer!");
     }
-
     @Override
     public void drawValues(Canvas c) {
-
         for (DataRenderer renderer : mRenderers)
             renderer.drawValues(c);
     }
-
     @Override
     public void drawExtras(Canvas c) {
-
         for (DataRenderer renderer : mRenderers)
             renderer.drawExtras(c);
     }
-
     @Override
     public void drawHighlighted(Canvas c, Highlight[] indices) {
-
         Chart chart = mChart.get();
         if (chart == null) return;
-
         for (DataRenderer renderer : mRenderers) {
             ChartData data = null;
-
             if (renderer instanceof BarChartRenderer)
                 data = ((BarChartRenderer) renderer).mChart.getBarData();
             else if (renderer instanceof LineChartRenderer)
@@ -118,32 +92,25 @@ public class CombinedChartRenderer extends DataRenderer {
                 data = ((ScatterChartRenderer) renderer).mChart.getScatterData();
             else if (renderer instanceof BubbleChartRenderer)
                 data = ((BubbleChartRenderer) renderer).mChart.getBubbleData();
-
             int dataIndex = data == null ? -1
                     : ((CombinedData) chart.getData()).getAllData().indexOf(data);
-
             mHighlightBuffer.clear();
-
             for (Highlight h : indices) {
                 if (h.getDataIndex() == dataIndex || h.getDataIndex() == -1)
                     mHighlightBuffer.add(h);
             }
-
             renderer.drawHighlighted(c, mHighlightBuffer.toArray(new Highlight[mHighlightBuffer.size()]));
         }
     }
-
     public DataRenderer getSubRenderer(int index) {
         if (index >= mRenderers.size() || index < 0)
             return null;
         else
             return mRenderers.get(index);
     }
-
     public List<DataRenderer> getSubRenderers() {
         return mRenderers;
     }
-
     public void setSubRenderers(List<DataRenderer> renderers) {
         this.mRenderers = renderers;
     }

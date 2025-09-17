@@ -1,17 +1,12 @@
 package com.infisense.usbir.view;
-
 import android.view.MotionEvent;
 import android.view.View;
-
 public class DragViewUtil {
     public static void registerDragAction(View v) {
-
     }
-
     public static void registerDragAction(View v, long delay) {
         v.setOnTouchListener(new TouchListener(delay));
     }
-
     private static class TouchListener implements View.OnTouchListener {
         private float downX;
         private float downY;
@@ -19,19 +14,15 @@ public class DragViewUtil {
         private long delay;
         private boolean isMove;
         private boolean canDrag;
-
         private TouchListener() {
             this(0);
         }
-
         private TouchListener(long delay) {
             this.delay = delay;
         }
-
         private boolean haveDelay() {
             return delay > 0;
         }
-
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
@@ -63,7 +54,6 @@ public class DragViewUtil {
                         int r = (int) (l + v.getWidth());
                         int t = (int) (v.getTop() + yDistance);
                         int b = (int) (t + v.getHeight());
-
                         v.setLeft(l);
                         v.setTop(t);
                         v.setRight(r);
@@ -76,6 +66,5 @@ public class DragViewUtil {
             }
             return isMove;
         }
-
     }
 }

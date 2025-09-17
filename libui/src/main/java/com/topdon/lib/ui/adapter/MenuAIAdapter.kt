@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,11 +10,8 @@ import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.databinding.UiItemMenuSecondViewBinding
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
-
 @Deprecated("旧的high/low temperature源menu，已重构过了")
-
 class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.ItemView>() {
-
     var selectCode: Int = -1
         set(value) {
             if (field != value) {
@@ -23,9 +19,7 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
                 notifyDataSetChanged()
             }
         }
-
     var onTempSourceListener: ((code: Int) -> Unit)? = null
-
     private val secondBean =
         arrayListOf(
             ColorBean(
@@ -44,7 +38,6 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
                 ObserveBean.TYPE_TMP_L_S,
             ),
         )
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -53,7 +46,6 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
             UiItemMenuSecondViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemView(binding)
     }
-
     override fun onBindViewHolder(
         holder: ItemView,
         position: Int,
@@ -76,11 +68,9 @@ class MenuAIAdapter(val context: Context) : RecyclerView.Adapter<MenuAIAdapter.I
             )
         }
     }
-
     override fun getItemCount(): Int {
         return secondBean.size
     }
-
     inner class ItemView(val binding: UiItemMenuSecondViewBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

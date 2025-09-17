@@ -1,5 +1,4 @@
 package com.topdon.module.user.view;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,36 +6,28 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.topdon.module.user.bean.ColorsBean;
-
 import java.util.List;
-
 public class ProgressBarView extends View {
     private Paint paint;
     private int totalParts = 100;
     private List<ColorsBean> colorsBeanList;
-
     public ProgressBarView(Context context) {
         super(context);
         init();
     }
-
     public ProgressBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
     public ProgressBarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
-
     private void init() {
         paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
     }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -56,7 +47,6 @@ public class ProgressBarView extends View {
             }
         }
     }
-
     public void setSegmentPart(List<ColorsBean> colorsBeans) {
         this.colorsBeanList = colorsBeans;
         invalidate();

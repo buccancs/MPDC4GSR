@@ -1,17 +1,14 @@
 package com.topdon.module.thermal.ir.view;
-
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.HorizontalScrollView;
-
 public class DetectHorizontalScrollView extends HorizontalScrollView {
     private Runnable scrollerTask;
     private int intitPosition;
     private int newCheck = 100;
     private int childWidth = 0;
     private OnScrollStopListner onScrollstopListner;
-
     public DetectHorizontalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
         scrollerTask = new Runnable() {
@@ -39,17 +36,14 @@ public class DetectHorizontalScrollView extends HorizontalScrollView {
             }
         };
     }
-
     public void setOnScrollStopListner(OnScrollStopListner listner) {
         onScrollstopListner = listner;
     }
-
     public void startScrollerTask() {
         intitPosition = getScrollX();
         postDelayed(scrollerTask, newCheck);
         checkTotalWidth();
     }
-
     private void checkTotalWidth() {
         if (childWidth > 0) {
             return;
@@ -58,7 +52,6 @@ public class DetectHorizontalScrollView extends HorizontalScrollView {
             childWidth += getChildAt(i).getWidth();
         }
     }
-
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
@@ -66,17 +59,11 @@ public class DetectHorizontalScrollView extends HorizontalScrollView {
             onScrollstopListner.onScrollChanged(l, t, oldl, oldt);
         }
     }
-
     public interface OnScrollStopListner {
-
         void onScrollStoped();
-
         void onScrollToLeftEdge();
-
         void onScrollToRightEdge();
-
         void onScrollToMiddle();
-
         void onScrollChanged(int l, int t, int oldl, int oldt);
     }
 }

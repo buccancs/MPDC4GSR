@@ -1,5 +1,4 @@
 package com.example.thermal_lite.activity
-
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
@@ -15,25 +14,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-
-/**
- *
-
- * @author: CaiSongL
- * @date: 2023/8/4 9:06
- */
-
 class IRCorrectionLiteFourActivity : BaseActivity() {
     private lateinit var binding: ActivityIrCorrectionLiteFourBinding
     val time = 60
     var result = false
-
     override fun initContentView(): Int = R.layout.activity_ir_correction_lite_four
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Handle back press with modern approach
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 TipDialog.Builder(this@IRCorrectionLiteFourActivity)
@@ -47,7 +34,6 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
                     .create().show()
             }
         })
-
         binding.titleView.setLeftClickListener {
             TipDialog.Builder(this)
                 .setTitleMessage(getString(R.string.app_tip))
@@ -59,7 +45,6 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
                 }
                 .create().show()
         }
-
         val irFragment =
             if (savedInstanceState == null) {
                 IRMonitorLiteFragment()
@@ -75,9 +60,7 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
                     .commit()
             }
         }
-
         binding.timeDownView.postDelayed({
-
             if (binding.timeDownView.downTimeWatcher == null) {
                 binding.timeDownView.setOnTimeDownListener(
                     object : TimeDownView.DownTimeWatcher {
@@ -88,10 +71,8 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
                                 }
                             }
                         }
-
                         override fun onLastTime(num: Int) {
                         }
-
                         override fun onLastTimeFinish(num: Int) {
                             try {
                                 if (!result) {
@@ -116,29 +97,23 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
             binding.timeDownView.downSecond(time, false)
         }, 2000)
     }
-
     override fun initView() {
         binding = ActivityIrCorrectionLiteFourBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
-
-
     override fun disConnected() {
         super.disConnected()
         binding.timeDownView.cancel()
         EventBus.getDefault().post(CorrectionFinishEvent())
         finish()
     }
-
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().post(CorrectionFinishEvent())
         finish()
     }
-
     override fun initData() {
     }
-
     override fun onDestroy() {
         super.onDestroy()
         binding.timeDownView.cancel()

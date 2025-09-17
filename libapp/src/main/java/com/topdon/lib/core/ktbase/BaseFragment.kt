@@ -1,5 +1,4 @@
 package com.topdon.lib.core.ktbase
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,19 +12,11 @@ import com.topdon.lib.core.dialog.LoadingDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-
-/**
- * create by fylder on 2018/7/13
- **/
 abstract class BaseFragment : Fragment() {
     val TAG = BaseFragment::class.java.simpleName
-
     abstract fun initContentView(): Int
-
     abstract fun initView()
-
     abstract fun initData()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,7 +24,6 @@ abstract class BaseFragment : Fragment() {
     ): View? {
         return inflater.inflate(initContentView(), container, false)
     }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -42,24 +32,18 @@ abstract class BaseFragment : Fragment() {
         EventBus.getDefault().register(this)
         initView()
     }
-
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (hidden) {
-
-        } else { // 在最前端显示 相当于调用了onResume();
-
+        } else { 
             initData()
         }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         EventBus.getDefault().unregister(this)
     }
-
     private var loadingDialog: LoadingDialog? = null
-
     fun showLoadingDialog(
         @StringRes resId: Int = 0,
     ) {
@@ -69,7 +53,6 @@ abstract class BaseFragment : Fragment() {
         loadingDialog?.setTips(if (resId == 0) R.string.tip_loading else resId)
         loadingDialog?.show()
     }
-
     fun showLoadingDialog(text: CharSequence) {
         if (loadingDialog == null) {
             loadingDialog = LoadingDialog(requireContext())
@@ -77,11 +60,9 @@ abstract class BaseFragment : Fragment() {
         loadingDialog?.setTips(text)
         loadingDialog?.show()
     }
-
     fun dismissLoadingDialog() {
         loadingDialog?.dismiss()
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getConnectState(event: DeviceConnectEvent) {
         if (event.isConnect) {
@@ -90,13 +71,10 @@ abstract class BaseFragment : Fragment() {
             disConnected()
         }
     }
-
     protected open fun connected() {
     }
-
     protected open fun disConnected() {
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketConnectState(event: SocketStateEvent) {
         if (event.isConnect) {
@@ -105,10 +83,8 @@ abstract class BaseFragment : Fragment() {
             onSocketDisConnected(event.isTS004)
         }
     }
-
     protected open fun onSocketConnected(isTS004: Boolean) {
     }
-
     protected open fun onSocketDisConnected(isTS004: Boolean) {
     }
 }

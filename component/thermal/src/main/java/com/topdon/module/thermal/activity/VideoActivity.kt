@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.activity
-
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -12,36 +11,27 @@ import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.module.thermal.R
 import java.io.File
 import com.topdon.lib.core.R as LibR
-
-
 class VideoActivity : BaseActivity() {
     companion object {
         const val KEY_PATH = "video_path"
     }
-
     var videoPath = ""
-
     override fun initContentView() = R.layout.activity_video
-
     override fun initView() {
-
         val toolbar =
             findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.video)
-
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, LibR.color.black))
         if (intent.hasExtra(KEY_PATH)) {
             videoPath = intent.getStringExtra(KEY_PATH)!!
         }
         previewVideo(videoPath)
     }
-
     override fun initData() {
     }
-
     private fun previewVideo(path: String) {
         Log.w("123", "打开文件:$path")
-        val file = File(path.replace("//", "/"))
+        val file = File(path.replace("
         Log.i("123", "打开文件file:$file")
         val uri: Uri =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

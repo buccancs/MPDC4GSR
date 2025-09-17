@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.report.activity
-
 import android.view.View
 import android.widget.ImageView
 import android.widget.ScrollView
@@ -28,22 +27,7 @@ import com.topdon.module.thermal.ir.report.view.ReportIRInputView
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-
-/**
-
- *
-
-
-
-
-
-
-
- */
-
-
 class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
-
     private val tvAddImage: TextView by lazy { findViewById(R.id.tv_add_image) }
     private val tvPreview: TextView by lazy { findViewById(R.id.tv_preview) }
     private val scrollView: ScrollView by lazy { findViewById(R.id.scroll_view) }
@@ -64,38 +48,26 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
     private val reportTempViewRect3: ReportIRInputView by lazy { findViewById(R.id.report_temp_view_rect3) }
     private val reportTempViewRect4: ReportIRInputView by lazy { findViewById(R.id.report_temp_view_rect4) }
     private val reportTempViewRect5: ReportIRInputView by lazy { findViewById(R.id.report_temp_view_rect5) }
-
     private var reportIRList: ArrayList<ReportIRBean> = ArrayList(0)
-
     private var currentFilePath: String = ""
-
     private var imageTempBean: ImageTempBean? = null
-
     override fun initContentView() = R.layout.activity_report_create_second
-
     override fun initView() {
-
-
         currentFilePath = intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH)!!
         imageTempBean = intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
         reportIRList =
             intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST) ?: ArrayList(10)
-
         refreshImg(currentFilePath)
         refreshData(imageTempBean)
-
         tvAddImage.setOnClickListener(this)
         tvPreview.setOnClickListener(this)
     }
-
     override fun initData() {
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReportCreate(event: ReportCreateEvent) {
         finish()
     }
-
     private fun refreshImg(absolutePath: String?) {
         lifecycleScope.launch {
             val drawable = GlideLoader.getDrawable(this@ReportCreateSecondActivity, absolutePath)
@@ -111,13 +83,10 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
             ivImage.setImageDrawable(drawable)
         }
     }
-
     private fun refreshData(imageTempBean: ImageTempBean?) {
         scrollView.scrollTo(0, 0)
-
         reportTempViewFull.isVisible = imageTempBean?.full != null
         reportTempViewFull.refreshData(imageTempBean?.full)
-
         reportTempViewPoint1.isVisible = (imageTempBean?.pointList?.size ?: 0) > 0
         if ((imageTempBean?.pointList?.size ?: 0) > 0) {
             reportTempViewPoint1.refreshData(imageTempBean?.pointList?.get(0))
@@ -138,7 +107,6 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         if ((imageTempBean?.pointList?.size ?: 0) > 4) {
             reportTempViewPoint5.refreshData(imageTempBean?.pointList?.get(4))
         }
-
         reportTempViewLine1.isVisible = (imageTempBean?.lineList?.size ?: 0) > 0
         if ((imageTempBean?.lineList?.size ?: 0) > 0) {
             reportTempViewLine1.refreshData(imageTempBean?.lineList?.get(0))
@@ -159,7 +127,6 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         if ((imageTempBean?.lineList?.size ?: 0) > 4) {
             reportTempViewLine5.refreshData(imageTempBean?.lineList?.get(4))
         }
-
         reportTempViewRect1.isVisible = (imageTempBean?.rectList?.size ?: 0) > 0
         if ((imageTempBean?.rectList?.size ?: 0) > 0) {
             reportTempViewRect1.refreshData(imageTempBean?.rectList?.get(0))
@@ -181,10 +148,9 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
             reportTempViewRect5.refreshData(imageTempBean?.rectList?.get(4))
         }
     }
-
     override fun onClick(v: View?) {
         when (v) {
-            tvAddImage -> { // 添加图片
+            tvAddImage -> { 
                 if (reportIRList.size >= 9) {
                     ToastUtils.showShort(R.string.album_report_max_image_tips)
                     return
@@ -208,8 +174,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                         .navigation(this)
                 }
             }
-
-            tvPreview -> { // 预览
+            tvPreview -> { 
                 val appLanguage = ConstantLanguages.ENGLISH
                 val sdkVersion = "1.2.8_23050619"
                 val reportInfoBean: ReportInfoBean? =
@@ -234,7 +199,6 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
     private fun buildReportIr(filePath: String): ReportIRBean {
         val full: ReportTempBean? =
             if (imageTempBean?.full != null) {
@@ -259,17 +223,11 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
             } else {
                 null
             }
-
         val pointList = buildReportTempBeanList(1)
         val lienList = buildReportTempBeanList(2)
         val rectList = buildReportTempBeanList(3)
         return ReportIRBean("", filePath, full, pointList, lienList, rectList)
     }
-
-    /**
-
-
-     */
     private fun buildReportTempBeanList(type: Int): ArrayList<ReportTempBean> {
         val size =
             when (type) {
@@ -281,7 +239,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         for (i in 0 until size) {
             val reportTempView =
                 when (type) {
-                    1 -> { // 点
+                    1 -> { 
                         when (i) {
                             0 -> reportTempViewPoint1
                             1 -> reportTempViewPoint2
@@ -290,8 +248,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                             else -> reportTempViewPoint5
                         }
                     }
-
-                    2 -> { // 线
+                    2 -> { 
                         when (i) {
                             0 -> reportTempViewLine1
                             1 -> reportTempViewLine2
@@ -300,8 +257,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                             else -> reportTempViewLine5
                         }
                     }
-
-                    else -> { // 面
+                    else -> { 
                         when (i) {
                             0 -> reportTempViewRect1
                             1 -> reportTempViewRect2
@@ -310,7 +266,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             val reportTempBean =
-                if (type == 1) { // 点的数据封装不太一样
+                if (type == 1) { 
                     ReportTempBean(
                         if ((reportTempView as? ReportIRInputView)?.getMaxInput()
                                 ?.isNotEmpty() == true

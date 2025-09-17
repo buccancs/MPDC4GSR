@@ -1,5 +1,4 @@
 package com.topdon.lib.core.utils
-
 object Constants {
     const val PRODUCT_TYPE_NAME = "product_type"
     const val PRODUCT_TS001_NAME = "TS001"
@@ -12,10 +11,9 @@ object Constants {
     const val SETTING_DISCONNECTION = 1
     const val IR_TEMPERATURE_MODE = 1
     const val IR_OBSERVE_MODE = 2
-    const val IR_EDIT_MODE = 4 // 二次编辑模式
-    const val IR_TCPLUS_MODE = 5 // dual light设备
-    const val IR_TC007_MODE = 6 // TC007设备
-    const val IR_TEMPERATURE_LITE = 7 // lite设备
-
+    const val IR_EDIT_MODE = 4 
+    const val IR_TCPLUS_MODE = 5 
+    const val IR_TC007_MODE = 6 
+    const val IR_TEMPERATURE_LITE = 7 
     const val IS_REPORT_FIRST = "IS_REPORT_FIRST"
 }

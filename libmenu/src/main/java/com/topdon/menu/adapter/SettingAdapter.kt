@@ -1,5 +1,4 @@
 package com.topdon.menu.adapter
-
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -7,15 +6,12 @@ import com.topdon.lib.core.R
 import com.topdon.menu.constant.MenuType
 import com.topdon.menu.constant.SettingType
 import com.topdon.menu.R as MenuR
-
 @SuppressLint("NotifyDataSetChanged")
 internal class SettingAdapter(
     menuType: MenuType = MenuType.SINGLE_LIGHT,
     isObserver: Boolean = false
 ) : BaseMenuAdapter() {
-
     var onSettingListener: ((settingType: SettingType, isSelected: Boolean) -> Unit)? = null
-
     var rotateAngle: Int = 270
         set(value) {
             if (field != value) {
@@ -23,7 +19,6 @@ internal class SettingAdapter(
                 setSelected(SettingType.ROTATE, value != 270)
             }
         }
-
     fun setSelected(
         settingType: SettingType,
         isSelected: Boolean,
@@ -36,9 +31,7 @@ internal class SettingAdapter(
             }
         }
     }
-
     private val dataList: ArrayList<Data> = ArrayList(7)
-
     init {
         if (isObserver) {
             dataList.add(
@@ -70,7 +63,7 @@ internal class SettingAdapter(
                 )
             )
         } else {
-            if (menuType == MenuType.GALLERY_EDIT) { // 2D编辑
+            if (menuType == MenuType.GALLERY_EDIT) { 
                 dataList.add(
                     Data(
                         R.string.temp_alarm_alarm,
@@ -107,7 +100,7 @@ internal class SettingAdapter(
                         SettingType.CONTRAST
                     )
                 )
-                if (menuType != MenuType.Lite) { // Lite 没有细节(锐度)
+                if (menuType != MenuType.Lite) { 
                     dataList.add(
                         Data(
                             R.string.thermal_sharpen,
@@ -123,7 +116,7 @@ internal class SettingAdapter(
                         SettingType.ALARM
                     )
                 )
-                if (menuType != MenuType.TC007) { // TC007 没有旋转
+                if (menuType != MenuType.TC007) { 
                     dataList.add(
                         Data(
                             R.string.thermal_rotate,
@@ -139,7 +132,7 @@ internal class SettingAdapter(
                         SettingType.FONT
                     )
                 )
-                if (menuType != MenuType.DOUBLE_LIGHT) { // TC001 Plus 没有镜像
+                if (menuType != MenuType.DOUBLE_LIGHT) { 
                     dataList.add(
                         Data(
                             R.string.mirror,
@@ -151,7 +144,6 @@ internal class SettingAdapter(
             }
         }
     }
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -171,14 +163,10 @@ internal class SettingAdapter(
         }
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
-
-
             onSettingListener?.invoke(data.settingType, data.isSelected)
         }
     }
-
     override fun getItemCount(): Int = dataList.size
-
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes val drawableId: Int,

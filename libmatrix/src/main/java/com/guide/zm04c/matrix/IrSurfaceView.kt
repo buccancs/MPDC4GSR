@@ -1,56 +1,43 @@
 package com.guide.zm04c.matrix
-
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.blankj.utilcode.util.ScreenUtils
-
 class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
-    private var mHolder: SurfaceHolder? = null // 用于控制SurfaceView
-    private var mCanvas: Canvas? = null // 声明一张画布
-    private val p: Paint by lazy { Paint() } // 声明一支画笔
+    private var mHolder: SurfaceHolder? = null 
+    private var mCanvas: Canvas? = null 
+    private val p: Paint by lazy { Paint() } 
     private val mMatrix: Matrix by lazy { Matrix() }
     private var openLut = false
-
     private val mBeforeRotateMatrixValues = FloatArray(9)
     private val mScaleMatrixValues = FloatArray(9)
     private val mRotateMatrixValues = FloatArray(9)
-
     @Volatile
     private var isPrepare = false
-
     @Volatile
     private var isLockImage = false
-
     private var callback: IfrCamOpenOverCallback? = null
-
     private var mCtx: Context? = null
-
     constructor(context: Context) : super(context) {
         mCtx = context
         init()
     }
-
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         mCtx = context
         init()
     }
-
     private fun init() {
-        mHolder = holder // 获得SurfaceHolder对象
-        mHolder?.addCallback(this) // 为SurfaceView添加状态监听
+        mHolder = holder 
+        mHolder?.addCallback(this) 
         mHolder?.setFormat(PixelFormat.TRANSPARENT)
         p.alpha = 0xff
         mMatrix.setScale(1.0f, 1.0f)
     }
-
     fun setIsLockImage(isLock: Boolean) {
         isLockImage = isLock
     }
-
-
     fun setMatrix(
         rotate: Float,
         w: Float,
@@ -64,29 +51,24 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 mMatrix.postTranslate(h, 0f)
                 mMatrix.postScale(sca, sca)
             }
-
             180f -> {
                 val sca = ScreenUtils.getScreenWidth() / w
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(w, h)
                 mMatrix.postScale(sca, sca)
             }
-
             270f -> {
-
                 val sca = ScreenUtils.getScreenWidth() / h
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(0f, w)
                 mMatrix.postScale(sca, sca)
             }
-
             else -> {
                 val sca = ScreenUtils.getScreenWidth() / w
                 mMatrix.postScale(sca, sca)
             }
         }
     }
-
     fun doDraw(
         bitmap: Bitmap?,
         shutterFlag: Int,
@@ -95,17 +77,14 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             if (isLockImage || !isPrepare || null == bitmap || shutterFlag == 1) {
                 return@doDraw
             }
-
-            mCanvas = mHolder?.lockCanvas() // 获得画布对象，开始对画布画图
-
+            mCanvas = mHolder?.lockCanvas() 
             try {
                 mCanvas?.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-
                 if (openLut) {
-                    mColorMatrixEnhance.setSaturation(saturation * 0.01f * 2.5f + 1f) // 对比度
-                    p.colorFilter = ColorMatrixColorFilter(mColorMatrixEnhance) // 修改色彩矩阵
+                    mColorMatrixEnhance.setSaturation(saturation * 0.01f * 2.5f + 1f) 
+                    p.colorFilter = ColorMatrixColorFilter(mColorMatrixEnhance) 
                 } else {
-                    p.colorFilter = ColorMatrixColorFilter(mColorMatrix) // 恢复色彩矩阵
+                    p.colorFilter = ColorMatrixColorFilter(mColorMatrix) 
                 }
                 mCanvas?.drawBitmap(bitmap, mMatrix, p)
             } catch (e: Exception) {
@@ -114,7 +93,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 val surface = mHolder!!.surface
                 if (mCanvas != null && mHolder != null && surface != null && surface.isValid) {
                     try {
-                        mHolder?.unlockCanvasAndPost(mCanvas) // 完成画画，把画布显示在屏幕上
+                        mHolder?.unlockCanvasAndPost(mCanvas) 
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -122,7 +101,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             }
         }
     }
-
     private var mColorMatrix =
         ColorMatrix(
             floatArrayOf(
@@ -132,7 +110,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 0f, 0f, 0f, 01f, 0f,
             ),
         )
-
     private var mColorMatrixLut =
         ColorMatrix(
             floatArrayOf(
@@ -143,11 +120,8 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             ),
         )
     private val n = 1f
-
     private var mColorMatrixEnhance =
         ColorMatrix(
-
-
             floatArrayOf(
                 1f, 0f, 0f, 0f, 0f,
                 0f, 1f, 0f, 0f, 0f,
@@ -155,28 +129,21 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 0f, 0f, 0f, 1f, 0f,
             ),
         )
-
-    private var saturation = 0 // 对比度 0~100
-
+    private var saturation = 0 
     fun setOpenLut() {
-
         openLut = true
     }
-
     fun setSaturationValue(saturation: Int) {
         this.saturation = saturation
     }
-
     fun getSaturationValue(): Int {
         return saturation
     }
-
     fun setAlpha(alpha: Int) {
         if (alpha in 0..255) {
             p?.alpha = alpha
         }
     }
-
     override fun surfaceCreated(holder: SurfaceHolder) {
         isPrepare = true
         if (callback != null) {
@@ -184,7 +151,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
         Logger.d(TAG, "holder onSurfaceCreated")
     }
-
     override fun surfaceChanged(
         holder: SurfaceHolder,
         format: Int,
@@ -193,18 +159,15 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
     ) {
         Logger.d(TAG, "holder surfaceChanged")
     }
-
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         synchronized(this) {
             isPrepare = false
             Logger.d(TAG, "holder destroyed")
         }
     }
-
     companion object {
         private val TAG = "IrSurfaceView"
     }
-
     interface IfrCamOpenOverCallback {
         fun onSurfaceCreated()
     }

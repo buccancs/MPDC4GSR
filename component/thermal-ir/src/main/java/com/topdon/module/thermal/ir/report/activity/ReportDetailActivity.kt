@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.report.activity
-
 import android.content.Intent
 import android.text.TextUtils
 import android.view.View
@@ -24,39 +23,22 @@ import kotlinx.coroutines.launch
 import java.io.File
 import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
-
-/**
-
- *
-
-
- */
-
-
 class ReportDetailActivity : BaseActivity() {
-
     private lateinit var titleView: TitleView
     private lateinit var scrollView: ScrollView
     private lateinit var reportInfoView: ReportInfoView
     private lateinit var llContent: LinearLayout
     private lateinit var watermarkView: WatermarkView
-
     private var reportBean: ReportBean? = null
-
     private var pdfFilePath: String? = null
-
     override fun initContentView() = R.layout.activity_report_detail
-
     override fun initView() {
-
         titleView = findViewById(R.id.title_view)
         scrollView = findViewById(R.id.scroll_view)
         reportInfoView = findViewById(R.id.report_info_view)
         llContent = findViewById(R.id.ll_content)
         watermarkView = findViewById(R.id.watermark_view)
-
         reportBean = intent.getParcelableExtra(ExtraKeyConfig.REPORT_BEAN)
-
         titleView.setTitleText(R.string.album_edit_report)
         titleView.setLeftDrawable(UiR.drawable.svg_arrow_left_e8)
         titleView.setRightDrawable(R.drawable.ic_share_black_svg)
@@ -66,14 +48,11 @@ class ReportDetailActivity : BaseActivity() {
         titleView.setRightClickListener {
             saveWithPDF()
         }
-
         reportInfoView.refreshInfo(reportBean?.report_info)
         reportInfoView.refreshCondition(reportBean?.detection_condition)
-
         if (reportBean?.report_info?.is_report_watermark == 1) {
             watermarkView.watermarkText = reportBean?.report_info?.report_watermark
         }
-
         val irList = reportBean?.infrared_data
         if (irList != null) {
             for (i in irList.indices) {
@@ -92,10 +71,8 @@ class ReportDetailActivity : BaseActivity() {
             }
         }
     }
-
     override fun initData() {
     }
-
     private fun saveWithPDF() {
         if (TextUtils.isEmpty(pdfFilePath)) {
             showCameraLoading()
@@ -126,7 +103,6 @@ class ReportDetailActivity : BaseActivity() {
             actionShare()
         }
     }
-
     private fun actionShare() {
         val uri = FileTools.getUri(File(pdfFilePath!!))
         val shareIntent = Intent()
@@ -135,11 +111,6 @@ class ReportDetailActivity : BaseActivity() {
         shareIntent.type = "application/pdf"
         startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
-
-    /**
-
-
-     */
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(reportInfoView)

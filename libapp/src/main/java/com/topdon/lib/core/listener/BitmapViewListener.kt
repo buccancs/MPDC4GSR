@@ -1,5 +1,4 @@
 package com.topdon.lib.core.listener
-
 public interface BitmapViewListener {
     val viewX: Float
     val viewY: Float

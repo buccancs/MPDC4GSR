@@ -1,8 +1,6 @@
 package com.topdon.lib.core.view
-
 import android.content.Context
 import android.util.AttributeSet
-
 class MainTitleView
 @JvmOverloads
 constructor(

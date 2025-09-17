@@ -1,13 +1,9 @@
 package com.github.mikephil.charting.animation;
-
 import android.animation.TimeInterpolator;
-
 import androidx.annotation.RequiresApi;
-
 @SuppressWarnings("WeakerAccess")
 @RequiresApi(11)
 public class Easing {
-
     @SuppressWarnings("unused")
     public static final EasingFunction Linear = new EasingFunction() {
         public float getInterpolation(float input) {
@@ -30,11 +26,9 @@ public class Easing {
     public static final EasingFunction EaseInOutQuad = new EasingFunction() {
         public float getInterpolation(float input) {
             input *= 2f;
-
             if (input < 1f) {
                 return 0.5f * input * input;
             }
-
             return -0.5f * ((--input) * (input - 2f) - 1f);
         }
     };
@@ -64,7 +58,6 @@ public class Easing {
     };
     @SuppressWarnings("unused")
     public static final EasingFunction EaseInQuart = new EasingFunction() {
-
         public float getInterpolation(float input) {
             return (float) Math.pow(input, 4);
         }
@@ -125,7 +118,6 @@ public class Easing {
             } else if (input == 1f) {
                 return 1f;
             }
-
             input *= 2f;
             if (input < 1f) {
                 return 0.5f * (float) Math.pow(2f, 10f * (input - 1f));
@@ -220,7 +212,6 @@ public class Easing {
             } else if (input == 1) {
                 return 1f;
             }
-
             float p = 0.3f;
             float s = p / DOUBLE_PI * (float) Math.asin(1f);
             return -((float) Math.pow(2f, 10f * (input -= 1f))
@@ -235,7 +226,6 @@ public class Easing {
             } else if (input == 1) {
                 return 1f;
             }
-
             float p = 0.3f;
             float s = p / DOUBLE_PI * (float) Math.asin(1f);
             return 1f
@@ -249,12 +239,10 @@ public class Easing {
             if (input == 0) {
                 return 0f;
             }
-
             input *= 2f;
             if (input == 2) {
                 return 1f;
             }
-
             float p = 1f / 0.45f;
             float s = 0.45f / DOUBLE_PI * (float) Math.asin(1f);
             if (input < 1f) {
@@ -267,10 +255,8 @@ public class Easing {
                     * (float) Math.sin((input * 1f - s) * DOUBLE_PI * p);
         }
     };
-
     public interface EasingFunction extends TimeInterpolator {
         @Override
         float getInterpolation(float input);
     }
-
 }

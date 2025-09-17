@@ -1,26 +1,20 @@
 package com.jaygoo.widget;
-
 import static com.jaygoo.widget.VerticalRangeSeekBar.DIRECTION_LEFT;
 import static com.jaygoo.widget.VerticalRangeSeekBar.DIRECTION_RIGHT;
 import static com.jaygoo.widget.VerticalRangeSeekBar.TEXT_DIRECTION_VERTICAL;
-
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-
 public class VerticalSeekBar extends SeekBar {
-
     VerticalRangeSeekBar verticalSeekBar;
     private int indicatorTextOrientation;
-
     public VerticalSeekBar(DefRangeSeekBar defRangeSeekBar, AttributeSet attrs, boolean isLeft) {
         super(defRangeSeekBar, attrs, isLeft);
         initAttrs(attrs);
         verticalSeekBar = (VerticalRangeSeekBar) defRangeSeekBar;
     }
-
     private void initAttrs(AttributeSet attrs) {
         try {
             TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.VerticalRangeSeekBar);
@@ -30,43 +24,33 @@ public class VerticalSeekBar extends SeekBar {
             e.printStackTrace();
         }
     }
-
     @Override
     protected void onDrawIndicator(Canvas canvas, Paint paint, String text2Draw) {
         if (text2Draw == null) return;
-
         if (indicatorTextOrientation == TEXT_DIRECTION_VERTICAL) {
             drawVerticalIndicator(canvas, paint, text2Draw);
         } else {
             super.onDrawIndicator(canvas, paint, text2Draw);
         }
     }
-
     protected void drawVerticalIndicator(Canvas canvas, Paint paint, String text2Draw) {
-
         paint.setTextSize(getIndicatorTextSize());
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(getIndicatorBackgroundColor());
         paint.getTextBounds(text2Draw, 0, text2Draw.length(), indicatorTextRect);
-
         int realIndicatorWidth = indicatorTextRect.height() + getIndicatorPaddingLeft() + getIndicatorPaddingRight();
         if (getIndicatorWidth() > realIndicatorWidth) {
             realIndicatorWidth = getIndicatorWidth();
         }
-
         int realIndicatorHeight = indicatorTextRect.width() + getIndicatorPaddingTop() + getIndicatorPaddingBottom();
         if (getIndicatorHeight() > realIndicatorHeight) {
             realIndicatorHeight = getIndicatorHeight();
         }
-
         indicatorRect.left = scaleThumbWidth / 2 - realIndicatorWidth / 2;
         indicatorRect.top = bottom - realIndicatorHeight - scaleThumbHeight - getIndicatorMargin();
         indicatorRect.right = indicatorRect.left + realIndicatorWidth;
         indicatorRect.bottom = indicatorRect.top + realIndicatorHeight;
-
         if (indicatorBitmap == null) {
-
-
             int ax = scaleThumbWidth / 2;
             int ay = indicatorRect.bottom;
             int bx = ax - getIndicatorArrowSize();
@@ -81,7 +65,6 @@ public class VerticalSeekBar extends SeekBar {
             indicatorRect.bottom -= getIndicatorArrowSize();
             indicatorRect.top -= getIndicatorArrowSize();
         }
-
         int defaultPaddingOffset = Utils.dp2px(getContext(), 1);
         int leftOffset = indicatorRect.width() / 2 - (int) (defRangeSeekBar.getProgressWidth() * currPercent) - defRangeSeekBar.getProgressLeft() + defaultPaddingOffset;
         int rightOffset = indicatorRect.width() / 2 - (int) (defRangeSeekBar.getProgressWidth() * (1 - currPercent)) - defRangeSeekBar.getProgressPaddingRight() + defaultPaddingOffset;
@@ -92,7 +75,6 @@ public class VerticalSeekBar extends SeekBar {
             indicatorRect.left -= rightOffset;
             indicatorRect.right -= rightOffset;
         }
-
         if (indicatorBitmap != null) {
             Utils.drawBitmap(canvas, paint, indicatorBitmap, indicatorRect);
         } else if (getIndicatorRadius() > 0f) {
@@ -100,16 +82,12 @@ public class VerticalSeekBar extends SeekBar {
         } else {
             canvas.drawRect(indicatorRect, paint);
         }
-
         int tx = indicatorRect.left + (indicatorRect.width() - indicatorTextRect.width()) / 2 + getIndicatorPaddingLeft() - getIndicatorPaddingRight();
         int ty = indicatorRect.bottom - (indicatorRect.height() - indicatorTextRect.height()) / 2 + getIndicatorPaddingTop() - getIndicatorPaddingBottom();
-
         paint.setColor(getIndicatorTextColor());
-
         int degrees = 0;
         float rotateX = (tx + indicatorTextRect.width() / 2f);
         float rotateY = (ty - indicatorTextRect.height() / 2f);
-
         if (indicatorTextOrientation == TEXT_DIRECTION_VERTICAL) {
             if (verticalSeekBar.getOrientation() == DIRECTION_LEFT) {
                 degrees = 90;
@@ -125,11 +103,9 @@ public class VerticalSeekBar extends SeekBar {
             canvas.rotate(-degrees, rotateX, rotateY);
         }
     }
-
     public int getIndicatorTextOrientation() {
         return indicatorTextOrientation;
     }
-
     public void setIndicatorTextOrientation(@VerticalRangeSeekBar.TextDirectionDef int orientation) {
         this.indicatorTextOrientation = orientation;
     }

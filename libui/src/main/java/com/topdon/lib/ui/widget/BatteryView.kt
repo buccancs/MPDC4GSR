@@ -1,34 +1,25 @@
 package com.topdon.lib.ui.widget
-
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
-
-
 class BatteryView : AppCompatImageView {
-
     var battery = -1
         set(value) {
             field = value
             invalidate()
         }
-
     var isCharging = false
         set(value) {
             field = value
             invalidate()
         }
-
     private val paint = Paint()
     private val path = Path()
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -36,7 +27,6 @@ class BatteryView : AppCompatImageView {
     ) {
         paint.isAntiAlias = true
     }
-
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -54,21 +44,18 @@ class BatteryView : AppCompatImageView {
                         wantWidth.coerceAtMost(widthSize),
                         heightSize
                     )
-
                     else -> setMeasuredDimension(wantWidth, heightSize)
                 }
             }
-
             MeasureSpec.AT_MOST -> {
                 when (widthMode) {
                     MeasureSpec.EXACTLY -> setMeasuredDimension(
                         widthSize,
                         (widthSize * 30 / 58f).toInt().coerceAtMost(heightSize)
                     )
-
                     MeasureSpec.AT_MOST -> {
                         if (widthSize < 58) {
-                            if (heightSize < 30) { // 宽✘ 高✘
+                            if (heightSize < 30) { 
                                 if ((widthSize * 30 / 58f).toInt() <= heightSize) {
                                     setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                                 } else {
@@ -77,49 +64,42 @@ class BatteryView : AppCompatImageView {
                                         heightSize
                                     )
                                 }
-                            } else { // 宽✘ 高✔
+                            } else { 
                                 setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                             }
                         } else {
-                            if (heightSize < 30) { // 宽✔ 高✘
+                            if (heightSize < 30) { 
                                 setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
-                            } else { // 宽✔ 高✔
+                            } else { 
                                 setMeasuredDimension(58, 30)
                             }
                         }
                     }
-
                     else -> setMeasuredDimension(
                         (widthSize * 30.coerceAtMost(heightSize) / 58f).toInt(),
                         30.coerceAtMost(heightSize)
                     )
                 }
             }
-
             else -> {
                 when (widthMode) {
                     MeasureSpec.EXACTLY -> setMeasuredDimension(
                         widthSize,
                         (widthSize * 30 / 58f).toInt()
                     )
-
                     MeasureSpec.AT_MOST -> setMeasuredDimension(
                         58.coerceAtMost(widthSize),
                         (58.coerceAtMost(widthSize) * 30 / 58f).toInt()
                     )
-
                     else -> setMeasuredDimension(58, 30)
                 }
             }
         }
-
         drawWidth =
             if ((measuredWidth * 30 / 58f).toInt() <= measuredHeight) measuredWidth else (measuredHeight * 58 / 30f).toInt()
         drawHeight =
             if ((measuredWidth * 30 / 58f).toInt() <= measuredHeight) (measuredWidth * 30 / 58f).toInt() else measuredHeight
-
         paint.strokeWidth = drawWidth * 2 / 58f
-
         val levelWidth = drawWidth * 42 / 58f
         val levelHeight = drawHeight * 20 / 30f
         val radius = drawWidth * 4 / 58f
@@ -138,13 +118,10 @@ class BatteryView : AppCompatImageView {
         path.lineTo(left, top + radius)
         path.quadTo(left, top, left + radius, top)
     }
-
     private var drawWidth: Int = 0
     private var drawHeight: Int = 0
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         val lineSize = drawWidth * 2 / 58f
         val roundSize = drawWidth * 6 / 58f
         val batteryWidth = drawWidth * 50 / 58f
@@ -160,8 +137,6 @@ class BatteryView : AppCompatImageView {
             roundSize,
             paint,
         )
-
-
         val anodeWidth = drawWidth * 3 / 58f
         val anodeHeight = drawHeight * 8 / 30f - lineSize
         val anodeX = drawWidth - anodeWidth / 2
@@ -170,8 +145,6 @@ class BatteryView : AppCompatImageView {
         paint.strokeCap = Paint.Cap.ROUND
         paint.strokeWidth = anodeWidth
         canvas.drawLine(anodeX, anodeStartY, anodeX, anodeStartY + anodeHeight, paint)
-
-
         if (battery <= 0) {
             return
         }

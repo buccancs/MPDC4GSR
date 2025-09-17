@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.report.activity
-
 import android.annotation.SuppressLint
 import android.location.Address
 import android.location.Geocoder
@@ -46,25 +45,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import com.topdon.lib.core.R as LibR
-
-/**
-
- *
-
-
-
-
- */
-
 class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
-    /**
-
-
-     */
     private var isTC007 = false
     private var locationManager: LocationManager? = null
     private var locationProvider: String? = null
-
     private val etReportName: android.widget.EditText by lazy { findViewById(R.id.et_report_name) }
     private val etReportAuthor: android.widget.EditText by lazy { findViewById(R.id.et_report_author) }
     private val switchReportAuthor: android.widget.Switch by lazy { findViewById(R.id.switch_report_author) }
@@ -82,23 +66,17 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     private val switchEmissivity: android.widget.Switch by lazy { findViewById(R.id.switch_emissivity) }
     private val etTestDistance: android.widget.EditText by lazy { findViewById(R.id.et_test_distance) }
     private val switchTestDistance: android.widget.Switch by lazy { findViewById(R.id.switch_test_distance) }
-
-
     private val tvAmbientTemperature: android.widget.TextView by lazy { findViewById(R.id.tv_ambient_temperature) }
     private val tvEmissivity: android.widget.TextView by lazy { findViewById(R.id.tv_emissivity) }
-
     override fun initContentView() = R.layout.activity_report_create_first
-
     private val permissionList =
         listOf(
             Permission.ACCESS_FINE_LOCATION,
             Permission.ACCESS_COARSE_LOCATION,
         )
-
     @SuppressLint("SetTextI18n")
     override fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-
         etReportName.setText(
             "TC${
                 TimeUtils.millis2String(
@@ -113,14 +91,12 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         tvAmbientTemperature.text =
             getString(R.string.thermal_config_environment) + "(${UnitTools.showUnit()})"
         tvEmissivity.text = getString(R.string.album_report_emissivity) + "(0~1)"
-
         etReportAuthor.addTextChangedListener {
             SaveSettingUtil.reportAuthorName = it?.toString() ?: ""
         }
         etReportWatermark.addTextChangedListener {
             SaveSettingUtil.reportWatermarkText = it?.toString() ?: ""
         }
-
         switchReportAuthor.setOnCheckedChangeListener { _, isChecked ->
             etReportAuthor.isVisible = isChecked
         }
@@ -159,20 +135,17 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                 else -> if (it < 10) "0.0$it" else "0.$it"
             }
         }
-
         tvReportDate.setOnClickListener(this)
         findViewById<android.widget.TextView>(R.id.tv_preview).setOnClickListener(this)
         findViewById<android.widget.TextView>(R.id.tv_next).setOnClickListener(this)
         findViewById<android.widget.ImageView>(R.id.img_location).setOnClickListener(this)
-
         readConfig()
     }
-
     @SuppressLint("SetTextI18n")
     private fun readConfig() {
-        var environment = 30f // 环境温度
-        var distance = 0.25f // 测试距离
-        var radiation = 0.95f // 发射率
+        var environment = 30f 
+        var distance = 0.25f 
+        var radiation = 0.95f 
         val config = ConfigRepository.readConfig(isTC007)
         distance = config.distance
         radiation = config.radiation
@@ -181,22 +154,18 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         etTestDistance.setText(NumberTools.to02(distance) + "m")
         tipSeekEmissivity.progress = (radiation * 100).toInt()
     }
-
     override fun initData() {
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReportCreate(event: ReportCreateEvent) {
         finish()
     }
-
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_report_date -> { // 报告日期
+            R.id.tv_report_date -> { 
                 selectTime()
             }
-
-            R.id.tv_preview -> { // 预览
+            R.id.tv_preview -> { 
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
                 NavigationManager.getInstance().build(RouterConfig.REPORT_PREVIEW_FIRST)
@@ -204,8 +173,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                     .withParcelable(ExtraKeyConfig.REPORT_CONDITION, reportConditionBean)
                     .navigation(this)
             }
-
-            R.id.tv_next -> { // 下一步
+            R.id.tv_next -> { 
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
                 val imageTempBean: ImageTempBean? =
@@ -221,25 +189,19 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         .navigation(this)
                 }
             }
-
             R.id.img_location -> {
                 checkLocationPermission()
             }
         }
     }
-
     @SuppressLint("MissingPermission")
     private fun getLocation(): String? {
-
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-
         val providers = locationManager?.getProviders(true)
         locationProvider =
             if (providers!!.contains(LocationManager.GPS_PROVIDER)) {
-
                 LocationManager.GPS_PROVIDER
             } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-
                 LocationManager.NETWORK_PROVIDER
             } else {
                 return null
@@ -254,7 +216,6 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             getAddress(location)
         }
     }
-
     private fun getAddress(location: Location?): String {
         var result: List<Address?>? = null
         try {
@@ -287,7 +248,6 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         }
         return str
     }
-
     private fun getNullString(str: String?): String {
         return if (str.isNullOrEmpty()) {
             ""
@@ -295,7 +255,6 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             str
         }
     }
-
     private fun buildReportInfo(): ReportInfoBean =
         ReportInfoBean(
             etReportName.text.toString(),
@@ -308,7 +267,6 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             etReportWatermark.text.toString(),
             if (switchReportWatermark.isChecked && etReportWatermark.text.isNotEmpty()) 1 else 0,
         )
-
     private fun buildReportCondition(): ReportConditionBean {
         val temperature =
             try {
@@ -327,9 +285,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             if (switchTestDistance.isChecked && etTestDistance.text.isNotEmpty()) 1 else 0,
         )
     }
-
     private var startTime = 0L
-
     private fun selectTime() {
         val picker = DatimePicker(this)
         picker.setTitle(R.string.chart_start_time)
@@ -341,17 +297,13 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             tvReportDate.text = TimeUtils.millis2String(time, "yyyy.MM.dd HH:mm")
             startTime = time
         }
-
         val startTimeEntity = DatimeEntity()
         startTimeEntity.date = DateEntity.target(2020, 1, 1)
         startTimeEntity.time = TimeEntity.target(0, 0, 0)
-
         val endTimeEntity = DatimeEntity.yearOnFuture(10)
         if (startTime == 0L) {
-
             picker.wheelLayout.setRange(startTimeEntity, endTimeEntity, DatimeEntity.now())
         } else {
-
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = startTime
             val year = calendar.get(Calendar.YEAR)
@@ -367,7 +319,6 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         }
         picker.show()
     }
-
     private fun checkLocationPermission() {
         if (!XXPermissions.isGranted(this, permissionList)) {
             if (BaseApplication.instance.isDomestic()) {
@@ -390,9 +341,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             initLocationPermission()
         }
     }
-
     private fun initLocationPermission() {
-
         XXPermissions.with(this@ReportCreateFirstActivity)
             .permission(
                 permissionList,
@@ -424,13 +373,11 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                             ToastUtils.showShort(R.string.scan_ble_tip_authorize)
                         }
                     }
-
                     override fun onDenied(
                         permissions: MutableList<String>,
                         never: Boolean,
                     ) {
                         if (never) {
-
                             if (BaseApplication.instance.isDomestic()) {
                                 ToastUtils.showShort(getString(R.string.app_location_content))
                                 return

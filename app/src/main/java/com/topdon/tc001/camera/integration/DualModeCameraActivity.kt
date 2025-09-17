@@ -1,5 +1,4 @@
 package com.topdon.tc001.camera.integration
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -13,12 +12,10 @@ import com.csl.irCamera.R
 import com.topdon.tc001.camera.RGBCameraRecorder
 import com.topdon.tc001.camera.ui.CameraModeSelector
 import kotlinx.coroutines.launch
-
 class DualModeCameraActivity : AppCompatActivity() {
     private lateinit var textureView: TextureView
     private lateinit var cameraModeSelector: CameraModeSelector
     private var rgbCameraRecorder: RGBCameraRecorder? = null
-
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission(),
@@ -34,23 +31,17 @@ class DualModeCameraActivity : AppCompatActivity() {
                 finish()
             }
         }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dual_mode_camera)
-
         textureView = findViewById(R.id.texture_view)
         cameraModeSelector = findViewById(R.id.camera_mode_selector)
-
         val initialMode = intent.getStringExtra("INITIAL_MODE") ?: "VIDEO_4K"
         val enableSamsungOptimizations =
             intent.getBooleanExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
-
         setupModeSelector(initialMode)
-
         checkCameraPermission()
     }
-
     private fun checkCameraPermission() {
         when {
             ContextCompat.checkSelfPermission(
@@ -59,18 +50,14 @@ class DualModeCameraActivity : AppCompatActivity() {
             ) == PackageManager.PERMISSION_GRANTED -> {
                 initializeCamera()
             }
-
             else -> {
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
     }
-
     private fun initializeCamera() {
         try {
-
             rgbCameraRecorder = RGBCameraRecorder(this, textureView)
-
             val settings =
                 RGBCameraRecorder.RecordingSettings(
                     mode = RGBCameraRecorder.CameraMode.VIDEO_4K,
@@ -78,11 +65,9 @@ class DualModeCameraActivity : AppCompatActivity() {
                     frameRate = 30,
                     bitRate = 10_000_000,
                     enableStabilization = true,
-                    enableHighSpeedVideo = false, // Start conservative for Samsung compatibility
+                    enableHighSpeedVideo = false, 
                 )
-
             rgbCameraRecorder?.updateRecordingSettings(settings)
-
             Toast.makeText(this, "Dual-mode camera system initialized", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to initialize camera: ${e.message}", Toast.LENGTH_LONG)
@@ -90,25 +75,20 @@ class DualModeCameraActivity : AppCompatActivity() {
             finish()
         }
     }
-
     private fun setupModeSelector(initialMode: String) {
-
         val mode =
             when (initialMode) {
                 "RAW_50MP" -> RGBCameraRecorder.CameraMode.RAW_50MP
                 "VIDEO_4K" -> RGBCameraRecorder.CameraMode.VIDEO_4K
                 else -> RGBCameraRecorder.CameraMode.PREVIEW_ONLY
             }
-
         cameraModeSelector.setOnModeChangeListener { newMode ->
             lifecycleScope.launch {
                 switchCameraMode(newMode)
             }
         }
-
         cameraModeSelector.setMode(mode)
     }
-
     private suspend fun switchCameraMode(newMode: RGBCameraRecorder.CameraMode) {
         try {
             val success = rgbCameraRecorder?.switchMode(newMode) ?: false
@@ -126,7 +106,6 @@ class DualModeCameraActivity : AppCompatActivity() {
             Toast.makeText(this, "Mode switch error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
-
     override fun onDestroy() {
         super.onDestroy()
         rgbCameraRecorder?.cleanup()

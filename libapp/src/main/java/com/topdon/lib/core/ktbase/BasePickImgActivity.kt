@@ -1,5 +1,4 @@
 package com.topdon.lib.core.ktbase
-
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -16,45 +15,30 @@ import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.view.ImageEditView
 import kotlinx.coroutines.launch
 import java.io.File
-
-/**
- * des:
- * author: CaiSongL
- * date: 2024/9/3 9:25
- **/
 abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
     protected lateinit var binding: ActivityImagePickIrPlushBinding
-
     val RESULT_IMAGE_PATH = "RESULT_IMAGE_PATH"
-
     private var hasTakePhoto = false
-
     override fun initContentView(): Int {
         return R.layout.activity_image_pick_ir_plush
     }
-
     override fun initView() {
     }
-
     override fun initData() {
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityImagePickIrPlushBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.ivEditCircle.isSelected = true
         binding.imageEditView.type = ImageEditView.Type.CIRCLE
         binding.viewColor.setBackgroundColor(binding.imageEditView.color)
-
         binding.ivEditColor.setOnClickListener(this)
         binding.ivEditCircle.setOnClickListener(this)
         binding.ivEditRect.setOnClickListener(this)
         binding.ivEditArrow.setOnClickListener(this)
         binding.ivEditClear.setOnClickListener(this)
         binding.imgPick.setOnClickListener(this)
-
         binding.titleView.setLeftClickListener {
             if (hasTakePhoto) {
                 switchPhotoState(false)
@@ -76,10 +60,8 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
                 finish()
             }
         }
-
         resize()
     }
-
     private fun resize() {
         val widthPixels = resources.displayMetrics.widthPixels
         val heightPixels = resources.displayMetrics.heightPixels
@@ -87,13 +69,12 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
             MeasureSpec.makeMeasureSpec(widthPixels, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(heightPixels, MeasureSpec.AT_MOST),
         )
-
-        val ivPickHeight = SizeUtils.dp2px(60f + 20 + 20) // 拍照按钮高度，60dp+上下各20dp margin
+        val ivPickHeight = SizeUtils.dp2px(60f + 20 + 20) 
         val menuHeight = (widthPixels * 75f / 384).toInt()
         val bottomHeight = ivPickHeight.coerceAtLeast(menuHeight)
         val canUseHeight = heightPixels - binding.titleView.measuredHeight - bottomHeight
         val wantHeight = (widthPixels * 256f / 192).toInt()
-        if (wantHeight <= canUseHeight) { // 够用
+        if (wantHeight <= canUseHeight) { 
             binding.fragmentContainerView.layoutParams =
                 binding.fragmentContainerView.layoutParams.apply {
                     this.width = widthPixels
@@ -117,11 +98,9 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
                 }
         }
     }
-
     open suspend fun getPickBitmap(): Bitmap? {
         return null
     }
-
     override fun onClick(v: View?) {
         when (v) {
             binding.imgPick -> {
@@ -133,7 +112,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
-
             binding.ivEditColor -> {
                 val colorPickDialog = ColorSelectDialog(this, binding.imageEditView.color)
                 colorPickDialog.onPickListener = {
@@ -142,32 +120,27 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
                 }
                 colorPickDialog.show()
             }
-
             binding.ivEditCircle -> {
                 binding.ivEditCircle.isSelected = true
                 binding.ivEditRect.isSelected = false
                 binding.ivEditArrow.isSelected = false
                 binding.imageEditView.type = ImageEditView.Type.CIRCLE
             }
-
             binding.ivEditRect -> {
                 binding.ivEditCircle.isSelected = false
                 binding.ivEditRect.isSelected = true
                 binding.ivEditArrow.isSelected = false
                 binding.imageEditView.type = ImageEditView.Type.RECT
             }
-
             binding.ivEditArrow -> {
                 binding.ivEditCircle.isSelected = false
                 binding.ivEditRect.isSelected = false
                 binding.ivEditArrow.isSelected = true
                 binding.imageEditView.type = ImageEditView.Type.ARROW
             }
-
             binding.ivEditClear -> binding.imageEditView.clear()
         }
     }
-
     @Deprecated("This method is deprecated")
     override fun onBackPressed() {
         if (hasTakePhoto) {
@@ -177,7 +150,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
             super.onBackPressed()
         }
     }
-
     private fun switchPhotoState(hasTakePhoto: Boolean) {
         this.hasTakePhoto = hasTakePhoto
         binding.imageEditView.isVisible = hasTakePhoto
@@ -186,7 +158,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         binding.fragmentContainerView.isVisible = !hasTakePhoto
         binding.titleView.setRightDrawable(if (hasTakePhoto) R.drawable.app_save else 0)
     }
-
     private fun showExitTipsDialog(listener: (() -> Unit)) {
         TipDialog.Builder(this)
             .setMessage(R.string.diy_tip_save)
@@ -196,7 +167,6 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
             .setCancelListener(R.string.app_cancel)
             .create().show()
     }
-
     override fun disConnected() {
         super.disConnected()
         finish()

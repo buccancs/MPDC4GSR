@@ -1,5 +1,4 @@
 package com.infisense.usbir.view;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,13 +8,10 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.TextureView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.energy.iruvc.utils.SynchronizedBitmap;
 import com.infisense.usbdual.Const;
-
 public class CameraView extends TextureView {
     public int productType = Const.TYPE_IR;
     private String TAG = "CameraView";
@@ -27,43 +23,33 @@ public class CameraView extends TextureView {
     private Paint paint;
     private int cross_len = 20;
     private Paint greenPaint;
-    private boolean drawLine = true;//是否画中心十字架
+    private boolean drawLine = true;
     private int irWidth = 192;
     private int irHeight = 256;
-
     private boolean isOpenAmplify = false;
-
-
     public CameraView(Context context) {
         this(context, null, 0);
     }
-
     public CameraView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
     public CameraView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        paint = new Paint();  //画笔
+        paint = new Paint();  
         paint = new Paint(Paint.FILTER_BITMAP_FLAG);
-
-        paint.setStrokeWidth(2);  //settings线宽。单位为像素
-        paint.setAntiAlias(true); //抗锯齿
-        paint.setDither(true);    //防抖动
-        paint.setColor(Color.WHITE);  //画笔color
-
+        paint.setStrokeWidth(2);  
+        paint.setAntiAlias(true); 
+        paint.setDither(true);    
+        paint.setColor(Color.WHITE);  
         greenPaint = new Paint();
         greenPaint.setStrokeWidth(6);
         greenPaint.setTextSize(56);
         greenPaint.setColor(Color.GREEN);
-
         runnable = new Runnable() {
             @Override
             public void run() {
                 while (!cameraThread.isInterrupted()) {
                     synchronized (syncimage.viewLock) {
-
                         if (syncimage.valid == false) {
                             try {
                                 syncimage.viewLock.wait();
@@ -72,28 +58,23 @@ public class CameraView extends TextureView {
                                 Log.e(TAG, "lock.wait(): catch an interrupted exception");
                             }
                         }
-
                         if (syncimage.valid == true) {
                             canvas = lockCanvas();
                             if (canvas == null) {
                                 continue;
                             }
-
-                            paint.setStrokeWidth(2);  //settings线宽。单位为像素
-                            paint.setAntiAlias(true); //抗锯齿
-                            paint.setDither(true);    //防抖动
-                            paint.setColor(Color.WHITE);  //画笔color
-
+                            paint.setStrokeWidth(2);  
+                            paint.setAntiAlias(true); 
+                            paint.setDither(true);    
+                            paint.setColor(Color.WHITE);  
                             Bitmap mScaledBitmap = Bitmap.createScaledBitmap(bitmap, getWidth(), getHeight(), true);
                             canvas.drawBitmap(mScaledBitmap, 0, 0, null);
-
                             if (drawLine) {
                                 canvas.drawLine(getWidth() / 2 - cross_len, getHeight() / 2,
                                         getWidth() / 2 + cross_len, getHeight() / 2, paint);
                                 canvas.drawLine(getWidth() / 2, getHeight() / 2 - cross_len,
                                         getWidth() / 2, getHeight() / 2 + cross_len, paint);
                             }
-
                             unlockCanvasAndPost(canvas);
                             syncimage.valid = false;
                         }
@@ -104,42 +85,33 @@ public class CameraView extends TextureView {
             }
         };
     }
-
     public boolean isOpenAmplify() {
         return isOpenAmplify;
     }
-
     public void setOpenAmplify(boolean openAmplify) {
         isOpenAmplify = openAmplify;
     }
-
     public void setImageSize(int irWidth, int irHeight) {
         this.irWidth = irWidth;
         this.irHeight = irHeight;
     }
-
     public boolean isDrawLine() {
         return drawLine;
     }
-
     public void setDrawLine(boolean drawLine) {
         this.drawLine = drawLine;
     }
-
     @Nullable
     @Override
     public Bitmap getBitmap() {
         return bitmap;
     }
-
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
     }
-
     public void setSyncimage(SynchronizedBitmap syncimage) {
         this.syncimage = syncimage;
     }
-
     @NonNull
     public Bitmap getScaledBitmap() {
         synchronized (syncimage.viewLock) {
@@ -148,12 +120,10 @@ public class CameraView extends TextureView {
             return sBitmap;
         }
     }
-
     public void start() {
         cameraThread = new Thread(runnable);
         cameraThread.start();
     }
-
     public void setShowCross(boolean isShow) {
         try {
             cross_len = isShow ? 20 : 0;
@@ -165,7 +135,6 @@ public class CameraView extends TextureView {
             Log.e(TAG, "点异常:" + e.getMessage());
         }
     }
-
     public void stop() {
         try {
             if (cameraThread != null) {

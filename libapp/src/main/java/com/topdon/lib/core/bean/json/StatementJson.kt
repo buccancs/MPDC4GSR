@@ -1,5 +1,4 @@
 package com.topdon.lib.core.bean.json
-
 data class StatementJson(
     val content: Any,
     val createTime: String,

@@ -1,5 +1,4 @@
 package com.topdon.lib.core.repository
-
 import android.net.Network
 import com.blankj.utilcode.util.EncryptUtils
 import com.google.gson.Gson
@@ -21,36 +20,30 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
-
 object TS004Repository {
     private fun Any.toBody(): RequestBody = Gson().toJson(this).toRequestBody()
-
     var netWork: Network? = null
-
     private fun getOKHttpClient(): OkHttpClient {
         val build =
             OkHttpClient.Builder()
-                .retryOnConnectionFailure(false) // 不重试
-                .connectTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
-                .readTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
-                .writeTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
+                .retryOnConnectionFailure(false) 
+                .connectTimeout(15, TimeUnit.SECONDS) 
+                .readTimeout(15, TimeUnit.SECONDS) 
+                .writeTimeout(15, TimeUnit.SECONDS) 
                 .addInterceptor(OKLogInterceptor(false))
         netWork?.socketFactory?.let {
             build.socketFactory(it)
         }
-
         return build.build()
     }
-
     private fun getTS004Service(): TS004Service =
         Retrofit.Builder()
-            .baseUrl("http://192.168.40.1:8080")
+            .baseUrl("http:
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(getOKHttpClient())
             .build()
             .create(TS004Service::class.java)
-
     suspend fun downloadList(
         dataMap: Map<String, File>,
         listener: ((path: String, isSuccess: Boolean) -> Unit),
@@ -69,7 +62,6 @@ object TS004Repository {
             return@withContext successCount
         }
     }
-
     suspend fun download(
         url: String,
         file: File,
@@ -86,7 +78,6 @@ object TS004Repository {
             try {
                 inputStream = responseBody.byteStream()
                 fileOutputString = FileOutputStream(file)
-
                 val buffer = ByteArray(4096)
                 var readLength = inputStream.read(buffer)
                 while (readLength != -1) {
@@ -94,7 +85,6 @@ object TS004Repository {
                     readLength = inputStream.read(buffer)
                 }
                 fileOutputString.flush()
-
                 return@withContext true
             } catch (_: Exception) {
                 return@withContext false
@@ -103,7 +93,6 @@ object TS004Repository {
                 fileOutputString?.close()
             }
         }
-
     suspend fun syncTime(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -121,7 +110,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun syncTimeZone(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -132,7 +120,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getVersion(): TS004Response<VersionBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -141,7 +128,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun getDeviceInfo(): TS004Response<DeviceInfo>? =
         withContext(Dispatchers.IO) {
             try {
@@ -150,7 +136,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun getFileCount(fileType: Int): Int? =
         withContext(Dispatchers.IO) {
             try {
@@ -161,7 +146,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun getNewestFile(fileType: Int): List<FileBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -175,7 +159,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun getAllFileList(fileType: Int): List<FileBean> =
         withContext(Dispatchers.IO) {
             try {
@@ -183,7 +166,6 @@ object TS004Repository {
                 if (fileCount < 1) {
                     return@withContext ArrayList()
                 }
-
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["pageNum"] = 1
                 paramMap["pageCount"] = fileCount
@@ -193,7 +175,6 @@ object TS004Repository {
                 ArrayList()
             }
         }
-
     suspend fun getFileByPage(
         fileType: Int,
         pageNum: Int,
@@ -210,9 +191,7 @@ object TS004Repository {
                 null
             }
         }
-
     data class IdData(val id: Int)
-
     suspend fun deleteFiles(ids: Array<Int>): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -220,7 +199,6 @@ object TS004Repository {
                     Array(ids.size) {
                         IdData(ids[it])
                     }
-
                 val paramMap: HashMap<String, Any> = HashMap()
                 paramMap["filelist"] = idArray
                 getTS004Service().deleteFile(paramMap.toBody()).isSuccess()
@@ -228,7 +206,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun updateFirmware(file: File): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -236,34 +213,28 @@ object TS004Repository {
                 if (!isStartSuccess) {
                     return@withContext false
                 }
-
                 val isSendStartSuccess = sendUpgradeFileStart(file)
                 if (!isSendStartSuccess) {
                     return@withContext false
                 }
-
                 val isSendFileSuccess = sendUpgradeFile(file)
                 if (!isSendFileSuccess) {
                     return@withContext false
                 }
-
                 val isEndSuccess = sendUpgradeFileEnd(file)
                 if (!isEndSuccess) {
                     return@withContext false
                 }
-
                 var status = getTS004Service().getUpgradeStatus().data?.status
-                while (status == 0 || status == 1 || status == 2) { // 文档跟实际值对不上
+                while (status == 0 || status == 1 || status == 2) { 
                     delay(1000)
                     status = getTS004Service().getUpgradeStatus().data?.status
                 }
-
                 status == 4
             } catch (_: Exception) {
                 false
             }
         }
-
     private suspend fun sendUpgradeFileStart(file: File): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -276,34 +247,29 @@ object TS004Repository {
                 false
             }
         }
-
     private suspend fun sendUpgradeFile(file: File): Boolean =
         withContext(Dispatchers.IO) {
             var fileInputStream: FileInputStream? = null
             try {
                 fileInputStream = FileInputStream(file)
-
                 var hasReadCount = 0
-                var byteArray = ByteArray(1024 * 1024 * 5) // 5M每包
-
+                var byteArray = ByteArray(1024 * 1024 * 5) 
                 var readCount = fileInputStream.read(byteArray)
                 while (readCount != -1) {
                     hasReadCount += readCount
                     if (hasReadCount == 1024 * 1024 * 5) {
                         getTS004Service().sendUpgradeFile(byteArray.toRequestBody())
                         hasReadCount = 0
-                        byteArray = ByteArray(1024 * 1024 * 5) // 5M每包
+                        byteArray = ByteArray(1024 * 1024 * 5) 
                     }
                     readCount =
                         fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
                 }
-
                 if (hasReadCount > 0) {
                     val lastArray = ByteArray(hasReadCount)
                     System.arraycopy(byteArray, 0, lastArray, 0, hasReadCount)
                     getTS004Service().sendUpgradeFile(lastArray.toRequestBody())
                 }
-
                 true
             } catch (_: Exception) {
                 false
@@ -311,7 +277,6 @@ object TS004Repository {
                 fileInputStream?.close()
             }
         }
-
     private suspend fun sendUpgradeFileEnd(file: File): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -322,7 +287,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun setPseudoColor(mode: Int): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -334,7 +298,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getPseudoColor(): TS004Response<PseudoColorBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -343,7 +306,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun setRangeFind(state: Int): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -354,7 +316,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getRangeFind(): TS004Response<RangeBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -363,7 +324,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun setPanelParam(brightness: Int): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -374,7 +334,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getPanelParam(): TS004Response<BrightnessBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -383,7 +342,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun setPip(enable: Boolean): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -394,7 +352,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getPip(): TS004Response<PipBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -403,7 +360,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun setZoom(factor: Int): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -415,7 +371,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getZoom(): TS004Response<ZoomBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -424,7 +379,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun setSnapshot(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -433,7 +387,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun setVideo(enable: Boolean): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -444,7 +397,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getRecordStatus(): TS004Response<RecordStatusBean>? =
         withContext(Dispatchers.IO) {
             try {
@@ -453,7 +405,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun getFreeSpace(): FreeSpaceBean? =
         withContext(Dispatchers.IO) {
             try {
@@ -462,7 +413,6 @@ object TS004Repository {
                 null
             }
         }
-
     suspend fun getFormatStorage(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -471,17 +421,14 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getResetAll(): Boolean =
         withContext(Dispatchers.IO) {
             try {
-
                 getTS004Service().resetAll().status == 100
             } catch (_: Exception) {
                 false
             }
         }
-
     suspend fun setTISR(state: Int): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -492,7 +439,6 @@ object TS004Repository {
                 false
             }
         }
-
     suspend fun getTISR(): TS004Response<TISRBean>? =
         withContext(Dispatchers.IO) {
             try {

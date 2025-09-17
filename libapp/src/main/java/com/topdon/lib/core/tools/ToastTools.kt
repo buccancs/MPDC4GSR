@@ -1,5 +1,4 @@
 package com.topdon.lib.core.tools
-
 import android.content.Context
 import android.os.Build
 import android.view.Gravity
@@ -13,21 +12,16 @@ import com.topdon.lib.core.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
-
 object ToastTools {
     var mPublicToast: Toast? = null
-
     fun showShort(
         @StringRes textStr: Int,
     ) {
         showShort(Utils.getApp().getString(textStr))
     }
-
     fun showShort(textStr: String) {
         showShort(textStr, Toast.LENGTH_SHORT)
     }
-
     fun showShort(
         textStr: String,
         duration: Int,
@@ -39,11 +33,9 @@ object ToastTools {
             val text = view.findViewById(R.id.toast_tip_text) as TextView
             text.text = textStr
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-
                 mPublicToast = Toast.makeText(Utils.getApp(), textStr, duration)
                 mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
             } else {
-
                 if (mPublicToast == null) {
                     mPublicToast = Toast(Utils.getApp())
                 }

@@ -1,5 +1,4 @@
 package com.topdon.lib.core.bean.response
-
 data class ResponseUserInfo(
     val topdonId: String,
     val userName: String,

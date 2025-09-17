@@ -1,5 +1,4 @@
 package com.topdon.lib.core.tools
-
 import android.content.Context
 import android.os.Build
 import com.blankj.utilcode.util.AppUtils
@@ -11,36 +10,28 @@ import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.R
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lms.sdk.weiget.TToast
-
 object PermissionTool {
-
     fun requestRecordAudio(
         context: Context,
         callback: () -> Unit,
     ) = request(context, Type.RECORD_AUDIO, callback)
-
     fun requestCamera(
         context: Context,
         callback: () -> Unit,
     ) = request(context, Type.CAMERA, callback)
-
     fun requestLocation(
         context: Context,
         callback: () -> Unit,
     ) = request(context, Type.LOCATION, callback)
-
     fun requestImageRead(
         context: Context,
         callback: () -> Unit,
     ) = request(context, Type.IMAGE, callback)
-
     fun requestFile(
         context: Context,
         callback: () -> Unit,
     ) = request(context, Type.FILE, callback)
-
     private enum class Type { RECORD_AUDIO, CAMERA, LOCATION, IMAGE, FILE }
-
     private fun request(
         context: Context,
         type: Type,
@@ -54,22 +45,19 @@ object PermissionTool {
                     Permission.ACCESS_COARSE_LOCATION,
                     Permission.ACCESS_FINE_LOCATION
                 )
-
                 Type.IMAGE ->
                     listOf(
                         if (context.applicationInfo.targetSdkVersion < 33) Permission.READ_EXTERNAL_STORAGE else Permission.READ_MEDIA_IMAGES,
                     )
-
                 Type.FILE ->
-                    if (context.applicationInfo.targetSdkVersion < 30) { // Android 10及以下
+                    if (context.applicationInfo.targetSdkVersion < 30) { 
                         listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
-                    } else if (context.applicationInfo.targetSdkVersion < 33) { // Android 13以下
+                    } else if (context.applicationInfo.targetSdkVersion < 33) { 
                         listOf(Permission.READ_EXTERNAL_STORAGE)
-                    } else { // Android 13及以上
+                    } else { 
                         listOf(Permission.READ_MEDIA_VIDEO, Permission.READ_MEDIA_IMAGES)
                     }
             }
-
         XXPermissions.with(context)
             .permission(permissions)
             .request(
@@ -84,7 +72,6 @@ object PermissionTool {
                             TToast.shortToast(context, R.string.scan_ble_tip_authorize)
                         }
                     }
-
                     override fun onDenied(
                         permissions: MutableList<String>,
                         never: Boolean,
@@ -98,7 +85,7 @@ object PermissionTool {
                                     Type.IMAGE -> R.string.app_album_content
                                     Type.FILE -> R.string.app_storage_content
                                 }
-                            if (BaseApplication.instance.isDomestic()) { // 国内版
+                            if (BaseApplication.instance.isDomestic()) { 
                                 TToast.shortToast(context, tipsResId)
                             } else {
                                 TipDialog.Builder(context)
@@ -119,9 +106,8 @@ object PermissionTool {
                 },
             )
     }
-
     fun hasBtPermission(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT < 31) { // 低于 Android12
+        return if (Build.VERSION.SDK_INT < 31) { 
             XXPermissions.isGranted(context, Permission.ACCESS_FINE_LOCATION)
         } else {
             XXPermissions.isGranted(
@@ -132,14 +118,13 @@ object PermissionTool {
             )
         }
     }
-
     fun requestBluetooth(
         context: Context,
         isBtFirst: Boolean,
         callback: Callback,
     ) {
         val permissionList: List<String> =
-            if (Build.VERSION.SDK_INT < 31) { // 低于 Android12
+            if (Build.VERSION.SDK_INT < 31) { 
                 arrayListOf(Permission.ACCESS_FINE_LOCATION, Permission.ACCESS_COARSE_LOCATION)
             } else {
                 arrayListOf(
@@ -149,7 +134,6 @@ object PermissionTool {
                     Permission.BLUETOOTH_CONNECT,
                 )
             }
-
         XXPermissions.with(context)
             .permission(permissionList)
             .request(
@@ -161,7 +145,6 @@ object PermissionTool {
                         XLog.i("onGranted($allGranted)")
                         callback.onResult(allGranted)
                     }
-
                     override fun onDenied(
                         permissions: MutableList<String>,
                         never: Boolean,
@@ -178,7 +161,6 @@ object PermissionTool {
                                     isLocationNever = true
                                 }
                             }
-
                             TipDialog.Builder(context)
                                 .setTitleMessage(context.getString(R.string.app_tip))
                                 .setMessage(
@@ -200,11 +182,8 @@ object PermissionTool {
                 },
             )
     }
-
     interface Callback {
-
         fun onResult(allGranted: Boolean)
-
         fun onNever(isJump: Boolean)
     }
 }

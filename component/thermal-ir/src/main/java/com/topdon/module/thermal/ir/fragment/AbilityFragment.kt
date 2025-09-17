@@ -1,6 +1,4 @@
 package com.topdon.module.thermal.ir.fragment
-
-
 import android.content.Intent
 import android.view.View
 import android.widget.ImageView
@@ -19,63 +17,50 @@ import com.topdon.module.thermal.ir.activity.IRThermalNightActivity
 import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
 import com.topdon.module.thermal.ir.activity.MonitoryHomeActivity
 import org.greenrobot.eventbus.EventBus
-
 class AbilityFragment : BaseFragment(), View.OnClickListener {
     private var mIsTC007 = false
-
     private lateinit var ivWinter: ImageView
     private lateinit var viewMonitory: View
     private lateinit var viewHouse: View
     private lateinit var viewCar: View
-
     override fun initContentView() = R.layout.fragment_ability
-
     override fun initView() {
         mIsTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
-
         ivWinter = requireView().findViewById(R.id.iv_winter)
         viewMonitory = requireView().findViewById(R.id.view_monitory)
         viewHouse = requireView().findViewById(R.id.view_house)
         viewCar = requireView().findViewById(R.id.view_car)
-
         ivWinter.setOnClickListener(this)
         viewMonitory.setOnClickListener(this)
         viewHouse.setOnClickListener(this)
         viewCar.setOnClickListener(this)
     }
-
     override fun initData() {
     }
-
     override fun onClick(v: View?) {
         when (v) {
-            ivWinter -> { // 冬季特辑入口
+            ivWinter -> { 
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
                 val url =
-                    if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
-                        "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
-                                "languageId=1" // Fixed to English (languageId=1)
+                    if (UrlConstant.BASE_URL == "https:
+                        "https:
+                                "languageId=1" 
                     } else {
-                        "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
+                        "http:
                     }
                 NavigationManager.getInstance().build(RouterConfig.WEB_VIEW)
                     .withString(ExtraKeyConfig.URL, url)
                     .navigation(requireContext())
             }
-
-            viewMonitory -> { // 温度监控
+            viewMonitory -> { 
                 val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 startActivity(intent)
             }
-
-            viewHouse -> { // 房屋检测
-
-
+            viewHouse -> { 
             }
-
-            viewCar -> { // 汽车检测
+            viewCar -> { 
                 if (mIsTC007) {
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)

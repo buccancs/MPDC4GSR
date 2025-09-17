@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -16,19 +15,14 @@ import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lib.ui.bean.TemperatureBean
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
-
 @Deprecated("旧的temperature levelmenu，已重构过了")
-
 class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var onTempLevelListener: ((index: Int) -> Unit)? = null
-
     private var selectedCode = SaveSettingUtil.temperatureMode
-
     fun selected(code: Int) {
         selectedCode = code
         notifyDataSetChanged()
     }
-
     private val fiveBean =
         arrayListOf(
             TemperatureBean(
@@ -59,7 +53,6 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                 CameraItemBean.TYPE_TMP_ZD,
             ),
         )
-
     private fun getTempStr(
         min: Int,
         max: Int,
@@ -69,7 +62,6 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         } else {
             "${(min * 1.8 + 32).toInt()}\n~\n${(max * 1.8 + 32).toInt()}°F"
         }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -78,7 +70,6 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
             .inflate(UiR.layout.ui_item_menu_five_view, parent, false)
         return ItemView(view)
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -110,14 +101,10 @@ class MenuFiveNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
             )
         }
     }
-
     override fun getItemCount(): Int {
         return fiveBean.size
     }
-
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-
         val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(UiR.id.item_menu_tab_text)

@@ -1,13 +1,10 @@
 package com.topdon.lib.core.ktbase
-
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.preference.PreferenceManager
 import com.hjq.permissions.Permission
 import com.topdon.lib.core.utils.NetWorkUtils
-
-
 abstract class BaseWifiActivity : BaseActivity() {
     protected val permissionList by lazy {
         if (this.applicationInfo.targetSdkVersion >= 34) {
@@ -24,10 +21,8 @@ abstract class BaseWifiActivity : BaseActivity() {
             mutableListOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT >= 29) {
-
             NetWorkUtils.switchNetwork(true)
         }
         super.onCreate(savedInstanceState)
@@ -38,20 +33,17 @@ abstract class BaseWifiActivity : BaseActivity() {
         PreferenceManager.getDefaultSharedPreferences(this@BaseWifiActivity)
             .getBoolean("auto_audio", false)
     }
-
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT >= 29) { // Android10 及以上
+        if (Build.VERSION.SDK_INT >= 29) { 
             NetWorkUtils.switchNetwork(true)
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
-
     override fun onPause() {
         super.onPause()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
-
     override fun onStop() {
         super.onStop()
     }

@@ -1,5 +1,4 @@
 package com.topdon.tc001
-
 import android.content.Context
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
@@ -24,16 +23,14 @@ import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.utils.ConstantUtil
 import com.topdon.lms.sdk.utils.LanguageUtil
 import java.util.Date
-
 object InitUtil {
     fun initLog() {
         val fileName = "logs_${TimeUtils.date2String(Date(), "yyyy-MM-dd")}.log"
         val fileDir = BaseApplication.instance.getExternalFilesDir("log")!!.absolutePath
         val tag = "MPDC4GSR_LOG"
         val pattern = "{d}, {L}, {t}, {m}"
-        val backupStrategy = FileSizeBackupStrategy2(5 * 1024 * 1024L, 10) // 一份文件的大小
-        val cleanStrategy = FileLastModifiedCleanStrategy(30 * 24 * 60 * 60) // 设置自动清除时间
-
+        val backupStrategy = FileSizeBackupStrategy2(5 * 1024 * 1024L, 10) 
+        val cleanStrategy = FileLastModifiedCleanStrategy(30 * 24 * 60 * 60) 
         val config =
             LogConfiguration.Builder()
                 .logLevel(LogLevel.ALL)
@@ -41,32 +38,27 @@ object InitUtil {
                 .build()
         val androidPrinter = AndroidPrinter(true)
         val filePrinter =
-            FilePrinter.Builder(fileDir) // 指定保存日志文件的路径
-                .fileNameGenerator(ChangelessFileNameGenerator(fileName)) // 指定日志文件名生成器
-                .backupStrategy(backupStrategy) // 指定日志文件备份策略
-                .cleanStrategy(cleanStrategy) // 指定日志文件清除策略
-                .flattener(PatternFlattener(pattern)) // 自定义日志格式
+            FilePrinter.Builder(fileDir) 
+                .fileNameGenerator(ChangelessFileNameGenerator(fileName)) 
+                .backupStrategy(backupStrategy) 
+                .cleanStrategy(cleanStrategy) 
+                .flattener(PatternFlattener(pattern)) 
                 .build()
         if (BuildConfig.DEBUG) {
             XLog.init(config, androidPrinter, filePrinter)
         } else {
-
             XLog.init(config, filePrinter)
         }
     }
-
     fun initLms() {
-
         val privacyPolicyUrl =
-            "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?" +
+            "https:
                     "softCode=${BaseApplication.instance.getSoftWareCode()}&" +
                     "language=${LanguageUtil.getLanguageId(Utils.getApp())}&type=22"
-
         val servicesAgreementUrl =
-            "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?" +
+            "https:
                     "softCode=${BaseApplication.instance.getSoftWareCode()}&" +
                     "language=${LanguageUtil.getLanguageId(Utils.getApp())}&type=21"
-
         LMS.getInstance().init(BaseApplication.instance)
             .apply {
                 productType = "TC001"
@@ -78,48 +70,33 @@ object InitUtil {
                 if (!BaseApplication.instance.isDomestic()) {
                     initXutils()
                 } else {
-
                     setWxAppId("wx588cb319449b72dd")
                     setBuglyAppId("0b375add84")
-
-
                 }
                 setAppKey(BuildConfig.APP_KEY)
                 setAppSecret(BuildConfig.APP_SECRET)
                 setAuthSecret(HttpConfig.AUTH_SECRET)
             }
     }
-
     fun initUM() {
-
-
     }
-
     fun initJPush() {
         var registrationID = ""
-
-
-
-
-
-
         if (SharedManager.getHasShowClause()) {
             XLog.w("registrationID= $registrationID")
         }
     }
-
     fun initReceiver() {
         try {
             BaseApplication.instance.unregisterReceiver(BaseApplication.usbObserver)
         } catch (e: Exception) {
         }
-
         val filter = IntentFilter()
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED)
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
-        filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION) // 申请USB权限
+        filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION) 
         if (Build.VERSION.SDK_INT < 33) {
             BaseApplication.instance.registerReceiver(BaseApplication.usbObserver, filter)
         } else {

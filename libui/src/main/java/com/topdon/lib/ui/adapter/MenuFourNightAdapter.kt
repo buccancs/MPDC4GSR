@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
@@ -22,68 +21,55 @@ import com.topdon.lib.ui.config.CameraHelp
 import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
-
 @Deprecated("旧的settingsmenu，已重构过了")
 @SuppressLint("NotifyDataSetChanged")
 class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
-
-    private var colorEnable = false // pseudo color条
-    private var contrastEnable = false // 对比度
-    private var ddeEnable = false // 细节
-    private var alarmEnable = false // 预警
-    private var textColorEnable = false // font
-    private var mirrorEnable = false // 镜像
-    private var waterMarkEnable = false // watermark
-    private var compassEnable = false // 指南针
-
-    private var rotateAngle = DeviceConfig.S_ROTATE_ANGLE // 校对默认角度0
-
+    private var colorEnable = false 
+    private var contrastEnable = false 
+    private var ddeEnable = false 
+    private var alarmEnable = false 
+    private var textColorEnable = false 
+    private var mirrorEnable = false 
+    private var waterMarkEnable = false 
+    private var compassEnable = false 
+    private var rotateAngle = DeviceConfig.S_ROTATE_ANGLE 
     fun selectRotate(rotateAngle: Int) {
         this.rotateAngle = rotateAngle
         notifyDataSetChanged()
     }
-
     fun enColor(colorEnable: Boolean) {
         this.colorEnable = colorEnable
         notifyDataSetChanged()
     }
-
     fun enContrast(param: Boolean) {
         this.contrastEnable = param
         notifyDataSetChanged()
     }
-
     fun enDde(param: Boolean) {
         this.ddeEnable = param
         notifyDataSetChanged()
     }
-
     fun enAlarm(param: Boolean) {
         this.alarmEnable = param
         notifyDataSetChanged()
     }
-
     fun enTextColor(param: Boolean) {
         this.textColorEnable = param
         notifyDataSetChanged()
     }
-
     fun enMirror(param: Boolean) {
         this.mirrorEnable = param
         notifyDataSetChanged()
     }
-
     fun enCompass(param: Boolean) {
         this.compassEnable = param
         notifyDataSetChanged()
     }
-
     fun enWaterMark(param: Boolean) {
         this.waterMarkEnable = param
         notifyDataSetChanged()
     }
-
     fun setShowMenuFour(modeType: Int) {
         fourBean.clear()
         when (modeType) {
@@ -138,7 +124,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
             }
-
             IR_TCPLUS_MODE -> {
                 fourBean.add(
                     ColorBean(
@@ -183,7 +168,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
             }
-
             IR_TEMPERATURE_LITE -> {
                 fourBean.add(
                     ColorBean(
@@ -228,7 +212,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
             }
-
             IR_TC007_MODE -> {
                 fourBean.add(
                     ColorBean(
@@ -273,7 +256,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
             }
-
             IR_OBSERVE_MODE -> {
                 fourBean.add(
                     ColorBean(
@@ -304,7 +286,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ),
                 )
             }
-
             else -> {
                 fourBean.add(
                     ColorBean(
@@ -331,7 +312,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         }
         notifyDataSetChanged()
     }
-
     private val fourBean =
         arrayListOf(
             ColorBean(
@@ -370,7 +350,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                 CameraHelp.TYPE_SET_MIRROR
             ),
         )
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -380,13 +359,11 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
         compassEnable = SaveSettingUtil.isOpenCompass
         return ItemView(view)
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         @SuppressLint("RecyclerView") position: Int,
     ) {
         if (holder is ItemView) {
-
             updateViewWidth(holder.itemView, holder.img)
             val bean = fourBean[position]
             holder.name.text = bean.name
@@ -395,15 +372,12 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     0 -> {
                         holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate270)
                     }
-
                     90 -> {
                         holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate180)
                     }
-
                     180 -> {
                         holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate90)
                     }
-
                     270 -> {
                         holder.img.setImageResource(MenuR.drawable.svg_menu2_setting_4_rotate0)
                     }
@@ -429,7 +403,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                                 )
                             )
                         }
-
                         90 -> {
                             holder.name.setTextColor(
                                 ContextCompat.getColor(
@@ -438,7 +411,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                                 )
                             )
                         }
-
                         180 -> {
                             holder.name.setTextColor(
                                 ContextCompat.getColor(
@@ -447,7 +419,6 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                                 )
                             )
                         }
-
                         270 -> {
                             holder.name.setTextColor(
                                 ContextCompat.getColor(
@@ -458,42 +429,33 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                         }
                     }
                 }
-
                 CameraHelp.TYPE_SET_ParamLevelDde -> {
                     iconUI(ddeEnable, holder.img, holder.name)
                 }
-
                 CameraHelp.TYPE_SET_ParamLevelContrast -> {
                     iconUI(contrastEnable, holder.img, holder.name)
                 }
-
                 CameraHelp.TYPE_SET_PSEUDOCOLOR -> {
                     iconUI(colorEnable, holder.img, holder.name)
                 }
-
                 CameraHelp.TYPE_SET_ALARM -> {
                     iconUI(alarmEnable, holder.img, holder.name)
                 }
-
                 CameraHelp.TYPE_SET_COLOR -> {
                     iconUI(textColorEnable, holder.img, holder.name)
                 }
-
                 CameraHelp.TYPE_SET_MIRROR -> {
                     iconUI(mirrorEnable, holder.img, holder.name)
                 }
-
                 CameraHelp.TYPE_SET_COMPASS -> {
                     iconUI(compassEnable, holder.img, holder.name)
                 }
-
                 CameraHelp.TYPE_SET_WATERMARK -> {
                     iconUI(waterMarkEnable, holder.img, holder.name)
                 }
             }
         }
     }
-
     private fun iconUI(
         isActive: Boolean,
         img: ImageView,
@@ -506,11 +468,9 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
             nameText.setTextColor(ContextCompat.getColor(context, UiR.color.font_third_color))
         }
     }
-
     override fun getItemCount(): Int {
         return fourBean.size
     }
-
     private fun updateViewWidth(
         itemView: View,
         itemMenu: ImageView,
@@ -528,10 +488,7 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
         }
-
-
     }
-
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)

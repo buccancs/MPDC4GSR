@@ -1,5 +1,4 @@
 package com.jaygoo.widget;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -18,19 +17,14 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
 import androidx.core.content.ContextCompat;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.text.DecimalFormat;
-
-
 public class SeekBar {
-
     public static final int INDICATOR_SHOW_WHEN_TOUCH = 0;
     public static final int INDICATOR_ALWAYS_HIDE = 1;
     public static final int INDICATOR_ALWAYS_SHOW_AFTER_TOUCH = 2;
@@ -76,7 +70,6 @@ public class SeekBar {
     private int thumbWidth;
     private int thumbHeight;
     private boolean isShowIndicator;
-
     public SeekBar(DefRangeSeekBar defRangeSeekBar, AttributeSet attrs, boolean isLeft) {
         this.defRangeSeekBar = defRangeSeekBar;
         this.isLeft = isLeft;
@@ -84,7 +77,6 @@ public class SeekBar {
         initBitmap();
         initVariables();
     }
-
     private void initAttrs(AttributeSet attrs) {
         TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.RangeSeekBar);
         if (t == null) return;
@@ -109,7 +101,6 @@ public class SeekBar {
         indicatorRadius = t.getDimension(R.styleable.RangeSeekBar_rsb_indicator_radius, 0f);
         t.recycle();
     }
-
     protected void initVariables() {
         scaleThumbWidth = thumbWidth;
         scaleThumbHeight = thumbHeight;
@@ -120,22 +111,18 @@ public class SeekBar {
             indicatorArrowSize = (int) (thumbWidth / 4);
         }
     }
-
     public Context getContext() {
         return defRangeSeekBar.getContext();
     }
-
     public Resources getResources() {
         if (getContext() != null) return getContext().getResources();
         return null;
     }
-
     private void initBitmap() {
         setIndicatorDrawableId(indicatorDrawableId);
         setThumbDrawableId(thumbDrawableId, thumbWidth, thumbHeight);
         setThumbInactivatedDrawableId(thumbInactivatedDrawableId, thumbWidth, thumbHeight);
     }
-
     protected void onSizeChanged(int x, int y) {
         initVariables();
         initBitmap();
@@ -144,7 +131,6 @@ public class SeekBar {
         top = y - getThumbHeight() / 2;
         bottom = y + getThumbHeight() / 2;
     }
-
     public void scaleThumb() {
         scaleThumbWidth = (int) getThumbScaleWidth();
         scaleThumbHeight = (int) getThumbScaleHeight();
@@ -153,7 +139,6 @@ public class SeekBar {
         bottom = y + scaleThumbHeight / 2;
         setThumbDrawableId(thumbDrawableId, scaleThumbWidth, scaleThumbHeight);
     }
-
     public void resetThumb() {
         scaleThumbWidth = getThumbWidth();
         scaleThumbHeight = getThumbHeight();
@@ -162,11 +147,9 @@ public class SeekBar {
         bottom = y + scaleThumbHeight / 2;
         setThumbDrawableId(thumbDrawableId, scaleThumbWidth, scaleThumbHeight);
     }
-
     public float getRawHeight() {
         return getIndicatorHeight() + getIndicatorArrowSize() + getIndicatorMargin() + getThumbScaleHeight();
     }
-
     protected void draw(Canvas canvas) {
         if (!isVisible) {
             return;
@@ -174,7 +157,6 @@ public class SeekBar {
         int offset = (int) (defRangeSeekBar.getProgressWidth() * currPercent);
         canvas.save();
         canvas.translate(offset, 0);
-
         canvas.translate(left, 0);
         if (currPercent <= 0) {
             canvas.translate(defRangeSeekBar.stepsPaddingLeft, 0);
@@ -187,7 +169,6 @@ public class SeekBar {
         onDrawThumb(canvas);
         canvas.restore();
     }
-
     protected void onDrawThumb(Canvas canvas) {
         if (thumbInactivatedBitmap != null && !isActivate) {
             canvas.drawBitmap(thumbInactivatedBitmap, 0, defRangeSeekBar.getProgressTop() + (defRangeSeekBar.getProgressHeight() - scaleThumbHeight) / 2f, null);
@@ -195,7 +176,6 @@ public class SeekBar {
             canvas.drawBitmap(thumbBitmap, 0, defRangeSeekBar.getProgressTop() + (defRangeSeekBar.getProgressHeight() - scaleThumbHeight) / 2f, null);
         }
     }
-
     protected String formatCurrentIndicatorText(String text2Draw) {
         SeekBarState[] states = defRangeSeekBar.getRangeSeekBarState();
         if (TextUtils.isEmpty(text2Draw)) {
@@ -218,7 +198,6 @@ public class SeekBar {
         }
         return text2Draw;
     }
-
     protected void onDrawIndicator(Canvas canvas, Paint paint, String text2Draw) {
         if (text2Draw == null) return;
         paint.setTextSize(indicatorTextSize);
@@ -229,20 +208,15 @@ public class SeekBar {
         if (indicatorWidth > realIndicatorWidth) {
             realIndicatorWidth = indicatorWidth;
         }
-
         int realIndicatorHeight = indicatorTextRect.height() + indicatorPaddingTop + indicatorPaddingBottom;
         if (indicatorHeight > realIndicatorHeight) {
             realIndicatorHeight = indicatorHeight;
         }
-
         indicatorRect.left = (int) (scaleThumbWidth / 2f - realIndicatorWidth / 2f);
         indicatorRect.top = bottom - realIndicatorHeight - scaleThumbHeight - indicatorMargin;
         indicatorRect.right = indicatorRect.left + realIndicatorWidth;
         indicatorRect.bottom = indicatorRect.top + realIndicatorHeight;
-
         if (indicatorBitmap == null) {
-
-
             int ax = scaleThumbWidth / 2;
             int ay = indicatorRect.bottom;
             int bx = ax - indicatorArrowSize;
@@ -257,11 +231,9 @@ public class SeekBar {
             indicatorRect.bottom -= indicatorArrowSize;
             indicatorRect.top -= indicatorArrowSize;
         }
-
         int defaultPaddingOffset = Utils.dp2px(getContext(), 1);
         int leftOffset = indicatorRect.width() / 2 - (int) (defRangeSeekBar.getProgressWidth() * currPercent) - defRangeSeekBar.getProgressLeft() + defaultPaddingOffset;
         int rightOffset = indicatorRect.width() / 2 - (int) (defRangeSeekBar.getProgressWidth() * (1 - currPercent)) - defRangeSeekBar.getProgressPaddingRight() + defaultPaddingOffset;
-
         if (leftOffset > 0) {
             indicatorRect.left += leftOffset;
             indicatorRect.right += leftOffset;
@@ -269,7 +241,6 @@ public class SeekBar {
             indicatorRect.left -= rightOffset;
             indicatorRect.right -= rightOffset;
         }
-
         if (indicatorBitmap != null) {
             Utils.drawBitmap(canvas, paint, indicatorBitmap, indicatorRect);
         } else if (indicatorRadius > 0f) {
@@ -277,7 +248,6 @@ public class SeekBar {
         } else {
             canvas.drawRect(indicatorRect, paint);
         }
-
         int tx, ty;
         if (indicatorPaddingLeft > 0) {
             tx = indicatorRect.left + indicatorPaddingLeft;
@@ -286,7 +256,6 @@ public class SeekBar {
         } else {
             tx = indicatorRect.left + (realIndicatorWidth - indicatorTextRect.width()) / 2;
         }
-
         if (indicatorPaddingTop > 0) {
             ty = indicatorRect.top + indicatorTextRect.height() + indicatorPaddingTop;
         } else if (indicatorPaddingBottom > 0) {
@@ -294,22 +263,18 @@ public class SeekBar {
         } else {
             ty = indicatorRect.bottom - (realIndicatorHeight - indicatorTextRect.height()) / 2 + 1;
         }
-
         paint.setColor(indicatorTextColor);
         canvas.drawText(text2Draw, tx, ty, paint);
     }
-
     protected boolean collide(float x, float y) {
         int offset = (int) (defRangeSeekBar.getProgressWidth() * currPercent);
         return x > left + offset && x < right + offset && y > top && y < bottom;
     }
-
     protected void slide(float percent) {
         if (percent < 0) percent = 0;
         else if (percent > 1) percent = 1;
         currPercent = percent;
     }
-
     protected void setShowIndicatorEnable(boolean isEnable) {
         switch (indicatorShowMode) {
             case INDICATOR_SHOW_WHEN_TOUCH:
@@ -324,7 +289,6 @@ public class SeekBar {
                 break;
         }
     }
-
     public void materialRestore() {
         if (anim != null) anim.cancel();
         anim = ValueAnimator.ofFloat(material, 0);
@@ -344,98 +308,75 @@ public class SeekBar {
         });
         anim.start();
     }
-
     public void setIndicatorText(String text) {
         userText2Draw = text;
     }
-
     public DecimalFormat getIndicatorTextDecimalFormat() {
         return indicatorTextDecimalFormat;
     }
-
     public void setIndicatorTextDecimalFormat(String formatPattern) {
         indicatorTextDecimalFormat = new DecimalFormat(formatPattern);
     }
-
     public void setIndicatorTextStringFormat(String formatPattern) {
         indicatorTextStringFormat = formatPattern;
     }
-
     public int getIndicatorDrawableId() {
         return indicatorDrawableId;
     }
-
     public void setIndicatorDrawableId(@DrawableRes int indicatorDrawableId) {
         if (indicatorDrawableId != 0) {
             this.indicatorDrawableId = indicatorDrawableId;
             indicatorBitmap = BitmapFactory.decodeResource(getResources(), indicatorDrawableId);
         }
     }
-
     public int getIndicatorArrowSize() {
         return indicatorArrowSize;
     }
-
     public void setIndicatorArrowSize(int indicatorArrowSize) {
         this.indicatorArrowSize = indicatorArrowSize;
     }
-
     public int getIndicatorPaddingLeft() {
         return indicatorPaddingLeft;
     }
-
     public void setIndicatorPaddingLeft(int indicatorPaddingLeft) {
         this.indicatorPaddingLeft = indicatorPaddingLeft;
     }
-
     public int getIndicatorPaddingRight() {
         return indicatorPaddingRight;
     }
-
     public void setIndicatorPaddingRight(int indicatorPaddingRight) {
         this.indicatorPaddingRight = indicatorPaddingRight;
     }
-
     public int getIndicatorPaddingTop() {
         return indicatorPaddingTop;
     }
-
     public void setIndicatorPaddingTop(int indicatorPaddingTop) {
         this.indicatorPaddingTop = indicatorPaddingTop;
     }
-
     public int getIndicatorPaddingBottom() {
         return indicatorPaddingBottom;
     }
-
     public void setIndicatorPaddingBottom(int indicatorPaddingBottom) {
         this.indicatorPaddingBottom = indicatorPaddingBottom;
     }
-
     public int getIndicatorMargin() {
         return indicatorMargin;
     }
-
     public void setIndicatorMargin(int indicatorMargin) {
         this.indicatorMargin = indicatorMargin;
     }
-
     public int getIndicatorShowMode() {
         return indicatorShowMode;
     }
-
     public void setIndicatorShowMode(@IndicatorModeDef int indicatorShowMode) {
         this.indicatorShowMode = indicatorShowMode;
     }
-
     public void showIndicator(boolean isShown) {
         isShowIndicator = isShown;
     }
-
     public boolean isShowIndicator() {
         return isShowIndicator;
     }
-
     public int getIndicatorRawHeight() {
         if (indicatorHeight > 0) {
             if (indicatorBitmap != null) {
@@ -451,51 +392,39 @@ public class SeekBar {
             }
         }
     }
-
     public int getIndicatorHeight() {
         return indicatorHeight;
     }
-
     public void setIndicatorHeight(int indicatorHeight) {
         this.indicatorHeight = indicatorHeight;
     }
-
     public int getIndicatorWidth() {
         return indicatorWidth;
     }
-
     public void setIndicatorWidth(int indicatorWidth) {
         this.indicatorWidth = indicatorWidth;
     }
-
     public int getIndicatorTextSize() {
         return indicatorTextSize;
     }
-
     public void setIndicatorTextSize(int indicatorTextSize) {
         this.indicatorTextSize = indicatorTextSize;
     }
-
     public int getIndicatorTextColor() {
         return indicatorTextColor;
     }
-
     public void setIndicatorTextColor(@ColorInt int indicatorTextColor) {
         this.indicatorTextColor = indicatorTextColor;
     }
-
     public int getIndicatorBackgroundColor() {
         return indicatorBackgroundColor;
     }
-
     public void setIndicatorBackgroundColor(@ColorInt int indicatorBackgroundColor) {
         this.indicatorBackgroundColor = indicatorBackgroundColor;
     }
-
     public int getThumbInactivatedDrawableId() {
         return thumbInactivatedDrawableId;
     }
-
     public void setThumbInactivatedDrawableId(@DrawableRes int thumbInactivatedDrawableId, int width, int height) {
         if (thumbInactivatedDrawableId != 0 && getResources() != null) {
             this.thumbInactivatedDrawableId = thumbInactivatedDrawableId;
@@ -506,11 +435,9 @@ public class SeekBar {
             }
         }
     }
-
     public int getThumbDrawableId() {
         return thumbDrawableId;
     }
-
     public void setThumbDrawableId(@DrawableRes int thumbDrawableId) {
         if (thumbWidth <= 0 || thumbHeight <= 0) {
             throw new IllegalArgumentException("please set thumbWidth and thumbHeight first!");
@@ -524,7 +451,6 @@ public class SeekBar {
             }
         }
     }
-
     public void setThumbDrawableId(@DrawableRes int thumbDrawableId, int width, int height) {
         if (thumbDrawableId != 0 && getResources() != null && width > 0 && height > 0) {
             this.thumbDrawableId = thumbDrawableId;
@@ -535,68 +461,52 @@ public class SeekBar {
             }
         }
     }
-
     public int getThumbWidth() {
         return thumbWidth;
     }
-
     public void setThumbWidth(int thumbWidth) {
         this.thumbWidth = thumbWidth;
     }
-
     public float getThumbScaleHeight() {
         return thumbHeight * thumbScaleRatio;
     }
-
     public float getThumbScaleWidth() {
         return thumbWidth * thumbScaleRatio;
     }
-
     public int getThumbHeight() {
         return thumbHeight;
     }
-
     public void setThumbHeight(int thumbHeight) {
         this.thumbHeight = thumbHeight;
     }
-
     public float getIndicatorRadius() {
         return indicatorRadius;
     }
-
     public void setIndicatorRadius(float indicatorRadius) {
         this.indicatorRadius = indicatorRadius;
     }
-
     protected boolean getActivate() {
         return isActivate;
     }
-
     protected void setActivate(boolean activate) {
         isActivate = activate;
     }
-
     public void setTypeface(Typeface typeFace) {
         paint.setTypeface(typeFace);
     }
-
     public float getThumbScaleRatio() {
         return thumbScaleRatio;
     }
-
     public boolean isVisible() {
         return isVisible;
     }
-
     public void setVisible(boolean visible) {
         isVisible = visible;
     }
-
     public float getProgress() {
         float range = defRangeSeekBar.getMaxProgress() - defRangeSeekBar.getMinProgress();
         return defRangeSeekBar.getMinProgress() + range * currPercent;
     }
-
     @IntDef({INDICATOR_SHOW_WHEN_TOUCH, INDICATOR_ALWAYS_HIDE, INDICATOR_ALWAYS_SHOW_AFTER_TOUCH, INDICATOR_ALWAYS_SHOW})
     @Retention(RetentionPolicy.SOURCE)
     public @interface IndicatorModeDef {

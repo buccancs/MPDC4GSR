@@ -1,5 +1,4 @@
 package com.topdon.tc001.camera.ui
-
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -14,7 +13,6 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.topdon.tc001.camera.RGBCameraRecorder
-
 class CameraSettingsView
 @JvmOverloads
 constructor(
@@ -22,7 +20,6 @@ constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
-
     private lateinit var cameraToggleButton: ImageButton
     private lateinit var resolutionSpinner: Spinner
     private lateinit var flashToggleButton: ImageButton
@@ -34,33 +31,26 @@ constructor(
     private lateinit var qualitySeekBar: SeekBar
     private lateinit var settingsPanel: LinearLayout
     private lateinit var statusText: TextView
-
     private var currentSettings = RGBCameraRecorder.RecordingSettings()
     private var isSettingsPanelVisible = false
     private var isRecording = false
-
     var onCameraToggle: (() -> Unit)? = null
     var onRecordingToggle: ((Boolean) -> Unit)? = null
     var onSettingsChanged: ((RGBCameraRecorder.RecordingSettings) -> Unit)? = null
     var onFlashToggle: ((Boolean) -> Unit)? = null
-
     init {
         initView()
         setupListeners()
         updateUI()
     }
-
     private fun initView() {
-
         this.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         setPadding(16, 16, 16, 16)
-
         val mainControlsLayout =
             LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             }
-
         cameraToggleButton =
             ImageButton(context).apply {
                 layoutParams =
@@ -72,7 +62,6 @@ constructor(
                 contentDescription = "Switch Camera"
             }
         mainControlsLayout.addView(cameraToggleButton)
-
         recordButton =
             ImageButton(context).apply {
                 layoutParams =
@@ -85,7 +74,6 @@ constructor(
                 scaleType = ImageView.ScaleType.CENTER
             }
         mainControlsLayout.addView(recordButton)
-
         flashToggleButton =
             ImageButton(context).apply {
                 layoutParams =
@@ -97,7 +85,6 @@ constructor(
                 contentDescription = "Flash"
             }
         mainControlsLayout.addView(flashToggleButton)
-
         settingsButton =
             ImageButton(context).apply {
                 layoutParams = LinearLayout.LayoutParams(120, 120)
@@ -106,9 +93,7 @@ constructor(
                 contentDescription = "Settings"
             }
         mainControlsLayout.addView(settingsButton)
-
         addView(mainControlsLayout)
-
         statusText =
             TextView(context).apply {
                 layoutParams =
@@ -121,10 +106,8 @@ constructor(
                 setPadding(0, 8, 0, 8)
             }
         addView(statusText)
-
         createSettingsPanel()
     }
-
     private fun createSettingsPanel() {
         settingsPanel =
             LinearLayout(context).apply {
@@ -138,7 +121,6 @@ constructor(
                 background = context.getDrawable(android.R.drawable.dialog_holo_light_frame)
                 visibility = View.GONE
             }
-
         val resolutionLayout =
             LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -147,7 +129,6 @@ constructor(
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             }
-
         val resolutionLabel =
             TextView(context).apply {
                 text = "Resolution:"
@@ -155,7 +136,6 @@ constructor(
                     LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
         resolutionLayout.addView(resolutionLabel)
-
         resolutionSpinner =
             Spinner(context).apply {
                 layoutParams =
@@ -168,7 +148,6 @@ constructor(
             }
         resolutionLayout.addView(resolutionSpinner)
         settingsPanel.addView(resolutionLayout)
-
         val frameRateLayout =
             LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -177,7 +156,6 @@ constructor(
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             }
-
         val frameRateLabel =
             TextView(context).apply {
                 text = "Frame Rate:"
@@ -185,7 +163,6 @@ constructor(
                     LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
         frameRateLayout.addView(frameRateLabel)
-
         frameRateSpinner =
             Spinner(context).apply {
                 layoutParams =
@@ -198,7 +175,6 @@ constructor(
             }
         frameRateLayout.addView(frameRateSpinner)
         settingsPanel.addView(frameRateLayout)
-
         val qualityLayout =
             LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
@@ -207,13 +183,11 @@ constructor(
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             }
-
         val qualityLabel =
             TextView(context).apply {
                 text = "Video Quality:"
             }
         qualityLayout.addView(qualityLabel)
-
         qualitySeekBar =
             SeekBar(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
@@ -221,11 +195,10 @@ constructor(
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
                 max = 100
-                progress = 80 // Default to high quality
+                progress = 80 
             }
         qualityLayout.addView(qualitySeekBar)
         settingsPanel.addView(qualityLayout)
-
         val stabilizationLayout =
             LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -234,7 +207,6 @@ constructor(
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             }
-
         val stabilizationLabel =
             TextView(context).apply {
                 text = "Video Stabilization:"
@@ -242,7 +214,6 @@ constructor(
                     LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
         stabilizationLayout.addView(stabilizationLabel)
-
         stabilizationToggle =
             Switch(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
@@ -253,7 +224,6 @@ constructor(
             }
         stabilizationLayout.addView(stabilizationToggle)
         settingsPanel.addView(stabilizationLayout)
-
         val audioLayout =
             LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -262,7 +232,6 @@ constructor(
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             }
-
         val audioLabel =
             TextView(context).apply {
                 text = "Record Audio:"
@@ -270,7 +239,6 @@ constructor(
                     LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
         audioLayout.addView(audioLabel)
-
         audioToggle =
             Switch(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
@@ -281,31 +249,25 @@ constructor(
             }
         audioLayout.addView(audioToggle)
         settingsPanel.addView(audioLayout)
-
         addView(settingsPanel)
     }
-
     private fun setupListeners() {
         cameraToggleButton.setOnClickListener {
             onCameraToggle?.invoke()
         }
-
         recordButton.setOnClickListener {
             isRecording = !isRecording
             onRecordingToggle?.invoke(isRecording)
             updateRecordingUI()
         }
-
         flashToggleButton.setOnClickListener {
             currentSettings = currentSettings.copy(enableFlash = !currentSettings.enableFlash)
             onFlashToggle?.invoke(currentSettings.enableFlash)
             updateFlashUI()
         }
-
         settingsButton.setOnClickListener {
             toggleSettingsPanel()
         }
-
         resolutionSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -318,10 +280,8 @@ constructor(
                     currentSettings = currentSettings.copy(resolution = resolution)
                     onSettingsChanged?.invoke(currentSettings)
                 }
-
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
-
         frameRateSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -334,10 +294,8 @@ constructor(
                     currentSettings = currentSettings.copy(frameRate = frameRate)
                     onSettingsChanged?.invoke(currentSettings)
                 }
-
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
-
         qualitySeekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
@@ -347,34 +305,28 @@ constructor(
                 ) {
                     if (fromUser) {
                         val bitRate =
-                            (progress / 100f * 15_000_000).toInt() + 1_000_000 // 1-16 Mbps
+                            (progress / 100f * 15_000_000).toInt() + 1_000_000 
                         currentSettings = currentSettings.copy(bitRate = bitRate)
                         onSettingsChanged?.invoke(currentSettings)
                     }
                 }
-
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {}
             },
         )
-
         stabilizationToggle.setOnCheckedChangeListener { _, isChecked ->
             currentSettings = currentSettings.copy(enableStabilization = isChecked)
             onSettingsChanged?.invoke(currentSettings)
         }
-
         audioToggle.setOnCheckedChangeListener { _, isChecked ->
             currentSettings = currentSettings.copy(audioEnabled = isChecked)
             onSettingsChanged?.invoke(currentSettings)
         }
     }
-
     private fun updateUI() {
         updateRecordingUI()
         updateFlashUI()
     }
-
     private fun updateRecordingUI() {
         if (isRecording) {
             recordButton.setImageResource(android.R.drawable.ic_media_pause)
@@ -385,18 +337,14 @@ constructor(
             statusText.text = "Ready to record"
             statusText.setTextColor(context.getColor(android.R.color.primary_text_light))
         }
-
         settingsButton.isEnabled = !isRecording
     }
-
     private fun updateFlashUI() {
         flashToggleButton.alpha = if (currentSettings.enableFlash) 1.0f else 0.5f
     }
-
     private fun toggleSettingsPanel() {
         isSettingsPanelVisible = !isSettingsPanelVisible
         settingsPanel.visibility = if (isSettingsPanelVisible) View.VISIBLE else View.GONE
-
         settingsButton.setImageResource(
             if (isSettingsPanelVisible) {
                 android.R.drawable.ic_menu_close_clear_cancel
@@ -405,43 +353,30 @@ constructor(
             },
         )
     }
-
-
     fun setRecordingState(recording: Boolean) {
         isRecording = recording
         updateRecordingUI()
     }
-
     fun setCameraFacing(facing: RGBCameraRecorder.CameraFacing) {
-
         cameraToggleButton.contentDescription = facing.displayName
     }
-
     fun updateRecordingStatus(status: String) {
         statusText.text = status
     }
-
     fun setAvailableCameraFacing(facingOptions: List<RGBCameraRecorder.CameraFacing>) {
-
         cameraToggleButton.isEnabled = facingOptions.size > 1
     }
-
     fun getCurrentSettings(): RGBCameraRecorder.RecordingSettings {
         return currentSettings
     }
-
     fun updateSettings(settings: RGBCameraRecorder.RecordingSettings) {
         currentSettings = settings
-
         resolutionSpinner.setSelection(settings.resolution.ordinal)
         frameRateSpinner.setSelection(if (settings.frameRate == 30) 0 else 1)
-
         val qualityPercentage = ((settings.bitRate - 1_000_000) / 15_000_000f * 100).toInt()
         qualitySeekBar.progress = qualityPercentage.coerceIn(0, 100)
-
         stabilizationToggle.isChecked = settings.enableStabilization
         audioToggle.isChecked = settings.audioEnabled
-
         updateFlashUI()
     }
 }

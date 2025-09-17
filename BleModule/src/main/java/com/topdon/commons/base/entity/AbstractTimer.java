@@ -1,23 +1,17 @@
 package com.topdon.commons.base.entity;
-
 import android.os.Handler;
 import android.os.Looper;
-
 import java.util.Timer;
 import java.util.TimerTask;
-
 public abstract class AbstractTimer {
     private final Handler handler;
     private final boolean callbackOnMainThread;
     private Timer timer;
-
     public AbstractTimer(boolean callbackOnMainThread) {
         handler = new Handler(Looper.getMainLooper());
         this.callbackOnMainThread = callbackOnMainThread;
     }
-
     public abstract void onTick();
-
     public synchronized final void start(long delay, long period) {
         if (timer == null) {
             timer = new Timer();
@@ -38,14 +32,12 @@ public abstract class AbstractTimer {
             }, delay, period);
         }
     }
-
     public synchronized final void stop() {
         if (timer != null) {
             timer.cancel();
             timer = null;
         }
     }
-
     public boolean isRunning() {
         return timer != null;
     }

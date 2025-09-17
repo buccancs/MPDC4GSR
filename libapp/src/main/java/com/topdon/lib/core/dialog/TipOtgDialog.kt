@@ -1,5 +1,4 @@
 package com.topdon.lib.core.dialog
-
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
@@ -14,13 +13,9 @@ import androidx.annotation.StringRes
 import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogTipOtgBinding
 import com.topdon.lib.core.utils.ScreenUtil
-
-
 class TipOtgDialog : Dialog {
     constructor(context: Context) : super(context)
-
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
-
     class Builder {
         var dialog: TipOtgDialog? = null
         private var context: Context? = null
@@ -31,35 +26,29 @@ class TipOtgDialog : Dialog {
         private var cancelEvent: (() -> Unit)? = null
         private var canceled = false
         private var hasCheck = false
-
         private lateinit var messageText: TextView
         private lateinit var checkBox: CheckBox
         private lateinit var successBtn: Button
         private lateinit var cancelBtn: Button
-
         constructor(context: Context) {
             this.context = context
         }
-
         fun setMessage(message: String): Builder {
             this.message = message
             return this
         }
-
         fun setMessage(
             @StringRes message: Int,
         ): Builder {
             this.message = context!!.getString(message)
             return this
         }
-
         fun setPositiveListener(
             @StringRes strRes: Int,
             event: ((check: Boolean) -> Unit)? = null,
         ): Builder {
             return setPositiveListener(context!!.getString(strRes), event)
         }
-
         fun setPositiveListener(
             str: String,
             event: ((check: Boolean) -> Unit)? = null,
@@ -68,14 +57,12 @@ class TipOtgDialog : Dialog {
             this.positiveEvent = event
             return this
         }
-
         fun setCancelListener(
             @StringRes strRes: Int,
             event: (() -> Unit)? = null,
         ): Builder {
             return setCancelListener(context!!.getString(strRes), event)
         }
-
         fun setCancelListener(
             str: String,
             event: (() -> Unit)? = null,
@@ -84,16 +71,13 @@ class TipOtgDialog : Dialog {
             this.cancelEvent = event
             return this
         }
-
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
         }
-
         fun dismiss() {
             this.dialog!!.dismiss()
         }
-
         fun create(): TipOtgDialog {
             if (dialog == null) {
                 dialog = TipOtgDialog(context!!, R.style.InfoDialog)
@@ -112,15 +96,12 @@ class TipOtgDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
                     0.85
                 } else {
-
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() 
             dialog!!.window!!.attributes = lp
-
             dialog!!.setCanceledOnTouchOutside(canceled)
             checkBox.isChecked = false
             hasCheck = false
@@ -135,7 +116,6 @@ class TipOtgDialog : Dialog {
                 dismiss()
                 cancelEvent?.invoke()
             }
-
             if (positiveStr != null) {
                 successBtn.text = positiveStr
             }
@@ -146,14 +126,12 @@ class TipOtgDialog : Dialog {
                 cancelBtn.visibility = View.GONE
                 cancelBtn.text = ""
             }
-
             if (message != null) {
                 messageText.visibility = View.VISIBLE
                 messageText.setText(message, TextView.BufferType.NORMAL)
             } else {
                 messageText.visibility = View.GONE
             }
-
             dialog!!.setContentView(binding.root)
             return dialog as TipOtgDialog
         }

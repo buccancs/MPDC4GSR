@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -13,19 +12,15 @@ import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.config.CameraHelp
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
-
 @Deprecated("旧的high/low temperature点menu，已重构过了")
 class MenuSecondNightAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val curMultipleArray: HashMap<Int, Int> by lazy { hashMapOf() }
-
     var multipleListener: ((Int, Boolean) -> Unit)? = null
-
     fun clearMultipleSelected() {
         curMultipleArray.clear()
         notifyDataSetChanged()
     }
-
     private val secondBean =
         arrayListOf(
             ColorBean(
@@ -44,7 +39,6 @@ class MenuSecondNightAdapter(val context: Context) :
                 CameraHelp.TYPE_SET_DETELE
             ),
         )
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -54,7 +48,6 @@ class MenuSecondNightAdapter(val context: Context) :
                 .inflate(UiR.layout.ui_item_menu_second_view, parent, false)
         )
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -62,11 +55,9 @@ class MenuSecondNightAdapter(val context: Context) :
         if (holder is ItemView) {
             holder.img.setImageResource(secondBean[position].res)
             holder.name.text = secondBean[position].name
-
             holder.itemView.findViewById<View>(UiR.id.item_menu_tab_lay).setOnClickListener {
                 multipleChoice(position)
             }
-
             holder.img.isSelected = curMultipleArray.contains(position)
             holder.name.isSelected = curMultipleArray.contains(position)
             holder.name.setTextColor(
@@ -78,9 +69,7 @@ class MenuSecondNightAdapter(val context: Context) :
             )
         }
     }
-
     private fun multipleChoice(position: Int) {
-
         if (position == secondBean.size - 1) {
             curMultipleArray.clear()
             curMultipleArray[position] = secondBean[position].code
@@ -94,16 +83,12 @@ class MenuSecondNightAdapter(val context: Context) :
                 curMultipleArray.remove(secondBean.size - 1)
             }
         }
-
         multipleListener?.invoke(secondBean[position].code, curMultipleArray.contains(position))
-
         notifyDataSetChanged()
     }
-
     override fun getItemCount(): Int {
         return secondBean.size
     }
-
     class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)

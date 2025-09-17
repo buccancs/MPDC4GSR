@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.adapter
-
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
@@ -13,18 +12,14 @@ import com.topdon.lib.core.bean.GalleryTitle
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.tools.TimeTool
 import com.topdon.module.thermal.ir.R
-
 @SuppressLint("NotifyDataSetChanged")
 class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val TYPE_HEAD = 0
         private const val TYPE_DATA = 1
     }
-
     val dataList: ArrayList<GalleryBean> = ArrayList()
-
     val selectList: ArrayList<Int> = ArrayList()
-
     var isTS004Remote = false
         set(value) {
             if (field != value) {
@@ -32,7 +27,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 notifyDataSetChanged()
             }
         }
-
     var isEditMode = false
         set(value) {
             if (field != value) {
@@ -44,23 +38,14 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 notifyDataSetChanged()
             }
         }
-
     var onLongEditListener: (() -> Unit)? = null
-
-    /**
-
-
-     */
     var selectCallback: ((data: ArrayList<Int>) -> Unit)? = null
-
     var itemClickCallback: ((position: Int) -> Unit)? = null
-
     fun refreshList(newList: List<GalleryBean>) {
         dataList.clear()
         dataList.addAll(newList)
         notifyDataSetChanged()
     }
-
     fun buildSelectList(): ArrayList<GalleryBean> {
         val resultList: ArrayList<GalleryBean> = ArrayList()
         selectList.forEach {
@@ -68,7 +53,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
         return resultList
     }
-
     fun selectAll() {
         var dataCount = 0
         dataList.forEach {
@@ -89,7 +73,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         selectCallback?.invoke(selectList)
         notifyDataSetChanged()
     }
-
     override fun getItemViewType(position: Int): Int {
         return if (dataList[position] is GalleryTitle) {
             TYPE_HEAD
@@ -97,7 +80,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             TYPE_DATA
         }
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -114,7 +96,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             )
         }
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -129,12 +110,9 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 holder.info.text = ""
                 holder.ivVideoTime.isVisible = false
             }
-
             holder.ivHasDownload.isVisible = isTS004Remote && data.hasDownload
-
             holder.ivCheck.isVisible = isEditMode
             holder.ivCheck.isSelected = selectList.contains(position)
-
             holder.img.setOnClickListener {
                 if (isEditMode) {
                     if (selectList.contains(position)) {
@@ -143,7 +121,6 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         selectList.add(position)
                     }
                     selectCallback?.invoke(selectList)
-
                     holder.ivCheck.isSelected = selectList.contains(position)
                 } else {
                     itemClickCallback?.invoke(position)
@@ -165,15 +142,12 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             holder.name.setTextColor(0x80ffffff.toInt())
         }
     }
-
     override fun getItemCount(): Int {
         return dataList.size
     }
-
     inner class ItemHeadView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.item_gallery_head_text)
     }
-
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val img: ImageView = itemView.findViewById(R.id.item_gallery_img)
         val info: TextView = itemView.findViewById(R.id.item_gallery_text)

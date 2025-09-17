@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.view
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -13,31 +12,21 @@ import android.view.View
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
-
 class TargetBarPickView : View {
     companion object {
-
         @ColorInt
         private const val DEFAULT_BG_COLOR = 0x7F000000.toInt()
-
         @ColorInt
         private const val DEFAULT_PROGRESS_COLOR = 0xffffffff.toInt()
-
         private const val THUMB_CORNERS = 4f
-
         private const val THUMB_STROKE_WIDTH = 1.5f
     }
-
     var onStartTrackingTouch: ((progress: Int, max: Int) -> Unit)? = null
-
     var onProgressChanged: ((progress: Int, max: Int) -> Unit)? = null
-
     var onStopTrackingTouch: ((progress: Int, max: Int) -> Unit)? = null
-
     var valueFormatListener: ((progress: Int) -> String) = {
         it.toString()
     }
-
     var max: Int = 100
         set(value) {
             if (field != value) {
@@ -45,7 +34,6 @@ class TargetBarPickView : View {
                 invalidate()
             }
         }
-
     var min: Int = 0
         set(value) {
             if (field != value) {
@@ -53,7 +41,6 @@ class TargetBarPickView : View {
                 invalidate()
             }
         }
-
     private var progress: Int = 0
         set(value) {
             if (field != value) {
@@ -61,34 +48,25 @@ class TargetBarPickView : View {
                 invalidate()
             }
         }
-
     fun setProgressAndRefresh(progress: Int) {
         this.progress = progress
         onProgressChanged?.invoke(this.progress, max)
     }
-
     private val barSize: Int
-
     private val rotate: Int
-
     private val labelText: String
-
     private val path = Path()
     private val paint = TextPaint()
     private val thumbRect = RectF()
     private val barRect = RectF()
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
         defStyleAttr,
         0
     )
-
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -118,12 +96,10 @@ class TargetBarPickView : View {
             SizeUtils.sp2px(13f)
         )
         typedArray.recycle()
-
         paint.isAntiAlias = true
         paint.textSize = textSize.toFloat()
         paint.strokeWidth = SizeUtils.dp2px(THUMB_STROKE_WIDTH).toFloat()
     }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) {
@@ -141,7 +117,6 @@ class TargetBarPickView : View {
                 90 -> (y / barHeight * (max - min) + min).toInt()
                 else -> ((barHeight - y) / barHeight * (max - min) + min).toInt()
             }.coerceAtLeast(min).coerceAtMost(max)
-
         when (event.action) {
             MotionEvent.ACTION_DOWN -> onStartTrackingTouch?.invoke(progress, max)
             MotionEvent.ACTION_MOVE -> onProgressChanged?.invoke(progress, max)
@@ -151,13 +126,11 @@ class TargetBarPickView : View {
         }
         return true
     }
-
     private fun computeThumbWidth(): Int {
         val minTextWidth = paint.measureText(valueFormatListener.invoke(min)).toInt()
         val maxTextWidth = paint.measureText(valueFormatListener.invoke(max)).toInt()
         return minTextWidth.coerceAtLeast(maxTextWidth) + SizeUtils.dp2px(12f)
     }
-
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -166,11 +139,9 @@ class TargetBarPickView : View {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-
         val thumbWidth = computeThumbWidth()
         val thumbHeight =
             paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
-
         val width: Int =
             if (rotate == 0 || rotate == 180) {
                 if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenWidth(context) else widthSize
@@ -183,7 +154,6 @@ class TargetBarPickView : View {
                     else -> wantWidth
                 }
             }
-
         val height: Int =
             if (rotate == 0 || rotate == 180) {
                 val wantHeight: Int = thumbHeight + paddingTop + paddingBottom
@@ -196,28 +166,21 @@ class TargetBarPickView : View {
             } else {
                 if (heightMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenHeight(context) else heightSize
             }
-
         setMeasuredDimension(width, height)
     }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (canvas == null) {
             return
         }
-
         computeBarRect()
         computeThumbRect()
-
         clipToBarRect(canvas)
         drawBgBar(canvas)
         drawProgress(canvas)
         canvas.restore()
-
         drawThumb(canvas)
-
     }
-
     private fun computeBarRect() {
         val textHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top
         val textMargin = SizeUtils.dp2px(4f)
@@ -248,7 +211,6 @@ class TargetBarPickView : View {
             barRect.set(left, top, right, bottom)
         }
     }
-
     private fun computeThumbRect() {
         val thumbWidth = computeThumbWidth()
         val thumbHeight =
@@ -278,7 +240,6 @@ class TargetBarPickView : View {
             thumbRect.set(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
         }
     }
-
     private fun clipToBarRect(canvas: Canvas) {
         canvas.save()
         val radius = (barSize / 2).toFloat()
@@ -304,10 +265,8 @@ class TargetBarPickView : View {
             canvas.clipPath(path)
         }
     }
-
     private fun drawBgBar(canvas: Canvas) {
         paint.color = DEFAULT_BG_COLOR
-
         val left = barRect.left
         val top = barRect.top
         val right = barRect.right
@@ -361,10 +320,8 @@ class TargetBarPickView : View {
             }
         }
     }
-
     private fun drawProgress(canvas: Canvas) {
         paint.color = DEFAULT_PROGRESS_COLOR
-
         val left = barRect.left
         val top = barRect.top
         val right = barRect.right
@@ -419,7 +376,6 @@ class TargetBarPickView : View {
             }
         }
     }
-
     private fun drawThumb(canvas: Canvas) {
         paint.style = Paint.Style.FILL
         val radius = SizeUtils.dp2px(THUMB_CORNERS).toFloat()

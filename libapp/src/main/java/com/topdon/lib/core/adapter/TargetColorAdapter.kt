@@ -1,5 +1,4 @@
 package com.topdon.lib.core.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,18 +10,15 @@ import com.topdon.lib.core.bean.ObserveBean
 import com.topdon.lib.core.bean.TargetColorBean
 import com.topdon.lib.core.databinding.ItmeTargetColorBinding
 import com.topdon.lib.core.utils.ScreenUtil
-
 class TargetColorAdapter(val context: Context, var targetColor: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listenerTarget: OnItemClickListener? = null
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
-
     fun selectedCode(code: Int) {
         targetColor = code
         notifyDataSetChanged()
     }
-
     private val targetColorBean =
         arrayListOf(
             TargetColorBean(
@@ -47,7 +43,6 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) :
                 ObserveBean.TYPE_TARGET_COLOR_WHITE
             ),
         )
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -56,11 +51,9 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) :
         val binding = ItmeTargetColorBinding.inflate(inflater, parent, false)
         return ItemView(binding)
     }
-
     override fun getItemCount(): Int {
         return targetColorBean.size
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -75,7 +68,6 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) :
             iconUI(bean.code == targetColor, holder.img, holder.strokeBg, holder.signBg)
         }
     }
-
     private fun iconUI(
         isActive: Boolean,
         img: ImageView,
@@ -91,14 +83,12 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) :
             signBg.visibility = View.GONE
         }
     }
-
     inner class ItemView(private val binding: ItmeTargetColorBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val lay: View = binding.itemMenuTabLay
         val img: ImageView = binding.itemTargetColor
         val strokeBg: ImageView = binding.itemTargetColorStroke
         val signBg: ImageView = binding.itemTargetColorSign
-
         init {
             val canSeeCount = 5
             val with = (ScreenUtil.getScreenWidth(context) / canSeeCount)
@@ -115,7 +105,6 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) :
             strokeBg.layoutParams = lpStrokeImg
         }
     }
-
     interface OnItemClickListener {
         fun onClick(
             index: Int,

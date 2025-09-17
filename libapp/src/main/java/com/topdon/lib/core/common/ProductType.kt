@@ -1,7 +1,5 @@
 package com.topdon.lib.core.common
-
 object ProductType {
-
     const val PRODUCT_NAME_TC = "TC001"
     const val PRODUCT_NAME_TS = "TS001"
     const val PRODUCT_NAME_TCP = "TC_PLUS"

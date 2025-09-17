@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.activity
-
 import android.view.View
 import android.widget.Button
 import androidx.core.content.ContextCompat
@@ -11,27 +10,20 @@ import com.topdon.lib.ui.dialog.MonitorSelectDialog
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
-
 class MonitorActivity : BaseActivity(), View.OnClickListener {
     companion object {
         const val STATS_START = 101
         const val STATS_MONITOR = 102
         const val STATS_FINISH = 103
     }
-
     var MONITOR_ACTION = STATS_START
-
-    private var selectType = 1 // 选取点类型(点 线 面)
-    private var selectIndex: ArrayList<Int> = arrayListOf() // 选取点
-
+    private var selectType = 1 
+    private var selectIndex: ArrayList<Int> = arrayListOf() 
     override fun initContentView() = R.layout.activity_monitor
-
     override fun initView() {
-
         val toolbar =
             findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
-
         val blackColor = ContextCompat.getColor(this, com.topdon.lib.core.R.color.black)
         toolbar?.setBackgroundColor(blackColor)
         BarUtils.setStatusBarColor(this, blackColor)
@@ -39,19 +31,14 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         findViewById<Button>(R.id.motion_log_btn).setOnClickListener(this)
         findViewById<Button>(R.id.motion_btn).setOnClickListener(this)
         findViewById<Button>(R.id.motion_start_btn).setOnClickListener(this)
-
-
     }
-
     override fun initData() {
     }
-
     override fun onClick(v: View?) {
         when (v) {
             findViewById<Button>(R.id.motion_log_btn) -> {
                 NavigationManager.getInstance().build(RouterConfig.LOG_MP_CHART).navigation(this)
             }
-
             findViewById<Button>(R.id.motion_btn) -> {
                 MonitorSelectDialog.Builder(this)
                     .setPositiveListener { select ->
@@ -66,7 +53,6 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
                     }
                     .create().show()
             }
-
             findViewById<Button>(R.id.motion_start_btn) -> {
                 NavigationManager.getInstance().build(RouterConfig.MONITOR_CHART)
                     .withInt("type", selectType)
@@ -75,7 +61,6 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
     fun select(
         selectType: Int,
         selectIndex: ArrayList<Int>,
@@ -84,7 +69,6 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         this.selectType = selectType
         this.selectIndex = selectIndex
     }
-
     private fun updateUI() {
         val motionStartBtn = findViewById<Button>(R.id.motion_start_btn)
         val motionLogBtn = findViewById<Button>(R.id.motion_log_btn)
@@ -94,7 +78,6 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
         motionLogBtn.visibility = View.GONE
         motionBtn.visibility = View.GONE
     }
-
     fun updateTime(time: Long) {
         val ss = time % 60
         val mm = time / 60 % 60

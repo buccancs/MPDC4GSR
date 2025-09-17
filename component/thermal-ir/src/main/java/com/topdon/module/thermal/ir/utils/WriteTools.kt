@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.utils
-
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
@@ -7,21 +6,18 @@ import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.tools.FileTools
 import java.io.File
-
 object WriteTools {
     fun delete(file: File): Int {
         val uri: Uri = FileTools.getUri(file)
         XLog.w("删除文件 uri:$uri")
-        val mediaId = queryId(uri) // MediaStore.Audio.Media._ID of item to update.
+        val mediaId = queryId(uri) 
         val resolver = Utils.getApp().applicationContext.contentResolver
         val selection = "${MediaStore.Images.Media._ID} = ?"
-
         val selectionArgs = arrayOf(mediaId.toString())
         val result = resolver.delete(uri, selection, selectionArgs)
         XLog.w("删除结果文件: $result")
         return result
     }
-
     private fun queryId(uri: Uri): Long {
         val fileName = uri.path!!.substring(uri.path!!.lastIndexOf("/") + 1)
         var result = 0L

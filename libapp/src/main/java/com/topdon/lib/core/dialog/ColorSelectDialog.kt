@@ -1,5 +1,4 @@
 package com.topdon.lib.core.dialog
-
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -10,25 +9,18 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogColorSelectBinding
 import com.topdon.lib.core.utils.ScreenUtil
-
-
 class ColorSelectDialog(
     context: Context,
     @ColorInt private var color: Int,
 ) : Dialog(context, R.style.InfoDialog) {
-
     var onPickListener: ((color: Int) -> Unit)? = null
-
     private lateinit var binding: DialogColorSelectBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(true)
         setCanceledOnTouchOutside(true)
-
         binding = DialogColorSelectBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
-
         binding.colorSelectView.selectColor(color)
         binding.colorSelectView.onSelectListener = {
             color = it
@@ -37,7 +29,6 @@ class ColorSelectDialog(
             dismiss()
             onPickListener?.invoke(color)
         }
-
         window?.let {
             val layoutParams = it.attributes
             layoutParams.width = ScreenUtil.getScreenWidth(context) - SizeUtils.dp2px(36f)

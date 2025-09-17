@@ -1,5 +1,4 @@
 package com.infisense.usbir.utils;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -10,10 +9,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.blankj.utilcode.util.Utils;
 import com.energy.iruvc.utils.CommonParams;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,13 +26,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 public class FileUtil {
-
     private static final String TAG = "FileUtil";
     private static final String DATA_SAVE_DIR = "InfiRay";
     private static int sBufferSize = 524288;
-
     public static String getDiskCacheDir(Context context) {
         String cachePath = context.getCacheDir().getPath();
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
@@ -47,7 +41,6 @@ public class FileUtil {
         }
         return cachePath;
     }
-
     public static void copyAssetsDataToSD(Context context, String srcFileName, String strOutFileName) throws IOException {
         File file = new File(strOutFileName);
         if (file.exists()) {
@@ -66,7 +59,6 @@ public class FileUtil {
         myInput.close();
         myOutput.close();
     }
-
     public static void saveByteFile(Context mContext, byte[] bytes, String fileTitle) {
         try {
             String fileSaveDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
@@ -85,23 +77,16 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-
     public static void saveByteFile(byte[] bytes, String fileTitle) {
-
-
     }
-
     ;
-
     public static String getTableDirPath() {
         return Utils.getApp().getCacheDir().getAbsolutePath() + "/table";
     }
-
     public static void saveShortFileForDeviceData(short[] bytes, String fileTitle) {
         try {
             String fileSaveDir = getTableDirPath();
             createOrExistsDir(fileSaveDir);
-
             File file = new File(fileSaveDir, fileTitle);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
@@ -111,7 +96,6 @@ public class FileUtil {
             Log.e(TAG, fileTitle + " saved失败：" + e.getMessage());
         }
     }
-
     public static void saveShortFile(short[] bytes, String fileTitle) {
         try {
             File path = new File("/sdcard");
@@ -127,7 +111,6 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-
     public static CommonParams.Y16ModePreviewSrcType getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode dataFlowMode) {
         switch (dataFlowMode) {
             case TEMP_OUTPUT: {
@@ -166,7 +149,6 @@ public class FileUtil {
         }
         return null;
     }
-
     public static boolean createFileDir(File dirFile) {
         if (dirFile == null) return true;
         if (dirFile.exists()) {
@@ -174,7 +156,6 @@ public class FileUtil {
         }
         File parentFile = dirFile.getParentFile();
         if (parentFile != null && !parentFile.exists()) {
-
             return createFileDir(parentFile) && createFileDir(dirFile);
         } else {
             boolean mkdirs = dirFile.mkdirs();
@@ -185,7 +166,6 @@ public class FileUtil {
             return isSuccess;
         }
     }
-
     public static File createFile(String dirPath, String fileName) {
         try {
             File dirFile = new File(dirPath);
@@ -217,7 +197,6 @@ public class FileUtil {
             return null;
         }
     }
-
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
             File path = new File("/sdcard");
@@ -234,7 +213,6 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-
     public static void savaIRFile(byte[] bytes) {
         try {
             File path = new File("/sdcard");
@@ -252,7 +230,6 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-
     public static void savaTempFile(byte[] bytes) {
         try {
             File path = new File("/sdcard");
@@ -270,7 +247,6 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-
     public static boolean isFileExists(Context context, final File file) {
         if (file == null) {
             return false;
@@ -280,7 +256,6 @@ public class FileUtil {
         }
         return isFileExists(context, file.getAbsolutePath());
     }
-
     public static boolean isFileExists(Context context, final String filePath) {
         File file = new File(filePath);
         if (file == null) {
@@ -291,7 +266,6 @@ public class FileUtil {
         }
         return isFileExistsApi29(context, filePath);
     }
-
     private static boolean isFileExistsApi29(Context context, String filePath) {
         if (Build.VERSION.SDK_INT >= 29) {
             try {
@@ -310,7 +284,6 @@ public class FileUtil {
         }
         return false;
     }
-
     private static byte[] toByteArray(short[] src) {
         int count = src.length;
         byte[] dest = new byte[count << 1];
@@ -320,7 +293,6 @@ public class FileUtil {
         }
         return dest;
     }
-
     public static short[] toShortArray(byte[] src) {
         int count = src.length >> 1;
         short[] dest = new short[count];
@@ -329,9 +301,7 @@ public class FileUtil {
         }
         return dest;
     }
-
     public static void saveShortFile(String fileDir, short[] bytes, String fileTitle) {
-
         createOrExistsDir(fileDir);
         try {
             File file = new File(fileDir, fileTitle + ".bin");
@@ -344,9 +314,7 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-
     private static void createOrExistsDir(File file) {
-
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -355,18 +323,13 @@ public class FileUtil {
             }
         }
     }
-
     private static void createOrExistsDir(String fileDir) {
         File file = new File(fileDir);
-
         if (!file.exists() && !file.isDirectory()) {
-
             file.mkdir();
         } else {
-
         }
     }
-
     public static byte[] readFile2BytesByStream(Context context, final File file) {
         if (!isFileExists(context, file)) {
             return null;
@@ -404,21 +367,17 @@ public class FileUtil {
             return null;
         }
     }
-
     public static void copyAssetsBigDataToSD(Context context, String srcFileName, String strOutFileName) {
         try {
             File file = new File(strOutFileName);
             Log.i(TAG, "file.exists->getAbsolutePath = " + file.getAbsolutePath());
             if (file.exists()) {
-
                 file.delete();
             }
-
             if (!file.createNewFile()) {
                 Log.e(TAG, "创建文件 " + srcFileName + " 失败");
                 return;
             }
-
             InputStream myInput;
             OutputStream myOutput = new FileOutputStream(strOutFileName);
             myInput = context.getAssets().open(srcFileName);
@@ -435,16 +394,13 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-
     public static String getISPConfigByGainStatus(CommonParams.GainStatus gainStatus) {
-
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H.json";
         } else {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_L.json";
         }
     }
-
     public static String getISPConfigWithEncryptHexByGainStatus(CommonParams.GainStatus gainStatus) {
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H_encrypt_hex.json";
@@ -452,16 +408,12 @@ public class FileUtil {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_L_encrypt_hex.json";
         }
     }
-
-
     static String INFISENSE_SAVE_DIR() {
         return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
-
     static String DEVICE_DATA_SAVE_DIR() {
         return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
-
     public static String getISPConfigWithEncryptBase64ByGainStatus(CommonParams.GainStatus gainStatus) {
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H_encrypt_base64.json";
@@ -469,7 +421,6 @@ public class FileUtil {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_L_encrypt_base64.json";
         }
     }
-
     public static String getVersionName(Context context) {
         PackageManager manager = context.getPackageManager();
         String name = null;
@@ -481,7 +432,6 @@ public class FileUtil {
         }
         return name;
     }
-
     public static String getMD5Key(String string) {
         if (TextUtils.isEmpty(string)) {
             return "";
@@ -504,14 +454,12 @@ public class FileUtil {
         }
         return "";
     }
-
     public static void makeDirectory(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();
         }
     }
-
     public static String getSaveFilePath(Context context) {
         boolean useExternalStorage = false;
         String directoryPath = "";
@@ -533,21 +481,16 @@ public class FileUtil {
         }
         return directoryPath;
     }
-
     private static File makeFile(String filePath, String fileName) throws IOException {
         makeDirectory(filePath);
-
         File file = new File(filePath + fileName);
         if (!file.exists()) {
             file.createNewFile();
         }
-
         return file;
     }
-
     public static int writeTxtToFile(byte[] bytes, String filePath, String fileName) {
         int result = -1;
-
         FileChannel fc = null;
         File file = null;
         try {
@@ -560,7 +503,6 @@ public class FileUtil {
             fc.position(fc.size());
             fc.write(ByteBuffer.wrap(bytes));
             result = 0;
-
         } catch (IOException e) {
             e.printStackTrace();
             result = -1;
@@ -569,7 +511,6 @@ public class FileUtil {
                 if (fc != null) {
                     fc.close();
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
                 result = -1;
@@ -577,7 +518,6 @@ public class FileUtil {
             return result;
         }
     }
-
     public static void saveStringToFile(String str, String path) {
         File file;
         FileOutputStream stream = null;
@@ -588,14 +528,13 @@ public class FileUtil {
                 file.createNewFile();
             }
             byte[] contentInBytes = str.getBytes();
-            stream.write(contentInBytes); // 写入
+            stream.write(contentInBytes); 
             stream.flush();
             stream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
     public static String getStringFromFile(String path) {
         StringBuffer txtContent = new StringBuffer();
         byte[] b = new byte[2048];
@@ -622,13 +561,11 @@ public class FileUtil {
         }
         return txtContent.toString();
     }
-
     public static void float2Byte(float num, byte[] numbyte) {
         int fbit = Float.floatToIntBits(num);
         for (int i = 0; i < 4; i++) {
-            numbyte[i] = (byte) (fbit >> (i * 8)); //little-endian
+            numbyte[i] = (byte) (fbit >> (i * 8)); 
             Log.i(TAG, "numbyte[=" + i + "]=" + numbyte[i]);
         }
     }
-
 }

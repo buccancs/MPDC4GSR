@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.util.Log
@@ -61,31 +60,22 @@ import org.greenrobot.eventbus.ThreadMode
 import java.math.BigDecimal
 import java.math.RoundingMode
 import com.topdon.lib.core.R as LibR
-
-
 class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
-
     protected var defaultDataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT
-
     private var gainStatus = CommonParams.GainStatus.HIGH_GAIN
     private var isTS001 = false
-
     private var selectBean: SelectPositionBean = SelectPositionBean()
-
     private lateinit var temperatureView: TemperatureView
     private lateinit var llTime: View
     private lateinit var mpChartView: ChartMonitorView
     private lateinit var cameraView: CameraView
     private lateinit var tvTime: TextView
     private lateinit var thermalLay: View
-
     private var ircmd: IRCMD? = null
     private val bean = ThermalBean()
     private var ts_data_H: ByteArray? = null
     private var ts_data_L: ByteArray? = null
-
     override fun initContentView() = R.layout.activity_ir_monitor_chart
-
     override fun initView() {
         findViewById<TitleView>(R.id.title_view).setRightClickListener {
             recordJob?.cancel()
@@ -97,34 +87,27 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         ts_data_H = CommonUtils.getTauData(this@IRMonitorChartActivity, "ts/TS001_H.bin")
         ts_data_L = CommonUtils.getTauData(this@IRMonitorChartActivity, "ts/TS001_L.bin")
         selectBean = intent.getParcelableExtra("select")!!
-
         findViewById<TextView>(R.id.monitor_current_vol).text =
             getString(if (selectBean.type == 1) LibR.string.chart_temperature else LibR.string.chart_temperature_high)
         findViewById<TextView>(R.id.monitor_real_vol).visibility =
             if (selectBean.type == 1) View.GONE else View.VISIBLE
         findViewById<ImageView>(R.id.monitor_real_img).visibility =
             if (selectBean.type == 1) View.GONE else View.VISIBLE
-
         temperatureView = findViewById(R.id.temperatureView)
         llTime = findViewById(R.id.ll_time)
         mpChartView = findViewById(R.id.mp_chart_view)
         cameraView = findViewById(R.id.cameraView)
         tvTime = findViewById(R.id.tv_time)
         thermalLay = findViewById(R.id.thermal_lay)
-
         temperatureView.isEnabled = false
         temperatureView.setTextSize(SaveSettingUtil.tempTextSize)
-
         initDataIR()
     }
-
     override fun finish() {
         super.finish()
         EventBus.getDefault().post(MonitorSaveEvent())
     }
-
     private var showTask: Job? = null
-
     override fun initData() {
         if (showTask != null && showTask!!.isActive) {
             showTask!!.cancel()
@@ -145,7 +128,6 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                                     selectBean.endPosition
                                 )
                             )
-
                             else -> temperatureView.getRectTemp(selectBean.getRect())
                         } ?: continue
                     if (isFirstRead) {
@@ -173,19 +155,17 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                         bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                         bean.createTime = System.currentTimeMillis()
-                        canUpdate = true // 可以开始更新记录
+                        canUpdate = true 
                     }
                 }
             }
     }
-
     override fun onStart() {
         super.onStart()
         isStop = false
         if (!isrun) {
             configParam()
             temperatureView.postDelayed({
-
                 try {
                     if (!isStop) {
                         pseudoColorMode = 3
@@ -195,29 +175,25 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         cameraView.start()
                         isrun = true
                         if (!isRecord) {
-                            recordThermal() // 开始记录
+                            recordThermal() 
                         }
                     }
                 } catch (e: Exception) {
-                    Log.e("测试", "//" + e.message)
+                    Log.e("测试", "
                 }
             }, 1500)
         }
     }
-
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        mpChartView.highlightValue(null) // 关闭高亮点Marker
+        mpChartView.highlightValue(null) 
     }
-
     override fun onPause() {
         super.onPause()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
-
     private var isStop = false
-
     override fun onStop() {
         super.onStop()
         isStop = true
@@ -231,7 +207,6 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         cameraView.stop()
         isrun = false
     }
-
     override fun onDestroy() {
         super.onDestroy()
         recordJob?.cancel()
@@ -241,18 +216,14 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
             Log.e(TAG, "imageThread.join(): catch an interrupted exception")
         }
     }
-
     override fun disConnected() {
         super.disConnected()
         finish()
     }
-
     private var isRecord = false
-    private var timeMillis = 1000L // 间隔1s
+    private var timeMillis = 1000L 
     private var canUpdate = false
-
     private var recordJob: Job? = null
-
     private fun recordThermal() {
         recordJob =
             lifecycleScope.launch(Dispatchers.IO) {
@@ -299,9 +270,8 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                 XLog.w("停止记录, 数据量:$time")
             }
     }
-
     private var imageThread: ImageThreadTC? = null
-    private var bitmap: Bitmap? = null // 不需要显示图像，可去掉
+    private var bitmap: Bitmap? = null 
     private var iruvc: IRUVCTC? = null
     private val cameraWidth = 256
     private val cameraHeight = 384
@@ -313,23 +283,13 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
     private val syncimage = SynchronizedBitmap()
     private var isrun = false
     private var pseudoColorMode = 0
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun irEvent(event: IRMsgEvent) {
         if (event.code == MsgCode.RESTART_USB) {
             restartUsbCamera()
         }
     }
-
     private var rotateAngle = 270
-
-    /**
-
-     *
-
-
-     * syncimage.valid = true
-     */
     private fun initDataIR() {
         imageWidth = cameraHeight - tempHeight
         imageHeight = cameraWidth
@@ -347,25 +307,21 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         temperatureView.setSyncimage(syncimage)
         temperatureView.setTemperature(temperatureBytes)
         setViewLay()
-
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) // 打开5V
+            Usbcontorl.usb3803_mode_setting(1) 
             Log.w("123", "打开5V")
         }
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun iruvctc(event: PreviewComplete) {
         dealY16ModePreviewComplete()
     }
-
     private fun dealY16ModePreviewComplete() {
         dismissLoadingDialog()
         isConfigWait = false
         iruvc!!.setFrameReady(true)
         addTempLine()
     }
-
     private fun startISP() {
         try {
             imageThread = ImageThreadTC(this@IRMonitorChartActivity, imageWidth, imageHeight)
@@ -380,7 +336,6 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
             Log.e("图像线程重复启动", e.message.toString())
         }
     }
-
     private fun startUSB(isRestart: Boolean) {
         iruvc =
             IRUVCTC(
@@ -389,20 +344,17 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                 object : ConnectCallback {
                     override fun onCameraOpened(uvcCamera: UVCCamera) {
                     }
-
                     override fun onIRCMDCreate(ircmd: IRCMD) {
                         Log.i(
                             TAG,
                             "ConnectCallback->onIRCMDCreate",
                         )
                         this@IRMonitorChartActivity.ircmd = ircmd
-
-
                         val fwBuildVersionInfoBytes = ByteArray(50)
                         ircmd?.getDeviceInfo(
                             CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                             fwBuildVersionInfoBytes,
-                        ) // ok
+                        ) 
                         val value = IntArray(1)
                         val arm = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
                         isTS001 = arm.contains("Mini256", true)
@@ -413,28 +365,20 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         Log.d(TAG, "TPD_PROP_GAIN_SEL=" + value[0])
                         gainStatus =
                             if (value[0] == 1) {
-
                                 CommonParams.GainStatus.HIGH_GAIN
-
                             } else {
-
                                 CommonParams.GainStatus.LOW_GAIN
                             }
                     }
                 },
                 object : USBMonitorCallback {
                     override fun onAttach() {}
-
                     override fun onGranted() {}
-
                     override fun onConnect() {}
-
                     override fun onDisconnect() {}
-
                     override fun onDettach() {
                         finish()
                     }
-
                     override fun onCancel() {
                         finish()
                     }
@@ -446,7 +390,6 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         iruvc!!.setRotate(rotateAngle)
         iruvc!!.registerUSB()
     }
-
     private fun restartUsbCamera() {
         if (iruvc != null) {
             iruvc!!.stopPreview()
@@ -454,9 +397,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         }
         startUSB(true)
     }
-
     private var isConfigWait = false
-
     private fun configParam() {
         lifecycleScope.launch {
             isConfigWait = true
@@ -464,23 +405,20 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                 delay(100)
             }
             val config = ConfigRepository.readConfig(false)
-            val disChar = (config.distance * 128).toInt() // 距离(米)
-            val emsChar = (config.radiation * 128).toInt() // 发射率
+            val disChar = (config.distance * 128).toInt() 
+            val emsChar = (config.radiation * 128).toInt() 
             XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
             val timeMillis = 250L
             delay(timeMillis)
-
             ircmd!!.setPropTPDParams(
                 CommonParams.PropTPDParams.TPD_PROP_EMS,
                 CommonParams.PropTPDParamsValue.NumberType(emsChar.toString()),
             )
             delay(timeMillis)
-
             ircmd!!.setPropTPDParams(
                 CommonParams.PropTPDParams.TPD_PROP_DISTANCE,
                 CommonParams.PropTPDParamsValue.NumberType(disChar.toString()),
             )
-
             delay(timeMillis)
             ircmd?.zoomCenterDown(
                 CommonParams.PreviewPathChannel.PREVIEW_PATH0,
@@ -502,7 +440,6 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                 CommonParams.ZoomScaleStep.ZOOM_STEP2,
             )
             iruvc?.let {
-
                 withContext(Dispatchers.IO) {
                     if (SaveSettingUtil.isAutoShutter) {
                         ircmd!!.setPropAutoShutterParameter(
@@ -517,7 +454,6 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                     }
                 }
             }
-
             delay(timeMillis)
             ircmd?.setPropImageParams(
                 CommonParams.PropImageParams.IMAGE_PROP_LEVEL_CONTRAST,
@@ -535,18 +471,14 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
             )
         }
     }
-
     private fun addTempLine() {
         temperatureView.visibility = View.VISIBLE
         when (selectBean.type) {
             1 -> {
-
                 temperatureView.addScalePoint(selectBean.startPosition)
                 temperatureView.temperatureRegionMode = REGION_MODE_POINT
             }
-
             2 -> {
-
                 temperatureView.addScaleLine(
                     Line(
                         selectBean.startPosition,
@@ -555,9 +487,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                 )
                 temperatureView.temperatureRegionMode = REGION_MODE_LINE
             }
-
             3 -> {
-
                 temperatureView.addScaleRectangle(
                     Rect(
                         selectBean.startPosition!!.x,
@@ -571,7 +501,6 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         }
         temperatureView.drawLine()
     }
-
     private fun setViewLay() {
         thermalLay.post {
             val params = thermalLay.layoutParams
@@ -589,7 +518,6 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
             thermalLay.layoutParams = params
         }
     }
-
     override fun tempCorrectByTs(temp: Float?): Float {
         var tmp = temp
         try {
@@ -599,14 +527,12 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         }
         return tmp!!
     }
-
     private fun tempCorrect(
         temp: Float,
         gainStatus: CommonParams.GainStatus,
         tempInfo: Long,
     ): Float {
         if (!isTS001) {
-
             return temp
         }
         if (ts_data_H == null || ts_data_L == null) {
@@ -646,17 +572,13 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         )
         return newTemp
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun cameraEvent(event: DeviceCameraEvent) {
         when (event.action) {
             100 -> {
-
                 showCameraLoading()
             }
-
             101 -> {
-
                 dismissCameraLoading()
                 addTempLine()
             }

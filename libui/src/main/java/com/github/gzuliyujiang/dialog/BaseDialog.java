@@ -1,18 +1,4 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
-
 package com.github.gzuliyujiang.dialog;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -31,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
@@ -40,41 +25,32 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
-
 import com.topdon.lib.ui.R;
-
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class BaseDialog extends Dialog implements DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
     public static final int MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT;
     public static final int WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
     protected Activity activity;
     protected View contentView;
-
     public BaseDialog(@NonNull Activity activity) {
         this(activity, R.style.DialogTheme_Base);
     }
-
     public BaseDialog(@NonNull Activity activity, @StyleRes int themeResId) {
         super(activity, themeResId);
         init(activity);
     }
-
     public final View getContentView() {
         return contentView;
     }
-
     private void init(Activity activity) {
         this.activity = activity;
         setOwnerActivity(activity);
-
         setCanceledOnTouchOutside(false);
-
         setCancelable(false);
         super.setOnShowListener(this);
         super.setOnDismissListener(this);
         Window window = super.getWindow();
         if (window != null) {
-
             window.requestFeature(Window.FEATURE_NO_TITLE);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setLayout(activity.getResources().getDisplayMetrics().widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
@@ -82,26 +58,21 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             window.getDecorView().setPadding(0, 0, 0, 0);
         }
         onInit(null);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             super.create();
         } else {
             readyView();
         }
     }
-
     @Deprecated
     @CallSuper
     protected void onInit(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
         DialogLog.print("dialog onInit");
     }
-
     @CallSuper
     protected void onInit(@Nullable Bundle savedInstanceState) {
-
         onInit(activity, savedInstanceState);
     }
-
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +81,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             readyView();
         }
     }
-
     private void readyView() {
         contentView = createContentView();
         contentView.setFocusable(true);
@@ -118,36 +88,28 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         setContentView(contentView);
         initView();
     }
-
     @NonNull
     protected abstract View createContentView();
-
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
     @CallSuper
     protected void initView(View contentView) {
         DialogLog.print("dialog initView");
     }
-
     @CallSuper
     protected void initView() {
-
         initView(contentView);
     }
-
     public final void disableCancel() {
         setCancelable(false);
         setCanceledOnTouchOutside(false);
     }
-
     public final void setBackgroundColor(@ColorInt int color) {
         setBackgroundColor(CornerRound.No, color);
     }
-
     public final void setBackgroundColor(@CornerRound int cornerRound, @ColorInt int color) {
         setBackgroundColor(cornerRound, 20, color);
     }
-
     public final void setBackgroundColor(@CornerRound int cornerRound, @Dimension(unit = Dimension.DP) int radius, @ColorInt int color) {
         if (contentView == null) {
             return;
@@ -174,45 +136,36 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         }
         contentView.setBackground(drawable);
     }
-
     public final void setBackgroundResource(@DrawableRes int resId) {
         if (contentView == null) {
             return;
         }
         contentView.setBackgroundResource(resId);
     }
-
     public final void setBackgroundDrawable(Drawable drawable) {
         if (contentView == null) {
             return;
         }
         contentView.setBackground(drawable);
     }
-
     public final void setLayout(int width, int height) {
         getWindow().setLayout(width, height);
     }
-
     public final void setWidth(int width) {
         getWindow().setLayout(width, getWindow().getAttributes().height);
     }
-
     public final void setHeight(int height) {
         getWindow().setLayout(getWindow().getAttributes().width, height);
     }
-
     public final void setGravity(int gravity) {
         getWindow().setGravity(gravity);
     }
-
     public final void setDimAmount(@FloatRange(from = 0, to = 1) float amount) {
         getWindow().setDimAmount(amount);
     }
-
     public final void setAnimationStyle(@StyleRes int animRes) {
         getWindow().setWindowAnimations(animRes);
     }
-
     @Override
     public void setOnShowListener(@Nullable OnShowListener listener) {
         if (listener == null) {
@@ -224,7 +177,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             listener.onShow(dialog);
         });
     }
-
     @Override
     public void setOnDismissListener(@Nullable OnDismissListener listener) {
         if (listener == null) {
@@ -236,7 +188,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             listener.onDismiss(dialog);
         });
     }
-
     @CallSuper
     @Override
     public void show() {
@@ -247,12 +198,9 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             super.show();
             DialogLog.print("dialog show");
         } catch (Exception e) {
-
-
             DialogLog.print(e);
         }
     }
-
     @CallSuper
     @Override
     public void dismiss() {
@@ -263,12 +211,9 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             super.dismiss();
             DialogLog.print("dialog dismiss");
         } catch (Exception e) {
-
-
             DialogLog.print(e);
         }
     }
-
     @CallSuper
     @Override
     public void onAttachedToWindow() {
@@ -276,29 +221,24 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
         super.onAttachedToWindow();
         initData();
     }
-
     @CallSuper
     protected void initData() {
         DialogLog.print("dialog initData");
     }
-
     @CallSuper
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         DialogLog.print("dialog detached from window");
     }
-
     @CallSuper
     @Override
     public void onShow(DialogInterface dialog) {
         DialogLog.print("dialog onShow");
     }
-
     @CallSuper
     @Override
     public void onDismiss(DialogInterface dialog) {
         DialogLog.print("dialog onDismiss");
     }
-
 }

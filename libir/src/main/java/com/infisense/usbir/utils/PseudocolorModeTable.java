@@ -1,7 +1,5 @@
 package com.infisense.usbir.utils;
-
 public final class PseudocolorModeTable {
-
     public final static int[][] pseudocolorMapTableOfBAIRE = new int[][]{
             {0, 0, 0}, {1, 1, 1}, {2, 2, 2}, {3, 3, 3},
             {4, 4, 4}, {5, 5, 5}, {6, 6, 6}, {7, 7, 7},
@@ -68,8 +66,6 @@ public final class PseudocolorModeTable {
             {248, 248, 248}, {249, 249, 249}, {250, 250, 250}, {251, 251, 251},
             {252, 252, 252}, {253, 253, 253}, {254, 254, 254}, {255, 255, 255},
     };
-
     public static final int[] RED_RGB = {205, 38, 38};
-
     public static final int[] BLUE_RGB = {0, 0, 205};
 }

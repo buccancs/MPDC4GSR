@@ -1,5 +1,4 @@
 package com.topdon.tc001.fragment
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -40,18 +39,14 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
-
 @SuppressLint("NotifyDataSetChanged")
 class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickListener {
     private lateinit var adapter: MyAdapter
-
     override fun initContentLayoutId(): Int = R.layout.fragment_main
-
     override fun initView(savedInstanceState: Bundle?) {
         adapter = MyAdapter()
         binding.tvConnectDevice.setOnClickListener(this)
         binding.ivAdd.setOnClickListener(this)
-
         binding.tvNoDeviceTitle.setOnLongClickListener {
             showGSROptions()
             true
@@ -60,11 +55,9 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             showGSROptions()
             true
         }
-
         binding.fabGsrRecording.setOnClickListener {
             showGSROptions()
         }
-
         adapter.hasConnectLine = DeviceTools.isConnect()
         adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
         adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
@@ -76,7 +69,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         .withBoolean(ExtraKeyConfig.IS_TC007, false)
                         .navigation(requireContext())
                 }
-
                 ConnectType.TS004 -> {
                     if (WebSocketProxy.getInstance().isTS004Connect()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_MONOCULAR)
@@ -88,7 +80,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             .navigation(requireContext())
                     }
                 }
-
                 ConnectType.TC007 -> {
                     NavigationManager.getInstance()
                         .build(RouterConfig.IR_MAIN)
@@ -121,10 +112,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             }
             popup.show(view)
         }
-
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
-
         if (WebSocketProxy.getInstance().isTC007Connect()) {
             lifecycleScope.launch {
                 val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
@@ -136,7 +125,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     }
@@ -144,13 +132,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             },
         )
     }
-
     override fun onResume() {
         super.onResume()
         refresh()
         adapter?.notifyDataSetChanged()
     }
-
     private fun refresh() {
         val hasAnyDevice =
             SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
@@ -161,17 +147,14 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
         adapter.notifyDataSetChanged()
     }
-
     override fun connected() {
         adapter.hasConnectLine = true
         SharedManager.hasTcLine = true
         refresh()
     }
-
     override fun disConnected() {
         adapter.hasConnectLine = false
     }
-
     override fun onSocketConnected(isTS004: Boolean) {
         if (isTS004) {
             SharedManager.hasTS004 = true
@@ -187,7 +170,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             }
         }
     }
-
     override fun onSocketDisConnected(isTS004: Boolean) {
         if (isTS004) {
             adapter.hasConnectTS004 = false
@@ -195,21 +177,17 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             adapter.hasConnectTC007 = false
         }
     }
-
     override fun onClick(v: View?) {
         when (v) {
-            binding.tvConnectDevice, binding.ivAdd -> { // 添加设备
+            binding.tvConnectDevice, binding.ivAdd -> { 
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
-
-
             }
         }
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
-        if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) { // 心跳
-            if (!adapter.hasConnectTC007) { // 当前连接的不是 TC007
+        if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) { 
+            if (!adapter.hasConnectTC007) { 
                 return
             }
             try {
@@ -220,27 +198,22 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             }
         }
     }
-
     private class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
-
         var hasConnectLine: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, 3)
             }
-
         var hasConnectTS004: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, itemCount)
             }
-
         var hasConnectTC007: Boolean = false
             set(value) {
                 field = value
                 notifyItemRangeChanged(0, itemCount)
             }
-
         var tc007Battery: BatteryInfo? = null
             set(value) {
                 if (field != value) {
@@ -248,10 +221,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     notifyItemRangeChanged(0, itemCount)
                 }
             }
-
         var onItemClickListener: ((type: ConnectType) -> Unit)? = null
         var onItemLongClickListener: ((view: View, type: ConnectType) -> Unit)? = null
-
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
@@ -261,7 +232,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     .inflate(R.layout.item_device_connect, parent, false)
             )
         }
-
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(
             holder: ViewHolder,
@@ -280,10 +250,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     ConnectType.TS004 -> hasConnectTS004
                     ConnectType.TC007 -> hasConnectTC007
                 }
-
             holder.bind(type, hasTitle, hasConnect, hasConnectTC007, tc007Battery)
         }
-
         override fun getItemCount(): Int {
             var result = 0
             if (SharedManager.hasTcLine) {
@@ -297,9 +265,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             }
             return result
         }
-
         inner class ViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView) {
-
             private val ivBg: View = rootView.findViewById(R.id.iv_bg)
             private val tvTitle: TextView = rootView.findViewById(R.id.tv_title)
             private val tvDeviceName: TextView = rootView.findViewById(R.id.tv_device_name)
@@ -309,7 +275,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             private val batteryView: com.topdon.lib.ui.widget.BatteryView =
                 rootView.findViewById(R.id.battery_view)
             private val viewDeviceState: View = rootView.findViewById(R.id.view_device_state)
-
             init {
                 ivBg.setOnClickListener {
                     val position = bindingAdapterPosition
@@ -320,7 +285,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 ivBg.setOnLongClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-
                         val deviceType = getConnectType(position)
                         when (deviceType) {
                             ConnectType.LINE -> {
@@ -328,13 +292,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                                     return@setOnLongClickListener true
                                 }
                             }
-
                             ConnectType.TS004 -> {
                                 if (WebSocketProxy.getInstance().isTS004Connect()) {
                                     return@setOnLongClickListener true
                                 }
                             }
-
                             ConnectType.TC007 -> {
                                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                                     return@setOnLongClickListener true
@@ -346,7 +308,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     true
                 }
             }
-
             fun bind(
                 type: ConnectType,
                 hasTitle: Boolean,
@@ -360,7 +321,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         itemView.context, ConstantLanguages.ENGLISH,
                     )
                         .getString(if (type == ConnectType.LINE) R.string.tc_connect_line else R.string.tc_connect_wifi)
-
                 ivBg.isSelected = hasConnect
                 tvDeviceName.isSelected = hasConnect
                 viewDeviceState.isSelected = hasConnect
@@ -370,7 +330,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
                 batteryView.isVisible =
                     type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
-
                 when (type) {
                     ConnectType.LINE -> {
                         tvDeviceName.setText(
@@ -386,7 +345,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             ivImage.setImageResource(R.drawable.ic_main_device_line_disconnect)
                         }
                     }
-
                     ConnectType.TS004 -> {
                         tvDeviceName.text = "TS004"
                         if (hasConnect) {
@@ -395,7 +353,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             ivImage.setImageResource(R.drawable.ic_main_device_ts004_disconnect)
                         }
                     }
-
                     ConnectType.TC007 -> {
                         tvDeviceName.text = "TC007"
                         if (hasConnect) {
@@ -409,7 +366,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     }
                 }
             }
-
             fun getConnectType(position: Int): ConnectType =
                 when (position) {
                     0 ->
@@ -420,29 +376,24 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         } else {
                             ConnectType.TC007
                         }
-
                     1 ->
                         if (SharedManager.hasTcLine) {
                             if (SharedManager.hasTS004) ConnectType.TS004 else ConnectType.TC007
                         } else {
                             ConnectType.TC007
                         }
-
                     else -> ConnectType.TC007
                 }
         }
     }
-
     private fun showGSROptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("GSR Multi-modal Recording")
             .setMessage("Choose recording option:")
             .setPositiveListener("Dual-Mode Camera") {
-                // Dual-Mode Camera
                 showDualModeCameraOptions()
             }
             .setCancelListener("Quick Recording") {
-                // Quick Recording
                 try {
                     val intent = Intent(
                         requireContext(),
@@ -450,37 +401,25 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     )
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {
-                    // Fallback
                     NavigationManager.getInstance()
                         .build(RouterConfig.GSR_MULTI_MODAL)
                         .navigation(requireContext())
                 }
             }
-            // Remove setNeutralListener since it's not available in TipDialog API
-            // .setNeutralListener("GSR Demo") {
-            //     // GSR Demo
-            //     NavigationManager.getInstance()
-            //         .build(RouterConfig.GSR_DEMO)
-            //         .navigation(requireContext())
-            // }
             .create().show()
     }
-
     private fun showDualModeCameraOptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera System")
             .setMessage("Samsung S22 optimized camera modes with fast switching:")
             .setPositiveListener("RAW 50MP Mode") {
-
                 launchDualModeCamera("RAW_50MP")
             }
             .setCancelListener("4K Video Mode") {
-
                 launchDualModeCamera("VIDEO_4K")
             }
             .create().show()
     }
-
     private fun launchDualModeCamera(initialMode: String) {
         try {
             val intent = Intent(
@@ -491,20 +430,15 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
             startActivity(intent)
         } catch (e: Exception) {
-
             Toast.makeText(
                 requireContext(),
                 "Launching dual-mode camera integration example...",
                 Toast.LENGTH_SHORT
             ).show()
-
             showDualModeIntegrationExample()
         }
     }
-
     private fun showDualModeIntegrationExample() {
-
-
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera Integration")
             .setMessage(
@@ -519,7 +453,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             .setPositiveListener("Got it") { }
             .create().show()
     }
-
     enum class ConnectType {
         LINE,
         TS004,

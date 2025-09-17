@@ -1,8 +1,6 @@
 package com.topdon.module.user.model
-
 import com.blankj.utilcode.util.Utils
 import com.topdon.lib.core.R as RCore
-
 object FaqRepository {
     fun getQuestionList(isTS001: Boolean): ArrayList<QuestionData> =
         if (isTS001) {
@@ -65,7 +63,6 @@ object FaqRepository {
             )
         }
 }
-
 data class QuestionData(
     val question: String,
     val answer: String,

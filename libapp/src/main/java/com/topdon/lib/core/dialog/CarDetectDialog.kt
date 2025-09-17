@@ -1,5 +1,4 @@
 package com.topdon.lib.core.dialog
-
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -20,34 +19,20 @@ import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.databinding.DialogCarDetectBinding
 import com.topdon.lib.core.databinding.ItemCarDetectChildLayoutBinding
 import com.topdon.lib.core.databinding.ItemCarDetectLayoutBinding
-
-
 class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean) -> Unit)) :
     Dialog(context, R.style.DefaultDialog) {
     private lateinit var binding: DialogCarDetectBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(true)
         setCanceledOnTouchOutside(false)
-
         binding = DialogCarDetectBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
-
         binding.titleView.setLeftClickListener { dismiss() }
-
         binding.rcyDetect.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.rcyDetect.adapter = CarDetectAdapter(context, getDetectList())
-
-        /*window?.let {
-            val layoutParams = it.attributes
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-            it.attributes = layoutParams
-        }*/
     }
-
     companion object {
         @JvmStatic
         fun getDetectList(): MutableList<CarDetectBean> {
@@ -231,7 +216,6 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             return dataList
         }
     }
-
     inner class CarDetectAdapter(val act: Context, private var carDetects: List<CarDetectBean>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         override fun onCreateViewHolder(
@@ -245,7 +229,6 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             )
             return ItemView(binding)
         }
-
         override fun onBindViewHolder(
             holder: RecyclerView.ViewHolder,
             position: Int,
@@ -268,11 +251,9 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                     listener.invoke(item)
                     dismiss()
                 }
-
                 var selectCarDetect = SharedManager.getCarDetectInfo()
                 carDetects.forEachIndexed { index, carDetectBean ->
                     carDetectBean.detectChildBeans.forEachIndexed { childIndex, carDetectChildBean ->
-
                         if (selectCarDetect == null) {
                             carDetectChildBean.isSelected = (index == 0 && childIndex == 0)
                         } else {
@@ -281,29 +262,24 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                         }
                     }
                 }
-
                 holder.rcyDetectChild?.adapter = carDetectChildAdapter
             }
         }
-
         override fun getItemCount(): Int {
             return carDetects.size
         }
-
         inner class ItemView(private val binding: ItemCarDetectLayoutBinding) :
             RecyclerView.ViewHolder(binding.root) {
             val tvTitle: TextView = binding.tvTitle
             val rcyDetectChild: RecyclerView = binding.rcyDetectChild
         }
     }
-
     class CarDetectChildAdapter(
         val context: Context,
         private var carChildDetects: List<CarDetectChildBean>,
     ) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var listener: ((index: Int, bean: CarDetectChildBean) -> Unit)? = null
-
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
@@ -315,7 +291,6 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             )
             return ItemView(binding)
         }
-
         override fun onBindViewHolder(
             holder: RecyclerView.ViewHolder,
             position: Int,
@@ -333,11 +308,9 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                 }
             }
         }
-
         override fun getItemCount(): Int {
             return carChildDetects.size
         }
-
         inner class ItemView(private val binding: ItemCarDetectChildLayoutBinding) :
             RecyclerView.ViewHolder(binding.root) {
             val rlyParent: RelativeLayout = binding.rlyParent

@@ -1,14 +1,10 @@
 package com.infisense.usbir.utils
-
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.view.animation.ScaleAnimation
-
 public object AnimaUtils {
-
     const val DEFAULT_ANIMATION_DURATION: Long = 400
-
     fun getRotateAnimation(
         fromDegrees: Float,
         toDegrees: Float,
@@ -34,7 +30,6 @@ public object AnimaUtils {
         }
         return rotateAnimation
     }
-
     fun getRotateAnimationByCenter(
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
@@ -50,21 +45,17 @@ public object AnimaUtils {
             animationListener,
         )
     }
-
     fun getRotateAnimationByCenter(duration: Long): RotateAnimation {
         return getRotateAnimationByCenter(duration, null)
     }
-
     fun getRotateAnimationByCenter(animationListener: Animation.AnimationListener?): RotateAnimation {
         return getRotateAnimationByCenter(
             DEFAULT_ANIMATION_DURATION,
             animationListener,
         )
     }
-
     val rotateAnimationByCenter: RotateAnimation
         get() = getRotateAnimationByCenter(DEFAULT_ANIMATION_DURATION, null)
-
     fun getAlphaAnimation(
         fromAlpha: Float,
         toAlpha: Float,
@@ -78,7 +69,6 @@ public object AnimaUtils {
         }
         return alphaAnimation
     }
-
     fun getAlphaAnimation(
         fromAlpha: Float,
         toAlpha: Float,
@@ -86,7 +76,6 @@ public object AnimaUtils {
     ): AlphaAnimation {
         return getAlphaAnimation(fromAlpha, toAlpha, durationMillis, null)
     }
-
     fun getAlphaAnimation(
         fromAlpha: Float,
         toAlpha: Float,
@@ -99,7 +88,6 @@ public object AnimaUtils {
             animationListener,
         )
     }
-
     fun getAlphaAnimation(
         fromAlpha: Float,
         toAlpha: Float,
@@ -111,39 +99,32 @@ public object AnimaUtils {
             null,
         )
     }
-
     fun getHiddenAlphaAnimation(
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
     ): AlphaAnimation {
         return getAlphaAnimation(1.0f, 0.0f, durationMillis, animationListener)
     }
-
     fun getHiddenAlphaAnimation(durationMillis: Long): AlphaAnimation {
         return getHiddenAlphaAnimation(durationMillis, null)
     }
-
     fun getHiddenAlphaAnimation(animationListener: Animation.AnimationListener?): AlphaAnimation {
         return getHiddenAlphaAnimation(
             DEFAULT_ANIMATION_DURATION,
             animationListener,
         )
     }
-
     val hiddenAlphaAnimation: AlphaAnimation
         get() = getHiddenAlphaAnimation(DEFAULT_ANIMATION_DURATION, null)
-
     fun getShowAlphaAnimation(
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
     ): AlphaAnimation {
         return getAlphaAnimation(0.0f, 1.0f, durationMillis, animationListener)
     }
-
     fun getShowAlphaAnimation(durationMillis: Long): AlphaAnimation {
         return getAlphaAnimation(0.0f, 1.0f, durationMillis, null)
     }
-
     fun getShowAlphaAnimation(animationListener: Animation.AnimationListener?): AlphaAnimation {
         return getAlphaAnimation(
             0.0f,
@@ -152,10 +133,8 @@ public object AnimaUtils {
             animationListener,
         )
     }
-
     val showAlphaAnimation: AlphaAnimation
         get() = getAlphaAnimation(0.0f, 1.0f, DEFAULT_ANIMATION_DURATION, null)
-
     fun getLessenScaleAnimation(
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
@@ -173,18 +152,15 @@ public object AnimaUtils {
         scaleAnimation.setAnimationListener(animationListener)
         return scaleAnimation
     }
-
     fun getLessenScaleAnimation(durationMillis: Long): ScaleAnimation {
         return getLessenScaleAnimation(durationMillis, null)
     }
-
     fun getLessenScaleAnimation(animationListener: Animation.AnimationListener?): ScaleAnimation {
         return getLessenScaleAnimation(
             DEFAULT_ANIMATION_DURATION,
             animationListener,
         )
     }
-
     fun getAmplificationAnimation(
         durationMillis: Long,
         animationListener: Animation.AnimationListener?,
@@ -202,11 +178,9 @@ public object AnimaUtils {
         scaleAnimation.setAnimationListener(animationListener)
         return scaleAnimation
     }
-
     fun getAmplificationAnimation(durationMillis: Long): ScaleAnimation {
         return getAmplificationAnimation(durationMillis, null)
     }
-
     fun getAmplificationAnimation(animationListener: Animation.AnimationListener?): ScaleAnimation {
         return getAmplificationAnimation(
             DEFAULT_ANIMATION_DURATION,

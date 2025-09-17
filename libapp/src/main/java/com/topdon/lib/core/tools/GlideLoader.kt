@@ -1,5 +1,4 @@
 package com.topdon.lib.core.tools
-
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -14,16 +13,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.topdon.lib.core.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-
 object GlideLoader {
-
     private fun getPhotoOptions(): RequestOptions {
         val multi = MultiTransformation(CenterCrop(), RoundedCorners(SizeUtils.dp2px(6f)))
         return RequestOptions
             .bitmapTransform(multi)
             .error(R.mipmap.ic_default_head)
     }
-
     fun loadCircle(
         img: ImageView,
         resourceId: Int,
@@ -34,7 +30,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
     fun loadCircle(
         img: ImageView,
         url: String,
@@ -45,7 +40,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
     fun loadCircle(
         img: ImageView,
         drawable: Drawable,
@@ -56,7 +50,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
     fun loadCircle(
         img: ImageView,
         uri: Uri,
@@ -67,7 +60,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
     fun loadCircle(
         img: ImageView,
         url: String,
@@ -81,7 +73,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
     fun loadRounded(
         img: ImageView,
         resourceId: Int,
@@ -91,7 +82,6 @@ object GlideLoader {
             .apply(getPhotoOptions())
             .into(img)
     }
-
     fun loadRounded(
         img: ImageView,
         url: String,
@@ -101,7 +91,6 @@ object GlideLoader {
             .apply(getPhotoOptions())
             .into(img)
     }
-
     fun loadRounded(
         img: ImageView,
         drawable: Drawable,
@@ -111,7 +100,6 @@ object GlideLoader {
             .apply(getPhotoOptions())
             .into(img)
     }
-
     fun loadRounded(
         img: ImageView,
         uri: Uri,
@@ -121,7 +109,6 @@ object GlideLoader {
             .apply(getPhotoOptions())
             .into(img)
     }
-
     fun load(
         img: ImageView,
         url: String?,
@@ -140,7 +127,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
     fun loadGallery(
         img: ImageView,
         url: String?,
@@ -159,7 +145,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
     fun loadFit(
         img: ImageView,
         url: String?,
@@ -178,7 +163,6 @@ object GlideLoader {
             .apply(options)
             .into(img)
     }
-
     fun load(
         img: ImageView,
         resourceId: Int,
@@ -190,13 +174,11 @@ object GlideLoader {
         val options =
             RequestOptions
                 .bitmapTransform(multi)
-
         Glide.with(img)
             .load(resourceId)
             .apply(options)
             .into(img)
     }
-
     fun loadP(
         img: ImageView,
         url: String?,
@@ -206,7 +188,6 @@ object GlideLoader {
             .placeholder(R.drawable.ic_default_search_svg)
             .into(img)
     }
-
     suspend fun getDrawable(
         context: Context,
         url: String?,

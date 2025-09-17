@@ -1,31 +1,24 @@
 package com.topdon.ble;
-
 public class TopdonDeviceConfig {
-
     public static final String RESOLUTION_256x192 = "256x192";
     public static final String RESOLUTION_384x288 = "384x288";
     public static final String RESOLUTION_640x480 = "640x480";
-
     public static final double FRAME_RATE_9HZ = 9.0;
     public static final double FRAME_RATE_15HZ = 15.0;
     public static final double FRAME_RATE_25HZ = 25.0;
     public static final double FRAME_RATE_30HZ = 30.0;
-
     public static final int TEMP_RANGE_MINUS_20_TO_120 = 0;
     public static final int TEMP_RANGE_0_TO_250 = 1;
     public static final int TEMP_RANGE_100_TO_450 = 2;
     public static final int TEMP_RANGE_CUSTOM = 3;
-
     public static final int PALETTE_IRON = 0;
     public static final int PALETTE_RAINBOW = 1;
     public static final int PALETTE_GRAYSCALE = 2;
     public static final int PALETTE_HOT = 3;
-
     public static final int ENV_TEMPERATURE = 1;
     public static final int ENV_HUMIDITY = 2;
     public static final int ENV_PRESSURE = 4;
     public static final int ENV_ALL = ENV_TEMPERATURE | ENV_HUMIDITY | ENV_PRESSURE;
-
     private final UnifiedBleManager.DeviceType deviceType;
     private final String thermalResolution;
     private final double thermalFrameRate;
@@ -40,7 +33,6 @@ public class TopdonDeviceConfig {
     private final String sessionId;
     private final boolean enableCalibration;
     private final int dataOutputFormat;
-
     private TopdonDeviceConfig(Builder builder) {
         this.deviceType = builder.deviceType;
         this.thermalResolution = builder.thermalResolution;
@@ -57,7 +49,6 @@ public class TopdonDeviceConfig {
         this.enableCalibration = builder.enableCalibration;
         this.dataOutputFormat = builder.dataOutputFormat;
     }
-
     public static TopdonDeviceConfig createDefaultThermalConfig() {
         return new Builder()
                 .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_THERMAL)
@@ -70,7 +61,6 @@ public class TopdonDeviceConfig {
                 .enableCalibration(true)
                 .build();
     }
-
     public static TopdonDeviceConfig createDefaultEnvironmentalConfig() {
         return new Builder()
                 .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_ENV)
@@ -79,7 +69,6 @@ public class TopdonDeviceConfig {
                 .enableAutoReconnect(true)
                 .build();
     }
-
     public static TopdonDeviceConfig createHighResThermalConfig() {
         return new Builder()
                 .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_THERMAL)
@@ -92,7 +81,6 @@ public class TopdonDeviceConfig {
                 .enableCalibration(true)
                 .build();
     }
-
     public static TopdonDeviceConfig createMultiSensorConfig() {
         return new Builder()
                 .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_MULTI)
@@ -106,63 +94,48 @@ public class TopdonDeviceConfig {
                 .enableCalibration(true)
                 .build();
     }
-
     public UnifiedBleManager.DeviceType getDeviceType() {
         return deviceType;
     }
-
     public String getThermalResolution() {
         return thermalResolution;
     }
-
     public double getThermalFrameRate() {
         return thermalFrameRate;
     }
-
     public int getTemperatureRange() {
         return temperatureRange;
     }
-
     public double getMinTemperature() {
         return minTemperature;
     }
-
     public double getMaxTemperature() {
         return maxTemperature;
     }
-
     public int getColorPalette() {
         return colorPalette;
     }
-
     public int getEnvironmentalSensors() {
         return environmentalSensors;
     }
-
     public boolean isTimestampEnabled() {
         return enableTimestamp;
     }
-
     public boolean isAutoReconnectEnabled() {
         return enableAutoReconnect;
     }
-
     public int getConnectionTimeout() {
         return connectionTimeout;
     }
-
     public String getSessionId() {
         return sessionId;
     }
-
     public boolean isCalibrationEnabled() {
         return enableCalibration;
     }
-
     public int getDataOutputFormat() {
         return dataOutputFormat;
     }
-
     @Override
     public String toString() {
         return "TopdonDeviceConfig{" +
@@ -182,7 +155,6 @@ public class TopdonDeviceConfig {
                 ", dataOutputFormat=" + dataOutputFormat +
                 '}';
     }
-
     public static class Builder {
         private UnifiedBleManager.DeviceType deviceType = UnifiedBleManager.DeviceType.TOPDON_THERMAL;
         private String thermalResolution = RESOLUTION_256x192;
@@ -194,78 +166,64 @@ public class TopdonDeviceConfig {
         private int environmentalSensors = 0;
         private boolean enableTimestamp = true;
         private boolean enableAutoReconnect = true;
-        private int connectionTimeout = 10000; // 10 seconds
+        private int connectionTimeout = 10000; 
         private String sessionId = null;
         private boolean enableCalibration = true;
-        private int dataOutputFormat = 0; // 0=CSV, 1=Binary, 2=JSON
-
+        private int dataOutputFormat = 0; 
         public Builder setDeviceType(UnifiedBleManager.DeviceType deviceType) {
             this.deviceType = deviceType;
             return this;
         }
-
         public Builder setThermalResolution(String resolution) {
             this.thermalResolution = resolution;
             return this;
         }
-
         public Builder setThermalFrameRate(double frameRate) {
             this.thermalFrameRate = frameRate;
             return this;
         }
-
         public Builder setTemperatureRange(int range) {
             this.temperatureRange = range;
             return this;
         }
-
         public Builder setCustomTemperatureRange(double minTemp, double maxTemp) {
             this.temperatureRange = TEMP_RANGE_CUSTOM;
             this.minTemperature = minTemp;
             this.maxTemperature = maxTemp;
             return this;
         }
-
         public Builder setColorPalette(int palette) {
             this.colorPalette = palette;
             return this;
         }
-
         public Builder setEnvironmentalSensors(int sensors) {
             this.environmentalSensors = sensors;
             return this;
         }
-
         public Builder enableTimestamp(boolean enable) {
             this.enableTimestamp = enable;
             return this;
         }
-
         public Builder enableAutoReconnect(boolean enable) {
             this.enableAutoReconnect = enable;
             return this;
         }
-
         public Builder setConnectionTimeout(int timeout) {
             this.connectionTimeout = timeout;
             return this;
         }
-
         public Builder setSessionId(String sessionId) {
             this.sessionId = sessionId;
             return this;
         }
-
         public Builder enableCalibration(boolean enable) {
             this.enableCalibration = enable;
             return this;
         }
-
         public Builder setDataOutputFormat(int format) {
             this.dataOutputFormat = format;
             return this;
         }
-
         public TopdonDeviceConfig build() {
             return new TopdonDeviceConfig(this);
         }

@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,8 +14,6 @@ import org.opencv.imgproc.Imgproc
 import org.opencv.imgproc.Imgproc.applyColorMap
 import java.io.IOException
 import java.io.InputStream
-
-
 class AlgorithmImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +89,6 @@ class AlgorithmImageActivity : AppCompatActivity() {
             val baseTemperatureBytes = ByteArray(192 * 256 * 2)
             val nextTemperatureBytes = ByteArray(192 * 256 * 2)
             val nextImageBytes = ByteArray(192 * 256 * 2)
-
             System.arraycopy(
                 buffer,
                 1024 + baseTemperatureBytes.size,
@@ -100,7 +96,6 @@ class AlgorithmImageActivity : AppCompatActivity() {
                 0,
                 baseTemperatureBytes.size
             )
-
             System.arraycopy(
                 bufferB,
                 1024 + nextTemperatureBytes.size,
@@ -108,9 +103,7 @@ class AlgorithmImageActivity : AppCompatActivity() {
                 0,
                 nextTemperatureBytes.size
             )
-
             System.arraycopy(bufferB, 1024, nextImageBytes, 0, nextImageBytes.size)
-
             val resMat = Mat(192, 256, CvType.CV_8UC2)
             resMat.put(0, 0, nextImageBytes)
             Imgproc.cvtColor(resMat, resMat, Imgproc.COLOR_YUV2GRAY_YUYV)
@@ -135,26 +128,20 @@ class AlgorithmImageActivity : AppCompatActivity() {
         findViewById<View>(R.id.btn_u4).setOnClickListener {
             val baseImageBytes = ByteArray(192 * 256 * 2)
             val nextImageBytes = ByteArray(192 * 256 * 2)
-
             System.arraycopy(buffer, 1024, baseImageBytes, 0, baseImageBytes.size)
-
             System.arraycopy(bufferB, 1024, nextImageBytes, 0, nextImageBytes.size)
-
             val resMat = Mat(192, 256, CvType.CV_8UC2)
             resMat.put(0, 0, nextImageBytes)
             Imgproc.cvtColor(resMat, resMat, Imgproc.COLOR_YUV2GRAY_YUYV)
             val nextImage = Mat()
             applyColorMap(resMat, nextImage, 15)
             Imgproc.cvtColor(nextImage, nextImage, Imgproc.COLOR_BGR2RGBA)
-
             val baseMat = Mat(192, 256, CvType.CV_8UC2)
             baseMat.put(0, 0, baseImageBytes)
             Imgproc.cvtColor(baseMat, baseMat, Imgproc.COLOR_YUV2GRAY_YUYV)
             val baseImage = Mat()
             applyColorMap(baseMat, baseImage, 15)
             Imgproc.cvtColor(baseImage, baseImage, Imgproc.COLOR_BGR2RGBA)
-
-
             val startTime = System.currentTimeMillis()
             val matByteArray =
                 JNITool.diff2firstFrameU4(

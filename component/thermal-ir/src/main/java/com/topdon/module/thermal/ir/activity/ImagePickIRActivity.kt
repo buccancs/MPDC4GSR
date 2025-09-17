@@ -1,20 +1,10 @@
 package com.topdon.module.thermal.ir.activity
-
 import android.graphics.Bitmap
 import com.topdon.lib.core.ktbase.BasePickImgActivity
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRMonitorThermalFragment
-
-/**
-
- * author: CaiSongL
- * date: 2024/8/24 18:10
- **/
-
-
 class ImagePickIRActivity : BasePickImgActivity() {
     var irFragment: IRMonitorThermalFragment? = null
-
     override fun initView() {
         irFragment =
             if (savedInstanceState == null) {
@@ -29,11 +19,9 @@ class ImagePickIRActivity : BasePickImgActivity() {
                 .commit()
         }
     }
-
     override suspend fun getPickBitmap(): Bitmap? {
         return irFragment?.getBitmap() ?: null
     }
-
     override fun initData() {
     }
 }

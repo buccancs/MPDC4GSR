@@ -1,5 +1,4 @@
 package com.topdon.tc001.gsr
-
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -17,12 +16,10 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingBinding>() {
     companion object {
         private const val TAG = "GSRQuickRecording"
         private const val REQUEST_PERMISSIONS = 100
-
         private val REQUIRED_PERMISSIONS =
             arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -32,39 +29,29 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.CAMERA,
             )
-
         fun start(context: Context) {
             val intent = Intent(context, GSRQuickRecordingActivity::class.java)
             context.startActivity(intent)
         }
     }
-
     override fun initContentLayoutId() = R.layout.activity_gsr_quick_recording
-
-    // Core recording components - this is the main integration point
     private lateinit var recordingController: RecordingController
     private var currentSessionDirectory: String? = null
     private var isRecording = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initRecordingController()
         setupUI()
         checkPermissions()
     }
-
     private fun initRecordingController() {
-        // Initialize the main RecordingController with GSR integration
         recordingController = RecordingController(this, this)
-
-        // Initialize sensors including GSR
         lifecycleScope.launch {
             val success = recordingController.initializeSensors()
             runOnUiThread {
                 if (success) {
                     binding.statusText.text = "Recording system initialized successfully"
                     binding.startRecordingButton.isEnabled = true
-
                     val availableSensors = recordingController.getAvailableSensors()
                     val gsrSensor =
                         availableSensors.find { it.sensorType.contains("GSR", ignoreCase = true) }
@@ -91,8 +78,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 }
             }
         }
-
-        // Monitor recording state
         lifecycleScope.launch {
             recordingController.recordingStateFlow.collect { state ->
                 runOnUiThread {
@@ -108,7 +93,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                                 ),
                             )
                         }
-
                         com.topdon.tc001.controller.RecordingState.STOPPED -> {
                             isRecording = false
                             binding.startRecordingButton.text = "Start Recording"
@@ -120,7 +104,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                                 )
                             )
                         }
-
                         else -> {
                             binding.statusText.text = "State: $state"
                         }
@@ -128,8 +111,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 }
             }
         }
-
-        // Monitor sensor status
         lifecycleScope.launch {
             recordingController.sensorStatusFlow.collect { statusList ->
                 runOnUiThread {
@@ -148,7 +129,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             }
         }
     }
-
     private fun setupUI() {
         binding.startRecordingButton.setOnClickListener {
             if (isRecording) {
@@ -157,38 +137,29 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 startRecording()
             }
         }
-
         binding.addSyncMarkerButton.setOnClickListener {
             addSyncMarker()
         }
-
         binding.viewSessionsButton.setOnClickListener {
-            // Navigate to session manager
             try {
                 val intent = Intent(this, SessionManagerActivity::class.java)
                 startActivity(intent)
             } catch (e: Exception) {
-                // Fallback to GSR Demo if SessionManagerActivity not available
                 val intent = Intent(this, GSRDemoActivity::class.java)
                 startActivity(intent)
             }
         }
-
         binding.gsrSettingsButton.setOnClickListener {
-            // Navigate to GSR settings
             try {
                 val intent = Intent(this, GSRSettingsActivity::class.java)
                 startActivity(intent)
             } catch (e: Exception) {
-                // Fallback to Multi-modal recording if GSRSettingsActivity not available
                 val intent = Intent(this, MultiModalRecordingActivity::class.java)
                 startActivity(intent)
             }
         }
     }
-
     private fun checkPermissions() {
-        // Check if all required permissions are granted
         val missingPermissions =
             REQUIRED_PERMISSIONS.filter {
                 ContextCompat.checkSelfPermission(
@@ -196,16 +167,13 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                     it
                 ) != android.content.pm.PackageManager.PERMISSION_GRANTED
             }
-
         if (missingPermissions.isNotEmpty()) {
             requestPermissions(missingPermissions.toTypedArray(), REQUEST_PERMISSIONS)
         }
     }
-
     private fun startRecording() {
         lifecycleScope.launch {
             try {
-                // Check storage before starting
                 val storageStatus = recordingController.getStorageStatus()
                 if (storageStatus.isLowStorage) {
                     runOnUiThread {
@@ -217,7 +185,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                     }
                     return@launch
                 }
-                
                 if (storageStatus.shouldWarn) {
                     runOnUiThread {
                         Toast.makeText(
@@ -227,27 +194,20 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                         ).show()
                     }
                 }
-
                 Log.i(TAG, "Starting recording with improved session management")
-
-                // Start recording with default parameters - the controller will handle session creation
                 val success = recordingController.startRecording(
                     participantId = "QuickRecording",
                     studyName = "GSR Quick Test"
                 )
-
                 runOnUiThread {
                     if (success) {
                         val sessionDir = recordingController.getCurrentSessionDirectory()
                         currentSessionDirectory = sessionDir?.rootDir?.absolutePath
-                        
                         Toast.makeText(
                             this@GSRQuickRecordingActivity,
                             "Recording started",
                             Toast.LENGTH_SHORT
                         ).show()
-                        
-                        // Show session info
                         currentSessionDirectory?.let { sessionDirPath ->
                             binding.sessionInfoText.text = "Session saved to:\n$sessionDirPath"
                         }
@@ -271,12 +231,10 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             }
         }
     }
-
     private fun stopRecording() {
         lifecycleScope.launch {
             try {
                 val success = recordingController.stopRecording()
-
                 runOnUiThread {
                     if (success) {
                         Toast.makeText(
@@ -284,8 +242,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                             "Recording stopped",
                             Toast.LENGTH_SHORT
                         ).show()
-
-                        // Show session info
                         currentSessionDirectory?.let { sessionDir ->
                             binding.sessionInfoText.text = "Session saved to:\n$sessionDir"
                         }
@@ -309,7 +265,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             }
         }
     }
-
     private fun addSyncMarker() {
         if (isRecording) {
             lifecycleScope.launch {
@@ -318,7 +273,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                     timestampNs = System.nanoTime(),
                     metadata = mapOf("source" to "quick_recording_ui"),
                 )
-
                 runOnUiThread {
                     Toast.makeText(
                         this@GSRQuickRecordingActivity,
@@ -332,14 +286,12 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 .show()
         }
     }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         if (requestCode == REQUEST_PERMISSIONS) {
             val allGranted =
                 grantResults.all { it == android.content.pm.PackageManager.PERMISSION_GRANTED }
@@ -352,11 +304,8 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             }
         }
     }
-
     override fun onDestroy() {
         super.onDestroy()
-
-        // Clean up recording controller
         lifecycleScope.launch {
             recordingController.cleanup()
         }

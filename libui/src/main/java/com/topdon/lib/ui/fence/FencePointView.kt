@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.fence
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -13,25 +12,18 @@ import android.view.MotionEvent
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.ui.R as UiR
-
-
 class FencePointView : View {
     var listener: CallBack? = null
     private val iconSize = SizeUtils.dp2px(32f)
-
     constructor (context: Context) : super(context)
-
     constructor (context: Context, attrs: AttributeSet) : super(context, attrs)
-
     constructor (context: Context, attrs: AttributeSet, defStyle: Int) : super(
         context,
         attrs,
         defStyle,
     )
-
     init {
     }
-
     private val mPaint by lazy {
         Paint().apply {
             color = Color.BLUE
@@ -41,17 +33,14 @@ class FencePointView : View {
             alpha = 255
         }
     }
-
     var destW = 0
     var destH = 0
-
     private val drawable: BitmapDrawable by lazy {
         resources.getDrawable(
             UiR.mipmap.ic_fence_point,
             null,
         ) as BitmapDrawable
     }
-
     @SuppressLint("UseCompatLoadingForDrawables", "DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -61,7 +50,6 @@ class FencePointView : View {
         destW = iconSize
         destH = destW * bh / bw
         val src = Rect(0, 0, bw, bh)
-
         var left = startPoint[0] - destW / 2
         var top = startPoint[1] - destH / 2
         var right = startPoint[0] + destW / 2
@@ -82,7 +70,6 @@ class FencePointView : View {
             bottom = height
             top = height - destH
         }
-
         val dst =
             Rect(
                 left,
@@ -92,12 +79,10 @@ class FencePointView : View {
             )
         canvas.drawBitmap(bitmap, src, dst, mPaint)
     }
-
     var mX = 0f
     var mY = 0f
     var old = Rect(0, 0, 0, 0)
     var startPoint = intArrayOf(0, 0)
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         mX = event.x
         mY = event.y
@@ -107,14 +92,11 @@ class FencePointView : View {
                 startPoint[1] = mY.toInt()
                 invalidate()
             }
-
             MotionEvent.ACTION_UP -> {
-
                 startPoint[0] = mX.toInt()
                 startPoint[1] = mY.toInt()
                 result()
             }
-
             MotionEvent.ACTION_MOVE -> {
                 startPoint[0] = mX.toInt()
                 startPoint[1] = mY.toInt()
@@ -123,23 +105,18 @@ class FencePointView : View {
         }
         return true
     }
-
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         if (startPoint[0] - destW / 2 < 0) {
-
             point1[0] = destW / 2
         }
         if (startPoint[0] + destW / 2 > width) {
-
             point1[0] = width - destW / 2
         }
         if (startPoint[1] - destW / 2 < 0) {
-
             point1[1] = destH / 2
         }
         if (startPoint[1] + destW / 2 > height) {
-
             point1[1] = height - destH / 2
         }
         Log.w("123", "坐标 point:${point1.contentToString()}")
@@ -147,16 +124,12 @@ class FencePointView : View {
             listener!!.callback(point1, intArrayOf(width, height))
         }
     }
-
     fun clear() {
         startPoint = intArrayOf(0, 0)
         result()
         invalidate()
     }
-
-
     interface CallBack {
-
         fun callback(
             startPoint: IntArray,
             srcRect: IntArray,

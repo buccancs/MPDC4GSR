@@ -1,27 +1,21 @@
 package com.topdon.ble;
-
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import com.topdon.ble.util.BluetoothPermissionUtils;
-
 import java.util.Objects;
-
 public class Device implements Comparable<Device>, Cloneable, Parcelable {
     public static final Creator<Device> CREATOR = new Creator<Device>() {
         @Override
         public Device createFromParcel(Parcel source) {
             return new Device(source);
         }
-
         @Override
         public Device[] newArray(int size) {
             return new Device[size];
@@ -37,63 +31,51 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
     String name = "";
     String address = "";
     int rssi = -120;
-
     public Device(BluetoothDevice originDevice) {
         this.originDevice = originDevice;
         Context context = EasyBLE.getInstance().getContext();
         this.name = BluetoothPermissionUtils.getDeviceName(context, originDevice);
         this.address = BluetoothPermissionUtils.getDeviceAddress(context, originDevice);
     }
-
     protected Device(Parcel in) {
         this.originDevice = in.readParcelable(BluetoothDevice.class.getClassLoader());
         readFromParcel(in);
     }
-
     @NonNull
     public BluetoothDevice getOriginDevice() {
         return originDevice;
     }
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @Nullable
     public ScanResult getScanResult() {
         return scanResult;
     }
-
     @Nullable
     public byte[] getScanRecord() {
         return scanRecord;
     }
-
     @NonNull
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     @NonNull
     public String getAddress() {
         return address;
     }
-
     public int getRssi() {
         return rssi;
     }
-
     public void setRssi(int rssi) {
         this.rssi = rssi;
     }
-
     @NonNull
     public ConnectionState getConnectionState() {
         Connection connection = EasyBLE.getInstance().getConnection(this);
         return connection == null ? connectionState : connection.getConnectionState();
     }
-
     @Nullable
     public Boolean isConnectable() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -105,37 +87,29 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
         }
         return null;
     }
-
     public boolean isConnected() {
         return getConnectionState() == ConnectionState.SERVICE_DISCOVERED;
     }
-
     public boolean isDisconnected() {
         ConnectionState state = getConnectionState();
         return state == ConnectionState.DISCONNECTED || state == ConnectionState.RELEASED;
     }
-
     public boolean isConnecting() {
         ConnectionState state = getConnectionState();
         return state != ConnectionState.DISCONNECTED && state != ConnectionState.SERVICE_DISCOVERED &&
                 state != ConnectionState.RELEASED;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Device)) return false;
-
         Device device = (Device) o;
-
         return address.equals(device.address);
     }
-
     @Override
     public int hashCode() {
         return address.hashCode();
     }
-
     @Override
     public int compareTo(Device other) {
         if (rssi == 0) {
@@ -150,7 +124,6 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
             return result;
         }
     }
-
     @NonNull
     @Override
     public String toString() {
@@ -159,12 +132,10 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
                 ", address='" + address + '\'' +
                 '}';
     }
-
     @Override
     public int describeContents() {
         return 0;
     }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.originDevice, flags);
@@ -187,7 +158,6 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
             }
         }
     }
-
     public void readFromParcel(Parcel in) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.scanResult = in.readParcelable(ScanResult.class.getClassLoader());

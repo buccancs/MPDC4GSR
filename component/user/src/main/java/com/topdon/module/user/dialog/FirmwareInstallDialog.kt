@@ -1,5 +1,4 @@
 package com.topdon.module.user.dialog
-
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -9,21 +8,14 @@ import android.view.ViewGroup
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.module.user.R
 import com.topdon.lib.core.R as LibAppR
-
-/**
-
- * Created by LCG on 2024/3/4.
- */
 class FirmwareInstallDialog(context: Context) : Dialog(context, LibAppR.style.TransparentDialog) {
     private val rootView: View =
         LayoutInflater.from(context).inflate(R.layout.dialog_firmware_install, null)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(false)
         setCanceledOnTouchOutside(false)
         setContentView(rootView)
-
         window?.let {
             val layoutParams = it.attributes
             layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.3).toInt()

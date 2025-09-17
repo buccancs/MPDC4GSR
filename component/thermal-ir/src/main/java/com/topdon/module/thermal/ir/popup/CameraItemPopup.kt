@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.popup
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.Gravity
@@ -16,40 +15,25 @@ import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.libcom.bean.SaveSettingBean
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.PopCameraItemBinding
-
-/**
-
- *
- * Created by LCG on 2025/1/3.
- */
-
 @SuppressLint("SetTextI18n")
 class CameraItemPopup(val context: Context, private val saveSetBean: SaveSettingBean) :
     PopupWindow(), View.OnClickListener {
-
     var isShutterSelect: Boolean
         get() = binding.ivShutter.isSelected
         set(value) {
             binding.ivShutter.isSelected = value
         }
-
     var isAudioSelect: Boolean
         get() = binding.ivAudio.isSelected
         set(value) {
             binding.ivAudio.isSelected = value
         }
-
     var onDelayClickListener: (() -> Boolean)? = null
-
     var onAutoCLickListener: ((isOpen: Boolean) -> Unit)? = null
-
     var onShutterClickListener: (() -> Unit)? = null
-
     var onAudioCLickListener: (() -> Unit)? = null
-
     private val binding: PopCameraItemBinding =
         PopCameraItemBinding.inflate(LayoutInflater.from(context))
-
     init {
         val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
             context.resources.displayMetrics.widthPixels,
@@ -60,24 +44,20 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
             View.MeasureSpec.AT_MOST
         )
         binding.root.measure(widthMeasureSpec, heightMeasureSpec)
-
         contentView = binding.root
         width = contentView.measuredWidth
         height = contentView.measuredHeight
         isOutsideTouchable = false
-
         binding.ivDelay.setImageLevel(saveSetBean.delayCaptureSecond)
         binding.ivAuto.isSelected = saveSetBean.isAutoShutter
         binding.ivAudio.isSelected =
             saveSetBean.isRecordAudio && XXPermissions.isGranted(context, Permission.RECORD_AUDIO)
-
         binding.clDelay.setOnClickListener(this)
         binding.clAuto.setOnClickListener(this)
         binding.clShutter.setOnClickListener(this)
         binding.clAudio.setOnClickListener(this)
         binding.clSetting.setOnClickListener(this)
     }
-
     override fun onClick(v: View?) {
         when (v) {
             binding.clDelay ->
@@ -87,12 +67,10 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                             saveSetBean.delayCaptureSecond = 3
                             ToastUtils.showShort(R.string.seconds_dalay_3)
                         }
-
                         3 -> {
                             saveSetBean.delayCaptureSecond = 6
                             ToastUtils.showShort(R.string.seconds_dalay_6)
                         }
-
                         6 -> {
                             saveSetBean.delayCaptureSecond = 0
                             ToastUtils.showShort(R.string.off_photography)
@@ -100,8 +78,7 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                     }
                     binding.ivDelay.setImageLevel(saveSetBean.delayCaptureSecond)
                 }
-
-            binding.clAuto -> { // 自动快门
+            binding.clAuto -> { 
                 saveSetBean.isAutoShutter = !saveSetBean.isAutoShutter
                 binding.ivAuto.isSelected = saveSetBean.isAutoShutter
                 if (SharedManager.isTipShutter && !saveSetBean.isAutoShutter) {
@@ -114,18 +91,15 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                 }
                 onAutoCLickListener?.invoke(saveSetBean.isAutoShutter)
             }
-
             binding.clShutter ->
                 if (!binding.ivShutter.isSelected) {
                     onShutterClickListener?.invoke()
                 }
-
             binding.clAudio -> onAudioCLickListener?.invoke()
             binding.clSetting -> NavigationManager.getInstance()
                 .build(RouterConfig.IR_CAMERA_SETTING).navigation(context)
         }
     }
-
     fun showAsUp(anchor: View) {
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)

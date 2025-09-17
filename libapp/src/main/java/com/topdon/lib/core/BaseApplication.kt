@@ -1,5 +1,4 @@
 package com.topdon.lib.core
-
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
@@ -41,23 +40,17 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 import java.io.File
-
 abstract class BaseApplication : Application() {
     companion object {
         lateinit var instance: BaseApplication
         val usbObserver by lazy { DeviceBroadcastReceiver() }
     }
-
     var tau_data_H: ByteArray? = null
     var tau_data_L: ByteArray? = null
-
     var activitys = arrayListOf<Activity>()
-    var hasOtgShow = false // otg提示只出现一次
-
+    var hasOtgShow = false 
     abstract fun getSoftWareCode(): String
-
     abstract fun isDomestic(): Boolean
-
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -65,22 +58,18 @@ abstract class BaseApplication : Application() {
             webviewSetPath(this)
         }
         onLanguageChange()
-
         WebSocketProxy.getInstance().onMessageListener = {
             parserSocketMessage(it)
         }
     }
-
     open fun initWebSocket() {
         connectWebSocket()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkRequest =
                 android.net.NetworkRequest.Builder()
                     .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                     .build()
-
             manager.registerNetworkCallback(
                 networkRequest,
                 object : ConnectivityManager.NetworkCallback() {
@@ -95,7 +84,6 @@ abstract class BaseApplication : Application() {
                 },
             )
         } else {
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(
                     NetworkChangedReceiver(),
@@ -113,7 +101,6 @@ abstract class BaseApplication : Application() {
             }
         }
     }
-
     private fun connectWebSocket() {
         val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return
         Log.i("WebSocket", "current连接 Wifi SSID: $ssid")
@@ -127,27 +114,23 @@ abstract class BaseApplication : Application() {
             NetWorkUtils.switchNetwork(true)
         }
     }
-
     fun disconnectWebSocket() {
         Log.i("WebSocket", "disconnectWebSocket()")
         WebSocketProxy.getInstance().stopWebSocket()
     }
-
     private fun parserSocketMessage(msgJson: String) {
         if (TextUtils.isEmpty(msgJson)) return
         EventBus.getDefault().post(SocketMsgEvent(msgJson))
-
-        if (SharedManager.is04AutoSync) { // 自动saved到手机开启
+        if (SharedManager.is04AutoSync) { 
             when (SocketCmdUtil.getCmdResponse(msgJson)) {
-                WsCmdConstants.AR_COMMAND_SNAPSHOT -> { // capture事件
+                WsCmdConstants.AR_COMMAND_SNAPSHOT -> { 
                     autoSaveNewest(false)
                 }
-
-                WsCmdConstants.AR_COMMAND_VRECORD -> { // 开始或结束recording事件
+                WsCmdConstants.AR_COMMAND_VRECORD -> { 
                     try {
                         val data: JSONObject = JSONObject(msgJson).getJSONObject("data")
                         val enable: Boolean = data.getBoolean("enable")
-                        if (!enable) { // 结束才同步
+                        if (!enable) { 
                             autoSaveNewest(true)
                         }
                     } catch (_: Exception) {
@@ -156,13 +139,12 @@ abstract class BaseApplication : Application() {
             }
         }
     }
-
     private fun autoSaveNewest(isVideo: Boolean) {
         CoroutineScope(Dispatchers.IO).launch {
             val fileList: List<FileBean>? = TS004Repository.getNewestFile(if (isVideo) 1 else 0)
             if (!fileList.isNullOrEmpty()) {
                 val fileBean: FileBean = fileList[0]
-                val url = "http://192.168.40.1:8080/DCIM/${fileBean.name}"
+                val url = "http:
                 val file = File(FileConfig.ts004GalleryDir, fileBean.name)
                 TS004Repository.download(url, file)
                 MediaScannerConnection.scanFile(
@@ -174,7 +156,6 @@ abstract class BaseApplication : Application() {
             }
         }
     }
-
     private inner class NetworkChangedReceiver : BroadcastReceiver() {
         override fun onReceive(
             context: Context?,
@@ -183,7 +164,6 @@ abstract class BaseApplication : Application() {
             if (intent?.action == "android.net.conn.CONNECTIVITY_CHANGE") {
                 val manager =
                     context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     val activeNetwork = manager.activeNetwork
                     val capabilities = manager.getNetworkCapabilities(activeNetwork)
@@ -194,7 +174,6 @@ abstract class BaseApplication : Application() {
                         Log.i("WebSocket", "WiFi network connected: $activeNetwork")
                     }
                 } else {
-
                     @Suppress("DEPRECATION")
                     val activeNetwork = manager.activeNetworkInfo
                     @Suppress("DEPRECATION")
@@ -206,17 +185,15 @@ abstract class BaseApplication : Application() {
             }
         }
     }
-
     @RequiresApi(api = 28)
     open fun webviewSetPath(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val processName = getProcessName(context)
-            if (!applicationContext.packageName.equals(processName)) { // 判断不等于默认进程名称
+            if (!applicationContext.packageName.equals(processName)) { 
                 WebView.setDataDirectorySuffix(processName!!)
             }
         }
     }
-
     open fun getProcessName(context: Context?): String? {
         if (context == null) return null
         val manager: ActivityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
@@ -227,7 +204,6 @@ abstract class BaseApplication : Application() {
         }
         return null
     }
-
     fun clearDb() {
         GlobalScope.launch(Dispatchers.Default) {
             try {
@@ -237,19 +213,15 @@ abstract class BaseApplication : Application() {
             }
         }
     }
-
     open fun onLanguageChange() {
-
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
         LanguageUtils.applyLanguage(locale)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()
     }
-
     open fun getAppLanguage(context: Context): String? {
         return ConstantLanguages.ENGLISH
     }
-
     fun exitAll() {
         hasOtgShow = false
         activitys.forEach {

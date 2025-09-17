@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.video
-
 import android.graphics.Bitmap
 import com.infisense.usbir.view.CameraView
 import com.infisense.usbir.view.TemperatureView
@@ -13,7 +12,6 @@ import io.reactivex.disposables.Disposable
 import java.io.File
 import java.util.Date
 import java.util.concurrent.TimeUnit
-
 class VideoRecordMedia(
     private var cameraView: CameraView,
     private var temperatureView: TemperatureView,
@@ -21,20 +19,16 @@ class VideoRecordMedia(
     private lateinit var exportDisposable: Disposable
     private var encoder: Encoder = MP4Encoder()
     private var isRunning = false
-
     var width = 480
     var height = 640
-
     init {
         encoder.setFrameDelay(25)
         width = 480
         height = width * cameraView.height / cameraView.width
-
         if (height % 2 == 1) {
             height -= 1
         }
     }
-
     override fun startRecord() {
         val downloadDir = FileConfig.lineGalleryDir
         val exportedFile = File(downloadDir, "${Date().time}.mp4")
@@ -42,14 +36,9 @@ class VideoRecordMedia(
             exportedFile.delete()
         }
         encoder.setOutputFilePath(exportedFile.path)
-
-
-
-
         encoder.setOutputSize(width, height)
         encoder.startEncode()
         isRunning = true
-
         exportDisposable =
             Observable.interval(50, TimeUnit.MILLISECONDS)
                 .map {
@@ -60,10 +49,8 @@ class VideoRecordMedia(
                     encoder.addFrame(it)
                 }
     }
-
     override fun startRecord(fileDir: String) {
     }
-
     override fun stopRecord() {
         if (isRunning) {
             encoder.stopEncode()
@@ -71,15 +58,11 @@ class VideoRecordMedia(
         }
         isRunning = false
     }
-
     override fun updateAudioState(audioRecord: Boolean) {
-
     }
-
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap = cameraView.bitmap
         if (temperatureView.temperatureRegionMode != TemperatureView.REGION_MODE_CLEAN) {
-
             cameraViewBitmap =
                 BitmapUtils.mergeBitmap(
                     cameraViewBitmap,

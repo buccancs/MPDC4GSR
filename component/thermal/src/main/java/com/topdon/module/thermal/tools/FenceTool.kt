@@ -1,7 +1,5 @@
 package com.topdon.module.thermal.tools
-
 object FenceTool {
-
     fun pointToIndex(
         point: IntArray,
         w: Int,
@@ -10,7 +8,6 @@ object FenceTool {
         val y = point[1]
         return y * w + x
     }
-
     fun indexToPoint(
         index: Int,
         w: Int,

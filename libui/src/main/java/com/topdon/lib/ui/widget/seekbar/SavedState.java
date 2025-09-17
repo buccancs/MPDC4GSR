@@ -1,15 +1,12 @@
 package com.topdon.lib.ui.widget.seekbar;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
-
 public class SavedState extends View.BaseSavedState {
     public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
         public SavedState createFromParcel(Parcel in) {
             return new SavedState(in);
         }
-
         public SavedState[] newArray(int size) {
             return new SavedState[size];
         }
@@ -20,11 +17,9 @@ public class SavedState extends View.BaseSavedState {
     public int tickNumber;
     public float currSelectedMin;
     public float currSelectedMax;
-
     public SavedState(Parcelable superState) {
         super(superState);
     }
-
     private SavedState(Parcel in) {
         super(in);
         minValue = in.readFloat();
@@ -34,7 +29,6 @@ public class SavedState extends View.BaseSavedState {
         currSelectedMin = in.readFloat();
         currSelectedMax = in.readFloat();
     }
-
     @Override
     public void writeToParcel(Parcel out, int flags) {
         super.writeToParcel(out, flags);

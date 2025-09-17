@@ -1,17 +1,13 @@
 package com.topdon.menu.adapter
-
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
 import com.topdon.menu.constant.TargetType
 import com.topdon.menu.R as MenuR
-
 @SuppressLint("NotifyDataSetChanged")
 internal class TargetAdapter : BaseMenuAdapter() {
-
     var onTargetListener: ((targetType: TargetType) -> Unit)? = null
-
     fun setSelected(
         targetType: TargetType,
         isSelected: Boolean,
@@ -24,7 +20,6 @@ internal class TargetAdapter : BaseMenuAdapter() {
             }
         }
     }
-
     fun setTargetMode(modeCode: Int) {
         for (i in dataArray.indices) {
             if (dataArray[i].targetType == TargetType.MODE) {
@@ -40,7 +35,6 @@ internal class TargetAdapter : BaseMenuAdapter() {
             }
         }
     }
-
     private val dataArray: Array<Data> =
         arrayOf(
             Data(
@@ -65,7 +59,6 @@ internal class TargetAdapter : BaseMenuAdapter() {
                 TargetType.HELP
             ),
         )
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
@@ -76,14 +69,10 @@ internal class TargetAdapter : BaseMenuAdapter() {
         holder.binding.ivIcon.isSelected = data.isSelected
         holder.binding.tvText.isSelected = data.isSelected
         holder.binding.clRoot.setOnClickListener {
-
-
             onTargetListener?.invoke(data.targetType)
         }
     }
-
     override fun getItemCount(): Int = dataArray.size
-
     data class Data(
         @StringRes val stringId: Int,
         @DrawableRes var drawableId: Int,

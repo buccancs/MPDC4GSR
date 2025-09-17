@@ -1,5 +1,4 @@
 package com.topdon.module.user.activity
-
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -31,10 +30,8 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.DecimalFormat
 import com.topdon.lib.core.R as RCore
-
 class MoreActivity : BaseActivity(), View.OnClickListener {
     private val firmwareViewModel: FirmwareViewModel by viewModels()
-
     private lateinit var settingDeviceInformation: View
     private lateinit var settingTisr: View
     private lateinit var settingStorageSpace: View
@@ -44,11 +41,8 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
     private lateinit var settingAutoSave: View
     private lateinit var itemSettingBottomText: TextView
     private lateinit var tvUpgradePoint: TextView
-
     override fun initContentView() = R.layout.activity_more
-
     override fun initView() {
-
         settingDeviceInformation = findViewById(R.id.setting_device_information)
         settingTisr = findViewById(R.id.setting_tisr)
         settingStorageSpace = findViewById(R.id.setting_storage_space)
@@ -58,7 +52,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         settingAutoSave = findViewById(R.id.setting_auto_save)
         itemSettingBottomText = findViewById(R.id.item_setting_bottom_text)
         tvUpgradePoint = findViewById(R.id.tv_upgrade_point)
-
         settingDeviceInformation.setOnClickListener(this)
         settingTisr.setOnClickListener(this)
         settingStorageSpace.setOnClickListener(this)
@@ -66,21 +59,14 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         settingVersion.setOnClickListener(this)
         settingDisconnect.setOnClickListener(this)
         settingAutoSave.setOnClickListener(this)
-
-        /*if (Build.VERSION.SDK_INT < 29) {//Lower than Android 10
-            settingVersion.isVisible = false
-        }*/
-
         settingVersion.isVisible = false
     }
-
     override fun initData() {
         updateVersion()
-
         firmwareViewModel.firmwareDataLD.observe(this) {
             tvUpgradePoint.isVisible = it != null
             dismissCameraLoading()
-            if (it == null) { // 请求成功但没有固件升级包，即已是最新
+            if (it == null) { 
                 ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
             } else {
                 showFirmwareUpDialog(it)
@@ -95,34 +81,27 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             tvUpgradePoint.isVisible = false
         }
     }
-
     override fun onClick(v: View?) {
         when (v) {
-            settingDeviceInformation -> { // 设备信息
+            settingDeviceInformation -> { 
                 NavigationManager.getInstance()
                     .build(RouterConfig.DEVICE_INFORMATION)
                     .withBoolean(ExtraKeyConfig.IS_TC007, false)
                     .navigation(this@MoreActivity)
             }
-
-            settingTisr -> { // 设置超分
+            settingTisr -> { 
                 NavigationManager.getInstance().build(RouterConfig.TISR)
                     .navigation(this@MoreActivity)
             }
-
-            settingAutoSave -> { // 自动保存到手机
+            settingAutoSave -> { 
                 NavigationManager.getInstance().build(RouterConfig.AUTO_SAVE)
                     .navigation(this@MoreActivity)
             }
-
-            settingStorageSpace -> { // TS004储存空间
+            settingStorageSpace -> { 
                 NavigationManager.getInstance().build(RouterConfig.STORAGE_SPACE)
                     .navigation(this@MoreActivity)
             }
-
-            settingVersion -> { // Firmware version
-
-
+            settingVersion -> { 
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
@@ -131,22 +110,17 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                     showCameraLoading()
                     firmwareViewModel.queryFirmware(true)
                 }
-
-
             }
-
-            settingReset -> { // 恢复出厂设置
+            settingReset -> { 
                 restoreFactory()
             }
-
-            settingDisconnect -> { // 断开连接
+            settingDisconnect -> { 
                 NavigationManager.getInstance().build(RouterConfig.IR_MORE_HELP)
                     .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_DISCONNECTION)
                     .navigation(this@MoreActivity)
             }
         }
     }
-
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(this)
         dialog.titleStr = "${getString(RCore.string.update_new_version)} ${firmwareData.version}"
@@ -155,13 +129,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-
-
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
         dialog.show()
     }
-
     private fun getFileSizeStr(size: Long): String =
         if (size < 1024) {
             "${size}B"
@@ -172,13 +143,11 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         } else {
             DecimalFormat("#.0").format(size.toDouble() / 1024 / 1024 / 1024) + "GB"
         }
-
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
             XLog.d("TS004 固件升级 - 开始下载固件升级包")
             val progressDialog = DownloadProDialog(this@MoreActivity)
             progressDialog.show()
-
             val file = FileConfig.getFirmwareFile("TS004${firmwareData.version}.zip")
             val isSuccess =
                 DownloadTool.download(firmwareData.downUrl, file) { current, total ->
@@ -194,13 +163,11 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
             XLog.d("TS004 固件升级 - 开始安装固件升级包")
             val installDialog = FirmwareInstallDialog(this@MoreActivity)
             installDialog.show()
-
             val isSuccess = TS004Repository.updateFirmware(file)
             installDialog.dismiss()
             if (isSuccess) {
@@ -215,7 +182,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
     private fun showReInstallDialog(file: File) {
         val dialog = ConfirmSelectDialog(this)
         dialog.setShowIcon(true)
@@ -227,7 +193,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         }
         dialog.show()
     }
-
     private fun showReDownloadDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = ConfirmSelectDialog(this)
         dialog.setShowIcon(true)
@@ -239,7 +204,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         }
         dialog.show()
     }
-
     private fun updateVersion() {
         lifecycleScope.launch {
             val versionBean = TS004Repository.getVersion()
@@ -251,7 +215,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
     private fun restoreFactory() {
         TipDialog.Builder(this)
             .setTitleMessage(getString(RCore.string.ts004_reset_tip1, "TS004"))
@@ -264,7 +227,6 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             .setCanceled(true)
             .create().show()
     }
-
     private fun resetAll() {
         showLoadingDialog(RCore.string.ts004_reset_tip3)
         lifecycleScope.launch {

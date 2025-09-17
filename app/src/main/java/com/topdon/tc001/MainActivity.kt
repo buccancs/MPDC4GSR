@@ -1,6 +1,4 @@
 package com.topdon.tc001
-
-
 import android.Manifest
 import android.content.ComponentName
 import android.content.Context
@@ -80,28 +78,22 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     companion object {
         private const val TAG = "MainActivity"
     }
-    
     private val versionViewModel: VersionViewModel by viewModels()
-
     private var webSocketClient: WebSocketClient? = null
     private var networkClient: NetworkClient? = null
     private var recordingService: RecordingService? = null
     private var serviceBinder: RecordingService.RecordingServiceBinder? = null
     private var isServiceBound = false
     private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
-
     private var networkStatusIndicator: ImageView? = null
     private var networkStatusText: TextView? = null
-
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
     private lateinit var permissionController: PermissionController
-
     enum class ConnectionStatus {
         DISCONNECTED,
         DISCOVERING,
@@ -109,7 +101,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         CONNECTED,
         ERROR
     }
-
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as RecordingService.RecordingServiceBinder
@@ -118,10 +109,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             networkClient = binder.getNetworkClient()
             isServiceBound = true
             Log.i(TAG, "Recording service connected")
-
             setupRemoteControl()
         }
-
         override fun onServiceDisconnected(name: ComponentName?) {
             serviceBinder = null
             recordingService = null
@@ -130,34 +119,24 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             Log.i(TAG, "Recording service disconnected")
         }
     }
-
     private fun setupRemoteControl() {
         Log.i(TAG, "Setting up enhanced remote control capabilities")
-
         if (!isServiceBound || recordingService == null) {
             Log.w(TAG, "Recording service not available for remote control setup")
             return
         }
-
         try {
-
             enableAutoReconnection()
-
             startHeartbeat()
-
             networkStatusIndicator?.setOnClickListener { handleNetworkStatusClick() }
             networkStatusText?.setOnClickListener { handleNetworkStatusClick() }
-
             Log.i(TAG, "Enhanced remote control setup completed")
-
         } catch (e: Exception) {
             Log.e(TAG, "Error setting up remote control", e)
             showNetworkError("Failed to setup remote control: ${e.message}")
         }
     }
-
     override fun initContentLayoutId(): Int = R.layout.activity_main
-
     private fun logInfo() {
         try {
             val str = StringBuilder()
@@ -181,37 +160,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializePhase0Baseline()
-
         initView()
         initData()
-
         initNetworking()
     }
-
     private fun initView() {
-        // Initialize permission controller
         permissionController = PermissionController(this)
         permissionController.initialize()
-
         if (!SharedManager.getHasShowClause()) {
             NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
             finish()
             return
         }
-
         logInfo()
-
         networkStatusIndicator = binding.networkStatusIndicator
         networkStatusText = binding.networkStatusText
-
         lifecycleScope.launch(Dispatchers.IO) {
-
-
         }
         binding.viewPage.offscreenPageLimit = 3
         binding.viewPage.isUserInputEnabled = false
@@ -224,22 +191,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             },
         )
         binding.viewPage.setCurrentItem(1, false)
-
         binding.viewMinePoint.isVisible = !SharedManager.hasClickWinter
-
         binding.clIconGallery.setOnClickListener(this)
         binding.viewMain.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
-
         binding.networkStatusBar.setOnClickListener {
             handleNetworkStatusClick()
         }
-
         binding.viewMain.setOnLongClickListener {
             launchShimmerMvp()
             true
         }
-
         App.instance.initWebSocket()
         copyFile("SR.pb", File(filesDir, "SR.pb"))
         BaseApplication.instance.clearDb()
@@ -248,9 +210,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         } else {
             versionViewModel.checkVersion()
         }
-
         if (!SharedManager.hasTcLine && !SharedManager.hasTS004 && !SharedManager.hasTC007) {
-
             if (DeviceTools.isConnect()) {
                 if (!WebSocketProxy.getInstance().isConnected()) {
                     NavigationManager.build(RouterConfig.IR_MAIN)
@@ -267,7 +227,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
         }
-
         if (DeviceTools.isConnect()) {
             SharedManager.hasTcLine = true
         }
@@ -277,12 +236,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (WebSocketProxy.getInstance().isTC007Connect()) {
             SharedManager.hasTC007 = true
         }
-
     }
-
     override fun onStart() {
         super.onStart()
-
         versionViewModel.updateLiveData.observe(this) {
             FirmwareUpDialog(this).apply {
                 titleStr = getString(com.topdon.lib.core.R.string.update_new_version)
@@ -293,15 +249,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     updateApk(it.downPageUrl)
                 }
                 onCancelClickListener = {
-                    SharedManager.setVersionCheckDate(System.currentTimeMillis()) // 刷新版本提示时间
+                    SharedManager.setVersionCheckDate(System.currentTimeMillis()) 
                 }
             }.show()
         }
     }
-
     private fun updateApk(url: String) {
         if (applicationInfo.targetSdkVersion < Build.VERSION_CODES.P) {
-
             val intent = Intent()
             intent.action = "android.intent.action.VIEW"
             intent.data = Uri.parse(url)
@@ -327,9 +281,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-
     private var resetTipsDialog: TipDialog? = null
-
     private fun showResetTipsDialog() {
         disconnectDialog?.dismiss()
         if (resetTipsDialog == null) {
@@ -342,9 +294,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
         resetTipsDialog?.show()
     }
-
     private var disconnectDialog: TipDialog? = null
-
     private fun dialogDisconnect() {
         if (resetTipsDialog?.isShowing == true) {
             return
@@ -359,12 +309,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
         disconnectDialog?.show()
     }
-
     private fun copyFile(
         filename: String,
         targetFile: File,
     ) {
-        if (targetFile.exists()) { // 已存在就不覆盖了
+        if (targetFile.exists()) { 
             return
         }
         try {
@@ -381,93 +330,65 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             e.printStackTrace()
         }
     }
-
     private fun initData() {
-        // Request all permissions using the new PermissionController
         requestAllPermissions()
-
         Log.i(
             "MainActivity",
             "✅ PC-to-Phone communication integration available - RecordingService supports network control"
         )
     }
-
     private fun requestAllPermissions() {
         permissionController.ensureAll { allGranted, deniedPermissions ->
             if (allGranted) {
                 Log.i(TAG, "All permissions granted - full functionality enabled")
-                // Continue with normal app flow
                 onAllPermissionsGranted()
             } else {
                 Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
-                // Handle partial functionality gracefully
                 onPartialPermissions(deniedPermissions)
             }
         }
     }
-
     private fun onAllPermissionsGranted() {
-        // All permissions are available - enable full functionality
         Log.i(TAG, "Full multi-sensor recording functionality available")
-        // The app can now proceed with all features enabled
     }
-
     private fun onPartialPermissions(deniedPermissions: List<String>) {
-        // Handle partial functionality based on what's available
         val permissionNames = permissionController.getPermissionNames(deniedPermissions)
-        
-        // Show user what functionality might be limited
         val message = "Some features may be limited due to missing permissions: ${permissionNames.joinToString(", ")}"
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-        
         Log.w(TAG, "Running with limited functionality: $message")
     }
-
     override fun onResume() {
         super.onResume()
         LMS.getInstance().language = ConstantLanguages.ENGLISH
-
     }
-
     override fun onPause() {
         super.onPause()
     }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
-        // Delegate to permission controller
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        
-        // Delegate to permission controller for battery optimization results
         permissionController.onActivityResult(requestCode, resultCode)
     }
-
     override fun onClick(v: View?) {
         when (v) {
-            binding.clIconGallery -> { // 图库
-                // Navigate to gallery tab
+            binding.clIconGallery -> { 
                 binding.viewPage.setCurrentItem(0, false)
             }
-
-            binding.viewMain -> { // 首页
+            binding.viewMain -> { 
                 binding.viewPage.setCurrentItem(1, false)
             }
-
-            binding.clIconMine -> { // 我的
+            binding.clIconMine -> { 
                 binding.viewPage.setCurrentItem(2, false)
             }
         }
     }
-
     override fun onKeyDown(
         keyCode: Int,
         event: KeyEvent?,
@@ -485,47 +406,38 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
         return super.onKeyDown(keyCode, event)
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getDevicePermission(event: DevicePermissionEvent) {
         DeviceTools.requestUsb(this, 0, event.device)
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWinterClick(event: WinterClickEvent) {
         binding.viewMinePoint.isVisible = false
     }
-
     private fun refreshTabSelect(index: Int) {
         binding.ivIconGallery.isSelected = false
         binding.tvIconGallery.isSelected = false
         binding.ivIconMine.isSelected = false
         binding.tvIconMine.isSelected = false
         binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_not_select)
-
         when (index) {
-            0 -> { // 图库
+            0 -> { 
                 binding.ivIconGallery.isSelected = true
                 binding.tvIconGallery.isSelected = true
             }
-
             1 -> {
                 binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_select)
             }
-
-            2 -> { // 我的
+            2 -> { 
                 binding.ivIconMine.isSelected = true
                 binding.tvIconMine.isSelected = true
             }
         }
     }
-
     override fun connected() {
         if (SharedManager.isConnectAutoOpen) {
-            // Check camera permissions when device connects
             if (permissionController.canStartRecording()) {
                 Log.i(TAG, "Camera permissions available - device connected and ready for recording")
-                // Proceed with camera functionality
             } else {
                 Log.w(TAG, "Camera permissions missing - requesting permissions")
                 permissionController.ensureAll { granted, _ ->
@@ -536,14 +448,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-
     private var tipOtgDialog: TipOtgDialog? = null
-
     override fun disConnected() {
         if (WebSocketProxy.getInstance().isTS004Connect()) {
             NavigationManager.build(RouterConfig.IR_MONOCULAR).navigation(this)
         }
-
         if (tipOtgDialog != null && tipOtgDialog!!.isShowing) {
             return
         }
@@ -559,25 +468,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             BaseApplication.instance.hasOtgShow = true
         }
     }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTS004ResetEvent(event: TS004ResetEvent) {
         showResetTipsDialog()
     }
-
     override fun onSocketConnected(isTS004: Boolean) {
         disconnectDialog?.dismiss()
     }
-
     override fun onSocketDisConnected(isTS004: Boolean) {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED) && isTS004) { // TC007不用
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED) && isTS004) { 
             dialogDisconnect()
         }
     }
-
     private class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
         override fun getItemCount() = 3
-
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> {
@@ -593,21 +497,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             }
                     }
                 }
-
                 1 -> MainFragment()
                 else -> MineFragment()
             }
         }
     }
-
-
-
-
     fun jumpIRActivity() {
-        // Updated to work with new permission system
-        // Check permissions before proceeding with thermal imaging activities
         if (permissionController.canStartRecording()) {
-            // Determine which thermal activity to launch
             when {
                 DeviceTools.isTC001PlusConnect() -> {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
@@ -627,18 +523,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
         } else {
-            // Request permissions if not available
             Toast.makeText(this, "Camera permission required for thermal imaging", Toast.LENGTH_SHORT).show()
             permissionController.ensureAll { granted, _ ->
                 if (granted && permissionController.canStartRecording()) {
-                    jumpIRActivity() // Retry after permissions granted
+                    jumpIRActivity() 
                 }
             }
         }
     }
-
     private var appVersionUtil: AppVersionUtil? = null
-
     private fun checkAppVersion(isShow: Boolean) {
         if (appVersionUtil == null) {
             appVersionUtil =
@@ -647,7 +540,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     object : AppVersionUtil.DotIsShowListener {
                         override fun isShow(show: Boolean) {
                         }
-
                         override fun version(version: String) {
                         }
                     },
@@ -655,20 +547,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
         appVersionUtil?.checkVersion(isShow)
     }
-
-
     private fun initializePhase0Baseline() {
         Log.i(TAG, "Initializing Phase 0 baseline components")
-
         try {
-
             FeatureFlags.initialize(this)
-
             structuredLogger = StructuredLogger.getInstance(this)
-
             crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
             crashSafeSupervisor.initialize()
-
             val configWarnings = FeatureFlags.validateConfiguration()
             if (configWarnings.isNotEmpty()) {
                 structuredLogger.log(
@@ -678,7 +563,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     mapOf("warnings" to configWarnings.joinToString("; "))
                 )
             }
-
             val protocolInfo = ProtocolVersion.getProtocolInfo()
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -686,7 +570,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "protocol_version_info",
                 protocolInfo
             )
-
             val featureFlags = FeatureFlags.getAllFlags()
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -694,19 +577,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "feature_flags_initialized",
                 featureFlags
             )
-
             Log.i(TAG, "Phase 0 baseline initialization completed successfully")
-
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize Phase 0 baseline components", e)
-
         }
     }
-
-
     private fun initNetworking() {
         Log.i(TAG, "Initializing PC-to-phone control networking with Phase 0 baseline")
-
         structuredLogger.log(
             StructuredLogger.LogLevel.INFO,
             "MainActivity",
@@ -716,9 +593,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "protocol_version" to ProtocolVersion.CURRENT_VERSION
             )
         )
-
         try {
-
             crashSafeSupervisor.registerJob(
                 id = "websocket_client",
                 name = "WebSocketClient",
@@ -749,17 +624,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             ) { stopToken ->
                 initializeWebSocketClientSupervised(stopToken)
             }
-
             bindRecordingService()
-
             RecordingService.startServer(this)
-
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
                 "MainActivity",
                 "networking_initialization_completed"
             )
-
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize networking", e)
             structuredLogger.log(
@@ -772,36 +643,27 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             showNetworkError("Network initialization failed: ${e.message}")
         }
     }
-
     private suspend fun initializeWebSocketClientSupervised(stopToken: CrashSafeSupervisor.StopToken) {
         while (!stopToken.isStopRequested()) {
             try {
-
                 webSocketClient = WebSocketClient(this@MainActivity).apply {
-
                     setEventListener(createWebSocketEventListener())
-
                     start()
                 }
-
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "WebSocketClient",
                     "initialized_successfully"
                 )
-
                 while (!stopToken.isStopRequested() && webSocketClient?.isConnected() != true) {
                     kotlinx.coroutines.delay(1000)
                 }
-
                 if (webSocketClient?.isConnected() == true) {
                     updateConnectionStatus(ConnectionStatus.CONNECTED)
                 }
-
                 while (!stopToken.isStopRequested() && webSocketClient?.isConnected() == true) {
                     kotlinx.coroutines.delay(1000)
                 }
-
             } catch (e: Exception) {
                 Log.e(TAG, "Error in WebSocket client supervision", e)
                 structuredLogger.log(
@@ -810,17 +672,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     "supervision_error",
                     mapOf("error" to (e.message ?: "Unknown error"))
                 )
-
                 updateConnectionStatus(ConnectionStatus.ERROR)
-
                 kotlinx.coroutines.delay(5000)
             }
         }
-
         webSocketClient?.stop()
         webSocketClient = null
     }
-
     private fun createWebSocketEventListener(): WebSocketClient.WebSocketEventListener {
         return object : WebSocketClient.WebSocketEventListener {
             override fun onServerDiscovered(serverInfo: WebSocketClient.ServerInfo) {
@@ -835,7 +693,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         "protocol_version" to serverInfo.protocolVersion
                     )
                 )
-
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                     Toast.makeText(
@@ -845,7 +702,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     ).show()
                 }
             }
-
             override fun onConnecting(serverInfo: WebSocketClient.ServerInfo) {
                 structuredLogger.logConnection(
                     "connecting",
@@ -856,12 +712,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         "port" to serverInfo.port
                     )
                 )
-
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                 }
             }
-
             override fun onConnected(serverInfo: WebSocketClient.ServerInfo) {
                 structuredLogger.logConnection(
                     "websocket_connected",
@@ -872,7 +726,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         "protocol_version" to serverInfo.protocolVersion
                     )
                 )
-
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.CONNECTED)
                     Toast.makeText(
@@ -882,7 +735,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     ).show()
                 }
             }
-
             override fun onAuthenticated() {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
@@ -890,7 +742,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     "authenticated_successfully",
                     emptyMap()
                 )
-
                 runOnUiThread {
                     Toast.makeText(
                         this@MainActivity,
@@ -899,14 +750,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     ).show()
                 }
             }
-
             override fun onDisconnected(reason: String) {
                 structuredLogger.logConnection(
                     "websocket_disconnected",
                     "",
                     mapOf("reason" to reason)
                 )
-
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.DISCONNECTED)
                     Toast.makeText(
@@ -916,7 +765,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     ).show()
                 }
             }
-
             override fun onMessage(messageType: String, message: org.json.JSONObject) {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.DEBUG,
@@ -924,43 +772,35 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     "message_received",
                     mapOf("message_type" to messageType)
                 )
-
                 when (messageType) {
                     "session_start_response" -> {
                         val success = message.optBoolean("success", false)
                         val sessionId = message.optString("session_id", "")
-
                         if (success) {
                             runOnUiThread {
                                 handleRemoteSessionStart(sessionId)
                             }
                         }
                     }
-
                     "session_stop_response" -> {
                         val success = message.optBoolean("success", false)
-
                         if (success) {
                             runOnUiThread {
                                 handleRemoteSessionStop()
                             }
                         }
                     }
-
                     "sync_flash" -> {
                         val durationMs = message.optInt("duration_ms", 500)
                         runOnUiThread {
                             performSyncFlash(durationMs)
                         }
                     }
-
                     else -> {
-
                         Log.d(TAG, "Received message type: $messageType")
                     }
                 }
             }
-
             override fun onError(error: String, exception: Throwable?) {
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
@@ -968,15 +808,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     "websocket_error",
                     mapOf("error" to error)
                 )
-
                 runOnUiThread {
                     updateConnectionStatus(ConnectionStatus.ERROR)
                     showNetworkError("WebSocket error: $error")
                 }
             }
-
             override fun onHeartbeatReceived() {
-
                 structuredLogger.log(
                     StructuredLogger.LogLevel.DEBUG,
                     "WebSocketClient",
@@ -986,7 +823,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-
     private fun handleRemoteSessionStart(sessionId: String) {
         try {
             structuredLogger.logSessionEvent(
@@ -994,14 +830,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 sessionId,
                 emptyMap()
             )
-
             lifecycleScope.launch {
                 val sessionDir = "${getExternalFilesDir("recordings")}/$sessionId"
                 serviceBinder?.getRecordingController()?.startRecording(sessionDir)
             }
-
             Toast.makeText(this, "Remote recording started: $sessionId", Toast.LENGTH_LONG).show()
-
         } catch (e: Exception) {
             Log.e(TAG, "Error handling remote session start", e)
             structuredLogger.log(
@@ -1012,7 +845,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             )
         }
     }
-
     private fun handleRemoteSessionStop() {
         try {
             structuredLogger.log(
@@ -1021,13 +853,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "remote_session_stop",
                 emptyMap()
             )
-
             lifecycleScope.launch {
                 serviceBinder?.getRecordingController()?.stopRecording()
             }
-
             Toast.makeText(this, "Remote recording stopped", Toast.LENGTH_LONG).show()
-
         } catch (e: Exception) {
             Log.e(TAG, "Error handling remote session stop", e)
             structuredLogger.log(
@@ -1038,88 +867,63 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             )
         }
     }
-
     private fun bindRecordingService() {
         val intent = Intent(this, RecordingService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
-
-
     private fun startNetworkDiscovery() {
         Log.i(TAG, "Starting WebSocket discovery for PC servers")
         updateConnectionStatus(ConnectionStatus.DISCOVERING)
-
-
         structuredLogger.log(
             StructuredLogger.LogLevel.INFO,
             "WebSocketClient",
             "discovery_started",
             emptyMap()
         )
-
-
     }
-
     private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
         Log.i(TAG, "Processing remote recording request for session: ${sessionInfo.sessionId}")
-
         if (!isServiceBound || recordingService == null) {
             Log.e(TAG, "Recording service not available for remote request")
             showNetworkError("Recording service not ready")
             return
         }
-
         try {
-
             val baseDir = File(getExternalFilesDir(null), "recordings")
             val sessionDir = File(baseDir, sessionInfo.sessionId)
-
             if (!sessionDir.exists()) {
                 sessionDir.mkdirs()
             }
-
             RecordingService.startRecording(this, sessionDir.absolutePath)
-
             Toast.makeText(
                 this,
                 "Remote recording started: ${sessionInfo.studyName}",
                 Toast.LENGTH_LONG
             ).show()
-
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start remote recording", e)
             showNetworkError("Failed to start recording: ${e.message}")
         }
     }
-
     private fun performSyncFlash(durationMs: Int) {
         Log.i(TAG, "Performing sync flash for ${durationMs}ms")
-
         val originalBackground = window.decorView.background
-
         try {
-
             window.decorView.setBackgroundColor(android.graphics.Color.WHITE)
-
             lifecycleScope.launch {
                 serviceBinder?.getRecordingController()
                     ?.addSyncMarker("pc_sync_flash", System.nanoTime())
             }
-
             window.decorView.postDelayed({
                 window.decorView.background = originalBackground
             }, durationMs.toLong())
-
         } catch (e: Exception) {
             Log.e(TAG, "Failed to perform sync flash", e)
-
             window.decorView.background = originalBackground
         }
     }
-
     private fun updateConnectionStatus(status: ConnectionStatus) {
         connectionStatus = status
-
         networkStatusIndicator?.let { indicator ->
             networkStatusText?.let { text ->
                 when (status) {
@@ -1127,22 +931,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         indicator.setColorFilter(android.graphics.Color.GRAY)
                         text.text = "PC: Disconnected"
                     }
-
                     ConnectionStatus.DISCOVERING -> {
                         indicator.setColorFilter(android.graphics.Color.YELLOW)
                         text.text = "PC: Discovering..."
                     }
-
                     ConnectionStatus.CONNECTING -> {
                         indicator.setColorFilter(android.graphics.Color.YELLOW)
                         text.text = "PC: Connecting..."
                     }
-
                     ConnectionStatus.CONNECTED -> {
                         indicator.setColorFilter(android.graphics.Color.GREEN)
                         text.text = "PC: Connected"
                     }
-
                     ConnectionStatus.ERROR -> {
                         indicator.setColorFilter(android.graphics.Color.RED)
                         text.text = "PC: Error"
@@ -1151,50 +951,37 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-
     private fun showNetworkError(message: String) {
         Log.e(TAG, "Network error: $message")
-
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("Network Error")
         builder.setMessage("$message\n\nWhat would you like to do?")
-
         builder.setPositiveButton("Retry Discovery") { _, _ ->
             startNetworkDiscovery()
         }
-
         builder.setNegativeButton("Manual Connect") { _, _ ->
             showManualConnectionDialog()
         }
-
         builder.setNeutralButton("Ignore") { _, _ ->
-
         }
-
         builder.show()
     }
-
     fun connectToPC(ipAddress: String, port: Int = 8080) {
         if (networkClient == null) {
             showNetworkError("Network client not initialized")
             return
         }
-
         Log.i(TAG, "Attempting connection to PC at $ipAddress:$port")
         updateConnectionStatus(ConnectionStatus.CONNECTING)
-
         lifecycleScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-
                     var success = networkClient?.connectToController(ipAddress, port, true) ?: false
-
                     if (!success) {
                         Log.i(TAG, "Secure connection failed, trying non-secure...")
                         success =
                             networkClient?.connectToController(ipAddress, port, false) ?: false
                     }
-
                     withContext(Dispatchers.Main) {
                         if (success) {
                             Log.i(TAG, "Connection successful to $ipAddress:$port")
@@ -1217,51 +1004,41 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-
     fun getConnectionStatus(): ConnectionStatus = connectionStatus
-
-
     fun getNetworkMetrics(): String {
         val client = webSocketClient ?: return "WebSocket client not available"
-
         return "Status: ${if (client.isConnected()) "Connected" else "Disconnected"}, " +
                 "Authenticated: ${client.isAuthenticated()}, " +
                 "Reconnecting: ${client.isReconnecting()}"
     }
-
     private fun enableAutoReconnection() {
         lifecycleScope.launch {
-            var reconnectDelay = 5000L // Start with 5 seconds
-            val maxDelay = 60000L // Max 60 seconds
-
+            var reconnectDelay = 5000L 
+            val maxDelay = 60000L 
             while (!isFinishing) {
                 if (connectionStatus == ConnectionStatus.ERROR ||
                     connectionStatus == ConnectionStatus.DISCONNECTED
                 ) {
-
                     Log.i(TAG, "Attempting auto-reconnection...")
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
-
                     val success = tryReconnection()
                     if (success) {
                         Log.i(TAG, "Auto-reconnection successful")
-                        reconnectDelay = 5000L // Reset delay on success
+                        reconnectDelay = 5000L 
                     } else {
                         Log.w(TAG, "Auto-reconnection failed, retrying in ${reconnectDelay}ms")
                         kotlinx.coroutines.delay(reconnectDelay)
-                        reconnectDelay = minOf(reconnectDelay * 2, maxDelay) // Exponential backoff
+                        reconnectDelay = minOf(reconnectDelay * 2, maxDelay) 
                     }
                 } else {
-                    kotlinx.coroutines.delay(10000L) // Check every 10 seconds when connected
+                    kotlinx.coroutines.delay(10000L) 
                 }
             }
         }
     }
-
     private suspend fun tryReconnection(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-
                 val controllers = networkClient?.getDiscoveredControllers()
                 if (!controllers.isNullOrEmpty()) {
                     for (controller: NetworkClient.ControllerInfo in controllers) {
@@ -1270,18 +1047,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             controller.ipAddress,
                             controller.port
                         ) ?: false
-
                         if (success) {
                             return@withContext true
                         }
                     }
                 }
-
                 networkClient?.startDiscovery { discoverySuccess: Boolean ->
                     if (discoverySuccess) {
                         val newControllers = networkClient?.getDiscoveredControllers()
                         if (!newControllers.isNullOrEmpty()) {
-
                             lifecycleScope.launch {
                                 val controller = newControllers.first()
                                 networkClient?.connectToController(
@@ -1296,98 +1070,76 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         }
                     }
                 }
-
                 return@withContext false
-
             } catch (e: Exception) {
                 Log.e(TAG, "Error during reconnection attempt", e)
                 return@withContext false
             }
         }
     }
-
     private fun startHeartbeat() {
         lifecycleScope.launch {
             while (!isFinishing) {
                 if (connectionStatus == ConnectionStatus.CONNECTED) {
                     try {
-
-
                         webSocketClient?.sendStatusRequest()
-
                     } catch (e: Exception) {
                         Log.w(TAG, "Status request exception", e)
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
                 }
-
-                kotlinx.coroutines.delay(30000L) // Send status request every 30 seconds
+                kotlinx.coroutines.delay(30000L) 
             }
         }
     }
-
     fun getConnectionStatusReport(): String {
         val sb = StringBuilder()
         sb.append("=== PC-to-Phone Control Status ===\n")
         sb.append("Connection Status: ${connectionStatus.name}\n")
         sb.append("Network Metrics: ${getNetworkMetrics()}\n")
-
         val servers = webSocketClient?.getDiscoveredServers()
         sb.append("Discovered Servers: ${servers?.size ?: 0}\n")
         servers?.forEach { (name, server) ->
             sb.append("  - $name (${server.host}:${server.port}) TLS:${server.usesTLS}\n")
         }
-
         val currentServer = webSocketClient?.getCurrentServer()
         if (currentServer != null) {
             sb.append("Current Server: ${currentServer.name} (${currentServer.host}:${currentServer.port})\n")
         }
-
         sb.append("Service Bound: $isServiceBound\n")
         if (isServiceBound && recordingService != null) {
             try {
                 val recordingController = serviceBinder?.getRecordingController()
                 val summary = recordingController?.getSensorStatusSummary()
                 sb.append("Recording Status: ${summary ?: "N/A"}\n")
-
                 val serverStatus = serviceBinder?.getServerStatus()
                 sb.append("Server Socket: $serverStatus\n")
-
                 val connectedClients = serviceBinder?.getConnectedClients()
                 sb.append("Connected PC Clients: ${connectedClients?.size ?: 0}\n")
                 connectedClients?.forEach { client ->
                     sb.append("  - $client\n")
                 }
-
             } catch (e: Exception) {
                 sb.append("Recording Status: Error - ${e.message}\n")
             }
         } else {
             sb.append("Recording Status: Service not available\n")
         }
-
         return sb.toString()
     }
-
     private fun handleNetworkStatusClick() {
         when (connectionStatus) {
             ConnectionStatus.DISCONNECTED, ConnectionStatus.ERROR -> {
-
                 showConnectionOptionsDialog()
             }
-
             ConnectionStatus.DISCOVERING, ConnectionStatus.CONNECTING -> {
-
                 Toast.makeText(this, "Connection in progress...", Toast.LENGTH_SHORT).show()
             }
-
             ConnectionStatus.CONNECTED -> {
-
                 showConnectionInfoDialog()
             }
         }
     }
-
     private fun showConnectionOptionsDialog() {
         val options = arrayOf(
             "Retry Discovery",
@@ -1395,44 +1147,33 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             "Connection Status Report",
             "Cancel"
         )
-
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("PC Connection Options")
         builder.setItems(options) { _, which ->
             when (which) {
                 0 -> {
-
                     Log.i(TAG, "Retrying network discovery")
                     startNetworkDiscovery()
                 }
-
                 1 -> {
-
                     showManualConnectionDialog()
                 }
-
                 2 -> {
-
                     showStatusReportDialog()
                 }
-
                 3 -> {
-
                 }
             }
         }
         builder.show()
     }
-
     private fun showConnectionInfoDialog() {
         val metrics = getNetworkMetrics()
         val servers = webSocketClient?.getDiscoveredServers()
         val currentServer = webSocketClient?.getCurrentServer()
-
         val message = StringBuilder()
         message.append("Connection Status: Connected\n\n")
         message.append("Performance Metrics:\n$metrics\n\n")
-
         if (currentServer != null) {
             message.append("Connected to:\n")
             message.append("Server: ${currentServer.name}\n")
@@ -1440,9 +1181,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             message.append("TLS: ${currentServer.usesTLS}\n")
             message.append("Protocol: ${currentServer.protocolVersion}\n\n")
         }
-
         message.append("Recording Service: ${if (isServiceBound) "Available" else "Not Available"}\n")
-
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("PC Connection Info")
         builder.setMessage(message.toString())
@@ -1452,10 +1191,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.setNegativeButton("Close", null)
         builder.show()
     }
-
     private fun showStatusReportDialog() {
         val statusReport = getConnectionStatusReport()
-
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("Detailed Status Report")
         builder.setMessage(statusReport)
@@ -1469,13 +1206,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.setNegativeButton("Close", null)
         builder.show()
     }
-
     private fun testRemoteRecordingCapability() {
         if (!isServiceBound || recordingService == null) {
             Toast.makeText(this, "Recording service not available", Toast.LENGTH_SHORT).show()
             return
         }
-
         try {
             val testSessionInfo = SessionInfo(
                 sessionId = "test_${System.currentTimeMillis()}",
@@ -1483,72 +1218,55 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 studyName = "Connection Test",
                 participantId = "test_participant"
             )
-
             Toast.makeText(this, "Testing remote recording capability...", Toast.LENGTH_SHORT)
                 .show()
-
             handleRemoteRecordingRequest(testSessionInfo)
-
         } catch (e: Exception) {
             Log.e(TAG, "Error testing remote recording", e)
             Toast.makeText(this, "Test failed: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
-
     private fun showManualConnectionDialog() {
         val input = android.widget.EditText(this)
         input.hint = "Enter PC IP address (e.g., 192.168.1.100)"
         input.inputType = android.text.InputType.TYPE_CLASS_TEXT
-
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("Manual PC Connection")
         builder.setMessage("Enter the IP address of your PC Controller:")
         builder.setView(input)
-
         builder.setPositiveButton("Connect") { _, _ ->
             val ipAddress = input.text.toString().trim()
             if (ipAddress.isNotEmpty()) {
                 connectToPC(ipAddress)
             } else {
-
                 tryCommonIPAddresses()
             }
         }
-
         builder.setNegativeButton("Try Defaults") { _, _ ->
             tryCommonIPAddresses()
         }
-
         builder.setNeutralButton("Cancel", null)
         builder.show()
     }
-
     private fun tryCommonIPAddresses() {
         val commonIPs = listOf(
             "192.168.1.100", "192.168.1.101", "192.168.1.102",
             "192.168.0.100", "192.168.0.101", "192.168.0.102",
             "10.0.0.100", "10.0.0.101", "10.0.0.102",
-            "127.0.0.1" // localhost for testing
+            "127.0.0.1" 
         )
-
         Toast.makeText(this, "Trying common IP addresses...", Toast.LENGTH_SHORT).show()
-
         lifecycleScope.launch {
             var connected = false
-
             for (ip in commonIPs) {
-                if (connected) break // Stop if we've already connected
-
+                if (connected) break 
                 Log.i(TAG, "Trying to connect to $ip")
                 updateConnectionStatus(ConnectionStatus.CONNECTING)
-
                 try {
                     val success = withContext(Dispatchers.IO) {
-
                         networkClient?.connectToController(ip, 8080, true) ?: false ||
                                 networkClient?.connectToController(ip, 8080, false) ?: false
                     }
-
                     if (success) {
                         Log.i(TAG, "Successfully connected to $ip")
                         Toast.makeText(
@@ -1565,7 +1283,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     Log.w(TAG, "Connection error to $ip: ${e.message}")
                 }
             }
-
             if (!connected) {
                 updateConnectionStatus(ConnectionStatus.DISCONNECTED)
                 Toast.makeText(
@@ -1577,27 +1294,21 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-
     override fun onDestroy() {
         super.onDestroy()
-
         structuredLogger.log(
             StructuredLogger.LogLevel.INFO,
             "MainActivity",
             "activity_destroying"
         )
-
         try {
             webSocketClient?.stop()
             webSocketClient = null
-
             RecordingService.stopServer(this)
-
             if (isServiceBound) {
                 unbindService(serviceConnection)
                 isServiceBound = false
             }
-
         } catch (e: Exception) {
             Log.e(TAG, "Error during networking cleanup", e)
             structuredLogger.log(
@@ -1607,7 +1318,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 mapOf("error" to (e.message ?: "Unknown error"))
             )
         }
-
         try {
             crashSafeSupervisor.shutdown()
             structuredLogger.cleanup()
@@ -1615,18 +1325,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             Log.e(TAG, "Error during Phase 0 cleanup", e)
         }
     }
-
     private fun launchShimmerMvp() {
         try {
             Log.i(TAG, "Showing developer sensor options")
-
             val options = arrayOf(
                 "Shimmer GSR MVP",
                 "Shimmer3 GSR+ Integration (Comprehensive)",
                 "Unified Sensor Platform",
                 "Cancel"
             )
-
             AlertDialog.Builder(this)
                 .setTitle("Developer Sensor Access")
                 .setMessage(
@@ -1638,15 +1345,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 .setItems(options) { _, which ->
                     when (which) {
                         0 -> {
-
                             Toast.makeText(this, "Opening Shimmer GSR MVP", Toast.LENGTH_SHORT)
                                 .show()
                             val intent = Intent(this, ShimmerMvpActivity::class.java)
                             startActivity(intent)
                         }
-
                         1 -> {
-                            // Shimmer integration moved to GSR Settings Activity
                             Toast.makeText(
                                 this,
                                 "GSR functionality available in GSR Settings",
@@ -1658,9 +1362,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             )
                             startActivity(intent)
                         }
-
                         2 -> {
-
                             Toast.makeText(
                                 this,
                                 "Opening Unified Sensor Platform",
@@ -1669,26 +1371,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             val intent = Intent(this, UnifiedSensorActivity::class.java)
                             startActivity(intent)
                         }
-
                         3 -> {
-
                         }
                     }
                 }
                 .show()
-
         } catch (e: Exception) {
             Log.e(TAG, "Error launching sensor options: ${e.message}")
             Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
-
     fun launchGSRRecording() {
-
         if (GSRSensorRecorder.hasRequiredPermissions(this)) {
             GSRQuickRecordingActivity.start(this)
         } else {
-
             TipDialog.Builder(this)
                 .setTitleMessage("GSR Recording Permissions")
                 .setMessage("GSR recording requires Bluetooth and location permissions. Enable them in settings?")

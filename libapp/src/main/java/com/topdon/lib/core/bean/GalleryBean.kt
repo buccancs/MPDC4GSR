@@ -1,5 +1,4 @@
 package com.topdon.lib.core.bean
-
 import android.os.Parcel
 import android.os.Parcelable
 import com.topdon.lib.core.config.FileConfig
@@ -9,14 +8,13 @@ import com.topdon.lib.core.tools.VideoTools
 import kotlinx.parcelize.Parcelize
 import java.io.File
 import java.util.TimeZone
-
 @Parcelize
 open class GalleryBean(
-    val id: Int, // 仅TS004远端时，id
+    val id: Int, 
     val path: String,
     val thumb: String,
     val name: String,
-    val duration: Long, // 仅当为视频时，持续毫秒数
+    val duration: Long, 
     val timeMillis: Long,
     var hasDownload: Boolean,
 ) : Parcelable {
@@ -29,18 +27,16 @@ open class GalleryBean(
         timeMillis = TimeTool.updateDateTime(file),
         hasDownload = true,
     )
-
     constructor(isVideo: Boolean, fileBean: FileBean) : this(
         id = fileBean.id,
-        path = "http://192.168.40.1:8080/DCIM/${fileBean.name}",
-        thumb = if (isVideo) "http://192.168.40.1:8080/DCIM/${fileBean.thumb}" else "http://192.168.40.1:8080/DCIM/${fileBean.name}",
+        path = "http:
+        thumb = if (isVideo) "http:
         name = fileBean.name,
         duration = fileBean.duration * 1000L,
         timeMillis = fileBean.time * 1000 - TimeZone.getDefault().getOffset(fileBean.time * 1000),
         hasDownload = File(FileConfig.ts004GalleryDir, fileBean.name).exists(),
     )
 }
-
 class GalleryTitle(timeMillis: Long) : GalleryBean(
     id = 0,
     path = "",
@@ -54,7 +50,6 @@ class GalleryTitle(timeMillis: Long) : GalleryBean(
         override fun createFromParcel(parcel: Parcel): GalleryTitle {
             return GalleryTitle(parcel.readLong())
         }
-
         override fun newArray(size: Int): Array<GalleryTitle?> {
             return arrayOfNulls(size)
         }

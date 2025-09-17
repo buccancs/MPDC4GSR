@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -13,36 +12,30 @@ import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR
-
 @Deprecated("看起来是旧版 2D 编辑的menu，根本没使用了")
 class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
-    private var colorEnable = false // pseudo color条
-    private var contrastEnable = false // 对比度
-    private var ddeEnable = false // 细节
-
+    private var colorEnable = false 
+    private var contrastEnable = false 
+    private var ddeEnable = false 
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
     }
-
     fun enColor(colorEnable: Boolean) {
         this.colorEnable = colorEnable
         notifyDataSetChanged()
     }
-
     fun enContrast(param: Boolean) {
         this.contrastEnable = param
         notifyDataSetChanged()
     }
-
     fun enDde(param: Boolean) {
         this.ddeEnable = param
         notifyDataSetChanged()
     }
-
     private val fourBean =
         arrayListOf(
             ColorBean(
@@ -61,7 +54,6 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
                 3
             ),
         )
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -70,7 +62,6 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
             .inflate(UiR.layout.ui_item_menu_four_view, parent, false)
         return ItemView(view)
     }
-
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
@@ -94,22 +85,18 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
                 1 -> {
                     iconUI(colorEnable, holder.img, holder.name)
                 }
-
                 2 -> {
                     iconUI(contrastEnable, holder.img, holder.name)
                 }
-
                 3 -> {
                     iconUI(ddeEnable, holder.img, holder.name)
                 }
-
                 else -> {
                     iconUI(bean.code == selected, holder.img, holder.name)
                 }
             }
         }
     }
-
     private fun iconUI(
         isActive: Boolean,
         img: ImageView,
@@ -122,11 +109,9 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
             nameText.setTextColor(ContextCompat.getColor(context, UiR.color.font_third_color))
         }
     }
-
     override fun getItemCount(): Int {
         return fourBean.size
     }
-
     inner class ItemView(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lay: View = itemView.findViewById(UiR.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(UiR.id.item_menu_tab_img)

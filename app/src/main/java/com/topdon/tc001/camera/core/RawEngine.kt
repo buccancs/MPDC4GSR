@@ -1,5 +1,4 @@
 package com.topdon.tc001.camera.core
-
 import android.content.Context
 import android.graphics.ImageFormat
 import android.hardware.camera2.CaptureResult
@@ -11,23 +10,19 @@ import android.util.Size
 import android.view.Surface
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
-
 class RawEngine(private val context: Context) {
     companion object {
         private const val TAG = "RawEngine"
         private const val RAW_CAPTURE_TIMEOUT_MS = 5000L
     }
-
     private var rawImageReader: ImageReader? = null
     private var isCapturing = false
     private var rawOutputDirectory: File? = null
     private var sessionId: String = ""
     private var rawCaptureCount = 0
     private val pendingCaptureResults = ConcurrentHashMap<Long, TotalCaptureResult>()
-
     var onRawImageSaved: ((File) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
-
     fun setup(
         rawSize: Size,
         outputDirectory: File,
@@ -37,53 +32,42 @@ class RawEngine(private val context: Context) {
             this.rawOutputDirectory = outputDirectory
             this.sessionId = sessionId
             this.rawCaptureCount = 0
-
             rawImageReader =
                 ImageReader.newInstance(
                     rawSize.width,
                     rawSize.height,
                     ImageFormat.RAW_SENSOR,
-                    2, // Conservative buffer count for Samsung devices
+                    2, 
                 )
-
             rawImageReader?.setOnImageAvailableListener(rawImageAvailableListener, null)
-
             Log.i(TAG, "RAW engine setup: ${rawSize.width}x${rawSize.height}")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to setup RAW engine", e)
             onError?.invoke("RAW setup failed: ${e.message}")
         }
     }
-
     fun getSurface(): Surface? = rawImageReader?.surface
-
     fun startCapture() {
         isCapturing = true
         rawCaptureCount = 0
         Log.i(TAG, "RAW capture started")
     }
-
     fun stopCapture() {
         isCapturing = false
         Log.i(TAG, "RAW capture stopped, captured $rawCaptureCount images")
     }
-
     fun storeCaptureResult(result: TotalCaptureResult) {
         if (isCapturing) {
             val timestamp = result.get(CaptureResult.SENSOR_TIMESTAMP) ?: System.nanoTime()
             pendingCaptureResults[timestamp] = result
-
             if (pendingCaptureResults.size > 10) {
                 val oldestKey = pendingCaptureResults.keys.minOrNull()
                 oldestKey?.let { pendingCaptureResults.remove(it) }
             }
         }
     }
-
     fun isCapturing(): Boolean = isCapturing
-
     fun getCaptureCount(): Int = rawCaptureCount
-
     fun release() {
         stopCapture()
         rawImageReader?.close()
@@ -91,23 +75,17 @@ class RawEngine(private val context: Context) {
         pendingCaptureResults.clear()
         Log.i(TAG, "RAW engine released")
     }
-
-
     private val rawImageAvailableListener =
         ImageReader.OnImageAvailableListener { reader ->
             if (!isCapturing) return@OnImageAvailableListener
-
             val image = reader.acquireLatestImage() ?: return@OnImageAvailableListener
-
             try {
                 val timestamp = image.timestamp
                 val captureResult = pendingCaptureResults.remove(timestamp)
-
                 if (captureResult != null) {
                     saveRawImageAsDng(image, captureResult)
                 } else {
                     Log.w(TAG, "No capture result found for timestamp $timestamp")
-
                     saveRawImageAsRaw(image)
                 }
             } catch (e: Exception) {
@@ -117,7 +95,6 @@ class RawEngine(private val context: Context) {
                 image.close()
             }
         }
-
     private fun saveRawImageAsDng(
         image: Image,
         captureResult: TotalCaptureResult,
@@ -125,12 +102,8 @@ class RawEngine(private val context: Context) {
         val outputDir = rawOutputDirectory ?: return
         val timestamp = System.currentTimeMillis()
         val dngFile = File(outputDir, "${sessionId}_raw_$timestamp.dng")
-
         try {
-
-
             saveRawImageAsRaw(image)
-
             rawCaptureCount++
             Log.d(TAG, "Saved RAW image: ${dngFile.name} (${image.width}x${image.height})")
             onRawImageSaved?.invoke(dngFile)
@@ -139,19 +112,15 @@ class RawEngine(private val context: Context) {
             onError?.invoke("DNG save failed: ${e.message}")
         }
     }
-
     private fun saveRawImageAsRaw(image: Image) {
         val outputDir = rawOutputDirectory ?: return
         val timestamp = System.currentTimeMillis()
         val rawFile = File(outputDir, "${sessionId}_raw_$timestamp.raw")
-
         try {
             val buffer = image.planes[0].buffer
             val bytes = ByteArray(buffer.remaining())
             buffer.get(bytes)
-
             rawFile.writeBytes(bytes)
-
             rawCaptureCount++
             Log.d(TAG, "Saved RAW binary: ${rawFile.name} (${image.width}x${image.height})")
             onRawImageSaved?.invoke(rawFile)

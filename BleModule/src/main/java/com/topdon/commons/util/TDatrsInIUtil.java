@@ -1,16 +1,11 @@
 package com.topdon.commons.util;
-
 import android.text.TextUtils;
-
 import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
-
 import java.io.File;
 import java.util.HashMap;
-
 public class TDatrsInIUtil {
-
     public static String getTdartsVersion(String path) {
         File file = new File(path + "T-darts.ini");
         if (!file.exists()) {
@@ -38,7 +33,6 @@ public class TDatrsInIUtil {
         }
         return "";
     }
-
     public static HashMap<String, String> getTdarts(String path) {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "T-darts.ini");
@@ -61,12 +55,10 @@ public class TDatrsInIUtil {
             if (!TextUtils.isEmpty(tDartSWSection.get("version"))) {
                 hashMap.put("Version", tDartSWSection.get("Version".toLowerCase()));
             }
-
             Profile.Section libsSection = ini.get("libs");
             if (libsSection == null) {
                 return hashMap;
             }
-
             if (!TextUtils.isEmpty(libsSection.get("T-dartsApp".toLowerCase()))) {
                 hashMap.put("T-dartsApp", libsSection.get("T-dartsApp".toLowerCase()));
             }
@@ -82,7 +74,6 @@ public class TDatrsInIUtil {
             return hashMap;
         }
     }
-
     public static String getBinPath(int data) {
         String path = FolderUtil.getTdartsUpgradePath();
         if (data == 0) {

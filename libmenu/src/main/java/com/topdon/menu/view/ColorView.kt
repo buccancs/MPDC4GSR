@@ -1,5 +1,4 @@
 package com.topdon.menu.view
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -12,35 +11,23 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.menu.R as MenuR
-
-
 class ColorView : View {
-
     var colors: IntArray = intArrayOf(0xfffbda00.toInt(), 0xffea0e0e.toInt(), 0xff6907af.toInt())
-
     var positions: FloatArray = floatArrayOf(0f, 0.5f, 1f)
-
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
     private var shaderSelectYes =
         LinearGradient(0f, 0f, 0f, 0f, colors, positions, Shader.TileMode.CLAMP)
-
     private var shaderSelectNot =
         LinearGradient(0f, 0f, 0f, 0f, colors, positions, Shader.TileMode.CLAMP)
-
     private val triangleDrawable: Drawable
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
         defStyleAttr,
         0
     )
-
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -55,7 +42,6 @@ class ColorView : View {
         paint.color = 0xffffffff.toInt()
         triangleDrawable = ContextCompat.getDrawable(context, MenuR.drawable.svg_color_select)!!
     }
-
     @SuppressLint("DrawAllocation")
     override fun onMeasure(
         widthMeasureSpec: Int,
@@ -65,13 +51,12 @@ class ColorView : View {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-
         val width: Int = if (widthMode == MeasureSpec.UNSPECIFIED) 100 else widthSize
         val barHeight: Int =
-            (width * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
+            (width * 73f / 62).toInt() 
         val triangleSize: Int =
-            (width * 12f / 62).toInt() // 62 and 12 from UI design - triangle width 12, total width 62
-        val margin: Int = SizeUtils.dp2px(4f) // 4dp spacing between color block and triangle
+            (width * 12f / 62).toInt() 
+        val margin: Int = SizeUtils.dp2px(4f) 
         val wantHeight: Int = barHeight + margin + triangleSize
         val height =
             when (heightMode) {
@@ -80,7 +65,6 @@ class ColorView : View {
                 else -> wantHeight
             }
         setMeasuredDimension(width, height)
-
         refreshShader()
         triangleDrawable.setBounds(
             (width - triangleSize) / 2,
@@ -89,15 +73,13 @@ class ColorView : View {
             height
         )
     }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val radius: Float = SizeUtils.dp2px(10f).toFloat()
         val barHeight: Int =
-            (width * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
-
+            (width * 73f / 62).toInt() 
         if (isSelected) {
-            val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // Border width 2dp
+            val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() 
             val selectBarHeight: Int = (barHeight - strokeSize * 2).toInt()
             paint.shader = null
             canvas.drawRoundRect(
@@ -122,8 +104,8 @@ class ColorView : View {
             triangleDrawable.draw(canvas)
         } else {
             val normalBarWidth: Int =
-                (width * 50f / 62).toInt() // Unselected width 50, total width 62
-            val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() // Aspect ratio 50:60
+                (width * 50f / 62).toInt() 
+            val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() 
             val top: Float = ((barHeight - normalBarHeight) / 2).toFloat()
             val left: Float = ((width - normalBarWidth) / 2).toFloat()
             paint.shader = shaderSelectNot
@@ -138,7 +120,6 @@ class ColorView : View {
             )
         }
     }
-
     fun refreshColor(
         colors: IntArray,
         positions: FloatArray,
@@ -148,11 +129,10 @@ class ColorView : View {
         refreshShader()
         invalidate()
     }
-
     private fun refreshShader() {
-        val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // Border width 2dp
+        val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() 
         val barHeight: Int =
-            (measuredWidth * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
+            (measuredWidth * 73f / 62).toInt() 
         val selectBarHeight: Int = (barHeight - strokeSize * 2).toInt()
         shaderSelectYes = LinearGradient(
             0f,
@@ -163,10 +143,9 @@ class ColorView : View {
             positions,
             Shader.TileMode.CLAMP
         )
-
         val normalBarWidth: Int =
-            (measuredWidth * 50f / 62).toInt() // Unselected width 50, total width 62
-        val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() // Aspect ratio 50:60
+            (measuredWidth * 50f / 62).toInt() 
+        val normalBarHeight: Int = (normalBarWidth * 60f / 50).toInt() 
         val top: Float = ((barHeight - normalBarHeight) / 2).toFloat()
         shaderSelectNot = LinearGradient(
             0f,

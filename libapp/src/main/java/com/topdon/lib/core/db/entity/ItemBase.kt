@@ -1,5 +1,4 @@
 package com.topdon.lib.core.db.entity
-
 import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -8,42 +7,29 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.blankj.utilcode.util.Utils
 import com.topdon.lib.core.R
-
 open class ItemBase {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
-
     @ColumnInfo(index = true)
     open var parentId: Long = 0
-
     @ColumnInfo
     var position: Int = 0
-
     @ColumnInfo
     var itemName: String = ""
-
     @ColumnInfo
     var state: Int = 0
-
     @ColumnInfo
     var inputText: String = ""
-
     @ColumnInfo
     var image1: String = ""
-
     @ColumnInfo
     var image2: String = ""
-
     @ColumnInfo
     var image3: String = ""
-
     @ColumnInfo
     var image4: String = ""
-
     override fun equals(other: Any?): Boolean = other is ItemBase && other.id == id
-
     override fun hashCode(): Int = id.toInt()
-
     fun getStateStr(context: Context): String =
         when (state) {
             1 -> context.getString(R.string.house_state_good)
@@ -51,7 +37,6 @@ open class ItemBase {
             3 -> context.getString(R.string.house_state_replace)
             else -> ""
         }
-
     fun getImageSize(): Int {
         var result = 0
         if (image1.isNotEmpty()) {
@@ -68,7 +53,6 @@ open class ItemBase {
         }
         return result
     }
-
     fun buildImageList(): ArrayList<String> {
         val resultList: ArrayList<String> = ArrayList(4)
         if (image1.isNotEmpty()) {
@@ -85,7 +69,6 @@ open class ItemBase {
         }
         return resultList
     }
-
     fun addOneImage(imagePath: String?) {
         if (imagePath.isNullOrEmpty()) {
             return
@@ -100,24 +83,21 @@ open class ItemBase {
             image4 = imagePath
         }
     }
-
     fun delOneImage(imageNum: Int) {
         when (imageNum) {
             4 -> {
                 image4 = ""
             }
-
             3 -> {
-                if (image4.isEmpty()) { // 只有3张删第3张
+                if (image4.isEmpty()) { 
                     image3 = ""
                 } else {
                     image3 = image4
                     image4 = ""
                 }
             }
-
             2 -> {
-                if (image3.isEmpty()) { // 只有2张删第2张
+                if (image3.isEmpty()) { 
                     image2 = ""
                 } else {
                     image2 = image3
@@ -129,9 +109,8 @@ open class ItemBase {
                     }
                 }
             }
-
             1 -> {
-                if (image2.isEmpty()) { // 只有1张删第1张
+                if (image2.isEmpty()) { 
                     image1 = ""
                 } else {
                     image1 = image2
@@ -151,7 +130,6 @@ open class ItemBase {
         }
     }
 }
-
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -170,18 +148,13 @@ class ItemDetect() : ItemBase() {
         this.position = position
         this.itemName = itemName
     }
-
     @ColumnInfo(index = true)
     override var parentId: Long = 0
-
     @Ignore
     var hasSelect = false
-
     @Ignore
     var dirDetect = DirDetect()
-
     fun copyName(): String = "$itemName(1)"
-
     fun copyOne(
         parentId: Long = this.parentId,
         position: Int = this.position,
@@ -202,7 +175,6 @@ class ItemDetect() : ItemBase() {
         newItemDetect.dirDetect = dirDetect
         return newItemDetect
     }
-
     fun toItemReport(): ItemReport {
         val itemReport = ItemReport()
         itemReport.id = 0
@@ -217,9 +189,7 @@ class ItemDetect() : ItemBase() {
         itemReport.image4 = image4
         return itemReport
     }
-
     companion object {
-
         fun buildDefaultItemList(
             parentId: Long,
             position: Int,
@@ -259,7 +229,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir1_item7)
                         ),
                     )
-
                 1 ->
                     arrayListOf(
                         ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
@@ -289,7 +258,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir2_item6)
                         ),
                     )
-
                 2 ->
                     arrayListOf(
                         ItemDetect(
@@ -308,7 +276,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir3_item3)
                         ),
                     )
-
                 3 ->
                     arrayListOf(
                         ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
@@ -343,7 +310,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir4_item7)
                         ),
                     )
-
                 4 ->
                     arrayListOf(
                         ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
@@ -388,7 +354,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir5_item9)
                         ),
                     )
-
                 5 ->
                     arrayListOf(
                         ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
@@ -403,7 +368,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir6_item3)
                         ),
                     )
-
                 6 ->
                     arrayListOf(
                         ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
@@ -448,7 +412,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir7_item9)
                         ),
                     )
-
                 7 ->
                     arrayListOf(
                         ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
@@ -473,7 +436,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir8_item5)
                         ),
                     )
-
                 8 ->
                     arrayListOf(
                         ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
@@ -498,7 +460,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir9_item5)
                         ),
                     )
-
                 9 ->
                     arrayListOf(
                         ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
@@ -518,7 +479,6 @@ class ItemDetect() : ItemBase() {
                             Utils.getApp().getString(R.string.detect_dir10_item4)
                         ),
                     )
-
                 else -> arrayListOf(
                     ItemDetect(
                         parentId,
@@ -529,7 +489,6 @@ class ItemDetect() : ItemBase() {
             }
     }
 }
-
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -542,7 +501,6 @@ class ItemDetect() : ItemBase() {
     ],
 )
 class ItemReport : ItemBase() {
-
     @ColumnInfo(index = true)
     override var parentId: Long = 0
 }

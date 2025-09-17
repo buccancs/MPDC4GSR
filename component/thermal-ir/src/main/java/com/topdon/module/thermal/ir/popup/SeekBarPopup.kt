@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.popup
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.Gravity
@@ -9,16 +8,6 @@ import android.widget.PopupWindow
 import android.widget.SeekBar
 import androidx.core.view.isVisible
 import com.topdon.module.thermal.ir.databinding.PopSeekBarBinding
-
-/**
-
- *
-
- *
- * Created by LCG on 2024/12/3.
- *
-
- */
 @SuppressLint("SetTextI18n")
 class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() {
     var progress: Int
@@ -26,24 +15,14 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
         set(value) {
             binding.seekBar.progress = value
         }
-
     var max: Int
         get() = binding.seekBar.max
         set(value) {
             binding.seekBar.max = value
         }
-
-    /**
-
-     *
-
-     */
     var isRealTimeTrigger = false
-
     var onValuePickListener: ((progress: Int) -> Unit)? = null
-
     private val binding: PopSeekBarBinding = PopSeekBarBinding.inflate(LayoutInflater.from(context))
-
     init {
         val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
             context.resources.displayMetrics.widthPixels,
@@ -68,22 +47,18 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
                         onValuePickListener?.invoke(progress)
                     }
                 }
-
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 }
-
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
                     onValuePickListener?.invoke(seekBar.progress)
                 }
             },
         )
-
         contentView = binding.root
         width = contentView.measuredWidth
         height = contentView.measuredHeight
         isOutsideTouchable = false
     }
-
     fun show(
         anchor: View,
         isDropDown: Boolean,

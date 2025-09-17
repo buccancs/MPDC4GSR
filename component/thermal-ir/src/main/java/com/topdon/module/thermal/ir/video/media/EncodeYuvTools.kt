@@ -1,21 +1,9 @@
 package com.topdon.module.thermal.ir.video.media
-
 import android.graphics.Bitmap
 import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedPlanar
 import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedSemiPlanar
 import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar
 import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar
-
-/**
-
- *
-
- *
-
- *
-
- *
- */
 object EncodeYuvTools {
     fun getNV12(
         inputWidth: Int,
@@ -34,7 +22,6 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
-
             COLOR_FormatYUV420Planar ->
                 encodeYUV420P(
                     yuv,
@@ -42,7 +29,6 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
-
             COLOR_FormatYUV420PackedSemiPlanar ->
                 encodeYUV420PSP(
                     yuv,
@@ -50,7 +36,6 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
-
             COLOR_FormatYUV420PackedPlanar ->
                 encodeYUV420PP(
                     yuv,
@@ -58,7 +43,6 @@ object EncodeYuvTools {
                     inputWidth,
                     inputHeight,
                 )
-
             else ->
                 encodeYUV420SP(
                     yuv,
@@ -69,7 +53,6 @@ object EncodeYuvTools {
         }
         return yuv
     }
-
     private fun encodeYUV420SP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -82,7 +65,6 @@ object EncodeYuvTools {
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -125,7 +107,6 @@ object EncodeYuvTools {
             }
         }
     }
-
     private fun encodeYUV420P(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -139,7 +120,6 @@ object EncodeYuvTools {
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -182,7 +162,6 @@ object EncodeYuvTools {
             }
         }
     }
-
     private fun encodeYUV420PSP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -193,7 +172,6 @@ object EncodeYuvTools {
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
@@ -239,7 +217,6 @@ object EncodeYuvTools {
             }
         }
     }
-
     private fun encodeYUV420PP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -251,14 +228,13 @@ object EncodeYuvTools {
         var index = 0
         for (j in 0 until height) {
             for (i in 0 until width) {
-
                 val r = argb[index] and 0xff0000 shr 16
                 val g = argb[index] and 0xff00 shr 8
                 val b = argb[index] and 0xff shr 0
                 val y = (66 * r + 129 * g + 25 * b + 128 shr 8) + 16
                 val u = (112 * r - 94 * g - 18 * b + 128 shr 8) + 128
                 val v = (-38 * r - 74 * g + 112 * b + 128 shr 8) + 128
-                if (j % 2 == 0 && index % 2 == 0) { // 0
+                if (j % 2 == 0 && index % 2 == 0) { 
                     yuv420sp[yIndex++] =
                         (
                                 if (y < 0) {
@@ -290,7 +266,7 @@ object EncodeYuvTools {
                                 }
                                 ).toByte()
                     yIndex++
-                } else if (j % 2 == 0 && index % 2 == 1) { // 1
+                } else if (j % 2 == 0 && index % 2 == 1) { 
                     yuv420sp[yIndex++] =
                         (
                                 if (y < 0) {
@@ -301,7 +277,7 @@ object EncodeYuvTools {
                                     y
                                 }
                                 ).toByte()
-                } else if (j % 2 == 1 && index % 2 == 0) { // 2
+                } else if (j % 2 == 1 && index % 2 == 0) { 
                     yuv420sp[vIndex++] =
                         (
                                 if (y < 0) {
@@ -313,7 +289,7 @@ object EncodeYuvTools {
                                 }
                                 ).toByte()
                     vIndex++
-                } else if (j % 2 == 1 && index % 2 == 1) { // 3
+                } else if (j % 2 == 1 && index % 2 == 1) { 
                     yuv420sp[vIndex++] =
                         (
                                 if (y < 0) {

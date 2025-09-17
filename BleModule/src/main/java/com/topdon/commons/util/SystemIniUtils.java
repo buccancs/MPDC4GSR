@@ -1,15 +1,10 @@
 package com.topdon.commons.util;
-
 import android.text.TextUtils;
-
 import com.blankj.utilcode.util.StringUtils;
-
 import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
-
 import java.io.File;
-
 public class SystemIniUtils {
     public static int getSystemVersion(String path, String systemName, int systemVersion) {
         File file = new File(path + "/Version.ini");
@@ -34,11 +29,9 @@ public class SystemIniUtils {
             if (!TextUtils.isEmpty(tDartSWSection.get("firmwaresw"))) {
                 firmwareSw = tDartSWSection.get("FirmwareSW".toLowerCase());
             }
-
             if (!TextUtils.isEmpty(tDartSWSection.get("version"))) {
                 version = tDartSWSection.get("Version".toLowerCase());
             }
-
             if (StringUtils.isEmpty(firmwareSw)) {
                 return 1;
             }

@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.fragment
-
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -25,14 +24,8 @@ import com.topdon.lib.core.utils.NetWorkUtils
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRThermalNightActivity
 import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
-
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
-    /**
-
-
-     */
     private var isTC007 = false
-
     private lateinit var titleView: com.topdon.lib.core.view.TitleView
     private lateinit var clOpenThermal: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var tvMainEnter: android.widget.TextView
@@ -41,11 +34,8 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     private lateinit var animationView: com.airbnb.lottie.LottieAnimationView
     private lateinit var clNotConnect: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clConnect: androidx.constraintlayout.widget.ConstraintLayout
-
     override fun initContentView() = R.layout.fragment_thermal_ir
-
     override fun initView() {
-
         titleView = requireView().findViewById(R.id.title_view)
         clOpenThermal = requireView().findViewById(R.id.cl_open_thermal)
         tvMainEnter = requireView().findViewById(R.id.tv_main_enter)
@@ -54,19 +44,15 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         animationView = requireView().findViewById(R.id.animation_view)
         clNotConnect = requireView().findViewById(R.id.cl_not_connect)
         clConnect = requireView().findViewById(R.id.cl_connect)
-
         isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
         titleView.setTitleText(if (isTC007) "TC007" else getString(R.string.tc_has_line_device))
-
         clOpenThermal.setOnClickListener(this)
         tvMainEnter.setOnClickListener(this)
         cl07ConnectTips.setOnClickListener(this)
         tv07Connect.setOnClickListener(this)
-
         tvMainEnter.isVisible = !isTC007
         cl07ConnectTips.isVisible = isTC007
         tv07Connect.isVisible = isTC007
-
         if (isTC007) {
             animationView.setAnimation("TC007AnimationJSON.json")
             clNotConnect.isVisible = !WebSocketProxy.getInstance().isTC007Connect()
@@ -78,7 +64,6 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     } else {
@@ -88,17 +73,14 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             },
         )
     }
-
     override fun initData() {
     }
-
     override fun onResume() {
         super.onResume()
         if (!isTC007) {
             checkConnect()
         }
     }
-
     override fun connected() {
         SharedManager.hasTcLine = true
         if (!isTC007) {
@@ -106,39 +88,34 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             clNotConnect.isVisible = false
         }
     }
-
     override fun disConnected() {
         if (!isTC007) {
             clConnect.isVisible = false
             clNotConnect.isVisible = true
         }
     }
-
     override fun onSocketConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
             clConnect.isVisible = true
             clNotConnect.isVisible = false
         }
     }
-
     override fun onSocketDisConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
             clConnect.isVisible = false
             clNotConnect.isVisible = true
         }
     }
-
     private fun checkConnect() {
         if (DeviceTools.isConnect(isAutoRequest = false)) {
             connected()
         } else {
             disConnected()
-            if (DeviceTools.findUsbDevice() != null) { // 找到设备,但不能连接
+            if (DeviceTools.findUsbDevice() != null) { 
                 showConnectTip()
             }
         }
     }
-
     override fun onClick(v: View?) {
         when (v) {
             clOpenThermal -> {
@@ -169,10 +146,8 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
             }
-
             tvMainEnter -> {
                 if (!DeviceTools.isConnect()) {
-
                     if (DeviceTools.findUsbDevice() == null) {
                         activity?.let {
                             TipDialog.Builder(it)
@@ -197,13 +172,11 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                                             showConnectTip()
                                         }
                                     }
-
                                     override fun onDenied(
                                         permissions: MutableList<String>,
                                         doNotAskAgain: Boolean,
                                     ) {
                                         if (doNotAskAgain) {
-
                                             context?.let {
                                                 TipDialog.Builder(it)
                                                     .setTitleMessage(getString(R.string.app_tip))
@@ -223,14 +196,12 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                     }
                 }
             }
-
-            cl07ConnectTips -> { // TC007 连接提示
+            cl07ConnectTips -> { 
                 NavigationManager.getInstance().build(RouterConfig.IR_CONNECT_TIPS)
                     .withBoolean(ExtraKeyConfig.IS_TC007, true)
                     .navigation(requireContext())
             }
-
-            tv07Connect -> { // TC007 连接设备
+            tv07Connect -> { 
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_DEVICE_ADD)
                     .withBoolean("isTS004", false)
@@ -238,13 +209,9 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
         }
     }
-
     private var tipConnectDialog: TipDialog? = null
-
     private var isCancelUpdateVersion = false
-
     private fun showConnectTip() {
-
         if (requireContext().applicationInfo.targetSdkVersion >= Build.VERSION_CODES.P &&
             Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
         ) {
@@ -258,7 +225,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                 TipDialog.Builder(requireContext())
                     .setMessage(getString(R.string.tip_target_sdk))
                     .setPositiveListener(R.string.app_confirm) {
-                        val url = "https://www.topdon.com/pages/pro-down?fuzzy=TS001"
+                        val url = "https:
                         val intent = Intent()
                         intent.action = "android.intent.action.VIEW"
                         intent.data = Uri.parse(url)
@@ -270,7 +237,6 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             tipConnectDialog?.show()
         }
     }
-
     private fun checkStoragePermission() {
         val permissionList: List<String> =
             if (activity?.applicationInfo?.targetSdkVersion!! >= 34) {
@@ -288,7 +254,6 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             } else {
                 listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
             }
-
         if (!XXPermissions.isGranted(requireContext(), permissionList)) {
             if (BaseApplication.instance.isDomestic()) {
                 context?.let {
@@ -312,7 +277,6 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             initStoragePermission(permissionList)
         }
     }
-
     private fun initStoragePermission(permissionList: List<String>) {
     }
 }

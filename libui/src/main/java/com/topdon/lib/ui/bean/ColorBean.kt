@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.bean
-
 data class ColorBean(
     val res: Int,
     val name: String,

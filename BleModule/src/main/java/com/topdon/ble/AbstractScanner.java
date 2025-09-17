@@ -1,5 +1,4 @@
 package com.topdon.ble;
-
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -16,20 +15,16 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
-
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.Logger;
-
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 abstract class AbstractScanner implements Scanner {
     final ScanConfiguration configuration;
     final BluetoothAdapter bluetoothAdapter;
@@ -39,7 +34,6 @@ abstract class AbstractScanner implements Scanner {
     private final SparseArray<BluetoothProfile> proxyBluetoothProfiles = new SparseArray<>();
     private final DeviceCreator deviceCreator;
     private boolean isScanning;
-
     AbstractScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
         this.bluetoothAdapter = bluetoothAdapter;
         this.configuration = easyBle.scanConfiguration;
@@ -47,19 +41,16 @@ abstract class AbstractScanner implements Scanner {
         logger = easyBle.getLogger();
         deviceCreator = easyBle.getDeviceCreator();
     }
-
     @Override
     public void addScanListener(ScanListener listener) {
         if (!scanListeners.contains(listener)) {
             scanListeners.add(listener);
         }
     }
-
     @Override
     public void removeScanListener(ScanListener listener) {
         scanListeners.remove(listener);
     }
-
     private boolean isLocationEnabled(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -73,41 +64,32 @@ abstract class AbstractScanner implements Scanner {
             }
         }
     }
-
     private boolean noLocationPermission(Context context) {
         int sdkVersion = context.getApplicationInfo().targetSdkVersion;
-        if (sdkVersion >= 29) {//target sdk版本在29以上的需要精确定位权限才能搜索到蓝牙设备
+        if (sdkVersion >= 29) {
             return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
         } else {
             return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
         }
     }
-
     private boolean noBluetoothPermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED;
         } else {
-
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED;
         }
     }
-
     private boolean hasBluetoothConnectPermission(Context context) {
         if (context == null) return false;
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
         } else {
-
             return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED;
         }
     }
-
     void handleScanCallback(final boolean start, final Device device, final boolean isConnectedBySys,
                             final int errorCode, final String errorMsg) {
         mainHandler.post(() -> {
@@ -124,7 +106,6 @@ abstract class AbstractScanner implements Scanner {
             }
         });
     }
-
     @SuppressWarnings("all")
     private void getSystemConnectedDevices(Context context) {
         try {
@@ -144,7 +125,6 @@ abstract class AbstractScanner implements Scanner {
             }
         } catch (Exception ignore) {
         }
-
         for (int i = 1; i <= 21; i++) {
             try {
                 getSystemConnectedDevices(context, i);
@@ -152,7 +132,6 @@ abstract class AbstractScanner implements Scanner {
             }
         }
     }
-
     private void getSystemConnectedDevices(Context context, int profile) {
         bluetoothAdapter.getProfileProxy(context, new BluetoothProfile.ServiceListener() {
             @Override
@@ -170,14 +149,11 @@ abstract class AbstractScanner implements Scanner {
                 } catch (Exception ignore) {
                 }
             }
-
             @Override
             public void onServiceDisconnected(int profile) {
-
             }
         }, profile);
     }
-
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     void parseScanResult(BluetoothDevice device, ScanResult result) {
         if (result == null) {
@@ -187,23 +163,18 @@ abstract class AbstractScanner implements Scanner {
             parseScanResult(device, false, result, result.getRssi(), record == null ? null : record.getBytes());
         }
     }
-
     private void parseScanResult(BluetoothDevice device, boolean isConnectedBySys) {
         parseScanResult(device, isConnectedBySys, null, -120, null);
     }
-
     void parseScanResult(BluetoothDevice device, boolean isConnectedBySys, ScanResult result, int rssi, byte[] scanRecord) {
-
         Context context = EasyBLE.getInstance().getContext();
         if (context != null && noBluetoothPermission(context)) {
             logger.log(Log.WARN, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permissions, skipping device access");
             return;
         }
-
         int deviceType = BluetoothDevice.DEVICE_TYPE_UNKNOWN;
         String deviceAddress = "";
         String deviceName = "";
-
         try {
             if (hasBluetoothConnectPermission(context)) {
                 deviceType = device.getType();
@@ -214,14 +185,12 @@ abstract class AbstractScanner implements Scanner {
             logger.log(Log.WARN, Logger.TYPE_SCAN_STATE, "SecurityException accessing device properties: " + e.getMessage());
             return;
         }
-
         if ((configuration.onlyAcceptBleDevice && deviceType != BluetoothDevice.DEVICE_TYPE_LE) ||
                 !deviceAddress.matches("^[0-9A-F]{2}(:[0-9A-F]{2}){5}$")) {
             return;
         }
         String name = deviceName == null ? "" : deviceName;
         if (configuration.rssiLowLimit <= rssi) {
-
             Device dev = deviceCreator.create(device, result);
             if (dev != null) {
                 dev.name = TextUtils.isEmpty(dev.getName()) ? name : dev.getName();
@@ -236,7 +205,6 @@ abstract class AbstractScanner implements Scanner {
         String msg = String.format(Locale.US, "found device! [name: %s, addr: %s]", TextUtils.isEmpty(name) ? "N/A" : name, device.getAddress());
         logger.log(Log.DEBUG, Logger.TYPE_SCAN_STATE, msg);
     }
-
     @CallSuper
     @Override
     public void startScan(Context context) {
@@ -277,19 +245,16 @@ abstract class AbstractScanner implements Scanner {
             mainHandler.postDelayed(stopScanRunnable, configuration.scanPeriodMillis);
         }
     }
-
     @Override
     public boolean isScanning() {
         return isScanning;
     }
-
     @CallSuper
     void setScanning(boolean scanning) {
         synchronized (this) {
             isScanning = scanning;
         }
     }
-
     @CallSuper
     @Override
     public void stopScan(boolean quietly) {
@@ -316,7 +281,6 @@ abstract class AbstractScanner implements Scanner {
             }
         }
     }
-
     private boolean isBtEnabled() {
         if (bluetoothAdapter.isEnabled()) {
             try {
@@ -330,7 +294,6 @@ abstract class AbstractScanner implements Scanner {
         }
         return false;
     }
-
     @Override
     public void onBluetoothOff() {
         synchronized (this) {
@@ -338,20 +301,12 @@ abstract class AbstractScanner implements Scanner {
         }
         handleScanCallback(false, null, false, -1, "");
     }    private final Runnable stopScanRunnable = () -> stopScan(false);
-
     @Override
     public void release() {
         stopScan(false);
         scanListeners.clear();
     }
-
     protected abstract boolean isReady();
-
     protected abstract void performStartScan();
-
     protected abstract void performStopScan();
-
-
-
-
 }

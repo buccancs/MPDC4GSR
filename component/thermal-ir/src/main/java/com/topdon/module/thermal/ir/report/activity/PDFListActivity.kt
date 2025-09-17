@@ -1,5 +1,4 @@
 package com.topdon.module.thermal.ir.report.activity
-
 import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
@@ -32,40 +31,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-
-/**
-
-
- * @author: CaiSongL
- * @date: 2023/5/12 11:34
- */
-
-
 class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
-
     private val titleView: TitleView by lazy { findViewById(R.id.title_view) }
     private val fragmentPdfRecyclerLay: SmartRefreshLayout by lazy { findViewById(R.id.fragment_pdf_recycler_lay) }
     private val fragmentPdfRecycler: RecyclerView by lazy { findViewById(R.id.fragment_pdf_recycler) }
-
-    /**
-
-
-     */
     private var isTC007 = false
-
     var page = 1
-
     override fun providerVMClass() = PdfViewModel::class.java
-
     var reportAdapter = PDFAdapter(R.layout.item_pdf)
-
     override fun initContentView(): Int {
         return R.layout.activity_pdf_list
     }
-
     override fun initView() {
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-
         viewModel.listData.observe(this) {
             dismissLoadingDialog()
             if (!reportAdapter.hasEmptyView()) {
@@ -80,7 +58,6 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
             }
             it?.let { data ->
                 if (page == 1) {
-
                     if (data.code == LMS.SUCCESS) {
                         reportAdapter.loadMoreModule.isEnableLoadMore =
                             !data.data?.records.isNullOrEmpty()
@@ -110,14 +87,11 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
         }
         initRecycler()
     }
-
     override fun initData() {
     }
-
     private fun initRecycler() {
         fragmentPdfRecycler.layoutManager = LinearLayoutManager(this)
         fragmentPdfRecyclerLay.setOnRefreshListener {
-
             page = 1
             viewModel.getReportData(isTC007, page)
         }
@@ -125,7 +99,6 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
         reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
         fragmentPdfRecyclerLay.autoRefresh()
         reportAdapter.loadMoreModule.setOnLoadMoreListener {
-
             viewModel.getReportData(isTC007, ++page)
         }
         reportAdapter.jumpDetailListener = { item, position ->
@@ -155,7 +128,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                             params.addBodyParameter(
                                 "modelId",
                                 if (isTC007) 1783 else 950
-                            ) // TC001-950, TC002-951, TC003-952 TC007-1783
+                            ) 
                             params.addBodyParameter("testReportIds", arrayOf(item.testReportId))
                             params.addBodyParameter("status", 1)
                             params.addBodyParameter(
@@ -177,10 +150,8 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                                         }
                                         Log.w("删除成功", response.toString())
                                     }
-
                                     override fun onFail(exception: Exception?) {
                                     }
-
                                     override fun onFail(
                                         failMsg: String?,
                                         errorCode: String,
@@ -215,8 +186,6 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                 }
                 .create().show()
         }
-
         fragmentPdfRecycler.adapter = reportAdapter
-
     }
 }

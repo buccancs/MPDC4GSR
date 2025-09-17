@@ -1,5 +1,4 @@
 package com.topdon.lib.core.dialog
-
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
@@ -17,14 +16,10 @@ import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.tools.NumberTools
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.utils.ScreenUtil
-
 class TipEmissivityDialog : Dialog {
     constructor(context: Context) : super(context)
-
     constructor(context: Context, themeResId: Int) : super(context, themeResId)
-
     var onDismissListener: ((check: Boolean) -> Unit)? = null
-
     class Builder {
         private var isTC007: Boolean = false
         private var text: String = ""
@@ -38,26 +33,21 @@ class TipEmissivityDialog : Dialog {
         private var closeEvent: ((check: Boolean) -> Unit)? = null
         private var canceled = false
         private var hasCheck = false
-
         private lateinit var titleText: TextView
         private lateinit var messageText: TextView
         private lateinit var checkBox: CheckBox
         private lateinit var imgClose: ImageView
-
         constructor(context: Context) {
             this.context = context
         }
-
         fun setMessage(message: Int): Builder {
             this.message = context!!.getString(message)
             return this
         }
-
         fun setTitle(title: Int): Builder {
             this.title = context!!.getString(title)
             return this
         }
-
         fun setDataBean(
             environment: Float,
             distance: Float,
@@ -72,33 +62,26 @@ class TipEmissivityDialog : Dialog {
             this.isTC007 = isTC007
             return this
         }
-
         fun setCancelListener(event: ((check: Boolean) -> Unit)? = null): Builder {
             this.closeEvent = event
             return this
         }
-
         fun setCanceled(canceled: Boolean): Builder {
             this.canceled = canceled
             return this
         }
-
         fun dismiss() {
             this.dialog!!.dismiss()
         }
-
         fun create(): TipEmissivityDialog {
             if (dialog == null) {
                 dialog = TipEmissivityDialog(context!!, R.style.InfoDialog)
             }
-
             val binding = DialogTipEmissivityBinding.inflate(LayoutInflater.from(context!!))
-
             binding.tvEnvironmentTitle.text =
                 context!!.getString(R.string.thermal_config_environment) + ":"
             binding.tvDistanceTitle.text =
                 context!!.getString(R.string.thermal_config_distance) + ":"
-
             binding.dialogTipSuccessBtn.setOnClickListener {
                 dialog?.onDismissListener?.invoke(hasCheck)
                 dismiss()
@@ -117,7 +100,6 @@ class TipEmissivityDialog : Dialog {
             val tvEmissivityMaterials = binding.tvEmissivityMaterials
             val tvEnvironmentValue = binding.tvEnvironmentValue
             val tvDistanceValue = binding.tvDistanceValue
-
             if (text.isNotEmpty()) {
                 tvEmissivityMaterials.text = text
                 tvEmissivityMaterials.visibility = View.VISIBLE
@@ -142,15 +124,12 @@ class TipEmissivityDialog : Dialog {
             val lp = dialog!!.window!!.attributes
             val wRatio =
                 if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
                     0.75
                 } else {
-
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() 
             dialog!!.window!!.attributes = lp
-
             dialog!!.setCanceledOnTouchOutside(canceled)
             checkBox.isChecked = false
             hasCheck = false
@@ -161,17 +140,9 @@ class TipEmissivityDialog : Dialog {
                 dismiss()
                 closeEvent?.invoke(hasCheck)
             }
-
             if (title != null) {
                 titleText.setText(title, TextView.BufferType.NORMAL)
             }
-
-
-
-
-
-
-
             dialog!!.setContentView(binding.root)
             return dialog as TipEmissivityDialog
         }

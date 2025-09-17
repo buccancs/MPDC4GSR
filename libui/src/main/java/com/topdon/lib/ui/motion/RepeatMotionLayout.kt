@@ -1,43 +1,32 @@
 package com.topdon.lib.ui.motion
-
 import android.content.Context
 import android.util.AttributeSet
 import androidx.constraintlayout.motion.widget.MotionLayout
-
-
 class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
     private var motionStartId = 0
     private var motionEndId = 0
-
     @Volatile
     private var isAdd = false
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
     }
-
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr,
     )
-
     fun startTransition() {
-
         if (!isAdd) {
             addTransitionListener(this)
             isAdd = true
         }
         transitionToEnd()
     }
-
     fun cancelTransition() {
         removeTransitionListener(this)
         isAdd = false
         transitionToStart()
     }
-
     override fun onTransitionStarted(
         motionLayout: MotionLayout?,
         startId: Int,
@@ -46,7 +35,6 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
         motionStartId = startId
         motionEndId = endId
     }
-
     override fun onTransitionChange(
         motionLayout: MotionLayout?,
         startId: Int,
@@ -54,19 +42,16 @@ class RepeatMotionLayout : MotionLayout, MotionLayout.TransitionListener {
         progress: Float,
     ) {
     }
-
     override fun onTransitionCompleted(
         motionLayout: MotionLayout?,
         currentId: Int,
     ) {
-
         if (currentId == motionEndId) {
             transitionToStart()
         } else {
             transitionToEnd()
         }
     }
-
     override fun onTransitionTrigger(
         motionLayout: MotionLayout?,
         triggerId: Int,

@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.widget
-
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
@@ -10,17 +9,13 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
-
-
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
     private val seekPercent: Float
-
     private val seekBar: SeekBar
     private val tvTips: TextView
     private val tvMin: TextView
     private val tvMax: TextView
-
     var progress: Int
         get() {
             return seekBar.progress
@@ -31,7 +26,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                 tvTips.text = valueFormatListener?.invoke(value)
             }
         }
-
     var valueText: String
         get() {
             return tvTips.text.toString()
@@ -39,28 +33,21 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         set(value) {
             tvTips.text = value
         }
-
     var onProgressChangeListener: ((progress: Int, fromUser: Boolean) -> Unit)? = null
-
     var onStopTrackingTouch: ((progress: Int) -> Unit)? = null
-
     var valueFormatListener: ((progress: Int) -> CharSequence?)? = null
         set(value) {
             tvTips.text = value?.invoke(seekBar.progress)
             field = value
         }
-
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
         defStyleAttr,
         0
     )
-
     constructor(
         context: Context,
         attrs: AttributeSet?,
@@ -72,7 +59,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         defStyleAttr,
         defStyleRes,
     ) {
-
         val thumb = ContextCompat.getDrawable(context, UiR.drawable.ic_tips_seek_bar_thumb)
         val thumbWidth = thumb?.intrinsicWidth ?: 0
         seekBar = SeekBar(context, attrs)
@@ -83,7 +69,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         seekBar.setPadding(thumbWidth / 2, 0, thumbWidth / 2, 0)
         seekBar.setOnSeekBarChangeListener(this)
         addView(seekBar, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-
         tvTips = TextView(context)
         tvTips.text = seekBar.progress.toString()
         tvTips.textSize = 12f
@@ -92,7 +77,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         tvTips.setTextColor(0xff16131e.toInt())
         tvTips.setBackgroundResource(UiR.drawable.ic_tips_seek_bar_tips_bg)
         addView(tvTips)
-
         val typedArray =
             context.obtainStyledAttributes(attrs, UiR.styleable.TipsSeekBar, defStyleAttr, 0)
         val minText = typedArray.getText(UiR.styleable.TipsSeekBar_minText)
@@ -100,20 +84,17 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         tipsPercent = typedArray.getFraction(UiR.styleable.TipsSeekBar_tipsPercent, 1, 1, 0f)
         seekPercent = typedArray.getFraction(UiR.styleable.TipsSeekBar_seekPercent, 1, 1, 0f)
         typedArray.recycle()
-
         tvMin = TextView(context)
         tvMin.text = minText
         tvMin.textSize = 14f
         tvMin.setTextColor(0xffffffff.toInt())
         addView(tvMin)
-
         tvMax = TextView(context)
         tvMax.text = maxText
         tvMax.textSize = 14f
         tvMax.setTextColor(0xffffffff.toInt())
         addView(tvMax)
     }
-
     override fun onMeasure(
         widthMeasureSpec: Int,
         heightMeasureSpec: Int,
@@ -124,7 +105,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
         val width =
             if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenWidth(context) else widthSize
-
         for (i in 0 until childCount) {
             when (val child = getChildAt(i)) {
                 seekBar -> {
@@ -139,7 +119,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                         if (heightMode == MeasureSpec.EXACTLY) childHeightSpc else heightMeasureSpec
                     )
                 }
-
                 tvTips -> {
                     val tipsWidth = (width * tipsPercent).toInt()
                     val tipsHeight = (tipsWidth * 44 / 56f).toInt()
@@ -148,18 +127,15 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                         MeasureSpec.makeMeasureSpec(tipsHeight, MeasureSpec.EXACTLY)
                     child.measure(childWidthSpec, childHeightSpc)
                 }
-
                 else -> {
                     measureChild(child, widthMeasureSpec, heightMeasureSpec)
                 }
             }
         }
-
         val height = tvTips.measuredHeight + SizeUtils.dp2px(5f) + (seekBar.thumb?.intrinsicHeight
             ?: seekBar.measuredHeight)
         setMeasuredDimension(width, if (heightMode == MeasureSpec.EXACTLY) heightSize else height)
     }
-
     override fun onLayout(
         changed: Boolean,
         l: Int,
@@ -177,7 +153,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                     val left = (measuredWidth - childWidth) / 2
                     child.layout(left, top, left + childWidth, top + childHeight)
                 }
-
                 tvTips -> {
                     val seekBarSeeWidth =
                         seekBar.measuredWidth - seekBar.paddingLeft - seekBar.paddingRight
@@ -187,13 +162,11 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                     val left = baseLeft + progressLeft - childWidth / 2
                     child.layout(left, paddingTop, left + childWidth, paddingTop + childHeight)
                 }
-
                 tvMin -> {
                     val baseTop = paddingTop + tvTips.measuredHeight + SizeUtils.dp2px(5f)
                     val top = baseTop + (seekBar.measuredHeight - childHeight) / 2
                     child.layout(paddingStart, top, paddingStart + childWidth, top + childHeight)
                 }
-
                 tvMax -> {
                     val baseTop = paddingTop + tvTips.measuredHeight + SizeUtils.dp2px(5f)
                     val top = baseTop + (seekBar.measuredHeight - childHeight) / 2
@@ -203,7 +176,6 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             }
         }
     }
-
     override fun onProgressChanged(
         seekBar: SeekBar?,
         progress: Int,
@@ -216,10 +188,8 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         requestLayout()
         onProgressChangeListener?.invoke(progress, fromUser)
     }
-
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
     }
-
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         onStopTrackingTouch?.invoke(this.seekBar.progress)
     }

@@ -1,5 +1,4 @@
 package com.topdon.tc001.test
-
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -9,28 +8,14 @@ import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.service.RecordingService
 import kotlinx.coroutines.launch
 import java.io.File
-
-/**
- * Demonstration activity showcasing the enhanced fault-tolerant session management
- * 
- * This activity demonstrates:
- * - Partial sensor start capability
- * - Mid-session error recovery
- * - Enhanced logging and diagnostics
- * - Session state validation
- * - Smart cleanup behavior
- */
 class FaultTolerantSessionDemoActivity : ComponentActivity() {
     companion object {
         private const val TAG = "FaultTolerantDemo"
     }
-
     private lateinit var recordingController: RecordingController
     private lateinit var statusText: TextView
     private lateinit var diagnosticsText: TextView
     private lateinit var scrollView: ScrollView
-
-    // UI Controls
     private lateinit var initButton: Button
     private lateinit var startSessionButton: Button
     private lateinit var stopSessionButton: Button
@@ -39,38 +24,29 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
     private lateinit var showStatusReportButton: Button
     private lateinit var simulateFailureButton: Button
     private lateinit var startServiceButton: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         createDemoUI()
-        
         recordingController = RecordingController(this, this)
-        
         setupEventHandlers()
         updateUI()
     }
-
     private fun createDemoUI() {
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(32, 32, 32, 32)
         }
-
         val titleText = TextView(this).apply {
             text = "Fault-Tolerant Session Management Demo"
             textSize = 20f
             setPadding(0, 0, 0, 24)
         }
-
         statusText = TextView(this).apply {
             text = "Status: Not initialized"
             textSize = 14f
             setBackgroundColor(0xFFE0E0E0.toInt())
             setPadding(16, 16, 16, 16)
         }
-
-        // Control buttons
         initButton = Button(this).apply { text = "Initialize Sensors" }
         startSessionButton = Button(this).apply { 
             text = "Start Session (Fault Tolerant)"
@@ -88,8 +64,6 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             isEnabled = false
         }
         startServiceButton = Button(this).apply { text = "Start Recording Service" }
-
-        // Diagnostics display
         diagnosticsText = TextView(this).apply {
             text = "Diagnostics will appear here..."
             textSize = 12f
@@ -97,7 +71,6 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             setBackgroundColor(0xFFF0F0F0.toInt())
             setPadding(16, 16, 16, 16)
         }
-
         scrollView = ScrollView(this).apply {
             addView(diagnosticsText)
             layoutParams = LinearLayout.LayoutParams(
@@ -105,7 +78,6 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
                 400
             )
         }
-
         layout.addView(titleText)
         layout.addView(statusText)
         layout.addView(initButton)
@@ -117,72 +89,57 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
         layout.addView(simulateFailureButton)
         layout.addView(startServiceButton)
         layout.addView(scrollView)
-
         setContentView(layout)
     }
-
     private fun setupEventHandlers() {
         initButton.setOnClickListener {
             lifecycleScope.launch {
                 initializeSensors()
             }
         }
-
         startSessionButton.setOnClickListener {
             lifecycleScope.launch {
                 startFaultTolerantSession()
             }
         }
-
         stopSessionButton.setOnClickListener {
             lifecycleScope.launch {
                 stopSession()
             }
         }
-
         validateStateButton.setOnClickListener {
             validateSessionState()
         }
-
         showDiagnosticsButton.setOnClickListener {
             showSessionDiagnostics()
         }
-
         showStatusReportButton.setOnClickListener {
             showStatusReport()
         }
-
         simulateFailureButton.setOnClickListener {
             simulateSensorFailure()
         }
-
         startServiceButton.setOnClickListener {
             startRecordingService()
         }
     }
-
     private suspend fun initializeSensors() {
         try {
             updateStatus("Initializing sensors with fault tolerance...")
             Log.i(TAG, "Starting sensor initialization")
-
             val success = recordingController.initializeSensors()
-            
             if (success) {
                 val availableSensors = recordingController.getAvailableSensors()
                 updateStatus("✓ Initialization complete: ${availableSensors.size} sensors available")
                 Log.i(TAG, "Sensors initialized: ${availableSensors.map { it.sensorId }}")
-                
                 startSessionButton.isEnabled = true
                 simulateFailureButton.isEnabled = false
-                
                 showMessage("Fault-tolerant initialization completed!\n" +
                           "Available sensors: ${availableSensors.joinToString(", ") { it.sensorId }}\n" +
                           "The system can now start sessions even if some sensors fail.")
             } else {
                 updateStatus("✗ Initialization failed: No sensors available")
                 Log.e(TAG, "Sensor initialization failed completely")
-                
                 showMessage("Initialization failed - no sensors are available.\n" +
                           "This may indicate hardware or permission issues.")
             }
@@ -191,36 +148,27 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             Log.e(TAG, "Error during initialization", e)
         }
     }
-
     private suspend fun startFaultTolerantSession() {
         try {
             updateStatus("Starting session with fault tolerance...")
-            
             val sessionDir = File(getExternalFilesDir(null), "demo_sessions/session_${System.currentTimeMillis()}")
             sessionDir.mkdirs()
-            
             Log.i(TAG, "Starting session: ${sessionDir.absolutePath}")
-            
             val success = recordingController.startSession(sessionDir.absolutePath)
-            
             if (success) {
                 val activeSensors = recordingController.getActiveSensorCount()
                 val totalSensors = recordingController.getAvailableSensors().size
-                
                 updateStatus("✓ Session started: $activeSensors/$totalSensors sensors active")
                 Log.i(TAG, "Session started successfully with partial sensors")
-                
                 startSessionButton.isEnabled = false
                 stopSessionButton.isEnabled = true
                 simulateFailureButton.isEnabled = true
-                
                 showMessage("Fault-tolerant session started!\n" +
                           "Active sensors: $activeSensors out of $totalSensors\n" +
                           "Session will continue even if individual sensors fail.")
             } else {
                 updateStatus("✗ Session failed: No sensors could start")
                 Log.e(TAG, "Session start failed - all sensors failed")
-                
                 showMessage("Session start failed.\n" +
                           "All sensors failed to start. Check sensor connections.")
             }
@@ -229,21 +177,16 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             Log.e(TAG, "Error starting session", e)
         }
     }
-
     private suspend fun stopSession() {
         try {
             updateStatus("Stopping session...")
-            
             val success = recordingController.stopSession()
-            
             if (success) {
                 updateStatus("✓ Session stopped successfully")
                 Log.i(TAG, "Session stopped with smart cleanup")
-                
                 startSessionButton.isEnabled = true
                 stopSessionButton.isEnabled = false
                 simulateFailureButton.isEnabled = false
-                
                 showMessage("Session stopped successfully!\n" +
                           "Smart cleanup ensured only active sensors were stopped.")
             } else {
@@ -255,35 +198,27 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             Log.e(TAG, "Error stopping session", e)
         }
     }
-
     private fun validateSessionState() {
         val validation = recordingController.validateSessionState()
-        
         val message = buildString {
             appendLine("Session State Validation:")
             appendLine("Status: ${validation.summary}")
             appendLine("Valid: ${validation.isValid}")
-            
             if (validation.hasIssues) {
                 appendLine("\nIssues:")
                 validation.issues.forEach { appendLine("• $it") }
             }
-            
             if (validation.hasWarnings) {
                 appendLine("\nWarnings:")
                 validation.warnings.forEach { appendLine("• $it") }
             }
-            
             appendLine("\nChecked at: ${java.text.SimpleDateFormat("HH:mm:ss").format(validation.checkedAt)}")
         }
-        
         showMessage(message)
         Log.i(TAG, "Session validation: ${validation.summary}")
     }
-
     private fun showSessionDiagnostics() {
         val diagnostics = recordingController.getSessionDiagnostics()
-        
         val message = buildString {
             appendLine("=== Session Diagnostics ===")
             appendLine("Status: ${diagnostics.statusSummary}")
@@ -310,17 +245,14 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
                 appendLine("Reference Timestamp: ${diagnostics.referenceTimestampNs}ns")
             }
         }
-        
         diagnosticsText.text = message
         Log.i(TAG, "Diagnostics displayed")
     }
-
     private fun showStatusReport() {
         val report = recordingController.getStatusReport()
         diagnosticsText.text = report
         Log.i(TAG, "Status report displayed")
     }
-
     private fun simulateSensorFailure() {
         showMessage("Sensor failure simulation would demonstrate:\n" +
                   "• Mid-session error handling\n" +
@@ -330,14 +262,11 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
                   "In a real implementation, this would trigger sensor disconnection.")
         Log.i(TAG, "Sensor failure simulation requested")
     }
-
     private fun startRecordingService() {
         try {
             val sessionDir = File(getExternalFilesDir(null), "service_sessions/service_${System.currentTimeMillis()}")
             sessionDir.mkdirs()
-            
             RecordingService.startRecording(this, sessionDir.absolutePath)
-            
             updateStatus("Recording service started")
             showMessage("Recording service started with fault-tolerant session management.\n" +
                       "The service will handle sensor failures gracefully.")
@@ -347,20 +276,16 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             Log.e(TAG, "Failed to start recording service", e)
         }
     }
-
     private fun updateStatus(status: String) {
         runOnUiThread {
             statusText.text = "Status: $status"
         }
     }
-    
     private fun updateUI() {
-        // Initial UI state
         startSessionButton.isEnabled = false
         stopSessionButton.isEnabled = false
         simulateFailureButton.isEnabled = false
     }
-
     private fun showMessage(message: String) {
         runOnUiThread {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()

@@ -1,5 +1,4 @@
 package com.topdon.tc001.popup
-
 import android.content.Context
 import android.view.Gravity
 import android.view.View
@@ -11,10 +10,8 @@ import androidx.core.view.setPadding
 import com.blankj.utilcode.util.SizeUtils
 import com.csl.irCamera.R
 import com.kylecorry.andromeda.core.ui.setCompoundDrawables
-
 class DelPopup(val context: Context) : PopupWindow() {
     var onDelListener: (() -> Unit)? = null
-
     init {
         val widthPixels = context.resources.displayMetrics.widthPixels
         val textView = TextView(context)
@@ -32,26 +29,20 @@ class DelPopup(val context: Context) : PopupWindow() {
             dismiss()
             onDelListener?.invoke()
         }
-
         val widthMeasureSpec: Int = MeasureSpec.makeMeasureSpec(widthPixels, MeasureSpec.AT_MOST)
         val heightMeasureSpec: Int = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         textView.measure(widthMeasureSpec, heightMeasureSpec)
-
         val drawable = ContextCompat.getDrawable(context, R.drawable.svg_popup_del_bg)
         drawable?.setBounds(0, 0, textView.measuredWidth, textView.measuredHeight)
         textView.background = drawable
-
         isOutsideTouchable = true
-
         contentView = textView
         width = textView.measuredWidth
         height = textView.measuredHeight
     }
-
     fun show(anchor: View) {
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)
-
         val x = (context.resources.displayMetrics.widthPixels - width) / 2
         val y = locationArray[1] - SizeUtils.dp2px(12f)
         showAtLocation(anchor, Gravity.NO_GRAVITY, x, y)

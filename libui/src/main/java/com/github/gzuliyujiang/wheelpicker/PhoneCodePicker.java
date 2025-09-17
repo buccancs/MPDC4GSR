@@ -1,33 +1,14 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
-
 package com.github.gzuliyujiang.wheelpicker;
-
 import android.app.Activity;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
-
 import com.github.gzuliyujiang.dialog.DialogLog;
 import com.github.gzuliyujiang.wheelpicker.entity.PhoneCodeEntity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
 @SuppressWarnings("unused")
 public class PhoneCodePicker extends OptionPicker {
     public static String JSON = "[{\"prefix\":\"1\",\"en\":\"USA\",\"cn\":\"美国\"},\n" +
@@ -243,20 +224,16 @@ public class PhoneCodePicker extends OptionPicker {
             "{\"prefix\":\"1869\",\"en\":\"St Kitts and Nevis\",\"cn\":\"圣基茨和尼维斯\"},\n" +
             "{\"prefix\":\"1876\",\"en\":\"Jamaica\",\"cn\":\"牙买加\"}]";
     private boolean onlyChina = false;
-
     public PhoneCodePicker(@NonNull Activity activity) {
         super(activity);
     }
-
     public PhoneCodePicker(@NonNull Activity activity, @StyleRes int themeResId) {
         super(activity, themeResId);
     }
-
     public void setOnlyChina(boolean onlyChina) {
         this.onlyChina = onlyChina;
         setData(provideData());
     }
-
     @Override
     public void setDefaultValue(Object item) {
         if (item instanceof String) {
@@ -265,25 +242,21 @@ public class PhoneCodePicker extends OptionPicker {
             super.setDefaultValue(item);
         }
     }
-
     public void setDefaultValueByCode(String code) {
         PhoneCodeEntity entity = new PhoneCodeEntity();
         entity.setCode(code);
         super.setDefaultValue(entity);
     }
-
     public void setDefaultValueByName(String name) {
         PhoneCodeEntity entity = new PhoneCodeEntity();
         entity.setName(name);
         super.setDefaultValue(entity);
     }
-
     public void setDefaultValueByEnglish(String english) {
         PhoneCodeEntity entity = new PhoneCodeEntity();
         entity.setEnglish(english);
         super.setDefaultValue(entity);
     }
-
     @Override
     protected List<?> provideData() {
         List<PhoneCodeEntity> data = new ArrayList<>();
@@ -325,5 +298,4 @@ public class PhoneCodePicker extends OptionPicker {
         }
         return data;
     }
-
 }

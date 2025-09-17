@@ -1,5 +1,4 @@
 package com.topdon.tc001
-
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,9 +13,8 @@ import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
-
 class ShimmerNetworkClient(
-    private val serverHost: String = "192.168.1.100", // Default PC IP
+    private val serverHost: String = "192.168.1.100", 
     private val serverPort: Int = 8888
 ) {
     companion object {
@@ -24,53 +22,40 @@ class ShimmerNetworkClient(
         private const val CONNECTION_TIMEOUT_MS = 5000
         private const val RECONNECT_DELAY_MS = 3000L
     }
-
     private var socket: Socket? = null
     private var outputStream: PrintWriter? = null
     private var inputStream: BufferedReader? = null
     private val isConnected = AtomicBoolean(false)
     private val isRunning = AtomicBoolean(false)
-
     private val networkScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var connectionJob: Job? = null
     private var heartbeatJob: Job? = null
-
     var onConnected: (() -> Unit)? = null
     var onDisconnected: (() -> Unit)? = null
     var onError: ((String) -> Unit)? = null
-
     suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
         try {
             if (isConnected.get()) {
                 Log.i(TAG, "Already connected to server")
                 return@withContext true
             }
-
             Log.i(TAG, "Connecting to PC Controller at $serverHost:$serverPort")
-
             socket = Socket()
             socket?.connect(
                 java.net.InetSocketAddress(serverHost, serverPort),
                 CONNECTION_TIMEOUT_MS
             )
-
             outputStream = PrintWriter(socket?.getOutputStream(), true)
             inputStream = BufferedReader(InputStreamReader(socket?.getInputStream()))
-
             isConnected.set(true)
             isRunning.set(true)
-
             startMessageListener()
-
             startHeartbeat()
-
             Log.i(TAG, "Connected to PC Controller successfully")
             withContext(Dispatchers.Main) {
                 onConnected?.invoke()
             }
-
             return@withContext true
-
         } catch (e: Exception) {
             Log.e(TAG, "Failed to connect to PC Controller: ${e.message}")
             cleanup()
@@ -80,26 +65,21 @@ class ShimmerNetworkClient(
             return@withContext false
         }
     }
-
     fun disconnect() {
         networkScope.launch {
             try {
                 Log.i(TAG, "Disconnecting from PC Controller")
                 cleanup()
-
                 withContext(Dispatchers.Main) {
                     onDisconnected?.invoke()
                 }
-
             } catch (e: Exception) {
                 Log.e(TAG, "Error during disconnect: ${e.message}")
             }
         }
     }
-
     fun sendGSRSample(sample: ShimmerMvpActivity.GSRSample, sequenceNumber: Long) {
         if (!isConnected.get()) return
-
         networkScope.launch {
             try {
                 val message = JSONObject().apply {
@@ -110,15 +90,12 @@ class ShimmerNetworkClient(
                     put("resistance_kohm", sample.resistance / 1000.0)
                     put("sample_sequence", sequenceNumber)
                 }
-
                 sendMessage(message)
-
             } catch (e: Exception) {
                 Log.w(TAG, "Error sending GSR sample: ${e.message}")
             }
         }
     }
-
     fun sendRecordingStart(sessionId: String) {
         networkScope.launch {
             try {
@@ -127,16 +104,13 @@ class ShimmerNetworkClient(
                     put("session_id", sessionId)
                     put("timestamp_ms", System.currentTimeMillis())
                 }
-
                 sendMessage(message)
                 Log.i(TAG, "Sent recording start notification")
-
             } catch (e: Exception) {
                 Log.w(TAG, "Error sending recording start: ${e.message}")
             }
         }
     }
-
     fun sendRecordingStop(sessionId: String, sampleCount: Long) {
         networkScope.launch {
             try {
@@ -146,16 +120,13 @@ class ShimmerNetworkClient(
                     put("timestamp_ms", System.currentTimeMillis())
                     put("total_samples", sampleCount)
                 }
-
                 sendMessage(message)
                 Log.i(TAG, "Sent recording stop notification")
-
             } catch (e: Exception) {
                 Log.w(TAG, "Error sending recording stop: ${e.message}")
             }
         }
     }
-
     fun sendSyncMarker(markerType: String, metadata: Map<String, String> = emptyMap()) {
         networkScope.launch {
             try {
@@ -165,16 +136,13 @@ class ShimmerNetworkClient(
                     put("timestamp_ms", System.currentTimeMillis())
                     put("metadata", JSONObject(metadata))
                 }
-
                 sendMessage(message)
                 Log.i(TAG, "Sent sync marker: $markerType")
-
             } catch (e: Exception) {
                 Log.w(TAG, "Error sending sync marker: ${e.message}")
             }
         }
     }
-
     private fun sendMessage(message: JSONObject) {
         try {
             outputStream?.let { out ->
@@ -184,11 +152,9 @@ class ShimmerNetworkClient(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error sending message: ${e.message}")
-
             handleConnectionError(e)
         }
     }
-
     private fun startMessageListener() {
         connectionJob = networkScope.launch {
             try {
@@ -200,7 +166,7 @@ class ShimmerNetworkClient(
                             processServerMessage(line)
                         } else {
                             Log.w(TAG, "Server closed connection")
-                            return@launch // Use return instead of break
+                            return@launch 
                         }
                     } else {
                         return@launch
@@ -212,20 +178,16 @@ class ShimmerNetworkClient(
             }
         }
     }
-
     private fun startHeartbeat() {
         heartbeatJob = networkScope.launch {
             while (isRunning.get() && isConnected.get()) {
                 try {
-                    delay(30000) // Send heartbeat every 30 seconds
-
+                    delay(30000) 
                     val heartbeat = JSONObject().apply {
                         put("type", "heartbeat")
                         put("timestamp_ms", System.currentTimeMillis())
                     }
-
                     sendMessage(heartbeat)
-
                 } catch (e: Exception) {
                     Log.w(TAG, "Heartbeat error: ${e.message}")
                     break
@@ -233,38 +195,29 @@ class ShimmerNetworkClient(
             }
         }
     }
-
     private fun processServerMessage(message: String) {
         try {
             val json = JSONObject(message)
             val type = json.getString("type")
-
             when (type) {
                 "connection_ack" -> {
                     Log.i(TAG, "Received connection acknowledgment from PC Controller")
                 }
-
                 "sync_request" -> {
                     Log.i(TAG, "Received sync request from PC Controller")
-
                 }
-
                 else -> {
                     Log.d(TAG, "Received message: $type")
                 }
             }
-
         } catch (e: Exception) {
             Log.w(TAG, "Error processing server message: ${e.message}")
         }
     }
-
     private fun handleConnectionError(error: Exception) {
         Log.w(TAG, "Connection error: ${error.message}")
-
         if (isRunning.get()) {
             cleanup()
-
             networkScope.launch {
                 delay(RECONNECT_DELAY_MS)
                 if (isRunning.get()) {
@@ -274,14 +227,11 @@ class ShimmerNetworkClient(
             }
         }
     }
-
     private fun cleanup() {
         isConnected.set(false)
         isRunning.set(false)
-
         connectionJob?.cancel()
         heartbeatJob?.cancel()
-
         try {
             outputStream?.close()
             inputStream?.close()
@@ -289,14 +239,11 @@ class ShimmerNetworkClient(
         } catch (e: Exception) {
             Log.w(TAG, "Error during cleanup: ${e.message}")
         }
-
         outputStream = null
         inputStream = null
         socket = null
     }
-
     fun isConnected(): Boolean = isConnected.get()
-
     fun getConnectionStatus(): String {
         return when {
             isConnected.get() -> "Connected to $serverHost:$serverPort"
@@ -304,7 +251,6 @@ class ShimmerNetworkClient(
             else -> "Disconnected"
         }
     }
-
     fun updateServerAddress(host: String, port: Int = serverPort): ShimmerNetworkClient {
         return ShimmerNetworkClient(host, port)
     }

@@ -1,5 +1,4 @@
 package com.topdon.commons.base;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -9,11 +8,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Looper;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -21,40 +18,31 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 public class AppHolder implements Application.ActivityLifecycleCallbacks {
-
     private final List<RunningActivity> runningActivities = new CopyOnWriteArrayList<>();
-
     private boolean isCompleteExit = false;
     private Application application;
     private Looper mainLooper;
     private RunningActivity topActivity;
-
     private AppHolder() {
         mainLooper = Looper.getMainLooper();
-
         application = tryGetApplication();
         if (application != null) {
             application.registerActivityLifecycleCallbacks(this);
         }
     }
-
     @NonNull
     public static AppHolder getInstance() {
         return Holder.INSTANCE;
     }
-
     public static void initialize(@NonNull Application application) {
         Objects.requireNonNull(application, "application is null");
-
         if (Holder.INSTANCE.application != null && Holder.INSTANCE.application != application) {
             Holder.INSTANCE.application.unregisterActivityLifecycleCallbacks(Holder.INSTANCE);
             application.registerActivityLifecycleCallbacks(Holder.INSTANCE);
         }
         Holder.INSTANCE.application = application;
     }
-
     @SuppressLint("PrivateApi")
     @Nullable
     private Application tryGetApplication() {
@@ -69,7 +57,6 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             return null;
         }
     }
-
     @CallSuper
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -79,37 +66,26 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
         topActivity = a;
     }
-
     @CallSuper
     @Override
     public void onActivityStarted(Activity activity) {
-
     }
-
     @CallSuper
     @Override
     public void onActivityResumed(Activity activity) {
-
     }
-
     @CallSuper
     @Override
     public void onActivityPaused(Activity activity) {
-
     }
-
     @CallSuper
     @Override
     public void onActivityStopped(Activity activity) {
-
     }
-
     @CallSuper
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
     }
-
     @CallSuper
     @Override
     public void onActivityDestroyed(Activity activity) {
@@ -123,11 +99,9 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             System.exit(0);
         }
     }
-
     public boolean isMainThread() {
         return Looper.myLooper() == mainLooper;
     }
-
     @NonNull
     public Looper getMainLooper() {
         if (mainLooper == null) {
@@ -135,13 +109,11 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
         return mainLooper;
     }
-
     @NonNull
     public Context getContext() {
         Objects.requireNonNull(application, "The AppHolder has not been initialized, make sure to call AppHolder.initialize(app) first.");
         return application;
     }
-
     @Nullable
     public PackageInfo getPackageInfo() {
         try {
@@ -151,7 +123,6 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
         return null;
     }
-
     public boolean isAppOnForeground() {
         ActivityManager am = (ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE);
         if (am != null) {
@@ -167,7 +138,6 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
         return false;
     }
-
     private boolean contains(Object[] array, Object obj) {
         if (array != null && array.length > 0) {
             for (Object o : array) {
@@ -178,10 +148,9 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
         return false;
     }
-
     public void finish(String className, String... classNames) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
-        Collections.reverse(list);//倒序，后开的先finish
+        Collections.reverse(list);
         for (RunningActivity runningActivity : list) {
             Activity activity = runningActivity.weakActivity.get();
             if (activity != null) {
@@ -192,10 +161,9 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             }
         }
     }
-
     public void finishAllWithout(@Nullable String className, String... classNames) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
-        Collections.reverse(list);//倒序，后开的先finish
+        Collections.reverse(list);
         for (RunningActivity runningActivity : list) {
             Activity activity = runningActivity.weakActivity.get();
             if (activity != null) {
@@ -206,14 +174,12 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             }
         }
     }
-
     public void finishAll() {
         finishAllWithout(null);
     }
-
     public void backTo(String className) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
-        Collections.reverse(list);//倒序，后开的先finish
+        Collections.reverse(list);
         for (RunningActivity runningActivity : list) {
             Activity activity = runningActivity.weakActivity.get();
             if (activity != null) {
@@ -225,7 +191,6 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             }
         }
     }
-
     @Nullable
     public Activity getActivity(String className) {
         for (RunningActivity runningActivity : runningActivities) {
@@ -235,11 +200,9 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
         return null;
     }
-
     public boolean isAllFinished() {
         return runningActivities.isEmpty();
     }
-
     public List<Activity> getAllActivities() {
         List<Activity> activities = new ArrayList<>();
         for (RunningActivity runningActivity : runningActivities) {
@@ -250,11 +213,10 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
         return activities;
     }
-
     public void completeExit() {
         isCompleteExit = true;
         List<RunningActivity> list = new ArrayList<>(runningActivities);
-        Collections.reverse(list);//倒序，后开的先finish
+        Collections.reverse(list);
         for (RunningActivity runningActivity : list) {
             Activity activity = runningActivity.weakActivity.get();
             if (activity != null) {
@@ -262,24 +224,19 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             }
         }
     }
-
     public Activity getTopActivity() {
         return topActivity == null ? null : topActivity.weakActivity.get();
     }
-
     private static final class Holder {
         private static final AppHolder INSTANCE = new AppHolder();
     }
-
     private static class RunningActivity {
         String name;
         WeakReference<Activity> weakActivity;
-
         RunningActivity(String name, WeakReference<Activity> weakActivity) {
             this.name = name;
             this.weakActivity = weakActivity;
         }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -287,7 +244,6 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             RunningActivity runningActivity = (RunningActivity) o;
             return name.equals(runningActivity.name);
         }
-
         @Override
         public int hashCode() {
             return Objects.hash(name);

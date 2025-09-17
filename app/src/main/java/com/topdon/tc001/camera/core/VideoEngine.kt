@@ -1,19 +1,15 @@
 package com.topdon.tc001.camera.core
-
 import android.media.MediaRecorder
 import android.util.Log
 import android.util.Size
 import java.io.File
-
 class VideoEngine {
     companion object {
         private const val TAG = "VideoEngine"
     }
-
     private var mediaRecorder: MediaRecorder? = null
     private var isRecording = false
     private var isPrepared = false
-
     fun prepare(
         outputFile: File,
         videoSize: Size,
@@ -24,8 +20,7 @@ class VideoEngine {
         enableStabilization: Boolean = true
     ): android.view.Surface? {
         try {
-            release() // Clean up any existing recorder
-
+            release() 
             mediaRecorder =
                 MediaRecorder().apply {
                     if (audioEnabled) {
@@ -38,26 +33,20 @@ class VideoEngine {
                     setVideoFrameRate(frameRate)
                     setVideoSize(videoSize.width, videoSize.height)
                     setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-                    
-                    // Set orientation hint for proper video orientation
                     setOrientationHint(orientationHint)
                     Log.d(TAG, "Video orientation hint set to: $orientationHint degrees")
-
                     if (audioEnabled) {
                         setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
                         setAudioEncodingBitRate(128000)
                         setAudioSamplingRate(44100)
                     }
-
                     prepare()
                 }
-
             isPrepared = true
             Log.i(
                 TAG,
                 "MediaRecorder prepared for ${videoSize.width}x${videoSize.height}@${frameRate}fps, orientation=$orientationHint°"
             )
-
             return mediaRecorder?.surface
         } catch (e: Exception) {
             Log.e(TAG, "Failed to prepare MediaRecorder", e)
@@ -65,14 +54,12 @@ class VideoEngine {
             return null
         }
     }
-
     fun start(): Boolean {
         return try {
             if (!isPrepared) {
                 Log.e(TAG, "MediaRecorder not prepared")
                 return false
             }
-
             mediaRecorder?.start()
             isRecording = true
             Log.i(TAG, "Video recording started")
@@ -82,7 +69,6 @@ class VideoEngine {
             false
         }
     }
-
     fun stop() {
         try {
             if (isRecording) {
@@ -94,7 +80,6 @@ class VideoEngine {
             Log.e(TAG, "Failed to stop video recording", e)
         }
     }
-
     fun release() {
         try {
             if (isRecording) {
@@ -109,8 +94,6 @@ class VideoEngine {
             Log.e(TAG, "Error releasing MediaRecorder", e)
         }
     }
-
     fun isRecording(): Boolean = isRecording
-
     fun getSurface(): android.view.Surface? = mediaRecorder?.surface
 }

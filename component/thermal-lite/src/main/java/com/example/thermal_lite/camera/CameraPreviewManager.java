@@ -1,14 +1,11 @@
 package com.example.thermal_lite.camera;
-
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
-
 import androidx.annotation.Nullable;
-
 import com.blankj.utilcode.util.SPUtils;
 import com.elvishew.xlog.XLog;
 import com.energy.ac020library.IrcamEngine;
@@ -44,12 +41,9 @@ import com.infisense.usbir.utils.IRImageHelp;
 import com.infisense.usbir.utils.PseudocodeUtils;
 import com.topdon.lib.core.bean.AlarmBean;
 import com.topdon.lib.ui.widget.LiteSurfaceView;
-
 import java.nio.ByteBuffer;
 import java.util.List;
-
 public class CameraPreviewManager {
-
     private static CameraPreviewManager mInstance;
     private final String TAG = "CameraPreviewManager";
     public LiteSurfaceView mSurfaceView;
@@ -104,109 +98,73 @@ public class CameraPreviewManager {
     private AutoGainImageRes mAutoGainImageRes = new AutoGainImageRes();
     private AutoGainSwitchInfo mAutoGainSwitchInfo = new AutoGainSwitchInfo();
     private AutoGainSwitchParam mGainSwitchParam = new AutoGainSwitchParam();
-
     private CameraPreviewManager() {
         irImageHelp = new IRImageHelp();
     }
-
     public static synchronized CameraPreviewManager getInstance() {
         if (mInstance == null) {
             mInstance = new CameraPreviewManager();
         }
         return mInstance;
     }
-
     public int getPreviewWidth() {
         return mPreviewWidth;
     }
-
     public int getPreviewHeight() {
         return mPreviewHeight;
     }
-
     public boolean isSunProtectEnable() {
         return mSunProtectEnable;
     }
-
     public void setSunProtectEnable(boolean mSunProtectEnable) {
         this.mSunProtectEnable = mSunProtectEnable;
     }
-
     public void init(LiteSurfaceView surfaceView, Handler mainHandler) {
         this.mSurfaceView = surfaceView;
         this.mMainHandler = mainHandler;
         initData();
-
         mSurfaceNativeWindow = new SurfaceNativeWindow();
         mIIrFrameCallback = new IIrFrameCallback() {
-            /**
-
-
-
-
-
-
-
-
-             */
             @Override
             public void onFrame(byte[] frame, int length) {
                 try {
                     if (mFramePause) {
                         return;
                     }
-
                     if (mIsShowFPS) {
                         double fps = CommonUtil.showFps();
                         Log.d(TAG, "onFrame frame.length = " + length + " onFrame fps=" + String.format("%.1f", fps));
                         Message message = Message.obtain(mMainHandler, IrDisplayActivity.HANDLE_SHOW_FPS, fps);
                         mMainHandler.sendMessage(message);
                     }
-
                     System.arraycopy(frame, 0, mIrData, 0, mIrLength);
-
                     System.arraycopy(mIrData, 0, frameIrAndTempData, 0, mIrLength);
-
                     if (!mShowDoubleImage) {
                         if (mInfoLength != 0 && mSunProtectEnable) {
-
                             System.arraycopy(frame, mIrLength, mInfoData, 0, mInfoLength);
                             InfoLineBean infoLineBean = mIrcamEngine.getInfoLineBean(mInfoData);
-
                             if (infoLineBean.getSunProtectFlag() == 1 || infoLineBean.getHardwareSunProtectFlag() == 1) {
                                 mMainHandler.sendEmptyMessage(IrDisplayActivity.HANDLE_SHOW_SUN_PROTECT_FLAG);
                             }
                         }
                     }
-
                     if (FRAME_OUT_PUT_FORMAT == CommonParams.FrameOutputFormat.YUYV_AND_TEMP_OUTPUT) {
                         if (!mShowDoubleImage) {
-
                             System.arraycopy(frame, mIrLength + mInfoLength, mTempData, 0, mTempLength);
-
                             System.arraycopy(frame, mIrLength + mInfoLength, frameIrAndTempData, mIrLength, mTempLength);
-
                         }
                         if (mOnTempDataChangeCallback != null) {
                             mOnTempDataChangeCallback.onTempDataChange(mTempData);
                         }
-
-
                     } else if (FRAME_OUT_PUT_FORMAT == CommonParams.FrameOutputFormat.NV12_AND_TEMP_OUTPUT) {
-
                         System.arraycopy(frame, mIrLength + mInfoLength, mTempData, 0, mTempLength);
-
-
                     }
-
                     switch (FRAME_OUT_PUT_FORMAT) {
                         case YUYV_IMAGE_OUTPUT:
                         case YUYV_AND_TEMP_OUTPUT:
                             if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_GL1280) {
                                 CommonUtil.convertArrayY16ToY14(mIrData, 2 * mPreviewWidth * mPreviewHeight, mIrYuvData);
                                 LibIRParse.convertArrayY14ToARGB(mIrYuvData, mPreviewWidth * mPreviewHeight, mIrARGBData);
-
-
                             } else {
                                 LibIRParse.converyArrayYuv422ToARGB(mIrData, mPreviewWidth * mPreviewHeight, mIrARGBData);
                                 if (irImageHelp.getColorList() == null) {
@@ -214,15 +172,11 @@ public class CameraPreviewManager {
                                             mPreviewWidth * mPreviewHeight,
                                             PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(pseudocolorMode), mIrARGBData);
                                 } else {
-
                                     com.energy.iruvc.sdkisp.LibIRProcess.convertYuyvMapToARGBPseudocolor(mIrData,
                                             mPreviewWidth * mPreviewHeight,
                                             PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(1), mIrARGBData);
                                 }
                                 irImageHelp.customPseudoColor(mIrARGBData, mTempData, mPreviewWidth, mPreviewHeight);
-                                /*
-
-                                 */
                                 irImageHelp.setPseudoColorMaxMin(mIrARGBData, mTempData, max, min, mPreviewWidth, mPreviewHeight);
                                 mIrARGBData = irImageHelp.contourDetection(alarmBean,
                                         mIrARGBData, mTempData, mPreviewWidth, mPreviewHeight);
@@ -232,20 +186,13 @@ public class CameraPreviewManager {
                         case NV12_AND_TEMP_OUTPUT:
                             Log.d(TAG, "NV12_AND_TEMP_OUTPUT");
                             LibIRParse.NV12ToRGBA(mIrData, mPreviewWidth, mPreviewHeight, mIrARGBData);
-
                             break;
                         default:
                             break;
                     }
-
-
                     mFinalImageWidth = 0;
                     mFinalImageHeight = 0;
-
-
                     handleSurfaceDisplay();
-
-
                     if (mAutoSwitchGainEnable && FRAME_OUT_PUT_FORMAT == CommonParams.FrameOutputFormat.YUYV_AND_TEMP_OUTPUT) {
                         Log.d(TAG, "onAutoGainSwitchState switch");
                         mIrcamEngine.advAutoGainSwitch(mTempData, mAutoGainImageRes, mAutoGainSwitchInfo, mGainSwitchParam, new AutoGainSwitchCallback() {
@@ -253,7 +200,6 @@ public class CameraPreviewManager {
                             public void onAutoGainSwitchState(int gainselStatus) {
                                 Log.d(TAG, "onAutoGainSwitchState : " + gainselStatus);
                             }
-
                             @Override
                             public void onAutoGainSwitchResult(int gainselStatus, int result) {
                                 Log.d(TAG, "onAutoGainSwitchResult : " + gainselStatus);
@@ -267,20 +213,15 @@ public class CameraPreviewManager {
             }
         };
     }
-
     public void initData() {
-
-
         mStreamWidth = IrConst.DEFAULT_STREAM_WIDTH;
         mStreamHeight = IrConst.DEFAULT_STREAM_HEIGHT;
-
         boolean isDoubleImage = IrConst.DEFAULT_DOUBLE_IMAGE;
         if (isDoubleImage) {
             setFrameOutPutFormat(CommonParams.FrameOutputFormat.YUYV_AND_TEMP_OUTPUT);
         } else {
             setFrameOutPutFormat(CommonParams.FrameOutputFormat.YUYV_IMAGE_OUTPUT);
         }
-
         if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_X3
                 || Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_P2L
                 || Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_X2PRO
@@ -291,30 +232,21 @@ public class CameraPreviewManager {
         }
         switch (FRAME_OUT_PUT_FORMAT) {
             case YUYV_IMAGE_OUTPUT:
-
                 mFrameFormatType = UvcParams.FrameFormatType.FRAME_FORMAT_YUYV;
-
                 mPreviewWidth = mStreamWidth;
                 mPreviewHeight = mStreamHeight - mInfoDataHeight;
-
                 mIrLength = mPreviewWidth * mPreviewHeight * 2;
                 mIrData = new byte[mIrLength];
-
                 mInfoLength = mPreviewWidth * mInfoDataHeight * 2;
                 mInfoData = new byte[mInfoLength];
-
                 mIrARGBLength = mPreviewWidth * mPreviewHeight * 2 * 2;
                 mIrARGBData = new byte[mIrARGBLength];
                 mIrYuvData = new byte[mIrLength / 2];
                 mIrRotateData = new byte[mIrARGBLength];
-
                 initZetaZoomData();
-
                 break;
             case YUYV_AND_TEMP_OUTPUT:
-
                 mFrameFormatType = UvcParams.FrameFormatType.FRAME_FORMAT_YUYV;
-
                 if (mShowDoubleImage) {
                     mPreviewWidth = mStreamWidth;
                     mPreviewHeight = mStreamHeight;
@@ -322,15 +254,12 @@ public class CameraPreviewManager {
                     mPreviewWidth = mStreamWidth;
                     mPreviewHeight = (mStreamHeight - mInfoDataHeight) / 2;
                 }
-
                 mIrLength = mPreviewWidth * mPreviewHeight * 2;
                 mIrData = new byte[mIrLength];
                 if (!mShowDoubleImage) {
-
                     mInfoLength = mPreviewWidth * mInfoDataHeight * 2;
                     mInfoData = new byte[mInfoLength];
                 }
-
                 mIrARGBLength = mPreviewWidth * mPreviewHeight * 2 * 2;
                 mIrARGBData = new byte[mIrARGBLength];
                 mTempLength = mPreviewWidth * mPreviewHeight * 2;
@@ -339,39 +268,22 @@ public class CameraPreviewManager {
                 mTempRotateData = new byte[mIrARGBLength];
                 break;
             case NV12_IMAGE_OUTPUT:
-                /**
-
-
-
-                 */
                 mFrameFormatType = UvcParams.FrameFormatType.FRAME_FORMAT_NV12;
-
                 mPreviewWidth = 640;
                 mPreviewHeight = 512;
-
                 mStreamWidth = 640;
                 mStreamHeight = 512;
-
                 mIrLength = (int) (mPreviewWidth * mPreviewHeight * 1.5);
                 mIrData = new byte[mIrLength];
                 mIrARGBLength = mPreviewWidth * mPreviewHeight * 2 * 2;
                 mIrARGBData = new byte[mIrARGBLength];
-
                 break;
             case NV12_AND_TEMP_OUTPUT:
-                /**
-
-
-
-                 */
                 mFrameFormatType = UvcParams.FrameFormatType.FRAME_FORMAT_NV12;
-
                 mPreviewWidth = 640;
                 mPreviewHeight = 512;
-
                 mStreamWidth = 640;
                 mStreamHeight = 1200;
-
                 mIrLength = (int) (mPreviewWidth * mPreviewHeight * 1.5);
                 mIrData = new byte[mIrLength];
                 mIrARGBLength = mPreviewWidth * mPreviewHeight * 2 * 2;
@@ -382,41 +294,32 @@ public class CameraPreviewManager {
             default:
                 break;
         }
-
         Log.i(TAG, "mPreviewWidth = " + mPreviewWidth + " mPreviewHeight = " + mPreviewHeight);
         mLibIRTemp = new LibIRTemp(mPreviewWidth, mPreviewHeight);
         mImageRes = new LibIRProcess.ImageRes_t();
         mImageRes.width = (char) mPreviewWidth;
         mImageRes.height = (char) mPreviewHeight;
-
         mAutoGainImageRes.width = 256;
         mAutoGainImageRes.height = 192;
-
-        mGainSwitchParam.above_pixel_prop = 0.1f;    //用于high -> low gain,图像像素总面积的百分比
-        mGainSwitchParam.above_temp_data = (int) ((130 + 273.15) * 16 * 4); //用于high -> low gain,高增益向低增益切换的触发温度,130为摄氏度
-        mGainSwitchParam.below_pixel_prop = 0.95f;   //用于low -> high gain,图像像素总面积的百分比
-        mGainSwitchParam.below_temp_data = (int) ((150 + 273.15) * 16 * 4);//用于low -> high gain,低增益向高增益切换的触发温度，150为摄氏度
-        mAutoGainSwitchInfo.switch_frame_cnt = 5 * 15; //连续满足触发条件帧数超过该阈值会触发自动增益切换(假设出图帧率为每秒15帧，则5 * 15大概为5秒)
-        mAutoGainSwitchInfo.waiting_frame_cnt = 7 * 15;//触发自动增益切换之后，会间隔该阈值的帧数不进行增益切换监测(假设出图帧率为每秒15帧，则7 * 15大概为7秒)
-
+        mGainSwitchParam.above_pixel_prop = 0.1f;    
+        mGainSwitchParam.above_temp_data = (int) ((130 + 273.15) * 16 * 4); 
+        mGainSwitchParam.below_pixel_prop = 0.95f;   
+        mGainSwitchParam.below_temp_data = (int) ((150 + 273.15) * 16 * 4);
+        mAutoGainSwitchInfo.switch_frame_cnt = 5 * 15; 
+        mAutoGainSwitchInfo.waiting_frame_cnt = 7 * 15;
     }
-
     public void handleUSBConnect(USBMonitor.UsbControlBlock ctrlBlock) {
         initHandleEngine(ctrlBlock, true);
     }
-
     public void handleUSBConnectNoPreview(USBMonitor.UsbControlBlock ctrlBlock) {
         initHandleEngine(ctrlBlock, false);
     }
-
     private void handleStartPreview() {
         startPreview();
         if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_WN2640) {
-
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
                     IrcmdError basicVideoStreamContinueResult = DeviceIrcmdControlManager.getInstance()
                             .getIrcmdEngine().basicVideoStreamContinue();
                     Log.d(TAG, "basicVideoStreamContinueResult=" + basicVideoStreamContinueResult);
@@ -427,11 +330,9 @@ public class CameraPreviewManager {
             mMainHandler.sendEmptyMessage(IrDisplayActivity.HIDE_LOADING);
         }
     }
-
     public Bitmap scaledBitmap() {
         return scaledBitmap(false);
     }
-
     public Bitmap scaledBitmap(Boolean isTakePhoto) {
         if (tmpData == null) {
             tmpData = new byte[mIrARGBLength];
@@ -444,47 +345,29 @@ public class CameraPreviewManager {
         mPhotoBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(tmpData));
         return mPhotoBitmap;
     }
-
-    /**
-     * @return
-     */
     public List<CameraSize> getAllSupportedSize() {
         return mIrcamEngine.getUsbSupportInfo();
     }
-
     private void initHandleEngine(USBMonitor.UsbControlBlock ctrlBlock, boolean isStartPreview) {
         UvcHandleParam uvcHandleParam = new UvcHandleParam();
-
         uvcHandleParam.setCtrlBlock(ctrlBlock);
-
         int fps = IrConst.DEFAULT_STREAM_FPS;
-
         uvcHandleParam.setFps(fps);
-
         float bandwidth = SPUtils.getInstance().getFloat(
                 IrConst.KEY_DEFAULT_STREAM_BANDWIDTH, IrConst.DEFAULT_STREAM_BANDWIDTH);
-
-        /**
-
-
-         */
         uvcHandleParam.setBandwidth(bandwidth);
-
         Log.d(TAG, "initHandleEngine UvcHandleParam = " + uvcHandleParam.toString());
-
         LibIRProcess.irprocessLogRegister(LogLevel.SDK_LOG_NO_PRINT);
         LibIRProcess.getIRProcessVersion();
         LibIRParse.irparseLogRegister(LogLevel.SDK_LOG_NO_PRINT);
         LibIRParse.getIRParseVersion();
         LibIRTemp.irtempLogRegister(LogLevel.SDK_LOG_NO_PRINT);
         LibIRTemp.getIRTempVersion();
-
         mIrcamEngine = IrcamEngine.Builder()
                 .setLogLevel(CommonParams.LogLevel.SDK_LOG_DEBUG)
                 .setStreamWidth(mStreamWidth)
                 .setStreamHeight(mStreamHeight)
                 .setDriverType(CommonParams.DriverType.USB)
-
                 .setFrameOutputFormat(FRAME_OUT_PUT_FORMAT)
                 .setUvcHandleParam(uvcHandleParam)
                 .build();
@@ -502,14 +385,12 @@ public class CameraPreviewManager {
                     handleStartPreview();
                 }
             }
-
             @Override
             public void onFail(ErrorCode errorCode) {
                 mMainHandler.sendEmptyMessage(IrDisplayActivity.HANDLE_INIT_FAIL);
             }
         });
     }
-
     public void startPreview() {
         Log.d(TAG, "startPreview");
         if (mIrcamEngine != null) {
@@ -525,19 +406,16 @@ public class CameraPreviewManager {
         }
         TempCompensation.getInstance().startTempCompensation();
     }
-
     public void pausePreview() {
         if (mIrcamEngine != null) {
             mIrcamEngine.pauseVideoStream();
         }
     }
-
     public void resumePreview() {
         if (mIrcamEngine != null) {
             mIrcamEngine.resumeVideoStream();
         }
     }
-
     public void closePreview() {
         if (mIrcamEngine != null) {
             mIrcamEngine.closeVideoStream();
@@ -546,12 +424,9 @@ public class CameraPreviewManager {
             mIrcamEngine = null;
         }
     }
-
     public void stopPreview() {
         Log.i(TAG, "stopPreview");
-
         if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_WN2640) {
-
             IrcmdError ircmdError = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                     .basicVideoStreamPause();
             Log.d(TAG, "basicVideoStreamPause=" + ircmdError);
@@ -561,7 +436,6 @@ public class CameraPreviewManager {
             mIrcamEngine.stopVideoStream();
         }
     }
-
     public void releaseSource() {
         mIIrFrameCallback = null;
         mIrARGBData = null;
@@ -571,62 +445,48 @@ public class CameraPreviewManager {
         DeviceIrcmdControlManager.getInstance().setIrcmdEngine(null);
         DeviceIrcmdControlManager.getInstance().setIrcamEngine(null);
     }
-
     public void updateDevHandleParam(DevHandleParam devHandleParam) {
         if (mIrcamEngine != null) {
             mIrcamEngine.updateDevHandleParam(devHandleParam);
         }
     }
-
     public void setSaveData(boolean mSaveData) {
         this.mSaveData = mSaveData;
     }
-
     public void setTakePhoto(boolean takePhoto) {
         this.mTakePhoto = takePhoto;
     }
-
     public IrcamEngine getIrcamEngine() {
         return mIrcamEngine;
     }
-
     public RotateDegree getImageRotate() {
         return mImageRotate;
     }
-
     public void setImageRotate(RotateDegree imageRotate) {
         this.mImageRotate = imageRotate;
         mIrRotateData = null;
         mIrRotateData = new byte[mIrARGBLength];
         Log.d(TAG, "setImageRotate : " + imageRotate.getValue());
     }
-
     public void setFramePause(boolean framePause) {
         this.mFramePause = framePause;
     }
-
     public void setFrameOutPutFormat(CommonParams.FrameOutputFormat frameOutPutFormat) {
         FRAME_OUT_PUT_FORMAT = frameOutPutFormat;
     }
-
     public void setShowDoubleImage(boolean showDoubleImage) {
         this.mShowDoubleImage = showDoubleImage;
     }
-
     public boolean getAutoSwitchGainEnable() {
         return mAutoSwitchGainEnable;
     }
-
     public void setAutoSwitchGainEnable(boolean mAutoSwitchGainEnable) {
         this.mAutoSwitchGainEnable = mAutoSwitchGainEnable;
     }
-
     public void setOnTempDataChangeCallback(OnTempDataChangeCallback onTempDataChangeCallback) {
         this.mOnTempDataChangeCallback = onTempDataChangeCallback;
     }
-
     private void handleSurfaceDisplay() {
-
         switch (mImageRotate) {
             case DEGREE_0:
                 mFinalImageWidth = mPreviewWidth;
@@ -658,7 +518,6 @@ public class CameraPreviewManager {
             mSurfaceView.setMIrRotateData(mIrRotateData.clone());
             mSurfaceView.setMFinalImageWidth(mFinalImageWidth);
             mSurfaceView.setMFinalImageHeight(mFinalImageHeight);
-
             mSurface = mSurfaceView.getHolder().getSurface();
             if (mSurface != null) {
                 mSurfaceNativeWindow.onDrawFrame(mSurface, mIrRotateData, mFinalImageWidth, mFinalImageHeight);
@@ -667,40 +526,28 @@ public class CameraPreviewManager {
             XLog.e(TAG + ":lite的图像渲染异常：" + e.getMessage());
         }
     }
-
     private void initZetaZoomData() {
-
-
     }
-
     private void handleSurfaceDisplayForZetaZoom() {
-
-
     }
-
     public AlarmBean getAlarmBean() {
         return alarmBean;
     }
-
     public void setAlarmBean(AlarmBean alarmBean) {
         this.alarmBean = alarmBean;
     }
-
     public void setLimit(float max, float min, int maxColor, int minColor) {
         this.max = max;
         this.min = min;
         this.maxColor = maxColor;
         this.minColor = minColor;
     }
-
     public void setColorList(int[] colorList, @Nullable float[] places, boolean isUseGray, float customMaxTemp, float customMinTemp) {
         irImageHelp.setColorList(colorList, places, isUseGray, customMaxTemp, customMinTemp);
     }
-
     public void setPseudocolorMode(int pseudocolorMode) {
         this.pseudocolorMode = pseudocolorMode;
     }
-
     public interface OnTempDataChangeCallback {
         void onTempDataChange(byte[] data);
     }

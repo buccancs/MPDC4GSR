@@ -1,5 +1,4 @@
 package com.topdon.lib.ui.adapter
-
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -9,19 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.topdon.lib.ui.bean.ColorSelectBean
 import com.topdon.lib.ui.databinding.UiItemColorSelectBinding
 import com.topdon.lib.ui.R as UiR
-
-
 class ColorSelectAdapter(val context: Context) :
     RecyclerView.Adapter<ColorSelectAdapter.ItemView>() {
     var listener: ((code: Int, color: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
-
     fun selected(index: Int) {
         selected = index
         notifyDataSetChanged()
     }
-
     private val colorBean =
         arrayListOf(
             ColorSelectBean(UiR.color.color_select1, "#FF000000", 1),
@@ -31,7 +26,6 @@ class ColorSelectAdapter(val context: Context) :
             ColorSelectBean(UiR.color.color_select5, "#FF0FA752", 5),
             ColorSelectBean(UiR.color.color_select6, "#FF808080", 6),
         )
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -44,7 +38,6 @@ class ColorSelectAdapter(val context: Context) :
             )
         return ItemView(binding)
     }
-
     override fun onBindViewHolder(
         holder: ItemView,
         position: Int,
@@ -59,11 +52,9 @@ class ColorSelectAdapter(val context: Context) :
             itemColorCheck.visibility = if (position == selected) View.VISIBLE else View.GONE
         }
     }
-
     override fun getItemCount(): Int {
         return colorBean.size
     }
-
     inner class ItemView(val binding: UiItemColorSelectBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

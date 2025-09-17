@@ -1,5 +1,4 @@
 package com.topdon.module.user.activity
-
 import android.annotation.SuppressLint
 import android.view.View
 import android.widget.TextView
@@ -21,9 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import com.topdon.lib.core.R as RCore
-
 class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
-
     private lateinit var tvFormatStorage: TextView
     private lateinit var tvProgressValue: TextView
     private lateinit var tvUsedValue: TextView
@@ -34,7 +31,6 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
     private lateinit var listStorageVideo: ListItemView
     private lateinit var listStorageSystem: ListItemView
     private lateinit var customViewProgress: ProgressBarView
-
     companion object {
         private fun formatFileSize(fileSize: Long): String =
             if (fileSize == 0L) {
@@ -48,7 +44,6 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
             } else {
                 DecimalFormat("#.0").format(fileSize.toDouble() / 1073741824)
             }
-
         private fun getUnit(fileSize: Long): String =
             if (fileSize < 1024) {
                 "B"
@@ -60,11 +55,8 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                 "GB"
             }
     }
-
     override fun initContentView() = R.layout.activity_storage_space
-
     override fun initView() {
-
         tvFormatStorage = findViewById(R.id.tv_format_storage)
         tvProgressValue = findViewById(R.id.tv_progress_value)
         tvUsedValue = findViewById(R.id.tv_used_value)
@@ -75,10 +67,8 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
         listStorageVideo = findViewById(R.id.list_storage_video)
         listStorageSystem = findViewById(R.id.list_storage_system)
         customViewProgress = findViewById(R.id.custom_view_progress)
-
         tvFormatStorage.setOnClickListener(this)
     }
-
     @SuppressLint("SetTextI18n")
     override fun initData() {
         lifecycleScope.launch {
@@ -87,17 +77,14 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                 TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
             } else {
                 TLog.d("ts004", "║ response :$freeSpaceBean")
-
                 tvProgressValue.text = "${
                     (freeSpaceBean.hasUseSize() * 100.0 / freeSpaceBean.total).toInt()
                         .coerceAtLeast(1)
                 }"
-
                 tvUsedValue.text = formatFileSize(freeSpaceBean.hasUseSize())
                 tvUsed.text = getUnit(freeSpaceBean.hasUseSize())
                 tvTotalValue.text = " / " + formatFileSize(freeSpaceBean.total)
                 tvTotal.text = getUnit(freeSpaceBean.total)
-
                 listStoragePhoto.setRightText(
                     formatFileSize(freeSpaceBean.image_size) + getUnit(
                         freeSpaceBean.image_size
@@ -113,7 +100,6 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                         freeSpaceBean.system
                     )
                 )
-
                 val systemPercent =
                     (freeSpaceBean.system * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1)
                         .coerceAtMost(98)
@@ -141,10 +127,9 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
     override fun onClick(v: View?) {
         when (v) {
-            tvFormatStorage -> { // 格式化存储
+            tvFormatStorage -> { 
                 TipDialog.Builder(this@StorageSpaceActivity)
                     .setTitleMessage(getString(RCore.string.more_storage_reset))
                     .setMessage(getString(RCore.string.more_storage_reset1))

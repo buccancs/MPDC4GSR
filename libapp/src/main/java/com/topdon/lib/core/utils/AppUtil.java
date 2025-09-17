@@ -1,5 +1,4 @@
 package com.topdon.lib.core.utils;
-
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,18 +8,13 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
-
 import androidx.core.content.FileProvider;
-
 import com.elvishew.xlog.XLog;
-
 import java.io.File;
 import java.util.List;
-
 public class AppUtil {
     public static boolean isAppInstalled(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
-
         List<PackageInfo> listPackageInfo = packageManager.getInstalledPackages(0);
         for (int i = 0; i < listPackageInfo.size(); i++) {
             if (listPackageInfo.get(i).packageName.equalsIgnoreCase(packageName)) {
@@ -29,7 +23,6 @@ public class AppUtil {
         }
         return false;
     }
-
     public static void openApp(Context context, String packageName) throws PackageManager.NameNotFoundException {
         PackageInfo pi = context.getPackageManager().getPackageInfo(packageName, 0);
         Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
@@ -37,7 +30,6 @@ public class AppUtil {
         resolveIntent.setPackage(pi.packageName);
         List<ResolveInfo> apps = context.getPackageManager().queryIntentActivities(resolveIntent, 0);
         if (apps == null || apps.size() <= 0) {
-
             return;
         }
         ResolveInfo ri = apps.iterator().next();
@@ -51,13 +43,10 @@ public class AppUtil {
             context.startActivity(intent);
         }
     }
-
     public static void installApp(Context context, File apkPath) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", apkPath);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
@@ -66,7 +55,6 @@ public class AppUtil {
         }
         context.startActivity(intent);
     }
-
     public static boolean isProcessRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> runningServiceInfos = am.getRunningServices(200);
@@ -81,7 +69,6 @@ public class AppUtil {
         }
         return false;
     }
-
     public static boolean isServiceRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> runningServiceInfos = am.getRunningServices(200);
@@ -96,7 +83,6 @@ public class AppUtil {
         }
         return false;
     }
-
     public static String getVersionName(Context context) {
         try {
             PackageManager packageManager = context.getPackageManager();
@@ -107,7 +93,6 @@ public class AppUtil {
         }
         return "";
     }
-
     public static float getVersionCode(Context context) {
         try {
             PackageManager packageManager = context.getPackageManager();
